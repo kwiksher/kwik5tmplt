@@ -1,0 +1,10 @@
+[
+{{each(options.pages)}}
+{
+    "page":{{@this.page}}, "alias":"{{@this.alias}}", "isTmplt":{{@this.isTmplt}},
+    {{each(@this.layers)}}
+    "{{@this.layer}}":{ "x":{{@this.x}}, "y":{{@this.y}}, "width":{{@this.width}}, "height":{{@this.height}}, "alpha" :{{@this.alpha}} , "ext":"{{@this.ext}}" },
+    {{/each}}
+},
+{{/each}}
+]

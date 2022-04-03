@@ -1,0 +1,22 @@
+{
+  "layers": {
+    "layer_image": [],
+    "butBlue": [
+      "button",
+      "animation"
+    ]
+  },
+  "components": {
+    "page": [
+      "common",
+      "navigation",
+      "swipe"
+    ]
+  },
+  "events": {
+    "Undo": [],
+    "eventA": "act_erase",
+    "act_erase": [],
+    "Redo": []
+  }
+}

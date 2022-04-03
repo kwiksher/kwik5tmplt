@@ -1,0 +1,106 @@
+{
+  "events": [
+    "doDistanceModel",
+    "init",
+    "resetButtonPress",
+    "updateAL",
+    "updateControls",
+    "visualToAudio"
+  ],
+  "layers": [
+    {
+      "bkgd": []
+    },
+    {
+      "desktop": [
+        {
+          "rolloffGradient": []
+        },
+        {
+          "distRef": []
+        },
+        {
+          "axis": []
+        },
+        {
+          "speaker": []
+        },
+        {
+          "person": []
+        },
+        {
+          "pointA": []
+        },
+        {
+          "pointB": []
+        }
+      ]
+    },
+    {
+      "dataText": []
+    },
+    {
+      "panel": [
+        {
+          "controlsBkgd": []
+        },
+        {
+          "pitchSlider": []
+        },
+        {
+          "panSlider": []
+        },
+        {
+          "volSlider": []
+        },
+        {
+          "oriSlider": []
+        },
+        {
+          "dirSlider": []
+        },
+        {
+          "coneInSlider": []
+        },
+        {
+          "coneOutSlider": []
+        },
+        {
+          "AtoBbutton": []
+        },
+        {
+          "dfSlider": []
+        },
+        {
+          "sosSlider": []
+        },
+        {
+          "rofSlider": []
+        },
+        {
+          "refDistSlider": []
+        },
+        {
+          "maxDistSlider": []
+        },
+        {
+          "sosSlider": []
+        },
+        {
+          "dm_radioGroup": []
+        },
+        {
+          "clamped": []
+        },
+        {
+          "linkButton": []
+        },
+        {
+          "playPauseButton": []
+        }
+      ]
+    }
+  ],
+  "name": "explorer",
+  "components": []
+}

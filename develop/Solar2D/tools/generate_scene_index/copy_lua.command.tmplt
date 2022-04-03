@@ -1,0 +1,7 @@
+cd generate_scene_model
+
+{{#.}}
+{{.}}
+{{/.}}
+
+exit

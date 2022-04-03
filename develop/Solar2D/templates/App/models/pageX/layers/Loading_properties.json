@@ -1,0 +1,134 @@
+[
+	{
+		"state": "default",
+		"photoshop": {
+			"alpha": 1,
+			"blendMode": "normal",
+			"height": 56,
+			"kind": "kwik",
+			"name": "Loading",
+			"width": 197,
+			"x": 484.5,
+			"y": 262
+		},
+		"kwik": {
+			"infinity": "",
+			"infinityDistance": "",
+			"infinitySpeed": "",
+			"isSharedAsset": "",
+			"isTmplt": "",
+			"langGroupName": "",
+			"langTableName": "",
+			"layerAsBg": "",
+			"layerSet": "",
+			"layerSetName": "",
+			"multLayers": "",
+			"randXEnd": "",
+			"randXStart": "",
+			"randYEnd": "",
+			"randYStart": "",
+			"rotation": "",
+			"scaleX": "",
+			"scaleY": ""
+		}
+	},
+	{
+		"state": "To",
+		"photoshop": {
+			"alpha": 1,
+			"blendMode": "normal",
+			"height": 56,
+			"kind": "kwik",
+			"name": "Loading",
+			"width": 197,
+			"x": 484.5,
+			"y": 262
+		},
+		"kwik": {
+			"infinity": "",
+			"infinityDistance": "",
+			"infinitySpeed": "",
+			"isSharedAsset": "",
+			"isTmplt": "",
+			"langGroupName": "",
+			"langTableName": "",
+			"layerAsBg": "",
+			"layerSet": "",
+			"layerSetName": "",
+			"multLayers": "",
+			"randXEnd": "",
+			"randXStart": "",
+			"randYEnd": "",
+			"randYStart": "",
+			"rotation": "",
+			"scaleX": "",
+			"scaleY": ""
+		}
+	},
+	{
+		"state": "From",
+		"photoshop": {
+			"alpha": 1,
+			"blendMode": "normal",
+			"height": 56,
+			"kind": "kwik",
+			"name": "Loading",
+			"width": 197,
+			"x": 484.5,
+			"y": 262
+		},
+		"kwik": {
+			"infinity": "",
+			"infinityDistance": "",
+			"infinitySpeed": "",
+			"isSharedAsset": "",
+			"isTmplt": "",
+			"langGroupName": "",
+			"langTableName": "",
+			"layerAsBg": "",
+			"layerSet": "",
+			"layerSetName": "",
+			"multLayers": "",
+			"randXEnd": "",
+			"randXStart": "",
+			"randYEnd": "",
+			"randYStart": "",
+			"rotation": "",
+			"scaleX": "",
+			"scaleY": ""
+		}
+	},
+	{
+		"state": "Portrait",
+		"photoshop": {
+			"alpha": 1,
+			"blendMode": "normal",
+			"height": 56,
+			"kind": "kwik",
+			"name": "Loading",
+			"width": 197,
+			"x": 484.5,
+			"y": 262
+		},
+		"kwik": {
+			"infinity": "",
+			"infinityDistance": "",
+			"infinitySpeed": "",
+			"isSharedAsset": "",
+			"isTmplt": "",
+			"langGroupName": "",
+			"langTableName": "",
+			"layerAsBg": "",
+			"layerSet": "",
+			"layerSetName": "",
+			"multLayers": "",
+			"randXEnd": "",
+			"randXStart": "",
+			"randYEnd": "",
+			"randYStart": "",
+			"rotation": "",
+			"scaleX": "",
+			"scaleY": ""
+		}
+	}
+]

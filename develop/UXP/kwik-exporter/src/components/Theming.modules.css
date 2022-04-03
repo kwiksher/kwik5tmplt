@@ -1,0 +1,40 @@
+:root {
+  --darkest: #2680eb;  /* Spectrum BLUE 400 */
+  --dark: #1473e6;     /* Spectrum BLUE 500 */
+  --light: #0d66d0;    /* Spectrum BLUE 600 */
+  --lightest: #095aba; /* Spectrum BLUE 700 */
+}
+
+.container {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  min-width: min-content;
+}
+
+.body, .toast { display: none; }
+
+@media (prefers-color-scheme: darkest) {
+  /* styles for the darkest theme */
+  .container { border: 1px solid var(--darkest); }
+  .darkest { display: flex; }
+}
+
+@media (prefers-color-scheme: dark) {
+  /* styles for the dark theme */
+  .container { border: 1px solid var(--dark); }
+  .dark { display: flex; }
+}
+
+@media (prefers-color-scheme: light) {
+  /* styles for the light theme */
+  .container { border: 1px solid var(--light); }
+  .light { display: flex; }
+}
+
+@media (prefers-color-scheme: lightest) {
+  /* styles for the lightest theme */
+  .container { border: 1px solid var(--lightest); }
+  .lightest { display: flex; }
+}

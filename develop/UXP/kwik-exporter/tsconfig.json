@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "es5",
+    "module": "commonjs",
+    "strict": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "lib": [
+      "es2015", "DOM"
+    ],
+    "jsx": "react-jsx",
+    "typeRoots": [
+      "typings-25.0/types/index.d.ts",
+      "node_modules/@types"
+    ],
+    "types": [
+      "./typings-25.0/types",
+      // "node_modules/types"
+    ],
+    //   "paths": {
+    //     "*": [
+    //       "./typings-25.0/types/*"
+    //     ]
+    //   }
+  }
+}
