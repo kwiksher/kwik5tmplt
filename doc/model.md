@@ -1,3 +1,327 @@
+# workflow
+
+## 1. assets
+
+```
+├── App
+    ├── contentX
+        ├── assets
+            ├── audios
+            │   ├── sounds
+            │   ├── streams
+            │   └── sync
+            ├── images
+            │   └── pageX
+            │       ├── bg.png
+                    ├── folder
+                    |      ├─  .png
+                    |      └── .png
+                    └── .png
+
+```
+### 1-1 images
+
+- Manually put images in App/contentX/images/pageX folder
+
+    - **kwik-generate-model**
+
+        it creates .json under models folder
+
+Alternatively
+
+- Photoshop
+    - select .psd files to export
+    - **kwik-export plugin**
+        -  create folders for a layer group in order to export each image of the group
+        - the plugin exports index.json too
+            - assets/images/.png
+            - models/scenes/pageX/index.json
+
+            ```
+            ├── models
+            │   ├── assets
+            │   │   ├── audios
+            │   │   │   ├── sounds
+            │   │   │   ├── streams
+            │   │   │   └── sync
+            │   │   ├── index.json
+            │   │   ├── images
+            |   |         ├── pageX
+            |   |               ├── layerX.json (ReadOnly)
+            │   ├── pageX
+            │       ├── index.json
+            │       └── layers
+            │           ├── layerX.json (RW from KwikLiveEditor)
+            ```
+
+    later you edit it with KwikLiveEditor, then layerX.json is created under models/pageX/layers folder. images/pageX/layerX.json is readonly.
+
+### 1-2 audios
+
+put audio files under assets/audios folder
+
+```
+.
+├── assets
+│   ├── audios
+│   │   ├── sounds
+│   │   │   └── ballsCollide.mp3
+│   │   ├── streams
+│   │   │   ├── Gentle-Rain.mp3
+│   │   │   └── Tranquility.mp3
+│   │   └── sync
+│   │       ├── en
+│   │       │   ├── cat.mp3
+│   │       │   ├── kwik.mp3
+│   │       │   └── narration.mp3
+│   │       ├── jp
+│   │       │   ├── cat.mp3
+│   │       │   ├── kwik.mp3
+│   │       │   └── narration.mp3
+│   │       ├── pageX_Text1.mp3
+│   │       ├── pageX_Text1.txt
+│   │       ├── page02_Text1.mp3
+│   │       └── page02_Text1.txt
+```
+
+- **kwik-generate-model**
+
+    creates .json under models/assets/audios
+
+    ```
+    ├── models
+    │   ├── assets
+    │   │   ├── audios
+    │   │   │   ├── sounds
+    |   |   |   |     ├── audioX.json
+    │   │   │   ├── streams
+    │   │   │   └── sync
+    │   │   ├── index.json
+    │   │   ├── images
+    │   ├── pageX
+    │       ├── index.json
+    ```
+
+
+- **kwik-editor**
+
+    audio files are not subjected to a page yet. So you can assign an audio to any pages with the tool.
+
+    1. edit audio properties
+        - auto play
+        - channnel
+        - ...
+
+        models/assets/audios/sounds/audioX.json
+        ```
+        {
+            "name":"audioX",
+            "autoPlay":false,
+            "channel":2,
+            "type":"sound"
+        }
+        ```
+
+    2. you assign an audio entry to a page with kwik-editor. Then the tool adds the entry in models/pageX/index.json
+
+    **pageX**/index.json
+    ```
+    {
+        "components": [
+            {
+                "audios": [
+                    {"name":"audioX", "type":"sound"},
+                ]
+            }
+        ],
+        "events": [],
+        "layers": []
+    }
+    ```
+
+# Lua
+
+you don't need to use kwik-generate-model nor kwik-editor to output lua files. You can skip making .json files of these tools, and you create each lua file and edit index.lua for scenes/pageX/ directly.
+
+
+- commands/pageX/**/*.lua
+- components/pageX/**/*.lua
+- scenes/pageX/**/*.lua
+
+At runtime, Kwik Code Framework reads scenes/pageX/index.lua to load each .lua files of pageX. The object names for commands, compnents, scenes are defined in the index.lua
+
+- scenes/pageX/index.lua
+
+kwik-genereate-index is a tool to generate the index.lua from traversing the folders above.
+
+1. create .lua for commands, components, layers of pageX,
+1. run the tool to generate scenes/pageX/index.lua
+
+> you don't need to use kwik-generate-index tool. You can manually edit it but it would be better to generate the index.lua with the tool.
+
+> Alternatively, there is another tool named **kwik-scaffold-lua**. This tool scafolds .lua files from scenes/pageX/index.lua. The tool does not overwrite .lua if exists, and may delete .lua if not defined in index.lua
+
+Which Workflow do you like?
+
+- A
+
+    use kwik-generate-index everytime after you update commands, components, senes lua files.
+
+- B
+
+    use kwik-scaffold-lua to create a lua for commands, components, scenes then edit the lua file.
+
+> I like A because thinking about files/folders strcure with a file explorer, and coping/pasting an exsiting file could be easier when coding is in progress.
+
+> To initiate a project, B would work quicky to make a skelton structure.
+## Image
+
+- scenes/pageX/background.lua
+
+    ```lua
+    local _K = require "Application"
+    local _M = require("components.kwik.layer_image").new()
+    _M.weight = 1
+
+    local Props = {
+    blendMode = "normal",
+    height    = 520,
+    width     = 1000,
+    kind      = pixel,
+    name      = "bg",
+    x         = 1000  -1000/2,
+    y         = 520/2,
+    alpha     = 100/100,
+    }
+
+    --
+    _M.imageWidth  = Props.width/4
+    _M.imageHeight = Props.height/4
+    _M.mX, _M.mY   = _K.ultimatePosition(Props.x, Props.y, "")
+    _M.randXStart  = _K.ultimatePosition()
+    _M.randXEnd    = _K.ultimatePosition()
+    _M.dummy, _M.randYStart = _K.ultimatePosition(0, )
+    _M.dummy, _M.randYEnd   = _K.ultimatePosition(0, )
+    _M.infinityDistance = (parseValue() or 0)/4
+
+    ....
+    ....
+    ....
+    --
+    function _M:localVars(UI)
+    end
+    --
+    function _M:localPos(UI)
+    end
+    --
+    function _M:didShow(UI)
+    end
+    --
+    function _M:toDispose(UI)
+    end
+    --
+    function  _M:toDestory()
+    end
+    --
+    return _M
+    ```
+
+    > '_M.weight = num' controlls the order of display objects for  **kwik-genereate-index** tool that outputs scenes/pageX/index.lua
+
+- scenes/pageX/groupOne/index.lua
+
+    ```lua
+    _M = {}
+    _M.weight = 1
+    --
+    -- this index.lua is for kwik-generate-model
+    -- you may put additional code here
+    --
+    return _M
+    ```
+
+- scenes/pageX/groupOne/imageOne.lua
+
+    ```lua
+    local _K = require "Application"
+    local _M = require("components.kwik.layer_image").new()
+    _M.weight = 1
+
+    local Props = {
+        ...
+        ....
+    }
+    ```
+- scenes/pageX/groupOne/imageTwo.lua
+
+    ```lua
+    local _K = require "Application"
+    local _M = require("components.kwik.layer_image").new()
+    _M.weight = 2
+
+    local Props = {
+        ...
+        ....
+    }
+    ```
+
+
+- scenes/pageX/index.lua
+
+    > Bottom to Top order
+
+    ```
+    {
+        name = "pageX",
+        layers = {
+            {background={}},
+            {groupOne = {
+                {imageTwo},
+                {imageOne},
+            }},
+        },
+        components = {},
+        events = {},
+    }
+    ```
+
+## Audio
+- components/pageX/audios
+
+    - sounds/soundOne.lua
+    - streams/songOne.lua
+
+    ```.lua
+    local Props = {
+        name     = "soundOne",
+        type     = "sound",
+        autoPlay = true,
+        channel  = 2
+    }
+    return Props
+    ```
+
+- scenes/pageX/index.lua
+
+    ```
+    {
+        name = "pageX",
+        layers = {
+            {background={}},
+        },
+        components = {
+            {audios = {
+                {name="soundOne", type="sound"},
+                {name="songOne", type="stream"}
+            }},
+            {others = {
+                {nanostores={}}
+            }}
+        },
+        events = {},
+    }
+    ```
+
 # project structure
 
 sandbox/Ps/react-uxp-styles/Project/Solar2D/src
@@ -5,7 +329,7 @@ sandbox/Ps/react-uxp-styles/Project/Solar2D/src
 ```
 .
 ├── App
-│   ├── album01
+│   ├── contentX
 |
 ├── Images.xcassets
 ├── LaunchScreen.storyboardc
@@ -13,14 +337,14 @@ sandbox/Ps/react-uxp-styles/Project/Solar2D/src
 |   └── kwik
 ├── build.settings
 ├── commands
-│   ├── album01
-│   │   └── page01
+│   ├── contentX
+│   │   └── pageX
 │   │       └── handmadeAction.lua
 │   ├── app
 │   └── kwik
 ├── components
-│   ├── album01
-│   │   └── page01
+│   ├── contentX
+│   │   └── pageX
 │   │       └── handmadeCommand.lua
 │   ├── tiledmap
 │   ├── crossword
@@ -50,7 +374,7 @@ sandbox/Ps/react-uxp-styles/Project/Solar2D/src
 
 ```
 ├── App
-    ├── albumX
+    ├── contentX
         ├── assets
         │   ├── audios
         │   │   ├── sounds
@@ -108,8 +432,8 @@ sandbox/Ps/react-uxp-styles/Project/Solar2D/src
 
 ```
 
-# alubmn01
-sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/album01
+# contentX
+sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/contentX
 
 ```
 .
@@ -129,12 +453,12 @@ sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/album01
 │   │       │   ├── cat.mp3
 │   │       │   ├── kwik.mp3
 │   │       │   └── narration.mp3
-│   │       ├── page01_Text1.mp3
-│   │       ├── page01_Text1.txt
+│   │       ├── pageX_Text1.mp3
+│   │       ├── pageX_Text1.txt
 │   │       ├── page02_Text1.mp3
 │   │       └── page02_Text1.txt
 │   ├── images
-│   │   └── page01
+│   │   └── pageX
 │   │       ├── Loading.png
 │   │       ├── Loading@2x.png
 │   │       ├── Loading@4x.png
@@ -185,7 +509,7 @@ sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/album01
 │   │   ├── sprites
 │   │   ├── videos
 │   │   └── www
-│   ├── page01
+│   ├── pageX
 │       ├── components
 │       │   └── audios
 │       ├── events
@@ -201,7 +525,7 @@ sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/album01
 │               ├── layersList.json
 │               └── topbar.json
 └── scenes
-    └── page01
+    └── pageX
         ├── Loading.lua
         ├── Loading_animation.lua
         ├── Loading_button.lua
