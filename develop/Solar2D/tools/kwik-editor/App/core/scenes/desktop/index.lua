@@ -30,7 +30,7 @@ local scene = require('contexts.scene').new(sceneName, {
     -- events
     -- a command can be associated with more than one events
     --------------------
-    events = {"sidepanel.selectApp","sidepanel.selectAlbum","sidepanel.selectPage", "sidepanel.selectLayer", "sidepanel.selectAction", "sidepanel.selectTool"},
+    events = {"sidepanel.selectApp","sidepanel.selectContent","sidepanel.selectPage", "sidepanel.selectLayer", "sidepanel.selectAction", "sidepanel.selectTool"},
     onInit = function(scene)
         local mui = require("materialui.mui")
         mui.init(nil, {parent = scene.view, useSvg = true})

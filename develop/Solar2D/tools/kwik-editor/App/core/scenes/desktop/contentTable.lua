@@ -29,9 +29,9 @@ function M:create(UI)
         -- })
     end
 
-    UI.albumStore:listen(function(foo, fooValue)
+    UI.contentStore:listen(function(foo, fooValue)
         models = fooValue
-        print("albumStore", #models)
+        print("contentStore", #models)
 
         local maxWidth = 0
         local maxStr
@@ -80,9 +80,9 @@ function M:create(UI)
 
        -- mui.turnOnButtonByName("selectApp")
 
-       UI.currentAlbum = models[2]
+       UI.currentcontent = models[2]
        UI.scene:dispatchEvent({
-           name = "sidepanel.selectAlbum",
+           name = "sidepanel.selectcontent",
            UI = UI
        })
 
@@ -92,10 +92,10 @@ function M:create(UI)
 
     muiSelector.listener = function(event)
       -- for k, v in pairs(event) do print(k, v) end
-      UI.currentAlbum = models[event.index]
+      UI.currentcontent = models[event.index]
       --print(#models, event.row.index, models[event.row.id])
       UI.scene:dispatchEvent({
-          name = "sidepanel.selectAlbum",
+          name = "sidepanel.selectcontent",
           UI = UI
       })
     end

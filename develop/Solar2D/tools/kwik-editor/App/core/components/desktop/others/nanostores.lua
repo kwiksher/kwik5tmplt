@@ -5,7 +5,7 @@ M.weight = 1
 ---
 
 local nanostores =  require("extlib.nanostores.index")
-local albums = nanostores.createStore()
+local contents = nanostores.createStore()
 local pages = nanostores.createStore()
 local layers = nanostores.createStore()
 local props = nanostores.createStore()
@@ -17,7 +17,7 @@ local assets = nanostores.createStore()
 ---
 function M:init(UI)
   print("-------- nanostore ---------")
-  UI.albumStore = albums
+  UI.contentStore = contents
   UI.pageStore = pages
   UI.layerStore = layers
   UI.propsStore = props
