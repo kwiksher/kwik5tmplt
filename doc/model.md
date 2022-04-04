@@ -1,4 +1,122 @@
+TODO
+
+- [ ] Ps test.psd - simple/good-looking layers
+    - [ ] UXP tool to generate .png and .json
+    - [ ] assets/images/pageX folder
+        - [ ] png only
+        - [ ] png with json in models/assets/pngX
+
+    kwik editor
+    - [ ] kwik-generate-model to create .json of models/assets out of assets/pageX/images
+
+          create models/pageX/layers/.json too?
+
+    - [ ] kwik-generate-index
+
+            look for models/assets/pageX and models/pageX/layers
+
+    - [ ] kwik-scaffold-lua or lustache renderer
+
+            if .json, output .lua
+
+    - [ ] user edit props or moves position of an image
+
+            update .json in models/pageX
+
+    - [ ] output .lua with renderer
+
+    - [ ] attach a type of class to a layer
+        - [ ] animation
+        - [ ] button
+
+    - [ ] create an event and a command
+        - [ ] select/add a command from a table
+
+    - [ ] output .lua with renderer
+
+    - [ ] custom code
+        - [ ] command/pageX/injectedAction.lua
+        - [ ] components/pageX/injectedLayer.lua
+
+    audio
+    - [ ] add audio to assets/audio
+        - [ ] sound
+        - [ ] stream
+        - [ ] sync
+
+    multilingual
+    - [ ] layer and language group
+    - [ ] syncAudioText with lang code
+    - [ ] animation with lang code
+    - [ ] button with lang code
+
+    song
+    - [ ] stream mp3 with audacity
+        - [ ] create subtitles
+    - [ ] audio.seek with subtitles
+    - [ ] Logic Pro X
+        - [ ] scores/tabs
+
+    kwik editor
+    - [ ] animation
+        - [ ] A->B
+        - [ ] slider controls for Props
+    - [ ] action panel
+    - [ ] particles
+    - [ ] spritesheet
+        - [ ] moveclips (PNGs)
+    - [ ] videos
+    - [ ] page curl
+    - [ ] canvas
+    - [ ] ...
+
+    sample-project
+    - [ ] GameCenter
+        - [ ] tiledmap
+        - [ ] crossword
+        - [ ] memory match
+        - [ ] jigsaw pussle
+    - [ ] Multilingual
+    - [ ] MusicLibrary
+    - [ ] SingleBook
+    - [ ] Business(mui)
+
+    networking with Strapi or graphQL or contentful(CDN) ?
+    - [ ] get started
+
+    animation
+    - [ ] typescript to lua
+        - [ ] Adobe Animate atras/create.js
+        - [ ] lottie .js
+    - [ ] spine
+        - [ ] what has been updated?
+
+    CoronaCard
+    - [ ] get started
+
+    Linux
+   - [ ] get started
 # workflow
+
+Overview
+
+1. put .png/.jpg into App/contentX/assets/images manually or kwik-export plugin for Ps/XD
+
+    - images without coordinates
+    - images with coordinates from Ps, XD with kwik-export plugin
+        - models/assets/images/*.json
+
+1. kwik-editor traverses the assets folder to output .json for models and .lua for scenes/pageX and components/pageX
+
+    - kwik-generate-model
+    - kwik-generate-index
+    - kwik-scaffold-lua
+
+    you can edit props or positions of images or attach a type of class such as animation, button ...
+
+    you can creat an event and a corresponding action of code such as playAnimation, hideLayer, playAudio ...
+
+    > if you manually add a .lua file, you need to update scenes/pageX/index.lua too. You can use kwik-generate-index that traverses pageX folder of commands, components and scenes for synclonizing the lisf of .lua for pageX context defined in the index.lua.
 
 ## 1. assets
 
@@ -339,13 +457,13 @@ sandbox/Ps/react-uxp-styles/Project/Solar2D/src
 ├── commands
 │   ├── contentX
 │   │   └── pageX
-│   │       └── handmadeAction.lua
+│   │       └── injectedAction.lua
 │   ├── app
 │   └── kwik
 ├── components
 │   ├── contentX
 │   │   └── pageX
-│   │       └── handmadeCommand.lua
+│   │       └── injectedLayer.lua
 │   ├── tiledmap
 │   ├── crossword
 │   └── store
