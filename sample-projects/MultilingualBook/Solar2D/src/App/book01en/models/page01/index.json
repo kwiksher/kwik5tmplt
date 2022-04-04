@@ -1,0 +1,29 @@
+{
+	"events": [
+		"doDistanceModel",
+		"init",
+		"resetButtonPress",
+		"updateAL",
+		"updateControls",
+		"visualToAudio"
+	],
+	"layers": [
+		{
+			"sidepanel": [
+				{
+					"layersList": []
+				},
+				{
+					"topbar": []
+				}
+			]
+		},
+		{
+			"Loading": [],
+			"types":["animation", "button"]
+		},
+		{
+			"bg": []
+		}
+	]
+}

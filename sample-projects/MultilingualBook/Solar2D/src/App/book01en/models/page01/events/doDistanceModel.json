@@ -1,0 +1,21 @@
+[
+	{
+		"animation": {
+			"pauseAnimation": {
+				"layer": ""
+			}
+		}
+	},
+	{
+		"layer": {
+			"showHide": {
+				"showLay": "",
+				"hides": true,
+				"toggles": false,
+				"tm": "",
+				"time": 1000,
+				"delay": 1000
+			}
+		}
+	}
+]
