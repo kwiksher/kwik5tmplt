@@ -54,6 +54,7 @@ TODO
     - [ ] stream mp3 with audacity
         - [ ] create subtitles
     - [ ] audio.seek with subtitles
+    - [ ] Inkey?
     - [ ] Logic Pro X
         - [ ] scores/tabs
 
