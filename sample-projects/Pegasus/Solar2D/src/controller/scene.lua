@@ -25,7 +25,7 @@ M.new = function(sceneName, model)
         local sceneGroup = self.view
         if self.model.onInit then self.model.onInit(self) end
         self.UI:create(self, event.params)
-         Runtime:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
+        self.app:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
     end
     --
     function scene:show(event)
@@ -47,7 +47,7 @@ M.new = function(sceneName, model)
     --
     function scene:destroy(event)
         self.UI:destroy(self, event.params)
-        Runtime:dispatchEvent({name = "onRobotlegsViewDestroyed", target = self})
+        self.app:dispatchEvent({name = "onRobotlegsViewDestroyed", target = self})
     end
 
     function scene:init(event)

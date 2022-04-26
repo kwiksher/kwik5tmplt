@@ -1,18 +1,21 @@
 local Context = {}
 
-function Context:new()
+function Context.new(app)
 	local context = {}
 	context.commands = {}
 	context.mediators = {}
 	context.mediatorInstances = {}
+	context.app = app
 
-	function context:init()
-		Runtime:addEventListener("onRobotlegsViewCreated", self)
-		Runtime:addEventListener("onRobotlegsViewDestroyed", self)
+	--app:addEventListener("onRobotlegsViewCreated", function(e) print("test")end)
+
+	function context:_init(app)
+		self.app:addEventListener("onRobotlegsViewCreated", self)
+		self.app:addEventListener("onRobotlegsViewDestroyed", self)
 	end
 
 	function context:onRobotlegsViewCreated(event)
-		--print("Context::onRobotlegsViewCreated")
+		print("Context::onRobotlegsViewCreated")
 		local view = event.target
 		if view == nil then
 			error("ERROR: Robotlegs Context received a create event, but no view instance in the event object.")
@@ -52,7 +55,7 @@ function Context:new()
 		assert(require(commandClass), "Could not find commandClass")
 		self.commands[eventName] = commandClass
 
-		Runtime:addEventListener(eventName, onCommand)
+		self.app:addEventListener(eventName, onCommand)
 	end
 
 	function context:mapMediator(viewClass, mediatorClass)
@@ -83,20 +86,24 @@ function Context:new()
 	function context:createMediator(viewInstance)
 		print("Context::createMediator, viewInstance: ", viewInstance)
 		assert(viewInstance.classType, "viewInstance does not have a classType parameter.")
+		print(0)
 		local className = assert(self:getClassName(viewInstance.classType), "Failed to get class name")
 		print("", viewInstance.classType, className)
 		-- assert(_K[className], "Cannot find viewInstance class")
 		assert(self:hasCreatedMediator(viewInstance) == false, "viewInstance already has an instantiated Mediator. Perhaps you meant to dispatch onRobotlegsViewDestroyed instead?")
+		print(1)
 		local mediatorClassName = self.mediators[className]
 		assert(mediatorClassName, "There is no Mediator registered for this View class: " .. className)
+		print(2, mediatorClassName)
 		if(mediatorClassName ~= nil) then
-			print("context:createMediator", mediatorClassName)
+			print("","context:createMediator", mediatorClassName)
 			local mediatorClass = require(mediatorClassName):new()
 			mediatorClass.viewInstance = viewInstance
 			table.insert(self.mediatorInstances, mediatorClass)
 			mediatorClass:onRegister()
 			return true
 		else
+			print("", "FAIL")
 			return false
 		end
 	end
@@ -157,13 +164,13 @@ function Context:new()
 	function context:destroy()
 		print(" ------- context:destroy ---------- ")
 		for k, v in pairs (self.commands) do
-			Runtime:removeEventListener(k, onCommand)
+			self.app:removeEventListener(k, onCommand)
 		end
-		Runtime:removeEventListener("onRobotlegsViewCreated", self)
-		Runtime:removeEventListener("onRobotlegsViewDestroyed", self)
+		self.app:removeEventListener("onRobotlegsViewCreated", self)
+		self.app:removeEventListener("onRobotlegsViewDestroyed", self)
 	end
 
-	context:init()
+	context:_init()
 
 	return context
 end

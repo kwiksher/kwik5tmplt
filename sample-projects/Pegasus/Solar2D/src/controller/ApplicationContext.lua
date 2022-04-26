@@ -19,8 +19,12 @@ print("",getParentPath(parent))
 local Context = require "extlib.robotlegs.Context"
 local Class = {}
 --
-function Class.new(appName)
-    local context = Context:new()
+function Class.new(app)
+    local appName = app.props.appName
+
+    --app:addEventListener("onRobotlegsViewCreated", function(e) print("test") end)
+
+    local context = Context.new(app)
     context.Router = {}
 
     local appDir = "App."..appName .."."
@@ -33,6 +37,8 @@ function Class.new(appName)
             print(scenes[i])
             local scene = require(appDir.."scenes."..scenes[i]..".index")
             scene:setProps(props)
+            scene.app = app
+
             local model = scene.model
             model.pageNum = i
 

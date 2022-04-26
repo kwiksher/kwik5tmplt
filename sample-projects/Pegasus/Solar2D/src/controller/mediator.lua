@@ -36,12 +36,23 @@ M.new = function(mediatorName)
             end
         end
         --
-        print("mediator")
+        -- event listeners are here. they are set with onRegister
+        --  event in scene is triggered with UI.scene:dispatchEvent
+        --    UI.scene:dispatchEvent
+        --      name = "bg.clickLayer",
+        --        UI = UI
+        --      }
+        --  then it is redirected to the app:dispatchEvent below
+        --
         for k, eventName in pairs(self.events) do
 			print("", self.name, eventName)
             mediator[eventName] = function(self, event)
                 local myself = self
-                Runtime:dispatchEvent({
+                print("", myself.name .. "." .. eventName)
+                --
+                -- addEventListener is set by context:mapCommand
+                --
+                self.viewInstance.app:dispatchEvent({
                     name = myself.name .. "." .. eventName,
                     event = event,
                     UI = myself.viewInstance.UI
