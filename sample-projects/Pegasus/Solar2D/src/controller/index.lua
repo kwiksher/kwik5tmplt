@@ -63,7 +63,7 @@ startThisMug = function()
         --]]
     end
     ---
-    local App = require("App.".._G.appName..".Application")
+    local App = require("conroller.Application")
     local appDir   = "App/".._G.appName.."/"
     _G.App = App
     package.loaded["Application"] = App
@@ -73,35 +73,36 @@ startThisMug = function()
 
 
     local function bootstrap()
-        App.appName     = ""
-        App.systemDir   = system.ResourceDirectory
-        App.imgDir      = "App/".._G.appName.."/assets/images/"
-        App.spriteDir   = "App/".._G.appName.."/assets/sprites/"
-        App.thumbDir    = "App/".._G.appName.."/assets/thumbnails/"
-        App.audioDir    = "App/".._G.appName.."/assets/audios/"
-        App.videoDir    = "App/".._G.appName.."/assets/videos/"
-        App.particleDir = "App/".._G.appName.."/assets/particles/"
-        App.trans       = {}
-        App.gt          = {}
-        App.timerStash  = {}
-        App.allAudios   = {kAutoPlay = 5}
-        App.gtween      = require("extlib.gtween")
-        App.btween      = require("extlib.btween")
-        App.Gesture     = require("extlib.dmc_gesture")
-        App.MultiTouch  = require("extlib.dmc_multitouch")
-        App.syncSound   = require("extlib.syncSound")
-        App.kBidi       = false
-        App.goPage      = 1
-        App.scenes       = require("App.".._G.appName..".scenes.index")
-        App.kAutoPlay   = 0
-        App.lang        = "en"
-    -- App.stage       = display.getCurrentStage()
-        system.activate("multitouch")
-        App.randomAction = {}
-        App.randomAnim   = {}
-        App.DocumentsDir = system.DocumentsDirectory
+        local app = App.new{
+            appName     = _G.appName,
+            systemDir   = system.ResourceDirectory,
+            imgDir      = "App/".._G.appName.."/assets/images/",
+            spriteDir   = "App/".._G.appName.."/assets/sprites/",
+            thumbDir    = "App/".._G.appName.."/assets/thumbnails/",
+            audioDir    = "App/".._G.appName.."/assets/audios/",
+            videoDir    = "App/".._G.appName.."/assets/videos/",
+            particleDir = "App/".._G.appName.."/assets/particles/",
+            trans       = {},
+            gt          = {},
+            timerStash  = {},
+            allAudios   = {kAutoPlay = 5},
+            gtween      = require("extlib.gtween"),
+            btween      = require("extlib.btween"),
+            Gesture     = require("extlib.dmc_gesture"),
+            MultiTouch  = require("extlib.dmc_multitouch"),
+            syncSound   = require("extlib.syncSound"),
+            kBidi       = false,
+            goPage      = 1,
+            scenes       = require("App.".._G.appName..".scenes.index"),
+            kAutoPlay   = 0,
+            lang        = "en",
+            --stage       = display.getCurrentStage(),
+            randomAction = {},
+            randomAnim   = {},
+            DocumentsDir = system.DocumentsDirectory
+        }
+        app:init()
     --
-        App.appInstance  = App.new()
     end
     --
     bootstrap()

@@ -3,7 +3,7 @@ local parent = dir:match("(.-)[^%.]+$")
 
 local M = {}
 
-local Application = require("Application")
+--local Application = require("Application")
 local handlerScene = require(parent.."sceneEventHandler")
 local handlerComponent = require(parent.."componentEventHandler")
 
@@ -24,14 +24,14 @@ function M.create(scene, model)
     UI.taben            = {}
     UI.tabjp            = {}
     UI.tSearch          = nil
-    UI.numPages         = #Application.scenes -- number of pages in the project
+    --UI.numPages         = #Application.scenes -- number of pages in the project
     --
     function UI:setLanguge()
-        if Application.lang == "" then Application.lang = "en" end
+        if self.props.lang == "" then self.props.lang = "en" end
         -- Language switch
-        if (Application.lang == "en") then self.tSearch = self.taben end
+        if (self.props.lang == "en") then self.tSearch = self.taben end
         -- Language switch
-        if (Application.lang == "jp") then self.tSearch = self.tabjp end
+        if (self.props.lang == "jp") then self.tSearch = self.tabjp end
     end
 
     local function callEventHandler(models, self, funcName)

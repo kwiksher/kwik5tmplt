@@ -5,12 +5,19 @@ local composer = require("composer")
 composer.recycleOnSceneChange = true
 
 M.new = function(sceneName, model)
+    -- sceneName is like App.book01.scenes.page01.index
+    local parent = sceneName:match("(.-)[^%.]+$")
+
     local scene = composer.newScene(sceneName)
     scene._composerFileName = nil
     local componentFolder = sceneName:gsub(".index", "")
-    scene.classType = "scenes." .. sceneName
+    scene.classType = sceneName
     scene.UI = UI.create(scene, model)
     scene.model = model
+    --
+    function scene:setProps (Props)
+        self.UI.props = Props
+    end
     ------------------------------------------------------------
     ------------------------------------------------------------
     function scene:create(event)

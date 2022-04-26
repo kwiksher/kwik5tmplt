@@ -19,24 +19,28 @@ print("",getParentPath(parent))
 local Context = require "extlib.robotlegs.Context"
 local Class = {}
 --
-function Class.new()
+function Class.new(appName)
     local context = Context:new()
     context.Router = {}
+
+    local appDir = "App."..appName .."."
     --
-    function context:init(scenes)
+    function context:init(scenes, props)
         --
         -- creat all the contexts of scenes
         --
         for i=1, #scenes do
             print(scenes[i])
             local scene = require(root.."scenes."..scenes[i]..".index")
+            scene:setProps(props)
             local model = scene.model
-            model.pageNum = k
+            model.pageNum = i
+
             --
             local events = scene:getEvents()
             --
-            print(root.."scenes."..model.name..".index", root.."mediators."..model.name.."Mediator")
-            self:mapMediator(root.."scenes."..model.name..".index", root.."mediators."..model.name.."Mediator")
+            print(appDir.."scenes."..model.name..".index", appDir.."mediators."..model.name.."Mediator")
+            self:mapMediator(appDir.."scenes."..model.name..".index", appDir.."mediators."..model.name.."Mediator")
             --
             for k, eventName in pairs(events) do
                 self:mapCommand(model.name.."."..eventName, "commands."..model.name.."."..eventName)
@@ -57,7 +61,7 @@ function Class.new()
         -- self:mapCommand("app.variables",    "commands.app.variables")
         -- self:mapCommand("app.versionCheck", "commands.app.versionCheck")
         --
-        self:mapMediator("Application", root.."contexts.ApplicationMediator")
+        self:mapMediator(appDir.."scenes.index", "contexts.ApplicationMediator") -- "Application" is a classType in Application.lua
         --
         Runtime:dispatchEvent({name = "startup"})
     end
