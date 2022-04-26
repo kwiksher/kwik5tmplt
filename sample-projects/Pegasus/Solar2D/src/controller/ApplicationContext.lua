@@ -45,6 +45,9 @@ function Class.new(appName)
             for k, eventName in pairs(events) do
                 self:mapCommand(model.name.."."..eventName, "commands."..model.name.."."..eventName)
             end
+            --
+            print("context:init", scenes[i], scene)
+            self.Router["scenes."..scenes[i]..".index"] = scene
         end
         -- app init command
         self:mapCommand("app.Ads", "commands.app.Ads")

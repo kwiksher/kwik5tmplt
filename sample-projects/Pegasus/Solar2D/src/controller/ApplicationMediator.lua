@@ -9,8 +9,9 @@ function ApplicationMediator:new()
 	--
 	function mediator:onRegister()
 		Runtime:addEventListener("onTrigger", self)
-
-		if self.viewInstance.showView then
+        if self.viewInstance.useTrigger then
+			self.viewInstance:trigger(self.viewInstance.startSceneName, {})
+		elseif self.viewInstance.showView then
 			-- only app context has showView when app(book) is loaded
 			-- 1) this onRegister is called by app:init
 			--

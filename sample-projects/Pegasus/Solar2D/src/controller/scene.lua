@@ -25,7 +25,7 @@ M.new = function(sceneName, model)
         local sceneGroup = self.view
         if self.model.onInit then self.model.onInit(self) end
         self.UI:create(self, event.params)
-       -- Runtime:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
+         Runtime:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
     end
     --
     function scene:show(event)
@@ -49,7 +49,18 @@ M.new = function(sceneName, model)
         self.UI:destroy(self, event.params)
         Runtime:dispatchEvent({name = "onRobotlegsViewDestroyed", target = self})
     end
+
+    function scene:init(event)
+        self.view = display.newGroup()
+    end
+
+    function scene:transition(event)
+        transition.to(self.view, event.params)
+    end
     --
+    scene:addEventListener("init", scene)
+    scene:addEventListener("transition", scene)
+
     scene:addEventListener("create", scene)
     scene:addEventListener("show", scene)
     scene:addEventListener("hide", scene)

@@ -34,7 +34,10 @@ function M:init()
         bookmark = false,
         appProps = self.props
     })
+    --
     -- ApplicationMediator.onRegister shows the top page
+    --
+    self.useTrigger = true
     Runtime:dispatchEvent({name = "onRobotlegsViewCreated", target = self}) -- self == app, this sets mediator's viewInstance as app
 end
 --
@@ -47,24 +50,39 @@ function M:whichViewToShowBasedOnOrientation()
     end
 end
 --
-function M:showView(name, params)
-    print("Application::name:", name, ", currentViewName:",
-          self.currentViewName)
-    if name == self.currentViewName then
-        print("same scene")
-        -- return true
-    end
+function M:showView(path, params)
+    print("showView", papth, ", currentViewName:", self.currentViewName)
     self.currentViewName = "App."..self.props.appName
-    composer.gotoScene("App."..self.props.appName.."."..name, {params = params})
+    composer.gotoScene("App."..self.props.appName.."."..path, {params = params})
 end
 --
 function M:trigger(url, params)
+    if url == self.currentViewName then
+        print("same scene")
+        return true
+    end
+    self.currentViewName = "App."..self.props.appName
+    local event = {}
+    event.name = "create"
+    event.phase = "will"
+
+    print("trigger", url)
+    local scene = self.context.Router[url]
+    scene:dispatchEvent({name="init"})
+    scene:dispatchEvent({name="create"})
+    scene:dispatchEvent({name="show", phase = "will"})
+    scene:dispatchEvent({name="show", phase = "did"})
+    scene:dispatchEvent({name="transition", params = self.props.position})
+
+
+    --[[
     self.currentViewName = self.context.Router[url]
     if self.currentViewName == nil then
         print("### error " .. url .. " not routed ###")
     else
         composer.gotoScene(self.currentViewName, params)
     end
+    --]]
 end
 
 --
