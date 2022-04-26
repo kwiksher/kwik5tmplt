@@ -31,7 +31,7 @@ function Class.new(appName)
         --
         for i=1, #scenes do
             print(scenes[i])
-            local scene = require(root.."scenes."..scenes[i]..".index")
+            local scene = require(appDir.."scenes."..scenes[i]..".index")
             scene:setProps(props)
             local model = scene.model
             model.pageNum = i
@@ -61,7 +61,7 @@ function Class.new(appName)
         -- self:mapCommand("app.variables",    "commands.app.variables")
         -- self:mapCommand("app.versionCheck", "commands.app.versionCheck")
         --
-        self:mapMediator(appDir.."scenes.index", "contexts.ApplicationMediator") -- "Application" is a classType in Application.lua
+        self:mapMediator(appDir.."scenes.index", "controller.ApplicationMediator") -- "Application" is a classType in Application.lua
         --
         Runtime:dispatchEvent({name = "startup"})
     end

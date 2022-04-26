@@ -1,11 +1,8 @@
-local dir = ...
-local parent = dir:match("(.-)[^%.]+$")
-
 local M = {}
 
 --local Application = require("Application")
-local handlerScene = require(parent.."sceneEventHandler")
-local handlerComponent = require(parent.."componentEventHandler")
+local handlerScene = require("controller.sceneEventHandler")
+local handlerComponent = require("controller.componentEventHandler")
 
 function M.create(scene, model)
     local UI = {}
@@ -15,7 +12,7 @@ function M.create(scene, model)
     UI.page              = model.name
     UI.curPage           = model.pageNum
     -- All components on a table
-    UI.props = {}
+    UI.props = {}  -- this is appProps. This is set when scene.book01.index is created in ApplicationContext.lua
     UI.layers = {}
     -- All audio files on a table
     UI.audios           = {}

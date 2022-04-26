@@ -1,4 +1,4 @@
-local _K = require "Application"
+local _K = require "controller.Application"
 local _M = require("components.kwik.layer_image").new()
 
 parseValue = function(value, newValue)

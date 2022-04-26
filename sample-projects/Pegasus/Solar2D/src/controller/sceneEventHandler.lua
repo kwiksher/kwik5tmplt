@@ -11,10 +11,10 @@ function _Class:setMod(type, layer, custom)
   end
   if custom then
     --print("custom.components."..self.page.."."..fileName)
-    self.mod = require(root.."custom.scenes."..self.UI.page.."."..fileName)
+    self.mod = require("App."..self.UI.props.appName..".custom.scenes."..self.UI.page.."."..fileName)
   else
     --print("components."..self.page.."."..fileName)
-    self.mod = require(root.."scenes."..self.UI.page.."."..fileName)
+    self.mod = require("App."..self.UI.props.appName..".scenes."..self.UI.page.."."..fileName)
   end
 end
 --

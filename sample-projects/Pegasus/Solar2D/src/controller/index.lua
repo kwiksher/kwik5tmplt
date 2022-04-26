@@ -63,13 +63,13 @@ startThisMug = function()
         --]]
     end
     ---
-    local App = require("conroller.Application")
+    local App = require("controller.Application")
     local appDir   = "App/".._G.appName.."/"
     _G.App = App
-    package.loaded["Application"] = App
-    package.loaded["contexts.mediator"] = require("App.".._G.appName..".contexts.mediator")
-    package.loaded["contexts.ApplicationUI"] = require("App.".._G.appName..".contexts.ApplicationUI")
-    package.loaded["contexts.scene"] = require("App.".._G.appName..".contexts.scene")
+   -- package.loaded["Application"] = App
+   -- package.loaded["contexts.mediator"] = require("App.".._G.appName..".contexts.mediator")
+   -- package.loaded["contexts.ApplicationUI"] = require("App.".._G.appName..".contexts.ApplicationUI")
+   -- package.loaded["contexts.scene"] = require("App.".._G.appName..".contexts.scene")
 
 
     local function bootstrap()

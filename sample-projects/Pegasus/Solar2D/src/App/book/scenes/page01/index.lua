@@ -2,7 +2,7 @@ local sceneName = ...
 
 
 --
-local scene = require('contexts.scene').new(sceneName, {
+local scene = require('controller.scene').new(sceneName, {
     name = "page01",
     layers = {{bg = {}}},
     components = {

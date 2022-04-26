@@ -9,7 +9,16 @@ function ApplicationMediator:new()
 	--
 	function mediator:onRegister()
 		Runtime:addEventListener("onTrigger", self)
-		self.viewInstance:showView(self.viewInstance.startSceneName, {})
+
+		if self.viewInstance.showView then
+			-- only app context has showView when app(book) is loaded
+			-- 1) this onRegister is called by app:init
+			--
+			-- 2) scene:create of composer.gotoScene() also fires this onTrigger
+			-- because onRobotloegsViewCreate create meditor for the composer scene
+			--
+			self.viewInstance:showView(self.viewInstance.startSceneName, {})
+		end
 	end
 	--
 	function mediator:onTrigger(event)

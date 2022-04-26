@@ -7,15 +7,16 @@ local _Command = {}
 -----------------------------
 function _Command:new()
 	local command = {}
-	local _K              = require("Application")
 	--
 	function command:execute(params)
 		local event         = params.event
+		local appProps = params.appProps
+
 		if event=="init" then
 			local json = require("json")
 			-- Json code for external variable loading
 			local jsonFile = function(filename )
-			   local path = system.pathForFile(filename, _K.DocumentsDir )
+			   local path = system.pathForFile(filename, appProps.DocumentsDir )
 			   local contents
 			   local file = io.open( path, "r" )
 			   if file then
@@ -26,7 +27,7 @@ function _Command:new()
 			   return contents
 			end
 			-- Variable saving function
-			local path = system.pathForFile(_K.appName.. "kwkVars.json", _K.DocumentsDir )
+			local path = system.pathForFile(appProps.appName.. "kwkVars.json", appProps.DocumentsDir )
 			local file = io.open( path, "r" )
 			if file == nil then
 			   local file = io.open( path, "w+" )
@@ -38,10 +39,10 @@ function _Command:new()
 				file = nil
 			end
 			-- Loads vars
-			kwkVar = json.decode( jsonFile(_K.appName.."kwkVars.json") )
+			kwkVar = json.decode( jsonFile(appProps.appName.."kwkVars.json") )
 			-- Check for saved variables
 			function kwkVarCheck(variable)
-			   kwkVar = json.decode( jsonFile(_K.appName.."kwkVars.json") )
+			   kwkVar = json.decode( jsonFile(appProps.appName.."kwkVars.json") )
 			   local found = nil
 			   if kwkVar ~= nil then
 			      for i = 1, #kwkVar do

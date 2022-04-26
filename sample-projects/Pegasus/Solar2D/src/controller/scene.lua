@@ -1,5 +1,5 @@
 local M = {}
-local UI = require("contexts.ApplicationUI")
+local UI = require("controller.ApplicationUI")
 
 local composer = require("composer")
 composer.recycleOnSceneChange = true
@@ -17,6 +17,7 @@ M.new = function(sceneName, model)
     --
     function scene:setProps (Props)
         self.UI.props = Props
+        self.UI.numPages = #Props.scenes
     end
     ------------------------------------------------------------
     ------------------------------------------------------------
@@ -24,7 +25,7 @@ M.new = function(sceneName, model)
         local sceneGroup = self.view
         if self.model.onInit then self.model.onInit(self) end
         self.UI:create(self, event.params)
-        Runtime:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
+       -- Runtime:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
     end
     --
     function scene:show(event)

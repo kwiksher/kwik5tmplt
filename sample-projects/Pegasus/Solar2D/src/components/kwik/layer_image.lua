@@ -4,7 +4,7 @@
 --
 local _M = {}
 --
-local app = require "Application"
+local _K = require "controller.Application"
 local util = require "lib.util"
 -- Infinity background animation
 local function infinityBackHandler(self, event)
@@ -48,7 +48,7 @@ local function infinityBackHandler(self, event)
 end
 --
 local function createInfinityImage(self, sceneGroup, layer)
-  local layer_2 = display.newImageRect( app.imgDir..self.imagePath, app.systemDir, self.imageWidth, self.imageHeight)
+  local layer_2 = display.newImageRect( UI.props.imgDir..self.imagePath, UI.props.systemDir, self.imageWidth, self.imageHeight)
   -- layer_2 = newImageRect({{bn}}, imageWidth, imageHeight )
   if layer_2 == nil then return end
   layer_2.blendMode = self.blendMode
@@ -139,7 +139,7 @@ local function createInfinityImage(self, sceneGroup, layer)
 end
 
 function _M:newImage(UI, sceneGroup)
-  local layer = display.newImageRect( app.imgDir..self.imagePath, app.systemDir, self.imageWidth, self.imageHeight)
+  local layer = display.newImageRect( UI.props.imgDir..self.imagePath, UI.props.systemDir, self.imageWidth, self.imageHeight)
   -- layer = newImageRect({{bn}}, imageWidth, imageHeight )
   if layer == nil then return end
   layer.imagePath = self.imagePath
@@ -211,12 +211,12 @@ function _M:comicImage(UI)
      -- print(target.width/4, target.height/4)
    end
    local group = display.newGroup()
-   local sheet = graphics.newImageSheet(app.imgDir..self.imagePath, app.systemDir, options )
+   local sheet = graphics.newImageSheet(UI.props.imgDir..self.imagePath, UI.props.systemDir, options )
    for i=1, #self.layerSet do
      local target = self.layerSet[i]
      local frame = options.frames[i]
      local frame1 = display.newImageRect( sheet, i, frame.width, frame.height )
-     frame1.x, frame1.y = app.getPosition(target.x, target.y)
+     frame1.x, frame1.y = _K.getPosition(target.x, target.y)
      frame1.name = target.myLName
      frame1.oriX              = frame1.x
      frame1.oriY              = frame1.y

@@ -8,7 +8,7 @@ local parent = dir:match("(.-)[^%.]+$")
 require("extlib.index")
 require("extlib.Deferred")
 require("extlib.Callbacks")
-local AppContext = require(parent.."contexts.ApplicationContext")
+local AppContext = require("controller.ApplicationContext")
 local composer = require("composer")
 ------------------------------------------------------
 ------------------------------------------------------
@@ -16,9 +16,9 @@ local M = {}
 --
 
 function M:init()
-    self.context = AppContext.new(self.appName)
-    self.context:init(self.scenes, self.props)
-    self.startSceneName = "scenes." .. self.scenes[self.goPage]..".index"
+    self.context = AppContext.new(self.props.appName)
+    self.context:init(self.props.scenes, self.props)
+    self.startSceneName = "scenes." .. self.props.scenes[self.props.goPage]..".index"
     --
     Runtime:dispatchEvent({name = "app.variables", event = "init"})
     Runtime:dispatchEvent({name = "app.loadLib", event = "init"})
@@ -27,11 +27,12 @@ function M:init()
     Runtime:dispatchEvent({name = "app.expDir", event = "init"})
     Runtime:dispatchEvent({name = "app.lang", event = "init"})
     Runtime:dispatchEvent({name = "app.droidHWKey", event = "init"})
-    Runtime:dispatchEvent({name = "app.kwkVar", event = "init"})
+    Runtime:dispatchEvent({name = "app.kwkVar", event = "init", appProps = self.props})
     Runtime:dispatchEvent({
         name = "app.bookmark",
         event = "init",
-        bookmark = false
+        bookmark = false,
+        appProps = self.props
     })
     -- ApplicationMediator.onRegister shows the top page
     Runtime:dispatchEvent({name = "onRobotlegsViewCreated", target = self}) -- self == app, this sets mediator's viewInstance as app
@@ -53,8 +54,8 @@ function M:showView(name, params)
         print("same scene")
         -- return true
     end
-    self.currentViewName = parent..name
-    composer.gotoScene(parent..name, {params = params})
+    self.currentViewName = "App."..self.props.appName
+    composer.gotoScene("App."..self.props.appName.."."..name, {params = params})
 end
 --
 function M:trigger(url, params)

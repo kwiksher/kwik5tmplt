@@ -1,3 +1,3 @@
 local mediatorName = ...
-local mediatorClass = require( 'contexts.mediator' ).new(mediatorName)
+local mediatorClass = require( 'controller.mediator' ).new(mediatorName)
 return mediatorClass
