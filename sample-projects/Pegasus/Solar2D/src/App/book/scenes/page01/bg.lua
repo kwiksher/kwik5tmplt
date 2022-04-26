@@ -78,6 +78,13 @@ function _M:create(UI)
   end
   if not self.multLayers then
     local layer = self:myNewImage(UI)
+    layer:addEventListener("tap", function(event)
+      print("--------")
+      UI.scene:dispatchEvent({
+        name = "bg.clickLayer",
+        UI = UI
+    })
+    end)
     if self.isComic then
       if self.layerSet then
         self:myComicImage(UI, layer)

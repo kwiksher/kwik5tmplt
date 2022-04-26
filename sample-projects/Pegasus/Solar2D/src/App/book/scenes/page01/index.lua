@@ -12,7 +12,7 @@ local scene = require('controller.scene').new(sceneName, {
         timers = {},
         variables = {}
     },
-    events = {},
+    events = {"bg.clickLayer"},
     onInit = function(scene) print("onInit") end
 })
 

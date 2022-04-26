@@ -43,7 +43,7 @@ function Class.new(appName)
             self:mapMediator(appDir.."scenes."..model.name..".index", appDir.."mediators."..model.name.."Mediator")
             --
             for k, eventName in pairs(events) do
-                self:mapCommand(model.name.."."..eventName, "commands."..model.name.."."..eventName)
+                self:mapCommand(model.name.."."..eventName, appDir.."commands."..model.name.."."..eventName)
             end
             --
             print("context:init", scenes[i], scene)

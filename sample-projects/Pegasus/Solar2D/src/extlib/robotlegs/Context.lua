@@ -48,7 +48,7 @@ function Context:new()
 	function context:mapCommand(eventName, commandClass)
 		assert(eventName ~= nil, "eventName required.")
 		assert(commandClass ~= nil, "commandClass required.")
-	--	print("Context::mapCommand, name: ", eventName, ", commandClass: ", commandClass)
+		--print("Context::mapCommand, name: ", eventName, ", commandClass: ", commandClass)
 		assert(require(commandClass), "Could not find commandClass")
 		self.commands[eventName] = commandClass
 
@@ -56,6 +56,7 @@ function Context:new()
 	end
 
 	function context:mapMediator(viewClass, mediatorClass)
+		print("context:mapMediator")
 		assert(viewClass ~= nil, "viewClass cannot be nil.")
 		assert(mediatorClass ~= nil, "mediatorClass cannot be nil.")
 		assert(require(viewClass), "Could not find viewClass")
@@ -65,8 +66,8 @@ function Context:new()
 		-- but until we have an easier way to get package information, we have zero clue what Lua/Corona
 		-- does with our classes.
 		local className = assert(self:getClassName(viewClass), "Couldn't parse class name")
-		-- print(className)
-		-- print(mediatorClass)
+		print("",className)
+		print("",mediatorClass)
 		self.mediators[className] = mediatorClass
 		return true
 	end
@@ -80,14 +81,16 @@ function Context:new()
 	end
 
 	function context:createMediator(viewInstance)
-		--print("Context::createMediator, viewInstance: ", viewInstance)
+		print("Context::createMediator, viewInstance: ", viewInstance)
 		assert(viewInstance.classType, "viewInstance does not have a classType parameter.")
 		local className = assert(self:getClassName(viewInstance.classType), "Failed to get class name")
+		print("", viewInstance.classType, className)
 		-- assert(_K[className], "Cannot find viewInstance class")
 		assert(self:hasCreatedMediator(viewInstance) == false, "viewInstance already has an instantiated Mediator. Perhaps you meant to dispatch onRobotlegsViewDestroyed instead?")
 		local mediatorClassName = self.mediators[className]
 		assert(mediatorClassName, "There is no Mediator registered for this View class: " .. className)
 		if(mediatorClassName ~= nil) then
+			print("context:createMediator", mediatorClassName)
 			local mediatorClass = require(mediatorClassName):new()
 			mediatorClass.viewInstance = viewInstance
 			table.insert(self.mediatorInstances, mediatorClass)
@@ -127,7 +130,8 @@ function Context:new()
 	end
 
 	-- take a package and get a clafdisss name
-	function context:getClassName(classType)
+	function context:getClassName(_classType)
+		local classType = _classType:gsub(".index", "")
 		assert(classType ~= nil, "You cannot pass a null classType")
 		local testStartIndex,testEndIndex = classType:find(".", 1, true)
 		if testStartIndex == nil then

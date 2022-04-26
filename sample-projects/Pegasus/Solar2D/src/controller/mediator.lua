@@ -5,14 +5,13 @@ local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 local M = {}
 
 M.new = function(mediatorName)
-    print(mediatorName)
+    --print("=== mediator ===", mediatorName)
     local Class = {}
-	print()
     -- Class.name = mediatorName:gsub("mediators.", ""):gsub("Mediator", "")
     Class.name = mediatorName:match("[^.]+$"):gsub("Mediator", "")
     --
     local appDir = mediatorName:match('(App%.%a+%.)')
-    print(appDir, Class.name)
+    --print(appDir, Class.name)
     local scene = require(appDir.."scenes." .. Class.name..".index")
     Class.events = scene:getEvents()
     --
@@ -22,8 +21,10 @@ M.new = function(mediatorName)
         mediator.name = self.name
         --
         function mediator:onRegister()
+            print("mediator:onRegister")
             local scene = self.viewInstance
             for k, eventName in pairs(self.events) do
+                print("", eventName)
                 scene:addEventListener(eventName, self)
             end
         end
