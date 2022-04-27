@@ -1,6 +1,6 @@
 TODO
 
-- [ ] kwik-visual-code/sample-projects/Pegasus
+- [ ] kwik-visual-code/tools/pegasus-harness, sample-projects/Pegasus, Misc/Transition2
 
     make it run and embed pegasus with doGet/doPost
 
@@ -18,6 +18,14 @@ TODO
     - [ ] assets/images/pageX folder
         - [ ] png only
         - [ ] png with json in models/assets/pngX
+
+
+
+- [ ] kwik-visual-code/develop/Solar2D/robotlegs
+    - [ ] rename like require("contoller.robotloges") ?
+    - [ ] rename type class
+    - [ ] package.path
+
 
     kwik editor
     - [ ] kwik-generate-model to create .json of models/assets out of assets/pageX/images

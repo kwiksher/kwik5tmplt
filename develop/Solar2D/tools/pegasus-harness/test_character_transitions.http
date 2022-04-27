@@ -1,0 +1,278 @@
+# https://httpyac.github.io/guide/request.html#request-line
+
+@host=http://localhost:9090
+
+###
+GET/character
+
+###
+POST /character/Transitions
+Content-Type: application/lua
+
+{
+	{x = 260, delay = 400},
+	{y = 260, xScale = -0.8, delay = 800},
+	{xScale = -1, yScale = 1, delay = 400},
+	{x = 60, xScale = -0.6, yScale = 0.6, delay = 1200},
+	{rotation = 135, delay = 400},
+	{x = 260, y = 60, alpha = 0, delay = 400},
+	{rotation = 0, alpha = 1, delay = 800},
+	{x = 60, delay = 400},
+	{xScale = 0.8, yScale = 0.8, delay = 400}
+}
+
+###
+POST /character/Transitions
+Content-Type: application/yaml
+
+- {rotation: 135, delay: 400}
+- {delay: 400, x: 260}
+- delay: -400
+  x: 260
+- {y: 260, xScale: -0.8, delay: 800}
+- {yScale: 1, xScale: -1, delay: 400}
+- {yScale: 0.6, x: 60, delay: 1200, xScale: -0.6}
+- {y: 60, x: 260, alpha: 0, delay: 400}
+- {rotation: 0, alpha: 1, delay: 800}
+- {delay: 400, x: 60}
+- {yScale: 0.8, xScale: 0.8, delay: 400}
+
+###
+POST /character/Transitions
+Content-Type: application/json
+
+[
+  {
+    "delay": 400,
+    "x": 260
+  },
+  {
+    "y": 260,
+    "xScale": -0.8,
+    "delay": 800
+  },
+  {
+    "yScale": 1,
+    "xScale": -1,
+    "delay": 400
+  },
+  {
+    "yScale": 0.6,
+    "x": 60,
+    "delay": 1200,
+    "xScale": -0.6
+  },
+  {
+    "rotation": 135,
+    "delay": 400
+  },
+  {
+    "y": 60,
+    "x": 260,
+    "alpha": 0,
+    "delay": 400
+  },
+  {
+    "rotation": 0,
+    "alpha": 1,
+    "delay": 800
+  },
+  {
+    "delay": 400,
+    "x": 60
+  },
+  {
+    "yScale": 0.8,
+    "xScale": 0.8,
+    "delay": 400
+  }
+]
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: blink
+- params:
+    time: 500
+
+# Default: 1000
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: dissolve
+- params:
+    target: circle
+    time: 1000
+    delay: 0
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: fadeIn
+- params:
+    time: 2000
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: fadeOut
+- params:
+    time: 2000
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: moveBy
+- params:
+    x: 200
+    y: 100
+    time: 2000
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: moveTo
+- params:
+    x: 200
+    y: 400
+    time: 2000
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: scaleBy
+- params:
+    xScale: 2.0
+    yScale: 1.5
+    time: 2000
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: scaleTo
+- params:
+    xScale: 2.0
+    yScale: 1.5
+    time: 2000
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: bounce
+- params:
+    height: 400
+    width: 200
+    time: 1000
+    iterations: 0
+		# Bounces upwards. Set to negative value to bounce downwards.
+  		# Bounces to the right. Set to negative value to bounce left.
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: color
+- startColor: {1, 1, 0, 1}
+# Yellow
+- endColor: {1, 0, 0, 1}
+# Red
+- time: 500,
+- stroke: true,
+# Enable stroke color fade
+- fill: false,
+# Disable fill color fade
+- reverse: true,
+# Will fade back from endColor to startColor when done
+- iterations: 0
+# Repeat forever
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: glow
+- startColor: {1, 1, 0, 1}
+		# Yellow
+- endColor: {1, 0, 0, 1}
+		# Red
+- time: 1000
+- stroke: true
+		# Enable stroke color glow
+- fill: false
+		# Disable fill color glow
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: moveBungy
+- time: 750
+- offsetY: 200
+- offsetX: 0
+- iterations: 0
+- iterationDelay: 100
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: moveSine
+- radiusX: 400
+- radiusY: 200
+- time: 5000
+- startDegreesX: 180
+- startDegreesY: 90
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: waterBalloon
+- time: 500
+- intensity: 0.4
+		# A value between 0-1. Default: 0.25.
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: zRotate
+- degrees: 360
+# Required. The number of degrees (delta) that the object should rotate, either from its current zRotation angle or from params.startDegrees.
+- startDegrees: 180
+# Optional. If specified, the object will always start rotating FROM this angle instead of from its current zRotation angle. Default: 0.
+- time: 2000
+- iterations: 0
+
+###
+POST /character
+Content-Type: application/yaml
+
+- transition: easing.inOutSine
+- reverse: true
+- perspective: 0.25
+# A value between 0-1. Defaults to 0.5.
+- horizontal: true
+# Set to true for horizontal rotation (around the y axis). Default is vertical rotation (around the x axis)
+- disableStrokeScaling: true
+# Set to true to disable scaling of strokes. Defaults is false, i.e. strokes are scaled.
+- shading: true
+# Applies a shading effect as the object rotates away
+- shadingDarknessIntensity: 0.75
+# A value between 0-1. Default: 1. Requires shading=true.
+- shadingBrightnessIntensity: 0.25
+# A value between 0-1. Default: 0. Requires shading=true.
+- static: false
+# Optional, default: false. Set to true to apply final rotation immediately without doing an actual transition:  If static=true, params like time, iterations etcetera have no effect.
+hideBackside: true
+# Optional, default = false. Set to true to hide the target object if it appears to be turned away from the display.
+
