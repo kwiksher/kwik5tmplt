@@ -5,6 +5,79 @@ html panel
 - uxp panel
 - webview
 
+
+```mermaid
+flowchart LR
+
+Designer((fas:fa-user Designer))
+Developer((fas:fa-user Developer))
+
+subgraph Photoshop
+	graphics
+	UXP
+end
+
+subgraph Editor[Editor]
+	subgraph App
+		assets[(assets/images<br>models/json)]
+		lua[(Source .lua)]
+	end
+	tools(renderer<br>scafolder)
+	httpServer
+	GUI(GUI<br>transform<br>animation)
+	GUI -.- tools
+end
+
+subgraph htmlPanel[REST API]
+	form(Properties <br> CRUD)
+end
+
+subgraph VSCode
+	httpYac(httpYac)
+end
+
+Photoshop -.img/json.-> assets
+htmlPanel <-.img/json.-> httpServer
+httpServer <-.-> assets
+httpServer -.- tools
+tools -.- App
+
+Browser-.- htmlPanel
+httpYac -.- htmlPanel
+VSCode -.- lua
+
+GUI -.- assets
+
+Designer --- GUI
+Designer --- Photoshop
+Designer --- Browser
+
+Developer --- VSCode
+
+```
+rest api
+
+> pegasus is runningin Editor
+
+1. run Editor
+
+1. upload an image to pegasus server
+	- save it assets/images/book/
+    - create display.object
+    - .json
+
+
+uxp
+
+> indirect, async
+
+1. outputs images/json to App
+
+	> offline
+
+1. run Editor
+
+
 ```mermaid
 flowchart LR
 

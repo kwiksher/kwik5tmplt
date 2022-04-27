@@ -322,6 +322,6 @@ function M:setTransition(name, params)
 end
 
 
-
+transitionMethods.fallingLeaf()
 -- timer.performWithDelay(5000, doNextTransition, -1)
 return M

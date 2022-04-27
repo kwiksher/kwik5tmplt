@@ -1,33 +1,19 @@
 TODO
 
-- [ ] kwik-visual-code/tools/pegasus-harness, sample-projects/Pegasus, Misc/Transition2
-
-    make it run and embed pegasus with doGet/doPost
-
-    - [ ] create display object
-        - [ ] post an image and save ito application folder
-        - [ ] webview to select mutliple files? can only browser' client do it?
-    - [ ] set layer props (scale, alpha, xy ..)
-    - [ ] set animation (kwik gtween)
-    - [ ] set button (kwik)
-    - [ ] set drag (kwik)
-    - [ ] set transition2
-
-- [ ] Ps test.psd - simple/good-looking layers
+- [ ] Ps test.psd - simple/good-looking layers for demonstration
     - [ ] UXP tool to generate .png and .json
     - [ ] assets/images/pageX folder
         - [ ] png only
         - [ ] png with json in models/assets/pngX
 
+    kwik-visual-code/develop/Solar2D/robotlegs
 
-
-- [ ] kwik-visual-code/develop/Solar2D/robotlegs
     - [ ] rename like require("contoller.robotloges") ?
     - [ ] rename type class
     - [ ] package.path
 
+    kwik editor generator/renderer
 
-    kwik editor
     - [ ] kwik-generate-model to create .json of models/assets out of assets/pageX/images
 
           create models/pageX/layers/.json too?
@@ -58,6 +44,23 @@ TODO
     - [ ] custom code
         - [ ] command/pageX/injectedAction.lua
         - [ ] components/pageX/injectedLayer.lua
+
+- [ ] kwik-visual-code/tools/pegasus-harness
+
+    - [ ] create display object
+        - [ ] post an image and save ito application folder
+        - [ ] webview to select mutliple files? can only browser' client do it?
+    - [ ] set layer props (scale, alpha, xy ..)
+    - [ ] set animation (kwik gtween)
+    - [ ] set button (kwik)
+    - [ ] set drag (kwik)
+    - [x] sample-projects/Pegasus-launcher
+    - [ ] Misc/Transition2
+
+        - [ ] make it run and embed pegasus with doGet/doPost
+
+    - [ ] set transition2
+
 
     audio
     - [ ] add audio to assets/audio
@@ -102,6 +105,7 @@ TODO
     - [ ] MusicLibrary
     - [ ] SingleBook
     - [ ] Business(mui)
+    - [ ] Map mapbox?
 
     networking with Strapi or graphQL or contentful(CDN) ?
     - [ ] get started
