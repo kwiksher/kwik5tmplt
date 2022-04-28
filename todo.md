@@ -6,6 +6,16 @@ TODO
         - [ ] png only
         - [ ] png with json in models/assets/pngX
 
+    XD is not a painting tool, so let's focus on Photoshop but
+    XD could be better to arrange for page' transition and layer's states, and components
+    - [ ] exporter plugin for XD
+      - XD imports .psd
+      - XD interactive transition/animation
+
+      workspace
+       - create graphics in Photoshop and then import them into XD canvas
+       -  XD/PS plugin - properties for httpYac params and get/post button
+
     kwik-visual-code/develop/Solar2D/robotlegs
 
     - [ ] rename like require("contoller.robotloges") ?
@@ -106,6 +116,8 @@ TODO
     - [ ] SingleBook
     - [ ] Business(mui)
     - [ ] Map mapbox?
+    - [ ] skybox?
+    - [ ] mode6?
 
     networking with Strapi or graphQL or contentful(CDN) ?
     - [ ] get started
