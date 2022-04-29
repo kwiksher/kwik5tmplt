@@ -57,6 +57,8 @@
 
 2. Set animation and button
 
+    > test KwikTheCat for evaluation
+
     one by one
 
     ```yaml

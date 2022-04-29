@@ -105,7 +105,25 @@ TODO
     - [ ] canvas
     - [ ] ...
 
+    video content marketing
+
+    - socail media video --> click to download interactive video
+    - with next audio?
+
+       > AI chat with Lulu? Spatical Audio book?
+
     sample-project
+
+    - [ ] video texture
+
+      https://github.com/ANSH3LL/plugin_movie
+
+          - [ ] webview with live
+
+        https://forums.solar2d.com/t/live-video/351778/5
+
+    - [ ] inkey?
+
     - [ ] GameCenter
         - [ ] tiledmap
         - [ ] crossword
