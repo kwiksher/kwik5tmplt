@@ -7,7 +7,7 @@ TODO
         - [ ] png with json in models/assets/pngX
 
     XD is not a painting tool, so let's focus on Photoshop but
-    XD could be better to arrange for page' transition and layer's states, and components
+    XD could be better to arrange for page' transition and layer's states, and components, maybe with audio/video files
     - [ ] exporter plugin for XD
       - XD imports .psd
       - XD interactive transition/animation

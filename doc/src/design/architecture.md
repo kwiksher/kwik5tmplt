@@ -1,3 +1,9 @@
+---
+title: "Architecure"
+chapter: true
+weight: 10
+---
+
 ## Architecure
 
 html panel
