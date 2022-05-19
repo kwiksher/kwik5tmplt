@@ -1,7 +1,7 @@
 ---
 title: "Editor"
 chapter: true
-weight: 10
+weight: 20
 ---
 
 ##  kwik Editor

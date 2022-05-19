@@ -41,7 +41,7 @@ function lib.bootstrap(Props)
         randomAnim   = {},
         DocumentsDir = system.DocumentsDirectory
     }
-    --app:init()
+    app:init()
 --
 end
 

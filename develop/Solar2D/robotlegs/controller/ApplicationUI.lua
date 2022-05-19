@@ -46,7 +46,7 @@ function M.create(scene, model)
                         if value.events then
                             -- do nothing
                         end
-                        if value.types then　-- TODO change it to value.class
+                        if value.types then-- TODO change it to value.class
                             for k, type in pairs(value.types) do
                                 -- print("", type, parentPath .. name)
                                 table.insert(children, {

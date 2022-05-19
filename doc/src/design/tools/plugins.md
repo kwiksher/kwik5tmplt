@@ -10,4 +10,4 @@ Exporrter plugin for PS, XD
 
 - develop/UXP/kwik-exporter
   - export images
-  - export codes
+  - export props

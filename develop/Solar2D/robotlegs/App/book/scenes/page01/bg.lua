@@ -58,7 +58,7 @@ _M.layerAsBg     = parseValue()
 _M.infinitySpeed = parseValue()
 --
 function _M:init(UI)
-	if not self.isSharedAsset then
+  if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
   if self.isTmplt then
