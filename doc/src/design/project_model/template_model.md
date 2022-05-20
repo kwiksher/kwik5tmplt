@@ -1,7 +1,7 @@
 ---
 title: "Template Model"
 chapter: true
-weight: 10
+weight: 50
 ---
 
 ### Code Template Model

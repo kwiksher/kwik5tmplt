@@ -6,24 +6,41 @@ weight: 10
 
 # Design
 
-- project model
-  - robotlegs
-  - template
-    - components
-    - commands
+Project model
+
+- robotlegs
+- template
+  - components
+  - commands
+
+Tools 
 
 - image exporter
 
   PS/XD UXP
 
-- visual editor
+- visual editor (frontEnd)
 
-- tools
-  - generate_scene_index
+  React
+  - uxp plugin for Ps or XD
+  - web app
+
+  Solar2D
+  - live editor
+
+- REST server 
+
   - pegasus-harness
   - pegasus-launcher
 
-- sample projects
+    frontEnd app sends REST API requests to harness of pegasus lua server
+
+    this server offers the renderer of .lua for components and commands
+
+- other tools
+  - generate_scene_index
+
+Sample projects
 
 ---
 Image Exporter plugin for Adobe Photoshop
@@ -39,15 +56,26 @@ Project Model
 <img src="./img/2022-05-18-13-20-45.png" width="360">
 
 ---
-Visual Editor
+Visual Editor(React)
+
+
+{{webview html panel}}
+
+- UXP
+- Browser
+
+---
+Visual Live Editor(Solar2D)
 
 <img src="./img/2022-05-18-13-15-45.png" width="800">
 
 ---
 Tools
 
-> develop/Solar2D/tools/pegasus-harness
-> develop/Solar2D/tools/pegasus-launcher
+- develop/Solar2D/tools/pegasus-harness
+- develop/Solar2D/tools/pegasus-launcher
+
+  REST API requests from httpYac are sent to pegasus
 
 <img src="./img/2022-05-18-13-37-14.png" width="600">
 

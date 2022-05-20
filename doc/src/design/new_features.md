@@ -1,7 +1,7 @@
 ---
 title: "New Features"
 chapter: true
-weight: 10
+weight: 100
 ---
 
 ## New Features

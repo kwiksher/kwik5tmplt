@@ -4,31 +4,14 @@ chapter: true
 weight: 20
 ---
 
-##  kwik Editor
+### Editor
 
-* In XD css and icons for vue
-* localization
+- React
+- Solar2D
+
 
 ---
-Solar2D
-
-* iOS
-* macOS
-* tvOS
-* Android Google, Amazon
-* Windows
-* HTML5
-
----
-Kwik
-
-```
-_k    -> app
-UI    -> data ???
-layer -> layerList
-```
-
-
+Kwik functions
 
 
 * Command

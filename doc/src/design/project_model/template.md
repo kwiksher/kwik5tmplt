@@ -1,7 +1,7 @@
 ---
 title: "Template strurcture"
 chapter: true
-weight: 10
+weight: 40
 ---
 
 ### template structure

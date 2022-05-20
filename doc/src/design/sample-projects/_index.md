@@ -1,7 +1,7 @@
 ---
 title: "Sample Projects"
 chapter: true
-weight: 10
+weight: 50
 ---
 
 ## Sample Projects
