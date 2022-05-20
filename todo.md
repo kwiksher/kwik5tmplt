@@ -2,9 +2,27 @@ TODO
 
 - [ ] Ps test.psd - simple/good-looking layers for demonstration
     - [ ] UXP tool to generate .png and .json
+    - [ ] layerSet
+        - [ ] create/delete a folder to toggle layerSet rendering on/off
     - [ ] assets/images/pageX folder
         - [ ] png only
         - [ ] png with json in models/assets/pngX
+    - [ ] publish multiple .psd files
+        - [ ] select .psd
+
+- [ ] React REST component to Pegasus
+    - [ ] launcher
+    - [ ] Transition2
+        - [ ] Component(class) CRUD
+        - [ ] Event/Command CRUD
+
+        > Need to retreive pages/layers of a project. Finally need a create project too. So pegasus REST should return json of pages/layers etc of a project.
+
+
+        > Could it be better to implement editor frontend in Solar2D than react? Do you have time to implement both of Solar2D and React? Might find someone to code in React?
+
+
+    - [ ] Pegasus REST for pages/layers 
 
     XD is not a painting tool, so let's focus on Photoshop but
     XD could be better to arrange for page' transition and layer's states, and components, maybe with audio/video files
