@@ -136,56 +136,156 @@ export const exportLayerProps = async (layer: Layer, sceneFolder:storage.Folder,
 export const exportLayerAsPng = async (layer:Layer, path:string, imageSuffix:string): Promise<void> => {
   const { id, name } = layer;
 
-  console.log("exportLayerAsPng",id, name);
+  console.log("exportLayerAsPng",imageSuffix, name);
   console.log("", path)
+      
+  //await selectLayerByID(id);
+  const selectCommand = 	  {
+    _obj: 'select',
+    _target: [
+      {
+      _ref: 'layer',
+       _id: id,
+      },
+    ],
+    makeVisible: false,
+    layerID: [id],
+    _isCommand: false,
+  }
+
+  //https://forums.creativeclouddeveloper.com/t/layer-transformation-in-a-for-loop/4524/3  
+  function transformFactory(widthPercent, heightPercent){ 
+      return {
+            _obj: "transform",
+            _target: [
+                {
+                    _ref: "layer",
+                    _enum: "ordinal",
+                    _value: "targetEnum"
+                }
+            ],
+            freeTransformCenterState: {
+                _enum: "quadCenterState",
+                _value: "QCSAverage"
+            },
+            width: {
+                _unit: "percentUnit",
+                _value: widthPercent
+            },
+            height: {
+                _unit: "percentUnit",
+                _value: heightPercent
+            },
+            interfaceIconFrameDimmed: {
+                _enum: "interpolationType",
+                _value: "bicubic"
+            },
+            _options: {
+                dialogOptions: "dontDisplay"
+            }
+        }
+  }
+
+  const exportCommand = {
+    _obj: 'exportSelectionAsFileTypePressed',
+    _target: { _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' },
+    fileType: 'png',
+    quality: 32,
+    metadata: 0,
+    //destFolder: destFolder.nativePath,
+    destFolder: path,
+    sRGB: true,
+    openWindow: false,
+    _options: { dialogOptions: 'dontDisplay' },
+  };
 
   await core.executeAsModal(
     async () => {
-      //await selectLayerByID(id);
 
       if (imageSuffix == '2x'){
-        await layer.scale(50, 50);
+        console.log("###")
+        await action.batchPlay([selectCommand, transformFactory(50, 50), exportCommand], { modalBehavior: 'wait', synchronousExecution:true });
+
       }else if(imageSuffix == '1x'){
-        await layer.scale(25, 25);
+        await action.batchPlay([selectCommand, transformFactory(25, 25), exportCommand], { modalBehavior: 'wait',synchronousExecution:true });
+
+      }else{
+        await action.batchPlay([selectCommand,  exportCommand], { modalBehavior: 'wait' });
       }
-
-      const selectCommand = 	  {
-        _obj: 'select',
-        _target: [
-          {
-          _ref: 'layer',
-           _id: id,
-          },
-        ],
-        makeVisible: false,
-        layerID: [id],
-        _isCommand: false,
-      }
-
-      const exportCommand = {
-        _obj: 'exportSelectionAsFileTypePressed',
-        _target: { _ref: 'layer', _enum: 'ordinal', _value: 'targetEnum' },
-        fileType: 'png',
-        quality: 32,
-        metadata: 0,
-        //destFolder: destFolder.nativePath,
-        destFolder: path,
-        sRGB: true,
-        openWindow: false,
-        _options: { dialogOptions: 'dontDisplay' },
-      };
-      await action.batchPlay([selectCommand, exportCommand], { modalBehavior: 'execute' });
-
-      if (imageSuffix == '2x'){
-        await layer.scale(200, 200);
-      }else if(imageSuffix == '1x'){
-        await layer.scale(400, 400);
-      }
-
     },
-    { commandName: `Export ${layer.name} Layer As PNG` }
+    { commandName: `Export ${layer.name} Layer As PNG start` }
   );
+
+
 };
+
+export const resettLayer = async (layer:Layer, path:string, imageSuffix:string): Promise<void> => {
+  const { id, name } = layer;
+      
+  //await selectLayerByID(id);
+  const selectCommand = 	  {
+    _obj: 'select',
+    _target: [
+      {
+      _ref: 'layer',
+       _id: id,
+      },
+    ],
+    makeVisible: false,
+    layerID: [id],
+    _isCommand: false,
+  }
+
+  //https://forums.creativeclouddeveloper.com/t/layer-transformation-in-a-for-loop/4524/3  
+  function transformFactory(widthPercent, heightPercent){ 
+      return {
+            _obj: "transform",
+            _target: [
+                {
+                    _ref: "layer",
+                    _enum: "ordinal",
+                    _value: "targetEnum"
+                }
+            ],
+            freeTransformCenterState: {
+                _enum: "quadCenterState",
+                _value: "QCSAverage"
+            },
+            width: {
+                _unit: "percentUnit",
+                _value: widthPercent
+            },
+            height: {
+                _unit: "percentUnit",
+                _value: heightPercent
+            },
+            interfaceIconFrameDimmed: {
+                _enum: "interpolationType",
+                _value: "bicubic"
+            },
+            _options: {
+                dialogOptions: "dontDisplay"
+            }
+        }
+  }
+
+    await core.executeAsModal(
+    async () => {
+
+      if (imageSuffix == '2x'){
+        await action.batchPlay([selectCommand, transformFactory(200, 200)], { modalBehavior: 'wait', synchronousExecution:true });
+
+      }else if(imageSuffix == '1x'){
+        await action.batchPlay([selectCommand, transformFactory(400, 400)], { modalBehavior: 'wait',synchronousExecution:true });
+
+      }
+    },
+    { commandName: `Export ${layer.name} Layer As PNG Reset` }
+  );
+
+};
+
+
 
 export const exportLayerAsPngAndLoad = async (layer:Layer, folder:any): Promise<string> => {
   const { id, name } = layer;

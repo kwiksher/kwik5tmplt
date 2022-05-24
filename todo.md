@@ -10,6 +10,10 @@ TODO
     - [ ] publish multiple .psd files
         - [ ] select .psd
 
+    - [ ] iPhone 13 Pro Max	1284x2778
+
+            kwik4 says 1440 × 2772 for  iPhone X
+
 - [ ] React REST component to Pegasus
     - [ ] launcher
     - [ ] Transition2
@@ -19,7 +23,7 @@ TODO
         > Need to retreive pages/layers of a project. Finally need a create project too. So pegasus REST should return json of pages/layers etc of a project.
 
 
-        > Could it be better to implement editor frontend in Solar2D than react? Do you have time to implement both of Solar2D and React? Might find someone to code in React?
+        > Could it be better to implement editor frontend in Solar2D than react? Do you have time to implement both of Solar2D and React? Might find someone to code the react one?
 
 
     - [ ] Pegasus REST for pages/layers 
