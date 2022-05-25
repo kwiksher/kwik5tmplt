@@ -138,7 +138,7 @@ export const exportLayerAsPng = async (layer:Layer, path:string, imageSuffix:str
 
   console.log("exportLayerAsPng",imageSuffix, name);
   console.log("", path)
-      
+
   //await selectLayerByID(id);
   const selectCommand = 	  {
     _obj: 'select',
@@ -153,8 +153,8 @@ export const exportLayerAsPng = async (layer:Layer, path:string, imageSuffix:str
     _isCommand: false,
   }
 
-  //https://forums.creativeclouddeveloper.com/t/layer-transformation-in-a-for-loop/4524/3  
-  function transformFactory(widthPercent, heightPercent){ 
+  //https://forums.creativeclouddeveloper.com/t/layer-transformation-in-a-for-loop/4524/3
+  function transformFactory(widthPercent, heightPercent){
       return {
             _obj: "transform",
             _target: [
@@ -203,7 +203,6 @@ export const exportLayerAsPng = async (layer:Layer, path:string, imageSuffix:str
     async () => {
 
       if (imageSuffix == '2x'){
-        console.log("###")
         await action.batchPlay([selectCommand, transformFactory(50, 50), exportCommand], { modalBehavior: 'wait', synchronousExecution:true });
 
       }else if(imageSuffix == '1x'){
@@ -221,7 +220,7 @@ export const exportLayerAsPng = async (layer:Layer, path:string, imageSuffix:str
 
 export const resettLayer = async (layer:Layer, path:string, imageSuffix:string): Promise<void> => {
   const { id, name } = layer;
-      
+
   //await selectLayerByID(id);
   const selectCommand = 	  {
     _obj: 'select',
@@ -236,8 +235,8 @@ export const resettLayer = async (layer:Layer, path:string, imageSuffix:string):
     _isCommand: false,
   }
 
-  //https://forums.creativeclouddeveloper.com/t/layer-transformation-in-a-for-loop/4524/3  
-  function transformFactory(widthPercent, heightPercent){ 
+  //https://forums.creativeclouddeveloper.com/t/layer-transformation-in-a-for-loop/4524/3
+  function transformFactory(widthPercent, heightPercent){
       return {
             _obj: "transform",
             _target: [

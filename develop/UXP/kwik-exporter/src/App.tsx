@@ -158,12 +158,11 @@ const App: React.FC<any> = () => {
     /// MOVE ///
     const imagesRoot: any = await bookFolder.getEntry('assets/images');
     const assetFolder = await getKwikFolder(docName, imagesRoot)
-
+    /////////////
     const exportLayers = async (layers, parentName, imageSuffix: string) => {
-
       let tmpFolder = await getKwikFolder(imageSuffix + parentName, assetFolder);
       let count = 0;
-      for (let i = 0; i < layers.length; i++) {
+      for (var i = 0; i < layers.length; i++) {
         const layer = layers[i];
         if (layer.kind == LayerKind.GROUP && await isFolder(layer.name, assetFolder)){
           await exportLayers(layer.layers,layer.name, imageSuffix);
@@ -174,16 +173,26 @@ const App: React.FC<any> = () => {
         }
       }
     }
-
+    //////////
     const resetLayers = async (layers, parentName, imageSuffix: string) => {
-
       let tmpFolder = await getKwikFolder(imageSuffix + parentName, assetFolder);
       let count = 0;
-
-      for (let i = 0; i < layers.length; i++) {
+      //
+      for (var i = 0; i < layers.length; i++) {
         const layer = layers[i];
         if (layer.kind == LayerKind.GROUP && await isFolder(layer.name, assetFolder)){
           await resetLayers(layer.layers,layer.name, imageSuffix);
+        }else{
+          await resettLayer(layer, tmpFolder.nativePath, imageSuffix);
+        }
+      }
+    }
+
+    const cleanupLayers = async (layers, parentName, imageSuffix: string) => {
+      //
+      for (var i = 0; i < layers.length; i++) {
+        const layer = layers[i];
+        if (layer.kind == LayerKind.GROUP && await isFolder(layer.name, assetFolder)){
           // clean up if
           let fileName = layer.name;
           if (imageSuffix == '4x' || imageSuffix == '2x') {
@@ -193,53 +202,78 @@ const App: React.FC<any> = () => {
           }
           if (await isFile(fileName, assetFolder)){
             const file = await assetFolder.getEntry(fileName);
+            console.log("cleanuptLayers delete", fileName);
             await file.delete();
           }
-        }else{
-          await resettLayer(layer, tmpFolder.nativePath, imageSuffix);
+
+          await cleanupLayers(layer.layers,layer.name, imageSuffix);
         }
       }
     }
 
-    const moveImages = async (parentName, imageSuffix: string) => {
+    const moveImages = async (layers, parentName, imageSuffix: string) => {
+      console.log("moveImages", parentName, imageSuffix);
       let tmpFolder = await getKwikFolder(imageSuffix + parentName, assetFolder);
+      console.log("", tmpFolder.nativePath);
       let targetFolder = assetFolder;
       if (parentName.length > 0 ){
         targetFolder = (await assetFolder.getEntry(parentName)) as storage.Folder;
+        console.log("", targetFolder.nativePath)
       }
-
+      //
       const currententries = await targetFolder.getEntries();
       let files = currententries.filter(entry => entry.isFile);
       const before = files.length;
       //
       const entries = await tmpFolder.getEntries();
       let count = 0;
-      for (let i = 0; i < entries.length; i++) {
-        const someFile = entries[i];
-        if (imageSuffix == '4x' || imageSuffix == '2x') {
-          const newName = someFile.name.replace(".png", "@" + imageSuffix + ".png");
-          await someFile.moveTo(targetFolder, { newName: newName, overwrite: true })
-        } else {
-          await someFile.moveTo(targetFolder, { newName: someFile.name, overwrite: true })
+      for (var i = 0; i < layers.length; i++) {
+        const layer = layers[i];
+        console.log("", layer.name, layer.kind)
+        if (layer.kind == LayerKind.GROUP && await isFolder(layer.name, assetFolder)){
+          try{
+            await moveImages(layer.layers,layer.name, imageSuffix);
+          }catch(e){
+            console.log("Error", e)
+          }
+        }else{
+          const someFile = entries[i];
+          console.log("", someFile.nativePath);
+          try{
+            if (imageSuffix == '4x' || imageSuffix == '2x') {
+              const newName = someFile.name.replace(".png", "@" + imageSuffix + ".png");
+              await someFile.moveTo(targetFolder, { newName: newName, overwrite: true })
+            } else {
+              await someFile.moveTo(targetFolder, { newName: someFile.name, overwrite: true })
+            }
+          }catch(e){
+            console.log(e)
+          }
+          count = count + 1
         }
-        count = count + 1
       }
-      const isFinished = await isUpdated(before + count, targetFolder);
+      const isFinished = await isUpdated(count, targetFolder);
       if (isFinished){
         await tmpFolder.delete();
       }
     }
-
+    //
     await exportLayers(docLayers, "", '4x');
     await exportLayers(docLayers, "", '2x');
     await resetLayers(docLayers,"", '2x');
     await exportLayers(docLayers, "", '1x');
     await resetLayers(docLayers,"", '1x');
- 
-    await moveImages("", '4x');
-    await moveImages("", '2x');
-    await moveImages("", '1x');
- 
+    //
+    await moveImages(docLayers, "", '4x');
+    await moveImages(docLayers, "", '2x');
+    await moveImages(docLayers, "", '1x');
+    //
+    // this clears layerSet images exists under images/book if rendering chidlren of layerSet instead.
+    await cleanupLayers(docLayers, "", '4x');
+    await cleanupLayers(docLayers, "", '2x');
+    await cleanupLayers(docLayers, "", '1x');
+
+
   }
 
   //// Publish with export image
