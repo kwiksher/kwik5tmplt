@@ -13,7 +13,7 @@ Project model
   - components
   - commands
 
-Tools 
+Tools
 
 - image exporter
 
@@ -28,7 +28,7 @@ Tools
   Solar2D
   - live editor
 
-- REST server 
+- REST server
 
   - pegasus-harness
   - pegasus-launcher
@@ -50,6 +50,10 @@ Image Exporter plugin for Adobe Photoshop
 
 ---
 Project Model
+
+> sample-projects/Pegasus
+
+<img src="./img/2022-05-31-11-13-26.png" width="360">
 
 > /kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D
 

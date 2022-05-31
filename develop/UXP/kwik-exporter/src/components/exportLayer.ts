@@ -14,7 +14,7 @@ const getTemplateData = async (fileName:string): Promise<string> => {
     console.log("getTemplateData")
     try{
       let folder  = await fs.getPluginFolder();
-      folder  = await folder.getEntry("kwik/templates");
+      folder  = await folder.getEntry("kwik/contentX");
       console.log("", folder.nativePath, fileName);
       const file  = await folder.getEntry(fileName);
       data = await file.read()
@@ -52,7 +52,7 @@ const renderJSON = async (tmplt, model, destFolder): Promise<void> => {
 };
 
 export const exportIndexLua = async (weight:number, destFolder:storage.Folder): Promise<void> => {
-  const tmplt = await getTemplateData('components/index.lua');
+  const tmplt = await getTemplateData('scenes/pageX/index.lua');
   await renderLua(tmplt, {name:"index", weight:weight}, destFolder);
 };
 
@@ -93,7 +93,7 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
   console.log("-----------")
   console.log(model.layers)
   const layerPartial = {"recursive": '{{#layers}}{{name}} = { {{>layers}} },{{/layers}}'};
-  const tmplt = await getTemplateData('scenes/book_index.lua');
+  const tmplt = await getTemplateData('scenes/pageX/book_index.lua');
 
   console.log( {"name":model.name, "layers":layers})
   const out = Mustache.render(tmplt, {"name":model.name, "layers":layers}, layerPartial);
@@ -108,11 +108,11 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
 
 export const exportLayerProps = async (layer: Layer, sceneFolder:storage.Folder, modelFolder:storage.Folder): Promise<void> => {
   console.log("exportLayerProps");
-  const tmplt = await getTemplateData('components/layer_image.lua');
+  const tmplt = await getTemplateData('scenes/pageX/layer_image.lua');
   //console.log(tmplt)
   await renderLua(tmplt, layer, sceneFolder);
   //
-  const tmpltJSON = await getTemplateData('components/layer_image.json');
+  const tmpltJSON = await getTemplateData('models/pageX/layer_image.json');
   const props = {
     "blendMode" : layer.blendMode,
     "height"    : layer.bounds.bottom-layer.bounds.top,

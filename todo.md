@@ -2,13 +2,15 @@ TODO
 
 - [ ] Ps test.psd - simple/good-looking layers for demonstration
     - [ ] UXP tool to generate .png and .json
+      - [x] export images
+      - [ ] export codes
     - [ ] layerSet
         - [ ] create/delete a folder to toggle layerSet rendering on/off
     - [ ] assets/images/pageX folder
         - [ ] png only
         - [ ] png with json in models/assets/pngX
     - [ ] publish multiple .psd files
-        - [ ] select .psd
+        - [ ] select .psd from a folder ex. Photoshop/book01
 
     - [ ] iPhone 13 Pro Max	1284x2778
 
@@ -26,7 +28,7 @@ TODO
         > Could it be better to implement editor frontend in Solar2D than react? Do you have time to implement both of Solar2D and React? Might find someone to code the react one?
 
 
-    - [ ] Pegasus REST for pages/layers 
+    - [ ] Pegasus REST for pages/layers
 
     XD is not a painting tool, so let's focus on Photoshop but
     XD could be better to arrange for page' transition and layer's states, and components, maybe with audio/video files

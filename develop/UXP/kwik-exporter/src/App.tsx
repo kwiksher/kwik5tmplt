@@ -307,16 +307,43 @@ const App: React.FC<any> = () => {
   //   and also create eventname.lua in models/page/events folder.
   //   eventname.lua has a props table for actions.
 
+
+  async function copyAll(src, dist){
+    const entries = await src.getEntries();
+    for (var i = 0; i < entries.length; i++) {
+      let element = entries[i];
+      if (element.isFile){
+        console.log(element)
+        element.copyTo(dist, {overwrite:false})
+      }else{
+        console.log("", element)
+        let folder = await getKwikFolder(element.name, dist);
+        await copyAll(element, folder);
+      }
+    }
+
+  }
   ////////
   const newProjectHandler = async() =>{
     // open dialog
     // getFolder
+
+    const fs = storage.localFileSystem;
+    let distFolder = await fs.getFolder();
+
+    let pluginFolder  = await fs.getPluginFolder();
+    let tmpltFolder = await pluginFolder.getEntry("kwik/Solar2D") as storage.Folder;
+
+    await copyAll(tmpltFolder, distFolder);
+
     // cp kwik
     //    user choose KwikShelf structure or single structre
     //
     // new psd
     // add the project to the list
     // createPersistentToken(entry)
+
+
   }
 
   const openProjectHandler = async() =>{
@@ -340,6 +367,8 @@ const App: React.FC<any> = () => {
     <>
       <ActionButton onClick={publishAssetsHandler}>Export Images</ActionButton>
       <ActionButton onClick={publishHandler}>Export Codes</ActionButton>
+      <ActionButton onClick={newProjectHandler}>New Project</ActionButton>
+
       //
       {/* <ActionButton onClick={newProjectHandler}>New Projectt</ActionButton>
       <ActionButton onClick={openProjectHandler}>Open Project</ActionButton>
