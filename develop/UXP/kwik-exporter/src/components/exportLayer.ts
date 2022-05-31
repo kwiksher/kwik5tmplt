@@ -92,7 +92,7 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
 
   console.log("-----------")
   console.log(model.layers)
-  const layerPartial = {"recursive": '{{#layers}}{{name}} = { {{>layers}} },{{/layers}}'};
+  const layerPartial = {"recursive": '{ {{#layers}}{{name}} = { {{>layers}} },{{/layers}} }'};
   const tmplt = await getTemplateData('scenes/pageX/book_index.lua');
 
   console.log( {"name":model.name, "layers":layers})

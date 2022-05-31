@@ -1,5 +1,17 @@
-local _K = require "Application"
+local _K = require "controller.Application"
 local _M = require("components.kwik.layer_image").new()
+
+parseValue = function(value, newValue)
+	if newValue then
+		if value then
+			return newValue
+		else
+			return nil
+		end
+	else
+		return value
+	end
+end
 
 local Props = {
   blendMode = "{{blendMode}}",
@@ -7,6 +19,7 @@ local Props = {
   width     = {{bounds.left}} - {{bounds.right}},
   kind      = {{kind}},
   name      = "{{name}}",
+  type      = "png",
   x         = {{bounds.right}} + ({{bounds.left}} -{{bounds.right}})/2,
   y         = {{bounds.top}} + ({{bounds.bottom}} - {{bounds.top}})/2,
   alpha     = {{opacity}}/100,
@@ -49,30 +62,30 @@ _M.layerSet = {
 --
 _M.imageWidth  = Props.width/4
 _M.imageHeight = Props.height/4
-_M.mX, _M.mY   = _K.ultimatePosition(Props.x, Props.y, "{{align}}")
-_M.randXStart  = _K.ultimatePosition({{randXStart}})
-_M.randXEnd    = _K.ultimatePosition({{randXEnd}})
-_M.dummy, _M.randYStart = _K.ultimatePosition(0, {{randYStart}})
-_M.dummy, _M.randYEnd   = _K.ultimatePosition(0, {{randYEnd}})
+_M.mX, _M.mY   = _K.getPosition(Props.x, Props.y, "{{align}}")
+_M.randXStart  = _K.getPosition({{randXStart}})
+_M.randXEnd    = _K.getPosition({{randXEnd}})
+_M.dummy, _M.randYStart = _K.getPosition(0, 0)
+_M.dummy, _M.randYEnd   = _K.getPosition(0, 0)
 _M.infinityDistance = (parseValue({{idist}}) or 0)/4
 --
 _M.layerName     = Props.name
 _M.oriAlpha = Props.alpha
 _M.isSharedAsset = parseValue({{kwk}})
-_M.imagePath = Props.name..".{{fExt}}"
-_M.imageName = "/"..Props.name..".{{fExt}}"
+_M.imagePath = Props.name.."." .. Props.type
+_M.imageName = "/"..Props.name.."." ..Props.type
 _M.langGroupName = "{{dois}}"
 _M.langTableName = "tab{{um}}"
 _M.scaleX     = parseValue({{scaleW}})
 _M.scaleY     = parseValue({{scaleH}})
 _M.rotation   = parseValue({{rotation}})
 _M.blendMode     = Props.blendMode
-_M.layerAsBg     = parseValue({{layerAsBg}}
+_M.layerAsBg     = parseValue({{layerAsBg}})
 _M.infinitySpeed = parseValue({{infinitySpeed}})
 --
-function _M:localVars(UI)
+function _M:init(UI)
 	if not self.isSharedAsset then
-    self.imagePath = "p"..UI.imagePage ..self.imageName
+    self.imagePath = UI.page ..self.imageName
   end
   if self.isTmplt then
    self.mX, self.mY, self.imageWidth, self.imageHeight , self.imagePath= _K.getModel(self.layerName, self.imagePath, UI.dummy)
@@ -82,9 +95,9 @@ function _M:localVars(UI)
   end
 end
 --
-function _M:localPos(UI)
+function _M:create(UI)
 	if not self.isSharedAsset then
-    self.imagePath = "p"..UI.imagePage ..imageName
+    self.imagePath = UI.page ..self.imageName
   end
   if not self.multLayers then
     local layer = self:myNewImage(UI)
@@ -114,17 +127,16 @@ function _M:didShow(UI)
   end
 end
 --
-function _M:toDispose(UI)
+function _M:didHide(UI)
   local sceneGroup = UI.scene.view
   if self.infinity then
     if sceneGroup[self.layerName] == nil  or sceneGroup[self.kayerName.."_2"] == nil then return end
       Runtime:removeEventListener("enterFrame", sceneGroup[self.layerName])
       Runtime:removeEventListener("enterFrame", sceneGroup[self.kayerName.."_2"])
-    end
   end
 end
 --
-function  _M:toDestory()
+function  _M:destory()
 end
 --
 return _M
