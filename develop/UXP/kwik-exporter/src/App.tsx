@@ -109,9 +109,9 @@ const App: React.FC<any> = () => {
     const scenesRoot = await getKwikFolder('scenes', bookFolder);
     const sceneFolder = await getKwikFolder(docName, scenesRoot)
     // .lua
-    const exportLayer = async (docLayers, sceneFolder, modelFolder):Promise<any> => {
+    const exportLayer = async (docLayers, sceneFolder, modelFolder, parent):Promise<any> => {
       const objs = [];
-      for (let i = 0; i < docLayers.length; i++) {
+      for (let i = docLayers.length-1; i >= 0; i--) {
         const layer = docLayers[i];
         const obj = {};
         obj[docLayers[i].name] = [];
@@ -120,7 +120,7 @@ const App: React.FC<any> = () => {
           const sfolder = await getKwikFolder(layer.name, sceneFolder);
           const mFolder = await getKwikFolder(layer.name, modelFolder)
           //
-          const element = await exportLayer(layer.layers, sfolder, mFolder);
+          const element = await exportLayer(layer.layers, sfolder, mFolder, layer.name + "/");
           obj[docLayers[i].name] = element;
           //
           if (false == await isFile("index.lua", sfolder)){
@@ -136,13 +136,13 @@ const App: React.FC<any> = () => {
             await file.delete();
           }
         }else{
-          await exportLayerProps(docLayers[i], sceneFolder, modelFolder);
+          await exportLayerProps(docLayers[i], sceneFolder, modelFolder, parent);
         }
         objs[i] = obj;
       }
       return objs
     }
-    const element = await exportLayer(docLayers, sceneFolder, modelFolder);
+    const element = await exportLayer(docLayers, sceneFolder, modelFolder, "");
     await exportIndex({"name":docName, "layers":element}, sceneFolder, modelFolder);
 
   }
@@ -162,7 +162,7 @@ const App: React.FC<any> = () => {
     const exportLayers = async (layers, parentName, imageSuffix: string) => {
       let tmpFolder = await getKwikFolder(imageSuffix + parentName, assetFolder);
       let count = 0;
-      for (var i = 0; i < layers.length; i++) {
+      for (var i = layers.length-1; i >= 0; i--) {
         const layer = layers[i];
         if (layer.kind == LayerKind.GROUP && await isFolder(layer.name, assetFolder)){
           await exportLayers(layer.layers,layer.name, imageSuffix);

@@ -3,6 +3,8 @@ import { Layer} from 'photoshop/dom/Layer';
 import { storage } from 'uxp';
 import selectLayerByID from './selectLayer';
 import {loadImageFromFolder} from './loadImage';
+import {formatText} from 'lua-fmt'; // not working?
+
 const fs = require('uxp').storage.localFileSystem;
 import * as Mustache from 'mustache'
 
@@ -33,6 +35,7 @@ const renderLua = async (tmplt, model, destFolder): Promise<void> => {
   console.log("", result.length)
   try{
     const file = await destFolder.createFile(model.name + ".lua",{overwrite: true});
+    result = result.replaceAll("&#x2F;", "/");
     await file.write(result);
   }catch(e) {
     console.log(e)
@@ -41,10 +44,11 @@ const renderLua = async (tmplt, model, destFolder): Promise<void> => {
 
 const renderJSON = async (tmplt, model, destFolder): Promise<void> => {
   console.log("renderJSON", model)
-  var result = Mustache.render(tmplt, model);
-  console.log("", result.length)
+  var jsonString = Mustache.render(tmplt, model);
   try{
     const file = await destFolder.createFile(model.name + ".json",{overwrite: true});
+    var result = JSON.stringify(JSON.parse(jsonString),null,2);
+    console.log("", result.length)
     await file.write(result);
   }catch(e) {
     console.log(e)
@@ -92,7 +96,10 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
 
   console.log("-----------")
   console.log(model.layers)
-  const layerPartial = {"recursive": '{ {{#layers}}{{name}} = { {{>layers}} },{{/layers}} }'};
+  const layerPartial = {"recursive": '{{#layers}}{ {{name}} = { {{>layers}} } },{{/layers}}'};
+
+//  const layerPartial = {"recursive": '{ {{#layers}}{{name}} = { {{>layers}} },{{/layers}} }'};
+
   const tmplt = await getTemplateData('scenes/pageX/book_index.lua');
 
   console.log( {"name":model.name, "layers":layers})
@@ -106,14 +113,12 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
   }
 };
 
-export const exportLayerProps = async (layer: Layer, sceneFolder:storage.Folder, modelFolder:storage.Folder): Promise<void> => {
+export const exportLayerProps = async (layer: Layer, sceneFolder:storage.Folder, modelFolder:storage.Folder, parent:string): Promise<void> => {
   console.log("exportLayerProps");
-  const tmplt = await getTemplateData('scenes/pageX/layer_image.lua');
-  //console.log(tmplt)
-  await renderLua(tmplt, layer, sceneFolder);
-  //
-  const tmpltJSON = await getTemplateData('models/pageX/layer_image.json');
+
   const props = {
+    "bounds"    : layer.bounds,
+    "opacity"   : layer.opacity,
     "blendMode" : layer.blendMode,
     "height"    : layer.bounds.bottom-layer.bounds.top,
     "width"     : layer.bounds.right -layer.bounds.left,
@@ -122,7 +127,13 @@ export const exportLayerProps = async (layer: Layer, sceneFolder:storage.Folder,
     "x"         : layer.bounds.right + (layer.bounds.left -layer.bounds.right)/2,
     "y"         : layer.bounds.top + (layer.bounds.bottom - layer.bounds.top)/2,
     "alpha"     : layer.opacity/100,
+    "parent"    : parent
   }
+  const tmplt = await getTemplateData('scenes/pageX/layer_image.lua');
+  //console.log(tmplt)
+  await renderLua(tmplt, props, sceneFolder);
+  //
+  const tmpltJSON = await getTemplateData('models/pageX/layer_image.json');
   await renderJSON(tmpltJSON, props, modelFolder);
 
   // const tmplt = 'My favorite template engine is {{it.favorite}}.'
@@ -203,10 +214,10 @@ export const exportLayerAsPng = async (layer:Layer, path:string, imageSuffix:str
     async () => {
 
       if (imageSuffix == '2x'){
-        await action.batchPlay([selectCommand, transformFactory(50, 50), exportCommand], { modalBehavior: 'wait', synchronousExecution:true });
+        await action.batchPlay([selectCommand, transformFactory(50, 50), exportCommand], { modalBehavior: 'wait' }); //, synchronousExecution:true
 
       }else if(imageSuffix == '1x'){
-        await action.batchPlay([selectCommand, transformFactory(25, 25), exportCommand], { modalBehavior: 'wait',synchronousExecution:true });
+        await action.batchPlay([selectCommand, transformFactory(25, 25), exportCommand], { modalBehavior: 'wait' }); //,synchronousExecution:true
 
       }else{
         await action.batchPlay([selectCommand,  exportCommand], { modalBehavior: 'wait' });
@@ -272,10 +283,10 @@ export const resettLayer = async (layer:Layer, path:string, imageSuffix:string):
     async () => {
 
       if (imageSuffix == '2x'){
-        await action.batchPlay([selectCommand, transformFactory(200, 200)], { modalBehavior: 'wait', synchronousExecution:true });
+        await action.batchPlay([selectCommand, transformFactory(200, 200)], { modalBehavior: 'wait'}); //, synchronousExecution:true
 
       }else if(imageSuffix == '1x'){
-        await action.batchPlay([selectCommand, transformFactory(400, 400)], { modalBehavior: 'wait',synchronousExecution:true });
+        await action.batchPlay([selectCommand, transformFactory(400, 400)], { modalBehavior: 'wait' });//, synchronousExecution:true
 
       }
     },

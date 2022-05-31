@@ -373,6 +373,18 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@types/commander@^2.3.31":
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/@types/commander/-/commander-2.12.2.tgz#183041a23842d4281478fa5d23c5ca78e6fd08ae"
+  integrity sha512-0QEFiR8ljcHp9bAbWxecjVRuAMr16ivPiGOw6KFQBVrVd0RQIcM3xKdRisH2EDWgVWujiYtHwhSkSUoAAGzH7Q==
+  dependencies:
+    commander "*"
+
+"@types/diff@^3.2.0":
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/@types/diff/-/diff-3.5.5.tgz#d1ddc082c03a26f0490856da47d57c29093d1e76"
+  integrity sha512-aqcrAbqT/0+ULJJ73bwKWsiFkBh3ZnAelj9u+iI5/cr4Nz3yXGf3w4glx5am6uvvgBbKinK1PAqSJs7fSKD6ig==
+
 "@types/eslint-scope@^3.7.3":
   version "3.7.3"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.3.tgz#125b88504b61e3c8bc6f870882003253005c3224"
@@ -393,6 +405,13 @@
   version "0.0.51"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.51.tgz#cfd70924a25a3fd32b218e5e420e6897e1ac4f40"
   integrity sha512-CuPgU6f3eT/XgKKPqKd/gLZV1Xmvf1a2R5POBOGQa6uv82xpls89HU5zKeVoyR8XzHd1RGNOlQlvUe3CFkjWNQ==
+
+"@types/get-stdin@^5.0.0":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@types/get-stdin/-/get-stdin-5.0.1.tgz#46afbcaf09e94fe025afa07ae994ac3168adbdf3"
+  integrity sha512-hkShVHsKPKK4OulBjeYi15m5RQRR2ZV7ItFEa3C+QEay81MenD5ZfcTxzlo3ZaUTkbCbpw5XIW/NWKQNWq+Q/A==
+  dependencies:
+    "@types/node" "*"
 
 "@types/hoist-non-react-statics@*":
   version "3.3.1"
@@ -918,7 +937,12 @@ colorette@^2.0.14:
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.16.tgz#713b9af84fdb000139f04546bd4a93f62a5085da"
   integrity sha512-hUewv7oMjCp+wkBv5Rm0v87eJhq4woh5rSR+42YSQJKecCqgIqNkZ6lAlQms/BwHPJA5NKMRlpxPRv0n8HQW6g==
 
-commander@^2.20.0:
+commander@*:
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-9.3.0.tgz#f619114a5a2d2054e0d9ff1b31d5ccf89255e26b"
+  integrity sha512-hv95iU5uXPbK83mjrJKuZyFM/LBAoCV/XhVGkS5Je6tl7sxr6A0ITMw5WoRV46/UaJ46Nllm3Xt7IaJhXTIkzw==
+
+commander@^2.20.0, commander@^2.9.0:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
@@ -1100,6 +1124,11 @@ des.js@^1.0.0:
   dependencies:
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
+
+diff@^3.3.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
+  integrity sha512-A46qtFgd+g7pDZinpnwiRJtxbC1hpgf0uzP3iG89scHk0AUC7A1TGxf5OiiOUv/JMZR8GOt8hL900hV0bOy5xA==
 
 diffie-hellman@^5.0.0:
   version "5.0.3"
@@ -1305,6 +1334,11 @@ get-caller-file@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
+
+get-stdin@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-5.0.1.tgz#122e161591e21ff4c52530305693f20e6393a398"
+  integrity sha512-jZV7n6jGE3Gt7fgSTJoz91Ak5MuTLwMwkoYdjxuJ/AmjIsE1UC03y/IWkZCQGEvVNS9qoRNwy5BCqxImv0FVeA==
 
 get-stream@^6.0.0:
   version "6.0.1"
@@ -1614,6 +1648,23 @@ lru-cache@^6.0.0:
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
+
+lua-fmt@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/lua-fmt/-/lua-fmt-2.6.0.tgz#ef9ac0573d1da7330dca09c022c39a33aed347a3"
+  integrity sha512-J4D7TK+BhSJ9ePQPpZPlu/aHE3X9ojN+D7DNv1HXZPryBJ74XWVmXpRX+qceXdE15TUsQRCj9w81waVOOFhfWA==
+  dependencies:
+    "@types/commander" "^2.3.31"
+    "@types/diff" "^3.2.0"
+    "@types/get-stdin" "^5.0.0"
+    commander "^2.9.0"
+    diff "^3.3.0"
+    get-stdin "^5.0.1"
+    luaparse oxyc/luaparse#ac42a00ebf4020b8c9d3219e4b0f84bf7ce6e802
+
+"luaparse@github:oxyc/luaparse#ac42a00ebf4020b8c9d3219e4b0f84bf7ce6e802":
+  version "0.2.1"
+  resolved "https://codeload.github.com/oxyc/luaparse/tar.gz/ac42a00ebf4020b8c9d3219e4b0f84bf7ce6e802"
 
 make-dir@^3.0.2, make-dir@^3.1.0:
   version "3.1.0"
