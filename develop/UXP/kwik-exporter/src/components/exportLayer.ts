@@ -64,7 +64,7 @@ export const exportIndexLua = async (weight:number, destFolder:storage.Folder): 
 function objs2list(arr) {
   const r = [];
   arr.forEach(function(obj, index, array) {
-    console.log(obj, index)
+    // console.log(obj, index)
     Object.keys(obj).forEach(function(key){
       if (key!="events" && key!="types"){
         let elements = obj[key];
@@ -94,7 +94,7 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
 
   const layers = objs2list(model.layers);
 
-  console.log("-----------")
+  console.log("-----exportIndex------")
   console.log(model.layers)
   const layerPartial = {"recursive": '{{#layers}}{ {{name}} = { {{>layers}} } },{{/layers}}'};
 

@@ -111,7 +111,7 @@ const App: React.FC<any> = () => {
     // .lua
     const exportLayer = async (docLayers, sceneFolder, modelFolder, parent):Promise<any> => {
       const objs = [];
-      for (let i = docLayers.length-1; i >= 0; i--) {
+      for (let i = 0; i < docLayers.length; i++) {
         const layer = docLayers[i];
         const obj = {};
         obj[docLayers[i].name] = [];
@@ -140,7 +140,7 @@ const App: React.FC<any> = () => {
         }
         objs[i] = obj;
       }
-      return objs
+      return objs.reverse();
     }
     const element = await exportLayer(docLayers, sceneFolder, modelFolder, "");
     await exportIndex({"name":docName, "layers":element}, sceneFolder, modelFolder);
