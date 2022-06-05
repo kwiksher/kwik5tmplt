@@ -6,7 +6,7 @@ weight: 10
 
 ### UXP Plugins
 
-Kwik4 created a project folder where psd files are placed. 
+Kwik4 created a project folder where psd files are placed.
 Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter opens, it asks for the folder location.
 
 
@@ -21,7 +21,7 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
   - select psd files (TODO)
 
       - Drag & Drop  to change the order of psd files
-      
+
         one psd file corresponds one **scene** in Solar2D code.
 
         a psd can be marked for being ignored
@@ -45,7 +45,7 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
 
   1. clcik Export Images
 
-      openFileDialog asks a **book folder** under App folder. 
+      openFileDialog asks a **book folder** under App folder.
 
         {{<img src="img/2022-05-24-18-32-56.png" width="600">}}
 
@@ -53,18 +53,20 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
 
   1. mark the checkboxes of documents you want to publish
 
-      shift + click selection
+    https://react-spectrum.adobe.com/react-spectrum/TableView.html
 
-      toggle all on/off
+      - Ctl(Win) or Option(Mac) + Space key toggles selection for the focused row
+
+      - toggle all on/off
 
 
   1. clcik Export Images
 
-      opendFileDialog asks a **book folder** under App folder. 
+      opendFileDialog asks a **book folder** under App folder.
 
   **Export each image of a layerSet(layer group)  in .psd**
 
-  1. create a folder with same name as layerSet in book/assets/images/FILE_NAME_OF_PSD 
+  1. create a folder with same name as layerSet in book/assets/images/FILE_NAME_OF_PSD
 
       for instance, "bg" is a layer group of kwik4_1280x1920.psd
 
