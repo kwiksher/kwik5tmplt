@@ -106,7 +106,8 @@ export const ProjectTable: React.FC =()=> {
   // );
 
   // https://forums.creativeclouddeveloper.com/t/bug-disabled-in-select-option-does-not-work/2270/5
-
+  // https://codereview.stackexchange.com/questions/242077/parsing-numbers-and-ranges-from-a-string-in-javascript
+  // https://www.npmjs.com/package/parse-numeric-range
   return (
   // <sp-dropdown placeholder="Make a selection...">
     <sp-menu multiple slot="options">
