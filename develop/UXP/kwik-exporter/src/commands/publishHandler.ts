@@ -4,7 +4,7 @@ import { Layer} from 'photoshop/dom/Layer';
 import { LayerKind} from 'photoshop/dom/Constants';
 
 import {getFolder, isFile, isFolder} from '../utils/storage'
-import {exportIndex, exportIndexLua, exportLayerProps, exportLayerAsPng, resettLayer, exportLayerAsPngAndLoad, exportLayerAsJpegAndLoad } from './components/exportLayer';
+import {exportIndex, exportIndexLua, exportLayerProps, exportLayerAsPng, resettLayer, exportLayerAsPngAndLoad, exportLayerAsJpegAndLoad } from '../photoshop/exportLayer';
 
 export const publishHandler = async (event) => {
 

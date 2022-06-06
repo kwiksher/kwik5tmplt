@@ -1,7 +1,7 @@
 import { storage } from 'uxp';
 
-import Spectrum, { ActionButton } from 'react-uxp-spectrum';
-import StyledComponents from "../components/StyledComponents";
+// import Spectrum, { ActionButton } from 'react-uxp-spectrum';
+// import StyledComponents from "../components/StyledComponents";
 
 export const selectProjectHandler = async() =>{
   // open dialog
@@ -17,7 +17,6 @@ export const selectProjectHandler = async() =>{
   const entries = await distFolder.getEntries();
   const psds = entries.filter(entry=>entry.name.endsWith('.psd'))
 
-
   const app = require("photoshop").app;
   const index = 0;
   await app.open(psds[index]);
@@ -28,6 +27,5 @@ export const selectProjectHandler = async() =>{
   // new psd
   // add the project to the list
   // createPersistentToken(entry)
-
 
 }

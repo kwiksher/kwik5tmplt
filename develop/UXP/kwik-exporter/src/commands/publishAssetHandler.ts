@@ -4,7 +4,7 @@ import { Layer} from 'photoshop/dom/Layer';
 import { LayerKind} from 'photoshop/dom/Constants';
 
 import {getFolder, isFile, isFolder, isUpdated} from '../utils/storage'
-import { exportLayerAsPng, resettLayer } from '../components/exportLayer';
+import { exportLayerAsPng, resettLayer } from '../photoshop/exportLayer';
 
 
 export const publishAssetsHandler = async (event)  => {

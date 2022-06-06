@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from "styled-components"
 import { Layer } from 'photoshop/dom/Layer'; // Credit to Hans Otto Wirtz for the Typescript library
-import {exportLayerAsPng, exportLayerAsPngAndLoad, exportLayerAsJpegAndLoad } from './exportLayer';
+import {exportLayerAsPng, exportLayerAsPngAndLoad, exportLayerAsJpegAndLoad } from '../photoshop/exportLayer';
 
-import Spectrum from 'react-uxp-spectrum';
+//import Spectrum from 'react-uxp-spectrum';
 
 interface Props {
   exportLayer: Layer;
@@ -49,14 +49,15 @@ const Container = styled.div`
 `
   return (
     <Container className="row">
-      {(imageUrl && (
+      {/* {(imageUrl && (
         <div>
           <img className="background" src="/img/BackGround.png" alt="Background" />
           {(!loading && <img className="image" src={imageUrl} alt="BaseLayer" />) || (
             <img className="loading" src="/img/Loading.gif" alt="loading" />
           )}
         </div>
-      )) || <sp-action-button>Select</sp-action-button>}
+      )) || 
+      <sp-action-button>Select</sp-action-button>} */}
     </Container>
   );
 }

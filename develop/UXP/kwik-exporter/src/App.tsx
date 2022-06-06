@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
+//import {Button, defaultTheme, Provider} from '@adobe/react-spectrum';
 
-import Spectrum, { ActionButton } from 'react-uxp-spectrum';
-import StyledComponents from "./components/StyledComponents";
+// import Spectrum, { ActionButton } from 'react-uxp-spectrum';
+// import StyledComponents from "./components/StyledComponents";
 
 import { publishHandler } from './commands/publishHandler';
 import { newProjectHandler } from './commands/newProjectHandler';
 import { publishAssetsHandler } from './commands/publishAssetHandler';
 import { selectProjectHandler } from './commands/selectProjectHandler';
-
+import {ProjectTable} from './components/ProjectTable';
 
 const App: React.FC<any> = () => {
 
@@ -72,7 +73,7 @@ const App: React.FC<any> = () => {
 
   return (
     <>
-      <ul>
+      {/* <ul>
       <li><ActionButton onClick={publishAssetsHandler}>Export Images</ActionButton></li>
       <li><ActionButton onClick={publishHandler}>Export Codes</ActionButton></li>
       </ul>
@@ -80,9 +81,10 @@ const App: React.FC<any> = () => {
       <ul>
       <li><ActionButton onClick={newProjectHandler}>New Project</ActionButton></li>
       <li><ActionButton onClick={selectProjectHandler}>Select Project</ActionButton></li>
-      </ul>
-
-
+      </ul> */}
+      {/* <Provider theme={defaultTheme}> */}
+      <ProjectTable /> 
+      {/* </Provider> */}
       //
       {/* <ActionButton onClick={newProjectHandler}>New Projectt</ActionButton>
       <ActionButton onClick={openProjectHandler}>Open Project</ActionButton>

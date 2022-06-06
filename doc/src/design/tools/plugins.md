@@ -53,6 +53,10 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
 
   1. mark the checkboxes of documents you want to publish
 
+    https://developer.adobe.com/xd/uxp/uxp/reference-spectrum/User%20Interface/
+
+    spectrum tableview is not yet supported in UXP
+    
     https://react-spectrum.adobe.com/react-spectrum/TableView.html
 
       - Ctl(Win) or Option(Mac) + Space key toggles selection for the focused row
