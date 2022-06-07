@@ -285,6 +285,8 @@ declare module 'uxp' {
         interface LocalFileSystemProvider extends FileSystemProvider {
             // TODO: Waiting for documentation on `LocalFileSystemProvider`
             createSessionToken(entory:any):any;
+            getEntryForPersistentToken(entry:any):any;
+            createPersistentToken(entry:any):any;
         }
 
         /**

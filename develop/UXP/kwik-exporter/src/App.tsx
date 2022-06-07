@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-//import {Button, defaultTheme, Provider} from '@adobe/react-spectrum';
 
-// import Spectrum, { ActionButton } from 'react-uxp-spectrum';
+import Spectrum, { ActionButton, Checkbox } from 'react-uxp-spectrum';
 // import StyledComponents from "./components/StyledComponents";
 
 import { publishHandler } from './commands/publishHandler';
@@ -71,20 +70,33 @@ const App: React.FC<any> = () => {
     // user selects a psd in the list
   }
 
+  const [isReset, setIsReset] = useState(false);
+  const [psds, setPSDs] = useState([])
+  const [projectPath, setProjectPath] = useState("")
+
+
+  const onChange = () =>{
+    setIsReset(!isReset);
+  }
+
+  const selectProject = () =>{
+    selectProjectHandler(isReset, setPSDs, setProjectPath);
+  }
+
   return (
     <>
-      {/* <ul>
+      <ul>
       <li><ActionButton onClick={publishAssetsHandler}>Export Images</ActionButton></li>
       <li><ActionButton onClick={publishHandler}>Export Codes</ActionButton></li>
       </ul>
-
+      <hr/>
       <ul>
       <li><ActionButton onClick={newProjectHandler}>New Project</ActionButton></li>
-      <li><ActionButton onClick={selectProjectHandler}>Select Project</ActionButton></li>
-      </ul> */}
-      {/* <Provider theme={defaultTheme}> */}
-      <ProjectTable /> 
-      {/* </Provider> */}
+      <li><ActionButton onClick={ selectProject }>Select Project</ActionButton><Checkbox onChange={onChange}>:Reset</Checkbox></li>
+      </ul>
+
+      <ProjectTable files={psds} path={projectPath}/>
+
       //
       {/* <ActionButton onClick={newProjectHandler}>New Projectt</ActionButton>
       <ActionButton onClick={openProjectHandler}>Open Project</ActionButton>

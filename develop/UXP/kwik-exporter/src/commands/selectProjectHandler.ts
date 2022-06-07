@@ -3,23 +3,52 @@ import { storage } from 'uxp';
 // import Spectrum, { ActionButton } from 'react-uxp-spectrum';
 // import StyledComponents from "../components/StyledComponents";
 
-export const selectProjectHandler = async() =>{
+export const selectProjectHandler = async(reset:boolean, setPSDs, setProjectPath) =>{
   // open dialog
   // getFolder
-
   const fs = storage.localFileSystem;
-  let distFolder = await fs.getFolder();
+  const pluginFolder  = await fs.getPluginFolder();
+  const tmpltFolder = await pluginFolder.getEntry("kwik/Solar2D") as storage.Folder;
 
-  let pluginFolder  = await fs.getPluginFolder();
-  let tmpltFolder = await pluginFolder.getEntry("kwik/Solar2D") as storage.Folder;
+  let projectFolder, doc, doc1, tries = 3, success = false;
 
+  if (reset){
+    projectFolder = await fs.getFolder();
+    localStorage.setItem("persistent-project-folder", await fs.createPersistentToken(projectFolder));
+  }else{
+    while (tries > 0) {
+        try {
+            projectFolder = await fs.getEntryForPersistentToken(localStorage.getItem("persistent-project-folder"));
+            tries = 0;
+            success = true;
+        } catch (err) {
+            projectFolder = await fs.getFolder();
+            localStorage.setItem("persistent-project-folder", await fs.createPersistentToken(projectFolder));
+            tries--;
+        }
+    }
+  }
 
-  const entries = await distFolder.getEntries();
-  const psds = entries.filter(entry=>entry.name.endsWith('.psd'))
+  if (success) {
+    const entries = await projectFolder.getEntries();
+    const psds = entries.filter(entry=>entry.name.endsWith('.psd'))
+    for (const psd of psds) {
+      console.log("Opening", psd.name);
+    }
+    setPSDs(psds);
+    setProjectPath(projectFolder.path);
+    //
+    // test open&close
+    const app = require("photoshop").app;
+    doc = await app.open(psds[0]);
+    doc1 = await app.open(psds[1]);
+    //
+    doc.closeWithoutSaving();
+    doc1.closeWithoutSaving()
 
-  const app = require("photoshop").app;
-  const index = 0;
-  await app.open(psds[index]);
+  }else{
+    // fail gracefully somehow
+  }
 
   // cp kwik
   //    user choose KwikShelf structure or single structre
