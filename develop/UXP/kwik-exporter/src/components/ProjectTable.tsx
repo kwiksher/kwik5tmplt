@@ -15,7 +15,7 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
       <sp-heading>{props.path}</sp-heading>
       <sp-menu multiple slot="options">
       {props.files.map((item, idx) => (
-            <sp-menu-item key={idx}>{item}</sp-menu-item>
+            <sp-menu-item key={idx}>{item.name}</sp-menu-item>
           ))}
       </sp-menu>
     </>

@@ -3,6 +3,9 @@ import { storage } from 'uxp';
 // import Spectrum, { ActionButton } from 'react-uxp-spectrum';
 // import StyledComponents from "../components/StyledComponents";
 
+const app = require("photoshop").app;
+const executeAsModal = require("photoshop").core.executeAsModal;
+
 export const selectProjectHandler = async(reset:boolean, setPSDs, setProjectPath) =>{
   // open dialog
   // getFolder
@@ -39,12 +42,18 @@ export const selectProjectHandler = async(reset:boolean, setPSDs, setProjectPath
     setProjectPath(projectFolder.path);
     //
     // test open&close
-    const app = require("photoshop").app;
-    doc = await app.open(psds[0]);
-    doc1 = await app.open(psds[1]);
-    //
-    doc.closeWithoutSaving();
-    doc1.closeWithoutSaving()
+    try{
+      const psd = await projectFolder.getEntry(psds[0].name)
+      await executeAsModal(async()=>{
+        doc = await app.open(psd);
+        doc.closeWithoutSaving();
+      },{ "commandName": "Opening..." })
+      //doc1 = await app.open(psds[1]);
+      //
+      //doc1.closeWithoutSaving()
+    }catch(e){
+      console.log(e)
+    }
 
   }else{
     // fail gracefully somehow
