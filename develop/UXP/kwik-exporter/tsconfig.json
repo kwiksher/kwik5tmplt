@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "strict": false,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "baseUrl": "./",
+    // "downlevelIteration": true,
     "lib": [
-      "es2015", "DOM"
+      "es2015", "DOM",
+      "dom.iterable",
     ],
     "jsx": "react-jsx",
     "typeRoots": [

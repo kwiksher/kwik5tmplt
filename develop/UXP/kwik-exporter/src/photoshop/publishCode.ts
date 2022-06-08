@@ -5,7 +5,7 @@ import { Layer} from 'photoshop/dom/Layer';
 import { LayerKind} from 'photoshop/dom/Constants';
 
 import {getFolder, isFile, isFolder} from '../utils/storage'
-import {exportIndex, exportIndexLua, exportLayerProps, exportLayerAsPng, resettLayer, exportLayerAsPngAndLoad, exportLayerAsJpegAndLoad } from '../photoshop/exportLayer';
+import {exportIndex, exportIndexLua, exportLayerProps, exportLayerAsPng, resettLayer, exportLayerAsPngAndLoad, exportLayerAsJpegAndLoad } from './exportLayer';
 
 export async function publishCode (bookFolder) {
   const docName = app.activeDocument.name.replace(".psd","");

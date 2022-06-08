@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom'
 
 import Spectrum, { ActionButton, Checkbox } from 'react-uxp-spectrum';
 // import StyledComponents from "./components/StyledComponents";
@@ -9,6 +10,11 @@ import { publishAssetsHandler } from './commands/publishAssetHandler';
 import { selectProjectHandler } from './commands/selectProjectHandler';
 import { ProjectTable } from './components/ProjectTable';
 import { publishAllHandler } from './commands/publishAllHandler';
+import { PublishPopup} from './components/PublishPopup'
+
+import { SortSampleApp } from './components/SortSampleApp';
+
+import { DroppableListBoxExample } from './components/DroppableListBoxExample'
 
 const App: React.FC<any> = () => {
 
@@ -85,11 +91,35 @@ const App: React.FC<any> = () => {
     selectProjectHandler(isReset, setPSDs, setProjectPath);
   }
 
-  const publishAll = (event) =>{
-    //dialog
+  const publishPopup = useRef(); // Reference for the <dialog> element
+  let publishDialog = null
 
-    //
-    publishAllHandler(event, selections, projectPath, appFolder, setAppFolder)
+  const publishAll = async (event) =>{
+    //dialog
+    if (!publishDialog) {
+      publishDialog = document.createElement("dialog");
+      ReactDOM.render(<PublishPopup dialog={publishDialog} />, publishDialog);
+    }
+    document.body.appendChild(publishDialog);
+
+    const response = await publishDialog.uxpShowModal({
+      title: "Export Settings",
+      resize: "both",
+      size: {
+        width: 400,
+        height: 200
+      }
+    });
+    console.log("RESPONZE", response);
+    // God, why have I to do that
+    if (!response ||
+      response === "reasonCanceled" ||
+      response.reason === "reasonCanceled") {
+      }else if (response.reason === "OK") {
+        //
+        //publishAllHandler(event, selections, projectPath, appFolder, setAppFolder)
+      }
+      publishDialog.remove();
   }
 
   return (
@@ -102,10 +132,12 @@ const App: React.FC<any> = () => {
       <hr/>
       <ul>
       <li><ActionButton onClick={newProjectHandler}>New Project</ActionButton></li>
-      <li><ActionButton onClick={selectProject}>Open Project</ActionButton><Checkbox onChange={onChange}>:Reset</Checkbox></li>
+      <li><ActionButton onClick={selectProject}>Open Project</ActionButton><Checkbox onChange={onChange}>Reset</Checkbox></li>
       </ul>
 
       <ProjectTable files={psds} path={projectPath} selections = {selections} setSelections = {setSelections} />
+
+      <SortSampleApp />
 
       //
       {/* <ActionButton onClick={newProjectHandler}>New Projectt</ActionButton>
