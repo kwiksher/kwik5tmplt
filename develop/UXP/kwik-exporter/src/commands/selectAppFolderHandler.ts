@@ -42,7 +42,6 @@ export const selectProjectHandler = async(reset:boolean, setPSDs, setProjectPath
     setProjectPath(projectFolder.path);
     //
     // test open&close
-    /*
     try{
       const psd = await projectFolder.getEntry(psds[0].name)
       await executeAsModal(async()=>{
@@ -55,7 +54,6 @@ export const selectProjectHandler = async(reset:boolean, setPSDs, setProjectPath
     }catch(e){
       console.log(e)
     }
-    */
 
   }else{
     // fail gracefully somehow

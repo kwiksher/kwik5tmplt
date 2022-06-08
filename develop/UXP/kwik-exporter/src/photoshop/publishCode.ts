@@ -1,27 +1,16 @@
 import { storage } from 'uxp';
 import { app } from 'photoshop'
+
 import { Layer} from 'photoshop/dom/Layer';
 import { LayerKind} from 'photoshop/dom/Constants';
 
 import {getFolder, isFile, isFolder} from '../utils/storage'
 import {exportIndex, exportIndexLua, exportLayerProps, exportLayerAsPng, resettLayer, exportLayerAsPngAndLoad, exportLayerAsJpegAndLoad } from '../photoshop/exportLayer';
 
-export const publishHandler = async (event) => {
-
+export async function publishCode (bookFolder) {
   const docName = app.activeDocument.name.replace(".psd","");
   const docLayers = app.activeDocument.layers;
   const layer: Layer = docLayers[0];
-
-  if (event.ctrlKey) {
-    console.log("crt")
-  } else if (event.metaKey) {
-    console.log("meta")
-  } else {
-    console.log(event)
-  }
-
-  const fs = storage.localFileSystem;
-  let bookFolder = await fs.getFolder();
   // setEntry(entry);
   //
   //let token = fs.createSessionToken(entry);
@@ -92,4 +81,3 @@ export const publishHandler = async (event) => {
   await exportIndex({"name":docName, "layers":element}, sceneFolder, modelFolder);
 
 }
-

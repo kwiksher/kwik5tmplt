@@ -1,7 +1,7 @@
 import { storage } from 'uxp';
-import { publishImages } from '../photoshop/publishImages';
+import { publishCode } from '../photoshop/publishCode';
 
-export const publishAssetsHandler = async (event) => {
+export const publishCodeHandler = async (event) => {
   if (event.ctrlKey) {
     console.log("crt")
   } else if (event.metaKey) {
@@ -13,6 +13,6 @@ export const publishAssetsHandler = async (event) => {
   const fs = storage.localFileSystem;
   let bookFolder = await fs.getFolder();
 
-  publishImages(bookFolder);
+  publishCode(bookFolder);
 }
 

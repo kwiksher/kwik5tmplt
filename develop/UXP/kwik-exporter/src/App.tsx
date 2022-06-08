@@ -3,11 +3,12 @@ import React, { useState, useEffect } from 'react';
 import Spectrum, { ActionButton, Checkbox } from 'react-uxp-spectrum';
 // import StyledComponents from "./components/StyledComponents";
 
-import { publishHandler } from './commands/publishHandler';
+import { publishCodeHandler } from './commands/publishCodeHandler';
 import { newProjectHandler } from './commands/newProjectHandler';
 import { publishAssetsHandler } from './commands/publishAssetHandler';
 import { selectProjectHandler } from './commands/selectProjectHandler';
-import {ProjectTable} from './components/ProjectTable';
+import { ProjectTable } from './components/ProjectTable';
+import { publishAllHandler } from './commands/publishAllHandler';
 
 const App: React.FC<any> = () => {
 
@@ -72,8 +73,9 @@ const App: React.FC<any> = () => {
 
   const [isReset, setIsReset] = useState(false);
   const [psds, setPSDs] = useState([])
+  const [selections, setSelections] = useState([])
   const [projectPath, setProjectPath] = useState("")
-
+  const [appFolder, setAppFolder] = useState("");
 
   const onChange = () =>{
     setIsReset(!isReset);
@@ -83,19 +85,27 @@ const App: React.FC<any> = () => {
     selectProjectHandler(isReset, setPSDs, setProjectPath);
   }
 
+  const publishAll = (event) =>{
+    //dialog
+
+    //
+    publishAllHandler(event, selections, projectPath, appFolder, setAppFolder)
+  }
+
   return (
     <>
       <ul>
       <li><ActionButton onClick={publishAssetsHandler}>Export Images</ActionButton></li>
-      <li><ActionButton onClick={publishHandler}>Export Codes</ActionButton></li>
+      <li><ActionButton onClick={publishCodeHandler}>Export Code</ActionButton></li>
+      <li><ActionButton onClick={publishAll}>Publish Selections</ActionButton></li>
       </ul>
       <hr/>
       <ul>
       <li><ActionButton onClick={newProjectHandler}>New Project</ActionButton></li>
-      <li><ActionButton onClick={ selectProject }>Select Project</ActionButton><Checkbox onChange={onChange}>:Reset</Checkbox></li>
+      <li><ActionButton onClick={selectProject}>Open Project</ActionButton><Checkbox onChange={onChange}>:Reset</Checkbox></li>
       </ul>
 
-      <ProjectTable files={psds} path={projectPath}/>
+      <ProjectTable files={psds} path={projectPath} selections = {selections} setSelections = {setSelections} />
 
       //
       {/* <ActionButton onClick={newProjectHandler}>New Projectt</ActionButton>
