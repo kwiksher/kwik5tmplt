@@ -135,12 +135,14 @@ const App: React.FC<any> = () => {
       <li><ActionButton onClick={selectProject}>Open Project</ActionButton><Checkbox onChange={onChange}>Reset</Checkbox></li>
       </ul>
 
-      <ProjectTable files={psds} path={projectPath} selections = {selections} setSelections = {setSelections} />
+      <ProjectTable files={psds} path={projectPath} selections = {selections} setSelections = {setSelections} setFiles = {setPSDs} />
 
-      <SortSampleApp />
 
       //
-      {/* <ActionButton onClick={newProjectHandler}>New Projectt</ActionButton>
+      {/*
+      <SortSampleApp />
+      <DroppableListBoxExample />
+      <ActionButton onClick={newProjectHandler}>New Projectt</ActionButton>
       <ActionButton onClick={openProjectHandler}>Open Project</ActionButton>
       <ActionButton onClick={newDocumentHandler}>New Document</ActionButton>
       <ActionButton onClick={openDocumentHandler}>Open Document</ActionButton> */}

@@ -3,13 +3,15 @@ import React, { useState, useEffect } from 'react';
 //import {Flex, ListBox, Item, Section} from '@adobe/react-spectrum'
 import Spectrum, { ActionButton } from 'react-uxp-spectrum';
 
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-export interface ProjectProps {
-  folder:any
+export interface sandboxProps {
+  folder:any;
+  files:any;
   // token:any;
 }
 
-export const ProjectTable: React.FC =()=> {
+export const sandbox: React.FC<sandboxProps> =(props:sandboxProps)=> {
 
   let columns = [
     {name: 'Name', uid: 'name'},
@@ -108,7 +110,20 @@ export const ProjectTable: React.FC =()=> {
   // https://forums.creativeclouddeveloper.com/t/bug-disabled-in-select-option-does-not-work/2270/5
   // https://codereview.stackexchange.com/questions/242077/parsing-numbers-and-ranges-from-a-string-in-javascript
   // https://www.npmjs.com/package/parse-numeric-range
+
+
+  const [characters, updateCharacters] = useState([]);
+  //
+  function handleOnDragEnd(result: any) {
+    const items = Array.from(characters);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    updateCharacters(items);
+  }
+
   return (
+    <>
   // <sp-dropdown placeholder="Make a selection...">
     <sp-menu multiple slot="options">
         <sp-menu-item> Deselect </sp-menu-item>
@@ -119,7 +134,25 @@ export const ProjectTable: React.FC =()=> {
         <sp-menu-item> Make work path </sp-menu-item>
     </sp-menu>
 // </sp-dropdown>
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+    <Droppable droppableId="characters">
+    {(provided) => (
+              <ul className="characters" {...provided.droppableProps} ref={provided.innerRef}>
+              {props.files.map(({id, name}) => {
+                  return (
+                  <li key={id}>
+                      <p>
+                      { name }
+                      </p>
+                  </li>
+                  );
+              })}
+              </ul>
+          )}
+    </Droppable>
+    </DragDropContext>
+  </>
   );
 }
 
-export default ProjectTable;
+export default sandbox;

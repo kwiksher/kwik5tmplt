@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 /**
  * @description マウスポインターが要素と被っているか判定します
@@ -27,7 +27,7 @@ interface Position {
 }
 
 // ドラッグ＆ドロップ要素の情報をまとめた型
-interface DnDItem<T> {
+export interface DnDItem<T> {
   value: T; // useDnDSort()の引数に渡された配列の要素の値
   key: string; // 要素と紐づいた一意な文字列
   position: Position; // 要素の座標
@@ -35,7 +35,7 @@ interface DnDItem<T> {
 }
 
 // useRef()で保持するデータの型
-interface DnDRef<T> {
+export interface DnDRef<T> {
   keys: Map<T, string>; // 要素に紐づいたkey文字列を管理するMap
   dndItems: DnDItem<T>[]; // 並び替える全ての要素を保持するための配列
   canCheckHovered: boolean; // 重なり判定ができるかのフラグ
@@ -53,18 +53,19 @@ interface DnDSortResult<T> {
   };
 }
 
-export const useDnDSort = <T>(defaultItems: T[]): DnDSortResult<T>[] => {
+// export const useDnDSort = <T>(defaultItems: T[]): DnDSortResult<T>[] => {
+ export const useDnDSort = <T>(items: T[], setItems, setFiles, state): DnDSortResult<T>[] => {
   // 描画内容と紐づいているのでuseStateで管理する
-  const [items, setItems] = useState(defaultItems);
+  // const [items, setItems] = useState(defaultItems);
 
-  // 状態をrefで管理する
-  const state = useRef<DnDRef<T>>({
-    dndItems: [],
-    keys: new Map(),
-    dragElement: null,
-    canCheckHovered: true,
-    pointerPosition: { x: 0, y: 0 }
-  }).current;
+  // // 状態をrefで管理する
+  // const state = useRef<DnDRef<T>>({
+  //   dndItems: [],
+  //   keys: new Map(),
+  //   dragElement: null,
+  //   canCheckHovered: true,
+  //   pointerPosition: { x: 0, y: 0 }
+  // }).current;
 
   // ドラッグ中の処理
   const onMouseMove = (event: MouseEvent) => {
@@ -118,7 +119,8 @@ export const useDnDSort = <T>(defaultItems: T[]): DnDSortResult<T>[] => {
       dragElement.position = { x, y };
 
       // 再描画する
-      setItems(dndItems.map((v) => v.value));
+      setFiles(dndItems.map((v) => { return {name:v.value}}));
+
     }
   };
 

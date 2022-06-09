@@ -120,7 +120,8 @@ export const DroppableListBox = React.forwardRef(function (props: any, ref) {
       let closestDistance = Infinity;
       let closestDir = null;
 
-      for (let child of domRef.current.children) {
+      for (var i=0; i< domRef.current.children.length;i++) {
+        const child = domRef.current.children.item(i);
         if (!(child as HTMLElement).dataset.key) {
           continue;
         }
@@ -173,6 +174,11 @@ export const DroppableListBox = React.forwardRef(function (props: any, ref) {
   }, dropState, dropRef);
   let {visuallyHiddenProps} = useVisuallyHidden();
 
+  const collectionArray =[];
+  for (var i=0; i< state.collection.size;i++){
+    collectionArray[i] = state.collection.at(i);
+  }
+
   return (
     <div
       {...mergeProps(collectionProps, listBoxProps)}
@@ -186,7 +192,7 @@ export const DroppableListBox = React.forwardRef(function (props: any, ref) {
           {...dropIndicatorProps}
           ref={dropRef} />
       }
-      {[...state.collection].map(item => (
+      {collectionArray.map(item => (
         <>
           <InsertionIndicator
             key={item.key + '-before'}

@@ -1,13 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'react-uxp-spectrum';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useDnDSort, DnDRef} from "./useDnDSort";
 
 export interface ProjectProps {
   files:any;
   path:string;
   selections:any;
   setSelections:any;
+  setFiles:any;
 }
+
+
+type Style<T extends HTMLElement> = React.HTMLAttributes<T>["style"];
+
+const bodyStyle: Style<HTMLDivElement> = {
+  height: "100vh",
+  display: "flex",
+  overflow: "hidden",
+  alignItems: "center",
+  justifyContent: "center"
+};
+
+const containerStyle: Style<HTMLDivElement> = {
+  display: "flex",
+  flexWrap: "wrap",
+  justifyContent: "space-between",
+  width: "100%",
+  maxWidth: "350px",
+  maxHeight: "500px"
+};
+
+const imageCardStyle: Style<HTMLDivElement> = {
+  cursor: "grab",
+  userSelect: "none",
+  width: "100px",
+  height: "130px",
+  overflow: "hidden",
+  borderRadius: "5px",
+  margin: 3
+};
 
 export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
   //
@@ -49,48 +80,62 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
     doDoubleClickAction(event);
   }
 
-  const [characters, updateCharacters] = useState([]);
-  function handleOnDragEnd(result: any) {
-    const items = Array.from(characters);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    updateCharacters(items);
-  }
-
   //https://zenn.dev/uttk/articles/b90454baec68c8
+
+  console.log("ProjectTable props.files.length", props.files.length);
+
+
+  const list:string[] = [];
+  const [itemsSorted, setItems] = useState([]);
+  const [dnds, setDnDs] = useState([]);
+
+  // props.files.map(item=>list.push(item.name))
+  // const dnds = useDnDSort(list, setItems);
+  // setDnDs(ret)
+
+  // 状態をrefで管理する
+  const state = useRef<DnDRef<any>>({
+    dndItems: [],
+    keys: new Map(),
+    dragElement: null,
+    canCheckHovered: true,
+    pointerPosition: { x: 0, y: 0 }
+  }).current;
+
+  useEffect(() => {
+    props.files.map(item=>list.push(item.name))
+    const ret = useDnDSort(list, setDnDs, props.setFiles, state);
+    setDnDs(ret);
+  }, [props.files]);
+
+  console.log(list, dnds);
 
   return (
     <>
       <sp-heading>{props.path}</sp-heading>
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-      <Droppable droppableId="characters">
-      {(provided) => (
-                <ul className="characters" {...provided.droppableProps} ref={provided.innerRef}>
-                {props.files.map(({id, name}) => {
-                    return (
-                    <li key={id}>
-                        <p>
-                        { name }
-                        </p>
-                    </li>
-                    );
-                })}
-                </ul>
-            )}
-      </Droppable>
-      </DragDropContext>
       <sp-menu multiple slot="options">
-      {props.files.map((item, idx) => (
-        <sp-menu-item key={idx}>
-              <div             onClick={handleClick}
+      {dnds.map((item, idx) => (
+        <div key={item.key} {...item.events}>
+          <sp-menu-item key={idx}>
+              <div onClick={handleClick}
                 onDoubleClick = {handleDoubleClick} >
-              {item.name}
+              {item.value}
               </div>
             </sp-menu-item>
-          ))}
+        </div>))}
       </sp-menu>
-
+      <hr/>
+      <div style={bodyStyle}>
+      <div style={containerStyle}>
+        {dnds.map((item) => (
+          <div key={item.key} style={imageCardStyle} {...item.events}>
+            <h1>
+            {item.value}
+            </h1>
+          </div>
+        ))}
+      </div>
+    </div>
     </>
   );
 }

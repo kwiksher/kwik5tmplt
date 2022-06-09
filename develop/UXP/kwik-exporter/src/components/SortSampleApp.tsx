@@ -57,7 +57,7 @@ const imageList: string[] = [
  * @description ドラッグ＆ドロップ並び替えサンプルのコンポーネント
  */
 export const SortSampleApp = () => {
-  const results = useDnDSort(imageList);
+  const results = []; //useDnDSort(imageList);
 
   return (
     <div style={bodyStyle}>
