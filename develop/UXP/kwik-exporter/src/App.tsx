@@ -80,7 +80,7 @@ const App: React.FC<any> = () => {
   const [isReset, setIsReset] = useState(false);
   const [psds, setPSDs] = useState([])
   const [selections, setSelections] = useState([])
-  const [projectPath, setProjectPath] = useState("")
+  const [projectFolder, setProjectFolder] = useState()
   const [appFolder, setAppFolder] = useState("");
 
   const onChange = () =>{
@@ -88,7 +88,7 @@ const App: React.FC<any> = () => {
   }
 
   const selectProject = () =>{
-    selectProjectHandler(isReset, setPSDs, setProjectPath);
+    selectProjectHandler(isReset, setPSDs, setProjectFolder);
   }
 
   const publishPopup = useRef(); // Reference for the <dialog> element
@@ -116,8 +116,8 @@ const App: React.FC<any> = () => {
       response === "reasonCanceled" ||
       response.reason === "reasonCanceled") {
       }else if (response.reason === "OK") {
-        //
-        //publishAllHandler(event, selections, projectPath, appFolder, setAppFolder)
+        console.log("publishAll", selections);
+        //publishAllHandler(event, selections, projectFolder, appFolder, setAppFolder)
       }
       publishDialog.remove();
   }
@@ -135,7 +135,7 @@ const App: React.FC<any> = () => {
       <li><ActionButton onClick={selectProject}>Open Project</ActionButton><Checkbox onChange={onChange}>Reset</Checkbox></li>
       </ul>
 
-      <ProjectTable files={psds} path={projectPath} selections = {selections} setSelections = {setSelections} setFiles = {setPSDs} />
+      <ProjectTable files={psds} projectFolder={projectFolder} setSelections = {setSelections} setFiles = {setPSDs} />
 
 
       //

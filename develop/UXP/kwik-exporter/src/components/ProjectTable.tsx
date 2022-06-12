@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { storage } from 'uxp';
 import { Button } from 'react-uxp-spectrum';
 import { useDnDSort, DnDRef} from "./useDnDSort";
+import { app } from 'photoshop'
+const executeAsModal = require("photoshop").core.executeAsModal;
 
 export interface ProjectProps {
   files:any;
-  path:string;
-  selections:any;
+  projectFolder:storage.Folder;
+  // selections:any;
   setSelections:any;
   setFiles:any;
 }
@@ -53,31 +56,46 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
   // save the ordered list to a json file
   //
 
+
   let timer = 0;
   let delay = 200;
   let prevent = false;
 
-  const doClickAction = (event) => {
-    console.log(' click');
+  const doClickAction = (event, idx, projectFolder) => {
+    console.log('Single click');
+    state.dndItems[idx].selected  = !state.dndItems[idx].selected;
+    props.setSelections(state.dndItems);
   }
 
-  const doDoubleClickAction = (event) => {
+  const doDoubleClickAction = async (event, idx, projectFolder) => {
     console.log('Double Click')
+    //
+    // open .psd
+    try{
+      const item = dnds[idx]
+      const psd = await projectFolder.getEntry(item.value)
+      await executeAsModal(async()=>{
+        const doc = await app.open(psd);
+      },{ "commandName": "Opening..." })
+
+    }catch(e){
+      console.log(e)
+    }
   }
 
-  const handleClick = (event) => {
+  const handleClick = (event, idx, projectFolder) => {
     timer = setTimeout(function() {
       if (!prevent) {
-        doClickAction(event);
+        doClickAction(event, idx, projectFolder);
       }
       prevent = false;
     }, delay);
   }
 
-  const handleDoubleClick = (event) =>{
+  const handleDoubleClick = (event, idx, projectFolder) =>{
     clearTimeout(timer);
     prevent = true;
-    doDoubleClickAction(event);
+    doDoubleClickAction(event, idx, projectFolder);
   }
 
   //https://zenn.dev/uttk/articles/b90454baec68c8
@@ -106,25 +124,28 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
     props.files.map(item=>list.push(item.name))
     const ret = useDnDSort(list, setDnDs, props.setFiles, state);
     setDnDs(ret);
+    const selections = dnds.map((item, idx)=>false);
+    props.setSelections(selections);
   }, [props.files]);
 
   console.log(list, dnds);
 
+
   return (
     <>
-      <sp-heading>{props.path}</sp-heading>
+      <sp-heading size="XXS">{props.projectFolder?props.projectFolder.nativePath:""}</sp-heading>
       <sp-menu multiple slot="options">
       {dnds.map((item, idx) => (
         <div key={item.key} {...item.events}>
           <sp-menu-item key={idx}>
-              <div onClick={handleClick}
-                onDoubleClick = {handleDoubleClick} >
-              {item.value}
+              <div onClick={(event)=>handleClick(event, idx, props.projectFolder)}
+                onDoubleClick = {(event)=>handleDoubleClick(event, idx, props.projectFolder)} >
+              {idx} {item.value}
               </div>
             </sp-menu-item>
         </div>))}
       </sp-menu>
-      <hr/>
+      {/* <hr/>
       <div style={bodyStyle}>
       <div style={containerStyle}>
         {dnds.map((item) => (
@@ -135,7 +156,7 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
           </div>
         ))}
       </div>
-    </div>
+    </div> */}
     </>
   );
 }

@@ -6,7 +6,7 @@ import { storage } from 'uxp';
 const app = require("photoshop").app;
 const executeAsModal = require("photoshop").core.executeAsModal;
 
-export const selectProjectHandler = async(reset:boolean, setPSDs, setProjectPath) =>{
+export const selectProjectHandler = async(reset:boolean, setPSDs, setProjectFolder) =>{
   // open dialog
   // getFolder
   const fs = storage.localFileSystem;
@@ -39,7 +39,7 @@ export const selectProjectHandler = async(reset:boolean, setPSDs, setProjectPath
       console.log("Opening", psd.name);
     }
     setPSDs(psds);
-    setProjectPath(projectFolder.path);
+    setProjectFolder(projectFolder);
     //
     // test open&close
     /*

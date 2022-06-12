@@ -32,6 +32,7 @@ export interface DnDItem<T> {
   key: string; // 要素と紐づいた一意な文字列
   position: Position; // 要素の座標
   element: HTMLElement; // DOM情報
+  selected:boolean;
 }
 
 // useRef()で保持するデータの型
@@ -176,7 +177,7 @@ interface DnDSortResult<T> {
 
             // 要素が無ければ新しく追加して処理を終わる
             if (itemIndex === -1) {
-              return dndItems.push({ key, value, element, position });
+              return dndItems.push({ key, value, element, position});
             }
 
             // ドラッグ要素の時は、ズレを修正する
