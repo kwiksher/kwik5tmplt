@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom'
+import './style.css';
 
-import Spectrum, { ActionButton, Checkbox } from 'react-uxp-spectrum';
+import Spectrum, { ActionButton, Checkbox, Textfield } from 'react-uxp-spectrum';
 // import StyledComponents from "./components/StyledComponents";
 
 import { publishCodeHandler } from './commands/publishCodeHandler';
@@ -15,6 +16,7 @@ import { PublishPopup} from './components/PublishPopup'
 import { SortSampleApp } from './components/SortSampleApp';
 
 import { DroppableListBoxExample } from './components/DroppableListBoxExample'
+import { TextFonts } from 'photoshop/dom/collections/TextFonts';
 
 const App: React.FC<any> = () => {
 
@@ -82,13 +84,30 @@ const App: React.FC<any> = () => {
   const [selections, setSelections] = useState([])
   const [projectFolder, setProjectFolder] = useState()
   const [appFolder, setAppFolder] = useState("");
+  const [isAll, setIsAll] = useState(false)
+  const [textRange, setTextRange] = useState("")
 
   const onChange = () =>{
     setIsReset(!isReset);
   }
 
+  const onAll = () =>{
+    //setPSDs(selections.map(v=>{return {name:v.value, selected:!isAll}}));
+    setIsAll(!isAll);
+    console.log(isAll)
+    if (isAll){
+      setTextRange("0-"+(psds.length-1))
+    }else{
+      setTextRange("")
+    }
+  }
+
   const selectProject = () =>{
     selectProjectHandler(isReset, setPSDs, setProjectFolder);
+  }
+
+  const onTextfield = (event) =>{
+    console.log(event.target.value)
   }
 
   const publishPopup = useRef(); // Reference for the <dialog> element
@@ -117,25 +136,33 @@ const App: React.FC<any> = () => {
       response.reason === "reasonCanceled") {
       }else if (response.reason === "OK") {
         console.log("publishAll", selections);
-        //publishAllHandler(event, selections, projectFolder, appFolder, setAppFolder)
+        publishAllHandler(event, selections, projectFolder, appFolder, setAppFolder)
       }
       publishDialog.remove();
   }
 
   return (
     <>
+      <sp-heading size="XXS">Project</sp-heading>
       <ul>
-      <li><ActionButton onClick={publishAssetsHandler}>Export Images</ActionButton></li>
-      <li><ActionButton onClick={publishCodeHandler}>Export Code</ActionButton></li>
-      <li><ActionButton onClick={publishAll}>Publish Selections</ActionButton></li>
+      <li>
+        <ActionButton onClick={newProjectHandler}>New</ActionButton>
+        <ActionButton onClick={selectProject}>Open</ActionButton>
+        <Checkbox onChange={onChange}>Reset</Checkbox>
+      </li>
+      <li>
+         <ActionButton onClick={publishAll}>Publish Selections</ActionButton>
+         <Checkbox onChange={onAll}>all</Checkbox>
+         <Textfield placeholder={textRange} className="textField" onChange={onTextfield}></Textfield>
+
+      </li>
       </ul>
       <hr/>
-      <ul>
-      <li><ActionButton onClick={newProjectHandler}>New Project</ActionButton></li>
-      <li><ActionButton onClick={selectProject}>Open Project</ActionButton><Checkbox onChange={onChange}>Reset</Checkbox></li>
-      </ul>
-
-      <ProjectTable files={psds} projectFolder={projectFolder} setSelections = {setSelections} setFiles = {setPSDs} />
+      <sp-heading size="XXS">Active Document</sp-heading>
+      <ActionButton onClick={publishAssetsHandler}>Export Images</ActionButton>
+      <ActionButton onClick={publishCodeHandler}>Export Code</ActionButton>
+      <hr/>
+      <ProjectTable files={psds} projectFolder={projectFolder} setSelections = {setSelections} setFiles = {setPSDs} selected={isAll?true:null} />
 
 
       //

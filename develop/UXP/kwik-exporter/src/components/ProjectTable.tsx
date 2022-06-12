@@ -11,6 +11,7 @@ export interface ProjectProps {
   // selections:any;
   setSelections:any;
   setFiles:any;
+  selected:boolean;
 }
 
 
@@ -126,7 +127,7 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
     setDnDs(ret);
     const selections = dnds.map((item, idx)=>false);
     props.setSelections(selections);
-  }, [props.files]);
+  }, [props.files, props.selected]);
 
   console.log(list, dnds);
 
@@ -137,7 +138,7 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
       <sp-menu multiple slot="options">
       {dnds.map((item, idx) => (
         <div key={item.key} {...item.events}>
-          <sp-menu-item key={idx}>
+          <sp-menu-item key={idx} selected={props.selected}>
               <div onClick={(event)=>handleClick(event, idx, props.projectFolder)}
                 onDoubleClick = {(event)=>handleDoubleClick(event, idx, props.projectFolder)} >
               {idx} {item.value}
