@@ -14,11 +14,12 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
 #### Exporter plugins for PS, XD
 
 - develop/UXP/kwik-exporter
-  - open psd files from a folder (TODO)
+  - New
+  - Open psd files from a folder (TODO)
 
     the folder name/path is saved in a json
 
-  - select psd files (TODO)
+  - Publish selected psd files (TODO)
 
       - Drag & Drop  to change the order of psd files
 
@@ -27,13 +28,33 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
         a psd can be marked for being ignored
 
 
-  - export images
-  - export props
+  - Export images
+  - Export code
+
+  {{<img src="./img/2022-06-13-10-52-00.png" width="400">}}
 
 
-  {{<img src="img/2022-05-24-18-41-28.png" width="400">}}
+  **Publish** all images of selected documents
 
-  **Export Images for a single document**
+  1. mark the checkboxes of documents you want to publish
+
+    https://developer.adobe.com/xd/uxp/uxp/reference-spectrum/User%20Interface/
+
+    spectrum tableview is not yet supported in UXP
+
+    https://react-spectrum.adobe.com/react-spectrum/TableView.html
+
+      - Ctl(Win) or Option(Mac) + Space key toggles selection for the focused row
+
+      - toggle all on/off
+
+  1. clcik
+
+      opendFileDialog asks a **book folder** under App folder.
+
+      {{<img src="./img/2022-06-13-10-57-57.png" width="400">}}
+
+  **Active Document** Export Images for an active document document
 
   1. open .psd by cliking the psd name in the list
 
@@ -49,26 +70,8 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
 
         {{<img src="img/2022-05-24-18-32-56.png" width="600">}}
 
-  **Export all images of selected documents**
 
-  1. mark the checkboxes of documents you want to publish
-
-    https://developer.adobe.com/xd/uxp/uxp/reference-spectrum/User%20Interface/
-
-    spectrum tableview is not yet supported in UXP
-    
-    https://react-spectrum.adobe.com/react-spectrum/TableView.html
-
-      - Ctl(Win) or Option(Mac) + Space key toggles selection for the focused row
-
-      - toggle all on/off
-
-
-  1. clcik Export Images
-
-      opendFileDialog asks a **book folder** under App folder.
-
-  **Export each image of a layerSet(layer group)  in .psd**
+  **Active Document** Export each image of a layerSet(layer group)  in .psd
 
   1. create a folder with same name as layerSet in book/assets/images/FILE_NAME_OF_PSD
 
@@ -88,6 +91,8 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
     > A concept of Kwik5 is to use App folder as a project base. It is a kind of file based database where .json, .lua and assets files are placed. No more .kwk xml file of Kwik4
 
     > Direclty Editing  a file under App folder while running Solar2D Simulator means a live editing. No more build4 folder of Kwik4
+
+  **TODO** Active Document > Layer Selection Only
 
 ----
 #### Editor Frontend for PS, XD
