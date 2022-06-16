@@ -125,8 +125,8 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
     props.files.map(item=>list.push(item.name))
     const ret = useDnDSort(list, setDnDs, props.setFiles, state);
     setDnDs(ret);
-    const selections = dnds.map((item, idx)=>false);
-    props.setSelections(selections);
+    //const selections = dnds.map((item, idx)=>{return {name: item.value, selected:false}});
+    props.setSelections(state.dndItems);
   }, [props.files, props.selected]);
 
   console.log(list, dnds);

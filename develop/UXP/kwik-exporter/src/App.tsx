@@ -83,7 +83,7 @@ const App: React.FC<any> = () => {
   const [psds, setPSDs] = useState([])
   const [selections, setSelections] = useState([])
   const [projectFolder, setProjectFolder] = useState()
-  const [appFolder, setAppFolder] = useState("");
+  const [bookFolder, setBookFolder] = useState("");
   const [isAll, setIsAll] = useState(false)
   const [textRange, setTextRange] = useState("")
 
@@ -92,10 +92,8 @@ const App: React.FC<any> = () => {
   }
 
   const onAll = () =>{
-    //setPSDs(selections.map(v=>{return {name:v.value, selected:!isAll}}));
     setIsAll(!isAll);
-    console.log(isAll)
-    if (isAll){
+    if (!isAll){
       setTextRange("0-"+(psds.length-1))
     }else{
       setTextRange("")
@@ -117,7 +115,7 @@ const App: React.FC<any> = () => {
     //dialog
     if (!publishDialog) {
       publishDialog = document.createElement("dialog");
-      ReactDOM.render(<PublishPopup dialog={publishDialog} />, publishDialog);
+      ReactDOM.render(<PublishPopup dialog={publishDialog} bookFolder = {bookFolder} setBookFolder={setBookFolder} />, publishDialog);
     }
     document.body.appendChild(publishDialog);
 
@@ -135,8 +133,9 @@ const App: React.FC<any> = () => {
       response === "reasonCanceled" ||
       response.reason === "reasonCanceled") {
       }else if (response.reason === "OK") {
-        console.log("publishAll", selections);
-        publishAllHandler(event, selections, projectFolder, appFolder, setAppFolder)
+        const target = {selections:selections, isAll:isAll, textRange:textRange};
+        console.log("publishAll",target);
+        publishAllHandler(event, target, projectFolder, bookFolder)
       }
       publishDialog.remove();
   }

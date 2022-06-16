@@ -11,6 +11,16 @@ export async function publishCode (bookFolder) {
   const docName = app.activeDocument.name.replace(".psd","");
   const docLayers = app.activeDocument.layers;
   const layer: Layer = docLayers[0];
+  const boundsCalc = (bounds)=>{
+    const ret = {bottom:bounds.bottom, top:bounds.top, right:bounds.right, left:bounds.left};
+    const xDiff = -(app.activeDocument.width-1920)/2
+    const yDiff = -(app.activeDocument.height-1280)/2
+    ret.left +=  xDiff
+    ret.right += xDiff
+    ret.top += yDiff
+    ret.bottom += yDiff
+    return ret;
+  }
   // setEntry(entry);
   //
   //let token = fs.createSessionToken(entry);
@@ -38,11 +48,6 @@ export async function publishCode (bookFolder) {
     │               ├── index.lua
     │               └── newIcon.lua
     */
-
-  const modelsRoot = await getFolder('models', bookFolder);
-  const modelFolder = await getFolder(docName, modelsRoot)
-  const scenesRoot = await getFolder('scenes', bookFolder);
-  const sceneFolder = await getFolder(docName, scenesRoot)
   // .lua
   const exportLayer = async (docLayers, sceneFolder, modelFolder, parent):Promise<any> => {
     const objs = [];
@@ -71,13 +76,25 @@ export async function publishCode (bookFolder) {
           await file.delete();
         }
       }else{
-        await exportLayerProps(docLayers[i], sceneFolder, modelFolder, parent);
+        await exportLayerProps(docLayers[i], boundsCalc(docLayers[i].bounds), sceneFolder, modelFolder, parent);
       }
       objs[i] = obj;
     }
     return objs.reverse();
   }
-  const element = await exportLayer(docLayers, sceneFolder, modelFolder, "");
-  await exportIndex({"name":docName, "layers":element}, sceneFolder, modelFolder);
+
+  try{
+    const modelsRoot = await getFolder('models', bookFolder);
+    const modelFolder = await getFolder(docName, modelsRoot)
+    const scenesRoot = await getFolder('scenes', bookFolder);
+    const sceneFolder = await getFolder(docName, scenesRoot)
+
+    const element = await exportLayer(docLayers, sceneFolder, modelFolder, "");
+    await exportIndex({"name":docName, "layers":element}, sceneFolder, modelFolder);
+
+  }catch(e){
+    console.log(e)
+
+  }
 
 }

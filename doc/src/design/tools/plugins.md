@@ -36,7 +36,7 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
 
   **Publish** all images of selected documents
 
-  1. mark the checkboxes of documents you want to publish
+  1. mark checkboxes of document's names you want to publish
 
     https://developer.adobe.com/xd/uxp/uxp/reference-spectrum/User%20Interface/
 
@@ -60,7 +60,7 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
 
       Kwik4_1280x1920.psd with background image 1440x2776
 
-      > kwik5 does not care the canvas size of .psd as kwik4 requests it 1280x1920 when publishing images.
+      > kwik5 does not request the canvas size of .psd as 1280x1920 when publising
 
       {{<img src="img/2022-05-24-18-46-26.png" width="600">}}
 
@@ -90,7 +90,7 @@ Kwik5 you can creat a folder for your psd files on your own. When Kwik Exporter 
 
     > A concept of Kwik5 is to use App folder as a project base. It is a kind of file based database where .json, .lua and assets files are placed. No more .kwk xml file of Kwik4
 
-    > Direclty Editing  a file under App folder while running Solar2D Simulator means a live editing. No more build4 folder of Kwik4
+    > Direclty Editing  a file under App folder while running Solar2D Simulator means a live editing. No more build4 folder of Kwik4 either
 
   **TODO** Active Document > Layer Selection Only
 

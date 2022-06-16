@@ -1,10 +1,13 @@
 import { useState } from "react";
 import {Button, Checkbox } from 'react-uxp-spectrum';
+import { storage } from 'uxp';
 
-export const PublishPopup = ({ dialog }) => {
+
+export const PublishPopup = ({ dialog, bookFolder, setBookFolder }) => {
 
   const [exportCode, setExportCode] = useState(true);
   const [exportImages, setExportImages] = useState(true);
+  const [distFolder, setDistFolder] = useState(bookFolder.nativePath);
 
   const buttonHandler = (reason) => {
     const retObj = {
@@ -15,6 +18,16 @@ export const PublishPopup = ({ dialog }) => {
     dialog.close(retObj);
   }
 
+  const appFolderHandler = async (event) =>{
+    const fs = storage.localFileSystem;
+    let folder = await fs.getFolder();
+    setBookFolder(folder);
+    setDistFolder(folder.nativePath)
+    console.log(folder.nativePath);
+
+  }
+
+
   return (
     <form method="dialog" className="aboutDialog">
       <div className="column">
@@ -23,6 +36,16 @@ export const PublishPopup = ({ dialog }) => {
         <Checkbox checked onChange={(event) => setExportImages(!exportImages)}>
         Export Images
         </Checkbox>
+
+        <sp-heading size="XXS">{distFolder}</sp-heading>
+
+        <Button
+            quiet
+            onClick={appFolderHandler}
+            style={{ marginLeft: "auto" }}>
+            Browse
+          </Button>
+
 
         <footer>
           <Button

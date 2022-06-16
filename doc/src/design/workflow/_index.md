@@ -8,7 +8,7 @@ weight: 10
 
 Overview
 
-1. put .png/.jpg into App/contentX/assets/images manually or kwik-export plugin for Ps/XD
+1. put .png/.jpg into App/contentX/assets/images manually or use kwik-export plugin for Ps/XD to publish images to App folder
 
     - images without coordinates
     - images with coordinates from Ps, XD with kwik-export plugin

@@ -15,8 +15,8 @@ end
 
 local Props = {
   blendMode = "{{blendMode}}",
-  height    = {{bounds.top}} - {{bounds.bottom}},
-  width     = {{bounds.left}} - {{bounds.right}},
+  height    =  {{bounds.bottom}} - {{bounds.top}},
+  width     = {{bounds.right}} - {{bounds.left}} ,
   kind      = {{kind}},
   name      = "{{parent}}{{name}}",
   type      = "png",

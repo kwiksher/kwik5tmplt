@@ -113,19 +113,19 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
   }
 };
 
-export const exportLayerProps = async (layer: Layer, sceneFolder:storage.Folder, modelFolder:storage.Folder, parent:string): Promise<void> => {
+export const exportLayerProps = async (layer: Layer, bounds, sceneFolder:storage.Folder, modelFolder:storage.Folder, parent:string): Promise<void> => {
   console.log("exportLayerProps");
 
   const props = {
-    "bounds"    : layer.bounds,
+    "bounds"    : bounds,
     "opacity"   : layer.opacity,
     "blendMode" : layer.blendMode,
-    "height"    : layer.bounds.bottom-layer.bounds.top,
-    "width"     : layer.bounds.right -layer.bounds.left,
+    "height"    : bounds.bottom-bounds.top,
+    "width"     : bounds.right -bounds.left,
     "kind"      : layer.kind,
     "name"      : layer.name,
-    "x"         : layer.bounds.right + (layer.bounds.left -layer.bounds.right)/2,
-    "y"         : layer.bounds.top + (layer.bounds.bottom - layer.bounds.top)/2,
+    "x"         : bounds.right + (bounds.left -bounds.right)/2,
+    "y"         : bounds.top + (bounds.bottom - bounds.top)/2,
     "alpha"     : layer.opacity/100,
     "parent"    : parent
   }
