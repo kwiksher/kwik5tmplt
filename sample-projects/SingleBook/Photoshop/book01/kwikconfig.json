@@ -1,0 +1,8 @@
+{
+  "name":"book one",
+  "output":"../../Solar2D/src/App/book",
+  "pages":[
+    {"psd":"page01.psd", "name":"page one"},
+    {"psd":"page02.psd", "name":"page two"}
+  ]
+}

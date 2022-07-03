@@ -9,7 +9,7 @@ export const newProjectHandler = async() =>{
   let distFolder = await fs.getFolder();
 
   let pluginFolder  = await fs.getPluginFolder();
-  let tmpltFolder = await pluginFolder.getEntry("kwik/Solar2D") as storage.Folder;
+  let tmpltFolder = await pluginFolder.getEntry("kwik/Landscape") as storage.Folder;
 
   await copyAll(tmpltFolder, distFolder);
 
