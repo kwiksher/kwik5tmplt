@@ -46,7 +46,7 @@ weight: 2
 
     > TODO kwikconfig.json will be created in the selected folder.
 
-1. Double Click the one of .psd in the list to make it open
+1. Double Click the one of .psd in the list to open for editing.
 
     <img src="./img/2022-07-02-20-44-38.png" width="600">
 
@@ -57,18 +57,18 @@ weight: 2
 
       it will select all the psd files in the list
 
-    Export Settings Dialog appears, click Export
+      Export Settings Dialog appears, click Export
 
-    > TODO show the project name with the default output folder
+      > TODO show the project name with the default output folder
 
-    <img src="./img/2022-07-02-20-46-39.png" width="350">
+      <img src="./img/2022-07-02-20-46-39.png" width="350">
 
     - Browse button
 
-       Select the folder for output if you change the destination. The default is defined in kwikconfig.json as "../../Solar2D/src/App/book"
+       Select the folder for output if you change the destination. The default is defined in kwikconfig.json as **"../../Solar2D/src/App/book"**
 
 
-    - Kwik will publish codes/images. You can find images and codes in
+    - Kwik will publish images/source code. You can find them in
 
       > TODO change dist to src with SimpleBook sample
 
@@ -93,13 +93,21 @@ weight: 2
 
 1. Project > New button
 
-      it will scafold a Solar2D folder of a template to a folder you choose.
-
-    NG Current implementations copies Solar2D folder w/o App
-
-    TODO it would be better to scafold the entire structure of SingleBook sample
+    TODO dialog for choice 
+      -  create a pair of Photoshop & Solar2D project folder
+      
+        it will scafold a Solar2D folder of a template to a folder you choose.
+    
+        NG Current implementation copies Solar2D folder w/o App
+      
+        TODO it would be better to scafold the entire structure of SingleBook sample
+      
+      -  create a book folder into Photoshop folder
+        
+      select a distination folder
 
     TODO select portrait or landscape
+
 
  ```
   ├── Photoshop
@@ -136,7 +144,7 @@ weight: 2
 
 develop/Solar2D/tools/kwik-editor
 
-This tool visually edits Soar2D/src files of a Kwik project
+This tool visually edits Soar2D/src files of a Kwik project and is harnessed by Pegasus http-server 
 
 TODO Port kwik5/sandbox/Solar2D_MENU/KwikLiveEditor to the folder above. Take diff
 
