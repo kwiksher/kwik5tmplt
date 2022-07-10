@@ -1,12 +1,14 @@
 ---
-title: "Content Structure"
+title: "Content X Structure"
 chapter: true
-weight: 10
+weight: 1
 ---
 
-### Content Structure
+### Content X Structure
 
 sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/contentX
+
+(TODO clean the tree structure below)
 
 ```
 .

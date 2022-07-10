@@ -11,7 +11,7 @@ sandbox/Ps/react-uxp-styles/Project/Solar2D/src
 ```
 .
 ├── App
-│   ├── contentX
+│   ├── contentX // See Content X Structure
 |
 ├── Images.xcassets
 ├── LaunchScreen.storyboardc

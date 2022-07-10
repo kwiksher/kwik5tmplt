@@ -4,6 +4,7 @@ TODO
     - [ ] UXP tool to generate .png and .json
       - [x] export images
       - [ ] export codes
+        - [ ] traverse commands, compoents and scene folder to output scenes/pageX/index.lua ⭐️
     - [ ] layerSet
         - [ ] create/delete a folder to toggle layerSet rendering on/off
     - [ ] assets/images/pageX folder

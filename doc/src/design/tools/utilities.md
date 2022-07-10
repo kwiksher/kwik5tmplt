@@ -7,11 +7,14 @@ weight: 50
 ### Utilities
 
 
-/develop/Solar2D/tools/generate_scene_index
+/develop/Solar2D/tools/generate_scene_index (TODO update ⭐️)
 
 - generating scene/pageX/index.lua
 
-  the table in the index.lua is created by iterating files in App/bookX/components and bookX/commands
+   index.lua is created by iterating files from
+   - App/conentX/scene/pageX
+   - App/contentX/components/pageX
+   - App/conentX/commands/pageX
 
 - scafolding (optional)
 

@@ -10,6 +10,44 @@ Exporrter plugin for PS, XD
 
   - UXP
 
+    - export images
+    - export source code
+      1. traverse photoshop layers
+
+          scnes/pageX/**/*.lua 
+
+          > kwik-exporter\src\photoshop\publishCode.ts
+
+      1. traverse App/contentX/
+         - commands/pageX/ for envets
+         - components/pageX for components such as audios,groups ..
+         - scenes/pageX for layers from Photoshop and attached animation, button
+      
+          > generate_scene_index\generate_models.lua
+
+      1. merge the both results to ouput scenes/pageX/index.lua ⭐️
+
+
+          ```lua
+          local sceneName = ...
+          --
+          local scene = require('controller.scene').new(sceneName, {
+              name = "page01",
+              layers = {{bg = {}}, {layerX = {types={button}}}},
+              components = {
+                  audios = {},
+                  groups = {},
+                  others = {},
+                  timers = {},
+                  variables = {}
+              },
+              events = {"bg.clickLayer"},
+              onInit = function(scene) print("onInit") end
+          })
+
+          return scene
+          ```
+
   - develop/UXP/kwik-exporter
      
      A layer set is exported as one single image if assets/images/pageX has the foler with the same name of the layer set.

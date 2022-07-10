@@ -377,6 +377,10 @@ function M.generate (folder, alias, index)
     ---
     print("----------")
     local types = {"button", "animation"}
+    --
+    -- TODO components/pageX for audios/groups
+    -- TODO btton, animation -- layer related onese are in scene/pageX
+
     path = system.pathForFile(projectFolder.."/components/"..folder, system.ResourceDirectory )
     print("", path)
     local function layerIterator (path, parent)
