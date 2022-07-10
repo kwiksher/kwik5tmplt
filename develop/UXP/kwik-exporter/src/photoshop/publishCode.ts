@@ -97,29 +97,70 @@ export async function publishCode (bookFolder) {
     const componentFolder = await getFolder(docName, componentRoot);
     //
     const lua_commands = await parseCommandFiles(commandFolder);
-    const lua_components = await parseComponentFiles(commandFolder);
-    const lua_layers   = await parseLayerFiles(sceneFolder);
+    const lua_components = await parseComponentFiles(componentFolder);
+    const lua_layers   = await parseLayerFiles(sceneFolder, lua_commands);
     //
     const elements = await exportLayer(docLayers, sceneFolder, modelFolder, "");
     //
     // merge
     //
-    for (const layer of lua_layers){
-        const element = elements.filter(entry=>entry.name==layer.name)
-        if (element==null ){
+    /*
+    ```lua
+    local sceneName = ...
+    --
+    local scene = require('controller.scene').new(sceneName, {
+        name = "page01",
+        layers = {{bg = {}}, {layerX = {types={button}}}},
+        components = {
+            audios = {},
+            groups = {},
+            others = {},
+            timers = {},
+            variables = {}
+        },
+        events = {"bg.clickLayer"},
+        onInit = function(scene) print("onInit") end
+    })
+
+    return scene
+    ```
+    */
+    const temp = [];
+    //
+    for (const [layerName, obj] of lua_layers){
+        const element = elements.filter(entry=>{
+          for (const [k, v] of entry){
+            if (k == layerName){
+              return true;
+            }
+          }
+          return false;
+        })
+        if (element.length == 0 ){
           //add
+          temp.push(obj);
         }else{
           // exists
           //   get entry.weight
           // check types
+          element[0].weight = obj.weight
         }
     }
+    //
+    temp.push(...elements);
     // sort by weight
+    temp.sort((a,b) =>{
+      if (a.weight < b.weight) {
+        return -1;
+      }else{
+        return 1;
+      }
+    })  
     //
     // add lua_commands to elements
     // add lua_components to elements
     //
-    await exportIndex({"name":docName, "layers":elements}, sceneFolder, modelFolder);
+    await exportIndex({"name":docName, "layers":temp, "components":lua_components, "events":lua_commands}, sceneFolder, modelFolder);
 
   }catch(e){
     console.log(e)

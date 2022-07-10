@@ -7,6 +7,7 @@ import {formatText} from 'lua-fmt'; // not working?
 
 const fs = require('uxp').storage.localFileSystem;
 import * as Mustache from 'mustache'
+import { Component } from 'react';
 
 let templateMap = new Map<string, string>();
 
@@ -93,17 +94,25 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
   //https://stackoverflow.com/questions/31885263/mustache-js-how-to-create-a-recursive-list-with-an-unknown-number-of-sub-lists
 
   const layers = objs2list(model.layers);
-
   console.log("-----exportIndex------")
   console.log(model.layers)
   const layerPartial = {"recursive": '{{#layers}}{ {{name}} = { {{>layers}} } },{{/layers}}'};
-
-//  const layerPartial = {"recursive": '{ {{#layers}}{{name}} = { {{>layers}} },{{/layers}} }'};
+  //  const layerPartial = {"recursive": '{ {{#layers}}{{name}} = { {{>layers}} },{{/layers}} }'};
+  //
+  // events =["eventOne", "eventTwo"]
+  const events = objs2list(model.events);
+   
+  const components = {
+    audios:objs2list(model.components.aduios),
+    groups:objs2list(model.groups), 
+    others:objs2list(model.others), 
+    timers:objs2list(model.timers),
+    variables:objs2list(model.variables)};
 
   const tmplt = await getTemplateData('scenes/pageX/book_index.lua');
 
   console.log( {"name":model.name, "layers":layers})
-  const out = Mustache.render(tmplt, {"name":model.name, "layers":layers}, layerPartial);
+  const out = Mustache.render(tmplt, {"name":model.name, "layers":layers, "events":events, "components":components}, layerPartial);
   try{
     const file = await sceneFolder.createFile("index.lua",{overwrite: true});
     await file.write(out);
