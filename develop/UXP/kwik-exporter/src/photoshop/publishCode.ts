@@ -4,7 +4,8 @@ import { app } from 'photoshop'
 import { Layer} from 'photoshop/dom/Layer';
 import { LayerKind} from 'photoshop/dom/Constants';
 
-import {getFolder, isFile, isFolder} from '../utils/storage'
+import {getFolder, isFile, isFolder} from '../utils/storage';
+import {parseCommandFiles, parseLayerFiles, parseComponentFiles } from '../utils/projectParser';
 import {exportIndex, exportIndexLua, exportLayerProps, exportLayerAsPng, resettLayer, exportLayerAsPngAndLoad, exportLayerAsJpegAndLoad } from './exportLayer';
 
 export async function publishCode (bookFolder) {
@@ -83,14 +84,42 @@ export async function publishCode (bookFolder) {
     return objs.reverse();
   }
 
+
+  
   try{
     const modelsRoot = await getFolder('models', bookFolder);
-    const modelFolder = await getFolder(docName, modelsRoot)
+    const modelFolder = await getFolder(docName, modelsRoot);
     const scenesRoot = await getFolder('scenes', bookFolder);
-    const sceneFolder = await getFolder(docName, scenesRoot)
-
-    const element = await exportLayer(docLayers, sceneFolder, modelFolder, "");
-    await exportIndex({"name":docName, "layers":element}, sceneFolder, modelFolder);
+    const sceneFolder = await getFolder(docName, scenesRoot);
+    const commandRoot = await getFolder('commands', bookFolder);
+    const commandFolder = await getFolder(docName, commandRoot);
+    const componentRoot = await getFolder('components', bookFolder);
+    const componentFolder = await getFolder(docName, componentRoot);
+    //
+    const lua_commands = await parseCommandFiles(commandFolder);
+    const lua_components = await parseComponentFiles(commandFolder);
+    const lua_layers   = await parseLayerFiles(sceneFolder);
+    //
+    const elements = await exportLayer(docLayers, sceneFolder, modelFolder, "");
+    //
+    // merge
+    //
+    for (const layer of lua_layers){
+        const element = elements.filter(entry=>entry.name==layer.name)
+        if (element==null ){
+          //add
+        }else{
+          // exists
+          //   get entry.weight
+          // check types
+        }
+    }
+    // sort by weight
+    //
+    // add lua_commands to elements
+    // add lua_components to elements
+    //
+    await exportIndex({"name":docName, "layers":elements}, sceneFolder, modelFolder);
 
   }catch(e){
     console.log(e)

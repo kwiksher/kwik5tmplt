@@ -14,7 +14,7 @@ Exporrter plugin for PS, XD
     - export source code
       1. traverse photoshop layers
 
-          scnes/pageX/**/*.lua 
+          scenes/pageX/**/*.lua 
 
           > kwik-exporter\src\photoshop\publishCode.ts
 
