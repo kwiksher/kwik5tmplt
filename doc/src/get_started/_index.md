@@ -93,17 +93,17 @@ weight: 2
 
 1. Project > New button
 
-    TODO dialog for choice 
+    TODO dialog for choice
       -  create a pair of Photoshop & Solar2D project folder
-      
+
         it will scafold a Solar2D folder of a template to a folder you choose.
-    
+
         NG Current implementation copies Solar2D folder w/o App
-      
+
         TODO it would be better to scafold the entire structure of SingleBook sample
-      
+
       -  create a book folder into Photoshop folder
-        
+
       select a distination folder
 
     TODO select portrait or landscape
@@ -144,7 +144,7 @@ weight: 2
 
 develop/Solar2D/tools/kwik-editor
 
-This tool visually edits Soar2D/src files of a Kwik project and is harnessed by Pegasus http-server 
+This tool visually edits Soar2D/src files of a Kwik project and is harnessed by Pegasus http-server
 
 TODO Port kwik5/sandbox/Solar2D_MENU/KwikLiveEditor to the folder above. Take diff
 
@@ -165,7 +165,7 @@ TODO editPorpsTable.lua
 		util.renderer(tmplt, path, map)
 ```
 
-{{<img src="./img/2022-07-03-14-34-35.png" width="1080">}}
+<img src="./img/2022-07-03-14-34-35.png" width="1080">
 
 ↑
 Select a layer or an event to review. You can edit values of properties

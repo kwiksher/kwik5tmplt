@@ -1,6 +1,6 @@
 import {getFolder, isFile, isFolder} from '../utils/storage';
 
-export async function parseCommandFiles(folder){ 
+export async function parseCommandFiles(folder){
   const ret = [];
   const eventIterator = async(folder, parent) =>{
     let  parentPath = ""
@@ -11,15 +11,15 @@ export async function parseCommandFiles(folder){
     for (var i = 0; i < entries.length; i++) {
       let element = entries[i];
       if (element.isFile && element.name.indexOf('.lua') > 0 ){
-        const value = parentPath +  element.name.gsub(".lua", "")
+        const value = parentPath +  element.name.replace(".lua", "")
         ret.push(value)
         console.log(value)
       }else if(element.isFolder && element.name.len() > 2){
         eventIterator(element, folder)
       }
-    }    
+    }
   }
-  await eventIterator(folder, null) 
+  await eventIterator(folder, null)
   return ret;
 }
 //
@@ -28,7 +28,7 @@ export async function parseCommandFiles(folder){
 const types = ["button", "animation"];
 
 async function readWeight(file){
-  const contents = await file.read(); 
+  const contents = await file.read();
   var lines = contents.split(/\r?\n/);
   for (const line of lines){
     if (line.indexOf(".weight") > 0){
@@ -36,7 +36,7 @@ async function readWeight(file){
       const text = line.substring(pos +1);
       return parseInt(text);
     }
-  } 
+  }
   return  0
 }
 
@@ -54,7 +54,7 @@ const layerIterator = async(folder, parent, eventsMap) =>{
   for (var i = 0; i < entries.length; i++) {
     let element = entries[i];
     if (element.isFile && element.name.indexOf('.lua') > 0 ){
-      const layerName = element.name.gsub(".lua", "");
+      const layerName = element.name.replace(".lua", "");
       if (layerName !='index'){
         let layer = layerMap.get(layerName);
         if (layer == null){
@@ -68,8 +68,8 @@ const layerIterator = async(folder, parent, eventsMap) =>{
         for (const type of types){
           if (element.name.indexOf("_"+type+".lua")){
             if (layer.types == null){
-              layer.types = {}
-            } 
+              layer.types = [];
+            }
             layer.types.push(type)
           }
         }
@@ -82,12 +82,12 @@ const layerIterator = async(folder, parent, eventsMap) =>{
         children.set('weight', readWeight(entries[0]));
       }
     }
-  }  
+  }
   // layerMap = {
   //     layerName:{types: [],events : [], weight : 1}),
   // },
   // convert to
-  // { 
+  // {
   //    layerName : {types : [], events : []}, weight:1
   // }
   //
@@ -97,10 +97,10 @@ const layerIterator = async(folder, parent, eventsMap) =>{
       t[k] = {}
       if (v.types){
         t.types = v.types
-      } 
+      }
       if (v.events){
         t.events = v.events
-      } 
+      }
       if (v.weight){
         t.weight = v.weight
       }
@@ -117,7 +117,7 @@ const layerIterator = async(folder, parent, eventsMap) =>{
          t.weight = children.get('weight')
        }
     }
-  }  
+  }
   //
   // temp.sort((a,b) =>{
   //   if (a.weight < b.weight) {
@@ -140,7 +140,7 @@ const layerIterator = async(folder, parent, eventsMap) =>{
 //   variables = {}
 // },
 //
-export async function parseComponentFiles(folder){ 
+export async function parseComponentFiles(folder){
   const ret = {}
   const folderNames = ["audios", "groups", "others", "times", "variables"];
   for (const name of folderNames){
@@ -150,7 +150,7 @@ export async function parseComponentFiles(folder){
   return ret;
 }
 
-export async function parseLayerFiles(folder, commands){ 
+export async function parseLayerFiles(folder, commands){
   const eventsMap = {}
   for (const event of commands){
       const splitTable = event.split('.');

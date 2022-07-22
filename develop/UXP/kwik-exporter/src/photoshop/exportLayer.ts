@@ -64,20 +64,22 @@ export const exportIndexLua = async (weight:number, destFolder:storage.Folder): 
 
 function objs2list(arr) {
   const r = [];
-  arr.forEach(function(obj, index, array) {
-    // console.log(obj, index)
-    Object.keys(obj).forEach(function(key){
-      if (key!="events" && key!="types"){
-        let elements = obj[key];
-        if (elements.length > 0 ) {
-          let ret = objs2list(elements)
-          r.push({"name":key,"layers":ret});
-        } else{
-          r.push({"name":key,"layers":null});
+  if (arr){
+    arr.forEach(function(obj, index, array) {
+      // console.log(obj, index)
+      Object.keys(obj).forEach(function(key){
+        if (key!="events" && key!="types"){
+          let elements = obj[key];
+          if (elements && elements.length > 0 ) {
+            let ret = objs2list(elements)
+            r.push({"name":key,"layers":ret});
+          } else{
+            r.push({"name":key,"layers":null});
+          }
         }
-      }
-    });
-  })
+      });
+    })
+  }
   return r;
 }
 
@@ -101,11 +103,11 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
   //
   // events =["eventOne", "eventTwo"]
   const events = objs2list(model.events);
-   
+
   const components = {
-    audios:objs2list(model.components.aduios),
-    groups:objs2list(model.groups), 
-    others:objs2list(model.others), 
+    audios:objs2list(model.components.audios),
+    groups:objs2list(model.groups),
+    others:objs2list(model.others),
     timers:objs2list(model.timers),
     variables:objs2list(model.variables)};
 

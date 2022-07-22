@@ -18,6 +18,7 @@ export const selectProjectHandler = async(reset:boolean, setPSDs, setProjectFold
   if (reset){
     projectFolder = await fs.getFolder();
     localStorage.setItem("persistent-project-folder", await fs.createPersistentToken(projectFolder));
+    success = true;
   }else{
     while (tries > 0) {
         try {

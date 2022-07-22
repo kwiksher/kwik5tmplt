@@ -7,6 +7,7 @@ import { LayerKind} from 'photoshop/dom/Constants';
 import {getFolder, isFile, isFolder} from '../utils/storage';
 import {parseCommandFiles, parseLayerFiles, parseComponentFiles } from '../utils/projectParser';
 import {exportIndex, exportIndexLua, exportLayerProps, exportLayerAsPng, resettLayer, exportLayerAsPngAndLoad, exportLayerAsJpegAndLoad } from './exportLayer';
+import ImageNext from '@spectrum-icons/workflow/ImageNext';
 
 export async function publishCode (bookFolder) {
   const docName = app.activeDocument.name.replace(".psd","");
@@ -85,7 +86,7 @@ export async function publishCode (bookFolder) {
   }
 
 
-  
+
   try{
     const modelsRoot = await getFolder('models', bookFolder);
     const modelFolder = await getFolder(docName, modelsRoot);
@@ -127,24 +128,27 @@ export async function publishCode (bookFolder) {
     */
     const temp = [];
     //
-    for (const [layerName, obj] of lua_layers){
-        const element = elements.filter(entry=>{
-          for (const [k, v] of entry){
-            if (k == layerName){
-              return true;
-            }
+    for (const layerObj of lua_layers){
+      Object.keys(layerObj).forEach(key=>{
+          if ( key =='events' || key=='types' || key=='weight' ) return;
+          const element = elements.filter(entry=>{
+            Object.keys(entry).forEach(k=>{
+              if (k == key){
+                return true;
+              }
+            })
+            return false;
+          })
+          if (element.length == 0 ){
+            //add
+            temp.push(layerObj);
+          }else{
+            // exists
+            //   get entry.weight
+            // check types
+            element[0].weight = layerObj.weight
           }
-          return false;
-        })
-        if (element.length == 0 ){
-          //add
-          temp.push(obj);
-        }else{
-          // exists
-          //   get entry.weight
-          // check types
-          element[0].weight = obj.weight
-        }
+      })
     }
     //
     temp.push(...elements);
@@ -155,7 +159,7 @@ export async function publishCode (bookFolder) {
       }else{
         return 1;
       }
-    })  
+    })
     //
     // add lua_commands to elements
     // add lua_components to elements
