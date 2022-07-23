@@ -3,21 +3,17 @@ local sceneName = ...
 local scene = require('controller.scene').new(sceneName, {
     name = "kwik4_1280x1920",
     layers = {
-          {  weight={
-                            } },
           {  bg={
-                            } },
-          {  weight={
-                            } },
-          {  hello={
-                            } },
-          {  bg={
-                            } },
-          {  star={
                             } },
           {  copyright={
                             } },
+          {  star={
+                            } },
           {  hello={
+                            } },
+          {  mycircle={
+                            } },
+          {  myrect={
                             } },
     },
     components = {

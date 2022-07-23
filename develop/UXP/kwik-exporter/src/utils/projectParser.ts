@@ -31,7 +31,7 @@ async function readWeight(file){
   const contents = await file.read();
   var lines = contents.split(/\r?\n/);
   for (const line of lines){
-    if (line.indexOf(".weight") > 0){
+    if (line.indexOf("$weight") > 0){
       const pos = line.indexOf("=")
       const text = line.substring(pos +1);
       return parseInt(text);
@@ -59,7 +59,7 @@ const layerIterator = async(folder, parent, eventsMap) =>{
         let layer = layerMap.get(layerName);
         if (layer == null){
           layer = {};
-          layer.weight = readWeight(element);
+          layer.weight = await readWeight(element);
           layerMap.set(layerName, layer);
           if (eventsMap){
             layer.events = eventsMap[layerName];
@@ -91,17 +91,17 @@ const layerIterator = async(folder, parent, eventsMap) =>{
   //    layerName : {types : [], events : []}, weight:1
   // }
   //
-  const temp = []
+  let temp = []
   for (const [k, v] of layerMap) {
       const t = {types:null, events:null, weight:0}
       t[k] = {}
-      if (v.types){
+      if (v.types!=null){
         t.types = v.types
       }
-      if (v.events){
+      if (v.events!=null){
         t.events = v.events
       }
-      if (v.weight){
+      if (v.weight !=null){
         t.weight = v.weight
       }
        temp.push(t)
@@ -117,17 +117,6 @@ const layerIterator = async(folder, parent, eventsMap) =>{
          t.weight = children.get('weight')
        }
     }
-  }
-  //
-  // temp.sort((a,b) =>{
-  //   if (a.weight < b.weight) {
-  //     return -1;
-  //   }else{
-  //     return 1;
-  //   }
-  // })
-  for ( const child of temp){
-    child.weight = null;
   }
   return temp;
 }

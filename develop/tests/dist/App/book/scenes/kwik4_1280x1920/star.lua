@@ -1,3 +1,5 @@
+-- $weight=1
+--
 local _K = require "controller.Application"
 local _M = require("components.kwik.layer_image").new()
 

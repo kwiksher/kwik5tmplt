@@ -164,8 +164,8 @@ const App: React.FC<any> = () => {
       <ul>
       <li>
         <ActionButton onClick={newProjectHandler}>New</ActionButton>
+        <ActionButton onClick={selectBookFolder}>Select Book</ActionButton>
         <sp-heading size="XXS">{bookFolder.nativePath}</sp-heading>
-        <ActionButton onClick={selectBookFolder}>Browse</ActionButton>
       </li>
       </ul>
       <sp-heading size="XXS">Publish</sp-heading>

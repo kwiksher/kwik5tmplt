@@ -68,7 +68,7 @@ function objs2list(arr) {
     arr.forEach(function(obj, index, array) {
       // console.log(obj, index)
       Object.keys(obj).forEach(function(key){
-        if (key!="events" && key!="types"){
+        if (key!="events" && key!="types" && key!="weight"){
           let elements = obj[key];
           if (elements && elements.length > 0 ) {
             let ret = objs2list(elements)
@@ -124,7 +124,7 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
   }
 };
 
-export const exportLayerProps = async (layer: Layer, bounds, sceneFolder:storage.Folder, modelFolder:storage.Folder, parent:string): Promise<void> => {
+export const exportLayerProps = async (index, layer: Layer, bounds, sceneFolder:storage.Folder, modelFolder:storage.Folder, parent:string): Promise<void> => {
   console.log("exportLayerProps");
 
   const props = {
@@ -138,7 +138,8 @@ export const exportLayerProps = async (layer: Layer, bounds, sceneFolder:storage
     "x"         : bounds.right + (bounds.left -bounds.right)/2,
     "y"         : bounds.top + (bounds.bottom - bounds.top)/2,
     "alpha"     : layer.opacity/100,
-    "parent"    : parent
+    "parent"    : parent,
+    "weight"    : index
   }
   const tmplt = await getTemplateData('scenes/pageX/layer_image.lua');
   //console.log(tmplt)

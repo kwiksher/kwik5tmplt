@@ -78,7 +78,7 @@ export async function publishCode (bookFolder) {
           await file.delete();
         }
       }else{
-        await exportLayerProps(docLayers[i], boundsCalc(docLayers[i].bounds), sceneFolder, modelFolder, parent);
+        await exportLayerProps(i, docLayers[i], boundsCalc(docLayers[i].bounds), sceneFolder, modelFolder, parent);
       }
       objs[i] = obj;
     }
@@ -101,7 +101,7 @@ export async function publishCode (bookFolder) {
     const lua_components = await parseComponentFiles(componentFolder);
     const lua_layers   = await parseLayerFiles(sceneFolder, lua_commands);
     //
-    const elements = await exportLayer(docLayers, sceneFolder, modelFolder, "");
+    const layersOfPSD = await exportLayer(docLayers, sceneFolder, modelFolder, "");
     //
     // merge
     //
@@ -126,12 +126,12 @@ export async function publishCode (bookFolder) {
     return scene
     ```
     */
-    const temp = [];
+    let temp = [];
     //
     for (const layerObj of lua_layers){
       Object.keys(layerObj).forEach(key=>{
           if ( key =='events' || key=='types' || key=='weight' ) return;
-          const element = elements.filter(entry=>{
+          const element = layersOfPSD.filter(entry=>{
             Object.keys(entry).forEach(k=>{
               if (k == key){
                 return true;
@@ -140,29 +140,36 @@ export async function publishCode (bookFolder) {
             return false;
           })
           if (element.length == 0 ){
-            //add
+            //add this layerObj from .lua, maybe user added manually
             temp.push(layerObj);
           }else{
             // exists
             //   get entry.weight
             // check types
             element[0].weight = layerObj.weight
+            temp.push(element[0])
           }
       })
     }
-    //
-    temp.push(...elements);
     // sort by weight
     temp.sort((a,b) =>{
-      if (a.weight < b.weight) {
-        return -1;
+      if (a.weight !=null && b.weight !=null ){
+        if (a.weight < b.weight) {
+          return 1;
+        }else{
+          return -1;
+        }
       }else{
-        return 1;
+        return 0;
       }
     })
+    // weight is no longer necessary?
+    // for ( const child of temp){
+    //   child.weight = null;
+    // }
     //
-    // add lua_commands to elements
-    // add lua_components to elements
+    // add lua_commands to layersOfPSD
+    // add lua_components to layersOfPSD
     //
     await exportIndex({"name":docName, "layers":temp, "components":lua_components, "events":lua_commands}, sceneFolder, modelFolder);
 

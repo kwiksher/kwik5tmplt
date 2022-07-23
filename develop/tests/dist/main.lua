@@ -3,7 +3,7 @@
 -- Version: 4.0.2 01
 -- Project: HelloWorld
 --
-require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=0, y=160}}) -- scenes.index
+require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=0, y=0}}) -- scenes.index
 
 --require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=100, y=100}}) -- scenes.index
 
