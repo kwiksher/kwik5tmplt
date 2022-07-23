@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom'
 import './style.css';
+import { storage } from 'uxp';
+
 
 import Spectrum, { ActionButton, Checkbox, Textfield } from 'react-uxp-spectrum';
 // import StyledComponents from "./components/StyledComponents";
@@ -8,8 +10,8 @@ import Spectrum, { ActionButton, Checkbox, Textfield } from 'react-uxp-spectrum'
 import { publishCodeHandler } from './commands/publishCodeHandler';
 import { newProjectHandler } from './commands/newProjectHandler';
 import { publishAssetsHandler } from './commands/publishAssetHandler';
-import { selectProjectHandler } from './commands/selectProjectHandler';
-import { ProjectTable } from './components/ProjectTable';
+import { selectPSDHandler } from './commands/selectPSDHandler';
+import { PhotoshopTable } from "./components/PhotoshopTable"
 import { publishAllHandler } from './commands/publishAllHandler';
 import { PublishPopup} from './components/PublishPopup'
 
@@ -82,8 +84,8 @@ const App: React.FC<any> = () => {
   const [isReset, setIsReset] = useState(false);
   const [psds, setPSDs] = useState([])
   const [selections, setSelections] = useState([])
-  const [projectFolder, setProjectFolder] = useState()
-  const [bookFolder, setBookFolder] = useState("");
+  const [psdFolder, setPSDFolder] = useState()
+  const [bookFolder, setBookFolder] = useState({nativePath:'please set an output book folder under App'});
   const [isAll, setIsAll] = useState(false)
   const [textRange, setTextRange] = useState("")
 
@@ -100,8 +102,14 @@ const App: React.FC<any> = () => {
     }
   }
 
-  const selectProject = () =>{
-    selectProjectHandler(isReset, setPSDs, setProjectFolder);
+  const selectPSDFolder = () =>{
+    selectPSDHandler(isReset, setPSDs, setPSDFolder);
+  }
+
+  const selectBookFolder = async () =>{
+    const fs = storage.localFileSystem;
+    let folder = await fs.getFolder();
+    if (folder) setBookFolder(folder);
   }
 
   const onTextfield = (event) =>{
@@ -135,34 +143,43 @@ const App: React.FC<any> = () => {
       }else if (response.reason === "OK") {
         const target = {selections:selections, isAll:isAll, textRange:textRange};
         console.log("publishAll",target);
-        publishAllHandler(event, target, projectFolder, bookFolder)
+        publishAllHandler(event, target, psdFolder, bookFolder)
       }
       publishDialog.remove();
   }
 
   return (
     <>
-      <sp-heading size="XXS">Project</sp-heading>
+      <sp-heading size="XXS">Photoshop Files</sp-heading>
       <ul>
       <li>
-        <ActionButton onClick={newProjectHandler}>New</ActionButton>
-        <ActionButton onClick={selectProject}>Open</ActionButton>
+        <ActionButton onClick={selectPSDFolder}>Open</ActionButton>
         <Checkbox onChange={onChange}>Reset</Checkbox>
-      </li>
-      <li>
-         <ActionButton onClick={publishAll}>Publish Selections</ActionButton>
-         <Checkbox onChange={onAll}>all</Checkbox>
-         <Textfield placeholder={textRange} className="textField" onChange={onTextfield}></Textfield>
-
       </li>
       </ul>
       <hr/>
+      <PhotoshopTable files={psds} psdFolder={psdFolder} setSelections = {setSelections} setFiles = {setPSDs} selected={isAll?true:null} />
+      <hr/>
+      <sp-heading size="XXS">Solar2D Project</sp-heading>
+      <ul>
+      <li>
+        <ActionButton onClick={newProjectHandler}>New</ActionButton>
+        <sp-heading size="XXS">{bookFolder.nativePath}</sp-heading>
+        <ActionButton onClick={selectBookFolder}>Browse</ActionButton>
+      </li>
+      </ul>
+      <sp-heading size="XXS">Publish</sp-heading>
+      <ul>
+      <li>
+         <ActionButton onClick={publishAll}>Publish</ActionButton>
+         <Checkbox onChange={onAll}>all</Checkbox>
+         <Textfield placeholder={textRange} className="textField" onChange={onTextfield}></Textfield>
+      </li>
+      </ul>
       <sp-heading size="XXS">Active Document</sp-heading>
       <ActionButton onClick={publishAssetsHandler}>Export Images</ActionButton>
       <ActionButton onClick={publishCodeHandler}>Export Code</ActionButton>
       <hr/>
-      <ProjectTable files={psds} projectFolder={projectFolder} setSelections = {setSelections} setFiles = {setPSDs} selected={isAll?true:null} />
-
 
       //
       {/*

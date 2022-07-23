@@ -5,9 +5,9 @@ import { useDnDSort, DnDRef} from "./useDnDSort";
 import { app } from 'photoshop'
 const executeAsModal = require("photoshop").core.executeAsModal;
 
-export interface ProjectProps {
+export interface psdProps {
   files:any;
-  projectFolder:storage.Folder;
+  psdFolder:storage.Folder;
   // selections:any;
   setSelections:any;
   setFiles:any;
@@ -44,7 +44,7 @@ const imageCardStyle: Style<HTMLDivElement> = {
   margin: 3
 };
 
-export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
+export const PhotoshopTable: React.FC<psdProps> =(props:psdProps)=> {
   //
   // https://forums.creativeclouddeveloper.com/t/bug-disabled-in-select-option-does-not-work/2270/5
   // https://codereview.stackexchange.com/questions/242077/parsing-numbers-and-ranges-from-a-string-in-javascript
@@ -62,19 +62,19 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
   let delay = 200;
   let prevent = false;
 
-  const doClickAction = (event, idx, projectFolder) => {
+  const doClickAction = (event, idx, psdFolder) => {
     console.log('Single click');
     state.dndItems[idx].selected  = !state.dndItems[idx].selected;
     props.setSelections(state.dndItems);
   }
 
-  const doDoubleClickAction = async (event, idx, projectFolder) => {
+  const doDoubleClickAction = async (event, idx, psdFolder) => {
     console.log('Double Click')
     //
     // open .psd
     try{
       const item = dnds[idx]
-      const psd = await projectFolder.getEntry(item.value)
+      const psd = await psdFolder.getEntry(item.value)
       await executeAsModal(async()=>{
         const doc = await app.open(psd);
       },{ "commandName": "Opening..." })
@@ -84,24 +84,24 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
     }
   }
 
-  const handleClick = (event, idx, projectFolder) => {
+  const handleClick = (event, idx, psdFolder) => {
     timer = setTimeout(function() {
       if (!prevent) {
-        doClickAction(event, idx, projectFolder);
+        doClickAction(event, idx, psdFolder);
       }
       prevent = false;
     }, delay);
   }
 
-  const handleDoubleClick = (event, idx, projectFolder) =>{
+  const handleDoubleClick = (event, idx, psdFolder) =>{
     clearTimeout(timer);
     prevent = true;
-    doDoubleClickAction(event, idx, projectFolder);
+    doDoubleClickAction(event, idx, psdFolder);
   }
 
   //https://zenn.dev/uttk/articles/b90454baec68c8
 
-  console.log("ProjectTable props.files.length", props.files.length);
+  console.log("psdTable props.files.length", props.files.length);
 
 
   const list:string[] = [];
@@ -134,13 +134,13 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
 
   return (
     <>
-      <sp-heading size="XXS">{props.projectFolder?props.projectFolder.nativePath:""}</sp-heading>
+      <sp-heading size="XXS">{props.psdFolder?props.psdFolder.nativePath:""}</sp-heading>
       <sp-menu multiple slot="options">
       {dnds.map((item, idx) => (
         <div key={item.key} {...item.events}>
           <sp-menu-item key={idx} selected={props.selected}>
-              <div onClick={(event)=>handleClick(event, idx, props.projectFolder)}
-                onDoubleClick = {(event)=>handleDoubleClick(event, idx, props.projectFolder)} >
+              <div onClick={(event)=>handleClick(event, idx, props.psdFolder)}
+                onDoubleClick = {(event)=>handleDoubleClick(event, idx, props.psdFolder)} >
               {idx} {item.value}
               </div>
             </sp-menu-item>
@@ -162,4 +162,4 @@ export const ProjectTable: React.FC<ProjectProps> =(props:ProjectProps)=> {
   );
 }
 
-export default ProjectTable;
+export default PhotoshopTable;

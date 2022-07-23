@@ -4,6 +4,32 @@ chapter: true
 weight: 2
 ---
 
+
+TODO
+
+- WIP call develop/Solar2D/tools/generate_scene_index.lua. Use typescript to lua!? lua to js?　⭐️
+
+ <img src="./img/2022-07-23-11-27-45.png" width="600">
+
+  - generate scenes/index.lua
+  - generate mediators/.lua
+
+  FIX develop/tests/dist/App/book/scenes/kwik4_1280x1920/index.lua, BUG: weight is generated as a layer object
+
+  ```lua
+  local scene = require('controller.scene').new(sceneName, {
+    name = "kwik4_1280x1920",
+    layers = {
+          {  weight={
+                            } },
+          {  bg={
+                            } },
+          {  weight={
+                            } },
+  ```
+
+  --
+
 # Get Started
 
 1. Open Adobe UXP Developer Tool
@@ -73,10 +99,6 @@ weight: 2
       > TODO change dist to src with SimpleBook sample
 
       <img src="./img/2022-07-02-21-01-08.png" width="300">
-
-
-    TODO  call develop/Solar2D/tools/generate_scene_index.lua. Use typescript to lua!? lua to js?　⭐️
-
 
 1. Open main.lua in Solar2D/src with Solar2D Simulator
 

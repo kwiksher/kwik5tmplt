@@ -6,25 +6,25 @@ import {getFolder, isFile, isFolder} from '../utils/storage'
 
 const executeAsModal = require("photoshop").core.executeAsModal;
 
-export const publishAllHandler = async (event, target, projectFolder, bookFolder) => {
+export const publishAllHandler = async (event, target, srcFolder, outFolder) => {
 
   let selections = target.selections.filter(item=>item.selected);
 
   if ((selections.length ==0) && target.isAll ){
     selections = target.selections;
   }
-  const entries = await bookFolder.getEntries();
-  const b = isFolder('models', bookFolder);
+  const entries = await outFolder.getEntries();
+  const b = isFolder('models', outFolder);
 
-  if (! await isFolder('models', bookFolder)){
-    await bookFolder.createFolder("models");
+  if (! await isFolder('models', outFolder)){
+    await outFolder.createFolder("models");
   }
 
-  if (! await isFolder('scenes', bookFolder)){
-    await bookFolder.createFolder("scenes");
+  if (! await isFolder('scenes', outFolder)){
+    await outFolder.createFolder("scenes");
   }
-  if (! await isFolder('assets', bookFolder)){
-    const parent = await bookFolder.createFolder("assets");
+  if (! await isFolder('assets', outFolder)){
+    const parent = await outFolder.createFolder("assets");
     if (! await isFolder('images', parent)){
       await parent.createFolder("images");
     }
@@ -35,11 +35,11 @@ export const publishAllHandler = async (event, target, projectFolder, bookFolder
   // open&close
   try{
     for( const item of selections){
-      const psd = await projectFolder.getEntry(item.value)
+      const psd = await srcFolder.getEntry(item.value)
       await executeAsModal(async()=>{
         const doc = await app.open(psd);
-        await publishCode(bookFolder)
-        await publishImages(bookFolder)
+        await publishCode(outFolder)
+        await publishImages(outFolder)
         doc.closeWithoutSaving();
       },{ "commandName": "Opening..." })
     }

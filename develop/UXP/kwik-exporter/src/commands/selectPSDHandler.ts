@@ -6,46 +6,46 @@ import { storage } from 'uxp';
 const app = require("photoshop").app;
 const executeAsModal = require("photoshop").core.executeAsModal;
 
-export const selectProjectHandler = async(reset:boolean, setPSDs, setProjectFolder) =>{
+export const selectPSDHandler = async(reset:boolean, setPSDs, setPSDFolder) =>{
   // open dialog
   // getFolder
   const fs = storage.localFileSystem;
   //const pluginFolder  = await fs.getPluginFolder();
   //const tmpltFolder = await pluginFolder.getEntry("kwik/Solar2D") as storage.Folder;
 
-  let projectFolder, doc, doc1, tries = 3, success = false;
+  let psdFolder, doc, doc1, tries = 3, success = false;
 
   if (reset){
-    projectFolder = await fs.getFolder();
-    localStorage.setItem("persistent-project-folder", await fs.createPersistentToken(projectFolder));
+    psdFolder = await fs.getFolder();
+    localStorage.setItem("persistent-project-folder", await fs.createPersistentToken(psdFolder));
     success = true;
   }else{
     while (tries > 0) {
         try {
-            projectFolder = await fs.getEntryForPersistentToken(localStorage.getItem("persistent-project-folder"));
+            psdFolder = await fs.getEntryForPersistentToken(localStorage.getItem("persistent-project-folder"));
             tries = 0;
             success = true;
         } catch (err) {
-            projectFolder = await fs.getFolder();
-            localStorage.setItem("persistent-project-folder", await fs.createPersistentToken(projectFolder));
+            psdFolder = await fs.getFolder();
+            localStorage.setItem("persistent-project-folder", await fs.createPersistentToken(psdFolder));
             tries--;
         }
     }
   }
 
   if (success) {
-    const entries = await projectFolder.getEntries();
+    const entries = await psdFolder.getEntries();
     const psds = entries.filter(entry=>entry.name.endsWith('.psd'))
     for (const psd of psds) {
       console.log("Opening", psd.name);
     }
     setPSDs(psds);
-    setProjectFolder(projectFolder);
+    setPSDFolder(psdFolder);
     //
     // test open&close
     /*
     try{
-      const psd = await projectFolder.getEntry(psds[0].name)
+      const psd = await psdFolder.getEntry(psds[0].name)
       await executeAsModal(async()=>{
         doc = await app.open(psd);
         doc.closeWithoutSaving();

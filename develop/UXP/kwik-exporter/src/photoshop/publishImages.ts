@@ -19,7 +19,8 @@ export async function publishImages (bookFolder) {
   //setToken(token);
   //
   /// MOVE ///
-  const imagesRoot: any = await bookFolder.getEntry('assets/images');
+  const assetRoot = await getFolder('assets', bookFolder);
+  const imagesRoot = await getFolder('images', assetRoot);
   const assetFolder = await getFolder(docName, imagesRoot)
   /////////////
   const exportLayers = async (layers, parentName, imageSuffix: string) => {
