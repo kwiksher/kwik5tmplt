@@ -1,0 +1,10 @@
+{
+  "name":"book one",
+  "output":"../dist",
+  "pages":[
+    {"psd":"iPhoneX_1125x2436.psd", "name":"iphone"},
+    {"psd":"kwik4_1280x1920.psd", "name":"kwik"},
+    {"psd":"page1.psd", "name":"page1"},
+    {"psd":"page2.psd", "name":"page2"}
+   ]
+}
