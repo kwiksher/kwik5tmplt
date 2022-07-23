@@ -102,7 +102,7 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
   //  const layerPartial = {"recursive": '{ {{#layers}}{{name}} = { {{>layers}} },{{/layers}} }'};
   //
   // events =["eventOne", "eventTwo"]
-  const events = objs2list(model.events);
+  const events = model.events;
 
   const components = {
     audios:objs2list(model.components.audios),

@@ -7,28 +7,10 @@ weight: 2
 
 TODO
 
-- WIP call develop/Solar2D/tools/generate_scene_index.lua. Use typescript to lua!? lua to js?　⭐️
-
- <img src="./img/2022-07-23-11-27-45.png" width="600">
-
-  - generate scenes/index.lua
-  - generate mediators/.lua
-
-  FIX develop/tests/dist/App/book/scenes/kwik4_1280x1920/index.lua, BUG: weight is generated as a layer object
-
-  ```lua
-  local scene = require('controller.scene').new(sceneName, {
-    name = "kwik4_1280x1920",
-    layers = {
-          {  weight={
-                            } },
-          {  bg={
-                            } },
-          {  weight={
-                            } },
-  ```
-
-  --
+- [ ] scenes/index.lua
+- [ ] mediators/xxxMediator.lua
+- [ ] test layer groups and add how to work with a layer group in get started
+- [ ] swipe page or A/D keys for navigation
 
 # Get Started
 
@@ -42,13 +24,15 @@ TODO
 
     Load it
 
-    <img src="./img/2022-07-02-20-33-11.png" width="400">
+    <img src="./img/2022-07-23-20-01-45.png" width="600">
 
-    <img src="./img/2022-07-03-12-20-00.png" width="400">
+    Kwik Exporter Panel apppears
 
-1. Project > Open
+    <img src="./img/2022-07-23-20-02-58.png" width="400">
 
-    you can select the following folder that comes with demo .psd files and kwikconfig.json
+1. Photoshop Files > Open
+
+    you can select the following folder that comes with demo .psd files and kwikconfig.json. You may open a folder of yours which contains psd files.
 
     - sample-projects/SingleBook/book01
 
@@ -74,14 +58,36 @@ TODO
 
 1. Double Click the one of .psd in the list to open for editing.
 
-    <img src="./img/2022-07-02-20-44-38.png" width="600">
+    <img src="./img/2022-07-23-20-05-50.png" width="600">
 
+1. Solar2D Project > Select Book
 
-1. Click Publish Selections button
+  - New button, a set of Solar2D project will be generated to a selected folder.
+  - Select Book
 
-    - [x] all
+    please select an output folder where each psf files are published. It must be under App folder.
+
+    <img src="./img/2022-07-23-20-10-03.png" width="400">
+
+    <img src="./img/2022-07-23-20-16-18.png" width="300">
+
+1. Publish
+
+    selected psd files are publihsed to App/book folder
+
+    <img src="./img/2022-07-23-20-09-31.png" width="400">
+
+    - checkbox all
 
       it will select all the psd files in the list
+
+    - Input text box
+
+      you can input the index number of psd files to be published for example,
+
+      0, 2-3
+
+    - Publish button
 
       Export Settings Dialog appears, click Export
 
@@ -89,9 +95,9 @@ TODO
 
       <img src="./img/2022-07-02-20-46-39.png" width="350">
 
-    - Browse button
+      - Browse button
 
-       Select the folder for output if you change the destination. The default is defined in kwikconfig.json as **"../../Solar2D/src/App/book"**
+        Select the folder for output if you like to change the destination. The default is defined in kwikconfig.json as **"../../Solar2D/src/App/book"**
 
 
     - Kwik will publish images/source code. You can find them in
@@ -99,6 +105,14 @@ TODO
       > TODO change dist to src with SimpleBook sample
 
       <img src="./img/2022-07-02-21-01-08.png" width="300">
+
+1. Active Document
+  - Export Images
+  - Export Code
+
+    <img src="./img/2022-07-23-20-23-00.png" width="300">
+
+## Solar2D Simulator
 
 1. Open main.lua in Solar2D/src with Solar2D Simulator
 
@@ -109,11 +123,83 @@ TODO
     debug = {enable = true, navigation= "swipe/keys"}
     ```
 
+### Custom Code
+
+  you can put your own code into commands and scenes folder. Kwik Exporter traverses folders of Solar2D project to integrate your additional files.
+
+  - commands/*.lua
+  - scenes/*.lua
+
+  <img src="./img/2022-07-23-20-34-40.png" width="300">
+
+for instance, myrect.lua calls myEvents.testHandler when user taps the rect.
+
+The $weight is a meta variable. A scene componet(layer or your custom code)with lower value will be placed top. The top layer from Photoshop is zero. Then values are increases to until the background layer. For your custom code , you can use minus or positive with decimal. For example, myrect is -2, mycircle is -1. If you change weight values of custom code files, don't forget to publish code again.
+
+  ```lua
+  -- $weight=-2
+  --
+  local _M = {}
+  --
+  function _M:init(UI)
+  end
+  --
+  function _M:create(UI)
+    local sceneGroup = UI.scene.view
+    local obj = display.newRect( sceneGroup, display.contentCenterX, display.contentCenterY-100, 100, 100 )
+    obj:setFillColor(0.2,0.2,0.2);
+
+    obj:addEventListener("tap", function()
+      UI.scene:dispatchEvent({
+        name = "myEvents.testHandler",
+        UI = UI
+      })
+    end)
+  end
+  --
+  function _M:didShow(UI)
+  end
+  --
+  function _M:didHide(UI)
+  end
+  --
+  function  _M:destory()
+  end
+  --
+  return _M
+  ```
+
+myEvents.testHandker.lua
+
+  ```lua
+  local instance = require("commands.kwik.baseCommand").new(
+    function (params)
+      local e     = params.event
+      local UI    = e.UI
+      print("commands.myEvents.testhander")
+
+      UI.scene:dispatchEvent({
+        name = "myAction",
+        UI = UI
+      })
+
+    end
+  )
+  --
+  return instance
+  ```
+
+You can find your custom code are inserted in scenes/{PSD FILENAME}/index.lua. The layers are sorted internally by values of meta weight variables.
+
+<img src="./img/2022-07-23-20-46-52.png" width="600">
 
 ----
-**Create a new project**
 
-1. Project > New button
+## Create a new project
+
+  <img src="./img/2022-07-23-20-28-14.png" width="300">
+
+1. Solar2D Project > New button
 
     TODO dialog for choice
       -  create a pair of Photoshop & Solar2D project folder
@@ -129,6 +215,7 @@ TODO
       select a distination folder
 
     TODO select portrait or landscape
+
 
 
  ```

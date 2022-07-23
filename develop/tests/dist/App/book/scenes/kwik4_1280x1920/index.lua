@@ -23,7 +23,7 @@ local scene = require('controller.scene').new(sceneName, {
       variables = {  },
       others = {  }
      },
-    events = {  },
+    events = { "myAction","myEvents.testHandler" },
     onInit = function(scene) print("onInit") end
 })
 --

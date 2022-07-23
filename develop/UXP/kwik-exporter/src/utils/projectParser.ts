@@ -5,7 +5,7 @@ export async function parseCommandFiles(folder){
   const eventIterator = async(folder, parent) =>{
     let  parentPath = ""
     if (parent){
-        parentPath = parent.name + ".";
+        parentPath = folder.name + ".";
     }
     const entries = await folder.getEntries();
     for (var i = 0; i < entries.length; i++) {
@@ -14,8 +14,8 @@ export async function parseCommandFiles(folder){
         const value = parentPath +  element.name.replace(".lua", "")
         ret.push(value)
         console.log(value)
-      }else if(element.isFolder && element.name.len() > 2){
-        eventIterator(element, folder)
+      }else if(element.isFolder && element.name.length > 2){
+        await eventIterator(element, folder)
       }
     }
   }

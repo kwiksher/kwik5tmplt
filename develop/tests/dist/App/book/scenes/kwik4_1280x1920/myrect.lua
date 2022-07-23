@@ -10,6 +10,13 @@ function _M:create(UI)
   local sceneGroup = UI.scene.view
   local obj = display.newRect( sceneGroup, display.contentCenterX, display.contentCenterY-100, 100, 100 )
   obj:setFillColor(0.2,0.2,0.2);
+
+  obj:addEventListener("tap", function()
+    UI.scene:dispatchEvent({
+      name = "myEvents.testHandler",
+      UI = UI
+    })
+  end)
 end
 --
 function _M:didShow(UI)
