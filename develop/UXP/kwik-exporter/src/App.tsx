@@ -15,7 +15,7 @@ import { PhotoshopTable } from "./components/PhotoshopTable"
 import { publishAllHandler } from './commands/publishAllHandler';
 import { PublishPopup} from './components/PublishPopup'
 import { GroupsTable} from './components/GroupsTable'
-import { unmergeHandler, unmergeCancelHandler, initListener as groupsInit } from './commands/groupsHandler'
+import { unmergeHandler, unmergeCancelHandler, initListener as groupsInit, loadUnmergedGroups } from './commands/groupsHandler'
 
 import { SortSampleApp } from './components/SortSampleApp';
 
@@ -159,6 +159,10 @@ const App: React.FC<any> = () => {
     unmergeCancelHandler({groups:groups, setGroups:setGroups, bookFolder:bookFolder})
   }
 
+  const unmergeRefresh = async(event) =>{
+    loadUnmergedGroups(bookFolder, setGroups)
+  }
+
   groupsInit(bookFolder, setGroups);
 
   return (
@@ -195,6 +199,7 @@ const App: React.FC<any> = () => {
       <sp-heading size="XXS">Layer Groups</sp-heading>
       <ActionButton onClick={unmerge}>Unmerge</ActionButton>
       <ActionButton onClick={unmergeCancel}>Cancel</ActionButton>
+      <ActionButton onClick={unmergeRefresh}>Refresh</ActionButton>
       <GroupsTable groups={groups} setGroups = {setGroups} />
       <hr/>
 

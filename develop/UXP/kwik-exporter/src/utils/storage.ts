@@ -3,7 +3,7 @@ import { storage } from 'uxp';
 export const isUpdated = async (
   after: number,
   folder: storage.Folder,
-  attempts = 10000
+  attempts = 100000
 ): Promise<boolean> => {
   let attemptsLeft = attempts;
 

@@ -20,7 +20,12 @@ const getParent = (element) =>{
 export const unmergeHandler = async (props) => {
   console.log("unmerge groups")
 
-  const imageMap = await getImageFolders(props.bookFolder)
+  const docName = app.activeDocument.name.replace(".psd","")
+  const assetsFolder = await getFolder("assets", props.bookFolder)
+  const imagesFolder = await getFolder("images", assetsFolder)
+  const pageFolder   = await getFolder(docName, imagesFolder)
+
+  const imageMap = await getImageFolders(pageFolder)
 
   const layers = app.activeDocument.activeLayers;
   let ret = []
@@ -50,10 +55,6 @@ export const unmergeHandler = async (props) => {
   }
   */
   //
-  const docName = app.activeDocument.name.replace(".psd","")
-  const assetsFolder = await getFolder("assets", props.bookFolder)
-  const imagesFolder = await getFolder("images", assetsFolder)
-  const pageFolder   = await getFolder(docName, imagesFolder)
 
   const newFolders = ret.filter(element=>element.isNew)
   for (let folder of newFolders){
@@ -107,11 +108,16 @@ export const unmergeCancelHandler = async (props) => {
 }
 
 export const loadUnmergedGroups = async(bookFolder, setGroups) =>{
-  const bookName = app.activeDocument.name;
+  const docName = app.activeDocument.name.replace(".psd","")
+  const assetsFolder = await getFolder("assets", bookFolder)
+  const imagesFolder = await getFolder("images", assetsFolder)
+  const pageFolder   = await getFolder(docName, imagesFolder)
+  const imageMap = await getImageFolders(pageFolder)
   let ret = []
-
-  // TODO read folders in App/book/assets/images/bookX/
-
+  imageMap.forEach((value, key) => {
+    ret.push({name:key, key:ret.length, parent:value.parent})
+  });
+  console.log("loadUnmergedGroups", ret)
   setGroups(ret);
 }
 

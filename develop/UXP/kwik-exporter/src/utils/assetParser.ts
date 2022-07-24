@@ -1,12 +1,9 @@
 import {getFolder, isFile, isFolder} from '../utils/storage';
 
-const imageIterator = async(imageMap, folder, parent) =>{
-  const children  = new Map();
+const imageIterator = async(folder, path) =>{
+  const imageMap  = new Map();
   //
-  let  parentPath = ""
-  if (parent){
-      parentPath = parent.name + ".";
-  }
+  let  parentPath = path || ""
   //
   const entries = await folder.getEntries();
   for (var i = 0; i < entries.length; i++) {
@@ -14,18 +11,21 @@ const imageIterator = async(imageMap, folder, parent) =>{
     if (element.isFile){
       //imageMap.set(element.name, {isFolder:false, parent:parentPath})
     }else if(element.isFolder){
-      const elements = await imageIterator(imageMap, element, folder)
-      children.set(element.name,elements);
-      imageMap.set(element.name, {isFolder:true, parent:parentPath, children:children})
+      imageMap.set(element.name, {isFolder:true, parent:parentPath})
+      const children = await imageIterator(element, element.name)
+      children.forEach((value, key) => {
+        if (parentPath.length > 0){
+          imageMap.set(key,{isFolder:true, parent:parentPath + "." + value.parent})
+        }else{
+          imageMap.set(key,{isFolder:true, parent:value.parent})
+        }
+      })
     }
   }
   return imageMap
 }
 
 export const getImageFolders = async(folder) =>{
-  const imageMap = new Map()
-
-  imageIterator(imageMap, folder, null);
-
+  const imageMap = await imageIterator(folder, null);
   return imageMap
 }
