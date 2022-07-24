@@ -14,6 +14,8 @@ import { selectPSDHandler } from './commands/selectPSDHandler';
 import { PhotoshopTable } from "./components/PhotoshopTable"
 import { publishAllHandler } from './commands/publishAllHandler';
 import { PublishPopup} from './components/PublishPopup'
+import { GroupsTable} from './components/GroupsTable'
+import { unmergeHandler, unmergeCancelHandler, initListener as groupsInit } from './commands/groupsHandler'
 
 import { SortSampleApp } from './components/SortSampleApp';
 
@@ -88,6 +90,7 @@ const App: React.FC<any> = () => {
   const [bookFolder, setBookFolder] = useState({nativePath:'please set an output book folder under App'});
   const [isAll, setIsAll] = useState(false)
   const [textRange, setTextRange] = useState("")
+  const [groups, setGroups] = useState([])
 
   const onChange = () =>{
     setIsReset(!isReset);
@@ -148,6 +151,16 @@ const App: React.FC<any> = () => {
       publishDialog.remove();
   }
 
+  const unmerge = async(event) =>{
+    unmergeHandler({groups:groups, setGroups:setGroups, bookFolder:bookFolder})
+  }
+
+  const unmergeCancel = async(event) =>{
+    unmergeCancelHandler({groups:groups, setGroups:setGroups, bookFolder:bookFolder})
+  }
+
+  groupsInit(bookFolder, setGroups);
+
   return (
     <>
       <sp-heading size="XXS">Photoshop Files</sp-heading>
@@ -177,8 +190,12 @@ const App: React.FC<any> = () => {
       </li>
       </ul>
       <sp-heading size="XXS">Active Document</sp-heading>
-      <ActionButton onClick={publishAssetsHandler}>Export Images</ActionButton>
       <ActionButton onClick={publishCodeHandler}>Export Code</ActionButton>
+      <ActionButton onClick={publishAssetsHandler}>Export Images</ActionButton>
+      <sp-heading size="XXS">Layer Groups</sp-heading>
+      <ActionButton onClick={unmerge}>Unmerge</ActionButton>
+      <ActionButton onClick={unmergeCancel}>Cancel</ActionButton>
+      <GroupsTable groups={groups} setGroups = {setGroups} />
       <hr/>
 
       //
