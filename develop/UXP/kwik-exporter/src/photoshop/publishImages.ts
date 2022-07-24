@@ -23,13 +23,14 @@ export async function publishImages (bookFolder) {
   const imagesRoot = await getFolder('images', assetRoot);
   const assetFolder = await getFolder(docName, imagesRoot)
   /////////////
-  const exportLayers = async (layers, parentName, imageSuffix: string) => {
+  const exportLayers = async (layers, parentName, imageSuffix: string, assetFolder) => {
     let tmpFolder = await getFolder(imageSuffix + parentName, assetFolder);
     let count = 0;
     for (var i = layers.length-1; i >= 0; i--) {
       const layer = layers[i];
       if (layer.kind == LayerKind.GROUP && await isFolder(layer.name, assetFolder)){
-        await exportLayers(layer.layers,layer.name, imageSuffix);
+        const parentFolder = await getFolder(layer.name, assetFolder);
+        await exportLayers(layer.layers,layer.name, imageSuffix, parentFolder);
       }else{
         await exportLayerAsPng(layer, tmpFolder.nativePath, imageSuffix);
         count = count + 1;
@@ -38,21 +39,23 @@ export async function publishImages (bookFolder) {
     }
   }
   //////////
-  const resetLayers = async (layers, parentName, imageSuffix: string) => {
+  const resetLayers = async (layers, parentName, imageSuffix: string, assetFolder) => {
     let tmpFolder = await getFolder(imageSuffix + parentName, assetFolder);
     let count = 0;
     //
     for (var i = 0; i < layers.length; i++) {
       const layer = layers[i];
       if (layer.kind == LayerKind.GROUP && await isFolder(layer.name, assetFolder)){
-        await resetLayers(layer.layers,layer.name, imageSuffix);
+        const parentFolder = await getFolder(layer.name, assetFolder);
+        await resetLayers(layer.layers,layer.name, imageSuffix, parentFolder);
       }else{
         await resettLayer(layer, tmpFolder.nativePath, imageSuffix);
       }
     }
   }
 
-  const cleanupLayers = async (layers, parentName, imageSuffix: string) => {
+  const cleanupLayers = async (layers, parentName, imageSuffix: string, assetFolder) => {
+    console.log("cleanupLayers", parentName, imageSuffix);
     //
     for (var i = 0; i < layers.length; i++) {
       const layer = layers[i];
@@ -69,21 +72,21 @@ export async function publishImages (bookFolder) {
           console.log("cleanuptLayers delete", fileName);
           await file.delete();
         }
-
-        await cleanupLayers(layer.layers,layer.name, imageSuffix);
+        const parentFolder = await getFolder(layer.name, assetFolder);
+        await cleanupLayers(layer.layers,layer.name, imageSuffix, parentFolder);
       }
     }
   }
 
-  const moveImages = async (layers, parentName, imageSuffix: string) => {
+  const moveImages = async (layers, parentName, imageSuffix: string, targetFolder) => {
     console.log("moveImages", parentName, imageSuffix);
-    let tmpFolder = await getFolder(imageSuffix + parentName, assetFolder);
+    let tmpFolder = await getFolder(imageSuffix + parentName, targetFolder);
     console.log("", tmpFolder.nativePath);
-    let targetFolder = assetFolder;
-    if (parentName.length > 0 ){
-      targetFolder = (await assetFolder.getEntry(parentName)) as storage.Folder;
-      console.log("", targetFolder.nativePath)
-    }
+    //let targetFolder = assetFolder;
+    // if (parentName.length > 0 ){
+    //   targetFolder = (await assetFolder.getEntry(parentName)) as storage.Folder;
+    //   console.log("", targetFolder.nativePath)
+    // }
     //
     const currententries = await targetFolder.getEntries();
     let files = currententries.filter(entry => entry.isFile);
@@ -93,25 +96,32 @@ export async function publishImages (bookFolder) {
     let count = 0;
     for (var i = 0; i < layers.length; i++) {
       const layer = layers[i];
+      console.log("------------")
       console.log("", layer.name, layer.kind)
-      if (layer.kind == LayerKind.GROUP && await isFolder(layer.name, assetFolder)){
+      if (layer.kind == LayerKind.GROUP && await isFolder(layer.name, targetFolder)){
         try{
-          await moveImages(layer.layers,layer.name, imageSuffix);
+          const parentFolder = await getFolder(layer.name, targetFolder);
+          await moveImages(layer.layers,layer.name, imageSuffix, parentFolder);
         }catch(e){
           console.log("Error", e)
         }
       }else{
-        const someFile = entries[i];
-        console.log("", someFile.nativePath);
-        try{
-          if (imageSuffix == '4x' || imageSuffix == '2x') {
-            const newName = someFile.name.replace(".png", "@" + imageSuffix + ".png");
-            await someFile.moveTo(targetFolder, { newName: newName, overwrite: true })
-          } else {
-            await someFile.moveTo(targetFolder, { newName: someFile.name, overwrite: true })
+        const files = entries.filter(entry=>entry.name==(layer.name+".png"));
+        if (files.length == 1){
+          const someFile = files[0];
+          console.log("", someFile.nativePath);
+          try{
+            if (imageSuffix == '4x' || imageSuffix == '2x') {
+              const newName = someFile.name.replace(".png", "@" + imageSuffix + ".png");
+              await someFile.moveTo(targetFolder, { newName: newName, overwrite: true })
+            } else {
+              await someFile.moveTo(targetFolder, { newName: someFile.name, overwrite: true })
+            }
+          }catch(e){
+            console.log("Error", e)
           }
-        }catch(e){
-          console.log(e)
+        }else{
+           console.log("Duplicated names in Layers")
         }
         count = count + 1
       }
@@ -119,22 +129,25 @@ export async function publishImages (bookFolder) {
     const isFinished = await isUpdated(count, targetFolder);
     if (isFinished){
       await tmpFolder.delete();
+    }else{
+      console.log("Not Finished Something wrong")
     }
   }
   //
-  await exportLayers(docLayers, "", '4x');
-  await exportLayers(docLayers, "", '2x');
-  await resetLayers(docLayers,"", '2x');
-  await exportLayers(docLayers, "", '1x');
-  await resetLayers(docLayers,"", '1x');
+  await exportLayers(docLayers, "", '4x', assetFolder);
+  // 2x, 1x resized, so need to call resetLayers too.
+  await exportLayers(docLayers, "", '2x', assetFolder);
+  await resetLayers(docLayers,"", '2x', assetFolder);
+  await exportLayers(docLayers, "", '1x', assetFolder);
+  await resetLayers(docLayers,"", '1x', assetFolder);
   //
-  await moveImages(docLayers, "", '4x');
-  await moveImages(docLayers, "", '2x');
-  await moveImages(docLayers, "", '1x');
+  await moveImages(docLayers, "", '4x', assetFolder);
+  await moveImages(docLayers, "", '2x', assetFolder);
+  await moveImages(docLayers, "", '1x', assetFolder);
   //
   // this clears layerSet images exists under images/book if rendering chidlren of layerSet instead.
-  await cleanupLayers(docLayers, "", '4x');
-  await cleanupLayers(docLayers, "", '2x');
-  await cleanupLayers(docLayers, "", '1x');
+  await cleanupLayers(docLayers, "", '4x', assetFolder);
+  await cleanupLayers(docLayers, "", '2x', assetFolder);
+  await cleanupLayers(docLayers, "", '1x', assetFolder);
 
 }

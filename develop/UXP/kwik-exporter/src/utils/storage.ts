@@ -3,7 +3,7 @@ import { storage } from 'uxp';
 export const isUpdated = async (
   after: number,
   folder: storage.Folder,
-  attempts = 100000
+  attempts = 1000
 ): Promise<boolean> => {
   let attemptsLeft = attempts;
 
@@ -14,11 +14,14 @@ export const isUpdated = async (
   while (files.length < after && attemptsLeft > 0) {
     const entries = await folder.getEntries();
     files = entries.filter(entry => entry.isFile);
-    await new Promise((res) => setTimeout(res, 50));
+    await new Promise((resolve) => setTimeout( async () =>{
+      resolve(true)}, 50));
     attemptsLeft -= 1;
   }
   //
-  console.warn('isUpdated', folder.nativePath, attemptsLeft);
+  if (attemptsLeft < 0 ){
+    console.warn('isUpdated', folder.nativePath, attemptsLeft);
+  }
   return attemptsLeft > 0
 };
 

@@ -7,6 +7,8 @@ local scene = require('controller.scene').new(sceneName, {
                             } },
           {  copyright={
                             } },
+          {  GroupA={
+                            } },
           {  star={
                             } },
           {  hello={
@@ -15,6 +17,8 @@ local scene = require('controller.scene').new(sceneName, {
                             } },
           {  myrect={
                             } },
+          {  GroupA={
+                { SubA = {  } },            } },
     },
     components = {
       audios = {  },
@@ -23,7 +27,7 @@ local scene = require('controller.scene').new(sceneName, {
       variables = {  },
       others = {  }
      },
-    events = { "myAction","myEvents.testHandler" },
+    events = { myAction,myEvents.testHandler },
     onInit = function(scene) print("onInit") end
 })
 --

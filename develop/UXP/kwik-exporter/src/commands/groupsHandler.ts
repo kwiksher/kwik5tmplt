@@ -24,7 +24,10 @@ export const unmergeHandler = async (props) => {
   const assetsFolder = await getFolder("assets", props.bookFolder)
   const imagesFolder = await getFolder("images", assetsFolder)
   const pageFolder   = await getFolder(docName, imagesFolder)
-
+  //
+  const scenesFolder = await getFolder("scenes", props.bookFolder)
+  const layersFolder = await getFolder(docName, scenesFolder)
+  //
   const imageMap = await getImageFolders(pageFolder)
 
   const layers = app.activeDocument.activeLayers;
@@ -35,14 +38,14 @@ export const unmergeHandler = async (props) => {
       const obj = imageMap.get(layer.name);
       if (obj == null){
         const parentPath = getParent(layer);
-        ret.push({name:layer.name, key:ret.length, parent:parentPath, isNew:true})
+        ret.push({name:layer.name, key:ret.length, parent:parentPath, isNew:true, selected:false})
       }
     }
   }
 
   console.log("imageMap length", imageMap.size)
   imageMap.forEach((value, key) => {
-    ret.push({name:key, key:ret.length, parent:value.parent})
+    ret.push({name:key, key:ret.length, parent:value.parent, selected:false})
   });
 
   console.log(ret)
@@ -55,7 +58,6 @@ export const unmergeHandler = async (props) => {
   }
   */
   //
-
   const newFolders = ret.filter(element=>element.isNew)
   for (let folder of newFolders){
     if (folder.parent.length > 0){
@@ -71,6 +73,22 @@ export const unmergeHandler = async (props) => {
       await getFolder(folder.name, pageFolder)
     }
   }
+  // create foldes under App/book/scenes/bookX/
+  for (let folder of newFolders){
+    if (folder.parent.length > 0){
+      const paths = folder.parent.split(".")
+      let lastFolder = await getFolder(paths[0], layersFolder)
+      for (var i=0;i<paths.length-1;i++){
+          const folderName = paths[i+1]
+          const parentFolder = paths[i]
+          lastFolder = await getFolder(folderName, parentFolder)
+      }
+      await getFolder(folder.name, lastFolder)
+    }else{
+      await getFolder(folder.name, layersFolder)
+    }
+  }
+
 }
 
 export const unmergeCancelHandler = async (props) => {
@@ -79,9 +97,13 @@ export const unmergeCancelHandler = async (props) => {
   const assetsFolder = await getFolder("assets", props.bookFolder)
   const imagesFolder = await getFolder("images", assetsFolder)
   const pageFolder   = await getFolder(docName, imagesFolder)
+  //
+  const scenesFolder = await getFolder("scenes", props.bookFolder)
+  const layersFolder = await getFolder(docName, scenesFolder)
+  //
   const deleteGroups = props.groups.filter(element=>element.selected)
   console.log("delete groups length", deleteGroups.length)
-  //
+  // foldes under App/book/assets/images/bookX/
   for (let folder of deleteGroups){
     let targetFolder
     if (folder.parent.length > 0){
@@ -103,6 +125,28 @@ export const unmergeCancelHandler = async (props) => {
     }
     await targetFolder.delete()
   }
+  // delete foldes under App/book/scenes/bookX/
+  for (let folder of deleteGroups){
+    let targetFolder
+    if (folder.parent.length > 0){
+      const paths = folder.parent.split(".")
+      let lastFolder = await getFolder(paths[0], layersFolder)
+      for (var i=0;i<paths.length-1;i++){
+          const folderName = paths[i+1]
+          const parentFolder = paths[i]
+          lastFolder = await getFolder(folderName, parentFolder)
+      }
+      targetFolder = await getFolder(folder.name, lastFolder)
+    }else{
+      targetFolder = await getFolder(folder.name, layersFolder)
+    }
+    let entries = await targetFolder.getEntries()
+    for (let entry of entries){
+      await entry.delete()
+    }
+    await targetFolder.delete()
+  }
+  //
   const updated = props.groups.filter(element=>element.selected !=true)
   props.setGroups(updated)
 }
@@ -115,7 +159,7 @@ export const loadUnmergedGroups = async(bookFolder, setGroups) =>{
   const imageMap = await getImageFolders(pageFolder)
   let ret = []
   imageMap.forEach((value, key) => {
-    ret.push({name:key, key:ret.length, parent:value.parent})
+    ret.push({name:key, key:ret.length, parent:value.parent, selected:false})
   });
   console.log("loadUnmergedGroups", ret)
   setGroups(ret);

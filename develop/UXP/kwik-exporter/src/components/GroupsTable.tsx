@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 export interface groupsProps {
   groups:any;
-  setGroups:any;
+  onClick:any;
 }
 
 export const GroupsTable: React.FC<groupsProps> =(props:groupsProps)=> {
@@ -14,6 +14,8 @@ export const GroupsTable: React.FC<groupsProps> =(props:groupsProps)=> {
   const doClickAction = (event, idx, groups) => {
     console.log('Single click');
     groups[idx].selected  = !groups[idx].selected;
+    props.onClick(idx, !groups[idx].selected)
+    //props.setGroups(groups)
   }
 
   const doDoubleClickAction = async (event, idx, groups) => {

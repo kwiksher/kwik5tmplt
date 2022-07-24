@@ -74,7 +74,7 @@ const layerIterator = async(folder, parent, eventsMap) =>{
           }
         }
       }
-    }else if(element.isFolder && element.name.len() > 2){
+    }else if(element.isFolder && element.name.length > 2){
       const elements = await layerIterator(element, folder, eventsMap)
       children.set(element.name,elements);
       const entries = (await element.getEntries()).filter(entry => entry.name == "index.lua");

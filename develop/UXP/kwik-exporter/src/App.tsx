@@ -163,6 +163,11 @@ const App: React.FC<any> = () => {
     loadUnmergedGroups(bookFolder, setGroups)
   }
 
+  const onClickGroup = (idx, value)=>{
+    console.log("onClickGroup", idx, value)
+    groups[idx].selected = value
+  }
+
   groupsInit(bookFolder, setGroups);
 
   return (
@@ -200,7 +205,7 @@ const App: React.FC<any> = () => {
       <ActionButton onClick={unmerge}>Unmerge</ActionButton>
       <ActionButton onClick={unmergeCancel}>Cancel</ActionButton>
       <ActionButton onClick={unmergeRefresh}>Refresh</ActionButton>
-      <GroupsTable groups={groups} setGroups = {setGroups} />
+      <GroupsTable groups={groups} onClick = {onClickGroup} />
       <hr/>
 
       //

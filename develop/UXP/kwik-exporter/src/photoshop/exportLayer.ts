@@ -226,13 +226,13 @@ export const exportLayerAsPng = async (layer:Layer, path:string, imageSuffix:str
     async () => {
 
       if (imageSuffix == '2x'){
-        await action.batchPlay([selectCommand, transformFactory(50, 50), exportCommand], { modalBehavior: 'wait' }); //, synchronousExecution:true
+        await action.batchPlay([selectCommand, transformFactory(50, 50), exportCommand], { modalBehavior: 'execute' }); //, synchronousExecution:true
 
       }else if(imageSuffix == '1x'){
-        await action.batchPlay([selectCommand, transformFactory(25, 25), exportCommand], { modalBehavior: 'wait' }); //,synchronousExecution:true
+        await action.batchPlay([selectCommand, transformFactory(25, 25), exportCommand], { modalBehavior: 'execute' }); //,synchronousExecution:true
 
       }else{
-        await action.batchPlay([selectCommand,  exportCommand], { modalBehavior: 'wait' });
+        await action.batchPlay([selectCommand,  exportCommand], { modalBehavior: 'execute' });
       }
     },
     { commandName: `Export ${layer.name} Layer As PNG start` }
@@ -295,10 +295,10 @@ export const resettLayer = async (layer:Layer, path:string, imageSuffix:string):
     async () => {
 
       if (imageSuffix == '2x'){
-        await action.batchPlay([selectCommand, transformFactory(200, 200)], { modalBehavior: 'wait'}); //, synchronousExecution:true
+        await action.batchPlay([selectCommand, transformFactory(200, 200)], { modalBehavior: 'execute'}); //, synchronousExecution:true
 
       }else if(imageSuffix == '1x'){
-        await action.batchPlay([selectCommand, transformFactory(400, 400)], { modalBehavior: 'wait' });//, synchronousExecution:true
+        await action.batchPlay([selectCommand, transformFactory(400, 400)], { modalBehavior: 'execute' });//, synchronousExecution:true
 
       }
     },
