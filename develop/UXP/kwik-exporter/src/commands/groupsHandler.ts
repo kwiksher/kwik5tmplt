@@ -73,10 +73,37 @@ export const unmergeHandler = async (props) => {
 }
 
 export const unmergeCancelHandler = async (props) => {
-  console.log("unmerge cancel")
+  console.log("unmerge cancel", props)
+  const docName = app.activeDocument.name.replace(".psd","")
+  const assetsFolder = await getFolder("assets", props.bookFolder)
+  const imagesFolder = await getFolder("images", assetsFolder)
+  const pageFolder   = await getFolder(docName, imagesFolder)
+  const deleteGroups = props.groups.filter(element=>element.selected)
+  console.log("delete groups length", deleteGroups.length)
+  //
+  for (let folder of deleteGroups){
+    let targetFolder
+    if (folder.parent.length > 0){
+      const paths = folder.parent.split(".")
+      let lastFolder = await getFolder(paths[0], pageFolder)
+      for (var i=0;i<paths.length-1;i++){
+          const folderName = paths[i+1]
+          const parentFolder = paths[i]
+          lastFolder = await getFolder(folderName, parentFolder)
+      }
+      targetFolder = await getFolder(folder.name, lastFolder)
+    }else{
+      targetFolder = await getFolder(folder.name, pageFolder)
+    }
 
-  //TODO remove folders
-
+    let entries = await targetFolder.getEntries()
+    for (let entry of entries){
+      await entry.delete()
+    }
+    await targetFolder.delete()
+  }
+  const updated = props.groups.filter(element=>element.selected !=true)
+  props.setGroups(updated)
 }
 
 export const loadUnmergedGroups = async(bookFolder, setGroups) =>{
