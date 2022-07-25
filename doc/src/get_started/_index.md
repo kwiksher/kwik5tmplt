@@ -6,13 +6,35 @@ weight: 2
 
 
 TODO
-
-- [ ] scenes/index.lua
-- [ ] mediators/xxxMediator.lua
-- [ ] test layer groups and add how to work with a layer group in get started
 - [ ] swipe page or A/D keys for navigation
+  - [ ] main.lua
+
+    - rendered with Solar2D Project > Select Book, bookFolder
+
+      ```lua
+      require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=0, y=0}}) -- scenes.index
+      ```
+
+  - [ ] scenes/index.lua
+
+    - Active Document index should be set to main.lua's sceneIndex
+
+      <img src="./img/2022-07-25-13-37-55.png" width="300">
+
+  - [ ] mediators/pageXMediator.lua
+
+    - when publishing, create the file.
+
+- [x] test layer groups and add how to work with a layer group in get started
+
+
+- [ ] clean image template lua
+- [ ] add animation and button
+- [ ] add audio & video
 
 # Get Started
+
+{{ %toc% }}
 
 1. Open Adobe UXP Developer Tool
 
@@ -176,6 +198,7 @@ myEvents.testHandker.lua
     function (params)
       local e     = params.event
       local UI    = e.UI
+
       print("commands.myEvents.testhander")
 
       UI.scene:dispatchEvent({
@@ -192,6 +215,50 @@ myEvents.testHandker.lua
 You can find your custom code are inserted in scenes/{PSD FILENAME}/index.lua. The layers are sorted internally by values of meta weight variables.
 
 <img src="./img/2022-07-23-20-46-52.png" width="600">
+
+----
+## Layer Groups
+
+You can export images of a layer group individually.
+
+<img src="./img/2022-07-25-13-12-57.png" width="300">
+
+Select layer groups and then click Unmerge button.
+
+<img src="./img/2022-07-25-13-13-44.png" width="300">
+
+If you want to cancel a layer group to be unmerged, Check it and click Cancel button. It will disppaer from the list.
+
+<img src="./img/2022-07-25-13-16-15.png" width="300">
+
+The source files and the images are exported when you publish.
+
+<img src="./img/2022-07-25-13-19-38.png" width="300">
+
+> TODO fix the bug that unmerged group is not indexed at the right position in index.lua
+
+  ```lua
+  local scene = require('controller.scene').new(sceneName, {
+      name = "kwik4_1280x1920",
+      layers = {
+            {  bg={
+                              } },
+            {  copyright={
+                              } },
+            {  star={
+                              } },
+            {  hello={
+                              } },
+            {  mycircle={
+                              } },
+            {  myrect={
+                              } },
+            {  GroupA={
+                  { SubA = {  } },            } },
+      },
+  ```
+
+
 
 ----
 
