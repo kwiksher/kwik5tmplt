@@ -156,7 +156,8 @@ const App: React.FC<any> = () => {
   }
 
   const unmergeCancel = async(event) =>{
-    unmergeCancelHandler({groups:groups, setGroups:setGroups, bookFolder:bookFolder})
+    await unmergeCancelHandler({groups:groups, setGroups:setGroups, bookFolder:bookFolder})
+    loadUnmergedGroups(bookFolder, setGroups)
   }
 
   const unmergeRefresh = async(event) =>{

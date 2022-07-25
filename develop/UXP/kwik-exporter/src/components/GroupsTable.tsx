@@ -14,7 +14,7 @@ export const GroupsTable: React.FC<groupsProps> =(props:groupsProps)=> {
   const doClickAction = (event, idx, groups) => {
     console.log('Single click');
     groups[idx].selected  = !groups[idx].selected;
-    props.onClick(idx, !groups[idx].selected)
+    props.onClick(idx, groups[idx].selected)
     //props.setGroups(groups)
   }
 
