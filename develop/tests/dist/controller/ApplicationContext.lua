@@ -21,15 +21,16 @@ local Class = {}
 --
 function Class.new(app)
     local appName = app.props.appName
-
     --app:addEventListener("onRobotlegsViewCreated", function(e) print("test") end)
-
     local context = Context.new(app)
     context.Router = {}
-
     local appDir = "App."..appName .."."
     --
     function context:init(scenes, props)
+        -- your global event if any
+          for i=1, props.common.events do
+            self:mapCommand("global."..props.common.events[i], "commands.global."..props.common.events[i])
+          end
         --
         -- creat all the contexts of scenes
         --

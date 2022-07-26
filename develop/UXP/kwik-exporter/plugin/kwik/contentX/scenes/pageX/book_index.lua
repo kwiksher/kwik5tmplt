@@ -18,7 +18,7 @@ local scene = require('controller.scene').new(sceneName, {
       others = { {{#others}}{{name}}={}, {{/others}} }
       {{/components}}
      },
-    events = { {{events}} },
+    events = { {{#events}}  "{{.}}", {{/events}} },
     onInit = function(scene) print("onInit") end
 })
 --

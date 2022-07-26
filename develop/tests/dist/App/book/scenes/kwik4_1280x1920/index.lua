@@ -25,7 +25,7 @@ local scene = require('controller.scene').new(sceneName, {
       variables = {  },
       others = {  }
      },
-    events = { myAction,myEvents.testHandler },
+    events = { "myAction", "myEvents.testHandler" },
     onInit = function(scene) print("onInit") end
 })
 --

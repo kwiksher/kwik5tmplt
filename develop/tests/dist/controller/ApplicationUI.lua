@@ -1,14 +1,16 @@
 local M = {}
 
 --local Application = require("Application")
-local handlerScene = require("controller.sceneEventHandler")
-local handlerComponent = require("controller.componentEventHandler")
+local handlerCommon = require("controller.commonComponentHandler")
+local handlerScene = require("controller.sceneHandler")
+local handlerComponent = require("controller.componentHandler")
 
 function M.create(scene, model)
     local UI = {}
     UI.scene            = scene
-    UI.sceneEventHandler = handlerScene.new(UI)
-    UI.componentEventHandler = handlerComponent.new(UI)
+    UI.commmonHandler = handlerCommon.new(UI)
+    UI.sceneHandler = handlerScene.new(UI)
+    UI.componentHandler = handlerComponent.new(UI)
     UI.page              = model.name
     UI.curPage           = model.pageNum
     -- All components on a table
@@ -83,10 +85,23 @@ function M.create(scene, model)
         end
     end
 
+    --[[
+      main.lua
+      -----
+      local common = {events = {"myEvent"}, components = {"myComponent"}}
+      require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=0, y=0}, common =common}) -- scenes.index
+      ----
+
+      this boostrap's props is attached to scene by scene:setProps in ApplicationContext.lua
+
+      --]]
+
+
     function UI:init()
         print("ApplicationUI:init", #model.components)
-        callEventHandler(model.layers, self.sceneEventHandler, "_init")
-        callEventHandler(model.components, self.componentEventHandler, "_init")
+        callEventHandler(model.layers, self.sceneHandler, "_init")
+        callEventHandler(model.components, self.componentHandler, "_init")
+        callEventHandler(self.props.common.components, self.commmonHandler, "_init")
     end
     --
     function UI:create(params)
@@ -94,48 +109,55 @@ function M.create(scene, model)
         self:init()
         self:setLanguge()
         self.sceneEventParams = params
-        callEventHandler(model.layers, self.sceneEventHandler, "_create")
-        callEventHandler(model.components, self.componentEventHandler, "_create")
+        callEventHandler(model.layers, self.sceneHandler, "_create")
+        callEventHandler(model.components, self.componentHandler, "_create")
+        callEventHandler(self.props.common.components, self.commmonHandler, "_create")
     end
     --
     function UI:willShow(params)
         -- self:_didShow("common", const.page_common, false)
         self.sceneEventParams = params
-        callEventHandler(model.layers, self.sceneEventHandler, "_willShow")
-        callEventHandler(model.components, self.componentEventHandler, "_willShow")
+        callEventHandler(model.layers, self.sceneHandler, "_willShow")
+        callEventHandler(model.components, self.componentHandler, "_willShow")
+        callEventHandler(self.props.common.components, self.commmonHandler, "_willShow")
     end
     --
     function UI:didShow(params)
         -- self:_didShow("common", const.page_common, false)
         self.sceneEventParams = params
-        callEventHandler(model.layers, self.sceneEventHandler, "_didShow")
-        callEventHandler(model.components, self.componentEventHandler, "_didShow")
+        callEventHandler(model.layers, self.sceneHandler, "_didShow")
+        callEventHandler(model.components, self.componentHandler, "_didShow")
+        callEventHandler(self.props.common.components, self.commmonHandler, "_didhow")
     end
     function UI:willHide(params)
         -- self:_didShow("common", const.page_common, false)
         self.sceneEventParams = params
-        callEventHandler(model.layers, self.sceneEventHandler, "_willHide")
-        callEventHandler(model.components, self.componentEventHandler, "_willHide")
+        callEventHandler(model.layers, self.sceneHandler, "_willHide")
+        callEventHandler(model.components, self.componentHandler, "_willHide")
+        callEventHandler(self.props.common.components, self.commmonHandler, "_willHide")
     end
     --
     function UI:didHide(params)
         self.sceneEventParams = params
-        callEventHandler(model.layers, self.sceneEventHandler, "_didHide")
-        callEventHandler(model.components, self.componentEventHandler, "_didHide")
+        callEventHandler(model.layers, self.sceneHandler, "_didHide")
+        callEventHandler(model.components, self.componentHandler, "_didHide")
+        callEventHandler(self.props.common.components, self.commmonHandler, "_didHide")
     end
     --
     function UI:destroy(params)
         self.sceneEventParams = params
-        callEventHandler(model.layers, self.sceneEventHandler, "_destroy")
-        callEventHandler(model.components, self.componentEventHandler, "_destroy")
+        callEventHandler(model.layers, self.sceneHandler, "_destroy")
+        callEventHandler(model.components, self.componentHandler, "_destroy")
+        callEventHandler(self.props.common.components, self.commmonHandler, "_destroy")
     end
     --
     function UI:touch(event) print("event.name: " .. event.name) end
 
     function UI:resume(params)
         self.sceneEventParams = params
-        callEventHandler(model.layers, self.sceneEventHandler, "_resume")
-        callEventHandler(model.components, self.componentEventHandler, "_resume")
+        callEventHandler(model.layers, self.sceneHandler, "_resume")
+        callEventHandler(model.components, self.componentHandler, "_resume")
+        callEventHandler(self.props.common.components, self.commmonHandler, "_resume")
     end
     --
     return UI

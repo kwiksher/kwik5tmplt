@@ -74,17 +74,22 @@ function M.parseValue (value, newValue)
 	end
 end
 
+function M.get(index)
+  return M.apps[index]
+end
+
 function M.new(Props)
     local app = display.newGroup()
     app.classType = "App."..Props.appName..".scenes.index"
     app.currentView = nil
     app.currentViewName = nil
     app.props = Props
+    M.apps[#M.apps+1] = app
 
 --
     function app:showView(path, params)
         print("showView", papth, ", currentViewName:", self.currentViewName)
-        self.currentViewName = "App."..self.props.appName
+        self.currentViewName = path
         composer.gotoScene("App."..self.props.appName.."."..path, {params = params})
     end
     --
