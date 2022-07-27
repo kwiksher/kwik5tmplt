@@ -1,4 +1,4 @@
--- $weight=4
+-- $weight=0
 --
 local _K = require "controller.Application"
 local _M = require("components.kwik.layer_image").new()
@@ -17,13 +17,13 @@ end
 
 local Props = {
   blendMode = "normal",
-  height    =  1360 - -80,
-  width     = 2348 - -428 ,
+  height    =  973.5 - 458.5,
+  width     = 1260 - 640 ,
   kind      = group,
-  name      = "bg",
+  name      = "Artboard 1",
   type      = "png",
-  x         = 2348 + (-428 -2348)/2,
-  y         = -80 + (1360 - -80)/2,
+  x         = 1260 + (640 -1260)/2,
+  y         = 458.5 + (973.5 - 458.5)/2,
   alpha     = 100/100,
 }
 

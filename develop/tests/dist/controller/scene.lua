@@ -22,10 +22,21 @@ M.new = function(sceneName, model)
     ------------------------------------------------------------
     ------------------------------------------------------------
     function scene:create(event)
-        local sceneGroup = self.view
-        if self.model.onInit then self.model.onInit(self) end
-        self.UI:create(self, event.params)
-        self.app:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
+      if self.UI.props.appName == nil then
+        self.calssType = event.params.sceneProps.classType
+        self.UI = event.params.sceneProps.UI
+        self.model = event.params.sceneProps.model
+        self.getEvents = event.params.sceneProps.getEvents
+        print("@@@@@@@@@@@@", self.UI.props.appName)
+      else
+        print("&&&&&&&&&&")
+        for k, v in pairs(self.UI.props) do print(k, v) end
+        print("&&&&&&&&&&")
+      end
+      local sceneGroup = self.view
+      if self.model.onInit then self.model.onInit(self) end
+      self.UI:create(self, event.params)
+      self.app:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
     end
     --
     function scene:show(event)

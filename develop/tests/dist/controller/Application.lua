@@ -12,7 +12,7 @@ local AppContext = require("controller.ApplicationContext")
 local composer = require("composer")
 ------------------------------------------------------
 ------------------------------------------------------
-local M = {}
+local M = {apps = {}}
 --
 function M:orientation(event) end
 --
@@ -87,24 +87,30 @@ function M.new(Props)
     M.apps[#M.apps+1] = app
 
 --
-    function app:showView(path, params)
-        print("showView", papth, ", currentViewName:", self.currentViewName)
-        self.currentViewName = path
-        composer.gotoScene("App."..self.props.appName.."."..path, {params = params})
+    function app:showView(viewName, _options)
+        print("showView", viewName, ", currentViewName:", self.currentViewName)
+        self.currentViewName = viewName
+        print("", "App."..self.props.appName.."."..viewName)
+        local scene = self.context.Router[viewName]
+        local options = _options or {}
+        options.params = options.params or {}
+        print("%%%%%%%%%", scene.UI.props.appName)
+        options.params.sceneProps = {classType = scene.classType, UI = scene.UI, model=scene.model, getEvents = scene.getEvents}
+        composer.gotoScene("App."..self.props.appName.."."..viewName, options)
     end
     --
-    function app:trigger(url, params)
-        if url == self.currentViewName then
+    function app:trigger(viewName, params)
+        if viewName == self.currentViewName then
             print("same scene")
             return true
         end
-        self.currentViewName = "App."..self.props.appName
+        self.currentViewName = viewName
         local event = {}
         event.name = "create"
         event.phase = "will"
 
-        print("trigger", url)
-        local scene = self.context.Router[url]
+        print("trigger", viewName)
+        local scene = self.context.Router[viewName]
         scene:dispatchEvent({name="init"})
         scene:dispatchEvent({name="create"})
         scene:dispatchEvent({name="show", phase = "will"})

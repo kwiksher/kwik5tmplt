@@ -5,13 +5,7 @@ function _Class:setMod(type, layer, custom)
   if type then
     fileName = layer .."_"..type
   end
-  if custom then
-    --print("custom.components."..self.page.."."..fileName)
-    self.mod = require("custom.components."..self.UI.page.."."..fileName)
-  else
-    --print("components."..self.page.."."..fileName)
-    self.mod = require("components."..self.UI.page.."."..fileName)
-  end
+  self.mod = require("components.common."..fileName)
 end
 --
 function _Class:_init(type, layer, custom)

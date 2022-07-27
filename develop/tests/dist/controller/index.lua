@@ -39,7 +39,8 @@ function lib.bootstrap(Props)
         --stage       = display.getCurrentStage(),
         randomAction = {},
         randomAnim   = {},
-        DocumentsDir = system.DocumentsDirectory
+        DocumentsDir = system.DocumentsDirectory,
+        common       = Props.common
     }
     app:init()
 --

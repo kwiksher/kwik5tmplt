@@ -3,7 +3,7 @@
 -- Version: 4.0.2 01
 -- Project: HelloWorld
 --
-local common = {events = {"myEvent"}, components = {myComponent={}}}
+local common = {events = {"myEvent"}, components = {{myComponent={}}}}
 
 require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=0, y=0}, common =common}) -- scenes.index
 

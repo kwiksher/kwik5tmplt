@@ -28,15 +28,18 @@ function Class.new(app)
     --
     function context:init(scenes, props)
         -- your global event if any
-          for i=1, props.common.events do
-            self:mapCommand("global."..props.common.events[i], "commands.global."..props.common.events[i])
+        if props.common then
+          for i=1, #props.common.events do
+            self:mapCommand("common."..props.common.events[i], "commands.common."..props.common.events[i])
           end
+        end
         --
         -- creat all the contexts of scenes
         --
         for i=1, #scenes do
             print(scenes[i])
             local scene = require(appDir.."scenes."..scenes[i]..".index")
+            print("context:init", appDir.."scenes."..scenes[i]..".index")
             scene:setProps(props)
             scene.app = app
 
@@ -53,7 +56,7 @@ function Class.new(app)
                 self:mapCommand(model.name.."."..eventName, appDir.."commands."..model.name.."."..eventName)
             end
             --
-            print("context:init", scenes[i], scene)
+            --print("context:init", scenes[i], scene)
             self.Router["scenes."..scenes[i]..".index"] = scene
         end
         -- app init command

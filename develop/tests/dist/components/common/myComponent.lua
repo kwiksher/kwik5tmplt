@@ -13,34 +13,35 @@ local function onKeyEvent( event )
   local message = "Key '" .. event.keyName .. "' was pressed " .. event.phase
   print( message )
 
-  local app = App.get(0)
+  local app = App.get(1)
   local scenes = app.props.scenes
 
+  print("onKeyEvent", app.currentViewName)
   if event.keyrName =="a" then
     local getPrevious = function ()
       for i=1, #scenes do
-        local sceneName = "scenes." .. self.props.scenes[i]..".index"
+        local sceneName = "scenes." .. scenes[i]..".index"
         if sceneName == app.currentViewName then
-          if i==1 then return "scenes." .. self.props.scenes[#scenes]..".index" end
-          return "scenes." .. self.props.scenes[i-1]..".index"
+          if i==1 then return "scenes." .. scenes[#scenes]..".index" end
+          return "scenes." .. scenes[i-1]..".index"
         end
       end
       return app.currentViewName
     end
-    app.showView(getPrevious())
+    app:showView(getPrevious())
 
   elseif event.keyName =="d" then
     local getNext = function ()
       for i=1, #scenes do
-        local sceneName = "scenes." .. self.props.scenes[i]..".index"
+        local sceneName = "scenes." .. scenes[i]..".index"
         if sceneName == app.currentViewName then
-          if i==#scenes then return "scenes." .. self.props.scenes[1]..".index" end
-          return "scenes." .. self.props.scenes[i+1]..".index"
+          if i==#scenes then return "scenes." .. scenes[1]..".index" end
+          return "scenes." .. scenes[i+1]..".index"
         end
       end
       return app.currentViewName
     end
-    app.showView(getPrevious())
+    app:showView(getNext())
   end
 
   -- If the "back" key was pressed on Android, prevent it from backing out of the app
@@ -58,15 +59,17 @@ end
 --
 function _M:create(UI)
   local sceneGroup = UI.scene.view
-  local obj = display.newCircle( sceneGroup, display.contentCenterX, display.contentCenterY-100, 50 )
+  local obj = display.newCircle( sceneGroup, display.contentCenterX, display.contentCenterY-400, 50 )
   obj:setFillColor(0.2,0.8,0.8);
 end
 --
 function _M:didShow(UI)
   local sceneGroup = UI.scene.view
-
-  UI.layers.bg:addEventListener("tap", function(event)
-      print("bg is taaped")
+  print ("------------")
+  for k, v in pairs(UI.layers) do print(k, v) end
+  local bg = UI.layers[#UI.layers]
+  bg:addEventListener("tap", function(event)
+      print("bg is tapped")
   end)
 
 

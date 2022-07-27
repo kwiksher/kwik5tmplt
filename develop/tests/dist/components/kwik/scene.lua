@@ -14,6 +14,12 @@ M.new = function(sceneName, model)
     ------------------------------------------------------------
     ------------------------------------------------------------
     function scene:create(event)
+        if self.UI == nil then
+          self.calssType = event.params.sceneProps.classType
+          self.UI = event.params.sceneProps.UI
+          self.model = event.params.sceneProps.model
+          self.getEvents = event.params.sceneProps.getEvents
+        end
         local sceneGroup = self.view
         if self.model.onInit then self.model.onInit(self) end
         self.UI:create(self, event.params)

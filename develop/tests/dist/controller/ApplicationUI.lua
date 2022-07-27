@@ -43,7 +43,7 @@ function M.create(scene, model)
                 for i = 1, #layers do
                     local layer = layers[i]
                     for name, value in pairs(layer) do
-                       -- print("", name, value)
+                        --print("", name, value)
                         -- print("", "string")
                         if value.events then
                             -- do nothing
@@ -60,6 +60,7 @@ function M.create(scene, model)
                         end
 
                         if #value == 0 then
+                            --print(funcName, parentPath..name)
                             self[funcName](self, nil, parentPath .. name, false)
                         else
                             self[funcName](self, nil,
@@ -98,10 +99,14 @@ function M.create(scene, model)
 
 
     function UI:init()
-        print("ApplicationUI:init", #model.components)
+        print("ApplicationUI:init")
+        --for k, v in pairs( self.scene.UI.props.common.components) do print(k, v) end
+        --print ("---------------")
         callEventHandler(model.layers, self.sceneHandler, "_init")
         callEventHandler(model.components, self.componentHandler, "_init")
-        callEventHandler(self.props.common.components, self.commmonHandler, "_init")
+        if self.scene.UI.props.common then
+          callEventHandler(self.scene.UI.props.common.components, self.commmonHandler, "_init")
+        end
     end
     --
     function UI:create(params)
@@ -111,7 +116,9 @@ function M.create(scene, model)
         self.sceneEventParams = params
         callEventHandler(model.layers, self.sceneHandler, "_create")
         callEventHandler(model.components, self.componentHandler, "_create")
-        callEventHandler(self.props.common.components, self.commmonHandler, "_create")
+        if self.scene.UI.props.common then
+          callEventHandler(self.scene.UI.props.common.components, self.commmonHandler, "_create")
+        end
     end
     --
     function UI:willShow(params)
@@ -119,7 +126,9 @@ function M.create(scene, model)
         self.sceneEventParams = params
         callEventHandler(model.layers, self.sceneHandler, "_willShow")
         callEventHandler(model.components, self.componentHandler, "_willShow")
-        callEventHandler(self.props.common.components, self.commmonHandler, "_willShow")
+        if self.scene.UI.props.common then
+          callEventHandler(self.scene.UI.props.common.components, self.commmonHandler, "_willShow")
+        end
     end
     --
     function UI:didShow(params)
@@ -127,28 +136,36 @@ function M.create(scene, model)
         self.sceneEventParams = params
         callEventHandler(model.layers, self.sceneHandler, "_didShow")
         callEventHandler(model.components, self.componentHandler, "_didShow")
-        callEventHandler(self.props.common.components, self.commmonHandler, "_didhow")
+        if self.scene.UI.props.common then
+          callEventHandler(self.scene.UI.props.common.components, self.commmonHandler, "_didShow")
+        end
     end
     function UI:willHide(params)
         -- self:_didShow("common", const.page_common, false)
         self.sceneEventParams = params
         callEventHandler(model.layers, self.sceneHandler, "_willHide")
         callEventHandler(model.components, self.componentHandler, "_willHide")
-        callEventHandler(self.props.common.components, self.commmonHandler, "_willHide")
+        if self.scene.UI.props.common then
+          callEventHandler(self.scene.UI.props.common.components, self.commmonHandler, "_willHide")
+        end
     end
     --
     function UI:didHide(params)
         self.sceneEventParams = params
         callEventHandler(model.layers, self.sceneHandler, "_didHide")
         callEventHandler(model.components, self.componentHandler, "_didHide")
-        callEventHandler(self.props.common.components, self.commmonHandler, "_didHide")
+        if self.scene.UI.props.common then
+          callEventHandler(self.scene.UI.props.common.components, self.commmonHandler, "_didHide")
+        end
     end
     --
     function UI:destroy(params)
         self.sceneEventParams = params
         callEventHandler(model.layers, self.sceneHandler, "_destroy")
         callEventHandler(model.components, self.componentHandler, "_destroy")
-        callEventHandler(self.props.common.components, self.commmonHandler, "_destroy")
+        if self.scene.UI.props.common then
+          callEventHandler(self.scene.UI.props.common.components, self.commmonHandler, "_destroy")
+        end
     end
     --
     function UI:touch(event) print("event.name: " .. event.name) end
@@ -157,7 +174,9 @@ function M.create(scene, model)
         self.sceneEventParams = params
         callEventHandler(model.layers, self.sceneHandler, "_resume")
         callEventHandler(model.components, self.componentHandler, "_resume")
-        callEventHandler(self.props.common.components, self.commmonHandler, "_resume")
+        if self.scene.UI.props.common then
+          callEventHandler(self.scene.UI.props.common.components, self.commmonHandler, "_resume")
+        end
     end
     --
     return UI
