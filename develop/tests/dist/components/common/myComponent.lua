@@ -3,6 +3,25 @@
 local _M = {}
 local App = require("controller.Application")
 
+function string:split(delimiter)
+  local t = {}
+  for s in self:gmatch(delimiter) do
+    table.insert(t, s)
+  end
+  return t
+end
+
+local _print = print
+
+print = function(...)
+  local t = debug.traceback()
+  local stacks = t:split("[^\r\n]+")
+  local lines = stacks[3]:split("[^/]+")
+  local line = lines[#lines]
+  local file = line:split("[^:]+")
+  _print(file[#file-2]..":".. file[#file-1], ...)
+end
+
 --
 function _M:init(UI)
 end
