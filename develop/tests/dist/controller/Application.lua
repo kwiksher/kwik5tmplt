@@ -90,12 +90,10 @@ function M.new(Props)
     function app:showView(viewName, _options)
         print("showView", viewName, ", currentViewName:", self.currentViewName)
         self.currentViewName = viewName
-        print("", "App."..self.props.appName.."."..viewName)
         local scene = self.context.Router[viewName]
         local options = _options or {}
         options.params = options.params or {}
-        print("%%%%%%%%%", scene.UI.props.appName)
-        options.params.sceneProps = {classType = scene.classType, UI = scene.UI, model=scene.model, getEvents = scene.getEvents}
+        options.params.sceneProps = {app =scene.app, classType = scene.classType, UI = scene.UI, model=scene.model, getEvents = scene.getEvents}
         composer.gotoScene("App."..self.props.appName.."."..viewName, options)
     end
     --
@@ -105,10 +103,6 @@ function M.new(Props)
             return true
         end
         self.currentViewName = viewName
-        local event = {}
-        event.name = "create"
-        event.phase = "will"
-
         print("trigger", viewName)
         local scene = self.context.Router[viewName]
         scene:dispatchEvent({name="init"})
@@ -116,16 +110,6 @@ function M.new(Props)
         scene:dispatchEvent({name="show", phase = "will"})
         scene:dispatchEvent({name="show", phase = "did"})
         scene:dispatchEvent({name="transition", params = self.props.position})
-
-
-        --[[
-        self.currentViewName = self.context.Router[url]
-        if self.currentViewName == nil then
-            print("### error " .. url .. " not routed ###")
-        else
-            composer.gotoScene(self.currentViewName, params)
-        end
-        --]]
     end
 
     function app:init()
@@ -152,7 +136,7 @@ function M.new(Props)
         --
         -- ApplicationMediator.onRegister shows the top page
         --
-        self.useTrigger = true
+        self.useTrigger = false -- true app:trigger, false:app:showView (composer.gotoScene)
         self:dispatchEvent({name = "onRobotlegsViewCreated", target = self}) -- self == app, this sets mediator's viewInstance as app
     end
 

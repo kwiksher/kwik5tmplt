@@ -99,7 +99,7 @@ function M.create(scene, model)
 
 
     function UI:init()
-        print("ApplicationUI:init")
+        --print("ApplicationUI:init")
         --for k, v in pairs( self.scene.UI.props.common.components) do print(k, v) end
         --print ("---------------")
         callEventHandler(model.layers, self.sceneHandler, "_init")

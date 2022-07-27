@@ -14,7 +14,7 @@ local function getParentPath(path)
     end
 end
 
-print("",getParentPath(parent))
+--print("",getParentPath(parent))
 
 local Context = require "extlib.robotlegs.Context"
 local Class = {}
@@ -37,9 +37,9 @@ function Class.new(app)
         -- creat all the contexts of scenes
         --
         for i=1, #scenes do
-            print(scenes[i])
+            --print(scenes[i])
             local scene = require(appDir.."scenes."..scenes[i]..".index")
-            print("context:init", appDir.."scenes."..scenes[i]..".index")
+            --print("context:init", appDir.."scenes."..scenes[i]..".index")
             scene:setProps(props)
             scene.app = app
 
@@ -49,7 +49,7 @@ function Class.new(app)
             --
             local events = scene:getEvents()
             --
-            print(appDir.."scenes."..model.name..".index", appDir.."mediators."..model.name.."Mediator")
+            --print(appDir.."scenes."..model.name..".index", appDir.."mediators."..model.name.."Mediator")
             self:mapMediator(appDir.."scenes."..model.name..".index", appDir.."mediators."..model.name.."Mediator")
             --
             for k, eventName in pairs(events) do

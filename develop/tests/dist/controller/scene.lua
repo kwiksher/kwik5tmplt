@@ -27,37 +27,36 @@ M.new = function(sceneName, model)
         self.UI = event.params.sceneProps.UI
         self.model = event.params.sceneProps.model
         self.getEvents = event.params.sceneProps.getEvents
-        print("@@@@@@@@@@@@", self.UI.props.appName)
-      else
-        print("&&&&&&&&&&")
-        for k, v in pairs(self.UI.props) do print(k, v) end
-        print("&&&&&&&&&&")
+        self.app = event.params.sceneProps.app
       end
-      local sceneGroup = self.view
+      --
+      local sceneGroup = self.view -- this comes from composer
+      self.UI.scene.view = self.view
+      --
       if self.model.onInit then self.model.onInit(self) end
-      self.UI:create(self, event.params)
+      self.UI:create(event.params)
       self.app:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
     end
     --
     function scene:show(event)
         local sceneGroup = self.view
         if event.phase == "will" then
-            self.UI:willShow(self, event.params)
+            self.UI:willShow(event.params)
         elseif event.phase == "did" then
-            self.UI:didShow(self, event.params)
+            self.UI:didShow(event.params)
         end
     end
     --
     function scene:hide(event)
         if event.phase == "will" then
             if event.parent then event.parent.UI:resume() end
-            self.UI:didHide(self, event.params)
+            self.UI:didHide(event.params)
         elseif event.phase == "did" then
         end
     end
     --
     function scene:destroy(event)
-        self.UI:destroy(self, event.params)
+        self.UI:destroy(event.params)
         self.app:dispatchEvent({name = "onRobotlegsViewDestroyed", target = self})
     end
 

@@ -21,10 +21,10 @@ M.new = function(mediatorName)
         mediator.name = self.name
         --
         function mediator:onRegister()
-            print("mediator:onRegister")
+            --print("mediator:onRegister")
             local scene = self.viewInstance
             for k, eventName in pairs(self.events) do
-                print("", eventName)
+                --print("", eventName)
                 scene:addEventListener(eventName, self)
             end
         end
@@ -45,10 +45,10 @@ M.new = function(mediatorName)
         --  then it is redirected to the app:dispatchEvent below
         --
         for k, eventName in pairs(self.events) do
-			print("", self.name, eventName)
+			    --print("", self.name, eventName)
             mediator[eventName] = function(self, event)
                 local myself = self
-                print("", myself.name .. "." .. eventName)
+                --print("", myself.name .. "." .. eventName)
                 --
                 -- addEventListener is set by context:mapCommand
                 --

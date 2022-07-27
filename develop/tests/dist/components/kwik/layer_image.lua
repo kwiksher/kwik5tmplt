@@ -139,7 +139,7 @@ local function createInfinityImage(self, sceneGroup, layer)
 end
 
 function _M:newImage(UI, sceneGroup)
-  print("######", UI.props.imgDir..self.imagePath)
+  --print("######", UI.props.imgDir..self.imagePath)
   local layer = display.newImageRect( UI.props.imgDir..self.imagePath, UI.props.systemDir, self.imageWidth, self.imageHeight)
   -- layer = newImageRect({{bn}}, imageWidth, imageHeight )
   if layer == nil then return end
