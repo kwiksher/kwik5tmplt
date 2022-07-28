@@ -9,6 +9,7 @@ import Spectrum, { ActionButton, Checkbox, Textfield } from 'react-uxp-spectrum'
 
 import { publishCodeHandler } from './commands/publishCodeHandler';
 import { newProjectHandler } from './commands/newProjectHandler';
+import { validateLayerNamesHandler } from './commands/validateLayerNames';
 import { publishAssetsHandler } from './commands/publishAssetHandler';
 import { selectPSDHandler } from './commands/selectPSDHandler';
 import { PhotoshopTable } from "./components/PhotoshopTable"
@@ -200,6 +201,7 @@ const App: React.FC<any> = () => {
       </li>
       </ul>
       <sp-heading size="XXS">Active Document</sp-heading>
+      <ActionButton onClick={validateLayerNamesHandler}>Validate Names</ActionButton>
       <ActionButton onClick={publishCodeHandler}>Export Code</ActionButton>
       <ActionButton onClick={publishAssetsHandler}>Export Images</ActionButton>
       <sp-heading size="XXS">Layer Groups</sp-heading>
