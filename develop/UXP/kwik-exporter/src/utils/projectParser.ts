@@ -79,7 +79,7 @@ const layerIterator = async(folder, parent, eventsMap) =>{
       children.set(element.name,elements);
       const entries = (await element.getEntries()).filter(entry => entry.name == "index.lua");
       if  (entries.length > 0 && entries[0].isFile){
-        children.set('weight', readWeight(entries[0]));
+        children.set('weight', await readWeight(entries[0]));
       }
     }
   }

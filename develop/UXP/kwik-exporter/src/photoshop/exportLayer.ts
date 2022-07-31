@@ -98,8 +98,10 @@ export const exportIndex = async (model, sceneFolder:storage.Folder, modelFolder
   const layers = objs2list(model.layers);
   console.log("-----exportIndex------")
   console.log(model.layers)
-  const layerPartial = {"recursive": '{{#layers}}{ {{name}} = { {{>layers}} } },{{/layers}}'};
-  //  const layerPartial = {"recursive": '{ {{#layers}}{{name}} = { {{>layers}} },{{/layers}} }'};
+  //const layerPartial = {"recursive": '{{#layers}}{ {{name}} = { {{>layers}} } },{{/layers}}'};
+  const layerPartial = {"recursive": '{{#layers}}{ {{name}} = { {{>recursive}} } },{{/layers}}'};
+
+  // "recurse": "<ul class=\"submenu\">{{#menu}}<li>{{item}}{{>recurse}}{{/menu}}</ul>"
   //
   // events =["eventOne", "eventTwo"]
   const events = model.events;

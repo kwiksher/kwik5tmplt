@@ -62,7 +62,7 @@ export async function publishCode (bookFolder) {
         const sfolder = await getFolder(layer.name, sceneFolder);
         const mFolder = await getFolder(layer.name, modelFolder)
         //
-        const element = await exportLayer(layer.layers, sfolder, mFolder, layer.name + "/");
+        const element = await exportLayer(layer.layers, sfolder, mFolder, parent + layer.name + "/");
         obj[docLayers[i].name] = element;
         //
         if (false == await isFile("index.lua", sfolder)){

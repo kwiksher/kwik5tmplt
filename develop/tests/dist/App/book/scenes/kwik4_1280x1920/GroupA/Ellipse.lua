@@ -17,13 +17,13 @@ end
 
 local Props = {
   blendMode = "normal",
-  height    =  1025 - 825,
+  height    =  1020 - 820,
   width     = 1551 - 1348 ,
   kind      = solidColor,
   name      = "GroupA/Ellipse",
   type      = "png",
   x         = 1551 + (1348 -1551)/2,
-  y         = 825 + (1025 - 825)/2,
+  y         = 820 + (1020 - 820)/2,
   alpha     = 100/100,
 }
 
@@ -63,9 +63,6 @@ function _M:init(UI)
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
-  if self.isTmplt then
-   self.mX, self.mY, self.imageWidth, self.imageHeight , self.imagePath= _K.getModel(self.layerName, self.imagePath, UI.dummy)
-  end
   if self.multLayers then
     UI[self.langTableName][self.langGroupName] = {self.imagePath, self.imageWidth, self.imageHeight, self.mX, self.mY, self.oriAlpha}
   end
@@ -75,20 +72,8 @@ function _M:create(UI)
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
-  if not self.multLayers then
-    local layer = self:myNewImage(UI)
-    if self.isComic then
-      if self.layerSet then
-        self:myComicImage(UI, layer)
-      else
-        self:myNewImage(UI)
-      end
-    end
-  else
-    if not self.isComic then
-      self:myNewImage(UI)
-    end
-  end
+  local layer = self:myNewImage(UI)
+  UI.layers[#UI.layers] = layer
 end
 --
 function _M:didShow(UI)
