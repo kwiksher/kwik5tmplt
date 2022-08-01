@@ -15,27 +15,20 @@ local Props = {
   alpha     = {{opacity}}/100,
 }
 
+_M.align       = "{{align}}"
+_M.randXStart  = {{randXStart}}
+_M.randXEnd    = {{randXEnd}}
+_M.randYStart  = {{randYStart}}
+_M.randYEnd    = {{randYEnd}}
 --
-_M.imageWidth  = Props.width/4
-_M.imageHeight = Props.height/4
-_M.mX, _M.mY   = app.getPosition(Props.x, Props.y, "{{align}}")
+_M.scaleX     = {{scaleW}}
+_M.scaleY     = {{scaleH}}
+_M.rotation   = {{rotation}}
 --
-_M.randXStart  = app.getPosition({{randXStart}})
-_M.randXEnd    = app.getPosition({{randXEnd}})
-_M.dummy, _M.randYStart = app.getPosition(0, {{randYStart}})
-_M.dummy, _M.randYEnd   = app.getPosition(0, {{randYEnd}})
+_M.layerAsBg     = {{layerAsBg}}
+_M.isSharedAsset = {{kwk}}
 --
-_M.layerName     = Props.name
-_M.oriAlpha = Props.alpha
---
-_M.isSharedAsset = parseValue({{kwk}})
-_M.imagePath = Props.name.."." .. Props.type
-_M.imageName = "/"..Props.name.."." ..Props.type
-_M.scaleX     = parseValue({{scaleW}})
-_M.scaleY     = parseValue({{scaleH}})
-_M.rotation   = parseValue({{rotation}})
-_M.blendMode     = Props.blendMode
-_M.layerAsBg     = parseValue({{layerAsBg}})
+_M:setProps(Props)
 --
 function _M:init(UI)
   --local sceneGroup = UI.scene.view

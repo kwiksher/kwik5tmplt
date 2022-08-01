@@ -3,6 +3,25 @@ local _M = {}
 local app = require "controller.Application"
 local util = require "lib.util"
 
+function _M:setProps(Props)
+  self.imageWidth  = Props.width/4
+  self.imageHeight = Props.height/4
+  self.mX, self.mY   = app.getPosition(Props.x, Props.y, self.align)
+  --
+  self.randXStart  = app.getPosition(self.randXStart)
+  self.randXEnd    = app.getPosition(self.randXEnd)
+  self.dummy, self.randYStart = app.getPosition(0, self.randYStart)
+  self.dummy, self.randYEnd   = app.getPosition(0, self.randYEnd)
+  --
+  self.layerName = Props.name
+  self.oriAlpha  = Props.alpha
+  --
+  self.imagePath = Props.name.."." .. Props.type
+  self.imageName = "/"..Props.name.."." ..Props.type
+  --
+  self.blendMode = Props.blendMode
+end
+
 function _M:createImage(UI)
   local sceneGroup = UI.scene.view
   local layer = display.newImageRect(

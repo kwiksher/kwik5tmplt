@@ -15,31 +15,24 @@ local Props = {
   alpha     = 100/100,
 }
 
-_M.infinity = app.parseValue()
-_M.infinitySpeed = app.parseValue()
+-- _M.infinity = app.parseValue()
+-- _M.infinitySpeed = app.parseValue()
 --
-_M.imageWidth  = Props.width/4
-_M.imageHeight = Props.height/4
-_M.mX, _M.mY   = app.getPosition(Props.x, Props.y, "")
---
-_M.randXStart  = app.getPosition()
-_M.randXEnd    = app.getPosition()
-_M.dummy, _M.randYStart = app.getPosition(0, 0)
-_M.dummy, _M.randYEnd   = app.getPosition(0, 0)
- _M.infinityDistance    = (app.parseValue() or 0)/4
---
-_M.layerName     = Props.name
-_M.oriAlpha      = Props.alpha
 
-_M.isSharedAsset = app.parseValue()
-_M.imagePath     = Props.name.."." .. Props.type
-_M.imageName     = "/"..Props.name.."." ..Props.type
-_M.scaleX        = app.parseValue()
-_M.scaleY        = app.parseValue()
-_M.rotation      = app.parseValue()
-_M.blendMode     = Props.blendMode
-_M.layerAsBg     = app.parseValue()
+_M.align       = ""
+_M.randXStart  = nil
+_M.randXEnd    = nil
+_M.randYStart  = nil
+_M.randYEnd    = nil
+--
+_M.scaleX     = nil
+_M.scaleY     = nil
+_M.rotation   = nil
+--
+_M.layerAsBg     = nil
+_M.isSharedAsset = nil
 
+_M:setProps(Props)
 --
 function _M:init(UI)
 	if not self.isSharedAsset then
