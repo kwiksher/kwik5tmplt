@@ -130,25 +130,41 @@ export const exportLayerProps = async (index, layer: Layer, bounds, sceneFolder:
   console.log("exportLayerProps");
 
   const props = {
-    "bounds"    : bounds,
-    "opacity"   : layer.opacity,
-    "blendMode" : layer.blendMode,
-    "height"    : bounds.bottom-bounds.top,
-    "width"     : bounds.right -bounds.left,
-    "kind"      : layer.kind,
-    "name"      : layer.name,
-    "x"         : bounds.right + (bounds.left -bounds.right)/2,
-    "y"         : bounds.top + (bounds.bottom - bounds.top)/2,
-    "alpha"     : layer.opacity/100,
-    "parent"    : parent,
-    "weight"    : index
+    bounds    : bounds,
+    opacity   : layer.opacity,
+    blendMode : layer.blendMode,
+    height    : bounds.bottom-bounds.top,
+    width     : bounds.right -bounds.left,
+    kind      : layer.kind,
+    name      : layer.name,
+    x         : bounds.right + (bounds.left -bounds.right)/2,
+    y         : bounds.top + (bounds.bottom - bounds.top)/2,
+    alpha     : layer.opacity/100,
+    parent    : parent,
+    weight    : index
   }
+
+  const options = {
+    align: "",
+    randXStart: "nil",
+    randXEnd: "nil",
+    randYStart: "nil",
+    randYEnd: "nil",
+    scaleW: "nil",
+    scaleH: "nil",
+    rotation: "nil",
+    layerAsBg: "nil",
+    kwk: "nil",
+  }
+
+  const merged = Object.assign({},props,options);
+
   const tmplt = await getTemplateData('scenes/pageX/layer_image.lua');
   //console.log(tmplt)
-  await renderLua(tmplt, props, sceneFolder);
+  await renderLua(tmplt, merged, sceneFolder);
   //
   const tmpltJSON = await getTemplateData('models/pageX/layer_image.json');
-  await renderJSON(tmpltJSON, props, modelFolder);
+  await renderJSON(tmpltJSON, merged, modelFolder);
 
   // const tmplt = 'My favorite template engine is {{it.favorite}}.'
   // var data = {

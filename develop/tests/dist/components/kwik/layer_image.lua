@@ -1,28 +1,28 @@
-local _M = {}
+local M = {}
 --
 local app = require "controller.Application"
 local util = require "lib.util"
 
-function _M:setProps(Props)
-  self.imageWidth  = Props.width/4
-  self.imageHeight = Props.height/4
-  self.mX, self.mY   = app.getPosition(Props.x, Props.y, self.align)
+function M:setProps(layerProps)
+  self.imageWidth  = layerProps.width/4
+  self.imageHeight = layerProps.height/4
+  self.mX, self.mY   = app.getPosition(layerProps.x, layerProps.y, self.align)
   --
   self.randXStart  = app.getPosition(self.randXStart)
   self.randXEnd    = app.getPosition(self.randXEnd)
   self.dummy, self.randYStart = app.getPosition(0, self.randYStart)
   self.dummy, self.randYEnd   = app.getPosition(0, self.randYEnd)
   --
-  self.layerName = Props.name
-  self.oriAlpha  = Props.alpha
+  self.layerName = layerProps.name
+  self.oriAlpha  = layerProps.alpha
   --
-  self.imagePath = Props.name.."." .. Props.type
-  self.imageName = "/"..Props.name.."." ..Props.type
+  self.imagePath = layerProps.name.."." .. layerProps.type
+  self.imageName = "/"..layerProps.name.."." ..layerProps.type
   --
-  self.blendMode = Props.blendMode
+  self.blendMode = layerProps.blendMode
 end
 
-function _M:createImage(UI)
+function M:createImage(UI)
   local sceneGroup = UI.scene.view
   local layer = display.newImageRect(
     UI.props.imgDir..self.imagePath,
@@ -73,9 +73,9 @@ function _M:createImage(UI)
 
 end
 --
-_M.new = function()
+M.new = function()
 	local instance = {}
-	return setmetatable(instance, {__index=_M})
+	return setmetatable(instance, {__index=M})
 end
 
-return _M
+return M

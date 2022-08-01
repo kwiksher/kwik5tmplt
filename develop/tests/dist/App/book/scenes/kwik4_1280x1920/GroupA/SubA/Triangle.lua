@@ -1,9 +1,9 @@
 -- $weight=0
 --
 local app = require "controller.Application"
-local _M = require("components.kwik.layer_image").new()
+local M = require("components.kwik.layer_image").new()
 
-local Props = {
+local layerProps = {
   blendMode = "normal",
   height    =  967 - 847,
   width     = 1513 - 1386 ,
@@ -15,47 +15,43 @@ local Props = {
   alpha     = 100/100,
 }
 
--- _M.infinity = app.parseValue()
--- _M.infinitySpeed = app.parseValue()
+M.align       = ""
+M.randXStart  = nil
+M.randXEnd    = nil
+M.randYStart  = nil
+M.randYEnd    = nil
 --
+M.scaleX     = nil
+M.scaleY     = nil
+M.rotation   = nil
+--
+M.layerAsBg     = nil
+M.isSharedAsset = nil
 
-_M.align       = ""
-_M.randXStart  = nil
-_M.randXEnd    = nil
-_M.randYStart  = nil
-_M.randYEnd    = nil
+M:setProps(layerProps)
 --
-_M.scaleX     = nil
-_M.scaleY     = nil
-_M.rotation   = nil
---
-_M.layerAsBg     = nil
-_M.isSharedAsset = nil
-
-_M:setProps(Props)
---
-function _M:init(UI)
+function M:init(UI)
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
 end
 --
-function _M:create(UI)
+function M:create(UI)
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
   UI.layers[#UI.layers] = self:createImage(UI)
 end
 --
-function _M:didShow(UI)
+function M:didShow(UI)
   local sceneGroup = UI.scene.view
 end
 --
-function _M:didHide(UI)
+function M:didHide(UI)
   local sceneGroup = UI.scene.view
 end
 --
-function  _M:destory()
+function  M:destory()
 end
 --
-return _M
+return M

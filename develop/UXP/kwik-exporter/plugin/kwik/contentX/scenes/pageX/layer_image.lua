@@ -1,9 +1,9 @@
 -- $weight={{weight}}
 --
 local app = require "controller.Application"
-local _M = require("components.kwik.layer_image").new()
+local M = require("components.kwik.layer_image").new()
 
-local Props = {
+local layerProps = {
   blendMode = "{{blendMode}}",
   height    =  {{bounds.bottom}} - {{bounds.top}},
   width     = {{bounds.right}} - {{bounds.left}} ,
@@ -15,42 +15,42 @@ local Props = {
   alpha     = {{opacity}}/100,
 }
 
-_M.align       = "{{align}}"
-_M.randXStart  = {{randXStart}}
-_M.randXEnd    = {{randXEnd}}
-_M.randYStart  = {{randYStart}}
-_M.randYEnd    = {{randYEnd}}
+M.align       = "{{align}}"
+M.randXStart  = {{randXStart}}
+M.randXEnd    = {{randXEnd}}
+M.randYStart  = {{randYStart}}
+M.randYEnd    = {{randYEnd}}
 --
-_M.scaleX     = {{scaleW}}
-_M.scaleY     = {{scaleH}}
-_M.rotation   = {{rotation}}
+M.scaleX     = {{scaleW}}
+M.scaleY     = {{scaleH}}
+M.rotation   = {{rotation}}
 --
-_M.layerAsBg     = {{layerAsBg}}
-_M.isSharedAsset = {{kwk}}
+M.layerAsBg     = {{layerAsBg}}
+M.isSharedAsset = {{kwk}}
 --
-_M:setProps(Props)
+M:setProps(Props)
 --
-function _M:init(UI)
+function M:init(UI)
   --local sceneGroup = UI.scene.view
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
 end
 --
-function _M:create(UI)
+function M:create(UI)
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
   UI.layers[#UI.layers] = self:createImage(UI)
 end
 --
-function _M:didShow(UI)
+function M:didShow(UI)
 end
 --
-function _M:didHide(UI)
+function M:didHide(UI)
 end
 --
-function  _M:destory(UI)
+function  M:destory(UI)
 end
 --
-return _M
+return M

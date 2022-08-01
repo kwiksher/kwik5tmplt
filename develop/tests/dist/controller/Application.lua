@@ -119,20 +119,11 @@ function M.new(Props)
 
         self.startSceneName = "scenes." .. self.props.scenes[self.props.goPage]..".index"
         --
-        self:dispatchEvent({name = "app.variables", event = "init"})
-        self:dispatchEvent({name = "app.loadLib", event = "init"})
         self:dispatchEvent({name = "app.statsuBar", event = "init"})
-        self:dispatchEvent({name = "app.versionCheck", event = "init"})
-        self:dispatchEvent({name = "app.expDir", event = "init"})
-        self:dispatchEvent({name = "app.lang", event = "init"})
         self:dispatchEvent({name = "app.droidHWKey", event = "init"})
-        self:dispatchEvent({name = "app.kwkVar", event = "init", appProps = self.props})
-        self:dispatchEvent({
-            name = "app.bookmark",
-            event = "init",
-            bookmark = false,
-            appProps = self.props
-        })
+        self:dispatchEvent({name = "app.memoryCheck", event = "init"})
+        self:dispatchEvent({name = "app.statusBar", event = "init"})
+        self:dispatchEvent({name = "app.suspend", event = "init"})
         --
         -- ApplicationMediator.onRegister shows the top page
         --

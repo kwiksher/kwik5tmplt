@@ -1,9 +1,10 @@
---
--- from /Users/ymmtny/Documents/GitHub/kwik5/sandbox/Solar2D_MENU/KwikLiveEditor/components/kwik/tabButFunction.lua
+-- Code created by Kwik - Copyright: kwiksher.com {{year}}
+-- Version: {{vers}}
+-- Project: {{ProjName}}
 --
 local _Class = {}
 --
-function _Class:createTabButFunction(UI, model)
+function _Class:addEventListenerForTap(UI, model)
    function model.obj:tap(event)
     event.UI = UI
     if model.enabled or model.enabled == nil then
@@ -19,7 +20,7 @@ function _Class:createTabButFunction(UI, model)
   model.obj:addEventListener("tap", model.obj)
 end
 --
-function _Class:removeTabButFunction(UI, model)
+function _Class:removeEventListenerForTap(UI, model)
   self.UI = UI
   model.obj:removeEventListener("tap", model.obj)
 end
