@@ -1,6 +1,6 @@
-# kwik4tmplt
+# kwik5tmplt
 
-Copyright (C) 2016 kwiksher.com. All Rights Reserved.
+Copyright (C) 2022 kwiksher.com. All Rights Reserved.
 
 extlib folders contains the following libraries and they follow each license described below.
 
@@ -113,7 +113,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## The State Machine Compiler (SMC) 
+## The State Machine Compiler (SMC)
 http://smc.sourceforge.net
 
 This software is OSI Certified Open Source Software.
