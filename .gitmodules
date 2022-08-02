@@ -1,0 +1,4 @@
+[submodule "develop/UXP/kwik-exporter/plugin/kwik/base-proj"]
+	path = develop/UXP/kwik-exporter/plugin/kwik/base-proj
+	url = git@github.com:kwiksher/kwik5tmplt.git
+	branch = develop
