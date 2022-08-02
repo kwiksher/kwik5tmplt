@@ -39,7 +39,10 @@ function lib.bootstrap(Props)
         --stage       = display.getCurrentStage(),
         randomAction = {},
         randomAnim   = {},
-        DocumentsDir = system.DocumentsDirectory
+        DocumentsDir = system.DocumentsDirectory,
+        common       = Props.common,
+        useTrigger   = true -- true app:trigger, false:app:showView (composer.gotoScene)
+
     }
     app:init()
 --

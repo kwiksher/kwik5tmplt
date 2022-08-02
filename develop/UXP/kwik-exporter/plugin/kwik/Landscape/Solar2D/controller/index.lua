@@ -1,143 +1,118 @@
--- Code created by Kwik - Copyright: kwiksher.com 2016, 2017, 2018
--- Version: 4.3.1
--- Project: Canvas
---
-require("extlib.index")
-require("extlib.Deferred")
-require("extlib.Callbacks")
-local AppContext = require("contexts.ApplicationContext")
-local composer = require("composer")
-------------------------------------------------------
-------------------------------------------------------
-local Application = {}
---
-function Application.new()
-    local app = display.newGroup()
-    app.classType = "Application"
-    app.currentView = nil
-    app.currentViewName = nil
-    --
-    function app:init()
-        self.context = AppContext.new()
-        self.context:init(Application.scenes)
-        self.startSceneName = "scenes." .. Application.scenes[Application.goPage]..".index"
-        --
-        Runtime:dispatchEvent({name = "app.variables", event = "init"})
-        Runtime:dispatchEvent({name = "app.loadLib", event = "init"})
-        Runtime:dispatchEvent({name = "app.statsuBar", event = "init"})
-        Runtime:dispatchEvent({name = "app.versionCheck", event = "init"})
-        Runtime:dispatchEvent({name = "app.expDir", event = "init"})
-        Runtime:dispatchEvent({name = "app.lang", event = "init"})
-        Runtime:dispatchEvent({name = "app.droidHWKey", event = "init"})
-        Runtime:dispatchEvent({name = "app.kwkVar", event = "init"})
-        Runtime:dispatchEvent({
-            name = "app.bookmark",
-            event = "init",
-            bookmark = false
-        })
-        -- ApplicationMediator.onRegister shows the top page
-        Runtime:dispatchEvent({name = "onRobotlegsViewCreated", target = self}) -- this sets mediator's viewInstance
-    end
-    --
-    function app:orientation(event) end
-    --
-    function app:whichViewToShowBasedOnOrientation()
-        local t = self.lastKnownOrientation
-        if t == "landscapeLeft" or t == "landscapeRight" then
-        else
-        end
-    end
-    --
-    function app:showView(name, params)
-        print("Application::name:", name, ", currentViewName:",
-              self.currentViewName)
-        if name == self.currentViewName then
-            print("same scene")
-            -- return true
-        end
-        self.currentViewName = name
-        composer.gotoScene(name, {params = params})
-    end
-    --
-    function app:trigger(url, params)
-        self.currentViewName = self.context.Router[url]
-        if self.currentViewName == nil then
-            print("### error " .. url .. " not routed ###")
-        else
-            composer.gotoScene(self.currentViewName, params)
-        end
-    end
-    --
+system.activate("multitouch")
+
+local trialCnt    = 1 -- set 0 for production
+local kprint = function(a, b)
+    print(a, b)
+end
+
+-- Create library
+local lib = {}
+
+-----------------------------------------------
+local App = require("controller.Application")
+
+function lib.bootstrap(Props)
+    local app = App.new{
+        appName     = Props.name,
+        systemDir   = system.ResourceDirectory,
+        imgDir      = "App/"..Props.name.."/assets/images/",
+        spriteDir   = "App/"..Props.name.."/assets/sprites/",
+        thumbDir    = "App/"..Props.name.."/assets/thumbnails/",
+        audioDir    = "App/"..Props.name.."/assets/audios/",
+        videoDir    = "App/"..Props.name.."/assets/videos/",
+        particleDir = "App/"..Props.name.."/assets/particles/",
+        trans       = {},
+        gt          = {},
+        timerStash  = {},
+        allAudios   = {kAutoPlay = 5},
+        gtween      = require("extlib.gtween"),
+        btween      = require("extlib.btween"),
+        Gesture     = require("extlib.dmc_gesture"),
+        MultiTouch  = require("extlib.dmc_multitouch"),
+        syncSound   = require("extlib.syncSound"),
+        kBidi       = false,
+        goPage      = Props.sceneIndex,
+        scenes       = require("App."..Props.name..".scenes.index"),
+        kAutoPlay   = 0,
+        lang        = "en",
+        position    = Props.position,
+        --stage       = display.getCurrentStage(),
+        randomAction = {},
+        randomAnim   = {},
+        DocumentsDir = system.DocumentsDirectory,
+        common       = Props.common
+    }
     app:init()
-    --
-    return app
-end
 --
-function Application.cancelAllTweens()
-    local k, v
-    for k, v in pairs(Application.gt) do
-        v:pause();
-        v = nil;
-        k = nil
-    end
-    Application.gt = nil
-    Application.gt = {}
-end
---
-function Application.cancelAllTimers()
-    local k, v
-    for k, v in pairs(Application.timerStash) do
-        timer.cancel(v)
-        v = nil;
-        k = nil
-    end
-    Application.timerStash = nil
-    Application.timerStash = {}
-end
---
-function Application.cancelAllTransitions()
-    local k, v
-    for k, v in pairs(Application.trans) do
-        transition.cancel(v)
-        v = nil;
-        k = nil
-    end
-    Application.trans = nil
-    Application.trans = {}
-end
---
-function Application.getPosition(x, y)
-    local mX = x and display.contentWidth / 2 + (x * 0.25 - 480 * 0.5) or 0
-    local mY = y and display.contentHeight / 2 + (y * 0.25 - 320 * 0.5) or 0
-    return mX, mY
 end
 
-function Application.parseValue (value, newValue)
-	if newValue then
-		if value then
-			return newValue
-		else
-			return nil
-		end
-	else
-		return value
-	end
+--
+local function onError(e)
+    kprint("--- unhandledError ---")
+    kprint(e)
+    return true
 end
----
+--
+Runtime:addEventListener("unhandledError", onError)
+--timer.performWithDelay(100, startThisMug)
+--
+local composer = require("composer")
+
+Runtime:addEventListener("changeThisMug",
+    function(e)
+       composer.gotoScene("extlib.page_cutscene")
+       composer.removeHidden(false)
+        _G.appInstance:destroy()
+        local function resetPacakges()
+            package.loaded["model"] = nil
+            for i=1, _G.pageNum do
+                package.loaded["contexts.page0"..i.."Context"] = nil
+                myunload(".contexts.page0%sContext",i)
+            end
+            package.loaded["contexts.ApplicationContext"]      = nil
+            package.loaded["KwikShelf.contexts.ApplicationContext"] = nil
+            package.loaded["Application"]                      = nil
+            package.loaded["KwikShelf.Application"] = nil
+            for i=1, _G.pageNum do
+                package.loaded["mediators.page0"..i.."Mediator"] = nil
+                myunload(".mediators.page0%sMediator",i)
+                package.loaded["vo.page0"..i.."VO"]               = nil
+                myunload(".vo.page0%sVO",i)
+                package.loaded["components.page0"..i.."UI"]       = nil
+                myunload(".components.page0%sUI",i)
+                package.loaded["views.page0"..i.."Scene"]         = nil
+                myunload(".views.page0%sScene",i)
+            end
+            package.loaded["mediators.ApplicationMediator"] = nil
+            package.loaded["KwikShelf.mediators.ApplicationMediator"] = nil
+            package.loaded["components.kwik.layerUI"] = nil
+            package.loaded["extlib.syncSound"] = nil
+            package.loaded["extlib.kNavi"] = nil
+            package.loaded["commands.kwik.pageAction"] = nil
+            package.loaded["commands.kwik.animationAction"] = nil
+            package.loaded["commands.kwik.actionCommand"] = nil
+            package.loaded["commands.kwik.languageAction"] = nil
+            -- store UI
+            -- this has a reference to App.TOC or bookXX, so need to unload it
+            package.loaded["components.store.UI"] = nil
 
 
 
---
+            --package.loaded["extlib.statemap"] = nil
+           -- for k, v in pairs(package.loaded) do kprint(string.format("[%50s]", k), v) end
+            -- now let's change the app
+            _G.appName = e.appName
+            if e.page then
+                _G.goPage  = e.page
+            else
+                 _G.goPage = 1
+            end
+        end
+        timer.performWithDelay(loadingTime, function()
+            resetPacakges()
+            startThisMug()
+            end)
+    end)
 
--- function Application.createCommand(scene, model)
--- 	local cmd = require("commands.kwik.actionCommand")
---     local Command = cmd.new()
--- 	--
--- 	function Command:execute(params)
--- 		self:_execute(params)
--- 	end
--- 	return Command
--- end
-
---
-return Application
+-- Return library instance
+return lib

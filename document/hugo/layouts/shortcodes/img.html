@@ -1,0 +1,3 @@
+{{ $src := .Get "src" }}
+{{ $width := .Get "width" }}
+<img src="../img/{{ path.Base $src }}" width="{{ $width }}">

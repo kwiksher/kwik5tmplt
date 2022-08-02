@@ -4,7 +4,8 @@
 --
 local _M = {}
 --
-local _K = require "Application"
+local app = require "Application"
+local util = require("lib.util")
 ---
 parseValue = function(value, newValue)
 	if newValue then
@@ -24,7 +25,7 @@ local positionFunc = {}
 --
 positionFunc["groupAndPage"] = function (layer, _endX, _endY, isSceneGroup)
 	local mX, mY
-	local endX, endY =  _K.ultimatePosition(_endX, _endY)
+	local endX, endY =  app.ultimatePosition(_endX, _endY)
 	local width, height = layer.width*layer.xScale, layer.height*layer.yScale
 
 	if _M.referencePoint=="CenterReferencePoint" then
@@ -78,7 +79,7 @@ positionFunc["groupAndPage"] = function (layer, _endX, _endY, isSceneGroup)
 end
 --
 positionFunc["default"] = function (layer, _endX, _endY, isSceneGroup)
-	local endX, endY =  _K.ultimatePosition(_endX, _endY)
+	local endX, endY =  app.ultimatePosition(_endX, _endY)
 	local width, height = layer.width*layer.xScale, layer.height*layer.yScale
 	if _M.defaultReference then
 		mX = endX + width/2
@@ -137,42 +138,42 @@ function _M:repoHeader(UI)
 	if self.referencePoint == "TopLeftReferencePoint" then
 		layer.anchorX = 0
 		layer.anchorY = 0;
-		_K.repositionAnchor(layer, 0,0)
+		util.repositionAnchor(layer, 0,0)
 	end
 	if self.referencePoint == "TopCenterReferencePoint" then
 		layer.anchorX = 0.5
 		layer.anchorY = 0;
-		_K.repositionAnchor(layer, 0.5,0)
+		util.repositionAnchor(layer, 0.5,0)
 	end
 	if self.referencePoint == "TopRightReferencePoint" then
 		layer.anchorX = 1
 		layer.anchorY = 0;
-		_K.repositionAnchor(layer, 1,0)
+		util.repositionAnchor(layer, 1,0)
 	end
 	if self.referencePoint == "CenterLeftReferencePoint" then
 		layer.anchorX = 0
 		layer.anchorY = 0.5;
-		_K.repositionAnchor(layer, 0,0.5)
+		util.repositionAnchor(layer, 0,0.5)
 	end
 	if self.referencePoint == "CenterRightReferencePoint" then
 		layer.anchorX = 1
 		layer.anchorY = 0.5;
-		_K.repositionAnchor(layer, 1,0.5)
+		util.repositionAnchor(layer, 1,0.5)
 	end
 	if self.referencePoint == "BottomLeftReferencePoint" then
 		layer.anchorX = 0
 		layer.anchorY = 1;
-		_K.repositionAnchor(layer, 0,1)
+		util.repositionAnchor(layer, 0,1)
 	end
 	if self.referencePoint == "BottomRightReferencePoint" then
 		layer.anchorX = 1
 		layer.anchorY = 1;
-		_K.repositionAnchor(layer, 1,1)
+		util.repositionAnchor(layer, 1,1)
 	end
 	if self.referencePoint == "BottomCenterReferencePoint" then
 		layer.anchorX = 0.5
 		layer.anchorY = 1;
-		_K.repositionAnchor(layer, 0.5,1)
+		util.repositionAnchor(layer, 0.5,1)
 	end
 end
 --
@@ -214,7 +215,7 @@ local function createOptions(self, UI)
 	end
 
 	local options = {
-		ease        = _K.gtween.easing[self.animationEasing],
+		ease        = app.gtween.easing[self.animationEasing],
 		repeatCount = self.animationLoop,
 		reflect     = self.animationReverse,
 		xSwipe      = self.animationSwipeX,
@@ -308,8 +309,8 @@ local function createAnimationFunc(self, UI)
 		layer.yScale = layer.oriYs
 
 		local restartHandler= function(event)
-			if _K.gt[self.layerName] then
-				_K.gt[self.layerName]:toBeginning()
+			if app.gt[self.layerName] then
+				app.gt[self.layerName]:toBeginning()
 			end
 		end
 		--
@@ -320,24 +321,24 @@ local function createAnimationFunc(self, UI)
 		local props = createProps(self, layer)
 		---
 		if self.animationType == "Default" then
-			_K.gt[self.layerName] = _K.gtween.new( layer, self.animationDuration, props, options)
+			app.gt[self.layerName] = app.gtween.new( layer, self.animationDuration, props, options)
 		else if self.animationType == "Path" then
-			_K.gt[self.layerName] = _K.btween.new(
+			app.gt[self.layerName] = app.btween.new(
 				layer,
 				self.animationDuration,
 				self.pathAnimation,
 				options,
 				props)
 
-			_K.gt[self.layerName].pathAnim = true
+			app.gt[self.layerName].pathAnim = true
 		end
 		--
 		if not self.audioPlay then
-			_K.gt[self.layerName]:pause()
+			app.gt[self.layerName]:pause()
 		end
-		-- _K.gt[self.layerName]:toBeginning()
+		-- app.gt[self.layerName]:toBeginning()
 		if self.isComic then
-			layer.anim[self.layerName] = _K.gt[self.layerName]
+			layer.anim[self.layerName] = app.gt[self.layerName]
 		end
 	end
 end
@@ -353,12 +354,12 @@ animationFunc["Dissolve"] = function(self, UI)
 	layer.xScale = layer.oriXs
 	layer.yScale = layer.oriYs
 
-	_K.trans[self.layerName] = {}
-	_K.trans[self.layerName].play = function()
+	app.trans[self.layerName] = {}
+	app.trans[self.layerName].play = function()
 		transition.dissolve(layer, self:getDssolvedLayer(UI),	self.animationDuration, self.animationDelay}}) end
-	_K.trans[self.layerName].pause = function()
+	app.trans[self.layerName].pause = function()
 		print("pause is not supported in dissove") end
-	_K.trans[self.layerName].resume = function()
+	app.trans[self.layerName].resume = function()
 		transition.dissolve(layer, self:getDssolvedLayer(UI),	self.animationDuration, self.animationDelay) end
 end
 

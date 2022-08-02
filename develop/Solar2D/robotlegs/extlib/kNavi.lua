@@ -24,7 +24,7 @@
 -- navBack holds the rect or image acting as background for the navigation
 -- navItems holds all thumbnails
 --
-local _K = require "Application"
+local _K = require "controller.Application"
 --
 local widget = require("widget")
 local composer = require( "composer" )

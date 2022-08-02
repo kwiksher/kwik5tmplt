@@ -15,7 +15,7 @@ function Context.new(app)
 	end
 
 	function context:onRobotlegsViewCreated(event)
-		print("Context::onRobotlegsViewCreated")
+		--print("Context::onRobotlegsViewCreated")
 		local view = event.target
 		if view == nil then
 			error("ERROR: Robotlegs Context received a create event, but no view instance in the event object.")
@@ -59,7 +59,7 @@ function Context.new(app)
 	end
 
 	function context:mapMediator(viewClass, mediatorClass)
-		print("context:mapMediator")
+		--print("context:mapMediator")
 		assert(viewClass ~= nil, "viewClass cannot be nil.")
 		assert(mediatorClass ~= nil, "mediatorClass cannot be nil.")
 		assert(require(viewClass), "Could not find viewClass")
@@ -69,8 +69,8 @@ function Context.new(app)
 		-- but until we have an easier way to get package information, we have zero clue what Lua/Corona
 		-- does with our classes.
 		local className = assert(self:getClassName(viewClass), "Couldn't parse class name")
-		print("",className)
-		print("",mediatorClass)
+		--print("",className)
+		--print("",mediatorClass)
 		self.mediators[className] = mediatorClass
 		return true
 	end
@@ -84,26 +84,26 @@ function Context.new(app)
 	end
 
 	function context:createMediator(viewInstance)
-		print("Context::createMediator, viewInstance: ", viewInstance)
+		--print("Context::createMediator, viewInstance: ", viewInstance)
 		assert(viewInstance.classType, "viewInstance does not have a classType parameter.")
-		print(0)
+		--print(0)
 		local className = assert(self:getClassName(viewInstance.classType), "Failed to get class name")
-		print("", viewInstance.classType, className)
+		--print("", viewInstance.classType, className)
 		-- assert(_K[className], "Cannot find viewInstance class")
 		assert(self:hasCreatedMediator(viewInstance) == false, "viewInstance already has an instantiated Mediator. Perhaps you meant to dispatch onRobotlegsViewDestroyed instead?")
-		print(1)
+		--print(1)
 		local mediatorClassName = self.mediators[className]
 		assert(mediatorClassName, "There is no Mediator registered for this View class: " .. className)
-		print(2, mediatorClassName)
+		--print(2, mediatorClassName)
 		if(mediatorClassName ~= nil) then
-			print("","context:createMediator", mediatorClassName)
+			--print("","context:createMediator", mediatorClassName)
 			local mediatorClass = require(mediatorClassName):new()
 			mediatorClass.viewInstance = viewInstance
 			table.insert(self.mediatorInstances, mediatorClass)
 			mediatorClass:onRegister()
 			return true
 		else
-			print("", "FAIL")
+			--print("", "FAIL")
 			return false
 		end
 	end
@@ -162,7 +162,7 @@ function Context.new(app)
 	end
 
 	function context:destroy()
-		print(" ------- context:destroy ---------- ")
+		--print(" ------- context:destroy ---------- ")
 		for k, v in pairs (self.commands) do
 			self.app:removeEventListener(k, onCommand)
 		end

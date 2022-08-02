@@ -77,7 +77,7 @@ function _M:create(UI)
     self.imagePath = UI.page ..self.imageName
   end
   if not self.multLayers then
-    local layer = self:myNewImage(UI)
+    local layer = self:createImage(UI)
     layer:addEventListener("tap", function(event)
       print("--------")
       UI.scene:dispatchEvent{
@@ -89,12 +89,12 @@ function _M:create(UI)
       if self.layerSet then
         self:myComicImage(UI, layer)
       else
-        self:myNewImage(UI)
+        self:createImage(UI)
       end
     end
   else
     if not self.isComic then
-      self:myNewImage(UI)
+      self:createImage(UI)
     end
   end
 end
