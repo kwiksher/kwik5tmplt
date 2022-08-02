@@ -16,7 +16,7 @@
 -- version 3.10 - for Kwik 3 (9/22/14) - save and set the talkbutton alpha after playing the sentence
 
 module(..., package.seeall)
-local _K = require "Application"
+local _K = _G.App
 --
 local fadeInDur = 100
 local fadeOutDur = 100
