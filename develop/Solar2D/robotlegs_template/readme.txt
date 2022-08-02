@@ -1,1 +1,0 @@
-moved to develop/UXP/kwik-exporter/plugin/kwik/base-proj/Solar2D
