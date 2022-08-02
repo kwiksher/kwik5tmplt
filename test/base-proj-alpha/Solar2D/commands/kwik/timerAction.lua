@@ -4,7 +4,7 @@
 --
 local _M = {}
 --
-local _K            = require "Application"
+local _K            = require "controller.Application"
 --
 function _M:startTimer(tname, delay, trigger, loop)
 	_K.timerStash[tname] = timer.performWithDelay(delay*1000, trigger, loop )

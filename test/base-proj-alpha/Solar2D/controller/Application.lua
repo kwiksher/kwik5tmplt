@@ -127,7 +127,7 @@ function M.new(Props)
         --
         -- ApplicationMediator.onRegister shows the top page
         --
-        self.useTrigger = false -- true app:trigger, false:app:showView (composer.gotoScene)
+        self.useTrigger = self.props.useTrigger -- true app:trigger, false:app:showView (composer.gotoScene)
         self:dispatchEvent({name = "onRobotlegsViewCreated", target = self}) -- self == app, this sets mediator's viewInstance as app
     end
 

@@ -40,7 +40,9 @@ function lib.bootstrap(Props)
         randomAction = {},
         randomAnim   = {},
         DocumentsDir = system.DocumentsDirectory,
-        common       = Props.common
+        common       = Props.common,
+        useTrigger   = true -- true app:trigger, false:app:showView (composer.gotoScene)
+
     }
     app:init()
 --

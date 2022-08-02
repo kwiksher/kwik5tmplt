@@ -4,10 +4,12 @@
 --
 local _Class = {}
 local json   = require("json")
-local app              = require("Application")
+local app              = require("controller.Application").get(1)
 --
 -- Variable saving function
-local path = system.pathForFile( app.appName.."kwkVars.json", app.DocumentsDir )
+print(app.props.appName.."kwkVars.json")
+local path = system.pathForFile( app.props.appName.."kwkVars.json", app.DocumentsDir )
+if path == nil then return end
 local file = io.open( path, "r" )
 if file then
     io.close(file)
