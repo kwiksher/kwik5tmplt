@@ -17,7 +17,7 @@ const getTemplateData = async (fileName:string): Promise<string> => {
     console.log("getTemplateData")
     try{
       let folder  = await fs.getPluginFolder();
-      folder  = await folder.getEntry("kwik/contentX");
+      folder  = await folder.getEntry("kwik/base-proj/Solar2D/App/bookX");
       console.log("", folder.nativePath, fileName);
       const file  = await folder.getEntry(fileName);
       data = await file.read()

@@ -51,7 +51,7 @@ export async function copyAll(src, dist){
     if (element.isFile){
       console.log(element)
       element.copyTo(dist, {overwrite:false})
-    }else{
+    }else if (element.name !="bookX") {
       console.log("", element)
       let folder = await getFolder(element.name, dist);
       await copyAll(element, folder);

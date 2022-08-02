@@ -11,7 +11,7 @@ export const selectPSDHandler = async(reset:boolean, setPSDs, setPSDFolder) =>{
   // getFolder
   const fs = storage.localFileSystem;
   //const pluginFolder  = await fs.getPluginFolder();
-  //const tmpltFolder = await pluginFolder.getEntry("kwik/Solar2D") as storage.Folder;
+  //const tmpltFolder = await pluginFolder.getEntry("kwik/base-proj/Solar2D") as storage.Folder;
 
   let psdFolder, doc, doc1, tries = 3, success = false;
 
