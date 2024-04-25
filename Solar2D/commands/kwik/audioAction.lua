@@ -5,7 +5,7 @@
 local _M = {}
 _M.x9 = {}
 --
-local _K = require("Application")
+local _K = require("controller.Application")
 --
 local allAudios = {}
 

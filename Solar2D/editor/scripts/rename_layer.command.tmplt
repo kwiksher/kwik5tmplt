@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd {{dst}}
+cp {{newIndex}} App/{{book}}/index.lua
+mv App/{{book}}/components/{{page}}/layers/{{layer}}.lua App/{{book}}/components/{{page}}/layers/{{newName}}.lua
+{{#class}}
+mv App/{{book}}/components/{{page}}/layers/{{layer}}_{{.}}.lua App/{{book}}/components/{{page}}/layers/{{newName}}__{{.}}.lua
+{{/class}}
+exit

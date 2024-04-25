@@ -4,7 +4,7 @@
 --
 local _M = {}
 --
-local _K            = require "Application"
+local _K            = require "controller.Application"
 --
 function _M:pauseAnimation(anim)
   if _K.gt[anim] then

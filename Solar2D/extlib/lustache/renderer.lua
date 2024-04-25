@@ -1,8 +1,8 @@
 local Scanner  = require "extlib.lustache.scanner"
 local Context  = require "extlib.lustache.context"
 
-local error, ipairs, loadstring, pairs, setmetatable, tostring, type =
-      error, ipairs, loadstring, pairs, setmetatable, tostring, type
+local error, ipairs, pairs, setmetatable, tostring, type =
+      error, ipairs, pairs, setmetatable, tostring, type
 local math_floor, math_max, string_find, string_gsub, string_split, string_sub, table_concat, table_insert, table_remove =
       math.floor, math.max, string.find, string.gsub, string.split, string.sub, table.concat, table.insert, table.remove
 
@@ -12,7 +12,7 @@ local patterns = {
   nonSpace = "%S",
   eq = "%s*=",
   curly = "%s*}",
-  tag = "[#\\^/>{&=!]"
+  tag = "[#\\^/>{&=!?]"
 }
 
 local html_escape_characters = {
@@ -21,7 +21,13 @@ local html_escape_characters = {
   [">"] = "&gt;",
   ['"'] = "&quot;",
   ["'"] = "&#39;",
-  -- ["/"] = "&#x2F;"
+  ["/"] = "&#x2F;"
+}
+
+local block_tags = {
+  ["#"] = true,
+  ["^"] = true,
+  ["?"] = true,
 }
 
 local function is_array(array)
@@ -58,6 +64,9 @@ local function compile_tokens(tokens, originalTemplate)
     for i, token in ipairs(tokens) do
       local t = token.type
       buf[#buf+1] =
+        t == "?" and rnd:_conditional(
+          token, ctx, subrender(i, token.tokens)
+        ) or
         t == "#" and rnd:_section(
           token, ctx, subrender(i, token.tokens), originalTemplate
         ) or
@@ -89,7 +98,7 @@ local function nest_tokens(tokens)
   local token, section
 
   for i,token in ipairs(tokens) do
-    if token.type == "#" or token.type == "^" then
+    if block_tags[token.type] then
       token.tokens = {}
       sections[#sections+1] = token
       collector[#collector+1] = token
@@ -203,6 +212,16 @@ function renderer:render(template, view, partials)
   return fn(view)
 end
 
+function renderer:_conditional(token, context, callback)
+  local value = context:lookup(token.value)
+
+  if value then
+    return callback(context, self)
+  end
+
+  return ""
+end
+
 function renderer:_section(token, context, callback, originalTemplate)
   local value = context:lookup(token.value)
 
@@ -261,7 +280,7 @@ function renderer:_partial(name, context, originalTemplate)
     end
 
     -- compile partial and store result in cache
-    fn = self:compile(partial, nil, originalTemplate)
+    fn = self:compile(partial, nil, partial)
     self.partial_cache[name] = fn
   end
   return fn and fn(context, self) or ""
@@ -359,7 +378,7 @@ function renderer:parse(template, tags)
     end
 
     if not scanner:scan(tag_patterns[2]) then
-      error("Unclosed tag at " .. scanner.pos)
+      error("Unclosed tag " .. value .. " of type " .. type .. " at position " .. scanner.pos)
     end
 
     tokens[#tokens+1] = { type = type, value = value, startIndex = start, endIndex = scanner.pos - 1 }

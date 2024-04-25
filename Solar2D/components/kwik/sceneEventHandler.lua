@@ -63,8 +63,8 @@ end
 --
 function _Class:_destroy(type, layer, custom)
   self:setMod(type, layer, custom)
-  if self.mod.destory then
-    self.mod:destory(self.UI)
+  if self.mod.destroy then
+    self.mod:destroy(self.UI)
   end
 end
 --

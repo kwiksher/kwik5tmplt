@@ -18,7 +18,7 @@ M.new = function(sceneName, model)
           self.calssType = event.params.sceneProps.classType
           self.UI = event.params.sceneProps.UI
           self.model = event.params.sceneProps.model
-          self.getEvents = event.params.sceneProps.getEvents
+          self.getCommands = event.params.sceneProps.getCommands
         end
         local sceneGroup = self.view
         if self.model.onInit then self.model.onInit(self) end
@@ -53,9 +53,9 @@ M.new = function(sceneName, model)
     scene:addEventListener("hide", scene)
     scene:addEventListener("destroy", scene)
     --
-    function scene:getEvents()
-        local events = {}
-        -- local events = {"initMenu","printStack",
+    function scene:getCommands()
+        local commands = {}
+        -- local commands = {"initMenu","printStack",
         --    "layersList.select", "layersList.drag",
         --    "layerProps.new", "layerProps.update","layerProps.attachFile", "layerProps.drag"
         -- }
@@ -66,10 +66,10 @@ M.new = function(sceneName, model)
                     for name, value in pairs(layer) do
                         --print(name, #value)
                         -- print("", "string")
-                        if value.events then
-                            for k, eventName in pairs(value.events) do
+                        if value.commands then
+                            for k, eventName in pairs(value.commands) do
                                -- print("", name .. "." .. eventName)
-                                table.insert(events,
+                                table.insert(commands,
                                              name .. "." .. eventName)
                             end
                         elseif value.types then
@@ -87,11 +87,11 @@ M.new = function(sceneName, model)
             end
         end
         -- for layers
-        iterator(self.model.layers)
-        for i=1, #self.model.events do
-            table.insert(events, self.model.events[i])
+        iterator(self.model.components.layers)
+        for i=1, #self.model.commands do
+            table.insert(commands, self.model.commands[i])
         end
-        return events
+        return commands
     end
     return scene
 
