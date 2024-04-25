@@ -3,7 +3,7 @@
 -- Project: {{ProjName}}
 --
 local _M = {}
-local _K = require("Application")
+local _K = require("controller.Application")
 local composer = require("composer")
 local Navigation = require("extlib.kNavi")
 --

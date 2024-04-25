@@ -343,7 +343,7 @@ function new(target, duration, values, props)
 		end
 		self.isPlaying = true
 		for i=1, #crumbs do
-				crumbs[i].alpha = 1
+      crumbs[i].alpha = 1
 		end
 		if self.position == nil or self.repeatCount ~= 0 and self.position >= self.repeatCount * self.duration then
 			-- reached the end, reset.
@@ -362,7 +362,9 @@ function new(target, duration, values, props)
 			return
 		end
 		for i=1, #crumbs do
-				crumbs[i].alpha = 0
+        if crumbs[i] then
+          crumbs[i].alpha = 0
+        end
 		end
 		self.isPlaying = false
 		unregisterTween(self)
@@ -395,6 +397,7 @@ function new(target, duration, values, props)
 		self.calculatedPositionOld = self.calculatedPosition
 
 		local maxPosition = self.repeatCount * self.duration
+    -- print(type(value), type(maxPosition), self.repeatCount)
 		local hasEnded = value >= maxPosition and self.repeatCount > 0
 		if hasEnded then
 

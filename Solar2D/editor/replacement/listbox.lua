@@ -1,0 +1,278 @@
+local M = {
+  x = 10, -- display.contentCenterX/2,
+  y = display.contentHeight*0.75 -45,
+  width = 55,
+  height = 240,
+  rowWidth = 55,
+  rowHeight = 20
+}
+-- attach drag-item scrollview to widget library
+require("extlib.dragitemscrollview")
+-- load widget library
+local widget = require("widget")
+local json = require("json")
+
+--I/F
+
+local headers = {}
+-- for sync
+headers.line = {"name", "start", "out", "dur", "file", "action"}
+-- for spritesheet
+headers.sequenceData = {"name", "start", "count", "frames", "loopCount", "loopDirection", "time", "pause"}
+
+M.headers = headers
+
+function M:setValue(fooValue, type)
+   self.type = type or self.type
+  self.value = fooValue or self.value
+  print("####", self.type, #self.value)
+  self:createTable()
+end
+
+--
+function M:create(UI)
+  self.rootGroup = UI.editor.rootGroup
+  self.rootGroup.listPropsTable = display.newGroup()
+  --
+  self.singleClickEvent = function(obj)
+    UI.scene.app:dispatchEvent {
+      name = "editor.replacement.list.select",
+      UI = UI,
+      index = obj.index,
+      value = obj.value,
+      type = obj.type
+    }
+    if self.selection and self.selection ~= obj and self.selection.rect.setFillColor then
+      self.selection.rect:setFillColor(1)
+    end
+    self.selection = obj
+    self.selection.rect:setFillColor(0,1,0)
+  end
+  --
+  self.addEvent = function(obj)
+    UI.scene.app:dispatchEvent {
+      name = "editor.replacement.list.add",
+      UI = UI,
+      index = #self.value,
+      value = nil,
+      type = self.type
+    }
+  end
+end
+
+
+    -- create a listener to handle drag-item commands
+function M:listener( item, touchevent )
+  -- print("@@@@")
+  if touchevent.phase  == "ended" then
+    -- print("single click event")
+    -- this opens a commond editor table
+    self.singleClickEvent(item)
+  else
+    display.currentStage:insert( item )
+    item.x, item.y = touchevent.x, touchevent.y
+    -- print(item.x, item.y)
+    --
+    local function touch(e)
+      --print("touch", e.phase, e.target.hasFocus)
+      if (e.phase == "began") then
+        display.currentStage:setFocus( e.target, e.id )
+        e.target.hasFocus = true
+        return true
+      elseif (e.target.hasFocus) then
+        e.target.x, e.target.y = e.x, e.y
+        -- print("", e.target.x, e.target.y)
+        if (e.phase == "moved") then
+        elseif (e.phase == "ended") then
+          -- print(e.phase, e.target.x, e.target.y)
+          display.currentStage:setFocus( e.target, nil )
+          e.target.hasFocus = nil
+          local localX, localY = self.scrollView:contentToLocal(  e.target.x,  e.target.y )
+          --[[
+
+            e.target.x = localX + self.scrollView.width/2
+            e.target.y = localY + self.scrollView.height/2
+            -- print("", e.target.x, e.target.y)
+            -- print("--------")
+            local function compare(a,b)
+              return a.y < b.y
+            end
+            --
+            table.sort(self.objs,compare)
+            local objs = {}
+            for i=1, #self.objs do
+              print(i, self.objs[i].index, self.objs[i].entry.command)
+              [i] = self.objs[i].entry
+            end
+            self:destroy()
+            self:createTable(self.type,  objs)
+            --]]
+          --
+        end
+        return true
+      end
+      return false
+    end
+    --
+    item.hasFocus = true
+    display.currentStage:setFocus( item, touchevent.id )
+    -- print("add")
+    item:addEventListener( "touch", touch )
+  end
+end
+
+local function newText(option)
+  local obj = display.newText(option)
+  obj:setFillColor(0)
+  -- obj.anchorX = 0
+  return obj
+end
+
+local option = {
+  text = "",
+  x = 0,
+  y = 0,
+  width = nil,
+  height = 20,
+  font = native.systemFont,
+  fontSize = 10,
+  align = "left"
+}
+
+function M:createTable ()
+  self.objs = {}
+  option.parent = self.rootGroup
+  option.text = self.name or ""
+  option.x = self.x
+  option.y = self.y
+
+  local labelText = newText(option)
+
+   -- create drag-item scrollview
+  local index = 0
+  local function createRow(row)
+    for i=1, #row do
+      local group = display.newGroup()
+      --
+      local type = type(row[i])
+      if type == 'table' then
+        row[i] =  json.encode(row[i])
+      end
+      option.text    = row[i]
+      local obj      = newText(option)
+      obj.x, obj.y   = i*self.rowWidth -20, index*self.rowHeight + 2
+      obj.value      = row
+      obj.index      = index
+      obj.type       = self.type
+      --
+      local rect = display.newRect(obj.x, obj.y, obj.width, obj.height)
+      rect:setFillColor(1)
+      -- rect.anchorX = 0
+      obj.rect = rect
+      ---
+      group:insert(rect)
+      group:insert(obj)
+      self.scrollView:insert(group)
+      self.scrollView:attachListener(obj,
+        function(item, touchevent )
+          self:listener(item, touchevent)
+        end, 100, 20, 20)
+      --
+      self.objs[#self.objs+1] = obj
+    end
+    index = index + 1
+  end
+
+  -- local headers = {"_name"}
+  -- local headerMap = {}
+  -- for i, entry in pairs(fooValue) do
+  --   for k, v in pairs(entry) do
+  --     if k~="name" and headerMap[k] == nil then
+  --       headerMap[k] = k
+  --       headers[#headers+1] = k
+  --       print(k)
+  --     end
+  --   end
+  -- end
+  -- local function compare(a, b) return a < b end
+  -- --
+  -- table.sort(headers, compare)
+  -- --
+  self.scrollView = widget.newDragItemsScrollView{
+    backgroundColor = {1.0},
+    left = self.x,
+    top = self.y,
+    -- top=(display.actualContentHeight-1280/4 )/2,
+    width= display.contentWidth -20,
+    -- width= self.width * #headers[self.type],
+    height=self.height
+  }
+  --
+  --index = 0
+  createRow(headers[self.type])
+  --  --
+  for i, entry in pairs(self.value) do
+    local row = {}
+    for i=1, #headers[self.type] do
+      -- if headers[i] == "_name" then
+      --   row[i] = entry["name"]
+      -- else
+      row[i] = entry[headers[self.type][i]] or ""
+      -- end
+    end
+    print(i, json.encode(row))
+    createRow(row)
+  end
+
+  self.rootGroup:insert(self.scrollView)
+
+  --
+  option.text = "Add"
+  option.x = self.scrollView.contentBounds.xMax - 10
+  option.y = self.scrollView.contentBounds.yMin - 5
+  self.addButton = newText(option)
+  self.addButton:setFillColor(0,1,0)
+  self.addButton:addEventListener("tap", self.addEvent)
+
+end
+
+
+function M:didShow(UI) end
+--
+function M:didHide(UI) end
+
+function M:hide()
+  if self.scrollView then
+    self.scrollView.isVisible = false
+    self.addButton.isVisible = false
+  end
+end
+
+function M:show()
+  if self.scrollView then
+    self.scrollView.isVisible = true
+    self.addButton.isVisible = true
+  end
+end
+
+--
+function M:destroy()
+  if self.objs then
+    for i=1, #self.objs do
+      if self.objs[i].rect then
+        self.objs[i].rect:removeSelf()
+      end
+      self.objs[i]:removeSelf()
+    end
+    self.objs = nil
+  end
+
+  if self.scrollView then
+    self.scrollView:removeSelf()
+    self.scrollView = nil
+    self.addButton:removeSelf()
+  end
+end
+
+
+return M

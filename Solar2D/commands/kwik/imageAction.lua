@@ -2,7 +2,7 @@
 -- Version: {{vers}}
 -- Project: {{ProjName}}
 --
-local _K            = require "Application"
+local _K            = require "controller.Application"
 local _M = {}
 --		obj:showHide("objB", false)
 function _M:editImage(obj, mx, my, sw, sh, fh, fv, ro)

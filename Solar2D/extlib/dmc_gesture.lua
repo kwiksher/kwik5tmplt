@@ -267,7 +267,7 @@ Gesture.activate = function( obj, params )
 	params = params or {}
 
 	-- sanity check
-	if obj.__dmc and obj.__dmc.gesture then
+	if obj==nil or obj.__dmc and obj.__dmc.gesture then
 		print( "WARNING: only initialize Gesture once !" )
 		return nil
 	end
@@ -318,11 +318,10 @@ Gesture.activate = function( obj, params )
 end
 
 Gesture.deactivate = function( obj )
-	local dmc = obj.__dmc.gesture
-	obj.__dmc.gesture = nil
-
-	TouchMgr:unregister( obj, swipeTouchHandler )
-
+  if obj==nil then return end
+  local dmc = obj.__dmc.gesture
+  obj.__dmc.gesture = nil
+  TouchMgr:unregister( obj, swipeTouchHandler )
 end
 
 

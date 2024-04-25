@@ -1,34 +1,21 @@
--- Code created by Kwik - Copyright: kwiksher.com {{year}}
--- Version: {{vers}}
--- Project: {{ProjName}}
+local M = {}
 --
-local _M = {}
---
-local app = require "Application"
-local util = require("lib.util")
----
-parseValue = function(value, newValue)
-	if newValue then
-		if value then
-			return newValue
-		else
-			return nil
-		end
-	else
-		return value
-	end
-end
---
-local animationFunc = {}
-local positionFunc = {}
---
---
-positionFunc["groupAndPage"] = function (layer, _endX, _endY, isSceneGroup)
-	local mX, mY
-	local endX, endY =  app.ultimatePosition(_endX, _endY)
-	local width, height = layer.width*layer.xScale, layer.height*layer.yScale
+local app    = require "controller.Application"
+local util   = require("lib.util")
+local gtween = require("extlib.gtween")
+local btween = require("extlib.btween")
 
-	if _M.referencePoint=="CenterReferencePoint" then
+---
+local animationFactory = {}
+--
+--
+local function groupPos(self, layer, _endX, _endY, isSceneGroup)
+	local mX, mY
+	local endX, endY =  app.getPosition(_endX, _endY)
+  local width, height = layer.width*layer.xScale, layer.height*layer.yScale
+
+  local referencePoint = self.layerOptions.referencePoint
+	if referencePoint=="Center" then
 	  if isSceneGroup then
 	      mX = endX + layer.x
 	      mY = endY + layer.y
@@ -37,338 +24,330 @@ positionFunc["groupAndPage"] = function (layer, _endX, _endY, isSceneGroup)
 	      mY = endY + height/2
 	  end
 	end
-	if _M.referencePoint=="TopLeftReferencePoint" then
+	if referencePoint=="TopLeft" then
         mX = endX + width/2
         mY = endY + height/2
 	end
-	if _M.referencePoint=="TopCenterReferencePoint" then
+	if referencePoint=="TopCenter" then
         mX = endX + width/2
         mY = endY + height/2
 	end
-	if _M.referencePoint=="TopRightReferencePoint" then
+	if referencePoint=="TopRight" then
         mX = endX + width
         mY = endY + height
 	end
-	if _M.referencePoint=="CenterLeftReferencePoint" then
+	if referencePoint=="CenterLeft" then
         mX = endX + width/2
         mY = endY + height/2
 	end
-	if _M.referencePoint=="CenterRightReferencePoint" then
+	if referencePoint=="CenterRight" then
         mX = endX + width
         mY = endY + height/2
 	end
-	if _M.referencePoint=="BottomLeftReferencePoint" then
+	if referencePoint=="BottomLeft" then
         mX = endX + width
         mY = endY + height
 	end
-	if _M.referencePoint=="BottomRightReferencePoint" then
+	if referencePoint=="BottomRight" then
         mX = endX + width
         mY = endY + height
 	end
-	if _M.referencePoint=="BottomCenterReferencePoint" then
+	if referencePoint=="BottomCenter" then
         mX = endX + width/2
         mY = endY + height
 	end
-	if _M.randXStart then
-		mX = _M.layerWidth + math.random(_M.randXStart, _M.randXEnd)
+	if layer.randXStart then
+		mX = layer.width + math.random(layer.randXStart, self.randXEnd)
 	end
-	if _M.randYStart then
-		mY =  _M.layerHeight + math.random(_M.randYStart, _M.randYEnd)
+	if layer.randYStart then
+		mY =  layer.height + math.random(layer.randYStart, self.randYEnd)
 	end
 	return mX, mY
 end
 --
-positionFunc["default"] = function (layer, _endX, _endY, isSceneGroup)
-	local endX, endY =  app.ultimatePosition(_endX, _endY)
-	local width, height = layer.width*layer.xScale, layer.height*layer.yScale
-	if _M.defaultReference then
+local function linearPos (self, layer, _endX, _endY, isSceneGroup)
+	local endX, endY =  app.getPosition(_endX, _endY)
+  -- print("linearPos", endX, endY)
+  local mX, mY
+  local width, height = layer.width*layer.xScale, layer.height*layer.yScale
+  local referencePoint = self.layerOptions.referencePoint
+	if referencePoint=="Center" then
 		mX = endX + width/2
 		mY = endY + height/2
 	end
-	if _M.textReference then
-		mX = endX + _M.nX - _M.layerX
-		mY = endY + _M.nY - _M.layerY -height*0.5
+	if self.deltaX  then -- for text
+		mY = endY + self.deltaY - layer.x -height*0.5
 	end
-	if _M.referencePoint == "TopLeftReferencePoint" then
+	if self.deltaY  then -- for text
+		mY = endY + self.deltaY - layer.y -height*0.5
+	end
+	if referencePoint == "TopLeft" then
 		mX = endX
 		mY = endY
 	end
-	if _M.referencePoint == "TopCenterReferencePoint" then
+	if referencePoint == "TopCenter" then
 		mX = endX + width/2
 		mY = endY
 	end
-	if _M.referencePoint == "TopRightReferencePoint" then
+	if referencePoint == "TopRight" then
       mX = endX + width
       mY = endY
 	end
-	if _M.referencePoint == "CenterLeftReferencePoint" then
+	if referencePoint == "CenterLeft" then
       mX = endX
       mY = endY + height/2
 	end
-	if _M.referencePoint == "CenterRightReferencePoint" then
+	if referencePoint == "CenterRight" then
       mX = endX + width
       mY = endY + height/2
 	end
-	if _M.referencePoint == "BottomLeftReferencePoint" then
+	if referencePoint == "BottomLeft" then
       mX = endX
       mY = endY + height
 	end
-	if _M.referencePoint == "BottomRightReferencePoint" then
+	if referencePoint == "BottomRight" then
       mX = endX + width
       mY = endY + height
 	end
-	if _M.referencePoint == "BottomCenterReferencePoint" then
+	if referencePoint == "BottomCenter" then
       mX = endX + width/2
       mY = endY + height
 	end
-	if _M.randXStart then
-		mX = _M.layerWidth + math.random(_M.randXStart, _M.randXEnd)
+	if layer.randXStart then
+		mX = layer.width + math.random(layer.randXStart, self.randXEnd)
 	end
-	if _M.randYStart then
-		mY =  _M.layerHeight + math.random(_M.randYStart, _M.randYEnd)
+	if layer.randYStart then
+		mY =  layer.height + math.random(layer.randYStart, self.randYEnd)
 	end
 	return mX, mY
 end
 
-local getPos = positionFunc[_M.positionFuncName]
-
---
-function _M:repoHeader(UI)
-	local layer = self:getLayer(UI)
-	if self.referencePoint == "TopLeftReferencePoint" then
-		layer.anchorX = 0
-		layer.anchorY = 0;
-		util.repositionAnchor(layer, 0,0)
-	end
-	if self.referencePoint == "TopCenterReferencePoint" then
-		layer.anchorX = 0.5
-		layer.anchorY = 0;
-		util.repositionAnchor(layer, 0.5,0)
-	end
-	if self.referencePoint == "TopRightReferencePoint" then
-		layer.anchorX = 1
-		layer.anchorY = 0;
-		util.repositionAnchor(layer, 1,0)
-	end
-	if self.referencePoint == "CenterLeftReferencePoint" then
-		layer.anchorX = 0
-		layer.anchorY = 0.5;
-		util.repositionAnchor(layer, 0,0.5)
-	end
-	if self.referencePoint == "CenterRightReferencePoint" then
-		layer.anchorX = 1
-		layer.anchorY = 0.5;
-		util.repositionAnchor(layer, 1,0.5)
-	end
-	if self.referencePoint == "BottomLeftReferencePoint" then
-		layer.anchorX = 0
-		layer.anchorY = 1;
-		util.repositionAnchor(layer, 0,1)
-	end
-	if self.referencePoint == "BottomRightReferencePoint" then
-		layer.anchorX = 1
-		layer.anchorY = 1;
-		util.repositionAnchor(layer, 1,1)
-	end
-	if self.referencePoint == "BottomCenterReferencePoint" then
-		layer.anchorX = 0.5
-		layer.anchorY = 1;
-		util.repositionAnchor(layer, 0.5,1)
-	end
+local function getPos (self, layer, _endX, _endY, isSceneGroup)
+  if self.layerOptions.isGroup then
+    return goupPos(self, layer, _endX, _endY, isSceneGroup)
+  else
+    return linearPos(self, layer, _endX, _endY, isSceneGroup)
+  end
 end
+
 --
 --
 local function createOptions(self, UI)
+  local layer = self.obj
 	local onEndHandler = function()
-		if self.restart then
-			if self.animationSubType == "Shake" then
+		if self.controls.resetAtEnd then
+			if self.class == "Shake" then
 				layer.rotation = 0
 			end
-			if not self.isComic then
-				layer.x				 = layer.oriX
-				layer.y				 = layer.oriY
-			end
+      layer.x				 = layer.oriX
+      layer.y				 = layer.oriY
 			layer.alpha		 = layer.oldAlpha
 			layer.rotation	= 0
 			layer.isVisible = true
 			layer.xScale		= layer.oriXs
 			layer.yScale		= layer.oriYs
 
-			if _M.isSpritesheet then
+			if self.layerOptions.isSpritesheet then
 				layer:pause()
 				layer.currentFrame = 1
-			else if _M.isMovieClip then
-				layer::stopAtFrame(1)
 			end
 		end
-		if self.actionName:len() > 0  then
-			Runtime:dispatchEvent({name=UI.page..self.actionName, event={}, UI=UI})
-		end
-		if sef.audioName:len() > 0 then
-			audio.setVolume({self.audioVolume, { channel=self.audioChannel })
-			if self.allowRepeat then
-				audio.play(UI.allAudios[self.audioName], { channel=self.audioChannel, loops=self.audioLoop, fadein=self.audioFadeIn })
-			else
-				audio.play(UI.allAudios[self.audioName], { channel=self.audioChannel, loops=0, fadein=self.audioFadeIn })
-			end
-		end
+    self.onEndHandler(UI)
 	end
 
 	local options = {
-		ease        = app.gtween.easing[self.animationEasing],
-		repeatCount = self.animationLoop,
-		reflect     = self.animationReverse,
-		xSwipe      = self.animationSwipeX,
-		ySwipe      = self.animationSwipeY,
-		delay       = self.animationDelay,
+		ease        = gtween.easing[self.controls.easing],
+		repeatCount = self.controls.loop,
+		reflect     = self.controls.reverse,
+		xSwipe      = self.controls.xSwipe,
+		ySwipe      = self.controls.ySwipe,
+		delay       = self.controls.delay,
 		onComplete  = onEndHandler
 	}
-	if self.breadcrumb then
+	if self.breadcrumbs then
 		options.breadcrumb = true
-		options.breadAnchor = 5,
-		options.breadShape = self.breadShape
-		options.breadW =self.breadcrumWidth
-		options.breadH = self.breadcrumHeight
-		if self.breadcrumColor then
-			options.breadColor = {self.breadcrumColor }
+		options.breadAnchor = 5
+		options.breadShape = self.breadcrumbs.shape
+		options.breadW =self.breadcrumbs.width
+		options.breadH = self.breadcrumbs.height
+		if self.breadcrumbs.color then
+			options.breadColor = self.breadcrumbs.color
 		else
 			options.breadColor = {"rand"}
 		end
-		options.breadInterval = self.breadcrumbInterval
-		if self.breadcrumbDispose then
-			options.breadTimer = self.breadcrumbTime
+		options.breadInterval = self.breadcrumbs.interval
+		if self.breadcrumbs.dispose then
+			options.breadTimer = self.breadcrumbs.time
 		end
 	end
 	return options
 end
 --
-local function getEndPosition(self, layer)
-	if self.animationEndX then
-		local mX, mY = getPos(layer, self.animationEndX, self.animationEndY, self.isSceneGroup)
-		if self.isComic then
-			local deltaX = layer.oriX -mX
-			local deltaY = layer.oriY -mY
-			mX, mY = display.contentCenterX - deltaX, display.contentCenterY - deltaY
-		end
-	end
-	return mX, mY
-end
---
-local function createProps(self, layer)
+
+local function createProps(self, layer, mX, mY)
+  -- print("createProps", mX, mY)
 	local props = {}
-	if self.animationSubType == "Linear" then
-		if self.animationSubType == "Pulse" then
-			props.xScale = self.animationScaleX
-			props.yScale = self.animationScaleY
-		end
-		if self.animationSubType == "Rotation" then
-			props.rotation =  self.animationRotation
-		end
-		if self.animationSubType == "Shake" then
-			props.rotation =  self.animationRotation
-		end
-		if self.animationSubType == "Bounce" then
-			props.y=mY
-		end
-		if self.animationSubType == "Blink" then
-			props.xScale =  self.animationScaleX
-			props.yScale = self.animationScaleY,
-		end
-	else
-		if self,animationEndX then
-			props.x = mX
-			props.y = mY
-		end
-		if self.animationEndAlpha then
-			props.alpha=self.animationEndAlpha
-		end
-		if self.animationRotation then
-			props.rotation = self.animationRotation
-		end
-		if self.animationScaleX then
-			props.xScale=self.animationScaleX * layer.xScale
-		end
-		if self.animationScaleY then
-			props.yScale=self.animationScaleY * layer.yScale
-		end
-		if self.animationNewAngle then
-			props.newAngle = self.animationNewAngle
-		end
-	end
+  if self.class == "Pulse" then
+    props.xScale = self.to.xScale
+    props.yScale = self.to.yScale
+  elseif self.class == "Rotation" then
+    props.rotation =  self.to.rotation
+  elseif self.class == "Shake" then
+    props.rotation =  self.to.rotation
+  elseif self.class == "Bounce" then
+    props.y=mY
+  elseif self.class == "Blink" then
+    props.xScale =  self.to.xScale
+    props.yScale = self.to.yScale
+  elseif (self.class == "Linear" or self.class == "Dissolve" or self.class == "Path") then
+    if self.to.x then
+      props.x = mX
+    end
+    if self.to.y then
+      props.y = mY
+    end
+    if self.to.rotation then
+      props.rotation = self.to.rotation
+    end
+    if self.to.xScale then
+      props.xScale=self.to.xScale * layer.xScale
+    end
+    if self.to.yScale then
+      props.yScale=self.to.yScale * layer.yScale
+    end
+    if self.pathProps and self.pathProps.newAngle then -- path
+      props.newAngle = self.pathProps.newAngle
+    end
+  end
+  if self.to.alpha then
+    props.alpha=self.to.alpha
+  end
 	return props
 end
 
-local function createAnimationFunc(self, UI)
+local function createAnimationFunc(self, UI, class)
 	return function(self, UI)
-		local layer = self:getLayer(UI)
-		local sceneGroup = UI.scene.view
+    local animObj = {}
+		local layer = self.obj
+		local sceneGroup = UI.sceneGroup
 		--
 		if layer == nil then return end
 		--
 		layer.xScale = layer.oriXs
 		layer.yScale = layer.oriYs
-
-		local restartHandler= function(event)
-			if app.gt[self.layerName] then
-				app.gt[self.layerName]:toBeginning()
-			end
-		end
 		--
-		local mX, mY = getEndPosition(self, layer)
-		--
+    local   mX, mY= getPos(self, layer, self.to.x, self.to.y, self.isSceneGroup)
+    --
 		local options = createOptions(self, UI)
-		--
-		local props = createProps(self, layer)
+		local props = createProps(self, layer, mX, mY)
 		---
-		if self.animationType == "Default" then
-			app.gt[self.layerName] = app.gtween.new( layer, self.animationDuration, props, options)
-		else if self.animationType == "Path" then
-			app.gt[self.layerName] = app.btween.new(
+		if class== "Linear" then
+      -- print("--- Linear ---", props.x, props.y, self.controls.duration)
+      -- for k, v in pairs(props) do print(k ,v) end
+      -- print ("-------")
+      -- for k, v in pairs(options) do print(k ,v) end
+			animObj = gtween.new( layer, self.controls.duration/1000, props, options)
+		elseif class == "Path" then
+			animObj = btween.new(
 				layer,
-				self.animationDuration,
-				self.pathAnimation,
+				self.controls.duration,
+				{
+          self.curve,
+          angle = self.pathProps.angle
+        },
 				options,
 				props)
 
-			app.gt[self.layerName].pathAnim = true
+			animObj.pathAnim = true
 		end
-		--
-		if not self.audioPlay then
-			app.gt[self.layerName]:pause()
-		end
-		-- app.gt[self.layerName]:toBeginning()
-		if self.isComic then
-			layer.anim[self.layerName] = app.gt[self.layerName]
-		end
+    return animObj
 	end
 end
 --
-animationFunc["Default"]  = createAnimationFunc(self, UI)
-animationFunc["Path"]     = createAnimationFunc(self, UI)
-animationFunc["Dissolve"] = function(self, UI)
-	local layer = self:getLayer(UI)
-	local sceneGroup = UI.scene.view
+animationFactory.Linear  = createAnimationFunc(self, UI, "Linear")
+animationFactory.Path     = createAnimationFunc(self, UI, "Path")
+animationFactory.Dissolve = function(self, UI)
+	local layer = self.obj
+	local sceneGroup = UI.sceneGroup
 	--
 	if layer == nil then return end
 	--
 	layer.xScale = layer.oriXs
 	layer.yScale = layer.oriYs
-
-	app.trans[self.layerName] = {}
-	app.trans[self.layerName].play = function()
-		transition.dissolve(layer, self:getDssolvedLayer(UI),	self.animationDuration, self.animationDelay}}) end
-	app.trans[self.layerName].pause = function()
-		print("pause is not supported in dissove") end
-	app.trans[self.layerName].resume = function()
-		transition.dissolve(layer, self:getDssolvedLayer(UI),	self.animationDuration, self.animationDelay) end
+  --
+	local animObj = {}
+	animObj.play = function()
+		transition.dissolve(layer, self:getDssolvedLayer(UI),	self.controls.duration, self.controls.delay)
+  end
+  --
+	animObj.pause = function()
+		print("pause is not supported in dissove")
+  end
+  return animObj
 end
 
 --
-_M.buildAnim = animationFunc[_M.animationType]
+function M:initAnimation(UI, layer, onEndHandler)
+  self.onEndHandler = onEndHandler
+  --
+  if not(self.class == "Dissolve" or self.class =="Path") then
+    self.buildAnim = animationFactory["Linear"]
+  else
+    self.buildAnim = animationFactory[M.class]
+  end
+  ---
+	self.obj = layer
+  self.obj.oriX = layer.x
+  self.obj.oriY = layer.y
+  self.obj.oriXs = layer.xScale
+  self.obj.oriYs = layer.yScale
+
+	local referencePoint = self.layerOptions.referencePoint
+	if referencePoint == "TopLeft" then
+		layer.anchorX = 0
+		layer.anchorY = 0;
+		util.repositionAnchor(layer, 0,0)
+	end
+	if referencePoint == "TopCenter" then
+		layer.anchorX = 0.5
+		layer.anchorY = 0;
+		util.repositionAnchor(layer, 0.5,0)
+	end
+	if referencePoint == "TopRight" then
+		layer.anchorX = 1
+		layer.anchorY = 0;
+		util.repositionAnchor(layer, 1,0)
+	end
+	if referencePoint == "CenterLeft" then
+		layer.anchorX = 0
+		layer.anchorY = 0.5;
+		util.repositionAnchor(layer, 0,0.5)
+	end
+	if referencePoint == "CenterRight" then
+		layer.anchorX = 1
+		layer.anchorY = 0.5;
+		util.repositionAnchor(layer, 1,0.5)
+	end
+	if referencePoint == "BottomLeft" then
+		layer.anchorX = 0
+		layer.anchorY = 1;
+		util.repositionAnchor(layer, 0,1)
+	end
+	if referencePoint == "BottomRight" then
+		layer.anchorX = 1
+		layer.anchorY = 1;
+		util.repositionAnchor(layer, 1,1)
+	end
+	if referencePoint == "BottomCenter" then
+		layer.anchorX = 0.5
+		layer.anchorY = 1;
+		util.repositionAnchor(layer, 0.5,1)
+	end
+end
+
 ---------------------------
-_M.new = function()
-	local instance = {}
-	setmetatable(instance, {__index=_M})
+M.set = function(instance)
+	return setmetatable(instance, {__index=M})
 end
 --
-return _M
+return M

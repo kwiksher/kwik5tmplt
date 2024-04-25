@@ -7,29 +7,29 @@ M.new = function(mediatorName)
     Class.name = mediatorName:gsub("mediators.", ""):gsub("Mediator", "")
     --
     local scene = require("scenes." .. Class.name)
-    Class.events = scene:getEvents()
+    Class.commands = scene:getCommands()
     --
     function Class:new()
         local mediator = {}
-        mediator.events = self.events
+        mediator.commands = self.commands
         mediator.name = self.name
         --
         function mediator:onRegister()
             local scene = self.viewInstance
-            for k, eventName in pairs(self.events) do
+            for k, eventName in pairs(self.commands) do
                 scene:addEventListener(eventName, self)
             end
         end
         --
         function mediator:onRemove()
             local scene = self.viewInstance
-            for k, eventName in pairs(self.events) do
+            for k, eventName in pairs(self.commands) do
                 scene:removeEventListener(eventName, self)
             end
         end
         --
         print("mediator")
-        for k, eventName in pairs(self.events) do
+        for k, eventName in pairs(self.commands) do
 			print("", self.name, eventName)
             mediator[eventName] = function(self, event)
                 local myself = self

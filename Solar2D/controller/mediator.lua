@@ -4,26 +4,26 @@ local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 
 local M = {}
 
-M.new = function(mediatorName)
+M.new = function(appDir, name)
     --print("=== mediator ===", mediatorName)
     local Class = {}
     -- Class.name = mediatorName:gsub("mediators.", ""):gsub("Mediator", "")
-    Class.name = mediatorName:match("[^.]+$"):gsub("Mediator", "")
+    Class.name = name -- mediatorName:match("[^.]+$"):gsub("Mediator", "")
     --
-    local appDir = mediatorName:match('(App%.%a+%.)')
+    --local appDir = mediatorName:match('(App%.%a+%.)')
     --print(appDir, Class.name)
-    local scene = require(appDir.."scenes." .. Class.name..".index")
-    Class.events = scene:getEvents()
+    local scene = require(appDir.."components."..Class.name..".index")
+    Class.commands = scene:getCommands()
     --
     function Class:new()
         local mediator = {}
-        mediator.events = self.events
+        mediator.commands = self.commands
         mediator.name = self.name
         --
         function mediator:onRegister()
             --print("mediator:onRegister")
             local scene = self.viewInstance
-            for k, eventName in pairs(self.events) do
+            for k, eventName in pairs(self.commands) do
                 --print("", eventName)
                 scene:addEventListener(eventName, self)
             end
@@ -31,7 +31,7 @@ M.new = function(mediatorName)
         --
         function mediator:onRemove()
             local scene = self.viewInstance
-            for k, eventName in pairs(self.events) do
+            for k, eventName in pairs(self.commands) do
                 scene:removeEventListener(eventName, self)
             end
         end
@@ -44,7 +44,7 @@ M.new = function(mediatorName)
         --      }
         --  then it is redirected to the app:dispatchEvent below
         --
-        for k, eventName in pairs(self.events) do
+        for k, eventName in pairs(self.commands) do
 			    --print("", self.name, eventName)
             mediator[eventName] = function(self, event)
                 local myself = self

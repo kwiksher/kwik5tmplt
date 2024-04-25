@@ -28,9 +28,9 @@ function Class.new(app)
     --
     function context:init(scenes, props)
         -- your global event if any
-        if props.common then
-          for i=1, #props.common.events do
-            self:mapCommand("common."..props.common.events[i], "commands.common."..props.common.events[i])
+        if props.common and props.common.commands then
+          for i=1, #props.common.commands do
+            self:mapCommand("common."..props.common.commands[i], "commands.common."..props.common.commands[i])
           end
         end
         --
@@ -38,8 +38,8 @@ function Class.new(app)
         --
         for i=1, #scenes do
             --print(scenes[i])
-            local scene = require(appDir.."scenes."..scenes[i]..".index")
-            --print("context:init", appDir.."scenes."..scenes[i]..".index")
+            local scene = require(appDir.."components."..scenes[i]..".index")
+            -- print("context:init", appDir.."components."..scenes[i]..".index")
             scene:setProps(props)
             scene.app = app
 
@@ -47,17 +47,20 @@ function Class.new(app)
             model.pageNum = i
 
             --
-            local events = scene:getEvents()
+            local commands = scene:getCommands()
             --
-            --print(appDir.."scenes."..model.name..".index", appDir.."mediators."..model.name.."Mediator")
-            self:mapMediator(appDir.."scenes."..model.name..".index", appDir.."mediators."..model.name.."Mediator")
+            --print(appDir.."scenes."..model.page..".index", appDir.."mediators."..model.page.."Mediator")
+            local mediatorName = appDir.."mediators."..model.page.."Mediator"
+            package.loaded[mediatorName] = require( 'controller.mediator' ).new(appDir, scenes[i])
+            self:mapMediator(appDir.."components."..model.page..".index", mediatorName)
             --
-            for k, eventName in pairs(events) do
-                self:mapCommand(model.name.."."..eventName, appDir.."commands."..model.name.."."..eventName)
+            for k, eventName in pairs(commands) do
+              -- print("@@@@@", model.page.."."..eventName)
+                self:mapCommand(model.page.."."..eventName, appDir.."commands."..model.page.."."..eventName)
             end
             --
             --print("context:init", scenes[i], scene)
-            self.Router["scenes."..scenes[i]..".index"] = scene
+            self.Router["components."..scenes[i]..".index"] = scene
         end
         -- app init command
         self:mapCommand("app.droidHWKey", "commands.app.droidHWKey")
@@ -66,7 +69,7 @@ function Class.new(app)
         self:mapCommand("app.statusBar", "commands.app.statusBar")
         self:mapCommand("app.suspend", "commands.app.suspend")
         --
-        self:mapMediator(appDir.."scenes.index", "controller.ApplicationMediator") -- "Application" is a classType in Application.lua
+        self:mapMediator(appDir.."index", "controller.ApplicationMediator") -- "Application" is a classType in Application.lua
         --
         Runtime:dispatchEvent({name = "startup"})
     end

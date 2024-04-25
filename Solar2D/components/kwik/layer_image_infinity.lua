@@ -155,11 +155,11 @@ function _M:newImage(UI, sceneGroup)
   if self.randYStart > 0 then
     layer.y = math.random( self.randYStart, self.randYEnd)
   end
-  if self.scaleX then
-    layer.xScale = self.scaleX
+  if self.xScale then
+    layer.xScale = self.xScale
   end
-  if self.scaleY then
-    layer.yScale = self.scaleY
+  if self.yScale then
+    layer.yScale = self.yScale
   end
   if self.rotation then
     layer:rotate( self.rotation )
@@ -185,11 +185,11 @@ end
 
 
 function _M:myNewImage(UI)
-  return self:newImage(UI, UI.scene.view)
+  return self:newImage(UI, UI.sceneGroup)
 end
 --
 function _M:comicImage(UI)
-  local sceneGroup = UI.scene.view
+  local sceneGroup = UI.sceneGroup
   local options = {
     frames ={},
      sheetContentWidth = self.imageWidth,

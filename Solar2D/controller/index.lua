@@ -1,15 +1,14 @@
 system.activate("multitouch")
 
 local trialCnt    = 1 -- set 0 for production
-local kprint = function(a, b)
-    print(a, b)
-end
 
 -- Create library
 local lib = {}
-
 -----------------------------------------------
 local App = require("controller.Application")
+package.loaded["Application"] = App
+
+local common = {commands = {"myEvent"}, components = {"keyboardNavigation", "bookstoreNavigation"}}
 
 function lib.bootstrap(Props)
     local app = App.new{
@@ -25,14 +24,9 @@ function lib.bootstrap(Props)
         gt          = {},
         timerStash  = {},
         allAudios   = {kAutoPlay = 5},
-        gtween      = require("extlib.gtween"),
-        btween      = require("extlib.btween"),
-        Gesture     = require("extlib.dmc_gesture"),
-        MultiTouch  = require("extlib.dmc_multitouch"),
-        syncSound   = require("extlib.syncSound"),
         kBidi       = false,
         goPage      = Props.sceneIndex,
-        scenes       = require("App."..Props.name..".scenes.index"),
+        scenes       = require("App."..Props.name..".index"),
         kAutoPlay   = 0,
         lang        = "en",
         position    = Props.position,
@@ -42,14 +36,22 @@ function lib.bootstrap(Props)
         DocumentsDir = system.DocumentsDirectory,
         common       = Props.common
     }
+    App.gtween      = require("extlib.gtween")
+    App.btween      = require("extlib.btween")
+    App.Gesture     = require("extlib.dmc_gesture")
+    App.MultiTouch  = require("extlib.dmc_multitouch")
+    App.syncSound   = require("extlib.syncSound")
+    App.currentName = Props.name
     app:init()
+    common = Props.common or common
+
 --
 end
 
 --
 local function onError(e)
-    kprint("--- unhandledError ---")
-    kprint(e)
+    print("--- unhandledError ---")
+    print(e)
     return true
 end
 --
@@ -58,61 +60,34 @@ Runtime:addEventListener("unhandledError", onError)
 --
 local composer = require("composer")
 
-Runtime:addEventListener("changeThisMug",
-    function(e)
-       composer.gotoScene("extlib.page_cutscene")
-       composer.removeHidden(false)
-        _G.appInstance:destroy()
-        local function resetPacakges()
-            package.loaded["model"] = nil
-            for i=1, _G.pageNum do
-                package.loaded["contexts.page0"..i.."Context"] = nil
-                myunload(".contexts.page0%sContext",i)
-            end
-            package.loaded["contexts.ApplicationContext"]      = nil
-            package.loaded["KwikShelf.contexts.ApplicationContext"] = nil
-            package.loaded["Application"]                      = nil
-            package.loaded["KwikShelf.Application"] = nil
-            for i=1, _G.pageNum do
-                package.loaded["mediators.page0"..i.."Mediator"] = nil
-                myunload(".mediators.page0%sMediator",i)
-                package.loaded["vo.page0"..i.."VO"]               = nil
-                myunload(".vo.page0%sVO",i)
-                package.loaded["components.page0"..i.."UI"]       = nil
-                myunload(".components.page0%sUI",i)
-                package.loaded["views.page0"..i.."Scene"]         = nil
-                myunload(".views.page0%sScene",i)
-            end
-            package.loaded["mediators.ApplicationMediator"] = nil
-            package.loaded["KwikShelf.mediators.ApplicationMediator"] = nil
-            package.loaded["components.kwik.layerUI"] = nil
-            package.loaded["extlib.syncSound"] = nil
-            package.loaded["extlib.kNavi"] = nil
-            package.loaded["commands.kwik.pageAction"] = nil
-            package.loaded["commands.kwik.animationAction"] = nil
-            package.loaded["commands.kwik.actionCommand"] = nil
-            package.loaded["commands.kwik.languageAction"] = nil
-            -- store UI
-            -- this has a reference to App.TOC or bookXX, so need to unload it
-            package.loaded["components.store.UI"] = nil
+local function resetPacakges()
+     package.loaded["extlib.syncSound"] = nil
+     package.loaded["extlib.kNavi"] = nil
+     package.loaded["commands.kwik.pageAction"] = nil
+     package.loaded["commands.kwik.animationAction"] = nil
+     package.loaded["commands.kwik.actionCommand"] = nil
+     package.loaded["commands.kwik.languageAction"] = nil
+     -- bookstore UI
+     -- this has a reference to App.TOC or bookXX, so need to unload it?
+     package.loaded["components.bookstore.controller.pageCommand"] = nil
+     package.loaded["editor.bookstore.controller.pageCommand"] = nil
+
+end
 
 
-
-            --package.loaded["extlib.statemap"] = nil
-           -- for k, v in pairs(package.loaded) do kprint(string.format("[%50s]", k), v) end
-            -- now let's change the app
-            _G.appName = e.appName
-            if e.page then
-                _G.goPage  = e.page
-            else
-                 _G.goPage = 1
-            end
-        end
-        timer.performWithDelay(loadingTime, function()
-            resetPacakges()
-            startThisMug()
-            end)
-    end)
-
+Runtime:addEventListener("changeThisMug", function(event)
+  print("---------- changeThisMug -------------")
+  local app = App.get()
+  print (event.appName, event.page, app.props.appName, app.currentViewName)
+  --local goPage = "components." .. app.props.scenes[self.props.goPage]..".index"
+  if event.appName == app.props.appName and event.page == app.props.goPage then
+    print("not changeThisMug")
+  else
+    composer.gotoScene("components.bookstore.view.page_cutscene")
+    composer.removeHidden(false)
+    resetPacakges()
+    lib.bootstrap({name=event.appName, sceneIndex = event.page or 1, position = {x=0, y=0}, common=common}) -- scenes.index
+  end
+end)
 -- Return library instance
 return lib

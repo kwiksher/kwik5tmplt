@@ -1,0 +1,244 @@
+local M = {}
+local current = ...
+local parent = current:match("(.-)[^%.]+$")
+local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
+--
+M.name = current
+M.weight = 1
+
+local listbox = require(parent.."listbox")
+local linkbox   = require(root.."parts.linkbox").new({width=55})
+
+---
+local util = require("lib.util")
+local json = require("json")
+
+local function newText(option)
+  local obj = display.newText(option)
+  obj:setFillColor(0)
+  return obj
+end
+
+local function newTextField(option)
+    -- Create native text field
+    textField = native.newTextField( option.x+5, option.y, option.width + 5, option.height )
+    textField.font = native.newFont( appFont,8 )
+    --textField:resizeFontToFitHeight()
+    --textField:setReturnKey( "done" )
+    --textField.placeholder = "Enter text"
+    textField:addEventListener( "userInput", function() print("userInput") end )
+    --native.setKeyboardFocus( textField )
+    textField.text = option.text
+    textField.hasBackground = false
+    return textField
+end
+
+local appFont
+if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
+  appFont = native.systemFont
+else
+  -- appFont = "HelveticaNeue-Light"
+  appFont = "HelveticaNeue"
+end
+
+local option = {
+  text = "",
+  x = 0,
+  y = 100,
+  --rootGroup.selectLayer.y,
+  width = 60,
+  height = 20,
+  font = appFont,
+  fontSize = 8,
+  align = "left"
+}
+
+--
+--- I/F ---
+--
+function M:getValue()
+  --for k, v in pairs(self.model) do print(k, v) end
+  local ret = {}
+  for i=1, #self.objs do
+    if self.objs[i] == nil then break end
+    -- print(self.model[i], self.objs[i].text, self.objs[i].field.text )
+      local key = self.objs[i].text
+      local value
+      if self.objs[i].field then
+        value = self.objs[i].field.text
+        print("@", type(self.objs[i].text),key, value)
+        if type(self.model.value[i]) == 'boolean' then
+          if value == nil or value == "" then
+            value = self.model.value[i]
+          end
+          value = tostring(value)
+        elseif type(self.model.value[i]) == 'number' then
+          value = tonumber( value )
+        end
+      else -- action
+        value = self.objs[i].linkbox.value
+      end
+      --
+      ret[key] = value
+    end
+    return ret
+end
+
+--
+function M:setValue(props)
+    self:didHide(self.UI)
+    self:destroy()
+    print("------- listPropsTable --------")
+    local posX = listbox.scrollView.x - option.width
+    -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
+    local posY  = listbox.y + 70  -- (display.actualContentHeight - display.contentHeight + option.height)/2
+    -- print("actionCommandPropsStore:listen", posX, posY)
+    -- print("", debug.traceback())
+    local function compare(a,b)
+      return a.name < b.name
+    end
+    --
+    local headers = listbox.headers[props.type]
+    ---
+    local objs = {}
+    for i=1, #headers do
+      -- print("", props[i].name)
+      local header = headers[i]
+      local value = props.value[i]
+      -- print(props.index, header, value)
+      --
+      option.text = header
+      option.x = posX
+      option.y = i*option.height + posY
+      --
+      local rect = display.newRect(option.parent, option.x, option.y, option.width*2, option.height)
+      rect:setFillColor(0.8)
+      --
+      option.x = option.x - option.width/2 + 5
+      local obj = newText(option)
+      obj.rect = rect
+
+      -- Edit
+      if header == "action" then
+        linkbox:load(self.UI, "action", obj.x + obj.width/2, obj.y - obj.height/4, value)
+        obj.linkbox = linkbox
+      else
+        option.x = posX + option.width/2+5
+        option.text = value
+        --
+        obj.field = newTextField(option)
+      end
+
+      objs[#objs + 1] = obj
+
+      -- objs[#objs + 1] = obj
+      -- obj.page = props.name
+      -- obj.tap = commandHandler
+      -- obj:addEventListener("tap", obj)
+    end
+    self.objs = objs
+    self.model = props
+
+    linkbox.callbackTriagnle = function(isOn)
+      if isOn then
+        for i=1, #self.objs do
+          if self.objs[i].field then
+            self.objs[i].field.alpha = 1
+          end
+        end
+      else
+        for i=1, #self.objs do
+          if self.objs[i].field then
+            self.objs[i].field.alpha = 0.1
+          end
+        end
+      end
+    end
+    --
+    --
+    --------
+    -- save
+    --[[
+
+    local map = {}
+    local objs = tableHelper:getTextFields()
+    for i=1, #objs do
+      print(" "..i..":", objs[i].text)
+      models[i].value = objs[i].text
+      map[models[i].name] = objs[i].text -- TODO tonumber?
+    end
+    local tmplt = UI.appFolder.."/../../templates/components/layer_props"
+    local path = UI.currentPage.path .."/"..UI.currentLayer.name.."_props"
+    util.renderer(tmplt, path, map)
+  --]]
+  end
+
+--
+function M:init(UI)
+end
+--
+function M:create(UI)
+  local rootGroup = UI.editor.rootGroup
+  if rootGroup.listPropsTable then return end
+  -- print("create", self.name)
+  option.parent= rootGroup
+  rootGroup.listPropsTable = self
+  self.UI = UI
+end
+--
+function M:didShow(UI)
+  self:show()
+  linkbox:didShow()
+end
+--
+function M:didHide(UI)
+  self:hide()
+  linkbox:didHide()
+end
+--
+function M:destroy()
+  if self.objs then
+    for i=1, #self.objs do
+      if self.objs[i].rect then
+        self.objs[i].rect:removeSelf()
+      end
+      if self.objs[i].field then
+        self.objs[i].field:removeSelf()
+      end
+      self.objs[i]:removeSelf()
+    end
+    self.objs = nil
+  end
+end
+--
+function M:hide()
+  self.isVisible = false
+  if self.objs == nil then return end
+  for i=1, #self.objs do
+    self.objs[i].isVisible = false
+    if self.objs[i].rect then
+      self.objs[i].rect.isVisible = false
+    end
+    if self.objs[i].field then
+      self.objs[i].field.isVisible = false
+    end
+  end
+  linkbox:hide()
+end
+
+function M:show()
+  self.isVisible = true
+  if self.objs == nil then return end
+  for i=1, #self.objs do
+    self.objs[i].isVisible = true
+    if self.objs[i].rect then
+      self.objs[i].rect.isVisible = true
+    end
+    if self.objs[i].field then
+      self.objs[i].field.isVisible = true
+    end
+  end
+  linkbox:show()
+end
+--
+return M

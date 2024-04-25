@@ -3,6 +3,15 @@ local exports = {}
 local lfs = require( "lfs" )
 local isWindows = system.getInfo("platform") == "win32"
 
+function exports.pwd(path)
+  return path:match("(.-)[^%.]+$")
+end
+
+function exports.root(path)
+  local parent = exports.pwd(path)
+  return parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
+end
+
 
 function exports.pairsByKeys (t, f)
 	local a = {}
@@ -102,6 +111,75 @@ function exports.repositionAnchor(object, newAnchorX, newAnchorY)
             object.oriY = object.y
         end
     end
+end
+
+function exports.readWeight(_path, file)
+  local weight = 0
+  local path = _path.."/"..file
+         -- Open the file handle
+  local file, errorString = io.open( path, "r" )
+
+  if not file then
+      -- Error occurred; output the cause
+      print( "File error: " .. errorString )
+  else
+      -- Output lines
+      for line in file:lines() do
+          if line:find(".weight") then
+              local pos = line:find("=")
+              weight = line:sub(pos + 1)
+             -- print( line, weight )
+              break
+          end
+      end
+      -- Close the file handle
+      io.close( file )
+  end
+  file = nil
+  return tonumber(weight) or 0
+end
+
+function exports.newLineswithWeight(_path, file, weight)
+  local weight = 0
+  local path = _path.."/"..file
+         -- Open the file handle
+  local file, errorString = io.open( path, "r" )
+  if not file then
+      -- Error occurred; output the cause
+      print( "File error: " .. errorString )
+  else
+     local lines = file:lines()
+      -- Output lines
+      for i, line in next, lines do
+          if line:find(".weight") then
+              lines[i] = "$.weight="..weight
+             -- print( line, weight )
+              io.close( file )
+              return lines
+          end
+      end
+      table.insert(lines, 1, "$.weight="..weight)
+      io.close( file )
+      -- Close the file handle
+      return lines
+  end
+  return nil
+end
+
+function exports.getLayer(UI, name)
+  for i, v in next, UI.layers do
+    if v.name == name then
+      return v
+    end
+  end
+end
+
+function exports.split(str, sep)
+  local out = {}
+  for m in string.gmatch(str, "[^" .. sep .. "]+") do
+    out[#out + 1] = m
+  end
+  return out
 end
 
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/templates/components/layer_props.lua
