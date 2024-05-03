@@ -48,7 +48,7 @@ function M:createTable( models, commandMap, group, selectLayer)
   }
 
   local count = 0
-  for k, v in pairs(models) do
+  for k, v in pairs(models or {}) do
     --print("actionEditor", self.name .. "-" .. v.name, v.icon)
     local obj = muiIcon:createImage {
       icon      = v.icon,
