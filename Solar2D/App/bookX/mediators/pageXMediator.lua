@@ -1,3 +1,0 @@
-local mediatorName = ...
-local mediatorClass = require( 'controller.mediator' ).new(mediatorName)
-return mediatorClass

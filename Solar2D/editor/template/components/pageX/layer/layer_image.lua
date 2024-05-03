@@ -28,7 +28,7 @@ M.rotation   = {{rotation}}
 M.layerAsBg     = {{layerAsBg}}
 M.isSharedAsset = {{kwk}}
 --
-M:setProps(Props)
+M:setProps(layerProps)
 --
 function M:init(UI)
   --local sceneGroup = UI.scene.view
