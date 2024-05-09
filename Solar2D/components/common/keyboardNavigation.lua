@@ -9,23 +9,21 @@ end
 local function onKeyEvent(event)
   -- Print which key was pressed down/up
   local message = "Key '" .. event.keyName .. "' was pressed " .. event.phase
-  print(message)
-
   local app = App.get()
   local scenes = app.props.scenes
-
-  --for k, v in pairs(event) do print(k, v) end
+  print("onKeyEvent", message, app.currentViewName )
+  -- for k, v in pairs(scenes) do print(k, v) end
   if event.phase == "up" then
     if event.keyName == "a" or event.keyName == "left" then
-      --print("onKeyEvent", app.currentViewName, #scenes)
+      -- print("onKeyEvent", app.currentViewName, #scenes)
       local getPrevious = function()
         for i = 1, #scenes do
-          local sceneName = "scenes." .. scenes[i] .. ".index"
+          local sceneName = "components." .. scenes[i] .. ".index"
           if sceneName == app.currentViewName then
             if i == 1 then
-              return "scenes." .. scenes[#scenes] .. ".index"
+              return "components." .. scenes[#scenes] .. ".index"
             end
-            return "scenes." .. scenes[i - 1] .. ".index"
+            return "components." .. scenes[i - 1] .. ".index"
           end
         end
         return app.currentViewName
@@ -34,12 +32,12 @@ local function onKeyEvent(event)
     elseif event.keyName == "d" or event.keyName == "right" then
       local getNext = function()
         for i = 1, #scenes do
-          local sceneName = "scenes." .. scenes[i] .. ".index"
+          local sceneName = "components." .. scenes[i] .. ".index"
           if sceneName == app.currentViewName then
             if i == #scenes then
-              return "scenes." .. scenes[1] .. ".index"
+              return "components." .. scenes[1] .. ".index"
             end
-            return "scenes." .. scenes[i + 1] .. ".index"
+            return "components." .. scenes[i + 1] .. ".index"
           end
         end
         return app.currentViewName
@@ -48,12 +46,12 @@ local function onKeyEvent(event)
     elseif event.keyName == "w" or event.keyName == "up" then
       local getNext = function()
         for i = 1, #scenes do
-          local sceneName = "scenes." .. scenes[i] .. ".index"
+          local sceneName = "components." .. scenes[i] .. ".index"
           if sceneName == app.currentViewName then
             if i == #scenes then
-              return "scenes." .. scenes[1] .. ".index"
+              return "components." .. scenes[1] .. ".index"
             end
-            return "scenes." .. scenes[i + 1] .. ".index"
+            return "components." .. scenes[i + 1] .. ".index"
           end
         end
         return app.currentViewName
@@ -62,12 +60,12 @@ local function onKeyEvent(event)
     elseif event.keyName == "s" or event.keyName == "down" then
       local getNext = function()
         for i = 1, #scenes do
-          local sceneName = "scenes." .. scenes[i] .. ".index"
+          local sceneName = "components." .. scenes[i] .. ".index"
           if sceneName == app.currentViewName then
             if i == #scenes then
-              return "scenes." .. scenes[1] .. ".index"
+              return "components." .. scenes[1] .. ".index"
             end
-            return "scenes." .. scenes[i + 1] .. ".index"
+            return "components." .. scenes[i + 1] .. ".index"
           end
         end
         return app.currentViewName
@@ -118,13 +116,14 @@ end
 function _M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   local app = App.get()
+  print("## keyboardNavigation")
   --
-  local bg = UI.layers[#UI.layers+1]
-  if bg == nil then return end
-  app.props.Gesture.activate(bg, {swipeLength = swipeLength})
-  bg:addEventListener("tap", onTap)
-  bg:addEventListener(app.props.Gesture.SWIPE_EVENT, onSwipe)
-  -- Add the key event listener
+  -- local bg = UI.layers[#UI.layers+1]
+  -- if bg == nil then return end
+  -- app.props.Gesture.activate(bg, {swipeLength = swipeLength})
+  -- bg:addEventListener("tap", onTap)
+  -- bg:addEventListener(app.props.Gesture.SWIPE_EVENT, onSwipe)
+  -- -- Add the key event listener
   Runtime:addEventListener("key", onKeyEvent)
 end
 --
