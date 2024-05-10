@@ -1,96 +1,8 @@
-local M = {}
-M.name = ...
+name = ...
+local parent,root, M = newModule(name)
 -- attach drag-item scrollview to widget library
 require("extlib.dragitemscrollview")
-
--- load widget library
 local widget = require("widget")
-
-function M:init(UI) end
---
-function M:create(UI)
-
-  self.group = display.newGroup()
-  self.UI = UI
-  UI.editor.viewStore.actionCommandTable = self
-
-  self.singleClickEvent = function(obj)
-    UI.scene.app:dispatchEvent {
-      name = "editor.action.selectActionCommand",
-      UI = UI,
-      index = obj.index,
-      commandClass = self.actions[obj.index]
-    }
-    if self.selection and self.selection ~= obj then
-      self.selection.rect:setFillColor(1)
-    end
-    self.selection = obj
-    self.selection.rect:setFillColor(0,1,0)
-  end
-
-  UI.editor.actionCommandStore:listen(function(foo, fooValue)
-    self:createTable(foo, fooValue)
-  end)
-
-end
-
-    -- create a listener to handle drag-item commands
-function M:listener( item, touchevent )
-  if touchevent.phase  == "ended" then
-    -- print("single click event")
-    -- this opens a commond editor table
-    self.singleClickEvent(item)
-  else
-    display.currentStage:insert( item )
-    item.x, item.y = touchevent.x, touchevent.y
-    -- print(item.x, item.y)
-    --
-    local function touch(e)
-      --print("touch", e.phase, e.target.hasFocus)
-      if (e.phase == "began") then
-        display.currentStage:setFocus( e.target, e.id )
-        e.target.hasFocus = true
-        return true
-      elseif (e.target.hasFocus) then
-        e.target.x, e.target.y = e.x, e.y
-        -- print("", e.target.x, e.target.y)
-        if (e.phase == "moved") then
-        elseif (e.phase == "ended") then
-          -- print(e.phase, e.target.x, e.target.y)
-          display.currentStage:setFocus( e.target, nil )
-          e.target.hasFocus = nil
-          local localX, localY = self.scrollView:contentToLocal(  e.target.x,  e.target.y )
-          e.target.x = localX + self.scrollView.width/2
-          e.target.y = localY + self.scrollView.height/2
-          -- print("", e.target.x, e.target.y)
-          -- print("--------")
-
-          local function compare(a,b)
-            return a.y < b.y
-          end
-          --
-          table.sort(self.objs,compare)
-          local actions = {}
-          for i=1, #self.objs do
-            print(i, self.objs[i].index, self.objs[i].action.command)
-            actions[i] = self.objs[i].action
-          end
-          self:destroy()
-          self:createTable(nil, {actions = actions})
-          --
-          --self.scrollView:attachListener(e.target, listener, 100, 20, 20)
-        end
-        return true
-      end
-      return false
-    end
-    --
-    item.hasFocus = true
-    display.currentStage:setFocus( item, touchevent.id )
-    -- print("add")
-    item:addEventListener( "touch", touch )
-  end
-end
 
 function M:createTable (foo, fooValue)
   local UI = self.UI
@@ -123,7 +35,7 @@ function M:createTable (foo, fooValue)
     left=UI.editor.viewStore.commandView.contentBounds.xMax,
     top=22,
     -- top=(display.actualContentHeight-1280/4 )/2,
-    width=display.actualContentWidth - UI.editor.viewStore.commandView.contentBounds.xMax,
+    width=200, --display.actualContentWidth - UI.editor.viewStore.commandView.contentBounds.xMax,
     height=240
   }
   --scrollView.x = display.contentCenterX
@@ -146,10 +58,13 @@ function M:createTable (foo, fooValue)
     end
 
     local obj = newText(option, action.command .." "..target)
+
     scrollView:attachListener(obj,
       function(item, touchevent )
-        self:listener(item, touchevent)
-      end, 100, 20, 20)
+         self:listener(item, touchevent)
+      end,
+      100, 20, 20)
+
     obj.x, obj.y = last_x, last_y + 20
     last_x, last_y = obj.x, obj.y
     obj.action = action
@@ -173,7 +88,42 @@ function M:createTable (foo, fooValue)
   self.actions = fooValue.actions
 end
 
+function M:init(UI)
+  require(parent.."actionCommandtableListener").attachListener(self)
+end
+--
+function M:create(UI)
+  self.UI = UI
+  self.group = display.newGroup()
+  UI.editor.viewStore.actionCommandTable = self
+  UI.editor.actionCommandStore:listen(function(foo, fooValue)
+    self:createTable(foo, fooValue)
+  end)
+end
 
+function M:didShow(UI) end
+--
+function M:didHide(UI) end
+--
+function M:destroy()
+  if self.objs then
+    for i=1, #self.objs do
+      if self.objs[i].rect then
+        self.objs[i].rect:removeSelf()
+      end
+      self.objs[i]:removeSelf()
+    end
+    self.objs = nil
+  end
+
+  if self.scrollView then
+    self.scrollView:removeSelf()
+    self.scrollView = nil
+  end
+end
+
+
+return M
   -- create item to add to the scroll view (this will be dragged off the scrollview)
   -- local text1 = newText(option, "Animation-play title")
   -- local text2 = newText(option, "Audio-play bgm")
@@ -264,26 +214,3 @@ end
   --   end
   -- )
 
-function M:didShow(UI) end
---
-function M:didHide(UI) end
---
-function M:destroy()
-  if self.objs then
-    for i=1, #self.objs do
-      if self.objs[i].rect then
-        self.objs[i].rect:removeSelf()
-      end
-      self.objs[i]:removeSelf()
-    end
-    self.objs = nil
-  end
-
-  if self.scrollView then
-    self.scrollView:removeSelf()
-    self.scrollView = nil
-  end
-end
-
-
-return M

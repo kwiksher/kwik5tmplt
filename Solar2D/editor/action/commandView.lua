@@ -1,6 +1,9 @@
 name = ...
-local parent,root = newModule(name)
-local M = {name=name}
+local parent,root, M = newModule(name)
+M.width  = display.contentWidth*0.5
+M.height = 240
+M.top    = 22
+M.left   = 0 -- display.contentCenterX --  - 480*0.5 - M.width
 
 ---
 local muiIcon = require("components.mui.icon").new()
@@ -22,7 +25,7 @@ function M:createTable( models, commandMap, group, selectLayer)
   local scrollListener  = function(e) end
   local  scrollView = widget.newScrollView{
        top                    = 22,
-       left                   = display.contentCenterX-200,
+       left                   = self.left, --display.contentCenterX-200,
        width                  = 100,
        height                 = 240,
     -- height                 = #models*18,
@@ -110,6 +113,7 @@ function M:createTable( models, commandMap, group, selectLayer)
       end
     end
   end
+  print("###", scrollView.x, scrollView.y, scrollView.contentBounds.xMin, scrollView.contentBounds.xMax, scrollView.contentBounds.yMin, scrollView.contentBounds.yMax)
   return scrollView
 end
 --

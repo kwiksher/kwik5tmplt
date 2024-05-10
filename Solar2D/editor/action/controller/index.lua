@@ -1,7 +1,5 @@
-local current = ...
-local parent,  root = newModule(current)
---
-local M = {}
+local name = ...
+local parent,  root, M = newModule(name)
 local util = require("editor.util")
 --
 local json = require("json")
@@ -27,6 +25,11 @@ M.commandGroupHandler = function(event)
   --   dispatchEvent selectXXX for linking target and xxx componetns
   --
 
+  if obj == nil then
+    print("Error name not found:", name)
+    for k,v in pairs(M.commandMap) do print(k, v) end
+  end
+
   if obj.model.commandClass then
     UI.scene.app:dispatchEvent {
       name = "editor.action.selectActionCommand",
@@ -36,7 +39,7 @@ M.commandGroupHandler = function(event)
     }
   else
     -- toggle hide/show the children
-    -- print("@@@@", name)
+    print("@@@@", name)
     UI.editor.actionEditor:commandViewHandler(name, UI.editor.rootGroup.selectLayer)
   end
 end
