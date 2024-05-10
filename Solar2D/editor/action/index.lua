@@ -114,12 +114,10 @@ function M:create(UI)
   -----------------------------------------
   self:createSelectbox(UI, posX, posY)
   -----------------------------------------
-  local scrollView = commandView:createTable(models, self.commandMap, self.group, UI.editor.rootGroup.selectLayer)
-  self.group:insert(scrollView)
-  -----------------------------------------
+
+  self:createCommandview()
+
   UI.editor.actionEditor = self
-  self.group.commandView = scrollView
-  UI.editor.viewStore.commandView = scrollView
   --
   self:hide()
   -- self:show()
@@ -134,8 +132,16 @@ function M:create(UI)
     local delta_x = 400
     self.group:translate(delta_x/2, 0)
   end
-
 end
+
+function M:createCommandview()
+  local scrollView = commandView:createTable(models, self.commandMap, self.group, self.UI.editor.rootGroup.selectLayer)
+  self.group:insert(scrollView)
+  self.group.commandView = scrollView
+  self.UI.editor.viewStore.commandView = scrollView
+  -----------------------------------------
+end
+
 
 function M:commandViewHandler(name, selectLayer)
   if commandView.activeEntry == name then
@@ -144,9 +150,7 @@ function M:commandViewHandler(name, selectLayer)
     commandView.activeEntry = name
   end
   self.group.commandView:removeSelf()
-  local scrollView = commandView:createTable(scrollView, models, self.commandMap, self.group, selectLayer)
-  self.group:insert(scrollView)
-  self.group.commandView = scrollView
+  self:createCommandview()
 end
 -----------------------------------------
 function M:show()

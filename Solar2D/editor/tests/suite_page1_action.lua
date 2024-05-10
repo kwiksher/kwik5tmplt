@@ -31,7 +31,7 @@ function selectTool(args)
   )
 end
 
-local muiName = "editor.action.commandView-"
+local muiName = "action.commandView-"
 local actionTable = require("editor.action.actionTable")
 local controller = require("editor.action.controller.index")
 --
