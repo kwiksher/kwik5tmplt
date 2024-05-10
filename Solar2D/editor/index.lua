@@ -11,7 +11,7 @@ local json = require("json")
 local bt = require(parent..'controller.BTree.btree')
 local tree = require(parent.."controller.BTree.selectorsTree")
 --
-local unitTestOn = false
+local unitTestOn = true
 local httpServerOn = true
 
 M.rootGroup = display.newGroup()

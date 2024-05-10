@@ -11,7 +11,7 @@ function M:init(UI) end
 function M:create(UI)
 
   self.group = display.newGroup()
-
+  self.UI = UI
   UI.editor.viewStore.actionCommandTable = self
 
   self.singleClickEvent = function(obj)
@@ -93,6 +93,7 @@ function M:listener( item, touchevent )
 end
 
 function M:createTable (foo, fooValue)
+  local UI = self.UI
   local objs = {}
   local group = display.newGroup()
 
@@ -129,7 +130,7 @@ function M:createTable (foo, fooValue)
   -- scrollView.y = 0
 
   self.scrollView = scrollView
-  UI.editor.viewStore.actionCommandTable:insert(scrollView)
+  UI.editor.viewStore.actionCommandTable.group:insert(scrollView)
   -- scrollView.isVisible = false
 
   local last_x, last_y = 2, 0
