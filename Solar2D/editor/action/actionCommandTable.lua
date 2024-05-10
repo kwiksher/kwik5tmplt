@@ -1,4 +1,4 @@
-name = ...
+local name = ...
 local parent,root, M = newModule(name)
 -- attach drag-item scrollview to widget library
 require("extlib.dragitemscrollview")
@@ -89,7 +89,6 @@ function M:createTable (foo, fooValue)
 end
 
 function M:init(UI)
-  require(parent.."actionCommandtableListener").attachListener(self)
 end
 --
 function M:create(UI)
@@ -122,8 +121,8 @@ function M:destroy()
   end
 end
 
+return require(parent.."actionCommandtableListener").attachListener(M)
 
-return M
   -- create item to add to the scroll view (this will be dragged off the scrollview)
   -- local text1 = newText(option, "Animation-play title")
   -- local text2 = newText(option, "Audio-play bgm")

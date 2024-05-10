@@ -25,9 +25,10 @@ end
 
 function M:updateValue(value)
   print("### updateValue", self.name, value, self.selectedText.isVisible)
-
-  self.selectedObj.text = value
-  self.selectedText.text =value
+  if self.selectedObj then
+    self.selectedObj.text = value
+    self.selectedText.text =value
+  end
 end
 
 

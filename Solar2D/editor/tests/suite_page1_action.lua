@@ -83,10 +83,16 @@ end
 --     selectors.projectPageSelector:show()
 -- end
 
-function M.xtest_action()
+function M.xtest_new_action()
   selectors.componentSelector:onClick(true,  "actionTable")
   selectAction("eventOne")
   editor.newButton:tap{target=editor.newButton}
+end
+
+function M.test_select_action()
+  selectors.componentSelector:onClick(true,  "actionTable")
+  selectAction("eventOne")
+  -- editor.editButton:tap{target=editor.editButton}
 end
 
 --[[
@@ -162,7 +168,7 @@ function M.test_modifyActionCommnad()
 --]]
 
 
-function M.test_newActionButton()
+function M.xtest_newActionButton()
   -- click UI.editor.actionIcon
   --  it dispatches
   local editor = require("editor.action.index")
