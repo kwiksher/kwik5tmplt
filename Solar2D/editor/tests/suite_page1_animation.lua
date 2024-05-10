@@ -60,7 +60,7 @@ function M.suite_setup()
   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
-  bookTable.commandHandler({book="bookFree"}, nil,  true)
+  bookTable.commandHandler({book="book"}, nil,  true)
   pageTable.commandHandler({page="page1"},nil,  true)
   selectors.componentSelector.iconHander()
   selectors.componentSelector:onClick(true,  "layerTable")
@@ -100,7 +100,7 @@ function M.xtest_select_animation()
     --
 end
 
-function M.xtest_new_animation()
+function M.test_new_animation()
   local name = "gotoBtn"
   helper.selectLayer(name)
 

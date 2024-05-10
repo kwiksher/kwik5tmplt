@@ -162,7 +162,7 @@ function M.new(Props)
 --
     function app:showView(viewName, _options)
         -- print(debug.traceback())
-        -- print("-------------- showView ------------------", self.props.appName.."."..viewName, ", currentViewName:", self.currentViewName)
+        print("-------------- showView ------------------", self.props.appName.."."..viewName, ", currentViewName:", self.currentViewName)
         self.currentViewName = viewName
         local scene = self.context.Router[viewName]
         if scene == ni then

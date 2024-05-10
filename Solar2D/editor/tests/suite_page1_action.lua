@@ -65,7 +65,7 @@ function M.suite_setup()
   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
-  bookTable.commandHandler({book="bookFree"}, nil,  true)
+  bookTable.commandHandler({book="book"}, nil,  true)
   pageTable.commandHandler({page="page1"},nil,  true)
   -- timer.performWithDelay( 1000, function()
   selectors.componentSelector.iconHander()

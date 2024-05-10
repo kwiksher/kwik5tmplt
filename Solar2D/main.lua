@@ -1,11 +1,11 @@
+--require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=0, y=0}}) -- scenes.index
+
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   local lldebugger = loadfile(os.getenv("LOCAL_LUA_DEBUGGER_FILEPATH"))()
   lldebugger.start()
 end
 
 inspect = require("extlib.inspect")
---require("controller.index").bootstrap({name="bookTOC", sceneIndex = 2, position = {x=0, y=0}}) -- scenes.index
---require("controller.index").bootstrap({name="bookTOC", sceneIndex = 3, position = {x=0, y=0}}) -- scenes.index
 
 local common = {
   commands = {"myEvent"},
@@ -13,59 +13,10 @@ local common = {
     -- "align",
     "myComponent",
     "thumbnailNavigation",
+    "keyboardNavigation",
     "index" -- this loads editor!
   }
 }
--- require("controller.index").bootstrap({name="bookTest01", sceneIndex = 1, position = {x=0, y=0}, common = common}) -- scenes.index
--- require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=0, y=0}, common = common}) -- scenes.index
--- require("controller.index").bootstrap({name="InAppPurchase", sceneIndex = 1, position = {x=0, y=0}, common = common}) -- scenes.index
--- require("controller.index").bootstrap({name="bookTOC", sceneIndex = 2, position = {x=0, y=0}, common = common}) -- scenes.index
 
-require("controller.index").bootstrap({name="bookFree", sceneIndex = 1, position = {x=0, y=0}, common = common}) -- scenes.index
+require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=0, y=0}, common = common}) -- scenes.index
 
--- require("controller.index").bootstrap({name="Kaboom", sceneIndex = 1, position = {x=0, y=0}, common = common}) -- scenes.index
-
--- local circle = display.newCircle(display.contentCenterX, display.contentCenterY, 100)
--- local shape = require("editor.shape.index")
--- shape.move(circle)
-
-
-local json = require("json")
---
-local function bookScenes (bookName)
-  local scenes = require("App."..bookName..".index")
-  local ret = {}
-  for i, name in next, scenes do
-    ret[i] = require("App."..bookName..".components."..name..".index").model
-    ret[i].onInit = nil
-  end
-
-  local contents = json.encode(ret)
-  -- local path = system.pathForFile("scenes.json",system.TemporaryDirectory )
-  -- print("App."..bookName..".scenes.json")
-	-- local file = io.open( path, "w+b" )
-	-- if file then
-	--    file:write(contents)
-	--    io.close( file )	-- close the file after using it
-  --    file = nil
-	-- end
-  print(contents)
-end
-
--- bookScenes("bookFree")
-
--- require("editor.tests.index").run()
-
--- local function onKeyEvent(event)
---   -- Print which key was pressed down/up
---   local message = "Key '" .. event.keyName .. "' was pressed " .. event.phase
---   print(message)
--- end
-
--- Runtime:addEventListener("key", onKeyEvent)
-
--- position is processed in  controller/scene.lua
---
--- function scene:transition(event)
---        transition.to(self.view, event.params) -- event.params = position
--- end

@@ -2,6 +2,8 @@ require "extlib.lunatest"
 local M = {
   run = function (props)
     print("============ lunatest =============")
+    --lunatest.suite("editor.tests.suite_page1_animation", props)
+    lunatest.suite("editor.tests.suite_page1_action", props)
     -- lunatest.suite("editor.tests.suite_misc", props)
     --lunatest.suite("editor.tests.suite_new_shape_transform", props)
     -- lunatest.suite("editor.tests.suite_new_book_page_layer", props)
@@ -11,8 +13,6 @@ local M = {
     -- lunatest.suite("editor.tests.suite_canvas", props)
     --  lunatest.suite("editor.tests.suite_open_vscode", props)
     -- lunatest.suite("editor.tests.suite_page1_select_copy_paste", props)
-    -- lunatest.suite("editor.tests.suite_page1_action", props)
-    -- lunatest.suite("editor.tests.suite_page1_animation", props)
     -- lunatest.suite("editor.tests.suite_page1_button", props)
     -- lunatest.suite("editor.tests.suite_page1_drag", props)
     -- lunatest.suite("editor.tests.suite_page1_group", props)
