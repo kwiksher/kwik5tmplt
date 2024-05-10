@@ -70,6 +70,7 @@ function M:create(UI)
       if layerTableCommands.singleSelection(self, target) then
         actionbox:setActiveProp(target.action) -- nil == activeProp
       end
+      self.lastTarget = target
     end
   end
   -- edit button

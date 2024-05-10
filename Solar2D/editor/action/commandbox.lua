@@ -1,13 +1,16 @@
-
+local name = ...
+local parent,root = newModule(name)
 local M = require("editor.baseBox").new()
 local shapes = require("extlib.shapes")
 local widget = require( "widget" )
 
+M.name = name
+M.x = display.contentCenterX*0.5
+M.y = display.actualContentHeight - 30
+M.width = 48
+M.top = 22
+M.left = 50
 ---------------------------
-M.name = ...
-local parent = M.name:match("(.-)[^%.]+$")
-
-
 -- animation = {
 --   pause = {target = ""},
 --   resume = {target = ""},
@@ -16,25 +19,6 @@ local parent = M.name:match("(.-)[^%.]+$")
 -- },
 
 --
--- I/F
-function M:setValue(UI, command, model, selected)
-
-  self:destroy()
-  --
-  self.command           = command -- animation
-  self.model             = model
-  self.selectedText.text = command -- audio, animation, image ...
-  print("action command", command)
-  -- self.selectedTextValue = nil
-  self.selectedIndex     = nil
-  self.selectedObj       = nil
-  self.objs           = {}
-  ---
-  if model then
-    self:createTable(UI, selected)
-  end
-end
-
 local function newText(option)
   local obj=display.newText(option)
   obj:setFillColor( 0 )
@@ -59,9 +43,9 @@ function M:createTable(UI, selected)
     --
   local scrollView = widget.newScrollView
   {
-    top                      = self.triangle.contentBounds.yMin,
-    left                     = self.triangle.contentBounds.xMin - 48,
-    width                    = 48,
+    top                      = self.top, --self.triangle.contentBounds.yMin,
+    left                     = self.left, --self.triangle.contentBounds.xMin - 48,
+    width                    = self.width,
     height                   = #self.model*16,
     scrollHeight             = #self.model*16,
     verticalScrollDisabled   = false,
@@ -96,34 +80,8 @@ function M:createTable(UI, selected)
     index = index + 1
     obj.index = index
 
-    function obj:tap(e)
-      -- print(e.target.name)
-      if e.numTaps == 2 then
-        -- print("------double tap --------")
-      else
-        -- print("-----single tap------")
-        if M.selectedObj ~= obj then
-          if M.selectedObj then
-            M.selectedObj.rect:setFillColor(0.8)
-          end
-          -- print("#####", self.text)
-          M.selectedObj = self
-          -- M.selectedText.text =self.text
-          M.selectedIndex = self.index
-          M.selectedObj.rect:setFillColor(0, 1, 0)
-          --
-          -- for k, v in pairs(self.params) do print("", k, v) end
-          UI.scene.app:dispatchEvent {
-            name = "editor.action.selectActionCommand",
-            UI = UI,
-            commandClass = M.command,
-            index = self.index,
-            isNew = true
-          }
-          -- UI.editor.actionCommandPropsStore:set(self.params)
-        end
-      end
-      return true
+    obj.tap = function (target, e)
+     return self:tap(target, e)
     end
     obj:addEventListener("tap",obj)
     --
@@ -152,41 +110,40 @@ end
 --
 --
 function M:init(UI)
-  self.x = display.contentCenterX/2 + 30
-  self.y = display.actualContentHeight - 30
   self.model = {}
 end
 --
 function M:create(UI)
+  self.UI = UI
   -- print("--------------------- commandbox ------------")
   -- singleton. destroy with composer is delayed, it causes to free created objects
   -- if  viewStore.commandbox then return end
   --
   self.group = display.newGroup()
   --
-  self.triangle = shapes.triangle.equi( self.x,self.y+5, 10 )
-  self.triangle:rotate(90)
-  self.triangle.tap = function(event)
-    -- print("triangle tap")
-    self.scrollView.isVisible = not self.scrollView.isVisible
-    for i=1, #self.objs do
-      local obj = self.objs[i]
-      obj.isVisible = self.scrollView.isVisible
-    end
-    return true
-  end
-  self.triangle.alpha = 0
-  ---
-  self.triangle.mouse = function(event )
-  end
+  -- self.triangle = shapes.triangle.equi( self.x,self.y+5, 10 )
+  -- self.triangle:rotate(90)
+  -- self.triangle.tap = function(event)
+  --   -- print("triangle tap")
+  --   self.scrollView.isVisible = not self.scrollView.isVisible
+  --   for i=1, #self.objs do
+  --     local obj = self.objs[i]
+  --     obj.isVisible = self.scrollView.isVisible
+  --   end
+  --   return true
+  -- end
+  -- self.triangle.alpha = 0
+  -- ---
+  -- self.triangle.mouse = function(event )
+  -- end
   --
-  self.group:insert(self.triangle)
+  -- self.group:insert(self.triangle)
 
   local obj = display.newText{
     parent = self.group,
     text = "",
-    x = self.triangle.x,
-    y = self.triangle.y,
+    x = self.x,
+    y = self.y,
     fontSize = 10,
   }
   obj:setFillColor(1, 0, 1 )
@@ -200,19 +157,17 @@ function M:create(UI)
 end
 --
 function M:didShow(UI)
-  if self.triangle then
-    self.triangle:addEventListener("tap", self.triangle)
-    self.triangle:addEventListener( "mouse", self.triangle )
-  end
-
+  -- if self.triangle then
+  --   self.triangle:addEventListener("tap", self.triangle)
+  --   self.triangle:addEventListener( "mouse", self.triangle )
+  -- end
 end
 --
 function M:didHide(UI)
-  if self.triangle then
-    self.triangle:removeEventListener("tap", self.triangle)
-    self.triangle:removeEventListener("mouse", self.triangle)
-  end
-
+  -- if self.triangle then
+  --   self.triangle:removeEventListener("tap", self.triangle)
+  --   self.triangle:removeEventListener("mouse", self.triangle)
+  -- end
 end
 --
 function  M:destroy(UI)
@@ -233,41 +188,5 @@ function  M:destroy(UI)
   -- self.selectedText = nil
   -- print(debug.traceback())
 end
-
-function M:toggle()
-  self.triangle.tap()
-  self.triangle.isVisible = self.scrollView.isVisible
-  self.selectedText.isVisible  = self.scrollView.isVisible
-end
-
-function M:show()
-  -- print("show")
-  self.triangle.isVisible = true
-  self.selectedText.isVisible  = true
-  --
-  if self.scrollView == nil  then return end
-  self.scrollView.isVisible = true
-  for i=1, #self.objs do
-    local obj = self.objs[i]
-    obj.isVisible = true
-    obj.rect.isVisible = true
-  end
-  -- print("", "show end")
-end
-
-function M:hide()
-  -- print("hide")
-  self.triangle.isVisible = false
-  self.selectedText.isVisible  = false
-  --
-  if self.scrollView == nil  then return end
-  self.scrollView.isVisible = false
-  for i=1, #self.objs do
-    local obj = self.objs[i]
-    obj.isVisible = false
-    obj.rect.isVisible = false
-  end
-  -- print("", "hide end")
-end
 --
-return M
+return require(parent.."commandboxListener").attachListener(M)

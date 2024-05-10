@@ -117,10 +117,10 @@ function M:create(UI)
       M:destroy()
       print("------- actionCommandPropsStore --------")
       local alphaObj = nil
-      local posX = commandbox.triangle.x + option.width/2
-      print("#### commandbox.triangle.x", commandbox.triangle.x)
+      local posX = commandbox.x + option.width/2
+      print("#### commandbox.x", commandbox.x)
       -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
-      local posY  = commandbox.triangle.y  -- (display.actualContentHeight - display.contentHeight + option.height)/2
+      local posY  = commandbox.y  -- (display.actualContentHeight - display.contentHeight + option.height)/2
       -- print("actionCommandPropsStore:listen", posX, posY)
       -- print("", debug.traceback())
       local function compare(a,b)

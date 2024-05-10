@@ -80,13 +80,13 @@ local command = function (params)
   end
 
 
-  commandbox.triangle.x = commandbox.x
-  commandbox.triangle.y = display.actualContentHeight- math.max(#entries, #model) * 20 -50
-  commandbox.selectedText.x = commandbox.triangle.x
-  commandbox.selectedText.y = commandbox.triangle.y
+  commandbox.x = commandbox.x
+  commandbox.y = display.actualContentHeight- math.max(#entries, #model) * 20 -50
+  commandbox.selectedText.x = commandbox.x
+  commandbox.selectedText.y = commandbox.y
 
   if commandbox.scrollView then
-    commandbox.scrollView.y = commandbox.triangle.y + commandbox.scrollView.height/2
+    commandbox.scrollView.y = commandbox.y + commandbox.scrollView.height/2
   end
 
 
