@@ -243,6 +243,7 @@ function M:create(UI)
   self.assetsSelector.marginX = 30 --display.contentCenterX
   self.assetsSelector.marginY = self.componentSelector.height+30
   self.assetsSelector.optionWidth = 42
+  self.assetsSelector.width =  60
 
   --
   self.projectPageSelector:create(UI)

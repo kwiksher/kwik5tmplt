@@ -3,7 +3,7 @@ local parent,root, M = newModule(name)
 M.width  = display.contentWidth*0.5
 M.height = 240
 M.top    = 22
-M.left   = 0 -- display.contentCenterX --  - 480*0.5 - M.width
+M.left   = nil -- display.contentCenterX --  - 480*0.5 - M.width
 
 ---
 local muiIcon = require("components.mui.icon").new()
@@ -20,8 +20,14 @@ local function newText(option)
 end
 
 
-function M:createTable( models, commandMap, group, selectLayer)
+function M:createTable(parent)
+  local UI = self.UI
+  --
+  self.left = UI.editor.viewStore.actionCommandTable.left + UI.editor.viewStore.actionCommandTable.width
+  print("@@@@", self.left)
 
+  self.y = 22
+  --
   local scrollListener  = function(e) end
   local  scrollView = widget.newScrollView{
        top                    = 22,
@@ -39,10 +45,10 @@ function M:createTable( models, commandMap, group, selectLayer)
   }
 
   local option = {
-    parent   = group,
+    parent   = parent,
     text     = "",
     x        = 0,
-    y        = selectLayer.y or 0,
+    y        = self.y,
     width    = 100,
     height   = 16,
     font     = native.systemFont,
@@ -51,7 +57,7 @@ function M:createTable( models, commandMap, group, selectLayer)
   }
 
   local count = 0
-  for k, v in pairs(models or {}) do
+  for k, v in pairs(self.models or {}) do
     --print("actionEditor", self.name .. "-" .. v.name, v.icon)
     local obj = muiIcon:createImage {
       icon      = v.icon,
@@ -78,7 +84,7 @@ function M:createTable( models, commandMap, group, selectLayer)
     obj.model = v
     obj.children = v.children or {}
     --print("", obj.name)
-    commandMap[obj.name] = obj
+    self.commandMap[obj.name] = obj
     scrollView:insert(obj)
     count = count + 1
     --
@@ -107,7 +113,7 @@ function M:createTable( models, commandMap, group, selectLayer)
         obj:addEventListener("tap", obj)
         obj.model = entry
         --
-        commandMap[obj.name] = obj
+        self.commandMap[obj.name] = obj
         scrollView:insert(obj)
         count = count + 1
       end
@@ -116,5 +122,49 @@ function M:createTable( models, commandMap, group, selectLayer)
   print("###", scrollView.x, scrollView.y, scrollView.contentBounds.xMin, scrollView.contentBounds.xMax, scrollView.contentBounds.yMin, scrollView.contentBounds.yMax)
   return scrollView
 end
+
+function M:set(models, commandMap)
+  self.models = models
+  self.commandMap = commandMap
+end
+
+function M:init(UI)
+end
+
+function M:create(UI)
+  -- if UI.editor.viewStore.actionCommandTabe then
+    local group = UI.editor.actionEditor.group
+    self.UI = UI
+    ---
+    UI.editor.actionCommandStore:listen(function(foo, fooValue)
+      if  UI.editor.viewStore.commandView == nil then
+        local scrollView = self:createTable(group)
+        group:insert(scrollView)
+        group.commandView = scrollView
+        UI.editor.viewStore.commandView = scrollView
+      end
+    end)
+   -- end
+end
+--
+function M:didShow(UI)
+end
+--
+function M:didHide(UI)
+end
+--
+function M:destroy()
+end
+
+function M:toggle()
+end
+
+function M:show()
+end
+
+function M:hide()
+end
+
+
 --
 return M

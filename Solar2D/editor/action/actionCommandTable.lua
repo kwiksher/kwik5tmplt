@@ -6,7 +6,7 @@ local widget = require("widget")
 local actionCommandTableListener = require(parent.."actionCommandtableListener")
 
 M.top = 22
-M.left = 0
+M.left = nil
 M.width = 200
 M.height = 240
 M.dragtime = 100
@@ -19,7 +19,10 @@ function M:createTable (foo, fooValue)
   local objs = {}
   local group = display.newGroup()
   --
-  self.left = UI.editor.viewStore.commandView.contentBounds.xMax
+  -- self.left = UI.editor.viewStore.commandView.contentBounds.xMax
+  self.left = UI.editor.rootGroup.actionTable.contentBounds.xMax
+
+  print("@@@@@@@ actionCommandTable")
   --
   local option = {
     parent = self.group,
