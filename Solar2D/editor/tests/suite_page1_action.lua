@@ -34,6 +34,7 @@ end
 local muiName = "action.commandView-"
 local actionTable = require("editor.action.actionTable")
 local controller = require("editor.action.controller.index")
+
 --
 function selectAction(name)
   for i, v in next, actionTable.objs do
@@ -84,15 +85,17 @@ end
 -- end
 
 function M.xtest_new_action()
+  local editor = require("editor.action.actionTable")
   selectors.componentSelector:onClick(true,  "actionTable")
   selectAction("eventOne")
   editor.newButton:tap{target=editor.newButton}
 end
 
 function M.test_select_action()
+  local editor = require("editor.action.actionTable")
   selectors.componentSelector:onClick(true,  "actionTable")
   selectAction("eventOne")
-  -- editor.editButton:tap{target=editor.editButton}
+  editor.editButton:tap{target=editor.editButton}
 end
 
 --[[

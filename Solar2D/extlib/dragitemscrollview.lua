@@ -1,3 +1,4 @@
+local M = {}
 local widget = require("widget")
 
 local function angleOf(ax, ay, bx, by, adjust, positive)
@@ -119,3 +120,6 @@ function widget.newDragItemsScrollView(params)
 
   return scrollview
 end
+
+M.new = widget.newDragItemsScrollView
+return M
