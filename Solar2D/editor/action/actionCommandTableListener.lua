@@ -73,9 +73,5 @@ function M:listener( item, touchevent )
   end
 end
 
-M.attachListener = function(instance)
-	return setmetatable(instance, {__index=M})
-end
-
 --
 return M

@@ -1,14 +1,26 @@
 local name = ...
 local parent,root, M = newModule(name)
 -- attach drag-item scrollview to widget library
-require("extlib.dragitemscrollview")
+local dragItemScrollView = require("extlib.dragitemscrollview")
 local widget = require("widget")
+local actionCommandTableListener = require(parent.."actionCommandtableListener")
+
+M.top = 22
+M.left = 0
+M.width = 200
+M.height = 240
+M.dragtime = 100
+M.angle = 20
+M.radius = 20
+M.touchthreshold = 0   -- touchthreshold or display.actualContentWidth * .1
 
 function M:createTable (foo, fooValue)
   local UI = self.UI
   local objs = {}
   local group = display.newGroup()
-
+  --
+  self.left = UI.editor.viewStore.commandView.contentBounds.xMax
+  --
   local option = {
     parent = self.group,
     text = "",
@@ -30,13 +42,13 @@ function M:createTable (foo, fooValue)
   end
 
    -- create drag-item scrollview
-  local scrollView = widget.newDragItemsScrollView{
+  local scrollView = dragItemScrollView.new{
     backgroundColor = {1.0},
-    left=UI.editor.viewStore.commandView.contentBounds.xMax,
-    top=22,
+    left=self.left,
+    top=self.top,
     -- top=(display.actualContentHeight-1280/4 )/2,
-    width=200, --display.actualContentWidth - UI.editor.viewStore.commandView.contentBounds.xMax,
-    height=240
+    width=self.width, --display.actualContentWidth - UI.editor.viewStore.commandView.contentBounds.xMax,
+    height=self.height
   }
   --scrollView.x = display.contentCenterX
   -- scrollView.y = 0
@@ -45,7 +57,7 @@ function M:createTable (foo, fooValue)
   UI.editor.viewStore.actionCommandTable.group:insert(scrollView)
   -- scrollView.isVisible = false
 
-  local last_x, last_y = 2, 0
+  local last_x, last_y = 0, 0
 
   for i, action in pairs(fooValue.actions) do
     local target, params = "", ""
@@ -63,8 +75,8 @@ function M:createTable (foo, fooValue)
       function(item, touchevent )
          self:listener(item, touchevent)
       end,
-      100, 20, 20)
-
+      self.dragtime, self.angle, self.radius) -- item, listener, dragtime, angle, radius, touchthreshold
+    --
     obj.x, obj.y = last_x, last_y + 20
     last_x, last_y = obj.x, obj.y
     obj.action = action
@@ -121,7 +133,7 @@ function M:destroy()
   end
 end
 
-return require(parent.."actionCommandtableListener").attachListener(M)
+return setmetatable(M, {__index=actionCommandTableListener})
 
   -- create item to add to the scroll view (this will be dragged off the scrollview)
   -- local text1 = newText(option, "Animation-play title")
