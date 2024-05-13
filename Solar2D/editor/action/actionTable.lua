@@ -7,6 +7,9 @@ local contextButtons = require("editor.parts.buttons")
 local layerTableCommands = require("editor.parts.layerTableCommands")
 --
 M.selections = {}
+M.x = nil
+M.y = nil
+M.width = 48
 
 local function onKeyEvent(event)
   return M:onKeyEvent(event)
@@ -30,8 +33,8 @@ function M:create(UI)
   self.rootGroup = UI.editor.rootGroup
   self.group = display.newGroup()
   self.UI = UI
-  self.x = UI.editor.actionIcon.contentBounds.xMin
-  self.y = UI.editor.actionIcon.contentBounds.yMax
+  self.x = self.rootGroup.selectAction.rect.contentBounds.xMax
+  self.y = self.rootGroup.selectAction.y
   -- self.x = self.rootGroup.selectAction.contentBounds.xMax
   -- self.y = self.rootGroup.selectAction.y
 
@@ -41,7 +44,7 @@ function M:create(UI)
     text = "",
     x = 0,
     y = 0,
-    width = nil,
+    width = self.width, -- nil makes newText automatically adjust the width
     height = 20,
     font = native.systemFont,
     fontSize = 10,
@@ -80,7 +83,7 @@ function M:create(UI)
     local editButton = newText{
       x = newButton.contentBounds.xMax +4,
       y = newButton.y,
-      text = "Edit"
+      text = "Set"
     }
     editButton:setFillColor(1, 1, 0)
     editButton.tap = function(event)self:editHandler(event)end

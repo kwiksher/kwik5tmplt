@@ -72,10 +72,12 @@ function M:show()
   self.selectbox:show()
   --
   local scrollView = UI.editor.viewStore.commandView
-  for k, v in pairs(self.commandMap) do
-    v.alpha = 1
+  if scrollView then
+    for k, v in pairs(self.commandMap) do
+      v.alpha = 1
+    end
+    scrollView.isVisible = true
   end
-  scrollView.isVisible = true
   --
   if UI.editor.viewStore.actionCommandTable then
     UI.editor.viewStore.actionCommandTable.isVisible = true

@@ -174,6 +174,7 @@ function M:init(UI)
       self.views[i] = require(parent.."parts."..self.models[i])
     end
     for i=1, #self.actionViews do
+      print(parent.."action."..self.actionViews[i])
       self.views[#self.views + 1] = require(parent.."action."..self.actionViews[i])
     end
     -- Here linking toolbar-xx with view.animation, ...
@@ -378,6 +379,10 @@ function M:didShow(UI)
       currentBook= UI.editor.currentBook,
       currentPage= UI.page,
       currentLayer = UI.editor.currentayer}
+    print ("------------ UI.editor.rootGroup ---------")
+    for k, v in pairs(UI.editor.rootGroup) do print("", k) end
+    print ("------------ UI.editor.viewStore ---------")
+    for k, v in pairs(UI.editor.viewStore) do print("", k) end
   end
 --
 function M:didHide(UI)

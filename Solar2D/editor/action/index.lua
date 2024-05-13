@@ -6,6 +6,7 @@ local M = {name = name, views = {
   "actionTable", -- lists actions in a page
   "actionCommandTable",
   "actionCommandPropsTable",
+  "commandView",
   "commandbox", -- animation.play, pause, ..
   "buttons",
   "actionCommandButtons"
@@ -115,7 +116,8 @@ function M:create(UI)
   self:createSelectbox(UI, posX, posY)
   -----------------------------------------
 
-  self:createCommandview()
+  -- self:createCommandview()
+  commandView:set(models, self.commandMap)
 
   UI.editor.actionEditor = self
   --
@@ -134,13 +136,13 @@ function M:create(UI)
   end
 end
 
-function M:createCommandview()
-  local scrollView = commandView:createTable(models, self.commandMap, self.group, self.UI.editor.rootGroup.selectLayer)
-  self.group:insert(scrollView)
-  self.group.commandView = scrollView
-  self.UI.editor.viewStore.commandView = scrollView
-  -----------------------------------------
-end
+-- function M:createCommandview()
+--   local scrollView = commandView:createTable(models, self.commandMap, self.group, self.UI)
+--   self.group:insert(scrollView)
+--   self.group.commandView = scrollView
+--   self.UI.editor.viewStore.commandView = scrollView
+--   -----------------------------------------
+-- end
 
 
 function M:commandViewHandler(name, selectLayer)
@@ -150,7 +152,8 @@ function M:commandViewHandler(name, selectLayer)
     commandView.activeEntry = name
   end
   self.group.commandView:removeSelf()
-  self:createCommandview()
+  -- self:createCommandview()
+  commandView:create(self.UI)
 end
 -----------------------------------------
 function M:show()

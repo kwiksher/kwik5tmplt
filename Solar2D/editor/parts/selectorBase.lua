@@ -1,6 +1,7 @@
 local Class, M = {}, {}
 M.name = ...
 M.weight = 1
+M.width = 48
 
 local parent = M.name:match("(.-)[^%.]+$")
 local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
@@ -32,7 +33,7 @@ function M:init(UI)
 end
 --
 function M:create(UI)
-  -- print("create", self.name)
+  -- print("@@@create", self.name, self.iconName)
   if self.rootGroup then return end
   self.rootGroup = UI.editor.rootGroup
 
@@ -95,7 +96,7 @@ function M:create(UI)
       option.x = self.marginX or option.x
       option.width = self.optionWidth or option.width
       --
-      local rect = display.newRect(self.rootGroup,option.x, option.y, option.width+18,option.height)
+      local rect = display.newRect(self.rootGroup,option.x, option.y, self.width,option.height)
       rect:setFillColor(0.8)
       --
       local obj = newText(option)

@@ -37,28 +37,32 @@ end
 
 function M:selectHandler(target)
   layerTableCommands.clearSelections(self, "action")
-  if self.altDown then
-    if layerTableCommands.showLayerProps(self, target) then
-      print("TODO show action props")
-    end
-  elseif self.controlDown then
+  if self.controlDown then
     print("controlDown")
     layerTableCommands.multiSelections(self, target)
   else
-    if layerTableCommands.singleSelection(self, target) then
-      actionbox:setActiveProp(target.action) -- nil == activeProp
-    end
     self.lastTarget = target
+    self.UI.scene.app:dispatchEvent {
+      name = "editor.action.selectAction",
+      action = target.action,
+      UI = self.UI
+    }
+    if self.altDown then
+      if layerTableCommands.singleSelection(self, target) then
+        actionbox:setActiveProp(target.action) -- nil == activeProp
+      end
+   end
   end
 end
 -- edit button
 function M:editHandler(target)
   if self.lastTarget then
-    self.UI.scene.app:dispatchEvent {
-      name = "editor.action.selectAction",
-      action = self.lastTarget.action,
-      UI = self.UI
-    }
+    if layerTableCommands.showLayerProps(self, self.lastTarget) then
+       print("TODO show action props")
+       if layerTableCommands.singleSelection(self, self.lastTarget) then
+         actionbox:setActiveProp(self.lastTarget.action) -- nil == activeProp
+       end
+    end
   end
 end
 
