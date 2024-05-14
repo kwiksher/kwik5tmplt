@@ -109,7 +109,7 @@ function M:create(UI)
   --
   controller:init(UI, self.commandMap, selectbox)
   -- print("create", self.name)
-  local posX, posY = toolbar:getWidth() + 36, -2 --display.contentCenterX/2 + 42, -2
+  local posX, posY =  54, -2 --display.contentCenterX/2 + 42, -2
   -----------------------------------------
   self:createIcon(UI, posX, posY)
   -----------------------------------------
@@ -151,9 +151,9 @@ function M:commandViewHandler(name, selectLayer)
   else
     commandView.activeEntry = name
   end
-  self.group.commandView:removeSelf()
-  -- self:createCommandview()
-  commandView:create(self.UI)
+  local group = self.UI.editor.rootGroup
+  group.commandView:removeSelf()
+  commandView:createCommandview()
 end
 -----------------------------------------
 function M:show()

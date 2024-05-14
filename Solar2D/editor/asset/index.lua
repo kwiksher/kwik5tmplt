@@ -20,6 +20,11 @@ local controller = require("editor.controller.index").new("asset")
 --
 local M = require(root.."baseClassEditor").new(model, controller)
 
+M.x = display.contentCenterX/2
+M.y	= 20
+M.width = 80
+M.height = 16
+
 function M:init(UI)
   self.UI = UI
   self.group = display.newGroup()
@@ -35,8 +40,8 @@ function M:init(UI)
 
   -- --
   controller:init{
-    selectbox      = selectbox,
-    classProps    = classProps,
+    selectbox      = selectbox, -- Audio, Particles, Spritesheet, SyncText, Video
+    classProps    = classProps, -- select a media entry then click the icon to insert media, it can be a layer replacement
     buttons       = buttons
   }
   controller.view = self

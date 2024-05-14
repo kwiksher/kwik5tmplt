@@ -30,7 +30,7 @@ function M.suite_setup()
   -- useTinyfiledialogs = false -- default
   ---
 
-  -- bookTable.commandHandler({book="bookTest01"}, nil,  true)
+  -- bookTable.commandHandler({book="book"}, nil,  true)
   -- pageTable.commandHandler({page="page1"},nil,  true)
 
   --selectors.componentSelector.iconHander()
@@ -126,7 +126,7 @@ function M.xtest_create_video()
   assetTable:iconsHandler({target={muiOptions={name="repVideo-icon"}}}, "video", "selectTool")
 
   -- click a layer
-  local args = {"bookTest01", "page1", "imageTwo"}
+  local args = {"book", "page1", "imageTwo"}
   local layerObj = layerTable.findObj(layerTable.objs, args, 3)
   layerObj:touch({phase="ended"})
 
@@ -158,7 +158,7 @@ function M.xtest_save_video_renderAssets()
   local controller = require("editor.controller.index")
   controller.view = {UI = UI}
 
-  local book = "bookTest01"
+  local book = "book"
   local page = "page1"
   local classFolderName = "replacement" -- this is id in editor.model.lua to get a folder name of template for lustache
   local class = "video"
@@ -319,7 +319,7 @@ function M.xtest_save_audio()
     filename = "click.mp3",
   }
 
-  local fileInSandbox = controller:renderAssets("bookTest01", "page1", nil ,"audio", nil, model)
+  local fileInSandbox = controller:renderAssets("book", "page1", nil ,"audio", nil, model)
 
   local expected = {
     audios = {
@@ -344,7 +344,7 @@ function M.xtest_spreitesheet()
   -- TBI display spriteseet icon if Spirtesheet is selected in assetTable.lua
 end
 
-function M.test_assets_lfs()
+function M.xtest_assets_lfs()
   -- only lfs
   -- add media files into assets folder and run this test
   --
@@ -399,8 +399,8 @@ function M.test_assets_lfs()
   }
 
   local controller = require("editor.asset.index").controller
-  local updated, map = controller:read("bookTest01") -- read assets/model.lua
-  -- local updated, map = controller:read("bookTest01", model_assets)
+  local updated, map = controller:read("book") -- read assets/model.lua
+  -- local updated, map = controller:read("book", model_assets)
 
   local json = require("json")
   print(json.encode(updated))
@@ -466,38 +466,46 @@ function M.xtest_linked_layer_CRUD()
   -- test delete video replacment from layer
 end
 
-function M.xtest_load()
-  UI.editor.assets = {
-    audios = {
-      {
-        name = "click.mp3",
-        path = "audios/short",
-        links = {{page = "page1"}, {page = "page2"}}
-      }
-    },
-    videos = {
-      {
-        name = "videoA.mp4",
-        path = "videos",
-        links = {
-          {page= "page01", layers = {"layerA1", "layerA10"}},
-          {page= "page02", layers = {"layerA2", "layerA20"}}
-        },
-      },
-      {
-        name = "videoB.mp4",
-        path = "videos",
-        links = {{page= "page01", layers = {"layerB"}}}
-        }
-    },
-    sprites = {}
+function M.test_load()
+  -- UI.editor.assets = {
+  --   audios = {
+  --     {
+  --       name = "click.mp3",
+  --       path = "audios/short",
+  --       links = {{page = "page1"}, {page = "page2"}}
+  --     }
+  --   },
+  --   videos = {
+  --     {
+  --       name = "videoA.mp4",
+  --       path = "videos",
+  --       links = {
+  --         {page= "page01", layers = {"layerA1", "layerA10"}},
+  --         {page= "page02", layers = {"layerA2", "layerA20"}}
+  --       },
+  --     },
+  --     {
+  --       name = "videoB.mp4",
+  --       path = "videos",
+  --       links = {{page= "page01", layers = {"layerB"}}}
+  --       }
+  --   },
+  --   sprites = {}
 
-  }
-  ---
+  -- }
+  -- ---
   selectors.assetsSelector:show()
   -- selectors.assetsSelector:onClick(true, nil)
-  -- selectors.assetsSelector:onClick(true, "audios")
-  selectors.assetsSelector:onClick(true, "videos")
+  selectors.assetsSelector:onClick(true, "audios")
+
+  local assetTable = require("editor.asset.assetTable")
+  assetTable.objs[2]:touch({phase="ended"})
+
+  -- click icon that is specified in assetTable.lua
+  assetTable:iconsHandler({target={muiOptions={name="addAudio"}}}, "audio", "selectAudio")
+
+  -- selectors.assetsSelector:onClick(true, "videos")
+  -- assetTable:iconsHandler({target={muiOptions={name="repVideo-icon"}}}, "video", "selectTool")
 
 end
 

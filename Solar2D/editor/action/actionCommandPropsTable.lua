@@ -5,6 +5,32 @@ local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 --
 M.name = current
 M.weight = 1
+-- M.groupName = nil
+M.groupName = "rootGroup"
+M.x =  display.contentCenterX + 28 -- UI.editor.viewStore.actionCommandTable.left + UI.editor.viewStore.actionCommandTable.width -- commandbox.x + option.width/2
+M.y =  22
+      -- commandbox.y  -- (display.actualContentHeight - display.contentHeight + option.height)/2
+
+local appFont
+if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
+  appFont = native.systemFont
+else
+  -- appFont = "HelveticaNeue-Light"
+  appFont = "HelveticaNeue"
+end
+
+local option = {
+  parent = nil,
+  text = "",
+  x = 0,
+  y = 100,
+  --viewStore.selectLayer.y,
+  width = 60,
+  height = 20,
+  font = appFont,
+  fontSize = 8,
+  align = "left"
+}
 
 local commandbox = require(parent.."commandbox")
 -- local linkbox   = require(root.."parts.linkbox").new()
@@ -57,6 +83,7 @@ end
 function M:init(UI)
   -- self.linkbox = linkbox
 end
+
 --
 function M:create(UI)
   -- if viewStore.actionCommandPropsTable then return end
@@ -64,27 +91,7 @@ function M:create(UI)
   self.group = display.newGroup()
   UI.editor.viewStore.actionCommandPropsTable = self
 
-  local option = {
-    parent = self.group,
-    text = "",
-    x = 0,
-    y = 100,
-    --viewStore.selectLayer.y,
-    width = 60,
-    height = 20,
-    font = appFont,
-    fontSize = 8,
-    align = "left"
-  }
-
-  local appFont
-  if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
-    appFont = native.systemFont
-  else
-    -- appFont = "HelveticaNeue-Light"
-    appFont = "HelveticaNeue"
-  end
-
+  option.parent = self.group
 
   local function newText(option)
     local obj = display.newText(option)
@@ -117,10 +124,12 @@ function M:create(UI)
       M:destroy()
       print("------- actionCommandPropsStore --------")
       local alphaObj = nil
-      local posX = commandbox.x + option.width/2
+
+
+      local posX = self.x
       print("#### commandbox.x", commandbox.x)
       -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
-      local posY  = commandbox.y  -- (display.actualContentHeight - display.contentHeight + option.height)/2
+      local posY  = self.y
       -- print("actionCommandPropsStore:listen", posX, posY)
       -- print("", debug.traceback())
       local function compare(a,b)
@@ -191,6 +200,7 @@ function M:create(UI)
       end
       M.objs = objs
       M.model = props
+
       --
       --
       --------
@@ -221,6 +231,8 @@ function M:create(UI)
   else
     self.group:translate(-130, 0)
   end
+
+
 
 end
 --

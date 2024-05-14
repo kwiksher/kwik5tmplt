@@ -4,7 +4,7 @@ local widget = require( "widget" )
 
 ---------------------------
 M.name = "class"
-M.selectedTextLabel =  "Class" -- class
+M.selectedTextLabel =  "" -- class
 --
 -- I/F
 function M:setValue(decoded, index)
@@ -80,6 +80,7 @@ function M:create(UI)
   --  print("### create", #self.model)
   self.group = display.newGroup()
   self.triangle = self:createTriangle( self.x,self.y+5, 10 )
+  self.triangle.alpha = 0
   self.group:insert(self.triangle)
   local scrollView = widget.newScrollView
   {

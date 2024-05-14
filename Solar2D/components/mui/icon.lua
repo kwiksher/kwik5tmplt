@@ -13,9 +13,9 @@ local onMouseHover = function(event)
     local textOptions = {
       --   parent = group,
       text = event.target.hoverText,
-      x = event.x,
+      x = event.target.x + 10,
        --display.contentCenterX,
-      y = event.y + 20,
+      y = event.y ,
       width = event.target.hoverText:len() * 10,
       font = native.systemFont,
       fontSize = 12,
@@ -24,6 +24,7 @@ local onMouseHover = function(event)
     hoverObj = display.newText(textOptions)
     hoverObj:setFillColor(1, 1, 0)
     prevHover = event.target.text
+    hoverObj.anchorX = 0
     timer.performWithDelay(
       500,
       function()
@@ -99,7 +100,7 @@ function M:createImage(Props)
       },
       on = {
         textColor = {0, 0, 0, 1},
-        fillColor = {.8, .8, .8, 1},
+        fillColor = Props.fillColor or {.8, .8, .8, 1},
         iconImage = "assets/images/icons/" .. Props.icon .. "Color.png"
       },
       disabled = {
