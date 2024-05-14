@@ -96,6 +96,7 @@ function M.test_select_action()
   selectors.componentSelector:onClick(true,  "actionTable")
   selectAction("eventOne")
   editor.editButton:tap{target=editor.editButton}
+  controller.commandGroupHandler{target={muiOptions={name=muiName.."Page"}}}
 end
 
 --[[

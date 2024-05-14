@@ -205,6 +205,9 @@ function M:create(UI)
     mouseHandler
   )
 
+  self.projectPageSelector.optionWidth = 40
+  self.projectPageSelector.marginX = 20
+
   self.componentSelector =
     selectorBase.new(
     UI,
@@ -225,11 +228,12 @@ function M:create(UI)
     mouseHandler
   )
 
+  local assetPosX = 960 -4
   self.assetsSelector =
   selectorBase.new(
     UI,
-    56,
-    -2,
+    assetPosX, -- icon x
+    -2, -- icon y
     {
       {label = "Audio", command = "selectAudioAsset", store = "audios", btree = "select asset"},
       {label = "Particles", command = "selectPaticlesAsset", store = "paticles", btree = "select asset"},
@@ -240,9 +244,9 @@ function M:create(UI)
     "toolAssets",
     nil
   )
-  self.assetsSelector.marginX = 30 --display.contentCenterX
-  self.assetsSelector.marginY = self.componentSelector.height+30
-  self.assetsSelector.optionWidth = 42
+  self.assetsSelector.marginX = assetPosX -48  --30
+  self.assetsSelector.marginY =  -12 -- self.componentSelector.height+30
+  self.assetsSelector.optionWidth = 48
   self.assetsSelector.width =  60
 
   --
@@ -251,11 +255,11 @@ function M:create(UI)
   self.assetsSelector:create(UI)
   --------------
   function self.assetsSelector.iconObj:move(width)
-    self.x = self.x + width
+    -- self.x = self.x + width
   end
 
   function self.assetsSelector.iconObj:reset(width)
-    self.x = self.x - width
+    -- self.x = self.x - width
   end
   -------------
 

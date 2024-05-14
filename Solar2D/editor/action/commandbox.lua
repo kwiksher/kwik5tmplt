@@ -7,9 +7,9 @@ local widget = require( "widget" )
 M.name = name
 M.x = display.contentCenterX*0.5
 M.y = display.actualContentHeight - 30
-M.width = 48
+M.width = 96
 M.top = 22
-M.left = 50
+M.left = display.contentCenterX -480/2 + 4
 ---------------------------
 -- animation = {
 --   pause = {target = ""},
@@ -25,15 +25,28 @@ local function newText(option)
   return obj
 end
 --
+function M:setPosition(entries, model)
+  -- self.x = self.x
+  -- self.y = display.actualContentHeight- math.max(#entries, #model) * 20 -50
+  self.y = 22
+  self.selectedText.x = self.x
+  self.selectedText.y = self.y
+
+  if self.scrollView then
+    self.scrollView.y = self.y + 8 + self.scrollView.height/2
+  end
+end
+--
 function M:createTable(UI, selected)
+
 
   -- print("createTable")
 
   local option = {
     text     = "",
-    x        = 0,
+    x        = 50,
     y        = 0,
-    width    = 80,
+    width    = self.width,
     height   = 16,
     font     = native.systemFont,
     fontSize = 10,
@@ -62,7 +75,7 @@ function M:createTable(UI, selected)
     local group = display.newGroup()
     -- name
     option.text   =  entry.name
-    option.x = 42  --labelText.contentBounds.xMin - 100
+    -- option.x = 50  --labelText.contentBounds.xMin - 100
     option.y = index * option.height + option.height/2
     --
 
@@ -142,11 +155,11 @@ function M:create(UI)
   local obj = display.newText{
     parent = self.group,
     text = "",
-    x = self.x,
+    x = self.x + 2,
     y = self.y,
     fontSize = 10,
   }
-  obj:setFillColor(1, 0, 1 )
+  obj:setFillColor(1, 1, 0 )
   obj.anchorX = 0
 
   self.selectedText = obj
@@ -188,5 +201,6 @@ function  M:destroy(UI)
   -- self.selectedText = nil
   -- print(debug.traceback())
 end
+
 --
 return require(parent.."commandboxListener").attachListener(M)

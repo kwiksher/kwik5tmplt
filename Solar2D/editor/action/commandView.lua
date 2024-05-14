@@ -2,9 +2,9 @@ local name = ...
 local parent,root, M = newModule(name)
 M.width  = display.contentWidth*0.5
 M.height = 240
-M.top    = 22
+M.top    = nil
 M.left   = nil -- display.contentCenterX --  - 480*0.5 - M.width
-
+M.groupName = "rootGroup"
 ---
 local muiIcon = require("components.mui.icon").new()
 local mui     = require("materialui.mui")
@@ -23,14 +23,20 @@ end
 function M:createTable(parent)
   local UI = self.UI
   --
-  self.left = UI.editor.viewStore.actionCommandTable.left + UI.editor.viewStore.actionCommandTable.width
-  print("@@@@", self.left)
+  -- self.left = UI.editor[self.groupName].selectAction.rect.contentBounds.xMin
+  self.top  = display.contentCenterY
+  -- UI.editor[self.groupName].selectAction.y + 100
 
-  self.y = 22
+  self.left = UI.editor.viewStore.actionCommandTable.left
+  -- + UI.editor.viewStore.actionCommandTable.width
+  -- print("@@@@", UI.editor.viewStore.actionCommandTable.left, UI.editor.viewStore.actionCommandTable.width)
+
+
+  self.y = self.top
   --
   local scrollListener  = function(e) end
   local  scrollView = widget.newScrollView{
-       top                    = 22,
+       top                    = self.top,
        left                   = self.left, --display.contentCenterX-200,
        width                  = 100,
        height                 = 240,
@@ -131,17 +137,23 @@ end
 function M:init(UI)
 end
 
+function M:createCommandview()
+  local group = self.UI.editor[self.groupName]
+  local scrollView = self:createTable(group)
+  group:insert(scrollView)
+  group.commandView = scrollView
+  self.UI.editor.viewStore.commandView = scrollView
+end
+
+
 function M:create(UI)
   -- if UI.editor.viewStore.actionCommandTabe then
-    local group = UI.editor.actionEditor.group
+    -- local group = UI.editor.actionEditor.group
     self.UI = UI
     ---
     UI.editor.actionCommandStore:listen(function(foo, fooValue)
       if  UI.editor.viewStore.commandView == nil then
-        local scrollView = self:createTable(group)
-        group:insert(scrollView)
-        group.commandView = scrollView
-        UI.editor.viewStore.commandView = scrollView
+        self:createCommandview()
       end
     end)
    -- end

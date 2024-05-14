@@ -79,16 +79,7 @@ local command = function (params)
     end
   end
 
-
-  commandbox.x = commandbox.x
-  commandbox.y = display.actualContentHeight- math.max(#entries, #model) * 20 -50
-  commandbox.selectedText.x = commandbox.x
-  commandbox.selectedText.y = commandbox.y
-
-  if commandbox.scrollView then
-    commandbox.scrollView.y = commandbox.y + commandbox.scrollView.height/2
-  end
-
+  commandbox:setPosition(entries, model)
 
   UI.editor.actionCommandPropsStore:set{type = type, entries=entries, isNew = params.isNew}
 

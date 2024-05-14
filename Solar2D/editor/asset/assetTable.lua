@@ -14,6 +14,9 @@ props.marginX = nil-- display.contentCenterX
 -- baseTable
 -----------
 local M, bt, tree = require(root.."baseTable").new(props)
+--
+M.x = display.contentCenterX + 480/2
+M.y = 22
 
 local propsTable = require(root .. "parts.propsTable")
 local selectors = require(root.."parts.selectors")
@@ -109,8 +112,8 @@ function M:createIcons (icons, class, tool)
       icon = {name.."_over", name.."Color_over", name},
       text = "",
       name = name.."-icon",
-      x = self.rootGroup[self.anchorName].x + marginX + i*22,
-      y = self.rootGroup[self.anchorName].y -22 + marginY,
+      x = self.x + marginX + i*22,
+      y = self.y,
       width = 22,
       height = 22,
       fontSize =16,
@@ -193,7 +196,8 @@ function M:create(UI)
 
   --
 
-  local function render(models, x, y, class)
+  local function render(models, class)
+
     local count = 0
     local marginX, marginY = 44, 50
     local option = self.option
@@ -201,9 +205,9 @@ function M:create(UI)
     for i = 1, #models do
       local asset = models[i]
       option.text =  asset.path .."/"..asset.name
-      option.x = x + marginX
-      option.y = y + option.height * (count-1) +marginY
-      option.width = 100
+      option.x = self.x + marginX
+      option.y = self.y + option.height * (count-1) +marginY
+      option.width = 180
       local obj = self.newText(option)
       obj.index = i
       obj.asset = asset
@@ -237,8 +241,9 @@ function M:create(UI)
           local pageObj
           if link.layers then
             option.text =  link.page
-            option.x = x + option.width/2 + 10
+            option.x = self.x + option.width/2 + 10
             option.y = option.y - option.height/2 + 10 + option.height*(k-1)
+            option.width = 100
             pageObj = self.newText(option)
             pageObj.layers = {}
             ---
@@ -269,7 +274,7 @@ function M:create(UI)
             -- print("count", count)
           else
             option.text =  link.page
-            option.x = x + option.width/2 *k
+            option.x = self.x + option.width/2 *k
             pageObj = self.newText(option)
             local rect = display.newRect(pageObj.x, pageObj.y, pageObj.width + 10, option.height)
             rect:setFillColor(0.8)
@@ -306,8 +311,8 @@ function M:create(UI)
         if asset then
           self.class = asset.class
           --
-          local anchor = self.rootGroup[self.anchorName].rect
-          render(fooValue.decoded or {}, anchor.x + anchor.width, anchor.y + anchor.height, asset.class )
+          -- local anchor = self.rootGroup[self.anchorName].rect
+          render(fooValue.decoded or {}, asset.class )
           if asset then
             self:createIcons(asset.icons, asset.class, asset.tool)
           end

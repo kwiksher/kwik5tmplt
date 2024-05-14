@@ -10,6 +10,7 @@ M.selections = {}
 M.x = nil
 M.y = nil
 M.width = 48
+M.groupName = "rootGroup"
 
 local function onKeyEvent(event)
   return M:onKeyEvent(event)
@@ -30,7 +31,7 @@ end
 
 function M:create(UI)
   -- if self.rootGroup then return end
-  self.rootGroup = UI.editor.rootGroup
+  self.rootGroup = UI.editor[self.groupName]
   self.group = display.newGroup()
   self.UI = UI
   self.x = self.rootGroup.selectAction.rect.contentBounds.xMax

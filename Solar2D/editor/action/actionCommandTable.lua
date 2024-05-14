@@ -7,12 +7,13 @@ local actionCommandTableListener = require(parent.."actionCommandtableListener")
 
 M.top = 22
 M.left = nil
-M.width = 200
+M.width = 136
 M.height = 240
 M.dragtime = 100
 M.angle = 20
 M.radius = 20
 M.touchthreshold = 0   -- touchthreshold or display.actualContentWidth * .1
+M.groupName = "rootGroup"
 
 function M:createTable (foo, fooValue)
   local UI = self.UI
@@ -21,8 +22,7 @@ function M:createTable (foo, fooValue)
   --
   -- self.left = UI.editor.viewStore.commandView.contentBounds.xMax
   self.left = UI.editor.rootGroup.actionTable.contentBounds.xMax
-
-  print("@@@@@@@ actionCommandTable")
+  -- print("@@@@@@@ actionCommandTable", self.left)
   --
   local option = {
     parent = self.group,
@@ -51,13 +51,16 @@ function M:createTable (foo, fooValue)
     top=self.top,
     -- top=(display.actualContentHeight-1280/4 )/2,
     width=self.width, --display.actualContentWidth - UI.editor.viewStore.commandView.contentBounds.xMax,
-    height=self.height
+    height=self.height,
+    hideBackground         = false,
+    -- isBounceEnabled        = false,
+    -- verticalScrollDisabled = false,
+    backgroundColor        = {1.0},
+
   }
   --scrollView.x = display.contentCenterX
   -- scrollView.y = 0
 
-  self.scrollView = scrollView
-  UI.editor.viewStore.actionCommandTable.group:insert(scrollView)
   -- scrollView.isVisible = false
 
   local last_x, last_y = 0, 0
@@ -88,7 +91,7 @@ function M:createTable (foo, fooValue)
     obj.index = i
 
     local rect = display.newRect(obj.x, obj.y, obj.width, obj.height)
-    rect:setFillColor(1)
+    rect:setFillColor(1.0)
     rect.anchorX = 0
     obj.rect = rect
 
@@ -98,6 +101,10 @@ function M:createTable (foo, fooValue)
     objs[#objs+1] = obj
 
   end
+
+  self.scrollView = scrollView
+  self.group:insert(scrollView)
+
   self.objs = objs
   -- print("@@@@@@@", #objs)
   self.actions = fooValue.actions
@@ -108,7 +115,10 @@ end
 --
 function M:create(UI)
   self.UI = UI
-  self.group = display.newGroup()
+  --self.group = display.newGroup()
+  --self.group = UI.editor.actionEditor.group
+  self.group = UI.editor[self.groupName]
+
   UI.editor.viewStore.actionCommandTable = self
   UI.editor.actionCommandStore:listen(function(foo, fooValue)
     self:createTable(foo, fooValue)

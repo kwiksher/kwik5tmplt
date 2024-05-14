@@ -1,6 +1,9 @@
 local M = {}
 M.name = ...
 M.weight = 1
+M.x =11
+M.y = display.contentCenterY -100
+
 ---
 local muiIcon = require("components.mui.icon").new()
 local util = require("lib.util")
@@ -80,8 +83,8 @@ function M:create(UI)
           hoverText = tool.name,
           -- x = 66+ (i+2 ) * 22 - #obj.tools * 22 * 0.5,
           -- y = (display.actualContentHeight-1280/4 )/2,
-          x = event.target.x + layerTool.x,
-          y = event.target.y + 22*i -2,
+          x = 33,
+          y =  self.y + event.target.y + 22*i -2,
           width = 22,
           height = 22,
           listener = toolListener
@@ -127,13 +130,14 @@ function M:create(UI)
         muiIcon:createImage {
         icon = v.icon,
         name = v.name,
-        x = 88 + (k) * 22 - (#self.models-#skipped) * 22 * 0.5,
-        y = - 2,
+        x = self.x,
+        y = self.y+ (k) * 22 - (#self.models-#skipped) * 22 * 0.5,
         -- y = (display.actualContentHeight-1280/4 )/2-22,
         width = 22,
         height = 22,
         listener = layerToolListener,
-        id = v.id
+        id = v.id,
+        fillColor = {1, 1, 1}
       }
       obj.id = v.id
       obj.tools = v.tools
