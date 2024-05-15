@@ -10,12 +10,21 @@ local Props = {
 local M = require(root.."baseTable").new(Props)
 local commands = require(parent.."layerTableCommands")
 
+function M:setPosition()
+  local marginX, marginY = 74, 44
+  -- self.x = self.rootGroup.selectLayer.x + marginX
+  self.rectWidth = 100 + 10
+  self.x = self.rectWidth/2 + 22
+  self.y = self.rootGroup.selectLayer.y + marginY
+end
+
 --
 function M:create(UI)
   self.commandHandlerClass = commands.commandHandlerClass
   self.commandHandler = commands.commandHandler
 
   if self.rootGroup then return end
+
   self:initScene(UI)
   self.selections = {}
 
@@ -58,12 +67,10 @@ function M:create(UI)
   local function render(models, xIndex, yIndex, parentObj)
     local count = 0
     local objs = {}
-    local marginX, marginY = 74, 20
     local option = self.option
-
-    self.x = self.rootGroup.selectLayer.x + marginX
-    self.y = self.rootGroup.selectLayer.y + marginY
-
+    --
+    self:setPosition()
+    --
     for i = 1, #models do
       local model = models[i]
       local entry = {}
@@ -95,7 +102,7 @@ function M:create(UI)
       obj:addEventListener("touch", obj)
       obj:addEventListener("mouse", commands.mouseHandler)
 
-      local rect = display.newRect(obj.x, obj.y, obj.width + 10, option.height)
+      local rect = display.newRect(obj.x, obj.y, self.rectWidth, option.height)
       rect:setFillColor(0.8 + xIndex*0.05)
       rect.strokeWidth = 1
       self.group:insert(rect)

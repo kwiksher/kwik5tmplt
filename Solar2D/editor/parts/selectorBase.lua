@@ -1,7 +1,8 @@
 local Class, M = {}, {}
 M.name = ...
 M.weight = 1
-M.width = 48
+M.widthRect = 48 -- for rect
+M.heightRect = 22
 
 local parent = M.name:match("(.-)[^%.]+$")
 local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
@@ -99,10 +100,11 @@ function M:create(UI)
       end
       option.width = self.optionWidth or option.width
       --
-      local rect = display.newRect(self.rootGroup,option.x, option.y, self.width,option.height)
+      local rect = display.newRect(self.rootGroup,option.x, option.y, self.widthRect, self.heightRect)
       rect:setFillColor(0.8)
       --
       local obj = newText(option)
+      obj.anchorY = 0.2
       obj.command = row.command
       -- if row.command and row.btree == nil then
       --   obj.tap = commandHandler
