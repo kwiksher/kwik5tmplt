@@ -228,7 +228,7 @@ function M:create(UI)
     mouseHandler
   )
 
-  local assetPosX = 960 -4
+  local assetPosX = 76
   self.assetsSelector =
   selectorBase.new(
     UI,

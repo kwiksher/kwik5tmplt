@@ -2,7 +2,8 @@ local name = ...
 local parent,root = newModule(name)
 local mui = require("materialui.mui")
 local muiIcon    = require("components.mui.icon").new()
-
+local assetTableListener = require(parent.."assetTableListener")
+local layerTable = require(root.."parts.layerTable")
 
 local props = require(root.."model").assetTool
 props.anchorName = "selectAction"
@@ -15,86 +16,17 @@ props.marginX = nil-- display.contentCenterX
 -----------
 local M, bt, tree = require(root.."baseTable").new(props)
 --
-M.x = display.contentCenterX + 480/2
+M.x = display.contentCenterX - 480*0.75
 M.y = 22
+M.width = 100
 
 local propsTable = require(root .. "parts.propsTable")
 local selectors = require(root.."parts.selectors")
 
 local layerTableCommands = require("editor.parts.layerTableCommands")
 local contextButtons = require("editor.parts.buttons")
-
 local posX = display.contentCenterX*0.75
-
-function M.mouseHandler(event)
-  if event.isSecondaryButtonDown and event.target.isSelected then
-    -- print("@@@@selected")
-    contextButtons.openEditorObj.text = "open folder"
-    contextButtons:showContextMenu(posX, event.y,  {type="asset", folder=M.class.."s", selections=M.selections})
-  else
-    -- print("@@@@not selected")
-  end
-  return true
-end
-
--- target.class will be audio.long or audio.short or audio.sync
--- a sync audio can be multiple
-
-local handlerMap = {
-  audios = {class = "audio", modify = require("editor.audio.audioTable").commandHandler, icons = {"addAudio", "trash"}, tool="selectAudio"},
-  videos = {class = "video", modify = require("editor.parts.layerTableCommands").commandHandlerClass, icons={"repVideo", "trash"}, tool="selectTool"},
-
-}
 local _marginX, _marginY = -16, 38
-local lastTool, lastClass
----
-function M:iconsHandler(event, class, tool)
-    if self.group.isVisible == false then
-      self:show()
-      selectors.assetsSelector:show()
-    else
-      -- self:hide()
-      -- selectors.assetsSelector:hide()
-      -- selectors.componentSelector:show()
-      -- selectors.componentSelector:onClick(true,  "layerTable")
-
-      -- should we use BT with "add component"?
-      -- for k, v in pairs(event.target.muiOptions) do print(k, v) end
-      local name = event.target.muiOptions.name
-      if self.selection then
-        if lastTool then
-          -- print("#########", lastTool)
-          self.UI.scene.app:dispatchEvent {
-            name = "editor.selector."..lastTool,
-            UI = self.UI,
-            class = lastClass,
-            hide = true
-          }
-          end
-        lastTool = tool
-        lastClass = class
-        --
-        self.UI.scene.app:dispatchEvent {
-          name = "editor.selector."..tool,
-          UI = self.UI,
-          class = class,
-          asset = self.selection.asset,
-          isNew = (name ~= "trash-icon"),
-          isDelete = (name == "trash-icon")
-        }
-        --
-        if  #self.selections > 0 then
-          for i = 1, #self.selections do
-            if self.selections[i].rect then
-              self.selections[i].rect:setFillColor(0.8)
-            end
-          end
-        end
-      else
-        native.showAlert( "alert", "Please select a file")
-      end
-    end
-  end
 
 function M:createIcons (icons, class, tool)
   -- print("createIcons", self.anchorName,_marginX, _marginY)
@@ -125,54 +57,7 @@ function M:createIcons (icons, class, tool)
   end
 end
 
-local function getHandler(assetName)
-  -- print(assetName)
-  local ret =  handlerMap[assetName]
-  if ret then
-    return ret.modify
-  else
-    return {}
-  end
-end
-
-local function getClass(assetName)
-  return handlerMap[assetName].class
-end
-
-local function getClassModule(class)
-  return handlerMap[class.."s"].tool
-end
-
-function M:touchHandler(target, event)
-  if event.phase == "began" or event.phase == "moved" then  return end
-  layerTableCommands.clearSelections(self, "asset")
-  -- print(self.controlDown)
-  if self:isAltDown() then
-    if layerTableCommands.showLayerProps(self, target) then
-      print("---- none for assets ------?")
-    end
-  elseif self:isControlDown() then -- mutli selections
-    print("multi", #self.selections)
-    layerTableCommands.multiSelections(self, target)
-  else
-    if layerTableCommands.singleSelection(self, target) then
-      -- TBI
-      -- dispatchEvent to the class editor
-      if class then
-        -- print(getClassModule(class))
-        self.UI.scene.app:dispatchEvent {
-          name = "editor.selector."..getClassModule(class),
-          UI = self.UI,
-          class = class,
-          asset = self.selection.asset,
-          isUpdatingAsset = true,
-          isNew = (name ~= "trash-icon"),
-          isDelete = (name == "trash-icon")
-        }
-      end
-    end
-  end
-  return true
+function M:init(UI)
 end
 --
 function M:create(UI)
@@ -207,7 +92,7 @@ function M:create(UI)
       option.text =  asset.path .."/"..asset.name
       option.x = self.x + marginX
       option.y = self.y + option.height * (count-1) +marginY
-      option.width = 180
+      option.width = self.width + 80
       local obj = self.newText(option)
       obj.index = i
       obj.asset = asset
@@ -243,7 +128,7 @@ function M:create(UI)
             option.text =  link.page
             option.x = self.x + option.width/2 + 10
             option.y = option.y - option.height/2 + 10 + option.height*(k-1)
-            option.width = 100
+            option.width = self.width
             pageObj = self.newText(option)
             pageObj.layers = {}
             ---
@@ -293,35 +178,14 @@ function M:create(UI)
     --
     self.rootGroup:insert(self.group)
     self.rootGroup.assetTable = self.group
+    self.group:translate(self.width*0.5, 0)
     -- self.group.isVisible = true
   end
 
-  UI.editor.assetStore:listen(
-    function(foo, fooValue)
-      self:destroy()
-      --print("assetStore", #fooValue)
-      self.selection = nil
-      self.selections = {}
-      self.objs = {}
-      self.commandHandler = getHandler(fooValue.class)
-      if fooValue == nil then
-        --render({}, 0, 0)
-      else
-        local asset = handlerMap[fooValue.class]
-        if asset then
-          self.class = asset.class
-          --
-          -- local anchor = self.rootGroup[self.anchorName].rect
-          render(fooValue.decoded or {}, asset.class )
-          if asset then
-            self:createIcons(asset.icons, asset.class, asset.tool)
-          end
-        else
-          print("Error asset map", fooValue.class)
-        end
-      end
-      self:show()
-    end
+  UI.editor.assetStore:listen(function(foo, fooValue)
+    self.x = self.rootGroup.layerTable.contentBounds.xMax
+    self:storeListener(foo, fooValue, render)
+  end
   )
 end
 --
@@ -378,5 +242,80 @@ function M:destroy()
   self.selection = nil
   self.rootGroup.assetTable = nil
 end
+
+local function copy(tbl)
+	local newTbl = {}
+
+	for key, value in pairs(tbl) do
+		newTbl[key] = value
+	end
+
+	return newTbl
+end
 --
-return M
+return setmetatable(copy(assetTableListener), {__index=M})
+
+--[[
+https://devforum.community/t/how-do-i-do-conditional-multiple-inheritance-in-lua-with-oop/343/2
+
+-- Enemy:
+
+local Enemy = {}
+Enemy.__index = Enemy
+
+function Enemy.new()
+	return setmetatable({}, Enemy)
+end
+
+-- Boss:
+
+local Boss = setmetatable({}, Enemy)
+Boss.__index = Boss
+
+function Boss.new()
+	return setmetatable({}, Boss)
+end
+
+-- Orc:
+
+local Orc = {}
+
+function Orc:method()
+
+end
+
+-- Orc methods and properties must be defined before you copy them!
+
+local OrcBoss = setmetatable(copy(Orc), Boss)
+OrcBoss.__index = OrcBoss
+
+local OrcEnemy = setmetatable(copy(Orc), Enemy)
+OrcEnemy.__index = OrcEnemy
+
+-- You can construct the different orc types like this:
+
+function Orc.enemy()
+	return setmetatable({}, OrcEnemy)
+end
+
+function Orc.boss()
+	return setmetatable({}, OrcBoss)
+end
+
+Orc.enemy()
+Orc.boss()
+
+-- or like this:
+
+function OrcEnemy.new()
+	return setmetatable({}, OrcEnemy)
+end
+
+function OrcBoss.new()
+	return setmetatable({}, OrcBoss)
+end
+
+OrcEnemy.new()
+OrcBoss.new()
+
+--]]

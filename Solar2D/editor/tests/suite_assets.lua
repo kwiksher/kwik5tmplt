@@ -33,8 +33,8 @@ function M.suite_setup()
   -- bookTable.commandHandler({book="book"}, nil,  true)
   -- pageTable.commandHandler({page="page1"},nil,  true)
 
-  --selectors.componentSelector.iconHander()
-  --selectors.componentSelector:onClick(true,  "layerTable")
+  selectors.componentSelector.iconHander()
+  selectors.componentSelector:onClick(true,  "layerTable")
 end
 
 function M.setup()
@@ -466,49 +466,6 @@ function M.xtest_linked_layer_CRUD()
   -- test delete video replacment from layer
 end
 
-function M.test_load()
-  -- UI.editor.assets = {
-  --   audios = {
-  --     {
-  --       name = "click.mp3",
-  --       path = "audios/short",
-  --       links = {{page = "page1"}, {page = "page2"}}
-  --     }
-  --   },
-  --   videos = {
-  --     {
-  --       name = "videoA.mp4",
-  --       path = "videos",
-  --       links = {
-  --         {page= "page01", layers = {"layerA1", "layerA10"}},
-  --         {page= "page02", layers = {"layerA2", "layerA20"}}
-  --       },
-  --     },
-  --     {
-  --       name = "videoB.mp4",
-  --       path = "videos",
-  --       links = {{page= "page01", layers = {"layerB"}}}
-  --       }
-  --   },
-  --   sprites = {}
-
-  -- }
-  -- ---
-  selectors.assetsSelector:show()
-  -- selectors.assetsSelector:onClick(true, nil)
-  selectors.assetsSelector:onClick(true, "audios")
-
-  local assetTable = require("editor.asset.assetTable")
-  assetTable.objs[2]:touch({phase="ended"})
-
-  -- click icon that is specified in assetTable.lua
-  assetTable:iconsHandler({target={muiOptions={name="addAudio"}}}, "audio", "selectAudio")
-
-  -- selectors.assetsSelector:onClick(true, "videos")
-  -- assetTable:iconsHandler({target={muiOptions={name="repVideo-icon"}}}, "video", "selectTool")
-
-end
-
 function M.xtest_load()
   UI.editor.assets = {
     audios = {
@@ -605,6 +562,50 @@ function M.xtest_load()
   selectors.assetsSelector:show()
   -- selectors.assetsSelector:onClick(true, nil)
   selectors.assetsSelector:onClick(true, "videos")
+end
+
+function M.test_load()
+  -- UI.editor.assets = {
+  --   audios = {
+  --     {
+  --       name = "click.mp3",
+  --       path = "audios/short",
+  --       links = {{page = "page1"}, {page = "page2"}}
+  --     }
+  --   },
+  --   videos = {
+  --     {
+  --       name = "videoA.mp4",
+  --       path = "videos",
+  --       links = {
+  --         {page= "page01", layers = {"layerA1", "layerA10"}},
+  --         {page= "page02", layers = {"layerA2", "layerA20"}}
+  --       },
+  --     },
+  --     {
+  --       name = "videoB.mp4",
+  --       path = "videos",
+  --       links = {{page= "page01", layers = {"layerB"}}}
+  --       }
+  --   },
+  --   sprites = {}
+
+  -- }
+  -- ---
+  selectors.assetsSelector:show()
+  -- selectors.assetsSelector:onClick(true, nil)
+  -- selectors.assetsSelector:onClick(true, "audios")
+
+  -- assetTable.objs[2]:touch({phase="ended"})
+
+  -- click icon that is specified in assetTable.lua
+  --assetTable:iconsHandler({target={muiOptions={name="addAudio"}}}, "audio", "selectAudio")
+
+  selectors.assetsSelector:onClick(true, "videos")
+  local assetTable = require("editor.asset.assetTable")
+  assetTable.objs[1]:touch({phase="ended"})
+  assetTable:iconsHandler({target={muiOptions={name="repVideo-icon"}}}, "video", "selectTool")
+
 end
 
 
