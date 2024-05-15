@@ -61,6 +61,9 @@ function M:create(UI)
     local marginX, marginY = 74, 20
     local option = self.option
 
+    self.x = self.rootGroup.selectLayer.x + marginX
+    self.y = self.rootGroup.selectLayer.y + marginY
+
     for i = 1, #models do
       local model = models[i]
       local entry = {}
@@ -69,10 +72,10 @@ function M:create(UI)
       entry.name, entry.class, entry.children = parse(model)
 
       option.text = entry.name
-      -- option.x = self.rootGroup.selectLayer.x + self.rootGroup.selectLayer.width/2 + xIndex *5
+      -- option.x = self.x + self.rootGroup.selectLayer.width/2 + xIndex *5
       --option.y = self.rootGroup.selectLayer.contentBounds.yMax + 10 + option.height * count
-      option.x = self.rootGroup.selectLayer.x + marginX + xIndex * 5
-      option.y = self.rootGroup.selectLayer.y + marginY + option.height * (count -1 + yIndex)
+      option.x = self.x + xIndex * 5
+      option.y = self.y  + option.height * (count -1 + yIndex)
       -- print("#", count, yIndex, entry.name)
       option.width = 100
 
@@ -108,10 +111,10 @@ function M:create(UI)
           -- print("#", entry.class[k])
           option.text = entry.class[k]
           -- option.text = entry.class[k]:sub(1, 5)
-          -- option.x = self.rootGroup.selectLayer.x + self.rootGroup.selectLayer.width/2 + last_x
+          -- option.x = self.x + self.rootGroup.selectLayer.width/2 + last_x
           -- option.y = self.rootGroup.selectLayer.contentBounds.yMax + 10 + option.height * (count-1)
-          option.x = self.rootGroup.selectLayer.x + marginX + last_x
-          option.y = self.rootGroup.selectLayer.y + marginY + option.height * (count - 1)
+          option.x = self.x + last_x
+          option.y = self.y + option.height * (count - 1)
           option.width = nil
           local classObj = self.newText(option)
           --classObj.width = 50

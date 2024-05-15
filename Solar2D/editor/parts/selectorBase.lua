@@ -86,14 +86,17 @@ function M:create(UI)
   end
 
   self.objs = {}
-  local createSelection = function(event)
+  local createSelection = function(vertical)
     for index=1, #self.rows do
       local row = self.rows[index]
       option.text =  row.label
-      option.y = (self.marginY or 0) + option.height * (index)  - option.height/2 + 22
-      -- option.y = option.height * (index) + (display.actualContentHeight-1280/4 )/2 - option.height/2
-      --
-      option.x = self.marginX or option.x
+      if vertical then
+        option.y = (self.marginY or 0) + option.height * (index)  - option.height/2 + 22
+        option.x = self.marginX or option.x
+      else
+        option.x = (self.marginX or 0) + option.width * (index)  - option.width/2 + 22
+        option.y = self.marginY or option.y
+      end
       option.width = self.optionWidth or option.width
       --
       local rect = display.newRect(self.rootGroup,option.x, option.y, self.width,option.height)
@@ -140,7 +143,7 @@ function M:create(UI)
       self.objs[#self.objs + 1] = obj
     end
   end
-  createSelection() -- create but do not show panel demo
+  createSelection(self.vertical) -- create but do not show panel demo
   --
   function self:show ()
     -- print("@@@ show @@@", self.iconName)
@@ -231,7 +234,7 @@ function M:destroy()
 end
 --
 --
-function Class.new(UI, x,y, rows, iconName, filter, propsTable, propsButtons, mouseHandler)
+function Class.new(UI, x,y, rows, iconName, filter, propsTable, propsButtons, mouseHandler, vertical)
   local instance = {}
   instance.x = x
   instance.y = y
@@ -244,6 +247,7 @@ function Class.new(UI, x,y, rows, iconName, filter, propsTable, propsButtons, mo
   instance.height = #rows*option.height
   instance.isVisible = false
   instance.mouseHandler = mouseHandler
+  instance.vertical = vertical or false
   return setmetatable(instance, {__index=M})
 end
 --
