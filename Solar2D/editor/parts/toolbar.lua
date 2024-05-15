@@ -1,8 +1,8 @@
 local M = {}
 M.name = ...
 M.weight = 1
-M.x =11
-M.y = display.contentCenterY -100
+M.x = 11
+M.y = 11*7/2 + 11 -- display.contentCenterY -100
 
 ---
 local muiIcon = require("components.mui.icon").new()

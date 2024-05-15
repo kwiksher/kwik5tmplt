@@ -57,11 +57,12 @@ function M.suite_setup()
     name = "editor.selector.selectApp",
     UI = UI
   }
-  -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
+
+  appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
-  bookTable.commandHandler({book="book"}, nil,  true)
-  pageTable.commandHandler({page="page1"},nil,  true)
+  -- bookTable.commandHandler({book="book"}, nil,  true)
+  -- pageTable.commandHandler({page="page1"},nil,  true)
   selectors.componentSelector.iconHander()
   selectors.componentSelector:onClick(true,  "layerTable")
 end
@@ -79,7 +80,7 @@ function M.xtest_select()
   --selectComponent("Action")
 end
 
-function M.test_select_for_editing()
+function M.xtest_select_for_editing()
   local name = "title"
   layerTable.altDown = true
   print("------------------")
@@ -91,16 +92,19 @@ function M.test_select_for_editing()
 end
 
 
-function M.xtest_select_animation()
+function M.test_select_animation()
     local name = "title"
     --
     -- local button = "save"
     -- local obj = require("editor.parts.buttons").objs[button]
     -- obj:tap()
     --
+    -- selectors.componentSelector.iconHander()
+    -- selectors.componentSelector:onClick(true,  "layerTable")
+
 end
 
-function M.test_new_animation()
+function M.xtest_new_animation()
   local name = "gotoBtn"
   helper.selectLayer(name)
 

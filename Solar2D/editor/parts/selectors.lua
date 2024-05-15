@@ -190,8 +190,8 @@ function M:create(UI)
   self.projectPageSelector =
     selectorBase.new(
     UI,
-    11,
-    -2,
+    11, --self.x
+    -2, --self.y
     {
       {label = "Show", command = "selectApp"},
       {label = " Book", command = "selectBook", store = "bookTable", btree = "select book"},
@@ -211,8 +211,8 @@ function M:create(UI)
   self.componentSelector =
     selectorBase.new(
     UI,
-    33,
-    -2,
+    33, --self.x
+    -2, --self.y
     {
       {label = "Layer", command = "selectLayer", store = "layerTable", filter = true, btree = "select layer"},
       {label = "Audio", command = "selectAudio", store = "audioTable", btree = "select component"},
@@ -227,13 +227,15 @@ function M:create(UI)
     propsButtons,
     mouseHandler
   )
+  self.componentSelector.marginY = 11
+  self.componentSelector.marginX = 22*3
 
   local assetPosX = 76
   self.assetsSelector =
   selectorBase.new(
     UI,
-    assetPosX, -- icon x
-    -2, -- icon y
+    assetPosX, -- self.x
+    -2,        -- self.y
     {
       {label = "Audio", command = "selectAudioAsset", store = "audios", btree = "select asset"},
       {label = "Particles", command = "selectPaticlesAsset", store = "paticles", btree = "select asset"},
