@@ -228,13 +228,12 @@ function M:create(UI)
     mouseHandler
   )
   self.componentSelector.marginY = 11
-  self.componentSelector.marginX = 22*3
+  self.componentSelector.marginX = 43
 
-  local assetPosX = 76
   self.assetsSelector =
   selectorBase.new(
     UI,
-    assetPosX, -- self.x
+    display.contentCenterX, -- self.x
     -2,        -- self.y
     {
       {label = "Audio", command = "selectAudioAsset", store = "audios", btree = "select asset"},
@@ -246,8 +245,8 @@ function M:create(UI)
     "toolAssets",
     nil
   )
-  self.assetsSelector.marginX = assetPosX -48  --30
-  self.assetsSelector.marginY =  -12 -- self.componentSelector.height+30
+  self.assetsSelector.marginX = display.contentCenterX -11
+  self.assetsSelector.marginY =  11 -- -12 -- self.componentSelector.height+30
   self.assetsSelector.optionWidth = 48
   self.assetsSelector.width =  60
 

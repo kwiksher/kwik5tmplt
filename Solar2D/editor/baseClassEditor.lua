@@ -113,6 +113,8 @@ function M:destroy()
   for k, v in pairs(self.controller.viewGroup) do
     v:destroy(UI)
   end
+  self.group:removeSelf()
+  self.group = nil
 end
 
 M.new = function(model, _controller)

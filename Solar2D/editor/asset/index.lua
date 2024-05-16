@@ -12,7 +12,7 @@ local model = {
   }
 }
 
-local selectbox      = require(parent .. "assetTable")
+local assetTable      = require(parent .. "assetTable")
 local classProps    = require(parent.."classProps")
 local buttons       = require(parent.."buttons")
 local controller = require("editor.controller.index").new("asset")
@@ -20,7 +20,7 @@ local controller = require("editor.controller.index").new("asset")
 --
 local M = require(root.."baseClassEditor").new(model, controller)
 
-M.x = display.contentCenterX/2
+M.x = display.contentCenterX +  480/2
 M.y	= 20
 M.width = 80
 M.height = 16
@@ -30,7 +30,7 @@ function M:init(UI)
   self.group = display.newGroup()
   UI.editor.assetEditorGroup = self.group
   --
-  selectbox:init()
+  assetTable:init(UI, display.contentCenterX, 40, self.width*0.74, self.height)
   classProps:init(UI, self.x + self.width*1.5, self.y,  self.width, self.height)
   classProps.model = model.props
   classProps.UI = UI
@@ -40,7 +40,7 @@ function M:init(UI)
 
   -- --
   controller:init{
-    selectbox      = selectbox, -- Audio, Particles, Spritesheet, SyncText, Video
+    selectbox      = assetTable, -- Audio, Particles, Spritesheet, SyncText, Video
     classProps    = classProps, -- select a media entry then click the icon to insert media, it can be a layer replacement
     buttons       = buttons
   }

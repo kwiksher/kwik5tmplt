@@ -299,19 +299,19 @@ end
 --
 function M:didShow(UI)
   self.UI = UI
-  print(self.name, "didShow")
+  -- print(self.name, "didShow")
   self.keyListener = function(event) onKeyEvent(self, event)end
   Runtime:addEventListener("key", self.keyListener)
 end
 
 --
 function M:didHide(UI)
-  print(self.name, "didHide")
+  -- print(self.name, "didHide")
   Runtime:removeEventListener("key", self.keyListener)
 end
 
 function M:show()
-  print(self.name, "show")
+  -- print(self.name, "show")
   --print(debug.traceback())
   if self.group then
     self.group.isVisible = true

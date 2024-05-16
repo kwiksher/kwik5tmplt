@@ -52,7 +52,7 @@ function M:iconsHandler(event, class, tool)
           class = lastClass,
           hide = true
         }
-        end
+      end
       lastTool = tool
       lastClass = class
       --
@@ -61,6 +61,7 @@ function M:iconsHandler(event, class, tool)
         UI = self.UI,
         class = class,
         asset = self.selection.asset,
+        isUpdatingAsset = true,
         isNew = (name ~= "trash-icon"),
         isDelete = (name == "trash-icon")
       }
@@ -112,14 +113,14 @@ function M:touchHandler(target, event)
     if layerTableCommands.singleSelection(self, target) then
       -- TBI
       -- dispatchEvent to the class editor
-      if class then
-        -- print(getClassModule(class))
+      if target.class then
+        print(getClassModule(target.class))
         self.UI.scene.app:dispatchEvent {
-          name = "editor.selector."..getClassModule(class),
+          name = "editor.selector."..getClassModule(target.class),
           UI = self.UI,
-          class = class,
+          class = target.class,
           asset = self.selection.asset,
-          isUpdatingAsset = true,
+          isUpdatingAsset = false,
           isNew = (name ~= "trash-icon"),
           isDelete = (name == "trash-icon")
         }
@@ -139,9 +140,19 @@ function M:storeListener(foo, fooValue, render)
   if fooValue == nil then
     --render({}, 0, 0)
   else
+
+     if self.lastClass then
+      local tool = self.UI.editor:getClassModule(self.lastClass)
+       if tool then
+          print("### lastTool", tool.name)
+          tool.controller:hide()
+       end
+     end
+
     local asset = handlerMap[fooValue.class]
     if asset then
-      self.class = asset.class
+       self.class = asset.class
+       self.lastClass= asset.class
       --
       -- local anchor = self.rootGroup[self.anchorName].rect
       render(fooValue.decoded or {}, asset.class )

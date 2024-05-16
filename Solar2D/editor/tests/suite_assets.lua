@@ -593,18 +593,16 @@ function M.test_load()
   -- }
   -- ---
   selectors.assetsSelector:show()
-  -- selectors.assetsSelector:onClick(true, nil)
-  -- selectors.assetsSelector:onClick(true, "audios")
+  local assetTable = require("editor.asset.assetTable")
 
-  -- assetTable.objs[2]:touch({phase="ended"})
-
-  -- click icon that is specified in assetTable.lua
-  --assetTable:iconsHandler({target={muiOptions={name="addAudio"}}}, "audio", "selectAudio")
+  selectors.assetsSelector:onClick(true, "audios")
+  assetTable.objs[2]:touch({phase="ended"})
+  assetTable:iconsHandler({target={muiOptions={name="addAudio"}}}, "audio", "selectAudio")
 
   selectors.assetsSelector:onClick(true, "videos")
-  local assetTable = require("editor.asset.assetTable")
-  assetTable.objs[1]:touch({phase="ended"})
-  assetTable:iconsHandler({target={muiOptions={name="repVideo-icon"}}}, "video", "selectTool")
+  assetTable.objs[2]:touch({phase="ended"})
+  -- assetTable:iconsHandler({target={muiOptions={name="repVideo-icon"}}}, "video", "selectTool")
+
 
 end
 

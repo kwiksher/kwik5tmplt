@@ -5,6 +5,12 @@ local muiIcon    = require("components.mui.icon").new()
 local assetTableListener = require(parent.."assetTableListener")
 local layerTable = require(root.."parts.layerTable")
 
+local propsTable = require(root .. "parts.propsTable")
+local selectors = require(root.."parts.selectors")
+
+local layerTableCommands = require("editor.parts.layerTableCommands")
+local contextButtons = require("editor.parts.buttons")
+
 local props = require(root.."model").assetTool
 props.anchorName = "selectAction"
 props.icons      = {"repVideo", "trash"}
@@ -16,17 +22,16 @@ props.marginX = nil-- display.contentCenterX
 -----------
 local M, bt, tree = require(root.."baseTable").new(props)
 --
-M.x = display.contentCenterX - 480*0.75
+M.x = display.contentCenterX + 480*0.75
 M.y = 22
 M.width = 100
 
-local propsTable = require(root .. "parts.propsTable")
-local selectors = require(root.."parts.selectors")
-
-local layerTableCommands = require("editor.parts.layerTableCommands")
-local contextButtons = require("editor.parts.buttons")
 local posX = display.contentCenterX*0.75
 local _marginX, _marginY = -16, 38
+
+function M:setPosition()
+  self.x = self.rootGroup.layerTable.contentBounds.xMax
+end
 
 function M:createIcons (icons, class, tool)
   -- print("createIcons", self.anchorName,_marginX, _marginY)
@@ -45,7 +50,7 @@ function M:createIcons (icons, class, tool)
       text = "",
       name = name.."-icon",
       x = self.x + marginX + i*22,
-      y = self.y,
+      y = self.y-2,
       width = 22,
       height = 22,
       fontSize =16,
@@ -57,13 +62,19 @@ function M:createIcons (icons, class, tool)
   end
 end
 
-function M:init(UI)
+function M:init(UI, x, y, w, h)
+  -- self.x = x or self.x
+  -- self.y = y or self.y
+  -- self.width = w or self.width
+  -- self.height = h or self.height
 end
 --
 function M:create(UI)
   if self.rootGroup then return end
 
   self:initScene(UI)
+
+  self.group:translate(self.width*0.5, 0)
 
   self.option = {
     text = "",
@@ -76,17 +87,18 @@ function M:create(UI)
     align = "left"
   }
 
-
-  M.selections = {}
+  self.linkGroup = display.newGroup()
+  self.selections = {}
 
   --
-
   local function render(models, class)
+    self:setPosition()
+
 
     local count = 0
     local marginX, marginY = 44, 50
     local option = self.option
-    option.y = y
+    option.y = self.y
     for i = 1, #models do
       local asset = models[i]
       option.text =  asset.path .."/"..asset.name
@@ -104,6 +116,11 @@ function M:create(UI)
         -- print("touch")
         self:touchHandler(eventObj, event)
         UI.editor.selections = self.selections
+        if event.phase == "ended" then
+          self.linkGroup:removeSelf()
+          self.linkGroup = display.newGroup()
+          self:renderLink(eventObj.asset.links)
+        end
       end
       obj:addEventListener("touch", obj)
       obj:addEventListener("mouse", self.mouseHandler)
@@ -116,79 +133,82 @@ function M:create(UI)
 
       -- count = count + 1
       obj.rect = rect
-
       obj.links = {}
-      if #asset.links == 0 then
-        count = count + 1
-      else
-        for k=1, #asset.links do
-          local link = asset.links[k]
-          local pageObj
-          if link.layers then
-            option.text =  link.page
-            option.x = self.x + option.width/2 + 10
-            option.y = option.y - option.height/2 + 10 + option.height*(k-1)
-            option.width = self.width
-            pageObj = self.newText(option)
-            pageObj.layers = {}
-            ---
-            local rect = display.newRect(pageObj.x, pageObj.y, pageObj.width + 10, option.height)
-            rect:setFillColor(0.8)
-            pageObj.rect = rect
-            self.group:insert(rect)
-            self.group:insert(pageObj)
-
-           ----
-            for j=1, #link.layers do
-              option.text =  link.layers[j]
-              option.x = option.x + option.width/2
-              local layerObj = self.newText(option)
-              layerObj.index = j
-              layerObj.touch = function(eventObj, event)
-                print(eventObj.text)
-              end
-              layerObj:addEventListener("touch", layerObj)
-              table.insert(pageObj.layers, layerObj)
-              local rect = display.newRect(layerObj.x, layerObj.y, layerObj.width + 10, option.height)
-              rect:setFillColor(0.8)
-              layerObj.rect = rect
-              self.group:insert(rect)
-              self.group:insert(layerObj)
-            end
-            count = count + 1
-            -- print("count", count)
-          else
-            option.text =  link.page
-            option.x = self.x + option.width/2 *k
-            pageObj = self.newText(option)
-            local rect = display.newRect(pageObj.x, pageObj.y, pageObj.width + 10, option.height)
-            rect:setFillColor(0.8)
-            pageObj.rect = rect
-            self.group:insert(rect)
-            self.group:insert(pageObj)
-            count = count + 1
-          end
-          table.insert(obj.links, pageObj)
-        end
-      end
+      count = count + 1
       self.objs[#self.objs + 1] = obj
     end
-
     --
     --
     self.rootGroup:insert(self.group)
     self.rootGroup.assetTable = self.group
-    self.group:translate(self.width*0.5, 0)
+    self.group:insert(self.linkGroup)
     -- self.group.isVisible = true
   end
 
   UI.editor.assetStore:listen(function(foo, fooValue)
-    self.x = self.rootGroup.layerTable.contentBounds.xMax
     self:storeListener(foo, fooValue, render)
   end
   )
 end
 --
+
+function M:renderLink(links)
+  local posX = display.contentCenterX + 480/4
+  local posY = 33
+  local option = self.option
+
+  for k=1, #links do
+    local link = links[k]
+    if link.layers then
+      local pageObj
+      option.text =  link.page
+      option.x = posX -- + option.width/2 + 10
+      option.y = posY + option.height*k
+      option.width = self.width
+      pageObj = self.newText(option)
+      pageObj.layers = {}
+      ---
+      local rect = display.newRect(pageObj.x, pageObj.y, pageObj.width + 10, option.height)
+      rect:setFillColor(0.8)
+      pageObj.rect = rect
+      self.linkGroup:insert(rect)
+      self.linkGroup:insert(pageObj)
+
+      ----
+      for j=1, #link.layers do
+        option.text =  link.layers[j]
+        option.x = posX + option.width*j
+        option.y = posY + option.height
+        local layerObj = self.newText(option)
+        layerObj.index = j
+        layerObj.touch = function(eventObj, event)
+          print(eventObj.text)
+        end
+        layerObj:addEventListener("touch", layerObj)
+        table.insert(pageObj.layers, layerObj)
+
+        local rect = display.newRect(layerObj.x, layerObj.y, layerObj.width + 10, option.height)
+        rect:setFillColor(0.8)
+        layerObj.rect = rect
+        self.linkGroup:insert(rect)
+        self.linkGroup:insert(layerObj)
+      end
+      -- count = count + 1
+      -- print("count", count)
+    else
+      option.text =  link.page
+      option.x = posX + option.width/2 *k
+      pageObj = self.newText(option)
+      local rect = display.newRect(pageObj.x, pageObj.y, pageObj.width + 10, option.height)
+      rect:setFillColor(0.8)
+      pageObj.rect = rect
+      self.linkGroup:insert(rect)
+      self.linkGroup:insert(pageObj)
+      -- count = count + 1
+    end
+    -- table.insert(obj.links, pageObj)
+  end
+end
 
 function M:show()
   self.group.isVisible = true
