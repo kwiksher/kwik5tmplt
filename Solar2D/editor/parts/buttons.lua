@@ -4,6 +4,7 @@ local parent,  root = newModule(current)
 
 M.name = current
 M.weight = 1
+M.width = 60
 
 local App = require("Application")
 
@@ -112,8 +113,8 @@ function M:create(UI)
     parent = group,
     text = "",
     font = native.systemFont,
-    fontSize = 10,
-    align = "left"
+    fontSize = 12,
+    align = "center"
   }
 
   local function createButton(params)
@@ -122,11 +123,12 @@ function M:create(UI)
     options.y = params.y
 
     local obj = display.newText(options)
-    --obj.anchorY=0.5
+    -- obj.anchorY=0.5
     -- obj.anchorX = 0
     obj.eventName = params.eventName
+    obj:translate(obj.width/2 + 10, 0)
 
-    local rect = display.newRoundedRect(obj.x, obj.y, 40, obj.height + 2, 10)
+    local rect = display.newRoundedRect(obj.x, obj.y, obj.width+10, obj.height + 2, 10)
     group:insert(rect)
     group:insert(obj)
     rect:setFillColor(0, 0, 0.8)
@@ -149,13 +151,15 @@ function M:create(UI)
       local _obj = createButton(v)
       v.x = _obj.x + _obj.rect.width
       objs[#objs+1] =_obj
+      _obj.alpha= 0
+      _obj.rect.alpha = 0
     end
     return objs
   end
 
   local obj = createButton {
     text = "New",
-    x = display.contentCenterX - 210,
+    x = display.contentCenterX - 480/2,
     y = display.actualContentHeight-10,
     eventName = "create",
     alignment = "left"
@@ -172,7 +176,7 @@ function M:create(UI)
 
   obj = createButton {
     text = "Edit",
-    x = display.contentCenterX - 210,
+    x = obj.rect.contentBounds.xMax,-- display.contentCenterX - 210,
     y = display.actualContentHeight-10,
     eventName = "modify",
     alignment = "left"
@@ -187,7 +191,7 @@ function M:create(UI)
 
   obj = createButton {
     text = "Copy",
-    x = display.contentCenterX - 170,
+    x = obj.rect.contentBounds.xMax,-- x = display.contentCenterX - 170,
     y = display.actualContentHeight-10,
     eventName = "copy",
     alignment = "left"
@@ -195,16 +199,15 @@ function M:create(UI)
 
   obj = createButton {
     text = "Paste",
-    x = display.contentCenterX -130,
+    x = obj.rect.contentBounds.xMax, --x = display.contentCenterX -130,
     y = obj.y,
     eventName = "paste",
     alignment = "left"
-
   }
 
   obj = createButton {
     text = "Delete",
-    x = obj.x + obj.width,
+    x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "delete",
     alignment = "left"
@@ -212,7 +215,7 @@ function M:create(UI)
 
   obj = createButton {
     text = "hide",
-    x = obj.x + obj.width+10,
+    x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "toggle",
     alignment = "left"
@@ -220,14 +223,14 @@ function M:create(UI)
 
   obj = createButton {
     text = "Save",
-    x = display.contentCenterX + 45,
+    x = obj.rect.contentBounds.xMax, --x = display.contentCenterX + 45,
     y = display.actualContentHeight-10,
     eventName = "save",
     alignment = "right"
   }
   obj = createButton {
     text = "Cancel",
-    x = obj.x + obj.width,
+    x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "cancel",
     alignment = "right"
@@ -235,7 +238,7 @@ function M:create(UI)
 
   obj = createButton {
     text = "In vscode",
-    x = obj.x + obj.width,
+    x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "openEditor",
     alignment = "right"
@@ -243,7 +246,7 @@ function M:create(UI)
 
   obj = createButton {
     text = "Rename",
-    x = obj.x + obj.width,
+    x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "rename",
     alignment = "right"
@@ -260,23 +263,23 @@ function M:create(UI)
   self.UI.editor.rootGroup.buttons = group
 
   group.split = function()
-    local leftPosX, rightPosX = screen.safe.minX + 30 , screen.centerX + 480*0.5
-    print(leftPosX, rightPosX)
-    for i, eventName in next, self.commands do
-      if self.objs then
-        local obj = self.objs[eventName]
-        if obj == nil then print(eventName) end
-        if obj.alignment == "left" then
-        obj.x = leftPosX
-        obj.rect.x = leftPosX
-        leftPosX = leftPosX + obj.rect.width
-        elseif obj.alignment == "right" then
-          obj.x = rightPosX
-          obj.rect.x = rightPosX
-          rightPosX = rightPosX + obj.rect.width
-        end
-      end
-    end
+    -- local leftPosX, rightPosX = screen.safe.minX + 30 , screen.centerX + 480*0.5
+    -- print(leftPosX, rightPosX)
+    -- for i, eventName in next, self.commands do
+    --   if self.objs then
+    --     local obj = self.objs[eventName]
+    --     if obj == nil then print(eventName) end
+    --     if obj.alignment == "left" then
+    --     obj.x = leftPosX
+    --     obj.rect.x = leftPosX
+    --     leftPosX = leftPosX + obj.rect.width
+    --     elseif obj.alignment == "right" then
+    --       obj.x = rightPosX
+    --       obj.rect.x = rightPosX
+    --       rightPosX = rightPosX + obj.rect.width
+    --     end
+    --   end
+    -- end
 
   end
   --
@@ -428,7 +431,9 @@ function M:show()
     obj.rect.isVisible = obj.isVisible
     obj.rect:removeEventListener("mouse", self.mouseOver)
     if obj.rect.buttonsInRow then
-      for i, o in next, obj.rect.buttonsInRow do
+      for i, o in next, obj.rect.buttonsInRow do -- mouse over to show them
+        o.isVisible = false
+        o.rect.isVisible = false
         o:removeEventListener("mouse", self.mouseOverInRow)
       end
     end

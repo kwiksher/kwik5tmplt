@@ -92,8 +92,14 @@ function M.xtest_select_for_editing()
 end
 
 
-function M.test_select_animation()
+function M.xtest_select_animation()
     local name = "title"
+    local toolbar = require("editor.parts.toolbar")
+    local obj = toolbar.layerToolMap["Animations"]
+    obj.callBack{target=obj}
+    for k, v in pairs(toolbar.toolMap) do print(k, v) end
+    local tool = toolbar.toolMap[obj.id.."-Linear"]
+    tool.callBack{target=tool}
     --
     -- local button = "save"
     -- local obj = require("editor.parts.buttons").objs[button]
@@ -104,19 +110,26 @@ function M.test_select_animation()
 
 end
 
-function M.xtest_new_animation()
-  local name = "gotoBtn"
+function M.test_new_animation()
+  local name = "cat"
   helper.selectLayer(name)
 
-  UI.scene.app:dispatchEvent(
-    {
-      name = "editor.selector.selectTool",
-      UI = UI,
-      class = "blink", -- obj.class,
-      -- toolbar = self,
-      isNew = true
-    }
-  )
+  local toolbar = require("editor.parts.toolbar")
+  local obj = toolbar.layerToolMap["Animations"]
+  obj.callBack{target=obj}
+  for k, v in pairs(toolbar.toolMap) do print(k, v) end
+  local tool = toolbar.toolMap[obj.id.."-Linear"]
+  tool.callBack{target=tool}
+
+  -- UI.scene.app:dispatchEvent(
+  --   {
+  --     name = "editor.selector.selectTool",
+  --     UI = UI,
+  --     class = "blink", -- obj.class,
+  --     -- toolbar = self,
+  --     isNew = true
+  --   }
+  -- )
 
   -- local button = "save"
   -- local obj = require("editor.parts.buttons").objs[button]

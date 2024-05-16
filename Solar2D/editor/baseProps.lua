@@ -4,6 +4,10 @@ local parent, root = newModule(name)
 local M = {}
 M.name = name
 M.weight = 1
+
+M.x = display.actualContentWidth - 200
+M.y = 10
+
 ---
 local util = require("lib.util")
 local yaml = require("server.yaml")
@@ -92,8 +96,8 @@ M.newTextField = newTextField
 --
 -------------------------------
 function M:init(UI, x, y, w, h)
-  self.x = x or display.actualContentWidth - 200
-  self.y = y or option.height /2
+  self.x = x or self.x
+  self.y = y or self.y
   self.width = w
   self.height = h
   self.UI = UI
@@ -204,6 +208,7 @@ function M:createTable(props)
   for i=1, #props do
     local prop = props[i]
     option.text = prop.name
+    print("@@@@@@@ baseProps", prop.name)
     option.x = self.x
     option.y = i*option.height + self.y
     -- print(self.group, option.x, option.y, option.width, option.height)
@@ -269,7 +274,7 @@ function M:createTable(props)
       option.text = prop.value
     end
     --
-    if prop.name == 'actions' then
+    -- if prop.name == 'actions' then
       --[[
         actionbox:load(self.UI, class, obj.contentBounds.xMax, obj.y , prop.value)
         obj.actionbox = actionbox
@@ -286,14 +291,14 @@ function M:createTable(props)
           end
         end
       --]]
-    else
+    -- else
       local objField = newTextField(option)
       obj.field = objField
       self.group:insert(objField)
       -- obj.page = props.name
       -- obj.tap = commandHandler
       -- obj:addEventListener("tap", obj)
-    end
+    -- end
     self.group:insert(obj.rect)
     self.group:insert(obj)
   end

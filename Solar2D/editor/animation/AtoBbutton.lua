@@ -12,7 +12,8 @@ local abTimer = {}
 
 local props = {
     x = display.contentCenterX,
-    y = display.actualContentHeight-10,
+    y = display.actualContentHeight-40,
+    -- y = display.actualContentHeight-10,
     width = 40,
     height = 20,
     textSize = 12,

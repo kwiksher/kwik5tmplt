@@ -2,7 +2,7 @@ local M = {}
 M.name = ...
 M.weight = 1
 M.x = 11
-M.y = 11*7/2 + 11 -- display.contentCenterY -100
+M.y = 11*7/2 + 15 -- display.contentCenterY -100
 
 ---
 local muiIcon = require("components.mui.icon").new()
@@ -20,6 +20,7 @@ function M:create(UI)
 
   self.layerToolMap = {}
   self.toolMap = nil
+  self.vertical = false
 
   local toolListener = function(event)
     print("@@", event.target.muiOptions.name)
@@ -74,6 +75,14 @@ function M:create(UI)
       -- Kwik Component such as linear, pulse, roation ..
       for i = 1, #layerTool.tools do
         local tool = layerTool.tools[i]
+        local posX, posY
+        if self.vertical then
+          posX = 33
+          posY =  self.y + event.target.y + 22*i -2
+        else
+          posX =  22*i + 11
+          posY = 20
+        end
         local obj =
           muiIcon:createToolImage {
           icon = tool.icon,
@@ -83,8 +92,8 @@ function M:create(UI)
           hoverText = tool.name,
           -- x = 66+ (i+2 ) * 22 - #obj.tools * 22 * 0.5,
           -- y = (display.actualContentHeight-1280/4 )/2,
-          x = 33,
-          y =  self.y + event.target.y + 22*i -2,
+          x = posX,
+          y =  posY,
           width = 22,
           height = 22,
           listener = toolListener
