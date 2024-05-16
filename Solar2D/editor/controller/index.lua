@@ -350,7 +350,7 @@ function M:command()
     local book = params.book or UI.editor.currentBook
     local page  = params.page or UI.page
 
-    for k, v in pairs(params) do print(k, v) end
+    -- for k, v in pairs(params) do print(k, v) end
     if params.hide then
       -- print("@@@@@")
       self:hide()

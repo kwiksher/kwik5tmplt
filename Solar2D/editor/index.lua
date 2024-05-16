@@ -125,7 +125,13 @@ local mui = require("materialui.mui")
 -- this returns a tool obj
 function M:getClassModule (class)
   local v = self.classMap[class:lower()] or class
-  return self.editorTools[v]
+  -- print("@@@@", v)
+  -- for k, v in pairs(self.editorTools) do print(k) end
+  local mod = self.editorTools[v]
+  if mod == nil then
+    return self.editorTools['editor.baseTable-'..v]
+  end
+  return mod
 end
 
 function M:getClassFolderName (class)
@@ -379,10 +385,10 @@ function M:didShow(UI)
       currentBook= UI.editor.currentBook,
       currentPage= UI.page,
       currentLayer = UI.editor.currentayer}
-    print ("------------ UI.editor.rootGroup ---------")
-    for k, v in pairs(UI.editor.rootGroup) do print("", k) end
-    print ("------------ UI.editor.viewStore ---------")
-    for k, v in pairs(UI.editor.viewStore) do print("", k) end
+    -- print ("------------ UI.editor.rootGroup ---------")
+    -- for k, v in pairs(UI.editor.rootGroup) do print("", k) end
+    -- print ("------------ UI.editor.viewStore ---------")
+    -- for k, v in pairs(UI.editor.viewStore) do print("", k) end
   end
 --
 function M:didHide(UI)

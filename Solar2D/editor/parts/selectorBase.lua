@@ -92,10 +92,10 @@ function M:create(UI)
       local row = self.rows[index]
       option.text =  row.label
       if vertical then
-        option.y = (self.marginY or 0) + option.height * (index)  - option.height/2 + 22
+        option.y = (self.marginY or 0) + self.heightRect * (index)  - self.heightRect/2 + 22
         option.x = self.marginX or option.x
       else
-        option.x = (self.marginX or 0) + option.width * (index)  - option.width/2 + 22
+        option.x = (self.marginX or 0) + self.widthRect * (index)  - self.widthRect/2 + 22
         option.y = self.marginY or option.y
       end
       option.width = self.optionWidth or option.width

@@ -208,7 +208,7 @@ function M:createTable(props)
   for i=1, #props do
     local prop = props[i]
     option.text = prop.name
-    print("@@@@@@@ baseProps", prop.name)
+    -- print("@@@@@@@ baseProps", prop.name)
     option.x = self.x
     option.y = i*option.height + self.y
     -- print(self.group, option.x, option.y, option.width, option.height)

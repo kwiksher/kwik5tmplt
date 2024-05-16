@@ -139,7 +139,9 @@ function M:create(UI)
 
     obj.alignment = params.alignment
     -- rect.anchorX = 0
-    self.objs[params.eventName] = obj
+    if params.objs then
+      params.objs[params.eventName] = obj
+    end
     return obj
   end
 
@@ -162,7 +164,8 @@ function M:create(UI)
     x = display.contentCenterX - 480/2,
     y = display.actualContentHeight-10,
     eventName = "create",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs
   }
 
   obj.rect.buttonsInRow = createButtonsInRow(
@@ -179,7 +182,8 @@ function M:create(UI)
     x = obj.rect.contentBounds.xMax,-- display.contentCenterX - 210,
     y = display.actualContentHeight-10,
     eventName = "modify",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs
   }
 
   obj.rect.buttonsInRow = createButtonsInRow(
@@ -194,7 +198,8 @@ function M:create(UI)
     x = obj.rect.contentBounds.xMax,-- x = display.contentCenterX - 170,
     y = display.actualContentHeight-10,
     eventName = "copy",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs
   }
 
   obj = createButton {
@@ -202,7 +207,8 @@ function M:create(UI)
     x = obj.rect.contentBounds.xMax, --x = display.contentCenterX -130,
     y = obj.y,
     eventName = "paste",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs
   }
 
   obj = createButton {
@@ -210,7 +216,8 @@ function M:create(UI)
     x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "delete",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs
   }
 
   obj = createButton {
@@ -218,7 +225,8 @@ function M:create(UI)
     x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "toggle",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs
   }
 
   obj = createButton {
@@ -226,14 +234,16 @@ function M:create(UI)
     x = obj.rect.contentBounds.xMax, --x = display.contentCenterX + 45,
     y = display.actualContentHeight-10,
     eventName = "save",
-    alignment = "right"
+    alignment = "right",
+    objs = self.objs
   }
   obj = createButton {
     text = "Cancel",
     x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "cancel",
-    alignment = "right"
+    alignment = "right",
+    objs = self.objs
   }
 
   obj = createButton {
@@ -241,7 +251,8 @@ function M:create(UI)
     x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "openEditor",
-    alignment = "right"
+    alignment = "right",
+    objs = self.objs
   }
 
   obj = createButton {
@@ -249,7 +260,8 @@ function M:create(UI)
     x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "rename",
-    alignment = "right"
+    alignment = "right",
+    objs = self.objs
   }
 
   self.openEditorObj = obj
@@ -263,23 +275,23 @@ function M:create(UI)
   self.UI.editor.rootGroup.buttons = group
 
   group.split = function()
-    -- local leftPosX, rightPosX = screen.safe.minX + 30 , screen.centerX + 480*0.5
-    -- print(leftPosX, rightPosX)
-    -- for i, eventName in next, self.commands do
-    --   if self.objs then
-    --     local obj = self.objs[eventName]
-    --     if obj == nil then print(eventName) end
-    --     if obj.alignment == "left" then
-    --     obj.x = leftPosX
-    --     obj.rect.x = leftPosX
-    --     leftPosX = leftPosX + obj.rect.width
-    --     elseif obj.alignment == "right" then
-    --       obj.x = rightPosX
-    --       obj.rect.x = rightPosX
-    --       rightPosX = rightPosX + obj.rect.width
-    --     end
-    --   end
-    -- end
+    local leftPosX, rightPosX = screen.safe.minX + 30 , screen.centerX + 480*0.5
+    print(leftPosX, rightPosX)
+    for i, eventName in next, self.commands do
+      if self.objs then
+        local obj = self.objs[eventName]
+        if obj == nil then print(eventName) end
+        if obj.alignment == "left" then
+        obj.x = leftPosX
+        obj.rect.x = leftPosX
+        leftPosX = leftPosX + obj.rect.width
+        elseif obj.alignment == "right" then
+          obj.x = rightPosX
+          obj.rect.x = rightPosX
+          rightPosX = rightPosX + obj.rect.width
+        end
+      end
+    end
 
   end
   --
@@ -317,7 +329,7 @@ function M:toggle()
   for k, obj in pairs(self.objs) do
     obj.isVisible = not obj.isVisible
     obj.rect.isVisible = obj.isVisible
-    end
+  end
 end
 
 function M.mouseOver(event)
@@ -344,7 +356,6 @@ function M.mouseOver(event)
     for k, o in next, target.buttonsInRow do
       o.isVisible = true
       o.rect.isVisible = true
-      o.alpha = 1
     end
   end
   M.lastButtonRect = target
@@ -428,12 +439,14 @@ end
 function M:show()
   for k, obj in pairs(self.objs) do
     obj.isVisible = true
-    obj.rect.isVisible = obj.isVisible
+    obj.rect.isVisible = true
     obj.rect:removeEventListener("mouse", self.mouseOver)
     if obj.rect.buttonsInRow then
       for i, o in next, obj.rect.buttonsInRow do -- mouse over to show them
         o.isVisible = false
         o.rect.isVisible = false
+        -- o.alpha = 0
+        -- o.rect.alpha = 0
         o:removeEventListener("mouse", self.mouseOverInRow)
       end
     end
@@ -465,7 +478,7 @@ function M:hide()
   if self.objs then
     for k, obj in pairs(self.objs) do
       obj.isVisible = false
-      obj.rect.isVisible = obj.isVisible
+      obj.rect.isVisible = false
       if obj.rect.buttonsInRow then
         for i, o in next, obj.rect.buttonsInRow do
           o.isVisible = false
