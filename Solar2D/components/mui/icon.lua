@@ -22,7 +22,7 @@ local onMouseHover = function(event)
       align = "left" -- Alignment parameter
     }
     hoverObj = display.newText(textOptions)
-    hoverObj:setFillColor(1, 1, 0)
+    hoverObj:setFillColor(0, 0, 1)
     prevHover = event.target.text
     hoverObj.anchorX = 0
     timer.performWithDelay(
@@ -71,6 +71,9 @@ function M:create(Props)
   local obj = mui.getWidgetBaseObject(Props.name)
   --obj:addEventListener("mouseHover", onMouseHover)
   obj.anchorY = 0
+  obj.callBack = Props.listener
+  obj.muiOptions = {name= Props.name}
+
   return obj
 end
 
@@ -115,6 +118,9 @@ function M:createImage(Props)
   obj.name = Props.name
   --obj:addEventListener("mouseHover", onMouseHover)
   obj.anchorY = 0
+  obj.callBack = Props.listener
+  obj.muiOptions = {name= Props.name}
+
   return obj
 end
 
@@ -155,6 +161,8 @@ function M:createToolImage(Props)
   obj.hoverText = Props.hoverText
   obj.anchorY = 0
   obj:addEventListener("mouseHover", onMouseHover)
+  obj.callBack = Props.listener
+  obj.muiOptions = {name= Props.name}
   return obj
 end
 
