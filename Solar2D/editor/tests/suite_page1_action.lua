@@ -56,21 +56,22 @@ function M.init(props)
 end
 
 function M.suite_setup()
-  selectors.projectPageSelector:show()
-  selectors.projectPageSelector:onClick(true)
+  -- selectors.projectPageSelector:show()
+  -- selectors.projectPageSelector:onClick(true)
   --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
   -- bookTable.commandHandler({book="book"}, nil,  true)
   -- pageTable.commandHandler({page="page1"},nil,  true)
   -- timer.performWithDelay( 1000, function()
-  selectors.componentSelector.iconHander()
   -- end)
+
+  --selectors.componentSelector:onClick(true,  "layerTable")
 
 end
 
@@ -92,11 +93,33 @@ function M.xtest_new_action()
 end
 
 function M.test_select_action()
+  UI.testCallback = function()
+    --
   local editor = require("editor.action.actionTable")
+  selectors.componentSelector.iconHander()
   selectors.componentSelector:onClick(true,  "actionTable")
   selectAction("eventOne")
-  editor.editButton:tap{target=editor.editButton}
-  controller.commandGroupHandler{target={muiOptions={name=muiName.."Page"}}}
+
+   --- select a command
+   local commandsTable = require("editor.action.actionCommandTable")
+   local obj = commandsTable.objs[1]
+   commandsTable:singleClickEvent(obj)
+
+    -- select a layer
+    -- local propsTable = require("editor.action.actionCommandPropsTable")
+    -- local linkbox = propsTable.linkbox
+    -- local obj = linkbox.objs[1]
+    -- obj:tap({numTaps = 1})
+
+   -- save command props
+      -- UI.scene.app:dispatchEvent {
+      --   name = "editor.actionCommand.save",
+      --   UI = UI,
+      -- }
+
+  -- -- editor.editButton:tap{target=editor.editButton}
+  -- controller.commandGroupHandler{target={muiOptions={name=muiName.."Page"}}}
+  end
 end
 
 --[[

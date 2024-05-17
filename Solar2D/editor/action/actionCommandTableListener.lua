@@ -17,6 +17,7 @@ end
 
     -- create a listener to handle drag-item commands
 function M:listener( item, touchevent )
+  print("@@@@@@ actionCommandTableListener UI", self.UI)
   if touchevent.phase  == "ended" then
     -- print("single click event")
     -- this opens a commond editor table
