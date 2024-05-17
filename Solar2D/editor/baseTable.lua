@@ -102,7 +102,7 @@ function M:initScene(UI)
   local option = {
     text = "",
     x = 0,
-    y = self.rootGroup[self.anchorName].y,
+    y = self.y,
     width = 100,
     height = 20,
     font = native.systemFont,
@@ -170,14 +170,16 @@ function M:createIcons (_marginX, _marginY)
   -- print("createIcons", self.anchorName,_marginX, _marginY)
   local marginX = _marginX or self.marginX
   local marginY = _marginY or 0
+  self:setPosition()
+  --
   for i=1, #self.icons do
     local name = self.icons[i]
     local actionIcon = muiIcon:create {
       icon = {name.."_over", name.."Color_over", name},
       text = "",
       name = name.."-icon",
-      x = self.rootGroup[self.anchorName].x + marginX + i*22,
-      y = self.rootGroup[self.anchorName].y -22 + marginY,
+      x = self.x + marginX + i*22,
+      y = self.y -22 + marginY,
       width = 22,
       height = 22,
       fontSize =16,
@@ -223,12 +225,13 @@ function M:create(UI)
     local count = 0
     local option = self.option
     ---[[
+    self:setPosition()
     for i = 1, #models do
       local name = models[i]
 
       option.text = name
-      option.x = self.rootGroup[self.anchorName].x + self.marginX + xIndex * 5
-      option.y = self.rootGroup[self.anchorName].y + self.marginY + option.height * (count-1)
+      option.x = self.x + self.marginX + xIndex * 5
+      option.y = self.y + self.marginY + option.height * (count-1)
       -- print(name, option.x, option.y)
       option.width = 100
       local obj = newText(option)
@@ -319,6 +322,7 @@ function M:show()
   if self.objs then
     for i=1, #self.objs do
       self.objs[i].isVisible = true
+      self.objs[i].rect.isVisible = true
     end
   end
 end
@@ -332,6 +336,8 @@ function M:hide()
   if self.objs then
     for i=1, #self.objs do
       self.objs[i].isVisible = false
+      self.objs[i].rect.isVisible = false
+
     end
   end
   -- for i=1, #self.objs do

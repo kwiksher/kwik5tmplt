@@ -5,7 +5,24 @@ local buttons    = require("editor.parts.buttons")
 
 local Props = {
   name = "page",
-  anchorName = "selectPage",
+  setPosition = function(self)
+    -- self.x = self.x
+    -- self.y = self.y
+    self.x = 0
+    self.y = 52
+    --
+    self.option = {
+      text = "",
+      x = self.x,
+      y = self.y,
+      width = nil,
+      height = 20,
+      font = native.systemFont,
+      fontSize = 10,
+      align = "left"
+    }
+
+  end ,
   id = "page"
 }
 
@@ -90,17 +107,19 @@ function M:createTable(UI, columns, selection)
     -- local objs = {}
 
     local max = math.min(10, #columns)
-
+    local width = 40
     local scrollView = widget.newScrollView
     {
       top                      = option.y - option.height/2,
-      left                     = option.x  - option.width/2,
-      width                    =  max*option.width,
+      left                     = self.x,
+      width                    =  max*width,
       height                   = option.height,
       scrollHeight             = option.height,
-      scrollWidth            = #columns*option.width,
+      scrollWidth              = #columns*width,
       verticalScrollDisabled   = true,
       horizontalScrollDisabled = false,
+      backgroundColor          = {0.8},
+
       -- width                    =  option.width,
       -- height                   = max*option.height,
       -- scrollHeight             = #columns*option.height,
@@ -115,7 +134,6 @@ function M:createTable(UI, columns, selection)
       local group = display.newGroup()
       --
       option.text = entry.name
-      option.x =  option.width/2 + (index-1)*option.width
       option.y = option.height/2
 
       -- option.x = option.x
@@ -126,6 +144,7 @@ function M:createTable(UI, columns, selection)
       obj.page = entry.name
       obj.tap = self.commandHandler
 
+      obj.x = obj.width/2
       -- function(eventObj)
       --   self:commandHandler(eventObj)
       --   self.selection.rect:setFillColor(0,1,0)
@@ -133,16 +152,20 @@ function M:createTable(UI, columns, selection)
       obj:addEventListener("tap", obj)
       obj:addEventListener("mouse", mouseHandler)
 
-      index = index + 1
       obj.index = index
 
-      local rect = display.newRect(obj.x, obj.y, obj.width, option.height)
+      local rect = display.newRect(obj.x, obj.y, obj.width+4, option.height)
       rect:setFillColor(0.8)
+      obj.rect = rect
 
-      group:insert(rect)
+      if index > 1 then
+        obj.x = self.objs[index-1].rect.contentBounds.xMax + obj.rect.width/2
+        obj.rect.x = obj.x
+      end
+
+      group:insert(obj.rect)
       group:insert(obj)
       scrollView:insert(group)
-      obj.rect = rect
       return obj
     end
 
@@ -187,16 +210,7 @@ function M:create(UI)
   UI.editor.pageStore:listen(
     function(foo, models)
       -- print(debug.traceback())
-      self.option = {
-        text = "",
-        x = self.rootGroup.selectBook.x + 40,
-        y = self.rootGroup.selectPage.y,
-        width = 40,
-        height = 20,
-        font = native.systemFont,
-        fontSize = 10,
-        align = "left"
-      }
+      self:setPosition()
       self:clean()
       self.objs = {}
       self:createTable(UI, models, self.selection )

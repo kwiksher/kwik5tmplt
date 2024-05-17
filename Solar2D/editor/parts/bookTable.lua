@@ -5,7 +5,12 @@ local buttons    = require("editor.parts.buttons")
 
 local Props = {
   name = "book",
-  anchorName = "selectBook",
+  setPosition = function(self)
+    -- self.x = self.x
+    -- self.y = self.y
+    self.x = 0
+    self.y = 33
+  end ,
   id = "book"
 }
 
@@ -87,12 +92,12 @@ function M:create(UI)
   if self.rootGroup then return end
   self:initScene(UI)
     -- print("create", self.name)
-
+  self:setPosition()
   self.option = {
     parent = nil, -- self.rootGroup,
     text = "",
-    x = self.rootGroup.selectBook.x + 40,
-    y = self.rootGroup.selectBook.y,
+    x = self.x,
+    y = self.y,
     width = nil,
     height = 20,
     font = native.systemFont,
@@ -120,9 +125,10 @@ function M:create(UI)
           obj:addEventListener("touch", obj)
           obj:addEventListener("mouse", mouseHandler)
           -- print(obj.book)
+          obj.x = obj.width/2
 
           if index > 1 then
-            obj.x = obj.width/2 + objs[index-1].contentBounds.xMax + 5
+            obj.x = obj.width/2 + objs[index-1].rect.contentBounds.xMax + 5
           end
           local rect = display.newRect(obj.x, obj.y, obj.width+10,option.height)
           rect:setFillColor(0.8)

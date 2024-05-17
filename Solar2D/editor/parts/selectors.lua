@@ -193,9 +193,9 @@ function M:create(UI)
     11, --self.x
     -2, --self.y
     {
-      {label = "Show", command = "selectApp"},
-      {label = " Book", command = "selectBook", store = "bookTable", btree = "select book"},
-      {label = " Page", command = "selectPage", store = "pageTable", btree = "select page"},
+      {label = "", command = "selectBook", store = "bookTable", btree = "select book"},
+      {label = "", command = "selectPage", store = "pageTable", btree = "select page"},
+      {label = "Project", command = "selectApp"},
       {label = "Settings", command = "selectPageProps"}
     },
     "openProject", --iconName
@@ -206,6 +206,7 @@ function M:create(UI)
   )
 
   self.projectPageSelector.optionWidth = 40
+  self.projectPageSelector.marginY = 11
   self.projectPageSelector.marginX = 20
 
   self.componentSelector =
@@ -238,7 +239,7 @@ function M:create(UI)
     {
       {label = "Audio", command = "selectAudioAsset", store = "audios", btree = "select asset"},
       {label = "Particles", command = "selectPaticlesAsset", store = "paticles", btree = "select asset"},
-      {label = "Spritesheet", command = "selectSpriteAsset", store = "sprites", btree = "select asset"},
+      {label = "Sprites", command = "selectSpriteAsset", store = "sprites", btree = "select asset"},
       {label = "SyncText", command = "selectSyncTextAsset", store = "aduios.sync", btree = "select asset"},
       {label = "Video", command = "selectVideoAsset", store = "videos", btree = "select asset"},
     },
@@ -362,6 +363,13 @@ function M:didShow(UI)
         local width = UI.editor.toolbar:getWidth()
         M.assetsSelector.iconObj:reset(width)
       end
+
+      UI.scene.app:dispatchEvent {
+            name = "editor.selector.selectApp",
+            UI = UI,
+            appFolder = system.pathForFile("App", system.ResourceDirectory), -- default
+            useTinyfiledialogs = false -- default
+          }
 
     end
 

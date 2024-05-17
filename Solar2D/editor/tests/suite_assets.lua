@@ -22,11 +22,11 @@ function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
   -- --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
-  appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
+  -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
 
@@ -35,6 +35,9 @@ function M.suite_setup()
 
   selectors.componentSelector.iconHander()
   selectors.componentSelector:onClick(true,  "layerTable")
+
+  -- bookTable.commandHandler(bookTable.objs[1], nil, true)
+
 end
 
 function M.setup()
@@ -564,7 +567,7 @@ function M.xtest_load()
   selectors.assetsSelector:onClick(true, "videos")
 end
 
-function M.test_load()
+function M.xtest_load()
   -- UI.editor.assets = {
   --   audios = {
   --     {

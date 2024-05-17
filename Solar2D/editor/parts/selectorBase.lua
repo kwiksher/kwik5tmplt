@@ -250,6 +250,7 @@ function Class.new(UI, x,y, rows, iconName, filter, propsTable, propsButtons, mo
   instance.isVisible = false
   instance.mouseHandler = mouseHandler
   instance.vertical = vertical or false
+  instance.onClick = nil
   return setmetatable(instance, {__index=M})
 end
 --
