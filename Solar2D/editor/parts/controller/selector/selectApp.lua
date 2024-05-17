@@ -22,7 +22,7 @@ local command = function (params)
 	local appFolder = params.appFolder or system.pathForFile( "App", system.ResourceDirectory )
   -- print("", appFolder)
 
-	if params.useTinyfiledialogs then
+	if params.useTinyfiledialogs == nil then
 		appFolder = tfd.selectFolderDialog({
 			title = "select App folder",
 			default_path = path
