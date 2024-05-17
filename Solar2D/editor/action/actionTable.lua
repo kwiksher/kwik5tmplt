@@ -25,6 +25,16 @@ end
 -- load widget library
 local widget = require("widget")
 
+function M:setPosition()
+  -- self.x = self.rootGroup.selectAction.rect.contentBounds.xMax
+  self.x = display.contentCenterX - 480*0.95
+  self.y = self.rootGroup.selectAction.y
+
+  -- self.x = self.rootGroup.selectAction.contentBounds.xMax
+  -- self.y = self.rootGroup.selectAction.y
+
+end
+
 function M:init(UI)
 end
 --
@@ -34,10 +44,7 @@ function M:create(UI)
   self.rootGroup = UI.editor[self.groupName]
   self.group = display.newGroup()
   self.UI = UI
-  self.x = self.rootGroup.selectAction.rect.contentBounds.xMax
-  self.y = self.rootGroup.selectAction.y
-  -- self.x = self.rootGroup.selectAction.contentBounds.xMax
-  -- self.y = self.rootGroup.selectAction.y
+  self:setPosition()
 
   buttons:show()
 

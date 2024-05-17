@@ -6,14 +6,21 @@ local App = require("controller.Application")
 function _M:init(UI)
 end
 
+-- local pressedKeys = {}
+
 local function onKeyEvent(event)
+  -- if event.phase == "down" then
+  --   pressedKeys[event.keyName] = true
+  -- else
+  --   pressedKeys[event.keyName] = false
+  -- end
   -- Print which key was pressed down/up
   local message = "Key '" .. event.keyName .. "' was pressed " .. event.phase
   local app = App.get()
   local scenes = app.props.scenes
-  print("onKeyEvent", message, app.currentViewName )
   -- for k, v in pairs(scenes) do print(k, v) end
   if event.phase == "up" then
+    print("onKeyEvent", message, app.currentViewName )
     if event.keyName == "a" or event.keyName == "left" then
       -- print("onKeyEvent", app.currentViewName, #scenes)
       local getPrevious = function()
@@ -117,6 +124,7 @@ function _M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   local app = App.get()
   print("## keyboardNavigation")
+  Runtime:addEventListener("key", onKeyEvent)
   --
   -- local bg = UI.layers[#UI.layers+1]
   -- if bg == nil then return end
@@ -124,19 +132,18 @@ function _M:didShow(UI)
   -- bg:addEventListener("tap", onTap)
   -- bg:addEventListener(app.props.Gesture.SWIPE_EVENT, onSwipe)
   -- -- Add the key event listener
-  Runtime:addEventListener("key", onKeyEvent)
 end
 --
 function _M:didHide(UI)
   local sceneGroup = UI.sceneGroup
   local app = App.get()
+  Runtime:removeEventListener("key", onKeyEvent)
   --
   local bg = UI.layers[#UI.layers+1]
   if bg == nil then return end
   app.props.Gesture.deactivate(bg)
   bg:removeEventListener(app.props.Gesture.SWIPE_EVENT, onSwipe)
   bg:removeEventListener("tap", onTap)
-  Runtime:removeEventListener("key", onKeyEvent)
 end
 --
 function _M:destroy()

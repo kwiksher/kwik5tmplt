@@ -234,7 +234,7 @@ function M:create(UI)
   self.assetsSelector =
   selectorBase.new(
     UI,
-    display.contentCenterX, -- self.x
+    display.contentCenterX + 480/2-24, -- self.x
     -2,        -- self.y
     {
       {label = "Audio", command = "selectAudioAsset", store = "audios", btree = "select asset"},
@@ -246,7 +246,7 @@ function M:create(UI)
     "toolAssets",
     nil
   )
-  self.assetsSelector.marginX = display.contentCenterX -11
+  self.assetsSelector.marginX = display.contentCenterX -60
   self.assetsSelector.marginY =  11 -- -12 -- self.componentSelector.height+30
   self.assetsSelector.optionWidth = 48
   self.assetsSelector.width =  60
@@ -328,6 +328,9 @@ function M:didShow(UI)
     buttons:hide()
     if isVisible then
       M.projectPageSelector:hide()
+      M.assetsSelector:show()
+      M.assetsSelector.iconObj.isVisible = true
+
       propsTable:hide()
       -- for k, tool in pairs(UI.editor.editorTools) do
       --   -- print("hiding", k)
@@ -337,8 +340,8 @@ function M:didShow(UI)
       if not UI.editor.toolbar.isVisible  then
          UI.editor.toolbar:show()
         UI.editor.actionIcon.isVisible = true
-        local width = UI.editor.toolbar:getWidth()
-        M.assetsSelector.iconObj:move(width)
+        -- local width = UI.editor.toolbar:getWidth()
+        -- M.assetsSelector.iconObj:move(width)
       end
 
     end
@@ -351,6 +354,9 @@ function M:didShow(UI)
     buttons:hide()
     if isVisible then
       M.componentSelector:hide()
+      M.assetsSelector:hide()
+      M.assetsSelector.iconObj.isVisible = false
+
       for k, tool in pairs(UI.editor.editorTools) do
         --print(k, tool.id)
         tool:hide()
@@ -359,9 +365,8 @@ function M:didShow(UI)
       if UI.editor.toolbar.isVisible then
         UI.editor.toolbar:hide()
         UI.editor.actionIcon.isVisible = false
-
-        local width = UI.editor.toolbar:getWidth()
-        M.assetsSelector.iconObj:reset(width)
+        -- local width = UI.editor.toolbar:getWidth()
+        -- M.assetsSelector.iconObj:reset(width)
       end
 
       UI.scene.app:dispatchEvent {
@@ -402,6 +407,7 @@ end
 function M:didHide(UI)
   self.projectPageSelector:didHide(UI)
   self.componentSelector:didHide(UI)
+  self.assetsSelector:didHide(UI)
 end
 --
 function M:destroy(UI)

@@ -32,7 +32,7 @@ local command = function (params)
       print( "props is decoded!" )
       settingsTable:didHide(UI)
       settingsTable:destroy(UI)
-      settingsTable:init(UI, 80, 80)
+      settingsTable:init(UI)
       --
       settingsTable:setValue(decoded)
       settingsTable:create(UI)
