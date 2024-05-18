@@ -53,6 +53,59 @@ local option = {
   align = "left"
 }
 
+function M:render(props)
+  local posX = display.contentCenterX + 480/2 + 120 -- listbox.scrollView.x - option.width
+  -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
+  local posY  = display.contentCenterY --listbox.y + 70  -- (display.actualContentHeight - display.contentHeight + option.height)/2
+  -- print("actionCommandPropsStore:listen", posX, posY)
+  -- print("", debug.traceback())
+  local function compare(a,b)
+    return a.name < b.name
+  end
+  --
+  local headers = listbox.headers[props.type]
+  ---
+  local objs = {}
+  for i=1, #headers do
+    -- print("", props[i].name)
+    local header = headers[i]
+    local value = props.value[i]
+    -- print(props.index, header, value)
+    --
+    option.text = header
+    option.x = posX
+    option.y = i*option.height + posY
+    --
+    local rect = display.newRect(option.parent, option.x, option.y, option.width*2, option.height)
+    rect:setFillColor(0.8)
+    --
+    option.x = option.x - option.width/2 + 5
+    local obj = newText(option)
+    obj.rect = rect
+
+    -- Edit
+    if header == "action" then
+      linkbox:load(self.UI, "action", obj.x + obj.width/2, obj.y - obj.height/4, value)
+      obj.linkbox = linkbox
+    else
+      option.x = posX + option.width/2+5
+      option.text = value
+      --
+      obj.field = newTextField(option)
+    end
+
+    objs[#objs + 1] = obj
+
+    -- objs[#objs + 1] = obj
+    -- obj.page = props.name
+    -- obj.tap = commandHandler
+    -- obj:addEventListener("tap", obj)
+  end
+  self.objs = objs
+  self.model = props
+
+end
+
 --
 --- I/F ---
 --
@@ -89,56 +142,7 @@ function M:setValue(props)
     self:didHide(self.UI)
     self:destroy()
     print("------- listPropsTable --------")
-    local posX = listbox.scrollView.x - option.width
-    -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
-    local posY  = listbox.y + 70  -- (display.actualContentHeight - display.contentHeight + option.height)/2
-    -- print("actionCommandPropsStore:listen", posX, posY)
-    -- print("", debug.traceback())
-    local function compare(a,b)
-      return a.name < b.name
-    end
-    --
-    local headers = listbox.headers[props.type]
-    ---
-    local objs = {}
-    for i=1, #headers do
-      -- print("", props[i].name)
-      local header = headers[i]
-      local value = props.value[i]
-      -- print(props.index, header, value)
-      --
-      option.text = header
-      option.x = posX
-      option.y = i*option.height + posY
-      --
-      local rect = display.newRect(option.parent, option.x, option.y, option.width*2, option.height)
-      rect:setFillColor(0.8)
-      --
-      option.x = option.x - option.width/2 + 5
-      local obj = newText(option)
-      obj.rect = rect
-
-      -- Edit
-      if header == "action" then
-        linkbox:load(self.UI, "action", obj.x + obj.width/2, obj.y - obj.height/4, value)
-        obj.linkbox = linkbox
-      else
-        option.x = posX + option.width/2+5
-        option.text = value
-        --
-        obj.field = newTextField(option)
-      end
-
-      objs[#objs + 1] = obj
-
-      -- objs[#objs + 1] = obj
-      -- obj.page = props.name
-      -- obj.tap = commandHandler
-      -- obj:addEventListener("tap", obj)
-    end
-    self.objs = objs
-    self.model = props
-
+    self:render(props)
     linkbox.callbackTriagnle = function(isOn)
       if isOn then
         for i=1, #self.objs do

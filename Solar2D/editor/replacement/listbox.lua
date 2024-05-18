@@ -1,9 +1,9 @@
 local M = {
-  x = 10, -- display.contentCenterX/2,
-  y = display.contentHeight*0.75 -45,
-  width = 55,
-  height = 240,
-  rowWidth = 55,
+  x = display.contentCenterX - 480/2 + 10, --10, -- display.contentCenterX/2,
+  y = display.contentCenterY + 320/2+5,
+  width = 480 -20,
+  height = 240/2 -40,
+  rowWidth = 60,
   rowHeight = 20
 }
 -- attach drag-item scrollview to widget library
@@ -35,6 +35,7 @@ function M:create(UI)
   self.rootGroup.listPropsTable = display.newGroup()
   --
   self.singleClickEvent = function(obj)
+    print("@@@", obj.index)
     UI.scene.app:dispatchEvent {
       name = "editor.replacement.list.select",
       UI = UI,
@@ -160,7 +161,7 @@ function M:createTable ()
       end
       option.text    = row[i]
       local obj      = newText(option)
-      obj.x, obj.y   = i*self.rowWidth -20, index*self.rowHeight + 2
+      obj.x, obj.y   = i*self.rowWidth -40, index*self.rowHeight + 4
       obj.value      = row
       obj.index      = index
       obj.type       = self.type
@@ -203,7 +204,7 @@ function M:createTable ()
     left = self.x,
     top = self.y,
     -- top=(display.actualContentHeight-1280/4 )/2,
-    width= display.contentWidth -20,
+    width= self.width, --display.contentWidth -20,
     -- width= self.width * #headers[self.type],
     height=self.height
   }
