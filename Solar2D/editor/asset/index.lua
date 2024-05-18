@@ -102,6 +102,7 @@ local function readAsset(path, folder, map)
 end
 
 function controller:read(book, _model)
+  -- print(debug.traceback())
   local assets = {}
   local model = _model or require("App." ..book..".assets.model")
   local map = {}

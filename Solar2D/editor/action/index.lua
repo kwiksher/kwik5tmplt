@@ -24,6 +24,7 @@ local controller     = require(parent.."controller.index")
 local commandView    = require(parent.."commandView")
 local selectbox      = require(root.."parts.selectbox"):newInstance()
 local toolbar        = require(root .."parts.toolbar")
+local selectors      = require(root.."parts.selectors")
 selectbox.name = "actionName"
 selectbox.create = function(UI) end -- see createSelectbox below
 
@@ -52,10 +53,24 @@ end
 function M.iconHander()
   local self = M
   self.isVisible = not self.isVisible
+  local UI = self.UI
     if self.isVisible then
+
+      selectors.componentSelector:onClick(self.isVisible, "actionTable")
+
+      --UI.editor.actionStore:set(UI.scene.model.commands)
+
+      -- self.UI.scene.app:dispatchEvent(
+      --   {
+      --     name = "editor.action.selectAction",
+      --     UI = self.UI,
+      --   }
+      -- )
+
       self:show()
     else
-        self:hide()
+      UI.editor.actionStore:set({})
+      self:hide()
     end
 end
 
@@ -74,7 +89,7 @@ function M:createIcon(UI, posX, posY)
     fillColor = {1.0}
   }
   UI.editor.actionIcon = actionIcon
-  actionIcon.isVisible = false
+  -- actionIcon.isVisible = false
   UI.editor.rootGroup:insert(actionIcon)
 end
 

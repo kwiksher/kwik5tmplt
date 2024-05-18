@@ -22,7 +22,7 @@ local option = {
   text = "",
   x = 20,
   y = 0,
-  width = 30,
+  width = nil, --30,
   height = 20,
   font = native.systemFont,
   fontSize = 8,
@@ -78,8 +78,6 @@ function M:create(UI)
 
   end
 
-  option.parent = self.rootGroup
-
   local function newText(option)
     local obj=display.newText(option)
     obj:setFillColor( 0 )
@@ -91,21 +89,31 @@ function M:create(UI)
     for index=1, #self.rows do
       local row = self.rows[index]
       option.text =  row.label
+      --
+      option.width = nil
       if vertical then
-        option.y = (self.marginY or 0) + self.heightRect * (index)  - self.heightRect/2 + 22
         option.x = self.marginX or option.x
       else
-        option.x = (self.marginX or 0) + self.widthRect * (index)  - self.widthRect/2 + 22
+        option.x = self.marginX or option.x
         option.y = self.marginY or option.y
       end
-      option.width = self.optionWidth or option.width
-      --
-      local rect = display.newRect(self.rootGroup,option.x, option.y, self.widthRect, self.heightRect)
-      rect:setFillColor(0.8)
-      --
+
       local obj = newText(option)
-      obj.anchorY = 0.2
+      -- obj.anchorY = 0.2
       obj.command = row.command
+
+      if vertical then
+        option.y = (self.marginY or 0) + self.heightRect * (index)  - self.heightRect/2 + 22
+      else
+        obj.x = self.marginX + obj.width/2
+        if index > 1 then
+          obj.x = self.objs[index-1].rect.contentBounds.xMax + obj.width/2
+        end
+      end
+      -- option.width = self.optionWidth or option.width
+
+      local rect = display.newRect(obj.x, obj.y, obj.width +4, self.heightRect)
+      rect:setFillColor(0.8)
       -- if row.command and row.btree == nil then
       --   obj.tap = commandHandler
       --   obj:addEventListener("tap", obj)
@@ -136,10 +144,12 @@ function M:create(UI)
 
       obj.rect = rect
       obj.btree = row.btree
+      self.rootGroup:insert(obj.rect)
+      self.rootGroup:insert(obj.rect)
       self.rootGroup[row.command] = obj
       if row.filter then
         -- filter
-        obj.filter = self.filter:create(UI, obj.contentBounds.xMax, obj.y)
+        obj.filter = self.filter:create(UI, obj.contentBounds.xMax, obj.contentBounds.yMax+10)
         self.rootGroup:insert(obj.filter)
       end
       self.objs[#self.objs + 1] = obj

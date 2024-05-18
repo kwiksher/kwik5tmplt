@@ -35,7 +35,7 @@ function M:iconsHandler(event, class, tool)
     self:show()
     selectors.assetsSelector:show()
   else
-    -- self:hide()
+    self:hide()
     -- selectors.assetsSelector:hide()
     -- selectors.componentSelector:show()
     -- selectors.componentSelector:onClick(true,  "layerTable")
@@ -131,6 +131,7 @@ function M:touchHandler(target, event)
 end
 --
 function M:storeListener(foo, fooValue, render)
+  print("-------------------- storeListener ---------")
   self:destroy()
   --print("assetStore", #fooValue)
   self.selection = nil

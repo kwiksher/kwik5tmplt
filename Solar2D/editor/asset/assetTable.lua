@@ -34,7 +34,7 @@ function M:setPosition()
 end
 
 function M:createIcons (icons, class, tool)
-  -- print("createIcons", self.anchorName,_marginX, _marginY)
+  -- print("createIcons", class, self.anchorName,_marginX, _marginY)
   local marginX = _marginX or self.marginX
   local marginY = _marginY or 0
   ---
@@ -55,8 +55,11 @@ function M:createIcons (icons, class, tool)
       height = 22,
       fontSize =16,
       fillColor = {1.0},
-      listener = function(event) self:iconsHandler(event, class, tool) end
+      listener = function(event)
+        self:iconsHandler(event, class, tool)
+      end
     }
+    -- print("", class, actionIcon)
     self.icons[i] = actionIcon
     self.group:insert(actionIcon)
   end
@@ -226,10 +229,25 @@ function M:hide()
       self.objs[i].isVisible = false
     end
   end
+  for i=1, #self.icons do
+    -- print(type(self.icons[i]))
+    if type(self.icons[i]) == "table" then
+      self.icons[i].isVisible = false
+    end
+  end
 end
 
 --
 function M:destroy()
+  for k, icon in next, self.icons do
+    if type(icon) == "table" then
+      for name, value in pairs(icon) do print(name, value) end
+      mui.removeWidgetByName(icon.name)
+    else
+      print(icon)
+    end
+  end
+
   if self.objs then
     for i = 1, #self.objs do
       if self.objs[i].isMUI then
@@ -258,6 +276,7 @@ function M:destroy()
       end
     end
   end
+  self.icons = nil
   self.objs = nil
   self.selection = nil
   self.rootGroup.assetTable = nil

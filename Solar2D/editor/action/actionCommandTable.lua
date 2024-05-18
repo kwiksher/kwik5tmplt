@@ -115,19 +115,28 @@ end
 --
 function M:create(UI)
   self.UI = UI
-  --self.group = display.newGroup()
+  self.group = display.newGroup()
   --self.group = UI.editor.actionEditor.group
-  self.group = UI.editor[self.groupName]
+  -- self.group = UI.editor[self.groupName]
 
   UI.editor.viewStore.actionCommandTable = self
   UI.editor.actionCommandStore:listen(function(foo, fooValue)
     self:createTable(foo, fooValue)
+    self:show()
   end)
 end
 
 function M:didShow(UI) end
 --
 function M:didHide(UI) end
+
+function M:hide()
+  self.group.isVisible = false
+end
+function M:show()
+  self.group.isVisible = true
+end
+
 --
 function M:destroy()
   if self.objs then

@@ -28,7 +28,7 @@ local widget = require("widget")
 function M:setPosition()
   -- self.x = self.rootGroup.selectAction.rect.contentBounds.xMax
   self.x = display.contentCenterX - 480*0.95
-  self.y = self.rootGroup.selectAction.y
+  self.y = 22 -- self.rootGroup.selectAction.y
 
   -- self.x = self.rootGroup.selectAction.contentBounds.xMax
   -- self.y = self.rootGroup.selectAction.y
@@ -136,6 +136,7 @@ function M:create(UI)
 
   UI.editor.actionStore:listen(
     function(foo, fooValue)
+      -- print(debug.traceback())
       self:destroy()
       if fooValue then
         self.objs, self.newButton, self.editButton = render(fooValue,0,0)

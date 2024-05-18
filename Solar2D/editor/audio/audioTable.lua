@@ -22,6 +22,11 @@ local contextButtons = require("editor.parts.buttons")
 
 local posX = display.contentCenterX*0.75
 
+function M:setPosition()
+  self.x = 0
+  self.y = self.rootGroup.selectAudio.y
+end
+
 function M.mouseHandler(event)
   if event.isSecondaryButtonDown and event.target.isSelected then
     -- print("@@@@selected")

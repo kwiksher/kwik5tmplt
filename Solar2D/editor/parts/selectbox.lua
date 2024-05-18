@@ -128,7 +128,9 @@ function M:commandHandler(event)
     print("-----single tap------")
     if self.selectedObj ~= obj then
       if self.selectedObj then
-        self.selectedObj.rect:setFillColor(0.8)
+        if self.selectedObj.rect then
+          self.selectedObj.rect:setFillColor(0.8)
+        end
         -- update modified props. save the values to the self.model(decoded)
         --
         local props = self.useClassEditorProps()
@@ -138,7 +140,9 @@ function M:commandHandler(event)
       self.selectedObj = event.target
       self.selectedText.text =event.target.text
       self.selectedIndex = event.target.index
-      self.selectedObj.rect:setFillColor(0, 1, 0)
+      if self.selectedObj.rect then
+        self.selectedObj.rect:setFillColor(0, 1, 0)
+      end
       --
       -- this is set by controller.lua
       --   this will redraw with the new index
