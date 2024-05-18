@@ -5,8 +5,9 @@ local UI
 local bookTable
 local pageTable
 local layerTable
-local bookName = "bookTest01"
+local bookName = "book" -- "bookTest01"
 local pageName = "page1"
+local listbox = require("editor.replacement.listbox")
 
 function M.init(props)
   selectors = props.selectors
@@ -20,15 +21,15 @@ function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
   --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
-  bookTable.commandHandler({book=bookName}, nil,  true)
-  pageTable.commandHandler({page=pageName},nil,  true)
+  -- bookTable.commandHandler({book=bookName}, nil,  true)
+  -- pageTable.commandHandler({page=pageName},nil,  true)
   selectors.componentSelector.iconHander()
   selectors.componentSelector:onClick(true,  "layerTable")
 
@@ -70,7 +71,7 @@ function M.xtest_new_video()
   )
 end
 
-function M.test_select_layer_video()
+function M.txest_select_layer_video()
   local name = "imageOne"
   for i, entry in next,layerTable.objs do
     print("", i, entry.text)
@@ -101,7 +102,17 @@ function M.test_new_spritesheet()
       isNew = true
     }
   )
-end
+
+  --timer.performWithDelay( 1000, function()
+    for i,obj in next, listbox.objs do
+      if obj.index == 1 then
+        listbox.singleClickEvent(obj)
+        break
+      end
+      -- print("----------")
+      -- for k, value in pairs(obj) do print(k, value) end
+    end
+  end
 
 ---[[
   function M.xtest_new_sync()
