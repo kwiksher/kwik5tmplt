@@ -44,6 +44,10 @@ local command = function (params)
   if params.isNew then
     type = commandClass
     --
+    if commandModel[commandClass] == nil then
+      return
+    end
+
     for k, v in pairs(commandModel[commandClass]) do
       model[#model+1] = {name=k, params=v}
     end

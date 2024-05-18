@@ -114,7 +114,7 @@ function M:hide()
   end
   --
   if UI.editor.viewStore.actionCommandTable then
-    UI.editor.viewStore.actionCommandTable.isVisible = false
+    UI.editor.viewStore.actionCommandTable:hide()
     UI.editor.viewStore.commandbox:hide()
     UI.editor.viewStore.actionCommandPropsTable:hide()
     if cancel then

@@ -71,6 +71,7 @@ function M:create(Props)
   local obj = mui.getWidgetBaseObject(Props.name)
   --obj:addEventListener("mouseHover", onMouseHover)
   obj.anchorY = 0
+  obj.name = Props.name
   obj.callBack = Props.listener
   obj.muiOptions = {name= Props.name}
 
