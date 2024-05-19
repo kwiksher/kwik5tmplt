@@ -11,25 +11,11 @@ M.x =  display.contentCenterX + 28 -- UI.editor.viewStore.actionCommandTable.lef
 M.y =  22
       -- commandbox.y  -- (display.actualContentHeight - display.contentHeight + option.height)/2
 
-local appFont
-if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
-  appFont = native.systemFont
-else
-  -- appFont = "HelveticaNeue-Light"
-  appFont = "HelveticaNeue"
-end
-
-local option = {
-  parent = nil,
-  text = "",
+local option, newText = newTextFactory{
   x = 0,
   y = 100,
-  --viewStore.selectLayer.y,
-  width = 60,
-  height = 20,
-  font = appFont,
-  fontSize = 8,
-  align = "left"
+  width = 100,
+  height = 20
 }
 
 local commandbox = require(parent.."commandbox")
@@ -92,12 +78,6 @@ function M:create(UI)
   UI.editor.viewStore.actionCommandPropsTable = self
 
   option.parent = self.group
-
-  local function newText(option)
-    local obj = display.newText(option)
-    obj:setFillColor(0)
-    return obj
-  end
 
 
     -- Create invisible background element for hiding the keyboard (when applicable)

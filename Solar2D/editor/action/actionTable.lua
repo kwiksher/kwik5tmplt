@@ -12,6 +12,8 @@ M.y = nil
 M.width = 48
 M.groupName = "rootGroup"
 
+local option, newText = newTextFactory{anchorX=0}
+
 local function onKeyEvent(event)
   return M:onKeyEvent(event)
 end
@@ -46,27 +48,11 @@ function M:create(UI)
   self.UI = UI
   self:setPosition()
 
-  buttons:show()
+  option.width = self.width -- nil makes newText automatically adjust the width
 
-  local option = {
-    text = "",
-    x = 0,
-    y = 0,
-    width = self.width, -- nil makes newText automatically adjust the width
-    height = 20,
-    font = native.systemFont,
-    fontSize = 10,
-    align = "left"
-  }
+   buttons:show()
 
-  local function newText(option)
-    local obj = display.newText(option)
-    obj:setFillColor(0)
-    obj.anchorX = 0
-    return obj
-  end
-
-  local function render (models, xIndex, yIndex)
+   local function render (models, xIndex, yIndex)
     -- print("actionStore", #models)
     M:destroy()
     --buttons:show()

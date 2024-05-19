@@ -5,6 +5,12 @@ require("extlib.dragitemscrollview")
 
 local util = require("editor.util")
 
+local option, newText = newTextFactory{
+  height = 20,
+  -- fontSize = 10,
+  anchorX = 0
+}
+
 -- load widget library
 local widget = require("widget")
 
@@ -48,24 +54,8 @@ function M:create(UI)
   self.group = display.newGroup()
   --UI.editor.viewStore:insert(self.group)
 
-  local option = {
-    parent = self.group,
-    text = "",
-    x = 0,
-    y = 0,
-    width = self.width,
-    height = 20,
-    font = native.systemFont,
-    fontSize = 10,
-    align = "left"
-  }
-
-  local function newText(option)
-    local obj = display.newText(option)
-    obj:setFillColor(0)
-    obj.anchorX = 0
-    return obj
-  end
+  option.parent = self.group
+  option.width = self.width
 
   self.singleClickEvent = function(obj)
     util.setSelection(self, obj)

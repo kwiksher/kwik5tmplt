@@ -21,25 +21,16 @@ else
   appFont = "HelveticaNeue"
 end
 ---
-local option = {
+local option, newText = newTextFactory {
   text = "",
   x    = 0,
   y    = 100,
-  --self.viewStore.selectLayer.y,
   width    = 72,
   height   = 20,
-  font     = appFont,
   fontSize = 8,
-  align    = "left"
 }
 --
 M.option = option
---
-local function newText(option)
-  local obj = display.newText(option)
-  obj:setFillColor(0)
-  return obj
-end
 --
 M.newText = newText
 --

@@ -181,6 +181,54 @@ function exports.split(str, sep)
   end
   return out
 end
+----------------------------------
+--
+local function newText(option)
+  local obj = display.newText(option)
+  obj:setFillColor(0)
+  return obj
+end
+
+local appFont
+if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
+  appFont = native.systemFont
+else
+  -- appFont = "HelveticaNeue-Light"
+  appFont = "HelveticaNeue"
+end
+---
+function newTextFactory(_option) -- this is global
+  local option = {
+    text = "",
+    x    = 0,
+    y    = 0,
+    width    = 0,
+    height   = 0,
+    font     = appFont,
+    fontSize = 10,
+    align    = "left"
+  }
+  if _option then
+    for k,v in pairs(_option) do
+      option[k] = v
+    end
+    if _option.anchorX then
+      return option, function(option)
+        local obj = display.newText(option)
+        obj:setFillColor(0)
+        obj.anchorX = _option.anchorX
+        return obj
+      end
+    elseif _option.setFillColor then
+      return option, function(option)
+        local obj = display.newText(option)
+        obj:setFillColor(_ootion.setFillColor)
+        return obj
+      end
+    end
+  end
+  return option, newText
+end
 
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/templates/components/layer_props.lua
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/../templates/components/layer_props.lua: No such file or directory

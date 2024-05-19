@@ -8,22 +8,14 @@ local nodes = {
   "select animation", "select replacements", "select interactions", "select physics", "--",
   "copy", "paste", "hide", "preview", "save", "cancel"}
 
-local option = {
-  text = "",
+local option, newText= newTextFactory{
   x = 300,
   y = 100,
   width = 150,
   height = 60,
-  font = native.systemFont,
-  fontSize = 24,
-  align = "left"
+  -- fontSize = 24,
+  setFillColor = 1
 }
-
-local function newText(option)
-  local obj = display.newText(option)
-  obj:setFillColor(1)
-  return obj
-end
 
 local group = display.newGroup()
 
