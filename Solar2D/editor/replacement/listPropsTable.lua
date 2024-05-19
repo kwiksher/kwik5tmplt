@@ -13,12 +13,6 @@ local linkbox   = require(root.."parts.linkbox").new({width=55})
 local util = require("lib.util")
 local json = require("json")
 
-local function newText(option)
-  local obj = display.newText(option)
-  obj:setFillColor(0)
-  return obj
-end
-
 local function newTextField(option)
     -- Create native text field
     textField = native.newTextField( option.x+5, option.y, option.width + 5, option.height )
@@ -33,24 +27,12 @@ local function newTextField(option)
     return textField
 end
 
-local appFont
-if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
-  appFont = native.systemFont
-else
-  -- appFont = "HelveticaNeue-Light"
-  appFont = "HelveticaNeue"
-end
 
-local option = {
-  text = "",
+local option, newText = newTextFactory{
   x = 0,
   y = 100,
-  --rootGroup.selectLayer.y,
   width = 60,
   height = 20,
-  font = appFont,
-  fontSize = 8,
-  align = "left"
 }
 
 function M:render(props)

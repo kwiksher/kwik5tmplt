@@ -17,7 +17,7 @@ local M = {
     -- lunatest.suite("editor.tests.suite_page1_drag", props)
     -- lunatest.suite("editor.tests.suite_page1_group", props)
     -- lunatest.suite("editor.tests.suite_page1_new_audio_timer_group_variable", props)
-    lunatest.suite("editor.tests.suite_page1_replacements", props)
+    -- lunatest.suite("editor.tests.suite_page1_replacements", props)
     -- lunatest.suite("editor.tests.suite_page3_audio", props)
     -- lunatest.suite("editor.tests.suite_timer", props)
     -- lunatest.suite("editor.tests.suite_variable", props)

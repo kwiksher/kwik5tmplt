@@ -12,6 +12,13 @@ local muiIcon    = require("components.mui.icon").new()
 local layerTableCommands = require("editor.parts.layerTableCommands")
 local contextButtons = require("editor.parts.buttons")
 
+local option, newText = newTextFactory{
+  x = 0,
+  y = nil,
+  width = 100,
+  height = 20
+}
+
 local posX = display.contentCenterX*0.75
 
 function M.mouseHandler(event, type, selections)
@@ -99,24 +106,10 @@ function M:initScene(UI)
   local btNodes = tree.tree.conditions.items[btNodeName]
   btNodes[1].viewObj = self.group
   --
-  local option = {
-    text = "",
-    x = 0,
-    y = self.y,
-    width = 100,
-    height = 20,
-    font = native.systemFont,
-    fontSize = 10,
-    align = "left"
-  }
+  option.y = self.y
   self.option = option
 end
 
-local function newText(option)
-  local obj = display.newText(option)
-  obj:setFillColor(0)
-  return obj
-end
 --
 M.newText = newText
 --

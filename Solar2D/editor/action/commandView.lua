@@ -13,12 +13,10 @@ local widget  = require("widget")
 ---
 local controller     = require(parent.."controller.index")
 
-local function newText(option)
-  local obj = display.newText(option)
-  obj:setFillColor(0)
-  return obj
-end
-
+local option, newText = newTextFactory{
+  width    = 100,
+  height   = 16,
+}
 
 function M:createTable(parent)
   local UI = self.UI
@@ -50,17 +48,8 @@ function M:createTable(parent)
        listener               = scrollListener
   }
 
-  local option = {
-    parent   = parent,
-    text     = "",
-    x        = 0,
-    y        = self.y,
-    width    = 100,
-    height   = 16,
-    font     = native.systemFont,
-    fontSize = 10,
-    align    = "left"
-  }
+  option.parent   = parent
+  option.y        = self.y
 
   local count = 0
   for k, v in pairs(self.models or {}) do

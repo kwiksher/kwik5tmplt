@@ -18,15 +18,12 @@ local widget = require("widget")
 local bt = require(root..'controller.BTree.btree')
 local tree = require(root.."controller.BTree.selectorsTree")
 
-local option = {
-  text = "",
+local option, newText = newTextFactory{
   x = 20,
   y = 0,
   width = nil, --30,
   height = 20,
-  font = native.systemFont,
-  fontSize = 8,
-  align = "left"
+  -- fontSize = 8,
 }
 
 ---
@@ -76,12 +73,6 @@ function M:create(UI)
         }
     end
 
-  end
-
-  local function newText(option)
-    local obj=display.newText(option)
-    obj:setFillColor( 0 )
-    return obj
   end
 
   self.objs = {}

@@ -44,11 +44,6 @@ M.commandMap = {}
   --   "trigger" : "eventTwo"
   -- }}
 
-local function newText(option)
-  local obj = display.newText(option)
-  obj:setFillColor(0)
-  return obj
-end
 
 function M.iconHander()
   local self = M

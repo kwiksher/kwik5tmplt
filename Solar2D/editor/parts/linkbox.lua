@@ -67,12 +67,7 @@ function M:setValue(selectedValue)
   end
 end
 
-local function newText(option)
-  local obj=display.newText(option)
-  obj:setFillColor( 0 )
-  return obj
-end
-
+local option, newText = newTextFactory()
 M.newText = newText
 
 function M:createTable(UI, rows, selectedIndex, selectedValue)
@@ -253,17 +248,8 @@ function M:_init(UI, x, y, w, h, type)
   -- local path =system.pathForFile( "App/"..App.get().name.."/models/"..UI.page.."/commands/"..UI.editor.currentAction..".json", system.ResourceDirectory)
   --
 
-  local option = {
-    text     = "",
-    x        = 0,
-    y        = 0,
-    width    = self.width,
-    height   = self.height,
-    font     = native.systemFont,
-    fontSize = 10,
-    align    = "left"
-  }
-
+  option.width    = self.width
+  option.height   = self.height
   self.option = option
 
 end

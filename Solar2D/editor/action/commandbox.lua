@@ -17,13 +17,8 @@ M.left = display.contentCenterX -480/2 + 4
 --   play = {target = ""},
 --   playAll = { animations = {}}
 -- },
-
+local option, newText = newTextFactory{ x = 50}
 --
-local function newText(option)
-  local obj=display.newText(option)
-  obj:setFillColor( 0 )
-  return obj
-end
 --
 function M:setPosition(entries, model)
   -- self.x = self.x
@@ -38,21 +33,8 @@ function M:setPosition(entries, model)
 end
 --
 function M:createTable(UI, selected)
-
-
   -- print("createTable")
-
-  local option = {
-    text     = "",
-    x        = 50,
-    y        = 0,
-    width    = self.width,
-    height   = 16,
-    font     = native.systemFont,
-    fontSize = 10,
-    align    = "left"
-  }
-
+  option.width    = self.width
     --
   local scrollView = widget.newScrollView
   {

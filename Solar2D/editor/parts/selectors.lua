@@ -25,11 +25,7 @@ local selectorsListener = require(parent.."selectorsListener")
 
 local widget = require("widget")
 ---
-local function newText(option)
-  local obj = display.newText(option)
-  obj:setFillColor(0)
-  return obj
-end
+local option, newText = newTextFactory()
 
 local function showLabels(fooValue, rootGroup)
   local labelBook = newText {
@@ -122,7 +118,7 @@ function M:create(UI)
 
   self.projectPageSelector.optionWidth = 40
   self.projectPageSelector.marginY = 11
-  self.projectPageSelector.marginX = 20
+  self.projectPageSelector.marginX = 55
 
   self.componentSelector =
     selectorBase.new(

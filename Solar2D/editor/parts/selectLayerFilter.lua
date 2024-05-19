@@ -46,11 +46,10 @@ M.selectedText = nil
 M.objs = {}
 --
 
-local function newText(option)
-  local obj=display.newText(option)
-  obj:setFillColor( 0 )
-  return obj
-end
+local option, newText = newTextFactory{
+    width    = 0,
+    height   = 16,
+}
 --
 local function createTable(triangle, rootGroup)
   -- print("createTable")
@@ -93,17 +92,6 @@ local function createTable(triangle, rootGroup)
   --scrollView.x=labelText.x
   ---[[
 
-  local option = {
-    --parent   = rootGroup,
-    text     = "",
-    x        = 0,
-    y        = 0,
-    width    = 0,
-    height   = 16,
-    font     = native.systemFont,
-    fontSize = 10,
-    align    = "left"
-  }
   local index = 0
   local function createRow(entry)
     -- print("createRow")

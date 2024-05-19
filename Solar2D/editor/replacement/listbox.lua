@@ -122,22 +122,9 @@ function M:listener( item, touchevent )
   end
 end
 
-local function newText(option)
-  local obj = display.newText(option)
-  obj:setFillColor(0)
-  -- obj.anchorX = 0
-  return obj
-end
-
-local option = {
-  text = "",
-  x = 0,
-  y = 0,
+local option, newText = newTextFactory{
   width = nil,
   height = 20,
-  font = native.systemFont,
-  fontSize = 10,
-  align = "left"
 }
 
 function M:createTable ()

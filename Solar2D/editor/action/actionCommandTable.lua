@@ -15,6 +15,13 @@ M.radius = 20
 M.touchthreshold = 0   -- touchthreshold or display.actualContentWidth * .1
 M.groupName = "rootGroup"
 
+local option, newText = newTextFactory {
+    x = 0,
+    y = 0,
+    width = nil,
+    height = 20,
+  }
+
 function M:createTable (foo, fooValue)
   local UI = self.UI
   local objs = {}
@@ -24,26 +31,7 @@ function M:createTable (foo, fooValue)
   self.left = UI.editor.rootGroup.actionTable.contentBounds.xMax
   -- print("@@@@@@@ actionCommandTable", self.left)
   --
-  local option = {
-    parent = self.group,
-    text = "",
-    x = 0,
-    y = 0,
-    width = nil,
-    height = 20,
-    font = native.systemFont,
-    fontSize = 10,
-    align = "left"
-  }
-
-  local function newText(option, text)
-    option.text = text or ""
-    local obj = display.newText(option)
-    obj:setFillColor(0)
-    obj.anchorX = 0
-    return obj
-  end
-
+  option.parent = self.group
    -- create drag-item scrollview
   local scrollView = dragItemScrollView.new{
     backgroundColor = {1.0},
@@ -75,7 +63,9 @@ function M:createTable (foo, fooValue)
       end
     end
 
-    local obj = newText(option, action.command .." "..target)
+    option.text = action.command .." "..target or ""
+    local obj = newText(option)
+    obj.anchorX = 0
 
     scrollView:attachListener(obj,
       function(item, touchevent )
