@@ -203,7 +203,7 @@ function newTextFactory(_option) -- this is global
     x    = 0,
     y    = 0,
     width    = 0,
-    height   = 0,
+    height   = 20,
     font     = appFont,
     fontSize = 10,
     align    = "left"
