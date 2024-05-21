@@ -50,6 +50,7 @@ function M:create(UI)
     width = 22,
     height = 22,
     fontSize =16,
+    iconSize = 18,
     listener = self.iconHander
   }
 

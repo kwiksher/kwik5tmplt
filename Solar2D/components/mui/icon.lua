@@ -46,8 +46,10 @@ function M:create(Props)
     width = Props.width or 30,
     height = Props.height or 30,
     fontSize = Props.fontSize or 30,
+    iconSize = Props.iconSize or 16,
     fillColor = {0, 0, 0},
     textAlign = "center",
+    iconAlign ="center",
     state = {
       value = "on",
       off = {
@@ -93,8 +95,10 @@ function M:createImage(Props)
     rectWidth = 100,
     height = Props.height or 16,
     fontSize = Props.fontSize or 16,
+    iconSize = Props.iconSize or 16,
     fillColor = {0, 0, 0},
     textAlign = "center",
+    iconAlign = Props.iconAlign or "left",
     state = {
       value = "on",
       off = {
@@ -135,9 +139,11 @@ function M:createToolImage(Props)
     width = Props.width or 30,
     rectWidth = 100,
     height = Props.height or 30,
-    fontSize = 30,
+    fontSize = Props.width or 30, -- this fontSize is also applied to the image size
+    iconSize = Props.iconSize or 16,
     fillColor = {0, 0, 0},
     textAlign = "center",
+    iconAlign ="center",
     state = {
       value = "on",
       off = {

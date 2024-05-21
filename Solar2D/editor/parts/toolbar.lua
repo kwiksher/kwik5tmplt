@@ -96,7 +96,9 @@ function M:create(UI)
           y =  posY,
           width = 22,
           height = 22,
-          listener = toolListener
+          listener = toolListener,
+          iconSize = 18
+
         }
         obj.class    = string.lower(tool.name)
         obj.layerTool = layerTool.id
@@ -146,7 +148,9 @@ function M:create(UI)
         height = 22,
         listener = layerToolListener,
         id = v.id,
-        fillColor = {1, 1, 1}
+        fillColor = {1, 1, 1},
+        iconAlign = "center",
+        iconSize = 18
       }
       obj.id = v.id
       obj.tools = v.tools

@@ -59,10 +59,11 @@ function M:createTable(parent)
       text      = v.name,
       name      = self.name .. "-" .. v.name,
       x         = 60,
-      y         = count*16,
+      y         = count*18,
       width     = 110,
-      height    = 16,
-      fontSize  = 10,
+      height    = 22,
+      fontSize  = 12,
+      iconSize  = 20,
       listener  = controller.commandGroupHandler,
       fillColor = {1.0}
     }
