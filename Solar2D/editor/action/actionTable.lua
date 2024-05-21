@@ -5,6 +5,7 @@ local actionTableListener = require(parent.."actionTableListener")
 local buttons = require(parent.."buttons")
 local contextButtons = require("editor.parts.buttons")
 local layerTableCommands = require("editor.parts.layerTableCommands")
+local util = require("lib.util")
 --
 M.selections = {}
 M.x = nil
@@ -12,7 +13,7 @@ M.y = nil
 M.width = 48
 M.groupName = "rootGroup"
 
-local option, newText = newTextFactory{anchorX=0}
+local option, newText = util.newTextFactory{anchorX=0}
 
 local function onKeyEvent(event)
   return M:onKeyEvent(event)

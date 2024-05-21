@@ -1,6 +1,8 @@
 local M={}
 local bt = require('btree')
 local tree = require("selectorsTree")
+local util = require("lib.util")
+
 --
 local nodes = {
   "select book", "select page", "select layer","--",
@@ -8,7 +10,7 @@ local nodes = {
   "select animation", "select replacements", "select interactions", "select physics", "--",
   "copy", "paste", "hide", "preview", "save", "cancel"}
 
-local option, newText= newTextFactory{
+local option, newText= util.newTextFactory{
   x = 300,
   y = 100,
   width = 150,

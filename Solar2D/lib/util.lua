@@ -197,7 +197,7 @@ else
   appFont = "HelveticaNeue"
 end
 ---
-function newTextFactory(_option) -- this is global
+function exports.newTextFactory(_option) -- this is global
   local option = {
     text = "",
     x    = 0,
@@ -230,6 +230,19 @@ function newTextFactory(_option) -- this is global
   return option, newText
 end
 
+function exports.newTextField(option)
+  		-- Create native text field
+      textField = native.newTextField( option.x+5, option.y, option.width + 5, option.height )
+      textField.font = native.newFont( appFont,12 )
+      --textField:resizeFontToFitHeight()
+      --textField:setReturnKey( "done" )
+      --textField.placeholder = "Enter text"
+      textField:addEventListener( "userInput", function() print("userInput") end )
+      --native.setKeyboardFocus( textField )
+      textField.text = option.text
+      option.parent:insert(textField)
+      return textField
+  end
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/templates/components/layer_props.lua
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/../templates/components/layer_props.lua: No such file or directory
 return exports

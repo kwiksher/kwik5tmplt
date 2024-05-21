@@ -3,6 +3,7 @@ local parent,root = newModule(name)
 local M = require("editor.baseBox").new()
 local shapes = require("extlib.shapes")
 local widget = require( "widget" )
+local util = require("lib.util")
 
 M.name = name
 M.x = display.contentCenterX*0.5
@@ -17,7 +18,7 @@ M.left = display.contentCenterX -480/2 + 4
 --   play = {target = ""},
 --   playAll = { animations = {}}
 -- },
-local option, newText = newTextFactory{ x = 50}
+local option, newText = util.newTextFactory{ x = 50}
 --
 --
 function M:setPosition(entries, model)

@@ -12,8 +12,9 @@ local muiData = require("materialui.mui-data")
 local widget  = require("widget")
 ---
 local controller     = require(parent.."controller.index")
+local util = require("lib.util")
 
-local option, newText = newTextFactory{
+local option, newText = util.newTextFactory{
   width    = 100,
   height   = 16,
 }

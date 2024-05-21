@@ -21,7 +21,7 @@ else
   appFont = "HelveticaNeue"
 end
 ---
-local option, newText = newTextFactory {
+local option, newText = util.newTextFactory {
   text = "",
   x    = 0,
   y    = 100,

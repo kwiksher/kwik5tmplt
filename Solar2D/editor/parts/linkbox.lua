@@ -4,11 +4,12 @@ local current = ...
 local parent = current:match("(.-)[^%.]+$")
 local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 
-local util = require(root.."util")
+local utileditor = require(root.."util")
 local shapes = require("extlib.shapes")
 local widget = require( "widget" )
 local App = require "Application"
 
+local util = require("lib.util")
 
 -- linkbox has a rect only not having native.textField. boxbase implements it with native.textField
 ---------------------------
@@ -42,7 +43,7 @@ function M:setValue(selectedValue)
   local book = UI.editor.currentBook or App.get().name
   local page = UI.editor.currentPage or UI.page
   print("linkbox", book, page)
-  self.model = util.read(book, page)
+  self.model = utileditor.read(book, page)
   local class = typeMap[self.type]
 
   -- print(debug.traceback())
@@ -67,7 +68,7 @@ function M:setValue(selectedValue)
   end
 end
 
-local option, newText = newTextFactory()
+local option, newText = util.newTextFactory()
 M.newText = newText
 
 function M:createTable(UI, rows, selectedIndex, selectedValue)
@@ -196,7 +197,7 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
         obj:addEventListener("touch", obj)
       end
       -- check
-      local path = util.getParent(obj)
+      local path = utileditor.getParent(obj)
       if obj.layer and selectedValue == path..obj.layer then -- layer is used for audio, action too
         self.selectedIndex = index
         obj.rect:setFillColor(0,1,0)
