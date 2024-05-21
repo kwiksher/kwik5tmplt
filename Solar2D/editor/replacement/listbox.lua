@@ -11,6 +11,7 @@ require("extlib.dragitemscrollview")
 -- load widget library
 local widget = require("widget")
 local json = require("json")
+local util = require("lib.util")
 
 --I/F
 
@@ -122,7 +123,7 @@ function M:listener( item, touchevent )
   end
 end
 
-local option, newText = newTextFactory{
+local option, newText = util.newTextFactory{
   width = nil,
   height = 20,
 }

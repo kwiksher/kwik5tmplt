@@ -3,9 +3,10 @@ M.name = ...
 -- attach drag-item scrollview to widget library
 require("extlib.dragitemscrollview")
 
-local util = require("editor.util")
+local utileditor = require("editor.util")
+local util = require("lib.util")
 
-local option, newText = newTextFactory{
+local option, newText = util.newTextFactory{
   height = 20,
   -- fontSize = 10,
   anchorX = 0
@@ -58,7 +59,7 @@ function M:create(UI)
   option.width = self.width
 
   self.singleClickEvent = function(obj)
-    util.setSelection(self, obj)
+    utileditor.setSelection(self, obj)
   end
 
 

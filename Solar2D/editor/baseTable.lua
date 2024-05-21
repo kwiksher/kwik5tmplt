@@ -11,8 +11,9 @@ local muiIcon    = require("components.mui.icon").new()
 
 local layerTableCommands = require("editor.parts.layerTableCommands")
 local contextButtons = require("editor.parts.buttons")
+local util = require("lib.util")
 
-local option, newText = newTextFactory{
+local option, newText = util.newTextFactory{
   x = 0,
   y = nil,
   width = 100,

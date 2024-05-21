@@ -24,8 +24,10 @@ local buttons                 = require("editor.parts.buttons")
 local selectorsListener = require(parent.."selectorsListener")
 
 local widget = require("widget")
+local util = require("lib.util")
+
 ---
-local option, newText = newTextFactory()
+local option, newText = util.newTextFactory()
 
 local function showLabels(fooValue, rootGroup)
   local labelBook = newText {

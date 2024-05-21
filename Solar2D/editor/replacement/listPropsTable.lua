@@ -28,7 +28,7 @@ local function newTextField(option)
 end
 
 
-local option, newText = newTextFactory{
+local option, newText = util.newTextFactory{
   x = 0,
   y = 100,
   width = 60,

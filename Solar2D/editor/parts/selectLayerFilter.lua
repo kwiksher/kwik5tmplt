@@ -36,6 +36,8 @@ local model= {
 
 local shapes = require("extlib.shapes")
 local widget = require( "widget" )
+local util = require("lib.util")
+
 local numberOfRows=#model
 local halfW = display.contentCenterX
 local halfH = display.contentCenterY
@@ -46,7 +48,7 @@ M.selectedText = nil
 M.objs = {}
 --
 
-local option, newText = newTextFactory{
+local option, newText = util.newTextFactory{
     width    = 0,
     height   = 16,
 }

@@ -18,7 +18,9 @@ local widget = require("widget")
 local bt = require(root..'controller.BTree.btree')
 local tree = require(root.."controller.BTree.selectorsTree")
 
-local option, newText = newTextFactory{
+local util = require("lib.util")
+
+local option, newText = util.newTextFactory{
   x = 20,
   y = 0,
   width = nil, --30,

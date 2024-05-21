@@ -2,6 +2,7 @@ local M = {}
 local current = ...
 local parent = current:match("(.-)[^%.]+$")
 local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
+local util = require("lib.util")
 --
 M.name = current
 M.weight = 1
@@ -11,7 +12,7 @@ M.x =  display.contentCenterX + 28 -- UI.editor.viewStore.actionCommandTable.lef
 M.y =  22
       -- commandbox.y  -- (display.actualContentHeight - display.contentHeight + option.height)/2
 
-local option, newText = newTextFactory{
+local option, newText = util.newTextFactory{
   x = 0,
   y = 100,
   width = 100,
@@ -83,19 +84,7 @@ function M:create(UI)
     -- Create invisible background element for hiding the keyboard (when applicable)
 
 
-  local function newTextField(option)
-  		-- Create native text field
-      textField = native.newTextField( option.x+5, option.y, option.width + 5, option.height )
-      textField.font = native.newFont( appFont,8 )
-      --textField:resizeFontToFitHeight()
-      --textField:setReturnKey( "done" )
-      --textField.placeholder = "Enter text"
-      textField:addEventListener( "userInput", function() print("userInput") end )
-      --native.setKeyboardFocus( textField )
-      textField.text = option.text
-      option.parent:insert(textField)
-      return textField
-  end
+  local newTextField = util.newTextField
 
   --
   UI.editor.actionCommandPropsStore:listen(
@@ -130,13 +119,13 @@ function M:create(UI)
         option.x = posX
         option.y = i*option.height + posY
         option.text = entry.name
-        -- print("", entry.name)
         local rect = display.newRect(option.parent, option.x, option.y, option.width*1.2, option.height)
         rect:setFillColor(1)
         --
         local obj
         obj = newText(option)
         obj.rect = rect
+        obj.anchorY = 0.25
         objs[#objs + 1] = obj
 
         -- Edit

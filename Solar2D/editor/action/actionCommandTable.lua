@@ -4,6 +4,7 @@ local parent,root, M = newModule(name)
 local dragItemScrollView = require("extlib.dragitemscrollview")
 local widget = require("widget")
 local actionCommandTableListener = require(parent.."actionCommandtableListener")
+local util = require("lib.util")
 
 M.top = 22
 M.left = nil
@@ -15,7 +16,7 @@ M.radius = 20
 M.touchthreshold = 0   -- touchthreshold or display.actualContentWidth * .1
 M.groupName = "rootGroup"
 
-local option, newText = newTextFactory {
+local option, newText = util.newTextFactory {
     x = 0,
     y = 0,
     width = nil,
@@ -66,6 +67,7 @@ function M:createTable (foo, fooValue)
     option.text = action.command .." "..target or ""
     local obj = newText(option)
     obj.anchorX = 0
+    --print("@@@@", option.text)
 
     scrollView:attachListener(obj,
       function(item, touchevent )
