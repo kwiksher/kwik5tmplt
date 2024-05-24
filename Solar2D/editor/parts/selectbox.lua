@@ -82,22 +82,25 @@ function M:create(UI)
   self.triangle = self:createTriangle( self.x,self.y+5, 10 )
   self.triangle.alpha = 0
   self.group:insert(self.triangle)
-  local scrollView = widget.newScrollView
-  {
-    top                      = self.triangle.contentBounds.yMax,
-    left                     = self.triangle.contentBounds.xMin,
-    width                    = self.width,
-    height                   = #self.model*self.height,
-    scrollHeight             = #self.model*self.height,
-    verticalScrollDisabled   = false,
-    horizontalScrollDisabled = true,
-    friction                 = 2,
-  }
-  --UI.editor.rootGroup:insert(self.group)
-  --scrollView.isVisible = false
-  -- this creatTable in baseBox set self.name to the text field next the triangle icon
-  self:createTable(self.triangle, self.group, {scrollView = scrollView, isRect = true}) -- isRect
+  if #self.model > 2 then
+    print("selctbox #", #self.model )
+    local scrollView = widget.newScrollView
+    {
+      top                      = self.triangle.contentBounds.yMax,
+      left                     = self.triangle.contentBounds.xMin,
+      width                    = self.width,
+      height                   = #self.model*self.height,
+      scrollHeight             = #self.model*self.height,
+      verticalScrollDisabled   = false,
+      horizontalScrollDisabled = true,
+      friction                 = 2,
+    }
+    UI.editor.rootGroup:insert(self.group)
+    --scrollView.isVisible = false
+    -- this creatTable in baseBox set self.name to the text field next the triangle icon
 
+    self:createTable(self.triangle, self.group, {scrollView = scrollView, isRect = true}) -- isRect
+  end
 end
 --
 function M:textListener(event )

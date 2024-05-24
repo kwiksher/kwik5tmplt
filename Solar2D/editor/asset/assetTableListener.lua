@@ -35,6 +35,7 @@ function M:iconsHandler(event, class, tool)
     self:show()
     selectors.assetsSelector:show()
   else
+
     self:hide()
     -- selectors.assetsSelector:hide()
     -- selectors.componentSelector:show()
