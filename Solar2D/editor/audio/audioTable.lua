@@ -55,8 +55,8 @@ function M:commandHandler(target, event)
         subclass = target.subclass
       }
       tree:setConditionStatus("select component", bt.SUCCESS, true)
-      tree:setActionStatus("load audio", bt.RUNNING, true)
       tree:setConditionStatus("select audio", bt.SUCCESS)
+      tree:setActionStatus("load audio", bt.RUNNING, true)
     end
   elseif self.isControlDown() then -- mutli selections
     layerTableCommands.multiSelections(self, target)
