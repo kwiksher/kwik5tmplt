@@ -22,7 +22,7 @@ props.marginX = nil-- display.contentCenterX
 -----------
 local M, bt, tree = require(root.."baseTable").new(props)
 --
-M.x = display.contentCenterX + 480*0.75
+M.x = 22 -- display.contentCenterX + 480*0.75
 M.y = 22
 M.width = 100
 
@@ -30,7 +30,7 @@ local posX = display.contentCenterX*0.75
 local _marginX, _marginY = -16, 38
 
 function M:setPosition()
-  self.x = self.rootGroup.layerTable.contentBounds.xMax
+  -- self.x = self.rootGroup.layerTable.contentBounds.xMax
 end
 
 function M:createIcons (icons, class, tool)
@@ -49,13 +49,15 @@ function M:createIcons (icons, class, tool)
       icon = {name.."_over", name.."Color_over", name},
       text = "",
       name = name.."-icon",
-      x = self.x + marginX + i*22,
+      x = self.x + i*22 - self.width/2-11,
       y = self.y-2,
       width = 22,
       height = 22,
       fontSize =16,
       fillColor = {1.0},
       listener = function(event)
+        print("@@@@@@@@@@@@@")
+
         self:iconsHandler(event, class, tool)
       end
     }
@@ -73,12 +75,12 @@ function M:init(UI, x, y, w, h)
 end
 --
 function M:create(UI)
+
   if self.rootGroup then return end
 
   self:initScene(UI)
-
+  self.selections = {}
   self.group:translate(self.width*0.5, 0)
-
   self.option = {
     text = "",
     x = 0,
@@ -89,14 +91,10 @@ function M:create(UI)
     fontSize = 10,
     align = "left"
   }
-
-  self.linkGroup = display.newGroup()
-  self.selections = {}
-
   --
   local function render(models, class)
     self:setPosition()
-
+    self.linkGroup = display.newGroup()
 
     local count = 0
     local marginX, marginY = 44, 50
@@ -156,7 +154,7 @@ end
 --
 
 function M:renderLink(links)
-  local posX = display.contentCenterX + 480/4
+  local posX = display.contentCenterX - 480*0.25
   local posY = 33
   local option = self.option
 
@@ -220,6 +218,9 @@ function M:show()
       self.objs[i].isVisible = true
     end
   end
+  if self.linkGroup then
+    self.linkGroup.isVisible = true
+  end
 end
 
 function M:hide()
@@ -228,6 +229,9 @@ function M:hide()
     for i=1, #self.objs do
       self.objs[i].isVisible = false
     end
+  end
+  if self.linkGroup then
+    self.linkGroup.isVisible = false
   end
   for i=1, #self.icons do
     -- print(type(self.icons[i]))
@@ -254,19 +258,6 @@ function M:destroy()
         -- print("@@@@@", self.objs[i].name)
         mui.removeWidgetByName(self.objs[i].name)
       else
-        if self.objs[i].links then
-          for k=1, #self.objs[i].links do
-            local pageObj = self.objs[i].links[k]
-            if pageObj and pageObj.layers then
-              for j=1, #pageObj.layers do
-                pageObj.layers[j].rect:removeSelf()
-                pageObj.layers[j]:removeSelf()
-              end
-              pageObj.rect:removeSelf()
-              pageObj:removeSelf()
-            end
-          end
-        end
         if self.objs[i].rect then
           self.objs[i].rect:removeSelf()
         end
@@ -276,7 +267,12 @@ function M:destroy()
       end
     end
   end
-  self.icons = nil
+
+  if self.linkGroup then
+    self.linkGroup:removeSelf()
+    self.linkGroup = nil
+  end
+  -- self.icons = nil
   self.objs = nil
   self.selection = nil
   self.rootGroup.assetTable = nil

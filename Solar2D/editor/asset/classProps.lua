@@ -2,6 +2,7 @@ local current = ...
 local parent,  root = newModule(current)
 --
 local M    = require(root.."baseProps").new()
+
 local assetbox   = require(root.."parts.assetbox")
 local util = require("editor.util")
 
@@ -78,9 +79,11 @@ end
 
 function M:didShow(UI)
   assetbox:didShow(UI)
+  self.group.isVisible = true
 end
 --
 function M:didHide(UI)
+  self.group.isVisible = false
   assetbox:didHide(UI)
 end
 

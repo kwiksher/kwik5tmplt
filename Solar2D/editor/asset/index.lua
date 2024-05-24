@@ -51,6 +51,8 @@ function M:init(UI)
 end
 
 function controller:toggle()
+  print("@@@@@@@@@@@@@")
+
   self.isVisible = not self.isVisible
   if self.isVisible then
     self:show()

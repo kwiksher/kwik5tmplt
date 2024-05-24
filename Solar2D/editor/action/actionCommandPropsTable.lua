@@ -8,14 +8,17 @@ M.name = current
 M.weight = 1
 -- M.groupName = nil
 M.groupName = "rootGroup"
-M.x =  display.contentCenterX + 28 -- UI.editor.viewStore.actionCommandTable.left + UI.editor.viewStore.actionCommandTable.width -- commandbox.x + option.width/2
+-- M.x =  display.contentCenterX + 28 -- UI.editor.viewStore.actionCommandTable.left + UI.editor.viewStore.actionCommandTable.width -- commandbox.x + option.width/2
+-- M.x = display.contentCenterX + 480/2
+M.x = display.actualContentWidth -50
 M.y =  22
+M.width = 100
       -- commandbox.y  -- (display.actualContentHeight - display.contentHeight + option.height)/2
 
 local option, newText = util.newTextFactory{
   x = 0,
   y = 100,
-  width = 100,
+  width = M.width,
   height = 20
 }
 

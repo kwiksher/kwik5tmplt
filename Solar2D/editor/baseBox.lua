@@ -250,11 +250,15 @@ function  M:destroy(UI)
   self:didHide(UI)
   if self.triangle then
     self.triangle:removeSelf()
-    self.labelText:removeSelf()
+    if self.labelTex then
+      self.labelText:removeSelf()
+    end
     if self.selectedText and self.selectedText.removeSelf then
       self.selectedText:removeSelf()
     end
-    self.scrollView:removeSelf()
+    if self.scrollView then
+      self.scrollView:removeSelf()
+    end
   end
   for i=1, #self.objs do
     self.objs[i]:removeSelf()

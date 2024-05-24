@@ -567,7 +567,7 @@ function M.xtest_load()
   selectors.assetsSelector:onClick(true, "videos")
 end
 
-function M.xtest_load()
+function M.test_load()
   -- UI.editor.assets = {
   --   audios = {
   --     {
