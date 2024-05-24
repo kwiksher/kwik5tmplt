@@ -141,6 +141,10 @@ selectors.lua handles to read values of UI.scene.model.components for xxxTable.
 
     then next, this tree action (load xxx) is called back. It is linked to selectXXX command  by editor/index.lua. commands/selectors/selectXXX to load a json of a selected entry
 
+    > assetTable does not use the bt. See assetTableListener:touchHandler()
+
+    > BT will be better if add key-event conditions, and then handler fucntions could remove 'if'.  All the props of handlers should be put in backboard, if all the conditions are defined in the tree, BT handler aggrigates all conditions with bt.SUCESS and actionStatus with bt.Running to rertive a final action node. Then action node is processed in a command function by eventDispatch
+
 1. selectors.lua
 
     > this is a view model. You see each command to be displayed as a button. It is a anchorName to xxxTable
