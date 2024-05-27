@@ -100,7 +100,6 @@ function M:setValue(decoded, index, template)
         self.actionbox:setValue(k, v)
       end
     else
-      print("@@@@@@@@@@@@@@")
       self.actionbox:hide()
       -- print(#self.actionbox.objs)
     end

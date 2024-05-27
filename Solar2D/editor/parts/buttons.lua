@@ -29,6 +29,7 @@ M.commands = {"create", "shape.new_rectangle", "shape.new_ellipse", "shape.new_t
   "save", "cancel"}
 
 M.objs = nil
+M.contextInit = false
 
 local isCancel = function(event)
   local ret = event.phase == "up" and event.keyName == 'escape'
@@ -41,12 +42,15 @@ function M:init(UI, toggleHandler)
   if self.objs then return end
   self.objs = {}
   ---
-  local app = App.get()
-  for i = 1, #self.commands do
-    app.context:mapCommand(
-      "editor.classEditor." .. self.commands[i],
-      "editor.controller." .. self.commands[i]
-    )
+  if not self.contextInit then
+    local app = App.get()
+    for i = 1, #self.commands do
+      app.context:mapCommand(
+        "editor.classEditor." .. self.commands[i],
+        "editor.controller." .. self.commands[i]
+      )
+    end
+    self.contextInit = true
   end
   self.togglePanel = toggleHandler
 end
@@ -98,6 +102,8 @@ function M:create(UI)
       if self.contextMenuOptions then
         props.options = self.contextMenuOptions
       end
+
+      --print("", "editor.classEditor." .. event.eventName)
 
       self.UI.scene.app:dispatchEvent {
         name = "editor.classEditor." .. event.eventName,
