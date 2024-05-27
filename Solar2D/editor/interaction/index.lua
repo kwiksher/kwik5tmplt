@@ -50,6 +50,9 @@ controller:init{
 
 local M          = require(root.."baseClassEditor").new(model, controller)
 --
+M.x				= display.contentCenterX + 480/2 -80
+M.y				= 20
+--
 function M:init(UI)
   self.UI = UI
   self.group = display.newGroup()
@@ -63,7 +66,7 @@ function M:init(UI)
   -- print("@@@@@", classProps.x + self.width*2, classProps.y)
   -- actionbox.props = {{name="onTap", value=""}}
   -- actionbox.activeProp = "onTap"
-  actionbox:init(UI, classProps.x + self.width*1.25, classProps.y+classProps.height + 3)
+  actionbox:init(UI, self.x + self.width*1.5,  display.contentCenterY)
   buttons:init(UI)
 
   UI.useClassEditorProps = function() return controller:useClassEditorProps() end

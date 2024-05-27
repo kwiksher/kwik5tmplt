@@ -7,6 +7,8 @@ local pageTable
 local layerTable
 local actionTable = require("editor.action.actionTable")
 
+--local toolbar  = require("editor.parts.toolbar")
+
 function selectLayer(name)
   for i, entry in next,layerTable.objs do
     print("", i, entry.text)
@@ -62,14 +64,14 @@ function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
   --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
-  bookTable.commandHandler({book="bookFree"}, nil,  true)
+  bookTable.commandHandler({book="book"}, nil,  true)
   pageTable.commandHandler({page="page1"},nil,  true)
   selectors.componentSelector.iconHander()
 end
@@ -110,11 +112,27 @@ end
   end
 --]]
 
+local function selectIcon(toolGroup, tool)
+  local toolbar = UI.editor.toolbar
+  local obj = toolbar.layerToolMap[toolGroup]
+  obj.callBack{target=obj}
+  if tool then
+    local obj = toolbar.toolMap[obj.id.."-"..tool]
+    obj.callBack{target=obj}
+  end
+end
+
+local function selectCancel()
+  local button = "cancel"
+  local obj = require("editor.parts.buttons").objs[button]
+  obj.rect:tap()
+end
+
 ---[[
   function M.test_new_button()
     selectors.componentSelector:onClick(true,  "layerTable")
 
-    local name = "gotoBtn"
+    local name = "cat"
     for i, entry in next,layerTable.objs do
       print("", i, entry.text)
       if entry.text == name then
@@ -122,11 +140,18 @@ end
         break
       end
     end
+    --print("-----------------")
+    -- for k, v in pairs(toolbar.layerToolMap.Interactions) do print(k, v) end
+    -- for k, v in pairs(toolbar.toolMap) do print(k, v) end
+    -- selectTool{class="button", isNew=true}
 
-    selectTool{class="button", isNew=true}
+    selectIcon("Interactions", "Button")
+    -- selectCancel()
+    --selectIcon("Interactions", "Button")
 
-  selectors.componentSelector:onClick(true,  "actionTable")
-  selectAction("eventOne")
+
+  -- selectors.componentSelector:onClick(true,  "actionTable")
+  -- selectAction("eventOne")
 
   --  select an over-layer
     -- click "over" of the prop's name to make it active

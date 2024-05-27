@@ -23,7 +23,7 @@ function M:create(UI)
   self.vertical = false
 
   local toolListener = function(event)
-    print("@@", event.target.muiOptions.name)
+    print("@@", self.selection, event.target.muiOptions.name)
     --for k, v in pairs(event.target.muiOptions) do print(k, v) end
     if self.selection == event.target.muiOptions.name then
       self.selection = nil
@@ -63,8 +63,7 @@ function M:create(UI)
   -- for Animations, Interactions, Replacements ...
   local layerToolListener = function(event)
     if UI.editor.currentTool then
-      print(UI.editor.currentTool.model.id)
-      -- save or cancel to make it nil
+      print("save or cancel to make it nil", UI.editor.currentTool.model.id)
       return
     end
     local toolbarName, layerTool = findSelectedTool(event.target.muiOptions.name)
