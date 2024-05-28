@@ -9,7 +9,7 @@ local model = {
     {name="autoPlay", value=true},
     {name="channel", value = ""},
     {name="delay", value=0},
-    {name="filename", value = ""},
+    {name="filenme", value = ""},
     {name="folder", value=""},
     {name="loops", value = ""},
     {name="name", value = ""},
@@ -20,6 +20,7 @@ local model = {
 local selectbox      = require(parent .. "audioTable")
 local classProps    = require(parent.."classProps")
 local actionbox = require(root..".parts.actionbox")
+
 -- this set editor.audio.save, cacnel
 local buttons       = require(parent.."buttons")
 local controller = require("editor.controller.index").new("audio")
@@ -45,7 +46,11 @@ function M:init(UI)
   classProps.model = model.props
   classProps.UI = UI
   --
-  actionbox:init(UI)
+  actionbox:init(UI, self.x+self.width, display.contentCenterY)
+  actionbox.props = {
+    {name="onComplete", value=""}
+  }
+
   buttons:init(UI)
   -- --
   controller:init{

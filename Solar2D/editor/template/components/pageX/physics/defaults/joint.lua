@@ -3,6 +3,7 @@ local M = {
   class="joint",
   -- actionName = "",
   settings = {
+    test="joint"
   }
 }
 

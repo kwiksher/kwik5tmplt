@@ -1,8 +1,9 @@
 local M = {
-  name = "properties",
-  class="properties",
+  name = "addPage",
+  class="page",
   -- actionName = "",
   settings = {
+    test="addPage"
   }
 }
 

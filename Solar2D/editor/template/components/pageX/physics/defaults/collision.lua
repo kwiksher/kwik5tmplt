@@ -3,6 +3,7 @@ local M = {
   class="collision",
   -- actionName = "",
   settings = {
+    test="collision"
   }
 }
 

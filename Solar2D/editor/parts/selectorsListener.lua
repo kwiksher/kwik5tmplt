@@ -4,6 +4,7 @@ local parent,root, M = newModule(name)
 local bt = require(root .. "controller.BTree.btree")
 local tree = require(root .. "controller.BTree.selectorsTree")
 local buttons  = require("editor.parts.buttons")
+local selectLayerFilter = require("editor.parts.selectLayerFilter")
 
 local function componentHandler(UI, storeTable)
   -- each table will be reset
@@ -23,8 +24,10 @@ local function componentHandler(UI, storeTable)
   --
   --
   if storeTable then
+    selectLayerFilter:hide()
     -- should we show the last secection?
     if storeTable == "layerTable" then
+      selectLayerFilter:show()
       UI.editor.layerStore:set(UI.scene.model.components.layers)
     elseif storeTable == "audioTable" then
       UI.editor.audioStore:set(UI.scene.model.components.audios)

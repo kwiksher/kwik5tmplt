@@ -3,6 +3,7 @@ local M = {
   class="force",
   -- actionName = "",
   settings = {
+    test="force"
   }
 }
 
