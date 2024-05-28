@@ -13,6 +13,9 @@ local layerTableCommands = require("editor.parts.layerTableCommands")
 local contextButtons = require("editor.parts.buttons")
 local util = require("lib.util")
 
+M.marginX = 74
+M.marginY = 20
+
 local option, newText = util.newTextFactory{
   x = 0,
   y = nil,
@@ -68,7 +71,8 @@ end
 function M:init(marginX, marginY)
   self.selection = nil
   self.lastSelection = nil
-  self.marginX, self.marginY = marginX or 74,  marginY or 20
+  self.marginX = marginX or self.marginX
+  self.marginY = marginY or self.marginY
 end
 
 function M:tick(e)
@@ -91,7 +95,9 @@ function M:tick(e)
   end
 end
 --
-
+function M:setPosition()
+  print("setPosition is not implemented")
+end
 --
 function M:initScene(UI)
   self.rootGroup = UI.editor.rootGroup
@@ -161,19 +167,24 @@ function M:commandHandler(eventObj, event)
 end
 -- icons
 function M:createIcons (_marginX, _marginY)
-  -- print("createIcons", self.anchorName,_marginX, _marginY)
+  print("@@@@@@@@@ createIcons", self.anchorName,_marginX, _marginY)
   local marginX = _marginX or self.marginX
   local marginY = _marginY or 0
   self:setPosition()
   --
   for i=1, #self.icons do
     local name = self.icons[i]
+
+    local posX = self.x + marginX
+    local posY = self.y -33 + marginY
+    print("", posX, posY)
+
     local actionIcon = muiIcon:create {
       icon = {name.."_over", name.."Color_over", name},
       text = "",
       name = name.."-icon",
-      x = self.x + marginX + i*22,
-      y = self.y -22 + marginY,
+      x = posX + i*22,
+      y = posY,
       width = 22,
       height = 22,
       fontSize =16,
@@ -202,7 +213,7 @@ function M:createIcons (_marginX, _marginY)
         --
       end,
     }
-    self.objs[#self.objs + 1] = actionIcon
+    self.iconObjs[#self.iconObjs + 1] = actionIcon
     self.group:insert(actionIcon)
   end
 end
@@ -271,6 +282,7 @@ function M:create(UI)
       self.selection = nil
       self.selections = {}
       self.objs = {}
+      self.iconObjs = {}
       if fooValue then
         render(fooValue, 0, 0)
         if #fooValue == 0 then
@@ -319,6 +331,9 @@ function M:show()
       self.objs[i].rect.isVisible = true
     end
   end
+  for i, v in next, self.iconObjs do
+    v.isVisible = true
+  end
 end
 
 function M:hide()
@@ -331,9 +346,13 @@ function M:hide()
     for i=1, #self.objs do
       self.objs[i].isVisible = false
       self.objs[i].rect.isVisible = false
-
     end
   end
+
+  for i, v in next, self.iconObjs do
+    v.isVisible = false
+  end
+
   -- for i=1, #self.objs do
   --   self.objs[i].isVisible = false
   -- end
@@ -350,6 +369,12 @@ function M:destroy()
       end
     end
   end
+  if self.iconObjs then
+    for i, v in next, self.iconObjs do
+      v:removeSelf()
+    end
+  end
+  self.iconObjs = nil
   self.objs = nil
   self.selection = nil
   --
@@ -366,6 +391,12 @@ function M:clean()
     end
     self.objs = nil
   end
+  if self.iconObjs then
+    for i, v in next, self.iconObjs do
+      v:removeSelf()
+    end
+  end
+  self.iconObjs = nil
   self.selection = nil
   -- print(debug.traceback())
 end
@@ -373,6 +404,7 @@ end
 M.new = function(instance)
   if instance.objs == nil then
     instance.objs = {}
+    instance.iconObjs = {}
   end
 	return setmetatable(instance, {__index=M}), bt, tree
 end
