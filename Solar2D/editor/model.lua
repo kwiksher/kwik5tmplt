@@ -4,7 +4,7 @@ local model = {
       name = "Page",
       icon = "toolPage",
       tools = {
-        {name = "add Page", icon = "newPage"},
+        {name = "addPage", icon = "newPage"},
         {name = "Properties", icon = "LayerProp"},
         {name = "Language", icon = "Lang"},
         {name = "setLanguage", icon = "setLang"}
@@ -67,7 +67,7 @@ local model = {
       name = "Physics",
       icon = "toolPhysics",
       tools = {
-        {name = "Properties", icon = "PhyProp"},
+        {name = "Physics", icon = "PhyProp"},
         {name = "Body", icon = "PhyBody"},
         {name = "Collision", icon = "PhyColl"},
         {name = "Force", icon = "PhyForce"},

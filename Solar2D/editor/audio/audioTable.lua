@@ -24,7 +24,7 @@ local posX = display.contentCenterX*0.75
 
 function M:setPosition()
   self.x = 0
-  self.y = self.rootGroup.selectAudio.y
+  self.y = 30 -- self.rootGroup.selectAudio.y
 end
 
 function M.mouseHandler(event)
@@ -159,6 +159,7 @@ function M:create(UI)
       self.selection = nil
       self.selections = {}
       self.objs = {}
+      self.iconObjs = {}
       if fooValue == nil then
         render({}, 0, 0)
       else
@@ -175,44 +176,44 @@ function M:create(UI)
 end
 --
 
-function M:show()
-  self.group.isVisible = true
-  if self.objs then
-    for i=1, #self.objs do
-      self.objs[i].isVisible = true
-    end
-  end
-end
+-- function M:show()
+--   self.group.isVisible = true
+--   if self.objs then
+--     for i=1, #self.objs do
+--       self.objs[i].isVisible = true
+--     end
+--   end
+-- end
 
-function M:hide()
-  self.group.isVisible = false
-  if self.objs then
-    for i=1, #self.objs do
-      self.objs[i].isVisible = false
-    end
-  end
-end
+-- function M:hide()
+--   self.group.isVisible = false
+--   if self.objs then
+--     for i=1, #self.objs do
+--       self.objs[i].isVisible = false
+--     end
+--   end
+-- end
 
 --
-function M:destroy()
-  if self.objs then
-    for i = 1, #self.objs do
-      if self.objs[i].isMUI then
-        -- print("@@@@@", self.objs[i].name)
-        mui.removeWidgetByName(self.objs[i].name)
-      else
-        if self.objs[i].rect then
-          self.objs[i].rect:removeSelf()
-        end
-        if self.objs[i].removeSelf then
-          self.objs[i]:removeSelf()
-        end
-      end
-    end
-  end
-  self.objs = nil
-  self.selection = nil
-  self.rootGroup.audioTable = nil
-end
+-- function M:destroy()
+--   if self.objs then
+--     for i = 1, #self.objs do
+--       if self.objs[i].isMUI then
+--         -- print("@@@@@", self.objs[i].name)
+--         mui.removeWidgetByName(self.objs[i].name)
+--       else
+--         if self.objs[i].rect then
+--           self.objs[i].rect:removeSelf()
+--         end
+--         if self.objs[i].removeSelf then
+--           self.objs[i]:removeSelf()
+--         end
+--       end
+--     end
+--   end
+--   self.objs = nil
+--   self.selection = nil
+--   self.rootGroup.audioTable = nil
+-- end
 --
 return M

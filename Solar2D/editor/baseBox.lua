@@ -41,6 +41,7 @@ end
 function M:createTriangle (x, y)
   local triangle = shapes.triangle.equi( x, y, 10 )
   triangle:rotate(120)
+  triangle.alpha = 0
   triangle.tap = function(event)
     -- print("triangle tap")
     for i=1, #self.objs do

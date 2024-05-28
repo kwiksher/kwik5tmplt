@@ -3,6 +3,7 @@ local M = {
   class="language",
   -- actionName = "",
   settings = {
+    test="lang"
   }
 }
 

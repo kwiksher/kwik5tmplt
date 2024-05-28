@@ -3,6 +3,7 @@ local M = {
   class="body",
   -- actionName = "",
   settings = {
+    test="body"
   }
 }
 

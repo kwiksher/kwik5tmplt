@@ -21,19 +21,27 @@ controller:init{
 -- end
 
 local M          = require(root.."baseClassEditor").new(model, controller)
+
+M.x				= display.contentCenterX + 480/2
+M.y				= 20
+-- M.y				= (display.actualContentHeight-1280/4 )/2
+M.width = 80
+M.height = 16
+
 --
 function M:init(UI)
   self.UI = UI
   self.group = display.newGroup()
   -- UI.editor.viewStore = self.group
 
-  selectbox     : init(UI, self.x + self.width/2, self.y, self.width*0.74, self.height)
-  -- selectbox:init(UI, self.x, self.y, self.width/2, self.height)
+  selectbox:init(UI, self.x, self.y)
   classProps:init(UI, self.x + self.width*1.5, self.y,  self.width, self.height)
   classProps.model = self.model.props
   --
   -- print("@@@@@", classProps.x + self.width*2, classProps.y)
   actionbox:init(UI, classProps.x + self.width-4, classProps.y+classProps.height + 3)
+  actionbox.props = {}
+
   buttons:init(UI)
 
   UI.useClassEditorProps = function() return controller:useClassEditorProps() end

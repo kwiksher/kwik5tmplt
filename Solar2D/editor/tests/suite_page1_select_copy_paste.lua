@@ -32,14 +32,14 @@ function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
   --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
-  bookTable.commandHandler({book="bookFree"}, nil,  true)
+  bookTable.commandHandler({book="book"}, nil,  true)
   pageTable.commandHandler({page="page1"},nil,  true)
   -- timer.performWithDelay( 1000, function()
   selectors.componentSelector.iconHander()
@@ -53,11 +53,11 @@ end
 function M.teardown()
 end
 
-function M.xtest_multi_edit_props()
+function M.test_multi_edit_props()
   --
   layerTable.controlDown = true
   --
-  local names = {"title", "gotoBtn", "bg"}
+  local names = {"name", "cat", "fish"}
   for i, name in next, names do
     helper.selectLayer(name)
     helper.selectLayer(name, nil, true) -- isRightClick true
@@ -68,17 +68,17 @@ function M.xtest_multi_edit_props()
 
 end
 
-function M.test_multi_new_animation()
+function M.xtest_multi_new_animation()
 end
 
-function M.test_multi_new_button()
+function M.xtest_multi_new_button()
 end
 
-function M.test_multi_set_physics()
+function M.xtest_multi_set_physics()
 end
 
 function M.xtest_select_for_edit()
-  local name = "title"
+  local name = "cat"
   layerTable.altDown = true
   helper.selectLayer(name)
   layerTable.altDown = false
@@ -86,7 +86,7 @@ function M.xtest_select_for_edit()
 end
 
 function M.xtest_select_for_edit_class()
-  local name = "title"
+  local name = "cat"
   local class = "linear"
   layerTable.altDown = true
   helper.selectLayer(name, class, true) -- isRightClick true
@@ -94,7 +94,7 @@ function M.xtest_select_for_edit_class()
 end
 
 function M.xtest_copy_layer()
-  local name = "title"
+  local name = "cat"
   -- layerTable.altDown = true
   helper.selectLayer(name)
   helper.selectLayer(name, nil, true) -- isRightClick true

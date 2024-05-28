@@ -349,8 +349,10 @@ function M:hide()
     end
   end
 
-  for i, v in next, self.iconObjs do
-    v.isVisible = false
+  if self.iconObjs then
+    for i, v in next, self.iconObjs do
+      v.isVisible = false
+    end
   end
 
   -- for i=1, #self.objs do
