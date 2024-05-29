@@ -10,9 +10,12 @@ local Props = {
     -- self.y = self.y
     self.x = 0
     self.y = 33
+    self.width = 80
   end ,
   id = "book"
 }
+
+local horizontal = false
 
 local M, bt, tree = require(root.."baseTable").new(Props)
 
@@ -98,7 +101,7 @@ function M:create(UI)
     text = "",
     x = self.x,
     y = self.y,
-    width = nil,
+    width = self.width,
     height = 20,
     font = native.systemFont,
     fontSize = 10,
@@ -128,7 +131,11 @@ function M:create(UI)
           obj.x = obj.width/2
 
           if index > 1 then
-            obj.x = obj.width/2 + objs[index-1].rect.contentBounds.xMax + 5
+            if horizontal then
+              obj.x = obj.width/2 + objs[index-1].rect.contentBounds.xMax + 5
+            else
+              obj.y = obj.height/2 + objs[index-1].y
+            end
           end
           local rect = display.newRect(obj.x, obj.y, obj.width+10,option.height)
           rect:setFillColor(0.8)

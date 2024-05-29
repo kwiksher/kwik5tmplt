@@ -11,7 +11,7 @@ local M = require(root.."baseTable").new(props)
 M.x = display.contentCenterX
 M.y = 20
 
-function M:init(x, y)
+function M:init(UI, x, y)
   self.x = x or self.x
   self.y = y or self.y
 end

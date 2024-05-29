@@ -15,7 +15,7 @@ local Props = {
 
 local M = require(root.."baseButtons").new(Props)
 
-function M:init(x, y)
+function M:init(UI, x, y)
   self.objs = {}
   self.x = x
   self.y = y
