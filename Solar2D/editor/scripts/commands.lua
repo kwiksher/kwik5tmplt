@@ -4,7 +4,7 @@ local json = require("json")
 local lfs = require("lfs")
 local lustache = require "extlib.lustache"
 local formatter = require("extlib.formatter")
-local platform = system.getInfo( "platformName" )
+local platform = system.getInfo("platformName")
 local util = require("editor.util")
 local libUtil = require("lib.util")
 
@@ -16,7 +16,7 @@ local function executeScript(filename, model)
     ext = "bat"
   end
   --
-  local path = system.pathForFile("editor/scripts/"..filename .. ext .. ".tmplt", system.ResourceDirectory)
+  local path = system.pathForFile("editor/scripts/" .. filename .. ext .. ".tmplt", system.ResourceDirectory)
   local file, errorString = io.open(path, "r")
   local cmd = filename .. ext -- create_book.command
   local cmdFile
@@ -61,7 +61,7 @@ end
 
 function M.createBook(book, _dst, weight)
   local root = _dst or "Solar2D"
-  local script = executeScript("create_book.", {dst = root, book=book})
+  local script = executeScript("create_book.", {dst = root, book = book})
   --
   -- prepare application sandbox folder
   --
@@ -71,35 +71,37 @@ end
 
 function M.createPage(book, index, page, _root, _weight)
   local root = _root or "Solar2D"
-  local dst = root.."/App/"..book.."/index.lua"
-  local tmplt =  "editor/template/index.lua"
+  local dst = root .. "/App/" .. book .. "/index.lua"
+  local tmplt = "editor/template/index.lua"
   local pages = {}
   local weight = _weight or 1 -- for book.index
   --
-  local path =system.pathForFile( "/App/"..book.."/index.lua", system.ResourceDirectory )
-  if path  then -- lfs.attributes(path)
+  local path = system.pathForFile("/App/" .. book .. "/index.lua", system.ResourceDirectory)
+  if path then -- lfs.attributes(path)
     print("File exists")
-    local scenes = require("App."..book..".index")
-    for i=1, #scenes do
+    local scenes = require("App." .. book .. ".index")
+    for i = 1, #scenes do
       pages[i] = {name = scenes[1]}
     end
-    table.insert(pages, index, {name=page})
+    table.insert(pages, index, {name = page})
     --
-    weight = libUtil.readWeight("/App/"..book, "index.lua")
+    weight = libUtil.readWeight("/App/" .. book, "index.lua")
   else
     print("Could not get attributes")
-    pages[1] = {name=page}
+    pages[1] = {name = page}
   end
-  local newIndex = util.saveLua(tmplt, "App/"..book.."/index.lua", {pages = pages, weight=weight})
+  local newIndex = util.saveLua(tmplt, "App/" .. book .. "/index.lua", {pages = pages, weight = weight})
   -- page index
   util.mkdir("App", book, "components", page)
 
   local updatedModel = util.createIndexModel(nil, nil, nil)
   local newPageIndex = util.renderIndex(book, page, updatedModel)
-  newPageIndex =  system.pathForFile( newPageIndex, system.TemporaryDirectory)
-  return executeScript("create_page.", {dst = root, book=book, page=page, newIndex = newIndex, newPageIndex = newPageIndex})
+  newPageIndex = system.pathForFile(newPageIndex, system.TemporaryDirectory)
+  return executeScript(
+    "create_page.",
+    {dst = root, book = book, page = page, newIndex = newIndex, newPageIndex = newPageIndex}
+  )
 end
-
 
 function M.renamePage(book, page, newName, _dst)
   local root = _dst or "Solar2D"
@@ -109,27 +111,26 @@ function M.renamePage(book, page, newName, _dst)
 
   -- index.lua gsub
   local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
-  local path = system.pathForFile("App/"..book.."/index.lua", system.ResourceDirectory)
+  local path = system.pathForFile("App/" .. book .. "/index.lua", system.ResourceDirectory)
   local contents
-  local file = io.open( path, "r" )
+  local file = io.open(path, "r")
   if file then
     contents = file:read("*a")
     io.close(file)
     file = nil
   end
 
-  print('"'..page..'"', '"'..newName..'"', contents)
-  contents = contents:gsub('"'..page..'"', '"'..newName..'"')
+  print('"' .. page .. '"', '"' .. newName .. '"', contents)
+  contents = contents:gsub('"' .. page .. '"', '"' .. newName .. '"')
 
-
-  local nfile = io.open( newFile, "w+" )
+  local nfile = io.open(newFile, "w+")
   if nfile then
     contents = nfile:write(contents)
     io.close(nfile)
     nfile = nil
   end
 
-  return executeScript("rename_page.", {dst = root, book=book,page=page, newName = newName, newIndex = newFile})
+  return executeScript("rename_page.", {dst = root, book = book, page = page, newName = newName, newIndex = newFile})
 end
 
 local function copyFiles(files, _dst)
@@ -166,44 +167,45 @@ end
 
 function M.createLayer(book, page, index, layer, _props)
   local files = {}
-  local scene = require("App."..book..".components."..page..".index")
+  local scene = require("App." .. book .. ".components." .. page .. ".index")
   local updatedModel = util.createIndexModel(scene.model)
   local entry = {}
   entry[layer] = {}
   --
   table.insert(updatedModel.layers, index, entry)
   --
-  local props = _props or {name=layer, shape="rect", x=display.contentCenterX, y=display.contentCenterY, width=100, height=100}
+  local props =
+    _props or
+    {name = layer, shape = "rect", x = display.contentCenterX, y = display.contentCenterY, width = 100, height = 100}
   local controller = require("editor.controller")
   --
-  files[#files+1] = controller:renderIndex(book, page, updatedModel)
-  files[#files+1] = controller:saveIndex(book, page, layer, nil, updatedModel)
+  files[#files + 1] = controller:renderIndex(book, page, updatedModel)
+  files[#files + 1] = controller:saveIndex(book, page, layer, nil, updatedModel)
   -- save lua
-  files[#files+1] = controller:render(book, page, layer, "layers", "shape", props)
+  files[#files + 1] = controller:render(book, page, layer, "layers", "shape", props)
   -- save json
-  files[#files+1] = controller:save(book, page, layer, nil, props)
+  files[#files + 1] = controller:save(book, page, layer, nil, props)
   currentScript = copyFiles(files)
 end
 
 function M.createLayerWithClass(book, page, layer, class, _dst)
-
 end
 
 function M.renameLayer(book, page, layer, newName, _dst)
   local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
-  local path = system.pathForFile("App/"..book.."/index.lua", system.ResourceDirectory)
+  local path = system.pathForFile("App/" .. book .. "/index.lua", system.ResourceDirectory)
   local contents
-  local file = io.open( path, "r" )
+  local file = io.open(path, "r")
   if file then
     contents = file:read("*a")
     io.close(file)
     file = nil
   end
 
-  print('"'..layer..'"', '"'..newName..'"', contents)
-  contents = contents:gsub('"'..layer..'"', '"'..newName..'"')
+  print('"' .. layer .. '"', '"' .. newName .. '"', contents)
+  contents = contents:gsub('"' .. layer .. '"', '"' .. newName .. '"')
 
-  local nfile = io.open( newFile, "w+" )
+  local nfile = io.open(newFile, "w+")
   if nfile then
     contents = nfile:write(contents)
     io.close(nfile)
@@ -211,21 +213,22 @@ function M.renameLayer(book, page, layer, newName, _dst)
   end
   local class = {}
 
-  local scene = require("App."..book..".components."..page..".index")
+  local scene = require("App." .. book .. ".components." .. page .. ".index")
   local model = util.selectFromIndexModel(scene, {layer})
 
   for k, v in pairs(model) do
-    print(k ,v)
-    if k=="class" then
+    print(k, v)
+    if k == "class" then
       for class in v do
         print(class)
       end
     end
   end
 
-  return executeScript("rename_layer.",
-    {dst = root, book=book, page=page,layer=layer, newName = newName, newIndex = newFile, class=class})
-
+  return executeScript(
+    "rename_layer.",
+    {dst = root, book = book, page = page, layer = layer, newName = newName, newIndex = newFile, class = class}
+  )
 end
 
 --------------------------------------------------------
@@ -234,19 +237,19 @@ end
 --
 --     args.updatedModel= util.createIndexModel(args.UI.scene.model)
 --     args.append = function(value, index)
-  --    local dst = args.updatedModel.components.timers or {}
-  --    if index then
-  --      dst[index] = value
-  --    else
-  --      dst[#dst + 1] = value
-  --    end
-  --  end
+--    local dst = args.updatedModel.components.timers or {}
+--    if index then
+--      dst[index] = value
+--    else
+--      dst[#dst + 1] = value
+--    end
+--  end
 --
 --
 local function getProps(args)
-  local   selected      = args.selected or {} -- args.selectbox.selection
-  local   append           = args.append      -- args.updatedModel.components.timers or {}
-  local   isNew         = args.isNew
+  local selected = args.selected or {} -- args.selectbox.selection
+  local append = args.append -- args.updatedModel.components.timers or {}
+  local isNew = args.isNew
 
   local props = {
     index = selected.index
@@ -272,7 +275,7 @@ local function getProps(args)
   -- TODO check if name is not duplicated or not
   ---
   -- Append the new entry to components.{timers, variables ...} in index.lua
-  if  props.settings then
+  if props.settings then
     if isNew or selected.index == nil then
       append(props.settings.name)
     else
@@ -284,39 +287,39 @@ local function getProps(args)
 end
 
 local function saveSelection(book, page, selections)
--- Data (string) to write
-local saveData = {book=book, page=page, selections = selections}
+  -- Data (string) to write
+  local saveData = {book = book, page = page, selections = selections}
 
--- Path for the file to write
-local path = system.pathForFile( "kwik.json", system.ApplicationSupportDirectory )
+  -- Path for the file to write
+  local path = system.pathForFile("kwik.json", system.ApplicationSupportDirectory)
 
--- Open the file handle
-local file, errorString = io.open( path, "w" )
+  -- Open the file handle
+  local file, errorString = io.open(path, "w")
 
-if not file then
+  if not file then
     -- Error occurred; output the cause
-    print( "File error: " .. errorString )
-else
+    print("File error: " .. errorString)
+  else
     -- Write data to file
-    file:write( json.encode(saveData) )
+    file:write(json.encode(saveData))
     -- Close the file handle
-    io.close( file )
+    io.close(file)
+  end
+
+  file = nil
 end
 
-file = nil
-end
-
-local pageTools = table:mySet{"page", "timer", "group", "variable"}
-local classWithAssets = table:mySet{"audio", "video", "sprite", "particles", "www", "thumbnail", "font"}
+local pageTools = table:mySet {"page", "timer", "group", "variable"}
+local classWithAssets = table:mySet {"audio", "video", "sprite", "particles", "www", "thumbnail", "font"}
 --
-function M.publish(UI, args, controller ,decoded)
-  local   book          = args.book or UI.editor.currentBook
-  local   page          = args.page
-  local   updatedModel  = args.updatedModel
-  local   layer         = args.layer or UI.editor.currentLayer
-  local   class         = args.class    -- timer
+function M.publish(UI, args, controller, decoded)
+  local book = args.book or UI.editor.currentBook
+  local page = args.page
+  local updatedModel = args.updatedModel
+  local layer = args.layer or UI.editor.currentLayer
+  local class = args.class -- timer
   --local actionbox = args.actionbox
-  local   name          = args.name     -- args.selected.timer
+  local name = args.name -- args.selected.timer
   --
   local props = args.props or getProps(args) -- getProps uses args.settings
   ---
@@ -337,17 +340,17 @@ function M.publish(UI, args, controller ,decoded)
     local classFolder = UI.editor:getClassFolderName(args.class)
     -- save lua
     -- print("@@@", props.name)
-    files[#files+1] = controller:render(book, page, layer, classFolder, class, props)
+    files[#files + 1] = controller:render(book, page, layer, classFolder, class, props)
     -- save json
-    files[#files+1] = controller:save(book, page, layer,classFolder, decoded) -- decoded will be nil
+    files[#files + 1] = controller:save(book, page, layer, classFolder, decoded) -- decoded will be nil
     -- save asset
     if classWithAssets[class] then
-      files[#files+1] = controller:renderAssets(book, page, layer, classFolder, class, props)
+      files[#files + 1] = controller:renderAssets(book, page, layer, classFolder, class, props)
     end
   end
   -- save the lastSelection
 
-  saveSelection(book, page, {{name=layer, class=class}})
+  saveSelection(book, page, {{name = layer, class = class}})
   -- publish
   currentScript = copyFiles(files)
 end
@@ -355,41 +358,46 @@ end
 function M.publishForSelections(UI, args, controller, decoded)
   --
   local files = {}
-  local classFolder = UI.editor:getClassFolderName(args.class)
+  local class = (args.class or "layer"):lower()
+  local classFolder = UI.editor:getClassFolderName(class)
   -------------
   local book = args.book or UI.editor.currentBook
   local page = args.page or UI.page
   local layer = args.layer or UI.editor.currentLayer
-  local class = args.class:lower()
 
-  print(book, page, layer,classFolder, class)
+  print(book, page, layer, classFolder, class)
 
   local props = getProps(args)
 
   -----------
   --- Update components/pageX/index.lua model/pageX/index.json
-  local scene = require("App."..book..".components."..page..".index")
+  local scene = require("App." .. book .. ".components." .. page .. ".index")
 
   for i, obj in next, UI.editor.selections do
     layer = obj.text
+    print("", layer)
     local updatedModel = util.createIndexModel(scene.model, layer, class)
     --- save json
     -----------
     -- print(book, page, layer, classFolder, args.index)
-    decoded[props.index] = props
+    if props.index then
+      decoded[props.index] = props
+    else
+      decoded = props
+    end
     -- decoded[props.index].settings = props.settings
     -- decoded[props.index].actionName = props.actionName
     -- decoded[props.index].name=props.name
     --
-    files[#files+1] = controller:renderIndex(book, page, updatedModel)
-    files[#files+1] = controller:saveIndex(book, page, layer, class, updatedModel)
+    files[#files + 1] = controller:renderIndex(book, page, updatedModel)
+    files[#files + 1] = controller:saveIndex(book, page, layer, class, updatedModel)
     -- save lua
-    files[#files+1] = controller:render(book, page, layer, classFolder, class, props)
+    files[#files + 1] = controller:render(book, page, layer, classFolder, class, props)
     -- save json
-    files[#files+1] = controller:save(book, page, layer,classFolder, decoded)
+    files[#files + 1] = controller:save(book, page, layer, classFolder, decoded)
     -- save asset
     if classWithAssets[class] then
-      files[#files+1] = controller:renderAssets(book, page, layer, classFolder, class, props)
+      files[#files + 1] = controller:renderAssets(book, page, layer, classFolder, class, props)
     end
   end
   --
@@ -404,27 +412,32 @@ end
 
 ----
 function M.openEditorForCommand(book, page, name)
-  local path = system.pathForFile("App/"..book.."/commands/"..page.."/"..name..".lua", system.ResourceDirectory)
-  local cmd = "code " ..path
-  os.execute( cmd )
+  local path =
+    system.pathForFile("App/" .. book .. "/commands/" .. page .. "/" .. name .. ".lua", system.ResourceDirectory)
+  local cmd = "code " .. path
+  os.execute(cmd)
 end
 
 -- type == audios, groups, page, timers, variables
 function M.openEditor(book, page, type, name)
-  local path = system.pathForFile("App/"..book.."/components/"..page.."/"..type.."/"..name..".lua", system.ResourceDirectory)
-  local cmd = "code " ..path
-  os.execute( cmd )
+  local path =
+    system.pathForFile(
+    "App/" .. book .. "/components/" .. page .. "/" .. type .. "/" .. name .. ".lua",
+    system.ResourceDirectory
+  )
+  local cmd = "code " .. path
+  os.execute(cmd)
 end
 
 function M.openEditorForLayer(book, page, layer, class)
-  print("App/"..book .."/components/" ..page.."/" .. layer, class)
-  local path = system.pathForFile("App/"..book, system.ResourceDirectory)
-  if class and class:len() > 3 and class~=layer then
-    path = path.. "/components/" ..page.."/layers/" .. layer .."_"..class..".lua"
-  elseif layer=="index" then
-    path = path.. "/components/" ..page.."/index.lua"
+  print("App/" .. book .. "/components/" .. page .. "/" .. layer, class)
+  local path = system.pathForFile("App/" .. book, system.ResourceDirectory)
+  if class and class:len() > 3 and class ~= layer then
+    path = path .. "/components/" .. page .. "/layers/" .. layer .. "_" .. class .. ".lua"
+  elseif layer == "index" then
+    path = path .. "/components/" .. page .. "/index.lua"
   else
-    path = path.. "/components/" ..page.."/layers/" .. layer ..".lua"
+    path = path .. "/components/" .. page .. "/layers/" .. layer .. ".lua"
   end
   --
   -- local url = "vscode://file/" .. path
@@ -434,16 +447,15 @@ function M.openEditorForLayer(book, page, layer, class)
   --     print( "WARNING: Facebook app is not installed!" )
   -- end
   --
-  local cmd = "code " ..path
-  os.execute( cmd )
+  local cmd = "code " .. path
+  os.execute(cmd)
 end
 
 function M.openFinder(book, folder)
-  local path = system.pathForFile("App/"..book.."/assets/"..folder, system.ResourceDirectory)
-  local cmd = "open " ..path
-  os.execute( cmd )
+  local path = system.pathForFile("App/" .. book .. "/assets/" .. folder, system.ResourceDirectory)
+  local cmd = "open " .. path
+  os.execute(cmd)
 end
-
 
 M.copyFiles = copyFiles
 

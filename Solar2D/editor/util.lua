@@ -527,14 +527,14 @@ function M.saveIndex(book, page, layer, class, model)
   if layer then
     for i = 1, #decoded.components.layers do
       local entry = decoded.components.layers[i]
-      -- for k, v in pairs(entry) do print(i, k) end
-      if entry[layer] then
-        if entry[layer].class == nil then
-          entry[layer].class = {}
+      -- for k, v in pairs(entry) do print(k,v) end
+      if entry.name == layer then
+        if entry.class == nil then
+          entry.class = {}
         end
-        table.insert(entry[layer].class, class)
-        for j = 1, #entry[layer].class do
-          print(entry[layer].class[j])
+        table.insert(entry.class, class)
+        for j = 1, #entry.class do
+          print(entry.class[j])
         end
         break
       end

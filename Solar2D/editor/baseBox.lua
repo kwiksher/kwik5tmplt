@@ -123,7 +123,7 @@ function M:createTable(params)
     -- name
     option.parent = group
     option.text   =  entry.name or ""
-    option.x = 42  --labelText.contentBounds.xMin - 100
+    option.x = 42   --labelText.contentBounds.xMin - 100
     option.y = triangle.contentBounds.yMax + (index-2) * option.height-5
     --
     local obj = self.newText(option)

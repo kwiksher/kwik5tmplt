@@ -43,12 +43,11 @@ end
 --
 function M:useClassEditorProps()
   -- print("useClassEditorProps")
-  local props = {}
+  local props = { settings = {}}
   if self.selectbox.selectedObj and self.selectbox.selectedText then
     props = {
       name = self.selectbox.selectedObj.text, -- UI.editor.currentLayer,
       class= self.selectbox.selectedText.text:lower(),
-      settings = {},
       actionName = nil,
       -- the following vales come from read()
       page = self.page,

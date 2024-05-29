@@ -1,15 +1,15 @@
 local model = {
   layerTools = {
     {
-      name = "Page",
+      name = "Layer",
       icon = "toolPage",
       tools = {
         -- {name = "addPage", icon = "newPage"},
         {name = "Properties", icon = "LayerProp"},
-        {name = "Language", icon = "Lang"},
+        -- {name = "Language", icon = "Lang"},
         {name = "setLanguage", icon = "setLang"}
       },
-      id = "page"
+      id = "layer"
     },
     {
       name = "Replacements",

@@ -3,7 +3,7 @@ local M = {
   class="page",
   -- actionName = "",
   settings = {
-    test="properties"
+    test="page properties"
   }
 }
 
