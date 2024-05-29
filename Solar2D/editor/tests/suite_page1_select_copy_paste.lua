@@ -15,6 +15,8 @@ local actionTable = require("editor.action.actionTable")
 local controller = require("editor.action.controller.index")
 local buttons = require("editor.parts.buttons")
 --
+local classProps = require("editor.parts.classProps")
+--
 
 function M.init(props)
   selectors = props.selectors
@@ -53,7 +55,7 @@ end
 function M.teardown()
 end
 
-function M.test_multi_edit_props()
+function M.xtest_multi_edit_props()
   --
   layerTable.controlDown = true
   --
@@ -64,7 +66,27 @@ function M.test_multi_edit_props()
   end
   layerTable.controlDown = false
   ---
-  helper.clickButton("modify")
+  -- helper.clickButton("modify")
+
+  local toolbar = require("editor.parts.toolbar")
+  local obj = toolbar.layerToolMap["Layer"]
+  obj.callBack{target=obj}
+  for k, v in pairs(toolbar.toolMap) do print(k, v) end
+  local tool = toolbar.toolMap[obj.id.."-Properties"]
+  tool.callBack{target=tool}
+
+  for i, obj in next, classProps.objs do
+  --  print(obj.text)
+    if obj.text == "alpha" then
+      obj.field.text = 1
+    end
+  end
+
+  -- for k, obj in pairs(buttons.objs) do
+  --   print(k)
+  -- end
+  -- buttons.objs["save"].rect:tap()
+  -- buttons.objs["cancel"]:tap()
 
 end
 

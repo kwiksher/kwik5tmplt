@@ -88,6 +88,9 @@ function M:create(UI)
         }
       elseif event.eventName == "save" then
         props = self.useClassEditorProps()
+        print("saving props")
+        props.class = self.UI.editor.currentClass
+        for k, v in pairs(props) do print("",k, v) end
       end
       -- close context menu
       -- for i, key in next, self.contextMenu do
@@ -406,7 +409,7 @@ function M:showContextMenu(x,y, options)
         --
         -- for buttons in row
         --
-        if obj.rect.buttonsInRow and not options.isPageContent then
+        if obj.rect.buttonsInRow and not (options or {}).isPageContent then
           local indexXX = 1
           for i, o in next, obj.rect.buttonsInRow do
             print(i, o.text)

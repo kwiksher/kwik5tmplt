@@ -206,6 +206,7 @@ function M:createTable(props)
     local rect = display.newRect(self.group, option.x, option.y, option.width, option.height)
     rect:setFillColor(1)
 
+    option.x = self.x + 2
     local obj = newText(option)
     obj.rect = rect
     objs[#objs + 1] = obj

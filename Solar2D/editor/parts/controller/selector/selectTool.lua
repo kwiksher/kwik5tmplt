@@ -69,6 +69,7 @@ local command = function (params)
       -- read json
       tool:show()
       UI.editor.currentTool = tool
+      UI.editor.currentClass = params.class
       if params.layer then -- this measn user clicks one of class, anim, button, drag ...
         UI.editor.currentLayer = params.layer
       end

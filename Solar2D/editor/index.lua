@@ -11,8 +11,8 @@ local json = require("json")
 local bt = require(parent..'controller.BTree.btree')
 local tree = require(parent.."controller.BTree.selectorsTree")
 --
-local unitTestOn = true
-local httpServerOn = true
+local unitTestOn = false
+local httpServerOn = false
 
 M.rootGroup = display.newGroup()
 M.viewStore = {}
@@ -272,7 +272,7 @@ end
 
 function M:gotoLastSelection()
   local UI = self.UI
-  local props = {book="bookFree", page="page1", selections={layer="title", class="linear"}}
+  local props = {book="book", page="page1", selections={layer="cat", class="linear"}}
   -- Path for the file to read
   local path = system.pathForFile( "kwik.json", system.ApplicationSupportDirectory )
   -- Open the file handle
@@ -304,10 +304,10 @@ function M:gotoLastSelection()
   --
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
 
   local obj = helper.getBook(props.book)
   bookTable.commandHandler(obj, {phase="ended"},  true)

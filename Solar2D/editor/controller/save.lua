@@ -30,11 +30,11 @@ local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
-    print(name)
+    print(name, params.class,  params.decoded)
     local props = params.props
     if not props.isNew then
       -- publish
-      local controller = UI.editor:getClassModule(params.class).controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
+      local controller = UI.editor:getClassModule(params.class or "layer").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
       scripts.publishForSelections(UI, params.props, controller, params.decoded or {})
     else
       print("new layer")
