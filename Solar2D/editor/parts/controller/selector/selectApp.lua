@@ -10,7 +10,7 @@ local util = require("lib.util")
 local command = function (params)
   local UI    = params.UI
 
-  print(debug.traceback())
+  --print(debug.traceback())
 	-- print("initApp")
 
 	-- https://ggcrunchy.github.io/corona-plugin-docs/DOCS/tinyfiledialogs/api.html

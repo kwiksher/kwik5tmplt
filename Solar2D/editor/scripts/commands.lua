@@ -365,18 +365,20 @@ function M.publishForSelections(UI, args, controller, decoded)
   local page = args.page or UI.page
   local layer = args.layer or UI.editor.currentLayer
 
-  print(book, page, layer, classFolder, class)
+  print(book, page, layer, class, "classFolder="..classFolder)
 
   local props = getProps(args)
 
   -----------
   --- Update components/pageX/index.lua model/pageX/index.json
   local scene = require("App." .. book .. ".components." .. page .. ".index")
-
+  local updatedModel = scene.model
   for i, obj in next, UI.editor.selections do
     layer = obj.text
     print("", layer)
-    local updatedModel = util.createIndexModel(scene.model, layer, class)
+    updatedModel = util.createIndexModel(updatedModel, layer, class)
+    print("------------------------------")
+    print(json.encode(updatedModel))
     --- save json
     -----------
     -- print(book, page, layer, classFolder, args.index)
@@ -389,8 +391,6 @@ function M.publishForSelections(UI, args, controller, decoded)
     -- decoded[props.index].actionName = props.actionName
     -- decoded[props.index].name=props.name
     --
-    files[#files + 1] = controller:renderIndex(book, page, updatedModel)
-    files[#files + 1] = controller:saveIndex(book, page, layer, class, updatedModel)
     -- save lua
     files[#files + 1] = controller:render(book, page, layer, classFolder, class, props)
     -- save json
@@ -400,10 +400,12 @@ function M.publishForSelections(UI, args, controller, decoded)
       files[#files + 1] = controller:renderAssets(book, page, layer, classFolder, class, props)
     end
   end
+  files[#files + 1] = controller:renderIndex(book, page, updatedModel)
+  files[#files + 1] = controller:saveIndex(book, page, nil, nil, updatedModel)
   --
   saveSelection(book, page, UI.editor.selections)
   ----------
-  currentScript = copyFiles(files)
+ -- currentScript = copyFiles(files)
 end
 
 function M.getScript()

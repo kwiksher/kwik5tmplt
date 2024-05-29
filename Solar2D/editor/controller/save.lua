@@ -34,7 +34,7 @@ local instance =
     local props = params.props
     if not props.isNew then
       -- publish
-      local controller = UI.editor:getClassModule(params.class or "layer").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
+      local controller = UI.editor:getClassModule(params.class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
       scripts.publishForSelections(UI, params.props, controller, params.decoded or {})
     else
       print("new layer")

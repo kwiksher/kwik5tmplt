@@ -55,7 +55,7 @@ end
 function M.teardown()
 end
 
-function M.xtest_multi_edit_props()
+function M.test_multi_edit_props()
   --
   layerTable.controlDown = true
   --
