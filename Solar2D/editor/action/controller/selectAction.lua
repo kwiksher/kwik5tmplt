@@ -17,7 +17,7 @@ local command = function (params)
       print( "Decode failed at "..tostring(pos)..": "..tostring(msg) )
       return
     end
-    UI.editor.actionEditor.selectbox:updateValue(decoded.name)
+    --UI.editor.actionEditor.selectbox:updateValue(decoded.name)
   end
   UI.editor.currentAction  = decoded
   --
