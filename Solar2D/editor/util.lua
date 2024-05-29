@@ -86,7 +86,7 @@ function M.createIndexModel(_scene, layerName, class)
         elseif key == "event" then
         else
           newEntry.name = key
-          if next(value) then
+          if type(value)=="table" and next(value) then
             if value.class == nil then
               --
               -- {aName = {A={}, B={}}}
