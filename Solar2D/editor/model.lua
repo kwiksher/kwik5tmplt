@@ -4,7 +4,7 @@ local model = {
       name = "Page",
       icon = "toolPage",
       tools = {
-        {name = "addPage", icon = "newPage"},
+        -- {name = "addPage", icon = "newPage"},
         {name = "Properties", icon = "LayerProp"},
         {name = "Language", icon = "Lang"},
         {name = "setLanguage", icon = "setLang"}

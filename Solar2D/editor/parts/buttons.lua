@@ -406,7 +406,7 @@ function M:showContextMenu(x,y, options)
         --
         -- for buttons in row
         --
-        if obj.rect.buttonsInRow then
+        if obj.rect.buttonsInRow and not options.isPageContent then
           local indexXX = 1
           for i, o in next, obj.rect.buttonsInRow do
             print(i, o.text)

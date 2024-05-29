@@ -31,7 +31,7 @@ function M:init(UI)
   self.UI               = UI
   self.group            = display.newGroup()
   --
-  selectbox:init(4, self.y)
+  selectbox:init(UI, 4, self.y)
   classProps:init(UI, display.contentCenterX+480*0.6 , 22,  self.width, self.height)
   classProps.option.width = 54
   classProps.model = model.props
@@ -40,8 +40,8 @@ function M:init(UI)
   -- actionbox:init(UI)
   -- group specific UI
   layersbox:init(UI, self.x-480/2-20, self.y, nil, nil, "layer")
-  layersTable:init(self.x + 480/2 + 20, self.y)
-  buttons:init(self.x , self.y-20)
+  layersTable:init(UI, self.x + 480/2 + 20, self.y)
+  buttons:init(UI, self.x , self.y-20)
   --
   controller:init{
     selectbox      = selectbox,

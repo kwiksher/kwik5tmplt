@@ -68,9 +68,13 @@ function M:isShiftDown()
   return self.shiftDown
 end
 ---
-function M:init(marginX, marginY)
+function M:init(UI, marginX, marginY)
   self.selection = nil
   self.lastSelection = nil
+  if type(marginX) == "table" then
+    print("####", self.name)
+    print(debug.traceback())
+  end
   self.marginX = marginX or self.marginX
   self.marginY = marginY or self.marginY
 end
@@ -167,7 +171,7 @@ function M:commandHandler(eventObj, event)
 end
 -- icons
 function M:createIcons (_marginX, _marginY)
-  print("@@@@@@@@@ createIcons", self.anchorName,_marginX, _marginY)
+  print("@@@@@@@@@ createIcons", self.anchorName, self.marginX, _marginY)
   local marginX = _marginX or self.marginX
   local marginY = _marginY or 0
   self:setPosition()
@@ -177,7 +181,7 @@ function M:createIcons (_marginX, _marginY)
 
     local posX = self.x + marginX
     local posY = self.y -33 + marginY
-    print("", posX, posY)
+    print(name, posX, posY)
 
     local actionIcon = muiIcon:create {
       icon = {name.."_over", name.."Color_over", name},

@@ -14,7 +14,7 @@ local M = {
     -- lunatest.suite("editor.tests.suite_page1_physics", props)
     -- lunatest.suite("editor.tests.suite_page1_select_copy_paste", props)
 
-    -- lunatest.suite("editor.tests.suite_new_book_page_layer", props)
+    lunatest.suite("editor.tests.suite_new_book_page_layer", props)
     -- lunatest.suite("editor.tests.suite_new_shape_transform", props)
     -- lunatest.suite("editor.tests.suite_new_timer", props)
     -- lunatest.suite("editor.tests.suite_new_variable", props)

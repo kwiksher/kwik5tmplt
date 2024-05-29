@@ -41,7 +41,7 @@ local function onKeyEvent(event)
   end
 end
 
-function M:init(x, y, width, height)
+function M:init(UI, x, y, width, height)
   self.x = x
   self.y = y
   self.width= width or 80*2
