@@ -15,10 +15,10 @@ function M.getFileName(str)
 end
 
 local isTarget = function(layer, layerName)
-  for entry, v in pairs(layer) do
-    if entry == "class" then
-    elseif entry == "event" then
-    elseif entry == layerName then
+  for key, v in pairs(layer) do
+    if key == "class" then
+    elseif key == "event" then
+    elseif key == layerName then
       return true
     end
   end
@@ -38,6 +38,91 @@ function M.isExist(book, page, layer, class)
   local path =system.pathForFile( "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class..".lua", system.ResourceDirectory)
   return path
 end
+
+function M.updateIndexModel(_scene, layerName, class)
+  local scene = _scene or {
+    components = {
+      layers = {  },
+      audios = {  },
+      groups = {  },
+      timers = {  },
+      variables = {  },
+      others = {  }
+     }
+  }
+  --
+  local onInit = scene.onInit
+  scene.onInit = nil
+  local copied = M.copyTable(scene)
+  scene.onInit = onInit
+
+  -- print("%%%", layerName)
+  local function processLayers(layers, nLevel)
+    for i = 1, #layers do
+      -- print("%%%", i)
+      local layer = layers[i]
+      local children = {}
+      --
+      if isTarget(layer, layerName) then
+        -- print("%%%", layerName)
+        local target = layer[layerName]
+        if target.class == nil then
+          target.class = {}
+        end
+        --
+        if not isClass(target, class) then
+          table.insert(target.class, class)
+        end
+      end
+
+      --
+      local children = {}
+      for key, value in pairs(layer) do
+        -- print(key, value)
+        if key == "class" then
+        elseif key == "event" then
+        else
+          if type(value)=="table" and next(value) then
+            if value.class == nil then
+              --
+              -- {aName = {A={}, B={}}}
+              --
+              children[#children + 1] = value
+            else
+              local field, child = next(value, nil)
+              while field do
+                -- print(field, "=", child, #children +1)
+                if field ~= "class" then
+                  -- child.layers = false
+                  children[#children + 1] = child
+                -- elseif newEntry.class == nil then
+                --   newEntry.class = child
+                end
+                field, child = next(value, field)
+              end
+            end
+          end
+        end
+      end
+      if #children > 0 then
+        -- if next(v) == nil then
+        --   -- just empty layer without class nor event
+        --   v.class = {class}
+        -- end
+        processLayers(children, nLevel + 1)
+      else
+        -- newEntry.layers = false
+      end
+    end
+  end
+  --
+  --if layerName then
+  processLayers(copied.components.layers, 1)
+  --end
+  --
+  return copied
+end
+
 
 function M.createIndexModel(_scene, layerName, class)
   local scene = _scene or {
