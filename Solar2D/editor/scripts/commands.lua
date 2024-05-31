@@ -373,12 +373,13 @@ function M.publishForSelections(UI, args, controller, decoded)
   --- Update components/pageX/index.lua model/pageX/index.json
   local scene = require("App." .. book .. ".components." .. page .. ".index")
   local updatedModel = scene.model
+  -- print(json.encode(updatedModel))
+
   for i, obj in next, UI.editor.selections do
     layer = obj.text
-    print("", layer)
-    updatedModel = util.createIndexModel(updatedModel, layer, class)
-    print("------------------------------")
-    print(json.encode(updatedModel))
+    -- print("", layer)
+    updatedModel = util.updateIndexModel(updatedModel, layer, class)
+
     --- save json
     -----------
     -- print(book, page, layer, classFolder, args.index)
@@ -400,8 +401,15 @@ function M.publishForSelections(UI, args, controller, decoded)
       files[#files + 1] = controller:renderAssets(book, page, layer, classFolder, class, props)
     end
   end
-  files[#files + 1] = controller:renderIndex(book, page, updatedModel)
-  files[#files + 1] = controller:saveIndex(book, page, nil, nil, updatedModel)
+  ---
+  -- print(json.encode(updatedModel))
+
+  local renderdModel = util.createIndexModel(updatedModel)
+  -- print("------------------------------")
+  -- print(json.encode(renderdModel))
+
+  files[#files + 1] = controller:renderIndex(book, page, renderdModel)
+  files[#files + 1] = controller:saveIndex(book, page, nil, nil, renderdModel)
   --
   saveSelection(book, page, UI.editor.selections)
   ----------

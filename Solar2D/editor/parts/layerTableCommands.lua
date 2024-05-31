@@ -136,7 +136,7 @@ local function showFocus(layerTable)
   for i, v in next, layerTable.selections do
     local obj = UI.sceneGroup[v.text]
     if obj then
-      print("@", v.text, obj.x, obj.y)
+      -- print("@", v.text, obj.x, obj.y)
       local posX, posY = obj.x, obj.y
       local rect = display.newRect(UI.editor.focusGroup, posX, posY, obj.width, obj.height)
       rect:setFillColor(1, 0, 0, 0)
@@ -163,7 +163,7 @@ function M.commandHandler(layerTable, target, event)
   --
   buttons:hide()
   ---
-  print("@@@@@@", layerTable.altDown, layerTable:isAltDown())
+  -- print("@@@@@@", layerTable.altDown, layerTable:isAltDown())
   -- print(debug.traceback())
   if layerTable:isAltDown() then
     if showLayerProps(layerTable, target) then
@@ -173,7 +173,7 @@ function M.commandHandler(layerTable, target, event)
         path = path
         -- class = target.class
       }
-      print("###", target.layer)
+      -- print("###", target.layer)
       tree:setConditionStatus("select layer", bt.SUCCESS, true)
       tree:setActionStatus("load layer", bt.RUNNING, true)
       tree:setConditionStatus("select props", bt.SUCCESS)
