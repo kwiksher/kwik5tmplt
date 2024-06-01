@@ -1,5 +1,11 @@
 --require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=0, y=0}}) -- scenes.index
 
+local restore = false
+if restore then
+  os.execute("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source undo_lua.command")
+  return
+end
+
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   local lldebugger = loadfile(os.getenv("LOCAL_LUA_DEBUGGER_FILEPATH"))()
   lldebugger.start()

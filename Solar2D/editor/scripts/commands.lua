@@ -10,7 +10,7 @@ local libUtil = require("lib.util")
 
 local currentScript
 
-local function executeScript(filename, model)
+local function saveScript(filename, model)
   local ext = "command"
   if platform == "win32" then
     ext = "bat"
@@ -47,8 +47,13 @@ local function executeScript(filename, model)
     end
   end
 
+  return cmd, cmdFile
+end
+
+local function executeScript(filename, model)
+  local cmd, cmdFile = saveScript(filename, model)
   if platform == "win32" then
-    print("copy " .. cmdFile .. " " .. system.pathForFile("", system.ResourceDirectory))
+    -- print("copy " .. cmdFile .. " " .. system.pathForFile("", system.ResourceDirectory))
     os.execute("copy " .. cmdFile .. " " .. system.pathForFile("..\\", system.ResourceDirectory))
     os.execute("cd " .. system.pathForFile("..\\", system.ResourceDirectory) .. " & start cmd /k call " .. cmd)
   else
@@ -133,6 +138,44 @@ function M.renamePage(book, page, newName, _dst)
   return executeScript("rename_page.", {dst = root, book = book, page = page, newName = newName, newIndex = newFile})
 end
 
+local function backupFiles(files, _dst)
+  local root = _dst or "Solar2D"
+  --
+  -- cp (system.TemporaryDirectory)copy_lua.command ( system.ResourceDirectory)../copy_lua.command
+  -- cd (system.ResourceDirectory)..; source copy_lua.command
+  --
+  local entries = {}
+  local commnans_undo = {}
+  for i = 1, #files do
+    print(files[i])
+    local src = system.pathForFile(files[i], system.TemporaryDirectory)
+    --local dst = system.pathForFile(nil, system.ResourceDirectory )
+    local dir = util.getPath(files[i])
+    local dst = files[i]
+    local tmp
+    if platform == "win32" then
+      dst = '"' .. dst:gsub("/", "\\") .. '"'
+      entries[#entries + 1] = {file = tmp}
+    else
+      src = src:gsub(" ", "\\ ")
+      dst = dst:gsub(" ", "\\ ")
+      dir = dir:gsub(" ", "\\ ")
+      -- print ("cp "..tmp.." "..pathDst)
+      entries[#entries + 1] = {file = dst}
+    end
+  end
+  local cmd, cmdFile = saveScript("undo_lua.", {dst = root, files = entries})
+  if platform == "win32" then
+    -- print("copy " .. cmdFile .. " " .. system.pathForFile("", system.ResourceDirectory))
+    os.execute("copy " .. cmdFile .. " " .. system.pathForFile("..\\", system.ResourceDirectory))
+  else
+    -- print("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
+    os.execute("cp " .. cmdFile .. " " .. system.pathForFile("../", system.ResourceDirectory))
+  end
+  ---
+  executeScript("backup_lua.", {dst = root, files = entries})
+end
+
 local function copyFiles(files, _dst)
   local root = _dst or "Solar2D"
   --
@@ -140,6 +183,7 @@ local function copyFiles(files, _dst)
   -- cd (system.ResourceDirectory)..; source copy_lua.command
   --
   local commands = {}
+  local commnans_undo = {}
   for i = 1, #files do
     print(files[i])
     local src = system.pathForFile(files[i], system.TemporaryDirectory)
@@ -352,6 +396,7 @@ function M.publish(UI, args, controller, decoded)
 
   saveSelection(book, page, {{name = layer, class = class}})
   -- publish
+  backupFiles(files)
   currentScript = copyFiles(files)
 end
 
@@ -365,7 +410,7 @@ function M.publishForSelections(UI, args, controller, decoded)
   local page = args.page or UI.page
   local layer = args.layer or UI.editor.currentLayer
 
-  print(book, page, layer, class, "classFolder="..classFolder)
+  print("publishForSelections", book, page, layer, class, "classFolder="..classFolder)
 
   local props = getProps(args)
 
@@ -413,7 +458,8 @@ function M.publishForSelections(UI, args, controller, decoded)
   --
   saveSelection(book, page, UI.editor.selections)
   ----------
- -- currentScript = copyFiles(files)
+  backupFiles(files)
+  currentScript = copyFiles(files)
 end
 
 function M.getScript()
@@ -468,5 +514,6 @@ function M.openFinder(book, folder)
 end
 
 M.copyFiles = copyFiles
+M.backupFiles = backupFiles
 
 return M

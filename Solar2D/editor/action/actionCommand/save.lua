@@ -79,6 +79,7 @@ local command = function (params)
   -- save json
   files[#files+1] = controller:save(UI.editor.currentBook, page, nameText, {name=nameText, actions = actions})
   -- publish
+  scripts.backupFiles(files)
   scripts.copyFiles(files)
 
   --[[
