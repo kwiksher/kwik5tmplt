@@ -88,6 +88,7 @@ local instance = require("commands.kwik.baseCommand").new(
     -- save json
     files[#files+1] = controller:save(book, page, props.subclass, props.name, props.settings)
     -- publish
+    scripts.backupFiles(files)
     scripts.copyFiles(files)
   end
 )
