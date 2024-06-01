@@ -295,7 +295,7 @@ function M.copyTable(decoded)
 end
 
 function M.mkdir(...)
-  print("#### mkdir")
+  -- print("#### mkdir")
   local folders = {...}
   local path = system.pathForFile(nil, system.TemporaryDirectory)
   lfs.chdir(path)

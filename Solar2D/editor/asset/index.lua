@@ -112,7 +112,7 @@ function controller:read(book, _model)
     for i, entry in next, v do
       entry.index = i
       map[entry.name] = entry
-      print(k, i, entry.name)
+      -- print(k, i, entry.name)
     end
   end
   --

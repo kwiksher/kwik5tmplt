@@ -23,7 +23,7 @@ function M:create(UI)
   self.vertical = false
 
   local toolListener = function(event)
-    print("@@", self.selection, event.target.muiOptions.name)
+    -- print("@@", self.selection, event.target.muiOptions.name)
     --for k, v in pairs(event.target.muiOptions) do print(k, v) end
     if self.selection == event.target.muiOptions.name then
       self.selection = nil

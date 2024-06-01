@@ -30,7 +30,7 @@ local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
-    print(name, params.class,  params.decoded)
+    -- print(name, params.class,  params.decoded)
     local props = params.props
     if not props.isNew then
       -- publish

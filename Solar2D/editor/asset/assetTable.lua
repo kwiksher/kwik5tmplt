@@ -248,7 +248,7 @@ function M:destroy()
       for name, value in pairs(icon) do print(name, value) end
       mui.removeWidgetByName(icon.name)
     else
-      print(icon)
+      -- print(icon)
     end
   end
 

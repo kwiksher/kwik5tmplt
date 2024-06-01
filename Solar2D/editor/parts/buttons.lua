@@ -68,7 +68,7 @@ function M:create(UI)
   self.group = group
 
   local function tapHandler(event)
-    print("tap", event.eventName)
+    -- print("tap", event.eventName)
     if event.eventName == "toggle" then
       self.togglePanel(true)
       local obj = self.objs[event.eventName]
@@ -88,9 +88,9 @@ function M:create(UI)
         }
       elseif event.eventName == "save" then
         props = self.useClassEditorProps()
-        print("saving props")
+        -- print("saving props")
         props.class = self.UI.editor.currentClass
-        for k, v in pairs(props) do print("",k, v) end
+        -- for k, v in pairs(props) do print("",k, v) end
       end
       -- close context menu
       -- for i, key in next, self.contextMenu do
@@ -317,7 +317,7 @@ end
 --
 function M:destroy()
   -- print(debug.traceback())
-  print("buttons:destroy()")
+  -- print("buttons:destroy()")
   if self.objs then
     for k, obj in next, self.objs do
       obj.rect:removeEventListener("tap", obj)
@@ -412,7 +412,7 @@ function M:showContextMenu(x,y, options)
         if obj.rect.buttonsInRow and not (options or {}).isPageContent then
           local indexXX = 1
           for i, o in next, obj.rect.buttonsInRow do
-            print(i, o.text)
+            -- print(i, o.text)
             o.isVisible = false
             o.rect.isVisible = o.isVisible
             -- if options and options.orientation =="horizontal" then

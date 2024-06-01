@@ -6,7 +6,7 @@ local current = ...
 local parent = current:match("(.-)[^%.]+$")
 local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 
-print(current, parent ,root)
+-- print(current, parent ,root)
 
 function string:mySplit(delimiter)
   local t = {}

@@ -33,7 +33,7 @@ end
 
 
 function M:setTemplate(template)
-  print("### setTemplate", #self.model)
+  -- print("### setTemplate", #self.model)
   local last = self.model[#self.model]
   local suffix
   if last and last.isTemplate then

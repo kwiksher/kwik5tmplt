@@ -187,7 +187,7 @@ function M.commandHandler(layerTable, target, event)
       --
     end
   elseif layerTable:isControlDown() then -- mutli selections
-    print("multi selection")
+    -- print("multi selection")
     multiSelections(layerTable, target)
   else
     if singleSelection(layerTable, target) then

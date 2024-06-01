@@ -94,7 +94,7 @@ function M:create(UI)
       -- obj:addEventListener("touch", obj)
 
       obj.touch = function(eventObj, event)
-        print("touch")
+        -- print("touch")
         self:commandHandler(eventObj, event)
         UI.editor.selections = self.selections
         return true
