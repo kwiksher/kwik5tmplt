@@ -178,19 +178,22 @@ M.Shapes = Shapes
 function M:render(book, page, layer, classFolder, class, model)
   print("render()", book, page, layer, classFolder, class, model.name)
   local dst, tmplt
-  if class == nil or model.name == nil then
-    dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
+  if (model.name and model.name:len()>0) and class then
+    dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..model.name ..".lua"
     --local dst = layer.."_"..class ..".lua"
-    tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_text.lua"
+    tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
   elseif Shapes[class] then
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
     --local dst = layer.."_"..class ..".lua"
     tmplt =  "editor/template/components/pageX/"..classFolder.."/"..class..".lua"
-
-  else
-    dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..model.name ..".lua"
+  elseif class then
+    dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
     --local dst = layer.."_"..class ..".lua"
     tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
+  else
+    dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
+    --local dst = layer.."_"..class ..".lua"
+    tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_text.lua"
     -- if tool == "animation" then
     --   tmplt =  "editor/template/components/pageX/animations/layer_animation.lua"
     -- end
