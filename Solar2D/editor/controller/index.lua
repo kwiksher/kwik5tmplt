@@ -176,7 +176,7 @@ local Shapes = table:mySet{"new_image", "new_rectangle", "new_ellipse", "new_tex
 M.Shapes = Shapes
 
 function M:render(book, page, layer, classFolder, class, model)
-  print(book, page, layer, classFolder, class, model.name)
+  print("render()", book, page, layer, classFolder, class, model.name)
   local dst, tmplt
   if class == nil or model.name == nil then
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
@@ -233,7 +233,7 @@ function M:read(book, page, layer,class, isNew)
   local decoded,  pos, msg
   if isNew then
     local path = "editor.template.components.pageX."..self.tool..".defaults."..class
-    print(path)
+    -- print(path)
     local data = require(path)
     decoded = {data}
   elseif layer then
@@ -298,7 +298,7 @@ function M:updateAsset(text, asset)
 end
 
 function M:load(book, page, layer, class, isNew, asset)
-  print("read", page, layer, class, isNew)
+  -- print("read", page, layer, class, isNew)
   -- the values are used in useClassEdtiorProps()
   self.page = page
   self.layer = layer

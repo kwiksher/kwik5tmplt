@@ -18,7 +18,7 @@ local command = function (params)
     local app = UI.scene.app -- App.get()
     app:showView("components." .. params.page .. ".index", {effect = "slideDown"})
   else
-    print("UI.page equals to", params.page)
+    -- print("UI.page equals to", params.page)
   end
 
   -- showView loads

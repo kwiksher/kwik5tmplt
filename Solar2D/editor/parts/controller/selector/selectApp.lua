@@ -43,7 +43,7 @@ local command = function (params)
 					-- set them to nanostores
 					if util.isFile(file.."/index.lua")  and file:len() > 3 and file ~="kwikEditor" then
             local w = util.readWeight(file, "index.lua")
-            print(w)
+            -- print(w)
 						table.insert(books, {name = file, path= util.PATH(appFolder.."/"..file), weight = w})
 					end
 				end

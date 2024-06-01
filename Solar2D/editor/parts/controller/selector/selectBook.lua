@@ -7,7 +7,7 @@ local composer = require("composer")
 local useModelJSON = false
 --
 local command = function (params)
-  print("----------- initBook -----------")
+  -- print("----------- initBook -----------")
 	local UI    = params.UI
   local bookName = params.book or App.get().name
   UI.editor.currentBook = bookName
@@ -61,7 +61,7 @@ local command = function (params)
     loadPage(UI)
    end)
   else
-    print("selectBook same book")
+    -- print("selectBook same book")
     loadPage(UI)
   end
 

@@ -135,7 +135,7 @@ function M:getClassModule (class)
 end
 
 function M:getClassFolderName (class)
-  print(class)
+  -- print(class)
   return self.classMap[class:lower()]
 end
 
@@ -180,7 +180,7 @@ function M:init(UI)
       self.views[i] = require(parent.."parts."..self.models[i])
     end
     for i=1, #self.actionViews do
-      print(parent.."action."..self.actionViews[i])
+      -- print(parent.."action."..self.actionViews[i])
       self.views[#self.views + 1] = require(parent.."action."..self.actionViews[i])
     end
     -- Here linking toolbar-xx with view.animation, ...
@@ -287,7 +287,7 @@ function M:gotoLastSelection()
       -- Read data from file
       local contents = file:read( "*a" )
       -- Output the file contents
-      print( "Contents of " .. path .. "\n" .. contents )
+      -- print( "Contents of " .. path .. "\n" .. contents )
       -- Close the file handle
       io.close( file )
       props = json.decode(contents)

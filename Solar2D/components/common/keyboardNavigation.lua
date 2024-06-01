@@ -123,7 +123,7 @@ end
 function _M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   local app = App.get()
-  print("## keyboardNavigation")
+  -- print("## keyboardNavigation")
   Runtime:addEventListener("key", onKeyEvent)
   --
   -- local bg = UI.layers[#UI.layers+1]

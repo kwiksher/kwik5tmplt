@@ -37,7 +37,7 @@ local lastTool
 --
 local command = function (params)
 	local UI    = params.UI
- 	print("selectTool", UI.editor:getClassModule(params.class), params.class, params.isNew )
+ 	-- print("selectTool", UI.editor:getClassModule(params.class), params.class, params.isNew )
   if params.asset then
     -- links is an array of layer names
     for k, v in pairs(params.asset) do print(k, v) end
@@ -48,11 +48,11 @@ local command = function (params)
   local tool = UI.editor:getClassModule(params.class)
   if tool then
     if lastTool then
-      print("### lastTool", lastTool.name)
+      -- print("### lastTool", lastTool.name)
       lastTool.controller:hide()
     end
     lastTool= tool
-    print("### tool", params.class, tool)
+    -- print("### tool", params.class, tool)
 
     if params.hide then
       tool.controller:hide()
