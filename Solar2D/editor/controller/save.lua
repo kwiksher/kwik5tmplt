@@ -16,8 +16,8 @@ local function printParams(params)
   end
   print("-----props---------")
   for k, v in pairs(params.props) do
-    if k =="settings" then
-      print("settings")
+    if k =="properties" then
+      print("properties")
       for kk, vv in pairs(v) do print("", kk, vv) end
     else
       print(k, v)
@@ -72,7 +72,7 @@ return instance
 -- App/bookFree/canvas/commands/blueBTN.lua
 -- App/bookFree/canvas/models/commands/blueBTN.json
 -----props---------
---  settings
+--  properties
         --  duration        3000
         --  delay   0
         --  name
@@ -95,7 +95,7 @@ return instance
 --[[ do multiple interactions work at the same time?
   butBlue_bbutton.json
   [{
-    "settings": {
+    "properties": {
       "delay": 0,
     },
     "class": "button",
@@ -110,7 +110,7 @@ return instance
     }
   },
   {
-    "settings": {
+    "properties": {
       "delay": 0,
     },
     "class": "drag",

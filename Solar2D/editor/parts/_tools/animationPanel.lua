@@ -198,7 +198,7 @@ function M:create(UI)
             yScale = 1.5,
             rotation = 90
         },
-		settings = {
+		properties = {
 			restart = false,
 			easing = "Linear",
 			reverse = false,

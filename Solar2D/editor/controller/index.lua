@@ -43,7 +43,7 @@ end
 --
 function M:useClassEditorProps()
   -- print("useClassEditorProps")
-  local props = { settings = {}}
+  local props = { properties = {}}
   if self.selectbox.selectedObj and self.selectbox.selectedText then
     props = {
       name = self.selectbox.selectedObj.text, -- UI.editor.currentLayer,
@@ -62,10 +62,10 @@ function M:useClassEditorProps()
     print("#Error self.classProps is nil for ", self.tool)
     return {}
   end
-  local settings = self.classProps:getValue()
-  for i=1, #settings do
-    -- print("", settings[i].name, type(settings[i].value))
-    props.settings[settings[i].name] = settings[i].value
+  local properties = self.classProps:getValue()
+  for i=1, #properties do
+    -- print("", properties[i].name, type(properties[i].value))
+    props.properties[properties[i].name] = properties[i].value
   end
   --
   props.actionName =self.actionbox.value
@@ -78,7 +78,7 @@ function M:setValue(decoded, index, template)
   if not template then
     print(json.encode(decoded[index]))
     self.selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
-    self.classProps:setValue(decoded[index].settings)
+    self.classProps:setValue(decoded[index].properties)
     local props = {}
     for k, v in pairs (decoded[index].actions) do
       props[#props+1] = {name=k, value=""}
@@ -88,7 +88,7 @@ function M:setValue(decoded, index, template)
     end
   else
     self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
-    self.classProps:setValue(decoded.settings)
+    self.classProps:setValue(decoded.properties)
     local props = {}
     if decoded.actions then
       for k, v in pairs (decoded.actions) do
@@ -179,7 +179,11 @@ function M:render(book, page, layer, classFolder, class, model)
   print("render()", book, page, layer, classFolder, class, model.name)
   local dst, tmplt
   if (model.name and model.name:len()>0) and class then
-    dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..model.name ..".lua"
+    if model.name == "nil" then
+      dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
+    else
+      dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..(model.name) ..".lua"
+    end
     --local dst = layer.."_"..class ..".lua"
     tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
   elseif Shapes[class] then
@@ -228,6 +232,7 @@ function M:saveIndex(book, page, layer, class, model)
   return util.saveIndex(book, page, layer, class, model)
 end
 
+
 function M:read(book, page, layer,class, isNew)
   self.page = page
   self.layer = layer
@@ -238,6 +243,9 @@ function M:read(book, page, layer,class, isNew)
     local path = "editor.template.components.pageX."..self.tool..".defaults."..class
     -- print(path)
     local data = require(path)
+    for k, v in pairs(data) do
+      print("@", k, v)
+    end
     decoded = {data}
   elseif layer then
     local layerName = layer or "index"

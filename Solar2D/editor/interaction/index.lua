@@ -24,7 +24,7 @@ controller:init{
 --   local props = {
 --     name = self.selectbox.selectedObj.text, -- UI.editor.currentLayer,
 --     class= self.selectbox.selectedText.text:lower(),
---     settings = {},
+--     properties = {},
 --     actionName = nil,
 --     -- the following vales come from read()
 --     page = self.page,
@@ -38,10 +38,10 @@ controller:init{
 --     print("#Error self.control is nil for ", self.layerTool)
 --     return {}
 --   end
---   local settings = self.control:getValue()
---   for i=1, #settings do
---     -- print("", settings[i].name, type(settings[i].value))
---     props.settings[settings[i].name] = settings[i].value
+--   local properties = self.control:getValue()
+--   for i=1, #properties do
+--     -- print("", properties[i].name, type(properties[i].value))
+--     props.properties[properties[i].name] = properties[i].value
 --   end
 --   --
 --   props.actionName =self.actionbox.selectedTextLabel

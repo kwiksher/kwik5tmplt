@@ -1,7 +1,7 @@
 local M = {
   name = "audio_",
   class="audio",
-  settings = {
+  properties = {
     autoPlay=false,
     channel = 0,
     delay=0,

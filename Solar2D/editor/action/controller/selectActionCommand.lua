@@ -19,7 +19,7 @@ local command = function (params)
   UI.editor.currentActionCommandIndex = params.index
 
   local type = ""
-  local entries = {}
+  local properties = {}
   local model = {}
   local index = params.index  or 1
 
@@ -63,9 +63,9 @@ local command = function (params)
     for k, v in pairs(model[index].params) do
       -- print("", k, v)
       local prop = {name=k, value=v}
-      entries[#entries+1] = prop
+      properties[#properties+1] = prop
     end
-    -- commandbox.group.y = display.actualContentHeight- #entries * 20 -40
+    -- commandbox.group.y = display.actualContentHeight- #properties * 20 -40
     --
   else
     print("",  UI.page.."/commands/"..UI.editor.currentAction.name..".json", UI.editor.currentActionCommandIndex)
@@ -79,13 +79,13 @@ local command = function (params)
     for k, v in pairs(commandClass.params) do
       -- print("", k, v)
       local prop = {name=k, value=v}
-      entries[#entries+1] = prop
+      properties[#properties+1] = prop
     end
   end
 
-  commandbox:setPosition(entries, model)
+  commandbox:setPosition(properties, model)
 
-  UI.editor.actionCommandPropsStore:set{type = type, entries=entries, isNew = params.isNew}
+  UI.editor.actionCommandPropsStore:set{type = type, properties=properties, isNew = params.isNew}
 
   buttons:hide()
   commandbox:show()

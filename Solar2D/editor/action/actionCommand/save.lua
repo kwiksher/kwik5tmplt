@@ -18,8 +18,8 @@ local command = function (params)
   local actions = actionCommandTable.actions
 
   local action = {command=props.type.."."..(selected or ""), params = {}}
-  for i=1, #props.entries do
-    local entry = props.entries[i]
+  for i=1, #props.properties do
+    local entry = props.properties[i]
     print(entry.name, entry.value)
     if entry.name == '_target' then
       action.params.target = entry.value

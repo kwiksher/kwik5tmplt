@@ -1,7 +1,7 @@
 local M = {
   name = "scroll",
   class="scroll",
-  settings = {
+  properties = {
     isActive = true
   }
 }

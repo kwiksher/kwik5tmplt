@@ -2,7 +2,7 @@ local M = {
   name = "collision",
   class="collision",
   -- actionName = "",
-  settings = {
+  properties = {
     test="collision"
   }
 }

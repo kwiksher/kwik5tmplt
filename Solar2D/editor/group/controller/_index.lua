@@ -25,7 +25,7 @@ local function useGroupProps(UI)
   --
   local layers, currentTable= layersTable:getValue()
   for i=1, #layers do
-    --print("", settings[i].name, type(settings[i].value))
+    --print("", properties[i].name, type(properties[i].value))
     props.layersTable[#props.layersTable + 1 ] = layers[i]
   end
   --

@@ -42,7 +42,7 @@ local basePropsControl = require("editor.basePropsControl")
     -- if name == "_target" then
     --   value = self.objs[i].linkbox.value
     -- end
-    -- print("@", type(self.model.entries[i].value))
+    -- print("@", type(self.model.properties[i].value))
     if _type == 'boolean' then
       if value == nil or value == "" then
         value = currentValue
@@ -58,10 +58,10 @@ local basePropsControl = require("editor.basePropsControl")
 function M:getValue()
   -- print(json.encode(self.model))
   -- for k, v in pairs(linkbox) do print(k, v) end
-  for i=1, #self.model.entries do
+  for i=1, #self.model.properties do
     if self.objs[i] == nil then break end
     -- print(self.model[i], self.objs[i].text, self.objs[i].field.text )
-    self.model.entries[i].value = baseProps._getValue(self.model.entries[i].name, self.objs[i].field.text, self.model.entries[i].value)
+    self.model.properties[i].value = baseProps._getValue(self.model.properties[i].name, self.objs[i].field.text, self.model.properties[i].value)
   end
   if commandbox.selectedObj then -- create
     return self.model, commandbox.selectedObj.text
@@ -108,16 +108,16 @@ function M:create(UI)
         return a.name < b.name
       end
       --
-      for i=1, #props.entries do
-        if props.entries[i].name == "target" then
-          props.entries[i].name = "_target"
+      for i=1, #props.properties do
+        if props.properties[i].name == "target" then
+          props.properties[i].name = "_target"
         end
       end
-      table.sort(props.entries,compare)
+      table.sort(props.properties,compare)
       ---
       local objs = {}
-      for i=1, #props.entries do
-        local entry = props.entries[i]
+      for i=1, #props.properties do
+        local entry = props.properties[i]
         option.text = entry.name
         option.x = posX
         option.y = i*option.height + posY

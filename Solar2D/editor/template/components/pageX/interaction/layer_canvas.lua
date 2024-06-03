@@ -22,13 +22,13 @@ local M = {
   -- class = "{{class}}", -- button, drag, canvas ...
   --
   -- canvasProps
-  {{#settings}}
+  {{#properties}}
   autoSave   = true,
   brushSize  = 10,
   brushColor = {0, 0, 1},
   color      = {255, 255, 255}
   outline    = true,
-  {{/settings}}
+  {{/properties}}
   --
   actions= nil,
   --
