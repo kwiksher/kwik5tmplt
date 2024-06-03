@@ -2,7 +2,7 @@ local M = {
   name = "joint",
   class="joint",
   -- actionName = "",
-  settings = {
+  properties = {
     test="joint"
   }
 }

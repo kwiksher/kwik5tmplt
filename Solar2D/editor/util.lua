@@ -315,6 +315,10 @@ function M.mkdir(...)
 end
 
 function M.saveLua(tmplt, dst, model, partial)
+  print("local tmplt='".. tmplt.. "'")
+  print("local dst ='".. dst.. "'")
+  print("local model = json.decode('".. json.encode(model).. "')" )
+
   local path = system.pathForFile(tmplt, system.ResourceDirectory)
   local file, errorString = io.open(path, "r")
   if not file then

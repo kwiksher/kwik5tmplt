@@ -2,7 +2,7 @@ local M = {
   name = "force",
   class="force",
   -- actionName = "",
-  settings = {
+  properties = {
     test="force"
   }
 }

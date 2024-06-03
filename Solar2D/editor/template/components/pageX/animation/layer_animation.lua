@@ -37,8 +37,8 @@ M.layerOptions = {
 }
 {{/layerOptions}}
 -- animationProps
-M.settings = {
-{{#settings}}
+M.properties = {
+{{#properties}}
   autoPlay = {{autoPlay}},
   delay    = {{delay}},
   duration = {{duration}},
@@ -68,7 +68,7 @@ M.settings = {
   xSwipe   = {{xSwipe}},
   ySwipe   = {{ySwipe}},
 }
-{{/settings}}
+{{/properties}}
   --
 
 {{#to}}

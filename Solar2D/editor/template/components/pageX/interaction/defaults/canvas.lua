@@ -1,7 +1,7 @@
 local M = {
   name = "canvas",
   class="canvas",
-  settings = {
+  properties = {
     autoSave   = true,
     brushSize  = 10,
     brushColor = {0, 0, 1},

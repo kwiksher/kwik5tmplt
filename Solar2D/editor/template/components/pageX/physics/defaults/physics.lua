@@ -2,7 +2,7 @@ local M = {
   name = "properties",
   class="properties",
   -- actionName = "",
-  settings = {
+  properties = {
     test="physics props"
   }
 }

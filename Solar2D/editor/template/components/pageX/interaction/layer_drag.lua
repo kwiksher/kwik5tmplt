@@ -22,7 +22,7 @@ local M = {
   -- class = "{{class}}", -- button, drag, canvas ...
   --
   -- dragProps
-  {{#settings}}
+  {{#properties}}
   constrainAngle = nil,
   bounds = {xStart=nil, xEnd=nil, yStart=nil, yEnd=nil},
   isActive = "{{isActive}}",
@@ -45,7 +45,7 @@ local M = {
   --
   rock = 1, -- 0,
   backToOrigin = true,
-  {{/settings}}
+  {{/properties}}
   --
   actions={
     onDropped = "{{actionName}}",

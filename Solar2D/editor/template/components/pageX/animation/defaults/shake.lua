@@ -19,7 +19,7 @@ local M = {
     yScale = 1.5,
     rotation = 90
   },
-  settings = {
+  properties = {
     autoPlay=true,
     delay=0,
     duration=3000,

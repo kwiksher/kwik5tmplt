@@ -2,26 +2,26 @@ local M = {
   name = "prpoerties",
   class="layer",
   -- actionName = "",
-  settings = {
-    blendMode = "",
-    height    = "",
-    width     = "" ,
-    kind      = "",
-    name      = "",
-    type      = "",
-    x         = "",
-    y         = "",
-    alpha     = "",
+  properties = {
+    blendMode = NIL,
+    height    = NIL,
+    width     = NIL ,
+    kind      = nil,
+    name      = nil,
+    type      = nil,
+    x         = NIL,
+    y         = NIL,
+    alpha     = NIL,
     --
-    align       = "",
-    randXStart  = "",
-    randXEnd    = "",
-    randYStart  = "",
-    randYEnd    = "",
+    align       = NIL,
+    randXStart  = NIL,
+    randXEnd    = NIL,
+    randYStart  = NIL,
+    randYEnd    = NIL,
     --,
-    xScale     = "",
-    yScale     = "",
-    rotation   = "",
+    xScale     = NIL,
+    yScale     = NIL,
+    rotation   = NIL,
     --,
     layerAsBg     = false,
     isSharedAsset = false,
@@ -31,14 +31,14 @@ local M = {
     font = nil,
     fontSize = nil,
     ---
-    infinity = nil,
-    infintySpeed = nil,
-    infinityDistance = nil,
+    infinity = NIL,
+    infinitySpeed = NIL,
+    infinityDistance = NIL,
     ---
     imagePath   = nil,
     imageHeight = nil,
     imageWidth  = nil
-  }
+  },
 }
 
 return M

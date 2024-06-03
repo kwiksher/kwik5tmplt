@@ -27,7 +27,7 @@ function M._yamlValue(k, v, params)
   end
 
   if value == nil then
-    if type(v) == "table" then
+    if type(v) == "table" and v~= NIL then
       if key == "color" then
         value, yamltype = yaml.getYaml({math.floor(v[1]*255), math.floor(v[2]*255), math.floor(v[3]*255), v[4]} )
       else

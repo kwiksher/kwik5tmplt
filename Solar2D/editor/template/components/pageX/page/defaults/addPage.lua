@@ -2,7 +2,7 @@ local M = {
   name = "addPage",
   class="page",
   -- actionName = "",
-  settings = {
+  properties = {
     test="addPage"
   }
 }

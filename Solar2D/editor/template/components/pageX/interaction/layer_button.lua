@@ -22,12 +22,12 @@ local M = {
   -- class = "{{class}}", -- button, drag, canvas ...
   --
   -- buttonProps
-  {{#settings}}
+  {{#properties}}
   type  = "{{type}}", -- tap, press
   over = "{{over}}",
   btaps = {{btaps}},
   mask = "{{mask}}",
-  {{/settings}}
+  {{/properties}}
   actions={onTap = "{{actionName}}" },
 
     -- buyProductHide = {{buyProductHide}}

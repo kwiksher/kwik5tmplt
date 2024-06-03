@@ -1,7 +1,7 @@
 local M = {
   name = "alphabet",
   class = "sync",
-  settings = {
+  properties = {
     autoPlay     = true,
     delay        = nil,
     fadeDuration = 1000,

@@ -145,7 +145,9 @@ end
 function M:setValue(fooValue)
   local props = {}
   local _fooValue = fooValue or {}
-  local params = _fooValue.settings or _fooValue
+  local params = _fooValue.properties or _fooValue
+
+  -- print(debug.traceback())
 
   if params.layerProps then
     for k, v in pairs(params.layerProps) do
@@ -154,7 +156,7 @@ function M:setValue(fooValue)
     end
   else
     for k, v in pairs(params) do
-      -- print(k, v)
+      print("", k, v)
       --
       if not basePropsControl.filter(k) then
         local prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}

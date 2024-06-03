@@ -15,7 +15,7 @@ local _layerProps = {
   --
   align       = "{{align}}",
   randXStart  = {{randXStart}},
-  randXEnd    = {{randXEnd},
+  randXEnd    = {{randXEnd}},
   randYStart  = {{randYStart}},
   randYEnd    = {{randYEnd}},
   --,
@@ -29,17 +29,21 @@ local _layerProps = {
   {{#color}}
   color    = { {{r}}, {{g}}, {{b}}, {{a}} },
   {{/color}}
+  {{#text}}
   text = {{text}},
   font = {{font}},
   fontSize = {{fontSize}},
+  {{/text}}
   ---
   infinity = {{infinity}},
-  infintySpeed = {{infinitySpeed}},
+  infinitySpeed = {{infinitySpeed}},
   infinityDistance = {{infinityDistance}},
   ---
+  {{#imagePath}}
   imagePath   = {{imagePath}},
   imageHeight = {{imageHeight}},
   imageWidth  = {{imageWidth}}
+  {{/imagePath}}
 }
 --
 function M:init(UI)

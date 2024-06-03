@@ -38,7 +38,7 @@ function _M:didShow(UI)
         io.close( file )
      end
 
-      -- Check for for auto play settings
+      -- Check for for auto play properties
      if (tonumber(_K.kAutoPlay) > 0) then
        local function act_autoPlay(event)
          if(curPage < numberOfPages) then

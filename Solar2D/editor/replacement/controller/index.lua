@@ -67,13 +67,13 @@ function M:useClassEditorProps()
     index = self.selectbox.selectedIndex,
     name = self.selectbox.selectedObj.text, -- UI.editor.currentLayer,
     class=self.selectbox.selectedText.text,
-    settings = {},
+    properties = {},
   }
   --
-  local settings = self.classProps:getValue()
-  for i=1, #settings do
-    -- print("", settings[i].name, type(settings[i].value))
-    props.settings[settings[i].name] = settings[i].value
+  local properties = self.classProps:getValue()
+  for i=1, #properties do
+    -- print("", properties[i].name, type(properties[i].value))
+    props.properties[properties[i].name] = properties[i].value
   end
   -- onComplete
   if self.actionbox.isActive then
@@ -91,7 +91,7 @@ function M:setValue(decoded, index, template)
   if not template then
     print(json.encode(decoded[index]))
     self.selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
-    self.classProps:setValue(decoded[index].settings)
+    self.classProps:setValue(decoded[index].properties)
     self.classProps.class = decoded[index].class
     if decoded[index].actionName then
       self.actionbox:setValue(decoded[index].actionName)
@@ -104,7 +104,7 @@ function M:setValue(decoded, index, template)
     end
   else
     self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
-    self.classProps:setValue(decoded.settings)
+    self.classProps:setValue(decoded.properties)
     self.classProps.class = decoded.class
     if decoded.actionName then
        self.actionbox:setValue(decoded.actionName)
@@ -123,7 +123,7 @@ end
 
 function M:mergeAsset(value, asset)
   print("mergreAsset", asset.path, asset.name, #asset.links)
-  value.settings.url = asset.name
+  value.properties.url = asset.name
   for k, v in pairs(value) do print(k,v) end
   return value
 end

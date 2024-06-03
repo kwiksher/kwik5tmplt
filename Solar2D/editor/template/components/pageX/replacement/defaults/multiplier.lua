@@ -2,7 +2,7 @@ local M = {
   name = "multiplier",
   class="multiplier",
   -- actionName = "",
-  settings = {
+  properties = {
   }
 }
 

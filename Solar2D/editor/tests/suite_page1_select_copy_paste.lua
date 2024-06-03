@@ -90,6 +90,16 @@ function M.test_multi_edit_props()
 
 end
 
+function M.xtest_saveLua()
+  local util = require("editor.util")
+
+  local tmplt='editor/template/components/pageX/layer/layer_properties.lua'
+  local dst ='App/book/components/page1/layers/name_nil.lua'
+  local model = json.decode('{"yScale":"nil","type":"nil","randYStart":"nil","height":"nil","xScale":"nil","randXStart":"nil","width":"nil","y":"nil","x":"nil","blendMode":"nil","name":"nil","randXEnd":"nil","kind":"nil","randYEnd":"nil","rotation":"nil"}')
+
+  util.saveLua(tmplt, dst, model)
+end
+
 function M.xtest_multi_new_animation()
 end
 

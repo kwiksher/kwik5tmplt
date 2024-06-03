@@ -19,11 +19,11 @@ local layerProps = require(parent.."{{layer}}")
 local M = {
   name="{{name}}",
   --
-  {{#settings}}
+  {{#properties}}
   constrainAngle = nil,
   bounds = {xStart=nil, xEnd=nil, yStart=nil, yEnd=nil},
   isActive = "{{isActive}}",
-  {{/settings}}
+  {{/properties}}
   --
   actions={
     onClokwise = "{{}}",
