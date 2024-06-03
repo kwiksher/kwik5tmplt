@@ -69,7 +69,7 @@ function M:create(UI)
     local toolbarName, layerTool = findSelectedTool(event.target.muiOptions.name)
     mui.turnOnButtonByName(toolbarName)
     --
-    if self.toolMap == nil then
+    if self.toolMap == nil and #layerTool.tools > 0 then
       self.toolMap = {}
       -- Kwik Component such as linear, pulse, roation ..
       for i = 1, #layerTool.tools do
@@ -103,6 +103,14 @@ function M:create(UI)
         obj.layerTool = layerTool.id
         self.toolMap[layerTool.id .. "-" .. tool.name] = obj
       end
+    elseif #layerTool.tools == 0 then -- Trash
+        UI.scene.app:dispatchEvent(
+          {
+            name = "editor.classEditor." ..layerTool.command,
+            UI = UI,
+          }
+        )
+
     else
       for k, v in pairs(self.toolMap) do
         v:removeSelf()
@@ -153,6 +161,7 @@ function M:create(UI)
       }
       obj.id = v.id
       obj.tools = v.tools
+      obj.command = v.command -- for trash
       self.layerToolMap[v.name] = obj
       lastTool = obj
     --end

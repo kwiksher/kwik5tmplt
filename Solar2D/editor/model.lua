@@ -85,8 +85,14 @@ local model = {
         {name = "new_image", icon = ""},
       },
       id = "shape"
+    },
+    {
+      name = "Trash",
+      icon = "toolTrash",
+      tools = {},
+      id = "trash",
+      command = "delete"
     }
-
   },
   pageTools = {
     audio = {

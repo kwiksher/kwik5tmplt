@@ -47,11 +47,11 @@ local function multiSelections(layerTable, target)
   if not target.isSelected then
     layerTable.selections[#layerTable.selections + 1] = target
     target.isSelected = true
-    -- target.rect:setFillColor(0, 1, 0)
+    target.rect:setFillColor(0, 1, 0)
     target.rect:setStrokeColor(0, 1, 0)
   else
     target.isSelected = false
-    -- target.rect:setFillColor(0.8)
+    target.rect:setFillColor(0.8)
     target.rect:setStrokeColor(0.8)
     for i, v in next, layerTable.selections do
        if v == target then
@@ -85,8 +85,8 @@ local function singleSelection(layerTable, target)
     --
     layerTable.selections = {target}
     target.isSelected = true
-    -- target.rect:setFillColor(0,1,0)
-    target.rect:setStrokeColor(0, 1, 0)
+    target.rect:setFillColor(0,1,0)
+    --target.rect:setStrokeColor(0, 1, 0)
     ---
     UI.editor.currentLayer = target.layer
     -- target.isSelected = true
@@ -192,6 +192,7 @@ function M.commandHandler(layerTable, target, event)
   else
     if singleSelection(layerTable, target) then
       -- should we enable one of them?
+      print("", "singleSelection")
         actionCommandPropsTable:setActiveProp(target.layer)
         classProps:setActiveProp(target.layer)
     end
@@ -257,6 +258,7 @@ local function showClassProps(layerTable, target)
 end
 
 function M.commandHandlerClass(layerTable, target, event)
+  print("commandHandlerClass", target.layer, target.text)
   local UI = layerTable.UI
   if event.phase == "began" or event.phase == "moved" then
     return
@@ -267,11 +269,14 @@ function M.commandHandlerClass(layerTable, target, event)
   buttons:hide()
   --
   if layerTable:isAltDown() then
+    print("", "isAltDown")
     showClassProps(layerTable, target)
-  elseif layerTable.isControlDown() then -- mutli selections
+  elseif layerTable:isControlDown() then -- mutli selections
+    print("", "isControlDown")
     multiSelections(layerTable, target)
   else
     if singleSelection(layerTable, target) then
+      print("", "singleSelection")
       actionCommandPropsTable:setActiveProp(target.layer, target.class)
       classProps:setActiveProp(target.layer, target.class)
     end

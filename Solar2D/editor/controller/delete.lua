@@ -6,6 +6,13 @@ local instance =
   function(params)
     local UI = params.UI
     print(name)
+    for i, obj in next, UI.editor.selections do
+      if obj.page then
+        print("", obj.page)
+      elseif obj.layer then
+        print("", obj.layer, obj.class)
+      end
+    end
   end
 )
 --

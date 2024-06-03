@@ -80,11 +80,12 @@ function M:setValue(decoded, index, template)
     self.selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
     self.classProps:setValue(decoded[index].properties)
     local props = {}
-    for k, v in pairs (decoded[index].actions) do
-      props[#props+1] = {name=k, value=""}
-    end
-    for k, v in pairs (decoded[index].actions) do
-      self.actionbox:setValue(k, v)
+    local actions = decoded[index].actions
+    if actions then
+      for k, v in pairs (actions) do
+        props[#props+1] = {name=k, value=""}
+        self.actionbox:setValue(k, v)
+      end
     end
   else
     self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...

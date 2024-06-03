@@ -479,6 +479,30 @@ function M.publishForSelections(UI, props, controller, decoded)
   currentScript = copyFiles(files)
 end
 
+function M.delete(UI)
+  for i, obj in next, UI.editor.selections do
+    local class, name
+    for k, v in pairs(pageTools) do
+      name = obj[k]
+      if name ~= nil then
+        class = k
+        print("", k, name)
+        break
+      end
+    end
+    if name == nil then
+      print("", obj.layer, obj.class)
+      name = obj.layer
+      class = obj.class
+    else
+      -- as audio imer, variable,
+      print("", class, name)
+    end
+    ---
+    -- removeFromIndex, deleteFile
+  end
+end
+
 function M.getScript()
   return currentScript
 end
