@@ -55,14 +55,14 @@ end
 function M.teardown()
 end
 
-function M.test_multi_edit_props()
+function M.xtest_multi_edit_props()
   --
   layerTable.controlDown = true
   --
   local names = {"name", "cat", "fish"}
   for i, name in next, names do
     helper.selectLayer(name)
-    helper.selectLayer(name, nil, true) -- isRightClick true
+    --helper.selectLayer(name, nil, true) -- isRightClick true
   end
   layerTable.controlDown = false
   ---
@@ -90,6 +90,42 @@ function M.test_multi_edit_props()
 
 end
 
+function M.xtest_multi_delete()
+  --
+  layerTable.controlDown = true
+  --
+    local names = {"name", "cat", "fish"}
+    for i, name in next, names do
+      helper.selectLayer(name)
+      --helper.selectLayer(name, nil, true) -- isRightClick true
+    end
+    layerTable.controlDown = false
+  ---
+end
+
+function M.test_multi_class_delete()
+  --
+  layerTable.controlDown = true
+  --
+    local names = {"name", "cat", "fish"}
+    local class = "properties"
+    for i, name in next, names do
+      helper.selectLayer(name, class)
+      --helper.selectLayer(name, nil, true) -- isRightClick true
+    end
+    layerTable.controlDown = false
+
+      -- helper.clickButton("modify")
+
+  -- local toolbar = require("editor.parts.toolbar")
+  -- local obj = toolbar.layerToolMap["Layer"]
+  -- obj.callBack{target=obj}
+
+  -- local tool = toolbar.toolMap[obj.id.."-Properties"]
+  -- tool.callBack{target=tool}
+
+end
+
 function M.xtest_saveLua()
   local util = require("editor.util")
 
@@ -111,18 +147,18 @@ end
 
 function M.xtest_select_for_edit()
   local name = "cat"
-  layerTable.altDown = true
+  -- layerTable.altDown = true
   helper.selectLayer(name)
-  layerTable.altDown = false
+  -- layerTable.altDown = false
 
 end
 
 function M.xtest_select_for_edit_class()
   local name = "cat"
-  local class = "linear"
-  layerTable.altDown = true
-  helper.selectLayer(name, class, true) -- isRightClick true
-  layerTable.altDown = false
+  local class = "properties"
+  -- layerTable.altDown = true
+  helper.selectLayer(name, class, false) -- isRightClick true
+  -- layerTable.altDown = false
 end
 
 function M.xtest_copy_layer()

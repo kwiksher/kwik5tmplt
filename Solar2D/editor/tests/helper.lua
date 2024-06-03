@@ -34,8 +34,8 @@ end
 function exports.selectLayer(name, class, isRightClick)
   -- print(name, class)
   for i, obj in next,layerTable.objs do
-    -- print("", i, obj.text, obj.name)
     if obj.text == name then
+      print("", i, obj.text, obj.name)
       if class == nil then
         if isRightClick then
           obj:dispatchEvent{name="mouse", target=obj, isSecondaryButtonDown=true, x =obj.x, y=obj.y}
@@ -44,11 +44,13 @@ function exports.selectLayer(name, class, isRightClick)
         end
       else
         for i, classObj in next, obj.classEntries do
-          print(classObj.class)
+          print("", "", classObj.class)
           if classObj.class == class then
               if isRightClick then
+                  print("", "", "isRightClick")
                   classObj:dispatchEvent{name= "mouse", target=classObj, isSecondaryButtonDown=true, x = classObj.x, y = classObj.y}
               else
+                print("", "", "touch ended")
                 classObj:touch({phase="ended"})
               end
             break
