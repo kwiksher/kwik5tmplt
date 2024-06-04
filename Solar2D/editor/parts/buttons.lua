@@ -80,17 +80,18 @@ function M:create(UI)
     else
       local props = {}
       transition.from(obj, {time=500, xScale=2, yScale=2})
+
       if event.eventName == "copy" then
-        props = {
-          layer=self.UI.editor.currentLayer,
-          class= self.UI.editor.currentClass,
-          selections = self.UI.editor.selections,
-        }
       elseif event.eventName == "save" then
         props = self.useClassEditorProps()
-        -- print("saving props")
-        props.class = self.UI.editor.currentClass
-        -- for k, v in pairs(props) do print("",k, v) end
+        print("saving props") -- if nil, command from dispathEvent will skip the process by checking props null
+         for k, v in pairs(props) do print("",k, v) end
+      end
+
+      if props then
+        props.layer=self.UI.editor.currentLayer
+        props.class= self.UI.editor.currentClass
+        props.selections = self.UI.editor.selections
       end
       -- close context menu
       -- for i, key in next, self.contextMenu do

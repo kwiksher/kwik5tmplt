@@ -30,6 +30,14 @@ function exports.init(props)
   audioTable = props.audioTable
 end
 
+function exports.clickIcon(toolGroup, tool)
+  local toolbar = require("editor.parts.toolbar")
+  local obj = toolbar.layerToolMap[toolGroup]
+  obj.callBack{target=obj}
+  -- for k, v in pairs(toolbar.toolMap) do print(k, v) end
+  local tool = toolbar.toolMap[obj.id.."-"..tool]
+  tool.callBack{target=tool}
+end
 
 function exports.selectLayer(name, class, isRightClick)
   -- print(name, class)

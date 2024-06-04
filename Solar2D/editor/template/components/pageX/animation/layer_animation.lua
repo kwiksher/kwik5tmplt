@@ -1,5 +1,7 @@
+local parent,root = newModule(...)
+
 local M = {
-  name = "{{name}}",
+  name = "{{layer}}",
   --
   class = "{{class}}",
     -- "Dissolve"
@@ -67,8 +69,8 @@ M.properties = {
   -- flip
   xSwipe   = {{xSwipe}},
   ySwipe   = {{ySwipe}},
-}
 {{/properties}}
+}
   --
 
 {{#to}}
@@ -113,13 +115,14 @@ end
 ---------------------------------------
 --
 local function onEndHandler (UI)
-  if M.actionName:len() > 0  then
+  if M.actionName and M.actionName:len() > 0  then
     Runtime:dispatchEvent({name=UI.page..M.actionName, event={}, UI=UI})
   end
 end
 --
 function M:create(UI)
-  self:init(UI, onEndHandler)
+  self.obj = UI.sceneGroup[self.name]
+  self:initAnimation(UI, self.obj, onEndHandler)
   self.animation = self:buildAnim(UI)
 end
 --

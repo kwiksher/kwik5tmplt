@@ -134,8 +134,10 @@ end
 --
 local function createOptions(self, UI)
   local layer = self.obj
+  self.properties = self.properties or {}
+  --
 	local onEndHandler = function()
-		if self.controls.resetAtEnd then
+		if self.properties.resetAtEnd then
 			if self.class == "Shake" then
 				layer.rotation = 0
 			end
@@ -156,12 +158,12 @@ local function createOptions(self, UI)
 	end
 
 	local options = {
-		ease        = gtween.easing[self.controls.easing],
-		repeatCount = self.controls.loop,
-		reflect     = self.controls.reverse,
-		xSwipe      = self.controls.xSwipe,
-		ySwipe      = self.controls.ySwipe,
-		delay       = self.controls.delay,
+		ease        = gtween.easing[self.properties.easing],
+		repeatCount = self.properties.loop,
+		reflect     = self.properties.reverse,
+		xSwipe      = self.properties.xSwipe,
+		ySwipe      = self.properties.ySwipe,
+		delay       = self.properties.delay,
 		onComplete  = onEndHandler
 	}
 	if self.breadcrumbs then
@@ -199,7 +201,7 @@ local function createProps(self, layer, mX, mY)
   elseif self.class == "Blink" then
     props.xScale =  self.to.xScale
     props.yScale = self.to.yScale
-  elseif (self.class == "Linear" or self.class == "Dissolve" or self.class == "Path") then
+  elseif (self.class == "linear" or self.class == "Dissolve" or self.class == "Path") then
     if self.to.x then
       props.x = mX
     end
@@ -231,10 +233,12 @@ local function createAnimationFunc(self, UI, class)
 		local layer = self.obj
 		local sceneGroup = UI.sceneGroup
 		--
-		if layer == nil then return end
+		if layer == nil then print("Error failed to create animation") return end
 		--
 		layer.xScale = layer.oriXs
 		layer.yScale = layer.oriYs
+
+    self.to = self.to or {}
 		--
     local   mX, mY= getPos(self, layer, self.to.x, self.to.y, self.isSceneGroup)
     --
@@ -242,15 +246,17 @@ local function createAnimationFunc(self, UI, class)
 		local props = createProps(self, layer, mX, mY)
 		---
 		if class== "Linear" then
-      -- print("--- Linear ---", props.x, props.y, self.controls.duration)
+      -- print("--- Linear ---", props.x, props.y, self.properties.duration)
       -- for k, v in pairs(props) do print(k ,v) end
       -- print ("-------")
       -- for k, v in pairs(options) do print(k ,v) end
-			animObj = gtween.new( layer, self.controls.duration/1000, props, options)
+
+      self.properties.duration = self.properties.duration or 1000
+			animObj = gtween.new( layer, self.properties.duration/1000, props, options)
 		elseif class == "Path" then
 			animObj = btween.new(
 				layer,
-				self.controls.duration,
+				self.properties.duration,
 				{
           self.curve,
           angle = self.pathProps.angle
@@ -277,7 +283,7 @@ animationFactory.Dissolve = function(self, UI)
   --
 	local animObj = {}
 	animObj.play = function()
-		transition.dissolve(layer, self:getDssolvedLayer(UI),	self.controls.duration, self.controls.delay)
+		transition.dissolve(layer, self:getDssolvedLayer(UI),	self.properties.duration, self.properties.delay)
   end
   --
 	animObj.pause = function()
@@ -302,6 +308,7 @@ function M:initAnimation(UI, layer, onEndHandler)
   self.obj.oriXs = layer.xScale
   self.obj.oriYs = layer.yScale
 
+  self.layerOptions =  self.layerOptions or {}
 	local referencePoint = self.layerOptions.referencePoint
 	if referencePoint == "TopLeft" then
 		layer.anchorX = 0
