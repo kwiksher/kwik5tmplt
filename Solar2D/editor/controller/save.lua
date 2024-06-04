@@ -32,10 +32,15 @@ local instance =
     local UI = params.UI
     -- print(name, params.class,  params.decoded)
     local props = params.props
+    if props == nil then print("Error") return end
     if not props.isNew then
       -- publish
       local controller = UI.editor:getClassModule(params.class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
-      scripts.publishForSelections(UI, params.props, controller, params.decoded or {})
+      scripts.publishForSelections(UI, {
+        book= props.book, page=props.page,
+        layer = props.layer,
+        class = props.class,
+        props = props}, controller, params.decoded or {})
     else
       print("new layer")
       local updatedModel = util.createIndexModel(UI.scene.model)

@@ -60,7 +60,7 @@ function M:useClassEditorProps()
   --
   if self.classProps == nil then
     print("#Error self.classProps is nil for ", self.tool)
-    return {}
+    return nil
   end
   local properties = self.classProps:getValue()
   for i=1, #properties do
@@ -174,6 +174,8 @@ function M:renderAssets(book, page, layer, classFolder, class, model)
 end
 
 local Shapes = table:mySet{"new_image", "new_rectangle", "new_ellipse", "new_text"}
+local Animations = table:mySet{"linear", "blink", "bounce", "pulse", "rotation", "shake"}
+
 M.Shapes = Shapes
 
 function M:render(book, page, layer, classFolder, class, model)
@@ -194,7 +196,11 @@ function M:render(book, page, layer, classFolder, class, model)
   elseif class then
     dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
     --local dst = layer.."_"..class ..".lua"
-    tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
+    if Animations[class] then
+      tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_animation.lua"
+    else
+      tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
+    end
   else
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
     --local dst = layer.."_"..class ..".lua"

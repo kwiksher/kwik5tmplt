@@ -56,9 +56,6 @@ end
 function M:useClassEditorProps()
   -- print("useClassEditorProps")
   local props = {
-    index = selectbox.selectedIndex,
-    name = selectbox.selectedObj.text, -- UI.editor.currentLayer,
-    class=selectbox.selectedText.text,
     properties = {},
     easing="Linear",
     to = {},
@@ -80,6 +77,12 @@ function M:useClassEditorProps()
     reverse = "nil",
     resetAtEnd = "nil",
   }
+
+  if selectbox.selectedObj then
+    props.index = selectbox.selectedIndex
+    props.name = selectbox.selectedObj.text -- UI.editor.currentLayer,
+    props.class=selectbox.selectedText.text
+  end
   --
   local properties = classProps:getValue()
   for i=1, #properties do

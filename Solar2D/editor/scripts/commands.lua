@@ -281,64 +281,68 @@ end
 --
 --     props.updatedModel= util.createIndexModel(props.UI.scene.model)
 --     props.append = function(value, index)
---    local dst = props.updatedModel.components.timers or {}
---    if index then
---      dst[index] = value
---    else
---      dst[#dst + 1] = value
---    end
---  end
+--       local dst = props.updatedModel.components.timers or {}
+--       if index then
+--          dst[index] = value
+--       else
+--          dst[#dst + 1] = value
+--       end
+--     end
 --
 --
-local function getModelFrom(props)
-  local selected = props.selected or {} -- props.selectbox.selection
-  local append = props.append -- props.updatedModel.components.timers or {}
-  local isNew = props.isNew
+local function getModelFrom(args)
+  local selected = args.selected or {} -- args.selectbox.selection
+  local append = args.append -- args.updatedModel.components.timers or {}
+  local isNew = args.isNew
 
-  local model = {
-    index = selected.index
-  }
+  -- local model = {
+  --   index = selected.index
+  -- }
   --
   -- TODO
   --
 
   ---[[
-
-  --
-  local properties = props.properties
-  for k, v in pairs(properties) do
-    -- print("", properties[i].name, properties[i].value)
-    if v==nil or v:len() == 0 then
-      v = "nil"
+  for k, entries in pairs(args.props ) do
+    if type(entries) == "table" then
+      local copied = {}
+      for k, v in pairs(entries) do
+        -- print("", properties[i].name, properties[i].value)
+        if type(v) == "string" and v:len() == 0 or v==nil then
+          v = "nil"
+        end
+        if k == "_name" then
+          copied["name"] = v
+        elseif k == "_type" then
+          copied["type"] = v
+        elseif k == "_file" then
+          copied["file"] = v
+        else
+          copied[k] = v
+        end
+      end
+      args.props[k] = copied
     end
-    if k == "_name" then
-      model["name"] = v
-    elseif k == "_type" then
-      model["type"] = v
-    elseif k == "_file" then
-      model["file"] = v
-    else
-      model[k] = v
-    end
-
   end
+  --
+  local properties = args.props.properties
   -- props.actionName
   -- props.actionName = actionbox.selectedTextLabel
   --
   -- TODO check if name is not duplicated or not
   ---
   -- Append the new entry to components.{timers, variables ...} in index.lua
-  if model.properties then
+  if append and model.name then
     if isNew or selected.index == nil then
-      append(model.properties.name)
+      append(model.name)
     else
-      append(model.properties.name, model.index)
+      append(model.name, model.index)
     end
     --
   end
 --]]
-
-  return model
+  args.props.index = selected.index
+  return args.props
 end
 
 local function saveSelection(book, page, selections)
@@ -367,17 +371,18 @@ end
 local pageTools = table:mySet {"page", "timer", "group", "variable"}
 local classWithAssets = table:mySet {"audio", "video", "sprite", "particles", "www", "thumbnail", "font"}
 --
-function M.publish(UI, props, controller, decoded)
-  local book = props.book or UI.editor.currentBook
-  local page = props.page
-  local updatedModel = props.updatedModel
-  local layer = props.layer or UI.editor.currentLayer
-  local class = props.class -- timer
-  --local actionbox = props.actionbox
-  local name = props.name -- props.selected.timer
+function M.publish(UI, args, controller, decoded)
+  local book = args.book or UI.editor.currentBook
+  local page = args.page
+  local updatedModel = args.updatedModel
+  local layer = args.layer or UI.editor.currentLayer
+  local class = args.class -- timer
+  --local actionbox = args.actionbox
+  local name = args.name -- args.selected.timer
   --
-  local model = props.model or getModelFrom(props) -- getModelFrom uses props.properties
+  local model = args.model or getModelFrom(args) -- getModelFrom uses args.props.properties
   ---
+  print(json.encode(model))
   local files = {}
   files[#files + 1] = util.renderIndex(book, page, updatedModel)
   files[#files + 1] = util.saveIndex(book, page, layer, class, updatedModel)
@@ -392,7 +397,7 @@ function M.publish(UI, props, controller, decoded)
     --  'shape' class will be avairable and expected here for creating a new layer if isNew
     --  for modifying a layer model will have a class value as 'image' when created by UXP plugin.
     --
-    local classFolder = UI.editor:getClassFolderName(props.class)
+    local classFolder = UI.editor:getClassFolderName(args.class)
     -- save lua
     -- print("@@@", model.name)
     files[#files + 1] = controller:render(book, page, layer, classFolder, class, model)
@@ -411,27 +416,27 @@ function M.publish(UI, props, controller, decoded)
   currentScript = copyFiles(files)
 end
 
-function M.publishForSelections(UI, props, controller, decoded)
+function M.publishForSelections(UI, args, controller, decoded)
   --
-  print("---props.properties----")
-  for k, v in pairs(props.properties) do print("", k, v) end
-  print("---decoded----")
-  for k, v in pairs(decoded) do print("", k, v) end
+  -- print("---args.properties----")
+  -- for k, v in pairs(args.properties) do print("", k, v) end
+  -- print("---decoded----")
+  -- for k, v in pairs(decoded) do print("", k, v) end
 
   local files = {}
-  local class = (props.class or "layer"):lower()
+  local class = (args.class or "layer"):lower()
   local classFolder = UI.editor:getClassFolderName(class)
   -------------
-  local book = props.book or UI.editor.currentBook
-  local page = props.page or UI.page
-  local layer = props.layer or UI.editor.currentLayer
+  local book = args.book or UI.editor.currentBook
+  local page = args.page or UI.page
+  local layer = args.layer or UI.editor.currentLayer
 
   print("publishForSelections", book, page, layer, class, "classFolder="..classFolder)
-
-  local model = getModelFrom(props)
-  -- print("---model----")
-  -- for k, v in pairs(model) do print("", k, v) end
-  -----------
+  -- print(json.encode(args))
+  local model = getModelFrom(args)
+  print("---model----")
+  for k, v in pairs(model) do print("", k, v) end
+  ---------
   --- Update components/pageX/index.lua model/pageX/index.json
   local scene = require("App." .. book .. ".components." .. page .. ".index")
   local updatedModel = scene.model
@@ -444,7 +449,7 @@ function M.publishForSelections(UI, props, controller, decoded)
 
     --- save json
     -----------
-    -- print(book, page, layer, classFolder, props.index)
+    -- print(book, page, layer, classFolder, args.index)
     if model.index then
       decoded[model.index] = model
     else

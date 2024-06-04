@@ -9,13 +9,6 @@ end
 
 NIL = setmetatable({},{__tostring=function() return "nil" end})
 
-dump = function(t)
-  local ret = ""
-  for k, v in pairs(t.userdata) do
-    ret = "   " ..k ..":" ..tostring(v)
-  end
-  return ret
-end
 
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   local lldebugger = loadfile(os.getenv("LOCAL_LUA_DEBUGGER_FILEPATH"))()
