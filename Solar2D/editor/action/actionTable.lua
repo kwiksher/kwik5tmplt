@@ -51,12 +51,10 @@ function M:create(UI)
 
   option.width = self.width -- nil makes newText automatically adjust the width
 
-   buttons:show()
-
    local function render (models, xIndex, yIndex)
     -- print("actionStore", #models)
     M:destroy()
-    --buttons:show()
+    buttons:show()
 
     local objs = {}
 

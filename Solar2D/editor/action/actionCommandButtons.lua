@@ -14,6 +14,10 @@ local App = require("Application")
 M.commands = {"delete", "save", "cancel"}
 M.objs = {}
 
+M.x = display.contentCenterX + 480/2
+M.y = display.actualContentHeight-10
+
+
 local isCancel = function(event)
   local ret = event.phase == "up" and event.keyName == 'escape'
   return ret or (system.getInfo("platform") == "android" and event.keyName == "back")
@@ -35,8 +39,8 @@ function M:create(UI)
   -- print("create", self.name)
   self.group = display.newGroup()
 
-  local posX = display.contentCenterX - 210
-  local posY = display.actualContentHeight-10
+  local posX = self.x
+  local posY = self.y
 
   local function tap(event)
     -- print("tap")
@@ -135,6 +139,7 @@ function M:create(UI)
   }
 
   UI.editor.viewStore.actionCommandButtons = self
+  self:hide()
 end
 --
 function M:didShow(UI)
@@ -142,7 +147,7 @@ function M:didShow(UI)
     obj:addEventListener("tap", obj)
   end
   self.UI = UI
-  self:toggle()
+  -- self:toggle()
 end
 --
 function M:didHide(UI)
@@ -158,7 +163,7 @@ function M:toggle()
   for k, obj in pairs(self.objs) do
     obj.isVisible = not obj.isVisible
     obj.rect.isVisible = obj.isVisible
-    end
+  end
 end
 
 function M:show()

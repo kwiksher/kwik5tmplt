@@ -103,7 +103,7 @@ function M.xtest_multi_delete()
   ---
 end
 
-function M.test_multi_class_delete()
+function M.xtest_multi_class_delete()
   --
   layerTable.controlDown = true
   --

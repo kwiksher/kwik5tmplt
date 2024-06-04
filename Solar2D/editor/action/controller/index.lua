@@ -16,7 +16,7 @@ end
 --
 M.commandGroupHandler = function(event)
   local UI = M.UI
-  print(event.target.muiOptions.name)
+  -- print(event.target.muiOptions.name)
   -- local len = string.len("editor.action.actionEditor-")
   local name = event.target.muiOptions.name
   local obj = M.commandMap[name]
@@ -39,7 +39,7 @@ M.commandGroupHandler = function(event)
     }
   else
     -- toggle hide/show the children
-    print("@@@@", name)
+    -- print("@@@@", name)
     UI.editor.actionEditor:commandViewHandler(name, UI.editor.rootGroup.selectLayer)
   end
 end
@@ -79,6 +79,10 @@ function M:show()
     scrollView.isVisible = true
   end
   --
+  if UI.editor.viewStore.actionButtons then
+    UI.editor.viewStore.actionButtons:show()
+  end
+
   if UI.editor.viewStore.actionCommandTable then
     UI.editor.viewStore.actionCommandTable.isVisible = true
     if UI.editor.viewStore.actionCommandButtons.lastVisible then
@@ -86,7 +90,7 @@ function M:show()
         UI.editor.viewStore.actionCommandPropsTable:show()
         UI.editor.viewStore.actionCommandButtons:show()
     else
-      UI.editor.viewStore.actionCommandButtons:show()
+        --UI.editor.viewStore.actionCommandButtons:show()
     end
   end
 --
@@ -149,16 +153,16 @@ function M:render(book, page, command, props)
   --   {animation = {pause = {target="layerTwo", sec=2}}},
   -- }})
   local model ={}
-  print(json.encode(props))
+  -- print(json.encode(props))
   for i=1, #props do
     local entry = {}
     local out = util.split(props[i].command, '.')
-    print(unpack(out))
+    -- print(unpack(out))
     entry[out[1]] = {}
     entry[out[1]][out[2]]  = props[i].params
     model[i] = entry
   end
-  print("###", json.encode(model))
+  -- print("###", json.encode(model))
   util.saveLua(tmplt, dst, {actions = model})
   return dst
 end

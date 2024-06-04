@@ -36,10 +36,13 @@ function M:mouseHandler(event)
 end
 
 function M:selectHandler(target)
+  local UI = self.UI
   layerTableCommands.clearSelections(self, "action")
   if self.controlDown then
     print("controlDown")
     layerTableCommands.multiSelections(self, target)
+    UI.editor.selections = self.selections
+    print("%%%%", #self.selections)
   else
     self.lastTarget = target
     self.UI.scene.app:dispatchEvent {

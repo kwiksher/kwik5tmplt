@@ -15,6 +15,11 @@ M.angle = 20
 M.radius = 20
 M.touchthreshold = 0   -- touchthreshold or display.actualContentWidth * .1
 M.groupName = "rootGroup"
+M.selections = {}
+
+local function onKeyEvent(event)
+  return M:onKeyEvent(event)
+end
 
 local option, newText = util.newTextFactory {
     x = 0,
@@ -118,9 +123,13 @@ function M:create(UI)
   end)
 end
 
-function M:didShow(UI) end
+function M:didShow(UI)
+  Runtime:addEventListener("key", onKeyEvent)
+end
 --
-function M:didHide(UI) end
+function M:didHide(UI)
+  Runtime:removeEventListener("key", onKeyEvent)
+end
 
 function M:hide()
   self.group.isVisible = false

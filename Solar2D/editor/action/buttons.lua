@@ -32,6 +32,7 @@ function M:init(UI, toggleHandler)
 end
 --
 function M:create(UI)
+
   -- print("create", self.name)
   -- single ton
   -- if self.objs == nil then return end
@@ -137,8 +138,9 @@ function M:create(UI)
     eventName = "cancel"
   }
   --print(debug.traceback())
-  self.group.actionButtons = self
+  UI.editor.viewStore.actionButtons = self
   self:hide()
+
 end
 --
 function M:didShow(UI)
@@ -176,7 +178,6 @@ function M:toggle()
 end
 
 function M:show()
-  --print(debug.traceback())
   if self.objs == nil then return end
   for k, obj in pairs(self.objs) do
     obj.isVisible = true
@@ -211,8 +212,8 @@ function M:hide()
   if self.objs == nil then return end
   for k, obj in pairs(self.objs) do
     -- print(obj.text)
-    obj.alpha = 0
-    obj.rect.alpha = 0
+    -- obj.alpha = 0
+    -- obj.rect.alpha = 0
     obj.isVisible = false
     obj.rect.isVisible = obj.isVisible
   end
