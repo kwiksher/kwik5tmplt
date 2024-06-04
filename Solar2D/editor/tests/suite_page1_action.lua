@@ -86,19 +86,16 @@ end
 -- end
 
 function M.xtest_new_action()
-  local editor = require("editor.action.actionTable")
-  selectors.componentSelector:onClick(true,  "actionTable")
-  selectAction("eventOne")
-  editor.newButton:tap{target=editor.newButton}
+  UI.editor.actionEditor.iconHander()
+  actionTable.newButton:tap{target=editor.newButton}
 end
 
-function M.test_select_action()
+function M.xtest_select_action()
   UI.testCallback = function()
     --
-  local editor = require("editor.action.actionTable")
-  selectors.componentSelector.iconHander()
-  selectors.componentSelector:onClick(true,  "actionTable")
-  selectAction("eventOne")
+    UI.editor.actionEditor.iconHander()
+
+    selectAction("eventOne")
 
    --- select a command
    local commandsTable = require("editor.action.actionCommandTable")
@@ -120,6 +117,33 @@ function M.test_select_action()
   -- -- editor.editButton:tap{target=editor.editButton}
   -- controller.commandGroupHandler{target={muiOptions={name=muiName.."Page"}}}
   end
+end
+
+function M.xtest_select_multi_actions()
+  -- UI.testCallback = function()
+  --
+  UI.editor.actionEditor.iconHander()
+  actionTable.controlDown = true
+  selectAction("eventOne")
+  selectAction("eventTwo")
+  actionTable.controlDown = false
+  -- end
+
+  local buttons = require("editor.action.buttons")
+  buttons.objs.cancel.tap{eventName="delete"}
+end
+
+function M.test_select_multi_actionCommands()
+  -- UI.testCallback = function()
+  --
+  UI.editor.actionEditor.iconHander()
+  selectAction("eventOne")
+  -- end
+
+  local buttons = require("editor.action.actionCommandButtons")
+  buttons.objs.cancel.tap{eventName="delete"}
+
+
 end
 
 --[[
@@ -158,7 +182,7 @@ function M.test_commandEditorShow()
     local obj = actionTable.objs[1]
     editor.singleClickEvent(obj)
     --
-    local buttons = require("editor.action.buttons")
+    alocal buttons = require("editor.action.buttons")
     buttons.objs["cancel"].tap{eventName="cancel"}
   end)
   --

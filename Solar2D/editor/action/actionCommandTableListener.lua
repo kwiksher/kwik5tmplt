@@ -1,18 +1,59 @@
 local M = {}
 M.name = ...
 
-function M:singleClickEvent(obj)
-  self.UI.scene.app:dispatchEvent {
-    name = "editor.action.selectActionCommand",
-    UI = self.UI,
-    index = obj.index,
-    commandClass = self.actions[obj.index]
-  }
-  if self.selection and self.selection ~= obj then
-    self.selection.rect:setFillColor(1)
+local layerTableCommands = require("editor.parts.layerTableCommands")
+
+function M:onKeyEvent(event)
+  -- Print which key was pressed down/up
+  -- local message = "Key '" .. event.keyName .. "' was pressed " .. event.phase
+  -- for k, v in pairs(event) do print(k, v) end
+  self.altDown = false
+  self.controlDown = false
+  if (event.keyName == "leftAlt" or event.keyName == "rightAlt") and event.phase == "down" then
+    -- print(message)
+    self.altDown = true
+  elseif (event.keyName == "leftControl" or event.keyName == "rightControl") and event.phase == "down" then
+    self.controlDown = true
+  elseif (event.keyName == "leftShift" or event.keyName == "rightShift") and event.phase == "down" then
+    self.shiftDown = true
   end
-  self.selection = obj
-  self.selection.rect:setFillColor(0,1,0)
+  -- print("controlDown", self.controlDown)
+end
+
+function M:singleClickEvent(obj)
+  local target = obj
+  local UI = self.UI
+  layerTableCommands.clearSelections(self, "actionCommand")
+  if self.controlDown then
+    print("controlDown")
+    layerTableCommands.multiSelections(self, target)
+    UI.editor.selections = self.selections
+    print("%%%%", #self.selections)
+  else
+    self.lastTarget = target
+    self.UI.scene.app:dispatchEvent {
+      name = "editor.action.selectActionCommand",
+      UI = self.UI,
+      index = obj.index,
+      commandClass = self.actions[obj.index]
+    }
+
+    if self.selection and self.selection ~= obj then
+      self.selection.rect:setFillColor(1)
+    end
+    self.selection = obj
+    self.selection.rect:setFillColor(0,1,0)
+
+    if self.altDown then
+      -- if layerTableCommands.singleSelection(self, target) then
+      --   actionbox:setActiveProp(target.action) -- nil == activeProp
+      -- end
+   end
+  end
+
+
+
+
 end
 
     -- create a listener to handle drag-item commands
