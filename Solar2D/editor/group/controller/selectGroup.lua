@@ -17,7 +17,8 @@ local command = function (params)
   UI.editor.currentTool = editor
 
   if params.isNew then
-    local boxData = util.read( UI.editor.currentBook, UI.page)
+    --local boxData = util.read( UI.editor.currentBook, UI.page)
+    --print(json.encode(boxData))
     --
     tableData = {
       name = "(new-group)",
@@ -31,7 +32,9 @@ local command = function (params)
     }
 
     UI.editor.groupLayersStore:set(tableData) -- layersTable
-    UI.editor.layerJsonStore:set(boxData.layers) -- layersbox
+    local model = util.createIndexModel(UI.scene.model)
+    print(json.encode(model))
+    UI.editor.layerJsonStore:set(model.components.layers) -- layersbox
 
   elseif params.isDelete then
     print(params.class, "delete")
@@ -48,23 +51,52 @@ local command = function (params)
     --
     -- layersbox
     --
-    local boxData = util.read( UI.editor.currentBook, UI.page, function(parent, name)
-      -- let's remove entries of tableData from boxData
-      --    layers = ["GroupA.Ellipse", "GroupA.SubA.Triangle"]
-      for i=1, #tableData.layers do
-        local _name = tableData.layers[i]
-        if parent then
-          if parent .."."..name == _name then
-            return true
+    local model = util.createIndexModel(UI.scene.model)
+
+    -- let's remove entries of tableData from boxData
+    --    layers = ["GroupA.Ellipse", "GroupA.SubA.Triangle"]
+
+    local function iterator(entries, parent)
+      for i, v in next, entries do
+        local parent = nil
+        local name = v.name
+
+        local function check(parent, name)
+          for i=1, #tableData.layers do
+            local _name = tableData.layers[i]
+            if parent then
+              if parent .."."..name == _name then
+                return true
+              end
+            elseif name == _name then
+              return true
+            end
           end
-        elseif name == _name then
-          return true
+        end
+        v.isFiltered = check(parent, name)
+        if v.children then
+            iterator(v.children, name)
         end
       end
-      return false
-    end)
+    end
 
-    UI.editor.layerJsonStore:set(boxData.layers) -- layersbox
+    iterator(model.components.layers)
+
+    -- local boxData = util.read( UI.editor.currentBook, UI.page, function(parent, name)
+    --   for i=1, #tableData.layers do
+    --     local _name = tableData.layers[i]
+    --     if parent then
+    --       if parent .."."..name == _name then
+    --         return true
+    --       end
+    --     elseif name == _name then
+    --       return true
+    --     end
+    --   end
+    --   return false
+    -- end)
+
+    UI.editor.layerJsonStore:set(model.components.layers) -- layersbox
     UI.editor.groupLayersStore:set(tableData) -- layersTable
 
   end

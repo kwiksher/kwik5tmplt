@@ -158,7 +158,11 @@ function exports.clickButton(name)
   for i, v in next, buttons.objs do
     print(v.text)
     if v.eventName == name then -- {name="add", label="->"}
-        v.rect:tap()
+        if v.rect.tap then
+          v.rect:tap()
+        else
+          v:tap()
+        end
       break
     end
   end

@@ -57,7 +57,7 @@ function M:init(UI)
 
   selectbox.useClassEditorProps = function()  return controller:useClassEditorProps() end
   selectbox.classEditorHandler = function(decoded, index)
-    print("@@@@@@@@@@@")
+    -- print("@@@@@@@@@@@")
   end
 
 end

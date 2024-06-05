@@ -1,6 +1,7 @@
 local name = ...
 local parent = name:match("(.-)[^%.]+$")
 local util = require("editor.util")
+local layerTableCommands = require("editor.parts.layerTableCommands")
 
 local M = {
   model = {},
@@ -47,7 +48,7 @@ function M:commandHandler(eventObj, event)
   end
 
   util.setSelection(self, eventObj)
-
+  layerTableCommands.showFocus(self)
   -- local target = eventObj -- or event.target
   -- --
   -- if not self.controlDown then

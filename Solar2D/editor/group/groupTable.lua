@@ -99,7 +99,6 @@ function M:commandHandlerClass(target, event)
   if self:isAltDown() then
     print("", "isAltDown")
     --showClassProps(self, target, "group")
-    print("::::::::::", target.layer)
     tree.backboard = {
       show = true,
       group  = target.layer,

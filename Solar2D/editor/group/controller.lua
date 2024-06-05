@@ -19,7 +19,7 @@ function M:useClassEditorProps()
   local layersbox = self.viewGroup.layersbox
   local layersTable = self.viewGroup.layersTable
 
-  props.name = classProps.name or ""
+  props.properties = classProps:getValue() or {} -- name or ""
   --
   props.layersTableSelections = layersTable:getSelections()
   props.layersboxSelections = layersbox:getSelections()

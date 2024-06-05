@@ -33,7 +33,7 @@ local command = function (params)
   end
 
   --remove them from layersbox
-  local filterFunc = function(parent, name)
+  local check = function(parent, name)
     -- let's remove entries of tableData from boxData
     --    layers = ["GroupA.Ellipse", "GroupA.SubA.Triangle"]
     for i=1, #newLayersTable do
@@ -50,10 +50,26 @@ local command = function (params)
     return false
   end
   --
-  local boxData = util.read( UI.editor.currentBook, UI.page, filterFunc)
+  local model = util.createIndexModel(UI.scene.model)
+
+  local function iterator(entries, parent)
+    for i, v in next, entries do
+      local parent = nil
+      local name = v.name
+
+      v.isFiltered = check(parent, name)
+      if v.children then
+          iterator(v.children, name)
+      end
+    end
+  end
+
+  iterator(model.components.layers)
+
+  -- local boxData = util.read( UI.editor.currentBook, UI.page, filterFunc)
 
   -- layersbox
-  UI.editor.layerJsonStore:set(boxData.layers)
+  UI.editor.layerJsonStore:set(model.components.layers)
   -- layersTable
   UI.editor.groupLayersStore:set({layers = newLayersTable})
 

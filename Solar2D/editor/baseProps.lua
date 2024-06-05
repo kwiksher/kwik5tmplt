@@ -132,12 +132,14 @@ function M:getValue()
   local props = self.props or {}
   for i, v in next, props do
     if self.objs[i] == nil then break end
-    -- print(props[i].name, self.objs[i].text )
+    print(props[i].name, self.objs[i].field.text )
     local fieldText =  self.objs[i].field.text
     local asset = self.objs[i].assetbox or {}
     local value = _getValue(props[i].name, fieldText, v.value, asset.value  )
     v.value = value or v.value
   end
+  local json = require("json")
+  print (json.encode(props))
   return props
 end
 
