@@ -360,9 +360,11 @@ function M:hide()
   if self.radioGroup then
     self.radioGroup.isVisible = false
   end
+  --self.group.isVisible = false
 end
 --
 function M:show ()
+  --self.group.isVisible = true
   -- print("show", self.name)
   if self.scrollView then
     self.triangle.isVisible = true
@@ -403,6 +405,19 @@ end
 
 function M:removeSelf()
   self:destroy()
+end
+
+--
+function M:isAltDown()
+  return self.altDown
+end
+--
+function M:isControlDown()
+  return self.controlDown
+end
+--
+function M:isShiftDown()
+  return self.shiftDown
 end
 
 function Class.new(t)

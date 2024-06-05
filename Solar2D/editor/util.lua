@@ -434,11 +434,12 @@ function M.read(book, page, filter)
   if not decoded then
     print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg))
   else
-    local function parser(decoded, parent)
+    local function parser(entries, parent)
       local layers = nil
-      for i = 1, #decoded do
+      for i = 1, #entries do
         local name = nil
-        for k, v in pairs(decoded[i]) do
+        local entry = entries[i]
+        for k, v in pairs(entry) do
           if k ~= "class" and k ~= "commands" and k ~= "weight" then
             local layer = {name = k, parent = parent}
             --  ret.layers[#ret.layers+1] = {name=k}
@@ -453,14 +454,18 @@ function M.read(book, page, filter)
             name = k
             --print(k)
             if parent then
-              layer.children = parser(v, parent .. "." .. k)
+              if type(v) == "table" then
+                layer.children = parser(v, parent .. "." .. k)
+              end
             else
-              layer.children = parser(v, k)
+              if type(v) == "table" then
+                layer.children = parser(v, k)
+              end
             end
             break
           end
         end
-        local classEntries = decoded[i].class or {}
+        local classEntries = entry.class or {}
         for j = 1, #classEntries do
           local className = classEntries[j]
           -- print("", name.."_"..className)
@@ -470,13 +475,16 @@ function M.read(book, page, filter)
             ret[className] = t
           end
           local f = name .. "_" .. className .. ".json"
+          print(f)
           local path = system.pathForFile("App/" .. book .. "/models/" .. page .. "/" .. f, system.ResourceDirectory)
-          local decoded, pos, msg = json.decodeFile(path)
-          if not decoded then
-            print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg))
-          else
-            for l = 1, #decoded do
-              t[#t + 1] = {name = decoded[l].name, file = name .. "_" .. className, index = l}
+          if path then
+            local decoded, pos, msg = json.decodeFile(path)
+            if not decoded then
+              print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg))
+            else
+              for l = 1, #decoded do
+                t[#t + 1] = {name = decoded[l].name, file = name .. "_" .. className, index = l}
+              end
             end
           end
         end
@@ -484,7 +492,8 @@ function M.read(book, page, filter)
       return layers
     end
     --
-    ret.layers = parser(decoded)
+    --print(json.encode(decoded))
+    ret.layers = parser(decoded.components.layers)
     --
     ret.audios = {}
     ret.groups = {}
