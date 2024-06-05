@@ -11,7 +11,7 @@ local json = require("json")
 
 function helper.selectLayer(name)
   for i, entry in next,layerTable.objs do
-    print("", i, entry.text)
+    -- print("", i, entry.text)
     if entry.text == name then
       entry:touch({phase="ended"}) -- animation
       -- entry.classEntries[1]:touch({phase="ended"}) -- animation

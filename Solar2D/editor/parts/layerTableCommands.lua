@@ -192,7 +192,7 @@ function M.commandHandler(layerTable, target, event)
   else
     if singleSelection(layerTable, target) then
       -- should we enable one of them?
-      print("", "singleSelection")
+      -- print("", "singleSelection")
         actionCommandPropsTable:setActiveProp(target.layer)
         classProps:setActiveProp(target.layer)
     end
@@ -241,19 +241,19 @@ local function showClassProps(layerTable, target)
       class = target.class,
       path = path
     }
-    tree:setConditionStatus("select layer", bt.SUCCESS, true)
-    tree:setActionStatus("load layer", bt.RUNNING) -- need tick to process load layer with tree.backboard
-    tree:setConditionStatus("select props", bt.FAILED, true)
+      tree:setConditionStatus("select "..type, bt.SUCCESS, true)
+      tree:setActionStatus("load "..type, bt.RUNNING) -- need tick to process load layer with tree.backboard
+      tree:setConditionStatus("select props", bt.FAILED, true)
 
-    -- For editor compoent. this fires selectTool event with backboard params
-    tree.backboard = {
-      class = target.class,
-      isNew = false,
-      layer = target.layer,
-      path = path
-    }
-    tree:setConditionStatus("modify component", bt.SUCCESS)
-    tree:setActionStatus("editor component", bt.RUNNING, true)
+      -- For editor compoent. this fires selectTool event with backboard params
+      tree.backboard = {
+        class = target.class,
+        isNew = false,
+        layer = target.layer,
+        path = path
+      }
+      tree:setConditionStatus("modify component", bt.SUCCESS)
+      tree:setActionStatus("editor component", bt.RUNNING, true)
   end
 end
 
@@ -321,5 +321,6 @@ M.singleSelection = singleSelection
 M.clearSelections = clearSelections
 M.multiSelections = multiSelections
 M.showLayerProps = showLayerProps
+M.showClassProps = showClassProps
 
 return M

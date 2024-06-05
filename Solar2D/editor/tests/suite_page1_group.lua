@@ -11,6 +11,39 @@ local buttons = require("editor.group.buttons")
 
 local helper = require("editor.tests.helper")
 
+function helper.selectGroup(name, class, isRightClick)
+  -- print(name, class)
+  for i, obj in next, groupTable.objs do
+    if obj.text == name then
+      print("", i, obj.text, obj.name)
+      if class == nil then
+        if isRightClick then
+          obj:dispatchEvent{name="mouse", target=obj, isSecondaryButtonDown=true, x =obj.x, y=obj.y}
+        else
+          obj:touch({phase="ended"})
+        end
+      else
+        for i, classObj in next, obj.classEntries do
+          print("", "", classObj.class)
+          if classObj.class == class then
+              if isRightClick then
+                  print("", "", "isRightClick")
+                  classObj:dispatchEvent{name= "mouse", target=classObj, isSecondaryButtonDown=true, x = classObj.x, y = classObj.y}
+              else
+                print("", "", "touch ended")
+                classObj:touch({phase="ended"})
+              end
+            break
+          end
+        end
+      end
+      -- obj.classEntries[1]:touch({phase="ended"}) -- animation
+      return obj
+    end
+  end
+end
+
+
 function M.init(props)
   selectors = props.selectors
   UI        = props.UI
@@ -49,19 +82,51 @@ end
 function M.teardown()
 end
 
-function M.test_click_group()
-    UI.testCallback = function()
+function M.xtest_click_group()
+    -- UI.testCallback = function()
       UI.page = "page1"
       selectors.componentSelector:onClick(true,  "groupTable")
-       -- click the icon for creatign a new group
-      UI.scene.app:dispatchEvent {
-        name = "editor.selector.selectGroup",
-        UI = UI,
-        isNew = true, --(name ~= "Trash-icon"),
-        isDelete =false -- (name == "Trash-icon")
-      }
+      --  -- click the icon for creatign a new group
+      -- UI.scene.app:dispatchEvent {
+      --   name = "editor.selector.selectGroup",
+      --   UI = UI,
+      --   isNew = true, --(name ~= "Trash-icon"),
+      --   isDelete =false -- (name == "Trash-icon")
+      -- }
 
-    end
+        helper.selectGroup("groupA")
+    -- end
+end
+
+function M.xtest_click_group_for_editing()
+  -- UI.testCallback = function()
+    UI.page = "page1"
+    groupTable.altDown = true
+    selectors.componentSelector:onClick(true,  "groupTable")
+    helper.selectGroup("groupA")
+    groupTable.altDown = false
+
+  -- end
+end
+
+
+function M.xtest_click_group_linear()
+  -- UI.testCallback = function()
+    UI.page = "page1"
+    selectors.componentSelector:onClick(true,  "groupTable")
+    helper.selectGroup("groupA", "linear")
+  -- end
+end
+
+function M.test_click_group_linear_for_editing()
+  -- UI.testCallback = function()
+    UI.page = "page1"
+    groupTable.altDown = true
+    selectors.componentSelector:onClick(true,  "groupTable")
+    helper.selectGroup("groupA", "linear")
+    groupTable.altDown = false
+
+  -- end
 end
 
 return M

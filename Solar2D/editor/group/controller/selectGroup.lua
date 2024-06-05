@@ -7,7 +7,7 @@ local command = function (params)
 	local UI    = params.UI
   local name =  params.group or ""
 
-  -- print (params.class)
+  print ("@@@@",params.group, params.class)
   -- print("selectGroup", name, path, params.show)
 
   --print(debug.traceback())
