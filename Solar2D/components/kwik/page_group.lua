@@ -46,7 +46,6 @@ end
 function M:create(UI)
   local sceneGroup  = UI.sceneGroup
   local layers       = UI.layers
-
   if self.isDispGroup then
     local group = display.newGroup()
     group.anchorX = 0.5

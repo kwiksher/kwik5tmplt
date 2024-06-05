@@ -250,9 +250,9 @@ function M:read(book, page, layer,class, isNew)
     local path = "editor.template.components.pageX."..self.tool..".defaults."..class
     -- print(path)
     local data = require(path)
-    for k, v in pairs(data) do
-      print("@", k, v)
-    end
+    -- for k, v in pairs(data) do
+    --   print("@", k, v)
+    -- end
     decoded = {data}
   elseif layer then
     local layerName = layer or "index"

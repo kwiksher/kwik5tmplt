@@ -79,7 +79,7 @@ function M.create(scene, model)
                                 --print("", class, parentPath .. name)
                                 table.insert(classEntries, {
                                     class = class,
-                                    path = parentPath .. name
+                                    path = parentPath .. name  -- see sceneHandler.lua, it splits to load layer_linear.lua by split('.')
                                 })
                                 -- handler[funcName](handler, class, parentPath .. name, false)
                             end
@@ -110,6 +110,19 @@ function M.create(scene, model)
               if entries.short then
                 for k=1, #entries.short do
                   handler[funcName](handler, "audios.short", entries.short[k], false)
+                end
+              end
+            elseif class =="groups" then
+              for k=1, #entries do
+                local group = entries[k]
+                for name, value in pairs(group) do  --
+                  handler[funcName](handler, "groups", name, false)
+                  if value.class then
+                    for k, class in pairs(value.class) do
+                        --print("", class, parentPath .. name)
+                        handler[funcName](handler, "groups", name.."_"..class, false)
+                    end
+                  end
                 end
               end
             elseif (class ~="layers") then
