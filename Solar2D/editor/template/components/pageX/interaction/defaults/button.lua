@@ -8,7 +8,8 @@ local M = {
     over = "",
     btaps = 1,
     mask = "",
-  }
+  },
+  actions = {onComplete = ""}
 }
 
 return M

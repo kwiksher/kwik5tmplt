@@ -38,14 +38,28 @@ end
     --   end
     -- end
 
-function M:setValue(_name, value)
-  local name = _name or self.activeProp
-  for i,v in next, self.props do
+function M:setValue(value)
+  -- print("@@@@", _name)
+  -- print(debug.traceback())
+  if value == nil then
+    self.props = {}
+  else
+    self.props = value
+  end
+end
+
+function M:initActiveProp(actions)
+  for _name, value in pairs(actions) do
+    -- print("@@@@", _name)
+    -- print(debug.traceback())
+    local name = _name or self.activeProp
+    for i,v in next, self.props do
         if v.name == name then
           v.value = value
           return
         end
       end
+ end
 end
 
 function M:getValue(name)

@@ -93,10 +93,18 @@ function M:create(UI)
       option.y = newButton.y+ option.height * i
       --option.width = 100
       local obj = newText(option)
-      obj.tap = function(event)self:selectHandler(event) end
-      obj.mouse = function(event)self:mouseHandler(event) end
+      obj.touch = function(target, event)
+        -- print(event)
+        if event.phase =="ended" then
+          self:selectHandler(target)
+        end
+        return true
+      end
+      obj.mouse = function(event)self:mouseHandler(event)
+        return true
+      end
       obj.action = obj.text
-      obj:addEventListener("tap", obj)
+      obj:addEventListener("touch", obj)
       obj:addEventListener("mouse",obj)
 
       local rect = display.newRect(obj.x, obj.y, obj.width+10,option.height)

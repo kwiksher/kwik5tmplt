@@ -156,6 +156,15 @@ local function tapListenerImage(event)
 
 end
 
+local function tapListenerAction(event)
+  print("action tap listener")
+  local actionEditor = require("editor.action.index")
+  actionEditor:showActionTable()
+
+
+end
+
+
 M.CommandForTapSet = table:mySet{"audio", "group", "timer", "variables", "action"}
 --
 M.handler = {
@@ -163,7 +172,8 @@ M.handler = {
   layer = tapListenerLayer,
   color = tapListenerColor,
   audio = tapListenerAudio,
-  imageFile = tapListenerImage
+  imageFile = tapListenerImage,
+  action = tapListenerAction
 }
 
 return M

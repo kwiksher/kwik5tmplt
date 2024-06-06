@@ -115,14 +115,18 @@ function M.create(scene, model)
             elseif class =="groups" then
               for k=1, #entries do
                 local group = entries[k]
-                for name, value in pairs(group) do  --
-                  handler[funcName](handler, "groups", name, false)
-                  if value.class then
-                    for k, class in pairs(value.class) do
-                        --print("", class, parentPath .. name)
-                        handler[funcName](handler, "groups", name.."_"..class, false)
+                if type(group) == "table" then
+                  for name, value in pairs(group) do  --
+                    handler[funcName](handler, "groups", name, false)
+                    if value.class then
+                      for k, class in pairs(value.class) do
+                          --print("", class, parentPath .. name)
+                          handler[funcName](handler, "groups", name.."_"..class, false)
+                      end
                     end
                   end
+                else
+                  print("Warning", group)
                 end
               end
             elseif (class ~="layers") then

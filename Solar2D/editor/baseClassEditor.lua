@@ -82,7 +82,7 @@ function M:create(UI)
   -- print("-- create ---", self.model.id)
   -- print(debug.traceback())
   for k, v in next, self.controller.viewGroup do
-    -- print(k)
+    -- print("viewGroup", k)
     v:create(UI)
 
     if system.orientation == "portrait" then

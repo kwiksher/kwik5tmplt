@@ -129,8 +129,6 @@ end
 
 
 function M:create(UI)
-  print("##############")
-
   -- self.commandHandlerClass = layerTableCommands.commandHandlerClass
   -- self.showClassProps = showClassProps
   -- --self.commandHandler = commands.commandHandler

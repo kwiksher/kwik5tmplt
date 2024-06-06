@@ -25,18 +25,23 @@ function M:createButton(UI)
           end
       end
 
-      obj =
-          widget.newButton {
-          id          = self.name,
-          defaultFile = UI.props.imgDir ..self.layerProps.imagePath,
-          overFile    = UI.props.imgDir ..self.over..".png",
-          width       = self.imageWidth,
-          height      = self.imageHeight,
-          onRelease   = onReleaseHandler,
-          baseDir     = UI.props.systemDir
-      }
-      --
-      obj.on = onReleaseHandler
+      local path1 = system.pathForFile( UI.props.imgDir ..self.layerProps.imagePath, system.ResourceDirectory)
+      local path2 = system.pathForFile( UI.props.imgDir ..self.over..".png", system.ResourceDirectory)
+
+      if path1 and path2 then
+        obj =
+            widget.newButton {
+            id          = self.name,
+            defaultFile = path1,
+            overFile    = path2,
+            width       = self.imageWidth,
+            height      = self.imageHeight,
+            onRelease   = onReleaseHandler,
+            baseDir     = UI.props.systemDir
+        }
+        --
+        obj.on = onReleaseHandler
+    end
   end
 
     --
@@ -47,9 +52,12 @@ function M:createButton(UI)
     --
 
 
-  if self.mask:len() > 0 then
-      local mask = graphics.newMask(UI.props.imgDir ..UI.imagePage.. self.mask, UI.props.systemDir)
-      obj:setMask(mask)
+  if self.mask:len() > 0 and UI.imagePage then
+      local path = system.pathForFile(  UI.props.imgDir ..UI.imagePage.. self.mask, system.ResourceDirectory)
+      if path then
+        local mask = graphics.newMask( UI.props.imgDir ..UI.imagePage.. self.mask, UI.props.systemDir)
+        obj:setMask(mask)
+      end
   end
 
   local sceneGroup = UI.sceneGroup
@@ -130,7 +138,7 @@ end
 function M:destroy(UI)
 end
 
-M.new = function(model)
+M.set = function(model)
   return setmetatable( model, {__index=M})
 end
 

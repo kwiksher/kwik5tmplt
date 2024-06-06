@@ -34,10 +34,9 @@ end
 
 function selectAction(name)
   for i, v in next, actionTable.objs do
-    print("###", v.text)
     if v.text == name then
       -- v:dispatchEvent{name="touch", pahse="ended", target=v}
-      v:tap{target=v}
+      v:touch{phase = "ended"}
       return
     end
   end
@@ -129,26 +128,40 @@ local function selectCancel()
 end
 
 ---[[
-  function M.test_new_button()
-    selectors.componentSelector:onClick(true,  "layerTable")
+function M.test_new_button()
+  selectors.componentSelector:onClick(true,  "layerTable")
 
-    local name = "cat"
-    for i, entry in next,layerTable.objs do
-      print("", i, entry.text)
-      if entry.text == name then
-        entry:touch({phase="ended"}) -- gotoBtn
-        break
-      end
+  local name = "cat"
+  for i, entry in next,layerTable.objs do
+    print("", i, entry.text)
+    if entry.text == name then
+      entry:touch({phase="ended"}) -- gotoBtn
+      break
     end
+  end
     --print("-----------------")
     -- for k, v in pairs(toolbar.layerToolMap.Interactions) do print(k, v) end
     -- for k, v in pairs(toolbar.toolMap) do print(k, v) end
     -- selectTool{class="button", isNew=true}
 
     selectIcon("Interactions", "Button")
+
+    local actionbox = require("editor.parts.actionbox")
+    local obj = actionbox.objs[1]
+    obj:dispatchEvent({name="tap", target=obj})
+
+    actionTable.altDown = true
+    selectAction("eventOne")
+    actionTable.altDown = false
+
+
     -- selectCancel()
     --selectIcon("Interactions", "Button")
 
+
+    -- local button = "save"
+    -- local obj = require("editor.parts.buttons").objs[button]
+    -- obj.rect:tap()
 
   -- selectors.componentSelector:onClick(true,  "actionTable")
   -- selectAction("eventOne")
@@ -169,9 +182,6 @@ end
     --   select a layer
 
     -- --
-    -- local button = "save"
-    -- local obj = require("editor.parts.buttons").objs[button]
-    -- obj:tap()
   end
 --]]
 
