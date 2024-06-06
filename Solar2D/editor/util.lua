@@ -286,12 +286,37 @@ function M.selectFromIndexModel(scene, args)
 end
 
 
-function M.copyTable(decoded)
-  if decoded then
-    return json.decode(json.encode(decoded))
-  else
-    return {}
+-- https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value
+function M.copyTable(tbl)
+
+  local new_tbl = {}
+  for key,value in pairs(tbl) do
+      local valid =  key ~="__index"  and key ~="_class" and key ~="_tableListeners" and key ~="_proxy" and key ~="_functionListeners"
+      local value_type = type(value)
+      local new_value
+      if value_type == "function" then
+          -- new_value = loadstring(string.dump(value))
+          -- Problems may occur if the function has upvalues.
+      elseif value_type == "table" and valid then
+        print(key)
+          new_value = table_copy(value)
+      else
+          new_value = value
+      end
+
+      if value_type ~= "function" and valid  then
+        new_tbl[key] = new_value
+      end
   end
+  return new_tbl
+
+  -- if decoded then
+  --   local ret = json.encode(decoded)
+  --   ret = ret:gsub("<type 'function' is not supported by JSON.>", "nil")
+  --   return json.decode(ret)
+  -- else
+  --   return {}
+  -- end
 end
 
 function M.mkdir(...)
@@ -314,9 +339,10 @@ function M.mkdir(...)
   -- print(parent)
 end
 
-function M.saveLua(tmplt, dst, model, partial)
+function M.saveLua(tmplt, dst, _model, partial)
   print("local tmplt='".. tmplt.. "'")
   print("local dst ='".. dst.. "'")
+  local model = M.copyTable(_model)
   print("local model = json.decode('".. json.encode(model).. "')" )
 
   local path = system.pathForFile(tmplt, system.ResourceDirectory)
@@ -367,8 +393,10 @@ function M.writeLines(_path, lines)
   return false
 end
 
-function M.saveJson(_path, model)
+function M.saveJson(_path, _model)
   local path = system.pathForFile(_path, system.TemporaryDirectory)
+  local model = M.copyTable(_model)
+
   -- print(_path)
   local file, errorString = io.open(path, "w")
   if not file then

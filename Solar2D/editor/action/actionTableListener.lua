@@ -43,6 +43,11 @@ function M:selectHandler(target)
     layerTableCommands.multiSelections(self, target)
     UI.editor.selections = self.selections
     print("%%%%", #self.selections)
+  elseif self.altDown then
+    print("setActiveProp")
+    if layerTableCommands.singleSelection(self, target) then
+      actionbox:setActiveProp(target.action) -- nil == activeProp
+    end
   else
     self.lastTarget = target
     self.UI.scene.app:dispatchEvent {
@@ -50,11 +55,6 @@ function M:selectHandler(target)
       action = target.action,
       UI = self.UI
     }
-    if self.altDown then
-      if layerTableCommands.singleSelection(self, target) then
-        actionbox:setActiveProp(target.action) -- nil == activeProp
-      end
-   end
   end
 end
 -- edit button

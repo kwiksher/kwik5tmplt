@@ -94,7 +94,7 @@ function M:setValue(decoded, index, template)
     self.classProps:setValue(decoded[index].properties)
     self.classProps.class = decoded[index].class
     if decoded[index].actionName then
-      self.actionbox:setValue(decoded[index].actionName)
+      self.actionbox:setValue({name ="onCompplete", value = decoded[index].actionName})
       self.actionbox.isActive = true
     end
     -- for sprite.sequenceData, sync.line
@@ -107,7 +107,7 @@ function M:setValue(decoded, index, template)
     self.classProps:setValue(decoded.properties)
     self.classProps.class = decoded.class
     if decoded.actionName then
-       self.actionbox:setValue(decoded.actionName)
+       self.actionbox:setValue({name = "onComplete", value=decoded.actionName})
         self.actionbox.isActive = true
     end
     if decoded.sequenceData or decoded.line then

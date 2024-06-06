@@ -12,7 +12,7 @@ local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 local classProps              = require("editor.parts.classProps")
 local buttons                 = require("editor.parts.buttons")
 
-local posX = display.contentCenterX*0.75
+local posX = display.contentCenterX*0.4
 
 local isLastSelection = "class"
 
@@ -79,8 +79,10 @@ local function singleSelection(layerTable, target)
   else
     layerTable.selection = target
     for i = 1, #layerTable.selections do
-      layerTable.selections[i].rect:setFillColor(0.8)
-      layerTable.selections[i].rect:setStrokeColor(0.8)
+      if layerTable.selections[i].rect then
+        layerTable.selections[i].rect:setFillColor(0.8)
+        layerTable.selections[i].rect:setStrokeColor(0.8)
+      end
     end
     --
     layerTable.selections = {target}
@@ -209,6 +211,7 @@ end
 
 local function showClassProps(layerTable, target)
   local UI = layerTable.UI
+  local type = "layer"
   local path = util.getParent(target)
   if layerTable.selection == target then
     print("let's toogle")

@@ -200,10 +200,11 @@ function M:createTable(props)
   local UI = self.UI
   local objs = {}
   local alphaObj, imageObj
+  print(#props)
   for i=1, #props do
-    local prop = props[i]
+    local prop = props[i] or {}
     option.text = prop.name
-    -- print("@@@@@@@ baseProps", prop.name)
+    -- print("@@ baseProps",i, prop.name)
     option.x = self.x
     option.y = i*option.height + self.y
     -- print(self.group, option.x, option.y, option.width, option.height)
@@ -218,6 +219,8 @@ function M:createTable(props)
     if prop.name == 'url' then
        obj.class = self.class
        obj:addEventListener("tap", function(event) tapListener(event, 'url')end)
+    elseif prop.name == 'onComplete' then
+        obj:addEventListener("tap", function(event) tapListener(event, 'action')end)
     elseif self.onTapLayerSet[prop.name] then
         obj:addEventListener("tap", function(event) tapListener(event, 'layer')end)
     elseif prop.name == 'alpha' then

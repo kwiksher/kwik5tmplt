@@ -107,13 +107,13 @@ function M:setValue(decoded, index, template)
     classProps:setValue(decoded[index].properties)
     -- -- breadcrumbs:setValue(decoded[index].breadcrumbs)
     pointABbox:setValue(decoded[index].from, decoded[index].to)
-    actionbox:setValue(decoded[index].actionName)
+    actionbox:setValue({name="onComplete", value=decoded[index].actionName})
   else
     selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
     classProps:setValue(decoded.properties)
     -- -- breadcrumbs:setValue(decoded.breadcrumbs)
     pointABbox:setValue(decoded.from, decoded.to)
-    actionbox:setValue(decoded.actionName)
+    actionbox:setValue({name="onComplete", value=decoded.actionName})
   end
 end
 

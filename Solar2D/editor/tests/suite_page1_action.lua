@@ -8,16 +8,7 @@ local actionTable = require("editor.action.actionTable")
 local commandbox = require("editor.action.commandbox")
 local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 
-function selectLayer(name)
-  for i, entry in next,layerTable.objs do
-    print("", i, entry.text)
-    if entry.text == name then
-      entry:touch({phase="ended"}) -- animation
-      -- entry.classEntries[1]:touch({phase="ended"}) -- animation
-      break
-    end
-  end
-end
+local helper = require("editor.tests.helper")
 
 function selectTool(args)
   UI.scene.app:dispatchEvent(
@@ -133,7 +124,7 @@ function M.xtest_select_multi_actions()
   buttons.objs.cancel.tap{eventName="delete"}
 end
 
-function M.test_select_multi_actionCommands()
+function M.xtest_select_multi_actionCommands()
   -- UI.testCallback = function()
   --
   UI.editor.actionEditor.iconHander()
@@ -219,7 +210,7 @@ function M.test_modifyActionCommnad()
 --]]
 
 
-function M.xtest_newActionButton()
+function M.test_newActionButton()
   -- click UI.editor.actionIcon
   --  it dispatches
   local editor = require("editor.action.index")
@@ -239,7 +230,7 @@ function M.xtest_newActionButton()
   local objEntry = actionCommandPropsTable.objs[1]
   objEntry:dispatchEvent{name="tap", target=objEntry}
 
-
+  helper.selectLayer("cat", "linear")
 
 -- select a layer's animation (one of animation class)
 

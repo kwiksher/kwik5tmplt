@@ -82,10 +82,8 @@ function M:setValue(decoded, index, template)
     local props = {}
     local actions = decoded[index].actions
     if actions then
-      for k, v in pairs (actions) do
-        props[#props+1] = {name=k, value=""}
-        self.actionbox:setValue(k, v)
-      end
+      self.actionbox:setValue(props)
+      -- self.actionbox:initActiveProp(actions)
     end
   else
     self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
@@ -95,12 +93,13 @@ function M:setValue(decoded, index, template)
       for k, v in pairs (decoded.actions) do
         props[#props+1] = {name=k, value=""}
       end
-      self.actionbox.props = props
-      for k, v in pairs (decoded.actions) do
-        self.actionbox:setValue(k, v)
-      end
+      self.actionbox:setValue(props)
+      -- self.actionbox:initActiveProp(props)
+
     else
-      self.actionbox:hide()
+      print("no actionbox")
+      --self.actionbox:hide()
+      self.actionbox:setValue()
       -- print(#self.actionbox.objs)
     end
   end
@@ -331,6 +330,7 @@ function M:load(book, page, layer, class, isNew, asset)
       value = self:mergeAsset(decoded[1], asset)
     end
     self:setValue(value, nil, true)
+    -- print(json.encode(value))
     self:redraw()
   elseif layer then
 
