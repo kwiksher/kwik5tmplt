@@ -74,14 +74,18 @@ end
 
 -- this handler should be called from selectbox to set one of animtations user selected
 function M:setValue(decoded, index, template)
+  -- print(debug.traceback())
   if decoded == nil then return end
   if not template then
-    print(json.encode(decoded[index]))
+    -- print(json.encode(decoded[index]))
     self.selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
     self.classProps:setValue(decoded[index].properties)
     local props = {}
     local actions = decoded[index].actions
     if actions then
+      for k, v in pairs (actions) do
+        props[#props+1] = {name=k, value=""}
+      end
       self.actionbox:setValue(props)
       -- self.actionbox:initActiveProp(actions)
     end
@@ -338,8 +342,7 @@ function M:load(book, page, layer, class, isNew, asset)
     local layerName = layer or "index"
     --local path      = page .."/"..layerName.."_"..self.tool..".json"
     local path      = system.pathForFile( "App/"..book.."/models/"..page .."/"..layerName.."_"..self.tool..".json", system.ResourceDirectory)
-
-    print("", path)
+    -- print("", path)
     if self.lastSelection ~= path then
       self.lastSelection   = path
       local decoded = self:loadLua(book, page, layer, class, isNew)

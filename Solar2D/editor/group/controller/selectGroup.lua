@@ -7,7 +7,7 @@ local command = function (params)
 	local UI    = params.UI
   local name =  params.group or ""
 
-  print ("@@@@",params.group, params.class)
+  -- print ("@@@@",params.group, params.class)
   -- print("selectGroup", name, path, params.show)
 
   --print(debug.traceback())
@@ -33,7 +33,7 @@ local command = function (params)
 
     UI.editor.groupLayersStore:set(tableData) -- layersTable
     local model = util.createIndexModel(UI.scene.model)
-    print(json.encode(model))
+    -- print(json.encode(model))
     UI.editor.layerJsonStore:set(model.components.layers) -- layersbox
 
   elseif params.isDelete then

@@ -144,9 +144,9 @@ function M.test_new_group()
       -- click add button
       helper.clickButton("add")
 
-  local button = "save"
-  local obj = require("editor.group.buttons").objs[button]
-  obj:tap()
+  -- local button = "save"
+  -- local obj = require("editor.group.buttons").objs[button]
+  -- obj:tap()
 
 end
 

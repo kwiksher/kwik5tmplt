@@ -10,7 +10,8 @@ function M:createButton(UI)
   local obj = sceneGroup[layerName]
   local path = UI.props.imgDir .. layerName
   -- Tap
-  if self.btaps  > 0 then
+  local props = self.properties
+  if props.btaps  > 0 then
       local function onReleaseHandler(event)
           if event.target.enabled == nil or event.target.enabled then
               event.target.type = "press"
@@ -26,7 +27,7 @@ function M:createButton(UI)
       end
 
       local path1 = system.pathForFile( UI.props.imgDir ..self.layerProps.imagePath, system.ResourceDirectory)
-      local path2 = system.pathForFile( UI.props.imgDir ..self.over..".png", system.ResourceDirectory)
+      local path2 = system.pathForFile( UI.props.imgDir ..props.over..".png", system.ResourceDirectory)
 
       if path1 and path2 then
         obj =
@@ -34,8 +35,8 @@ function M:createButton(UI)
             id          = self.name,
             defaultFile = path1,
             overFile    = path2,
-            width       = self.imageWidth,
-            height      = self.imageHeight,
+            width       = self.layerProps.imageWidth,
+            height      = self.layerProps.imageHeight,
             onRelease   = onReleaseHandler,
             baseDir     = UI.props.systemDir
         }
@@ -52,10 +53,10 @@ function M:createButton(UI)
     --
 
 
-  if self.mask:len() > 0 and UI.imagePage then
-      local path = system.pathForFile(  UI.props.imgDir ..UI.imagePage.. self.mask, system.ResourceDirectory)
+  if props.mask:len() > 0 and UI.imagePage then
+      local path = system.pathForFile(  UI.props.imgDir ..UI.imagePage.. props.mask, system.ResourceDirectory)
       if path then
-        local mask = graphics.newMask( UI.props.imgDir ..UI.imagePage.. self.mask, UI.props.systemDir)
+        local mask = graphics.newMask( UI.props.imgDir ..UI.imagePage.. props.mask, UI.props.systemDir)
         obj:setMask(mask)
       end
   end
@@ -92,18 +93,19 @@ end
 function M:addEventListener(UI)
     local sceneGroup = UI.sceneGroup
     local layers = UI.layers
+    local props = self.properties
     -- Tap
-    if self.btaps and layers[self.name] then
+    if props.btaps and layers[self.name] then
         --
         local obj = layers[self.name]
-        local eventName = self.onTap
+        local eventName = props.onTap
 
         function obj:tap(event)
           print("tap")
           event.UI = UI
-          if self.enabled or self.enabled == nil then
-            if self.btaps and event.numTaps then
-              if event.numTaps == self.btaps then
+          if props.enabled or props.enabled == nil then
+            if props.btaps and event.numTaps then
+              if event.numTaps == props.btaps then
                   UI.scene:dispatchEvent({name=eventName, event = event})
               end
             else
@@ -115,10 +117,10 @@ function M:addEventListener(UI)
         obj:addEventListener("tap",obj)
     end
     --
-    if self.buyProductHide then
+    if props.buyProductHide then
       local IAP = require("components.store.IAP")
         --Hide button if purchase was already made
-        if IAP.getInventoryValue("unlock_" .. self.product) then
+        if IAP.getInventoryValue("unlock_" .. props.product) then
             --This page was purchased, do not show the BUY button
             layers[self.name].alpha = 0
         end
@@ -128,8 +130,9 @@ end
 function M:removeEventListener(UI)
     local layers = UI.layers
     local sceneGroup = UI.sceneGroup
+    local props = self.properties
     -- Tap
-    if self.btaps and layers[self.name] then
+    if props.btaps and layers[self.name] then
       local obj = layers[self.name]
       obj:removeEventListener("tap", obj)
     end

@@ -291,15 +291,15 @@ function M.copyTable(tbl)
 
   local new_tbl = {}
   for key,value in pairs(tbl) do
-      local valid =  key ~="__index"  and key ~="_class" and key ~="_tableListeners" and key ~="_proxy" and key ~="_functionListeners"
+      local valid =  key ~="__index"  and key ~="_class" and key ~="_tableListeners" and key ~="_proxy" and key ~="_functionListeners" and key ~="selections"
       local value_type = type(value)
       local new_value
       if value_type == "function" then
           -- new_value = loadstring(string.dump(value))
           -- Problems may occur if the function has upvalues.
       elseif value_type == "table" and valid then
-        print(key)
-          new_value = table_copy(value)
+          -- print(key)
+          new_value = M.copyTable(value)
       else
           new_value = value
       end

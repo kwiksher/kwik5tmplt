@@ -42,7 +42,7 @@ function M:didHide(UI)
 end
 
 function M:commandHandler(eventObj, event)
-  print(event.phase)
+  -- print(event.phase)
   if event.phase == "began" or event.phase == "moved" then
     return
   end

@@ -48,7 +48,7 @@ function M:_create(UI)
   local group = display.newGroup()
 
   local function tapHandler(event)
-    print("tap")
+    -- print("tap")
     UI.scene.app:dispatchEvent {
       name = "editor."..self.commandClass.."." .. event.eventName,
       UI = UI

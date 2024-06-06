@@ -69,11 +69,11 @@ function M.create(scene, model)
                           local ret = iterator(handler, name, value, -- value is array of children
                                                 parentPath .. name .. ".")
 
-                          for j = 1, #ret do
-                              handler[funcName](handler, ret[j].class, ret[j].path,
-                                              false)
-                          end
+                          -- for j = 1, #ret do
+                          --     handler[funcName](handler, ret[j].class, ret[j].path, false)
+                          -- end
                         else
+                          handler[funcName](handler, nil, parentPath .. name, false)
                           if value.class then
                             for k, class in pairs(value.class) do
                                 --print("", class, parentPath .. name)
@@ -81,10 +81,9 @@ function M.create(scene, model)
                                     class = class,
                                     path = parentPath .. name  -- see sceneHandler.lua, it splits to load layer_linear.lua by split('.')
                                 })
-                                -- handler[funcName](handler, class, parentPath .. name, false)
+                                handler[funcName](handler, class, parentPath .. name, false)
                             end
                           end
-                          handler[funcName](handler, nil, parentPath .. name, false)
                         end
                         -- print("", value, parent)
                     end
@@ -93,9 +92,9 @@ function M.create(scene, model)
             return classEntries
         end
         local ret = iterator(handler, nil, models, nil)
-        for j = 1, #ret do
-            handler[funcName](handler, ret[j].class, ret[j].path, false)
-        end
+        -- for j = 1, #ret do
+        --     handler[funcName](handler, ret[j].class, ret[j].path, false)
+        -- end
     end
 
     local function callComponentsHandler(models, handler, funcName)
