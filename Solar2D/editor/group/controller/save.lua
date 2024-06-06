@@ -13,7 +13,6 @@ local instance = require("commands.kwik.baseCommand").new(
     print(name)
     -- for i, v in next, layersTable.objs do print(i, v.text) end
 
-
     local updatedModel = util.createIndexModel(UI.scene.model)
     if props.isNew then
       print("new group")

@@ -136,7 +136,7 @@ local function showFocus(layerTable)
   UI.editor.focusGroup = group
   --
   for i, v in next, layerTable.selections do
-    print(i, v.text)
+    -- print(i, v.text)
     local obj = UI.sceneGroup[v.text]
     if obj then
       -- print("@", v.text, obj.x, obj.y)

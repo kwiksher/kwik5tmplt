@@ -109,6 +109,7 @@ end
 
 -- this handler should be called from selectbox to set one of animtations user selected
 function M:setValue(decoded, index, template)
+  -- print(debug.traceback())
   if decoded == nil then print("## Error setValue ##") return end
   if not template then
     -- print(json.encode(decoded[index]))

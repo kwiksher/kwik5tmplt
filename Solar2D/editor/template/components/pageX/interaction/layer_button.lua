@@ -17,7 +17,7 @@ local layerProps = require(parent.."{{layer}}")
 -- }
 
 local M = {
-  name ="{{name}}",
+  name ="{{layer}}_button",
   -- commonAsset = "{{common}}",
   -- class = "{{class}}", -- button, drag, canvas ...
   --

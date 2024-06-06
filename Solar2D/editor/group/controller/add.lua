@@ -9,10 +9,10 @@ local useJson = false
 --
 local command = function (params)
 	local UI    = params.UI
-  print("----- group.add ----")
+  -- print("----- group.add ----")
 
   local props = controller:useClassEditorProps(UI)
-  for k, v in pairs(props) do print("", k, v) end
+  -- for k, v in pairs(props) do print("", k, v) end
 
   local workTable = {}
   for i=1, #props.layersboxSelections do
@@ -50,9 +50,9 @@ local command = function (params)
         if parent .."."..name == _name then
           return true
         end
-        print("@", parent, name, _name)
+        -- print("@", parent, name, _name)
       elseif name == _name then
-        print("@", name, _name)
+        -- print("@", name, _name)
         return true
       end
     end
@@ -78,9 +78,9 @@ local command = function (params)
 
   UI.editor.layerJsonStore:set(model.components.layers) -- layersbox
 
-  for i=1, #model.components.layers do
-    print(i, model.components.layers[i].name, model.components.layers[i].isFiltered)
-  end
+  -- for i=1, #model.components.layers do
+  --   print(i, model.components.layers[i].name, model.components.layers[i].isFiltered)
+  -- end
 
   UI.editor.groupLayersStore:set({layers = newLayersTable}) -- layersTable
 

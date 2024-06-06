@@ -156,7 +156,7 @@ end
 
 function exports.clickButton(name)
   for i, v in next, buttons.objs do
-    print(v.text)
+    -- print(v.text)
     if v.eventName == name then -- {name="add", label="->"}
         if v.rect.tap then
           v.rect:tap()
@@ -187,7 +187,7 @@ function exports.selectEntries(box, names)
   for k, n in next, names do
     for i, v in next, box.objs do
       if v.layer == n then
-        print("n", n)
+        -- print("n", n)
         --v:dispatchEvent{name="touch", phase="began", target=v}
         -- v:dispatchEvent{name="touch", phase="ended", target=v}
         v:touch{phase="ended"}
