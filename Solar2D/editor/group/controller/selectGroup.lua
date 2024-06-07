@@ -7,7 +7,7 @@ local command = function (params)
 	local UI    = params.UI
   local name =  params.group or ""
 
-  -- print ("@@@@",params.group, params.class)
+  print ("@@@@",params.group, params.class)
   -- print("selectGroup", name, path, params.show)
 
   --print(debug.traceback())
@@ -20,16 +20,7 @@ local command = function (params)
     --local boxData = util.read( UI.editor.currentBook, UI.page)
     --print(json.encode(boxData))
     --
-    tableData = {
-      name = "(new-group)",
-      layers = {},
-      children = {},
-      alpha =  nil,
-      xScale =  nil,
-      yScale =  nil,
-      rotation =  nil,
-      isLuaTable = nll
-    }
+    tableData = require("editor.template.components.pageX.group.defaults.group")
 
     UI.editor.groupLayersStore:set(tableData) -- layersTable
     local model = util.createIndexModel(UI.scene.model)
@@ -40,13 +31,18 @@ local command = function (params)
     print(params.class, "delete")
   elseif name:len() > 0 then
     --
-    -- layersTable
-    --
-    local path = system.pathForFile( "App/"..UI.editor.currentBook.."/models/"..UI.page .."/groups/"..name..".json", system.ResourceDirectory)
-    tableData, pos, msg = json.decodeFile( path )
-    if not tableData then
-      print( "Decode failed at "..tostring(pos)..": "..tostring(msg), path )
-      tableData = {}
+    -- layersTable (group members)
+    -- --
+    -- local path = system.pathForFile( "App/"..UI.editor.currentBook.."/models/"..UI.page .."/groups/"..name..".json", system.ResourceDirectory)
+    -- tableData, pos, msg = json.decodeFile( path )
+    -- if not tableData then
+    --   print( "Decode failed at "..tostring(pos)..": "..tostring(msg), path )
+    --   tableData = {}
+    -- end
+
+    tableData = require("App."..UI.editor.currentBook..".components."..UI.page ..".groups."..name)
+    for i, v in next, tableData.members do
+      print("", i, v)
     end
     --
     -- layersbox
@@ -54,7 +50,7 @@ local command = function (params)
     local model = util.createIndexModel(UI.scene.model)
 
     -- let's remove entries of tableData from boxData
-    --    layers = ["GroupA.Ellipse", "GroupA.SubA.Triangle"]
+    --    members = ["GroupA.Ellipse", "GroupA.SubA.Triangle"]
 
     local function iterator(entries, parent)
       for i, v in next, entries do
@@ -62,8 +58,8 @@ local command = function (params)
         local name = v.name
 
         local function check(parent, name)
-          for i=1, #tableData.layers do
-            local _name = tableData.layers[i]
+          for i=1, #tableData.members do
+            local _name = tableData.members[i]
             if parent then
               if parent .."."..name == _name then
                 return true
@@ -96,11 +92,16 @@ local command = function (params)
     --   return false
     -- end)
 
+
     UI.editor.layerJsonStore:set(model.components.layers) -- layersbox
     UI.editor.groupLayersStore:set(tableData) -- layersTable
 
+
   end
 
+  editor.controller.classProps:setValue{name="group-2"}
+  editor.controller.classProps:destroy(UI)
+  editor.controller.classProps:create(UI)
   --
   editor:show()
   --

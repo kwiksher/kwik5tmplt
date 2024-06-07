@@ -7,7 +7,9 @@ local instance = require("commands.kwik.baseCommand").new(
     -- print(name)
     -- print(UI.editor.currentTool.model.id)
     tool.controller:hide()
-    UI.editor.focusGroup:removeSelf()
+    if UI.editor.focusGroup then
+      UI.editor.focusGroup:removeSelf()
+    end
     UI.editor.currentTool = nil
 
   end

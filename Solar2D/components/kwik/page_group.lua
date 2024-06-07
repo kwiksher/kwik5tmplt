@@ -1,20 +1,27 @@
 local M = {
-  -- name       = "GroupA",
-  -- children   = {"Ellipse", "SubA"},
-  -- isLuaTable = false,               -- if true, a group holds names of layers but not creating diplay.newGroup()
+  -- name       = {{name}},
+  -- members   = {
+    --  {{#members}} {{.}}, {{/members}}
+    -- },
+  -- properties = {
+    -- isLuaTable = false,               -- if true, a group holds names of layers but not creating diplay.newGroup()
+    -- alpha = {{alpha}},
+    -- xScale = {{scaleW}},
+    -- yScale = {{scaleH}},
+    -- rotation = {{rotation}},
+  --}
 }
 
--- {
---   name     = "SubA",
---   chidlren = "Triangle"
--- }
+-- "name"  : "myGroup",
+-- "members":["copyright", "star"],
 
--- alpha = {{alpha}}
--- xScale = {{scaleW}}
--- yScale = {{scaleH}}
--- rotation = {{rotation}}
+-- "name"  : "GroupA",
+-- "members":["GroupA.Ellipse", "GroupA.SubA"],
 
-M.isDispGroup = not M.isLuaTable
+-- "name"  : "SubA",
+-- "members":["GroupA.SubA.Triangle"],
+
+
 
 ---------------------
 -- Capture and set group position
@@ -46,40 +53,42 @@ end
 function M:create(UI)
   local sceneGroup  = UI.sceneGroup
   local layers       = UI.layers
-  if self.isDispGroup then
+  local props = self.properties
+  if props.isLuaTable then
+    UI.data[self.name] = {}
+    for k, v in pairs(self.members) do
+      UI.data[self.name][k] = v -- {{chldName}}
+    end
+  else
     local group = display.newGroup()
     group.anchorX = 0.5
     group.anchorY = 0.5
     group.anchorChildren = true
 
-    for i=1, #self.children do
-      local obj = sceneGroup[self.children[i]]
+    for i=1, #self.members do
+      local obj = sceneGroup[self.members[i]]
       if obj then
         group:insert(obj)
       else
-        print("## error layer not found", self.children[i] )
+        print("## error layer not found", self.members[i] )
       end
     end
-      group.alpha = self.alpha
-    group.oldAlpha = self.alpha
-    group.xScale = self.xScale or 1
-    group.yScale = self.yScale or 1
-    group.rotation = self.rotation
-    group.oriX = group.x
-    group.oriY = group.y
+
+    group.alpha = props.alpha or group.alpha
+    group.oldAlpha = props.alpha
     group.oriXs = group.xScale
     group.oriYs = group.yScale
+    group.xScale = props.xScale or 1
+    group.yScale = props.yScale or 1
+    group.rotation = props.rotation or group.rotation
+    group.oriX = group.x
+    group.oriY = group.y
 
     groupPos(group)
     sceneGroup:insert(group)
     sceneGroup[self.name] = group
     -- print("@@@@", self.name)
     self.group = group
-  else -- self.isLua
-      UI.data[self.name] = {}
-      for i=1, #self.children do
-        UI.data[self.name][i] = self.children[i] -- {{chldName}}
-      end
   end
 end
 --
