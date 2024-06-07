@@ -67,7 +67,7 @@ M.BThandler = function(name, status)
     }
     if tree.backboard then
       for k, v in pairs(tree.backboard) do
-        -- print("", k, v)
+        print("", k, v)
         params[k] = v
       end
     end

@@ -94,16 +94,16 @@ function M.xtest_click_group()
       --   isDelete =false -- (name == "Trash-icon")
       -- }
 
-        helper.selectGroup("groupA")
+        helper.selectGroup("groupC")
     -- end
 end
 
-function M.xtest_click_group_for_editing()
+function M.test_click_group_for_editing()
   -- UI.testCallback = function()
     UI.page = "page1"
     groupTable.altDown = true
     selectors.componentSelector:onClick(true,  "groupTable")
-    helper.selectGroup("groupA")
+    helper.selectGroup("groupC")
     groupTable.altDown = false
 
   -- end
@@ -114,7 +114,8 @@ function M.xtest_click_group_linear()
   -- UI.testCallback = function()
     UI.page = "page1"
     selectors.componentSelector:onClick(true,  "groupTable")
-    helper.selectGroup("groupA", "linear")
+    helper.selectGroup("groupC")
+    -- helper.selectGroup("groupC", "linear")
   -- end
 end
 
@@ -123,13 +124,13 @@ function M.xtest_click_group_linear_for_editing()
     UI.page = "page1"
     groupTable.altDown = true
     selectors.componentSelector:onClick(true,  "groupTable")
-    helper.selectGroup("groupA", "linear")
+    helper.selectGroup("groupC", "linear")
     groupTable.altDown = false
 
   -- end
 end
 
-function M.test_new_group()
+function M.xtest_new_group()
   selectors.componentSelector:onClick(true,  "groupTable")
   -- for k, v in pairs(groupTable.iconObjs[1]) do print(k, v) end
   local obj = groupTable.iconObjs[1]

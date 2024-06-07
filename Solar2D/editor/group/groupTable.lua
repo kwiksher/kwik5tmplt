@@ -36,7 +36,7 @@ end
 local layerTableCommands = require("editor.parts.layerTableCommands")
 
 function M:commandHandler(eventObj, event)
-  print("@@@@@@@@@@ commandHandler")
+  -- print("@@@@@@@@@@ commandHandler")
   if event.phase == "began" or event.phase == "moved" then
     return
   end
@@ -55,16 +55,17 @@ function M:commandHandler(eventObj, event)
   --
   if self.altDown then
     if layerTableCommands.showLayerProps(self, target) then
-      print("TODO show group props")
+      print("@@@@@TODO show group props", target.id, target.text)
       -- print(target[self.id])
       tree.backboard = {
         show = true,
-        class = "group"
+        class = "group",
+        group = target.text
       }
       -- for instance, obj.animation = "animA", obj.group = "grouA"
       --  see obj[self.id] = name in render
       --
-      tree.backboard[self.id] = target[self.id],
+      --tree.backboard[self.id] = target[self.id],
       tree:setConditionStatus("select component", bt.SUCCESS, true)
       tree:setActionStatus("load "..self.id, bt.RUNNING, true)
       tree:setConditionStatus("select "..self.id, bt.SUCCESS)
@@ -85,7 +86,7 @@ end
 
 
 function M:commandHandlerClass(target, event)
-  print("commandHandlerClass", target.layer, target.text)
+  print("@@@@@@ commandHandlerClass", target.layer, target.text)
   local class = target.text
   local UI = self.UI
   if event.phase == "began" or event.phase == "moved" then

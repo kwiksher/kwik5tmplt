@@ -24,7 +24,7 @@ function M:getValue()
 end
 
 function M:getLayers()
-  return self.layers
+  return self.members
 end
 
 function M:getSelections()
@@ -151,7 +151,7 @@ function M:create(UI)
               _layers[i] = v.text
             end
             -- reset
-            UI.editor.groupLayersStore:set{layers=_layers} -- layersTable
+            UI.editor.groupLayersStore:set{members=_layers} -- layersTable
             --
           end
           return true
@@ -191,10 +191,10 @@ function M:create(UI)
         local last_x, last_y = 2, 0 -- scrollView.x , scrollView.y
 
 
-        for i=1, #fooValue.layers do
+        for i=1, #fooValue.members do
           local _group = display.newGroup()
 
-          local name = fooValue.layers[i]
+          local name = fooValue.members[i]
           option.text = name
           local obj = newText(option)
 
@@ -217,7 +217,7 @@ function M:create(UI)
           objs[#objs+1] = obj
 
         end
-        self.layers = fooValue.layers
+        self.members = fooValue.members
         self.objs = objs
       end
     )

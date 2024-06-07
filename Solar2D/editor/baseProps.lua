@@ -158,7 +158,7 @@ function M:setValue(fooValue)
     end
   else
     for k, v in pairs(params) do
-      -- print("", k, v)
+    --  print("", k, v)
       --
       if not basePropsControl.filter(k) then
         local prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
@@ -204,7 +204,7 @@ function M:createTable(props)
   for i=1, #props do
     local prop = props[i] or {}
     option.text = prop.name
-    -- print("@@ baseProps",i, prop.name)
+    -- print("@@ baseProps",i, prop.name, prop.value)
     option.x = self.x
     option.y = i*option.height + self.y
     -- print(self.group, option.x, option.y, option.width, option.height)
