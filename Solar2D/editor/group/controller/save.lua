@@ -28,15 +28,22 @@ local instance = require("commands.kwik.baseCommand").new(
       print("", i ,v.name, v.value)
     end
 
-    print("layerTable")
-    for k, v in pairs(props.layersTable) do print("", k ,v.text) end
-    -- scripts.publish(UI, {
-    --   book=UI.editor.currentBook, page=UI.editor.currentPage or UI.page,
-    --   updatedModel = updatedModel,
-    --   layer = props.name,
-    --   class = "group",
-    --   props = props},
-    --   controller)
+    print("members(layerTable)")
+    for i, v in next, props.layersTable do
+      print(i,  v)
+    end
+    props.members = props.layersTable
+
+    -- for k, v in pairs(props.layersTable) do print("", k ,v.text) end
+
+
+    scripts.publish(UI, {
+      book=UI.editor.currentBook, page=UI.editor.currentPage or UI.page,
+      updatedModel = updatedModel,
+      layer = props.name,
+      class = "group",
+      props = props},
+      controller)
 
   end
 )

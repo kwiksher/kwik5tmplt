@@ -32,7 +32,7 @@ function M:init(UI)
   self.group            = display.newGroup()
   --
   selectbox:init(UI, 4, self.y)
-  classProps:init(UI, display.contentCenterX+480*0.6 , 22,  self.width, self.height)
+  classProps:init(UI, display.contentCenterX+480*0.6 , display.contentCenterY,  self.width, self.height)
   classProps.option.width = 54
   classProps.model = model.props
   classProps:setValue{name="group-1"}

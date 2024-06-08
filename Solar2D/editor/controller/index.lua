@@ -217,6 +217,23 @@ function M:render(book, page, layer, classFolder, class, model)
   return dst
 end
 
+function M:renderPage(book, page, class, name, model)
+  print("", book, page, class, name, #model.properties)
+  local dst, tmplt
+  if class=="page" then
+    dst = "App/"..book.."/components/"..page.."/"..class.."/"..name ..".lua"
+    tmplt =  "editor/template/components/pageX/"..class.."/"..class ..".lua"
+    util.mkdir("App", book, "components", page, class)
+  else
+    dst = "App/"..book.."/components/"..page.."/"..class.."s/"..name ..".lua"
+    tmplt =  "editor/template/components/pageX/"..class.."/"..class ..".lua"
+    util.mkdir("App", book, "components", page, class.."s")
+  end
+  util.saveLua(tmplt, dst, model)
+  return dst
+end
+
+
 function M:save(book, page, layer, class, model, entry)
   local dst
   if class == nil then

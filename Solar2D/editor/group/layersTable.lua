@@ -20,7 +20,10 @@ local option, newText = util.newTextFactory{
 local widget = require("widget")
 
 function M:getValue()
-  return self.objs
+  -- for i, v in next, self.members do
+  --   print("", v)
+  -- end
+  return self.members or {}
 end
 
 function M:getLayers()

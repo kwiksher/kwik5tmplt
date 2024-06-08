@@ -74,13 +74,13 @@ function M:create(UI)
       end
     end
 
-    group.alpha = props.alpha or group.alpha
+    group.alpha = NilCheck(props.alpha) or 1
     group.oldAlpha = props.alpha
     group.oriXs = group.xScale
     group.oriYs = group.yScale
-    group.xScale = props.xScale or 1
-    group.yScale = props.yScale or 1
-    group.rotation = props.rotation or group.rotation
+    group.xScale = NilCheck(props.xScale) or 1
+    group.yScale = NilCheck(props.yScale) or 1
+    group.rotation = NilCheck(props.rotation) or group.rotation
     group.oriX = group.x
     group.oriY = group.y
 

@@ -9,7 +9,7 @@ local M = require("editor.controller.index").new("group")
 -- I/F
 --
 function M:useClassEditorProps()
-  -- print("useClassEditorProps")
+  print("useClassEditorProps")
   local props = {}
 
   local selectbox = self.viewGroup.selectbox

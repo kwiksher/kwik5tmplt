@@ -8,7 +8,13 @@ if restore then
 end
 
 NIL = setmetatable({},{__tostring=function() return "nil" end})
-
+NilCheck = function(v)
+  if v == NIL then
+    return nil
+  else
+    return v
+  end
+end
 
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   local lldebugger = loadfile(os.getenv("LOCAL_LUA_DEBUGGER_FILEPATH"))()
