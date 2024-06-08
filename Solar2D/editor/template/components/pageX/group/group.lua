@@ -1,15 +1,15 @@
-local _M = {
-  name       = {{name}},
+local props = {
+  name       = "{{name}}",
   members   = {
     {{#members}}
-    {{.}},
+    "{{.}}",
     {{/members}}
   },
   properties = {
     {{#properties}}
     alpha = {{alpha}},
-    xScale = {{scaleW}},
-    yScale = {{scaleH}},
+    xScale = {{xScale}},
+    yScale = {{yScale}},
     rotation = {{rotation}},
     isLuaTable = false
     {{/properties}}

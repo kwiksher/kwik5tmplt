@@ -120,10 +120,24 @@ function M.updateIndexModel(_scene, layerName, class)
   processLayers(copied.components.layers, 1)
   --end
   --
+
+  local groups = {}
+  for i, v in next, copied.components.groups do
+    local entry = {}
+    for key, value in pairs(v) do
+      entry.name = key
+      entry.class = value
+    end
+    groups[i] = entry
+  end
+  copied.components.groups = groups
+
   return copied
 end
 
-
+--
+-- nLevel is used for lustache render in createIndexModel
+--
 function M.createIndexModel(_scene, layerName, class)
   local scene = _scene or {
     components = {
@@ -216,6 +230,17 @@ function M.createIndexModel(_scene, layerName, class)
   --
   --if layerName then
   processLayers(copied.components.layers, 1)
+
+  local groups = {}
+  for i, v in next, copied.components.groups do
+    local entry = {}
+    for key, value in pairs(v) do
+      entry.name = key
+      entry.class = value
+    end
+    groups[i] = entry
+  end
+  copied.components.groups = groups
   --end
   --
   return copied
@@ -291,7 +316,7 @@ function M.copyTable(tbl)
 
   local new_tbl = {}
   for key,value in pairs(tbl) do
-      local valid =  key ~="__index"  and key ~="_class" and key ~="_tableListeners" and key ~="_proxy" and key ~="_functionListeners" and key ~="selections"
+      local valid =  key ~="__index"  and key ~="_class" and key ~="_tableListeners" and key ~="_proxy" and key ~="_functionListeners" and key ~="selections" and key ~="rect"
       local value_type = type(value)
       local new_value
       if value_type == "function" then

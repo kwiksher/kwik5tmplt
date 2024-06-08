@@ -17,7 +17,7 @@ local scene = require('controller.scene').new(sceneName, {
       {{#groups}}
       {
         {{name}} ={
-          class={ {{#class}}"{{.}}",{{/class}} },
+          class={ {{#class}}"{{.}}",{{/class}} }
         }
       },
       {{/groups}} },

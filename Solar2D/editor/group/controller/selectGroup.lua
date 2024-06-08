@@ -7,7 +7,7 @@ local command = function (params)
 	local UI    = params.UI
   local name =  params.group or ""
 
-  print ("@@@@",params.group, params.class)
+  -- print ("@@@@",params.group, params.class)
   -- print("selectGroup", name, path, params.show)
 
   --print(debug.traceback())
@@ -41,9 +41,9 @@ local command = function (params)
     -- end
 
     tableData = require("App."..UI.editor.currentBook..".components."..UI.page ..".groups."..name)
-    for i, v in next, tableData.members do
-      print("", i, v)
-    end
+    -- for i, v in next, tableData.members do
+    --   print("", i, v)
+    -- end
     --
     -- layersbox
     --
@@ -99,7 +99,10 @@ local command = function (params)
 
   end
 
-  editor.controller.classProps:setValue{name="group-2"}
+  local copied = util.copyTable(tableData.properties)
+  copied._name = tableData.name
+
+  editor.controller.classProps:setValue(copied)
   editor.controller.classProps:destroy(UI)
   editor.controller.classProps:create(UI)
   --

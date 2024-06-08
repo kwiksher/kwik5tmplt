@@ -291,6 +291,7 @@ end
 --
 --
 local function getModelFrom(args)
+  local ret = {name=nil, properties={}}
   local selected = args.selected or {} -- args.selectbox.selection
   local append = args.append -- args.updatedModel.components.timers or {}
   local isNew = args.isNew
@@ -304,45 +305,45 @@ local function getModelFrom(args)
 
   ---[[
   for k, entries in pairs(args.props ) do
-    if type(entries) == "table" then
-      local copied = {}
-      for k, v in pairs(entries) do
-        -- print("", properties[i].name, properties[i].value)
-        if type(v) == "string" and v:len() == 0 or v==nil then
-          v = "nil"
-        end
-        if k == "_name" then
-          copied["name"] = v
-        elseif k == "_type" then
-          copied["type"] = v
-        elseif k == "_file" then
-          copied["file"] = v
+    print("", k, type(entries))
+    if k =="properties" then
+      for i, v in next, entries do
+        if v.name == "_name" then
+          ret.name = v.value
+        elseif v.name == "_type" then
+          ret.properties.type = v.value
+        elseif v.name == "_file" then
+          ret.properties.file = v.value
         else
-          copied[k] = v
+          if v.value == "" then
+            ret.properties[v.name] = "NIL"
+          else
+            ret.properties[v.name] = v.value
+          end
         end
       end
-      args.props[k] = copied
+    else
+      ret[k] = entries
     end
   end
   --
-  local properties = args.props.properties
   -- props.actionName
   -- props.actionName = actionbox.selectedTextLabel
   --
   -- TODO check if name is not duplicated or not
   ---
   -- Append the new entry to components.{timers, variables ...} in index.lua
-  if append and model.name then
+  ret.index = selected.index
+  if append and ret.name then
     if isNew or selected.index == nil then
-      append(model.name)
+      append(ret.name)
     else
-      append(model.name, model.index)
+      append(ret.name, ret.index)
     end
     --
   end
 --]]
-  args.props.index = selected.index
-  return args.props
+  return ret
 end
 
 local function saveSelection(book, page, selections)
@@ -378,20 +379,24 @@ function M.publish(UI, args, controller, decoded)
   local layer = args.layer or UI.editor.currentLayer
   local class = args.class -- timer
   --local actionbox = args.actionbox
-  local name = args.name -- args.selected.timer
+  -- local name = args.name -- args.selected.timer
   --
+  -- print(args.model)
   local model = args.model or getModelFrom(args) -- getModelFrom uses args.props.properties
   ---
-  print(json.encode(model))
+  -- local _dump = util.copyTable(model)
+  -- print(json.encode(_dump))
+
   local files = {}
   files[#files + 1] = util.renderIndex(book, page, updatedModel)
   files[#files + 1] = util.saveIndex(book, page, layer, class, updatedModel)
 
   if pageTools[class] then
+    -- local classFolder = class
     -- save lua
-    files[#files + 1] = controller:render(book, page, class, name, model)
+    files[#files + 1] = controller:renderPage(book, page, class, model.name, model)
     -- save json
-    files[#files + 1] = controller:save(book, page, class, name, model)
+    files[#files + 1] = controller:save(book, page, class, model.name, model)
   else
     --
     --  'shape' class will be avairable and expected here for creating a new layer if isNew

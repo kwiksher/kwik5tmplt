@@ -55,7 +55,7 @@ function M:commandHandler(eventObj, event)
   --
   if self.altDown then
     if layerTableCommands.showLayerProps(self, target) then
-      print("@@@@@TODO show group props", target.id, target.text)
+      -- print("@@@@@TODO show group props", target.id, target.text)
       -- print(target[self.id])
       tree.backboard = {
         show = true,
@@ -86,7 +86,7 @@ end
 
 
 function M:commandHandlerClass(target, event)
-  print("@@@@@@ commandHandlerClass", target.layer, target.text)
+  -- print("@@@@@@ commandHandlerClass", target.layer, target.text)
   local class = target.text
   local UI = self.UI
   if event.phase == "began" or event.phase == "moved" then

@@ -10,6 +10,7 @@ local groupTable = require("editor.group.groupTable")
 local buttons = require("editor.group.buttons")
 
 local helper = require("editor.tests.helper")
+local json   = require("json")
 
 function helper.selectGroup(name, class, isRightClick)
   -- print(name, class)
@@ -109,6 +110,11 @@ function M.test_click_group_for_editing()
   -- end
 end
 
+function M.test_render()
+  local tmplt='editor/template/components/pageX/group/group.lua'
+  local dst ='App/book/components/page1/groups/group-2.lua'
+  local model = json.decode('{"layersboxSelections":[],"name":"groupC","layersbox":[{"rect":[],"layer":"background","index":1,"name":"background"},{"rect":[],"layer":"name","index":2,"name":"name"},{"rect":[],"layer":"cat","index":3,"name":"cat"},{"rect":[],"layer":"cat_face1","index":4,"name":"cat_face1"},{"rect":[],"layer":"title_base","index":5,"name":"title_base"},{"rect":[],"layer":"title3","index":6,"name":"title3"},{"rect":[],"layer":"title2","index":7,"name":"title2"},{"rect":[],"layer":"title1","index":8,"name":"title1"},{"rect":[],"layer":"starfish","index":9,"name":"starfish"},{"rect":[],"layer":"fish","index":10,"name":"fish"}],"properties":[{"name":"name","value":"group-2"}],"layersTable":[{"index":1,"rect":[]},{"index":2,"rect":[]}],"layersTableSelections":[]}')
+end
 
 function M.xtest_click_group_linear()
   -- UI.testCallback = function()
