@@ -25,26 +25,28 @@ end
 
 function M:create(UI)
   print("create page audio", self.type)
+  local props = self.properties
+  local filename
     --
     --
     if self.audioObj == nil then
-    if self.folder then
-       self.filename = self.folder.."/"..self.filename
+    if props.folder then
+       filename = props.folder.."/"..props.filename
     end
     if self.language then
-      self.filename = App.getProps().lang.."/"..self.filename
+      filename = App.getProps().lang.."/"..props.filename
     end
     --
 
     if self.type == "stream" then
       self.loader = audio.loadStream
-      self.filename = "long/"..self.filename
+      filename = "long/"..props.filename
     else
       self.loader = audio.loadSound
-      self.filename = "short/"..self.filename
+      filename = "short/"..props.filename
     end
 
-    local path =  App.getProps().audioDir..self.filename
+    local path =  App.getProps().audioDir..filename
 
     self.audioObj =  self.loader(path , App.getProps().systemDir)
 
@@ -60,20 +62,22 @@ function M:create(UI)
 end
 
 function M:play()
-  audio.setVolume(self.volume or 8, { channel=self.channel });
-  if self.allowRepeat then
-      self.repeatableChannel = audio.play(self.audioObj, {  channel=self.channel, loops=self.loops, fadein = self.fadein } )
+  local props = self.properties
+  audio.setVolume(props.volume or 8, { channel=porps.channel });
+  if porps.allowRepeat then
+      porps.repeatableChannel = audio.play(porps.audioObj, {  channel=porps.channel, loops=porps.loops, fadein = porps.fadein } )
   else
-    audio.play(self.audioObj, {channel=self.channel, loops=self.loops, fadein = self.fadein } )
+    audio.play(porps.audioObj, {channel=porps.channel, loops=porps.loops, fadein = porps.fadein } )
   end
 end
 
 function M:didShow(UI)
+  local props = self.properties
   if self.audioObj == nil then return end
   --
-   if self.autoPlay then
-    if self.delay then
-       self.timerStash = timer.performWithDelay(self.delay, function() self:play() end, 1)
+   if props.autoPlay then
+    if props.delay then
+       self.timerStash = timer.performWithDelay(props.delay, function() self:play() end, 1)
     else
       self:play()
     end
@@ -81,10 +85,11 @@ function M:didShow(UI)
 end
 
 function M:didHide(UI)
+  local props = self.properties
   if self.audioObj == nil then return end
-  if not self.retain then
-    if audio.isChannelActive ( self.channel ) then
-      audio.stop(self.channel)
+  if not props.retain then
+    if audio.isChannelActive ( props.channel ) then
+      audio.stop(props.channel)
     end
   end
   if self.timerStash then
@@ -94,10 +99,11 @@ function M:didHide(UI)
 end
 --
 function M:destroy(UI)
+  local props = self.properties
   if self.audioObj == nil then return end
-  if not self.retain then
-      if self.allowRepeat then
-        if self.repeatableChannel then
+  if not props.retain then
+      if props.allowRepeat then
+        if props.repeatableChannel then
           audio.dispose(self.audioObj)
         end
       else
@@ -106,19 +112,21 @@ function M:destroy(UI)
         end
       end
       self.audioObj = nil
-      self.repeatableChannel = nil
+      props.repeatableChannel = nil
    end
 end
 
 function M:getAudio(UI)
+  local props = self.properties
+  local filename
   if self.audioObj == nil then
     if self.language then
-      self.filename = App.getProps().lang .."/"..self.filename
+      filename = App.getProps().lang .."/"..props.filename
     end
 
-    local path =  App.getProps().audioDir..self.filename
-    if self.folder then
-      path = App.getProps().audioDir..self.folder.."/"..self.filename
+    local path =  App.getProps().audioDir..props.filename
+    if props.folder then
+      path = App.getProps().audioDir..props.folder.."/"..props.filename
     end
 
     self.audioObj =  self.loader(path , App.getProps().systemDir)
@@ -128,11 +136,12 @@ function M:getAudio(UI)
 end
 
 function M:rewind()
-  if not self.repeatable then
+  local props = self.properties
+  if not props.repeatable then
     audio.rewind( self.channel )
   else
-    if self.repeatableChannel then
-      audio.rewind(self.repeatableChannel)
+    if props.repeatableChannel then
+      audio.rewind(props.repeatableChannel)
     else
       audio.rewind(self.audioObj )
     end
@@ -140,11 +149,12 @@ function M:rewind()
 end
 --
 function M:pause()
-  if not self.repeatable then
-    audio.pause(self.channel )
+  local props = self.properties
+  if not props.repeatable then
+    audio.pause(props.channel )
   else
-    if self.repeatableChannel then
-      audio.pause(self.repeatableChannel)
+    if props.repeatableChannel then
+      audio.pause(props.repeatableChannel)
     else
       audio.pause(self.audioObj )
     end
@@ -152,13 +162,14 @@ function M:pause()
 end
 --
 function M:stop()
-  if not self.repeatable then
+  local props = self.properties
+  if not props.repeatable then
     audio.rewind( self.audioObj )
     audio.stop( self.audioObj )
   else
-    if self.repeatableChannel  then
-      audio.rewind(self.repeatableChannel )
-      audio.stop(self.repeatableChannel  )
+    if props.repeatableChannel  then
+      audio.rewind(props.repeatableChannel )
+      audio.stop(props.repeatableChannel  )
     else
       audio.rewind(self.audioObj )
       audio.stop(self.audioObj )
@@ -167,26 +178,29 @@ function M:stop()
 end
 --
 function M:resume()
-  if not self.repeatable then
+  local props = self.properties
+  if not props.repeatable then
     audio.resume( self.audioObj )
   else
-    if self.repeatableChannel  then
-      audio.resume(self.repeatableChannel  )
+    if props.repeatableChannel  then
+      audio.resume(props.repeatableChannel  )
     else
-      audio.resume( self.audioChannel )
+      audio.resume( props.audioChannel )
     end
   end
 end
 --
 function M:setVolume(vvol)
-  audio.setVolume(vvol, {channel=self.audioChannel} )
+  local props = self.properties
+  audio.setVolume(vvol, {channel=props.audioChannel} )
 end
 
 function M:muteUnmute()
+  local props = self.properties
   if (audio.getVolume() == 0.0) then
-     audio.setVolume(self.volume, {channel=self.audioChannel})
+     audio.setVolume(props.volume, {channel=props.audioChannel})
   else
-     audio.setVolume(0.0,  {channel=self.audioChannel})
+     audio.setVolume(0.0,  {channel=props.audioChannel})
   end
 end
 

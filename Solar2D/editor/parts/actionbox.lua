@@ -1,6 +1,7 @@
 -- local M = require("editor.parts.linkTable")
 local M = require("editor.baseProps").new()
 
+-- print(debug.traceback())
 ---------------------------
 M.name = "onComplete"
 M.selectedTextLabel = ""
@@ -24,9 +25,11 @@ function M:setActiveProp(value)
   for i,v in next, self.objs or {} do
     if v.text == name then
       v.field.text = value
+      print("###", self.activeProp, value, #self.objs, self)
       return
     end
   end
+  print("Warning activeProp name is not found for", self.activeProp)
 end
 
     -- if self.objs then
@@ -63,8 +66,10 @@ function M:initActiveProp(actions)
 end
 
 function M:getValue(name)
+  print(name)
   if self.objs then
     for i,v in next, self.objs do
+      print(v.text)
       if v.text == name then
         return v.field.text
       end

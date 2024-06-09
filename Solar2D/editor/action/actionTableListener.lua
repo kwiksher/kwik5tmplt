@@ -1,6 +1,6 @@
 local name = ...
 local parent,root, M = newModule(name)
-local actionbox = require(root.."parts.actionbox")
+-- local actionbox = require(root.."parts.actionbox")
 --
 
 local contextButtons = require("editor.parts.buttons")
@@ -42,11 +42,13 @@ function M:selectHandler(target)
     print("controlDown")
     layerTableCommands.multiSelections(self, target)
     UI.editor.selections = self.selections
-    print("%%%%", #self.selections)
+    -- print("%%%%", #self.selections)
   elseif self.altDown then
-    print("setActiveProp")
+    print("setActiveProp", target.action)
     if layerTableCommands.singleSelection(self, target) then
-      actionbox:setActiveProp(target.action) -- nil == activeProp
+      self.actionbox:setActiveProp(target.action) -- nil == activeProp
+    else
+      print("Error for setting activeProp")
     end
   else
     self.lastTarget = target
@@ -63,7 +65,7 @@ function M:editHandler(target)
     if layerTableCommands.showLayerProps(self, self.lastTarget) then
        print("TODO show action props")
        if layerTableCommands.singleSelection(self, self.lastTarget) then
-         actionbox:setActiveProp(self.lastTarget.action) -- nil == activeProp
+         self.actionbox:setActiveProp(self.lastTarget.action) -- nil == activeProp
        end
     end
   end

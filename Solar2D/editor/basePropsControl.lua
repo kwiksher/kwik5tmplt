@@ -159,7 +159,7 @@ end
 local function tapListenerAction(event)
   print("action tap listener")
   local actionEditor = require("editor.action.index")
-  actionEditor:showActionTable()
+  actionEditor:showActionTable(event.actionbox)
 
 
 end

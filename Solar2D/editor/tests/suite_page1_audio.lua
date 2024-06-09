@@ -45,6 +45,53 @@ end
   end
 --]]
 
+function M.xtest_select_audio()
+    selectors.componentSelector.iconHander()
+    selectors.componentSelector:onClick(true,  "audioTable")
+    local audioTable = require("editor.audio.audioTable")
+    local obj = audioTable.objs[1]
+    obj:touch{phase="ended"}
+end
+
+function M.test_new_component()
+  selectors.componentSelector.iconHander()
+  selectors.componentSelector:onClick(true,  "audioTable")
+  local audioTable = require("editor.audio.audioTable")
+  local obj = audioTable.objs[1]
+  obj:touch{phase="ended"}
+  ---
+  -- local buttons = require("editor.audio.buttons")
+  -- buttons.objs["save"].tap{eventName="save"}
+
+    -- local assetbox = require("editor.parts.assetbox")
+    -- local obj = assetbox.objs[2]
+    -- obj:tap({numTaps = 1})
+    -- assetbox:scrollToPosition()
+
+    -- TODO input new Name
+    -- local obj = audioTable.objs[1]
+    -- obj:touch{phase="ended"}
+    -- ---
+    -- local buttons = require("editor.audio.buttons")
+    -- buttons.objs["save"].tap{eventName="save"}
+end
+
+function M.test_new_component_from_asset()
+  selectors.componentSelector.iconHander()
+
+  selectors.assetsSelector:show()
+  selectors.assetsSelector:onClick(true, "audios")
+
+  timer.performWithDelay( 1000, function()
+    local assetTable = require("editor.asset.assetTable")
+    local obj = assetTable.objs[1]
+    obj:touch{phase="ended"}
+
+    -- local buttons = require("editor.asset.buttons")
+    -- buttons.objs["save"].tap{eventName="save"}
+  end)
+
+end
 ---[[
 function M.xtest_radioGroup()
   timer.performWithDelay( 1000, function()
@@ -75,45 +122,7 @@ function M.xtest_radioGroup()
 end
 --]]
 
-function M.test_new_component()
-  timer.performWithDelay( 1000, function()
-    selectors.componentSelector.iconHander()
-    selectors.componentSelector:onClick(true,  "audioTable")
-    local audioTable = require("editor.audio.audioTable")
 
-    UI.scene.app:dispatchEvent {
-      name = "editor.selector.selectAudio",
-      UI = UI,
-      class = "audio",
-      isNew = true, --(name ~= "Trash-icon"),
-      isDelete =false -- (name == "Trash-icon")
-    }
-    -- local assetbox = require("editor.parts.assetbox")
-    -- local obj = assetbox.objs[2]
-    -- obj:tap({numTaps = 1})
-    -- assetbox:scrollToPosition()
-
-    -- TODO input new Name
-    -- local obj = audioTable.objs[1]
-    -- obj:touch{phase="ended"}
-    -- ---
-    -- local buttons = require("editor.audio.buttons")
-    -- buttons.objs["save"].tap{eventName="save"}
-  end)
-end
-
-function M.xtest_component()
-  timer.performWithDelay( 1000, function()
-    selectors.componentSelector.iconHander()
-    selectors.componentSelector:onClick(true,  "audioTable")
-    local audioTable = require("editor.audio.audioTable")
-    local obj = audioTable.objs[1]
-    obj:touch{phase="ended"}
-    ---
-    -- local buttons = require("editor.audio.buttons")
-    -- buttons.objs["save"].tap{eventName="save"}
-  end)
-end
 
 function M.xtest_newAction()
 
