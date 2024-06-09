@@ -318,9 +318,15 @@ function M:loadLua(book, page, layer,class, isNew)
   end
 end
 
-function M:mergeAsset(value, asset)
-  -- print("@@@@@", asset.path, asset.name, #asset.links)
-  return value
+function M:mergeAsset(model, asset)
+   print(json.encode(asset))
+   model.properties["file"] = asset.name
+   model.properties["folder"] = asset.path
+
+   local tmps = util.split(asset.name, ".")
+   model.properties["_name"] = tmps[1]
+
+  return model
 end
 
 function M:updateAsset(text, asset)
@@ -346,12 +352,12 @@ function M:load(book, page, layer, class, isNew, asset)
   if isNew then
     local decoded = self:read(book, page, layer, class, isNew)
     self:reset()
-    local value = decoded[1]
+    local model = decoded[1]
     if asset then
-      value = self:mergeAsset(decoded[1], asset)
+      model = self:mergeAsset(decoded[1], asset)
     end
-    self:setValue(value, nil, true)
-    -- print(json.encode(value))
+    self:setValue(model, nil, true)
+    -- print(json.encode(model))
     self:redraw()
   elseif layer then
 
@@ -406,17 +412,22 @@ function M:command()
       end
     else
       -- read from models/{class}/{name}.json
-      local decoded = util.decode(book, page, params.class, params.name, {subclass = params.subClass, isNew = params.isNew, isDelete = params.isDelete}) -- this reads models/xx.json
+      local decoded = util.decode(book, page, params.class, name, {subclass = params.subclass, isNew = params.isNew, isDelete = params.isDelete}) -- this reads models/xx.json
       --
       print("From selectors")
       self.classProps:didHide(UI)
       self.classProps:destroy(UI)
       self.classProps:init(UI)
-      local value = decoded
+      local model = decoded
       if params.isNew and params.asset then
-        value = self:mergeAsset(decoded, params.asset)
+        model = self:mergeAsset(decoded, params.asset)
       end
-      self.classProps:setValue(value)
+      if model and model.properties == nil then
+          print("#Warning properties are missing", params.class, name)
+      else
+        print(json.encode(model.properties))
+      end
+      self.classProps:setValue(model)
       self.classProps.isNew = params.isNew
       --
       self.classProps:create(UI)

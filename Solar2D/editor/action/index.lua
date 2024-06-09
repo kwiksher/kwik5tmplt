@@ -71,7 +71,14 @@ end
 
 local buttons  = require("editor.action.buttons")
 
-function M:showActionTable()
+function M:showActionTable(actionbox)
+
+  ---
+  --- there were two instances of actionbox from selectAudio actionTable
+  ---  s
+  local actionTable = require("editor.action.actionTable")
+  actionTable.actionbox = actionbox
+
   local UI = self.UI
   if not self.isVisible then
     UI.editor.actionStore:set(UI.scene.model.commands)

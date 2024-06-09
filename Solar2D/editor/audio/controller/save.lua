@@ -17,7 +17,7 @@ local instance = require("commands.kwik.baseCommand").new(
 
     print(name)
     local props = {
-      name       = selected.audio,               -- UI.editor.currentLayer,
+      name       =  selected.audio,               -- UI.editor.currentLayer,
       class      = "audio",
       subclass   = selected.subclass or "short",
       properties   = {},
@@ -27,10 +27,10 @@ local instance = require("commands.kwik.baseCommand").new(
       index   = selected.index,
     }
     --
+
     local properties = params.properties or classProps:getValue()
     for i=1, #properties do
       -- print("", properties[i].name, type(properties[i].value), properties[i].value)
-      print("", properties[i].name, properties[i].value)
       --
       -- props.subclass
       --
@@ -60,12 +60,23 @@ local instance = require("commands.kwik.baseCommand").new(
       print("#NEW",props.properties.name)
       -- local t = util.split(props.properties.file or "", '.')
       -- props.name = t[1]
-      props.name = props.properties.name
     end
+
+    if props.properties._name then
+      props.name = props.properties._name
+    end
+
+    if props.properties.folder then
+      props.subclass = props.properties.folder
+    end
+
     -- props.actionName
-    props.actionName = actionbox.selectedTextLabel
-    print("porps")
-    for k, v in pairs(props) do print("", k, v) end
+    -- props.actionName = actionbox.selectedTextLabel
+    props.actionName = actionbox:getValue("onComplete")
+
+    print("props")
+    for k, v in pairs(props) do print( k, v) end
+    for k,v in pairs(props.properties) do print("", k, v) end
     --
     local updatedModel = util.createIndexModel(UI.scene.model)
     -- print(json.encode(updatedModel))
@@ -90,6 +101,7 @@ local instance = require("commands.kwik.baseCommand").new(
     -- publish
     scripts.backupFiles(files)
     scripts.copyFiles(files)
+
   end
 )
 --[[

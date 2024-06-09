@@ -438,7 +438,26 @@ function M.saveJson(_path, _model)
 end
 
 
-function M.decode(book, page, class, name, options)
+function M.decode(book, page, class, _name, options)
+  print("", class, _name, options.subclass)
+  local name = _name
+  if options.isNew then
+    local path = "editor.template.components.pageX." .. class .. ".defaults." .. class
+    return require(path)
+  elseif options.isDelete then
+    print(class, "delete")
+    return {}
+  else
+    if options.subclass then
+      name = options.subclass .. "." .. name
+    end
+    local path = "App." .. book .. ".components." .. page .. "." .. class .. "s." .. name
+    print(path)
+    return require(path)
+  end
+end
+
+function M.decodeJson(book, page, class, name, options)
   print("$$$$", options.isNew)
   if options.isNew then
     local path = "editor.template.components.pageX." .. class .. ".defaults." .. class

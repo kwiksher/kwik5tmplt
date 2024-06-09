@@ -1,15 +1,14 @@
 local M = {
   name = "audio_",
   class="audio",
+  type = "short",
   properties = {
     autoPlay=false,
     channel = 0,
     delay=0,
-    _file = "",
-    -- folder="",
+    file = "",
+    folder="",
     loops = 0,
-    name = "",
-    _type = "",
   }
 }
 

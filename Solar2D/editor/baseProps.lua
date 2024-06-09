@@ -52,8 +52,9 @@ local basePropsControl = require("editor.basePropsControl")
 --
 M.onTapLayerSet = {}
 --
-local function tapListener(event, type)
-  M.activeProp = event.target.text
+function M:tapListener(event, type)
+  self.activeProp = event.target.text
+  event.actionbox = self
   basePropsControl.handler[type](event)
 end
 
@@ -158,7 +159,7 @@ function M:setValue(fooValue)
     end
   else
     for k, v in pairs(params) do
-    --  print("", k, v)
+      print("", k, v)
       --
       if not basePropsControl.filter(k) then
         local prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
@@ -218,11 +219,11 @@ function M:createTable(props)
     -- show asset table
     if prop.name == 'url' then
        obj.class = self.class
-       obj:addEventListener("tap", function(event) tapListener(event, 'url')end)
+       obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)
     elseif prop.name == 'onComplete' then
-        obj:addEventListener("tap", function(event) tapListener(event, 'action')end)
+        obj:addEventListener("tap", function(event) self:tapListener(event, 'action')end)
     elseif self.onTapLayerSet[prop.name] then
-        obj:addEventListener("tap", function(event) tapListener(event, 'layer')end)
+        obj:addEventListener("tap", function(event) self:tapListener(event, 'layer')end)
     elseif prop.name == 'alpha' then
       alphaObj = obj
     elseif prop.name == 'color' or prop.name == 'imageFile' then
@@ -230,7 +231,7 @@ function M:createTable(props)
       imageObj = obj
       obj.targetObject = self.targetObject
       obj.page = "*"..UI.page .."*"
-      obj:addEventListener("tap", function(event) tapListener(event, prop.name)end)
+      obj:addEventListener("tap", function(event) self:tapListener(event, prop.name)end)
 
     elseif prop.name == "imageFolder" then
         local onMouseHover = function(event)

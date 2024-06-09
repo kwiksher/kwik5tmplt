@@ -7,10 +7,10 @@ local json = require("json")
 local instance = require("commands.kwik.baseCommand").new(
   function (params)
     local UI    = params.UI
-    local selectbox    = params.selectbox or require(root.."audioTable")
+    local selectbox    = params.selectbox or require(root.."assetTable")
     local controller   = require(root.."index").controller
     local classProps = controller.classProps
-    local actionbox = params.actionbox or controller.actionbox
+    local actionbox = params.actionbox or requier("edtior.parts.actionbox") -- controller.actionbox
     local selected      = selectbox.selection or {}
     local book = params.book or UI.editor.currentBook
     local page = params.page or UI.page,
@@ -63,8 +63,10 @@ local instance = require("commands.kwik.baseCommand").new(
       props.name = props.properties.name
     end
     -- props.actionName
-    props.actionName = actionbox.selectedTextLabel
-    print("porps")
+    -- props.actionName = actionbox.selectedTextLabel
+
+    props.actionName = actionbox:getValue("onComplete")
+    print("props")
     for k, v in pairs(props) do print("", k, v) end
     --
     local updatedModel = util.createIndexModel(UI.scene.model)
@@ -90,6 +92,7 @@ local instance = require("commands.kwik.baseCommand").new(
     -- publish
     scripts.backupFiles(files)
     scripts.copyFiles(files)
+
   end
 )
 --[[
