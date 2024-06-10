@@ -47,7 +47,7 @@ end
 function M.teardown()
 end
 
-function M.test_settings()
+function M.test_select()
   selectIcon("Physics", "Physics")
   -- selectIcon("Physics", "Body")
   -- selectIcon("Physics", "Collision")

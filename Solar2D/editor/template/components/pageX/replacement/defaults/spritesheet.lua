@@ -30,7 +30,9 @@ local M = {
       time = 1000,
    }
   },
-  actioneName = "",
+  actions = {
+    actionName = "",
+  }
     -- event.phase
       -- began
       -- ended

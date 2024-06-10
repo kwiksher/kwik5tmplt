@@ -1,9 +1,13 @@
 local M = {
-  name = "force",
+  name = "",
   class="force",
-  -- actionName = "",
   properties = {
-    test="force"
+    event = "touch",
+    isInitail = false,
+    isImpluse = true,
+    type = "pull", -- push, none
+    xForce = 0,
+    yForce = 0,
   }
 }
 
