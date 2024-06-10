@@ -17,7 +17,7 @@ local Props = {
 
 local horizontal = false
 
-local M, bt, tree = require(root.."baseTable").new(Props)
+local M, bt, tree = require(parent .."baseTable").new(Props)
 
 local btNodeName = "select book"
 

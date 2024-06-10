@@ -130,7 +130,7 @@ function M:getClassModule (class)
   -- for k, v in pairs(self.editorTools) do print(k) end
   local mod = self.editorTools[v]
   if mod == nil then
-    return self.editorTools['editor.baseTable-'..v]
+    return self.editorTools['editor.parts.baseTable-'..v]
   end
   return mod
 end
@@ -175,7 +175,7 @@ function M:init(UI)
     --
     local app = App.get()
     for i=1, #self.commands do
-      app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.parts.controller.selector."..self.commands[i].name)
+      app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.controller.selector."..self.commands[i].name)
     end
     for i=1, #self.models do
       self.views[i] = require(parent.."parts."..self.models[i])
@@ -216,7 +216,7 @@ function M:init(UI)
         -- print("@@@", parent..v.id..".index")
         local module = require(parent..v.id..".index")
         self.views[#self.views + 1] = module
-        self.editorTools['editor.baseTable-'..v.id] = module
+        self.editorTools['editor.parts.baseTable-'..v.id] = module
       end
     end
 
@@ -224,7 +224,7 @@ function M:init(UI)
     -- asset tool
     local mod  = require(parent..assetTool.id..".index")
     self.views[#self.views + 1] = mod
-    self.editorTools['editor.baseTable-'..assetTool.id] = mod
+    self.editorTools['editor.parts.baseTable-'..assetTool.id] = mod
 
     self:initStores()
     --

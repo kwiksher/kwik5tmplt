@@ -1,4 +1,4 @@
-local M = require("editor.baseProps").new()
+local M = require("editor.parts.baseProps").new()
 local widget = require("widget")
 local json = require("json")
 ---------------------------

@@ -3,10 +3,10 @@ local current = ...
 local parent,  root = newModule(current)
 
 --
-local selectbox      = require(parent.."parts.selectbox")
-local classProps    = require(parent.."parts.classProps")
-local actionbox = require(parent..".parts.actionbox")
-local buttons       = require(parent.."parts.buttons")
+local selectbox      = require(parent.."selectbox")
+local classProps    = require(parent.."classProps")
+local actionbox = require(parent.."actionbox")
+local buttons       = require(parent.."buttons")
 
 --local model         = require(parent.."model")
 

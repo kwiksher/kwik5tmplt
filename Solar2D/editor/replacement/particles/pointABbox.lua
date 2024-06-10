@@ -17,7 +17,7 @@ local model= {
 --   {name="rotation",A="", B=""},
 -- }
 
-local M = require("editor.baseBox").new(model)
+local M = require("editor.parts.baseBox").new(model)
 local shapes = require("extlib.shapes")
 local widget = require( "widget" )
 local numberOfRows=#model

@@ -23,7 +23,7 @@ local Props =  {
 }
 
 
-local M = require(root.."baseButtons").new(Props)
+local M = require(parent.."baseButtons").new(Props)
 
 --
 return M

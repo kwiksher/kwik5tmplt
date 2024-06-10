@@ -3,9 +3,9 @@ local name = ...
 M.weight = 1
 ---
 local parent,     root = newModule(name)
-local propsTable = require(parent .. "parts.propsTable")
-local bt         = require(parent .. "controller.BTree.btree")
-local tree       = require(parent .. "controller.BTree.selectorsTree")
+local propsTable = require(parent .. "propsTable")
+local bt         = require(root .. "controller.BTree.btree")
+local tree       = require(root .. "controller.BTree.selectorsTree")
 local btNodeName = "select component"
 local muiIcon    = require("components.mui.icon").new()
 

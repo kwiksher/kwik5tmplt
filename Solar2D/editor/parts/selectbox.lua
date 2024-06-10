@@ -1,4 +1,4 @@
-local M = require("editor.baseBox").new()
+local M = require("editor.parts.baseBox").new()
 local shapes = require("extlib.shapes")
 local widget = require( "widget" )
 

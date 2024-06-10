@@ -11,7 +11,7 @@ local Props = {
 
 }
 
-local M = require(root.."baseProps").new(Props)
+local M = require(parent.."baseProps").new(Props)
 --
 -- I/F
 --

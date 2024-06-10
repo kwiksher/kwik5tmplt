@@ -7,7 +7,7 @@ local Props = {
   id = "layer"
 }
 
-local M = require(root.."baseTable").new(Props)
+local M = require(parent .."baseTable").new(Props)
 local commands = require(parent.."layerTableCommands")
 
 local function parse(model)

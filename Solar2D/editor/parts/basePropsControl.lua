@@ -64,7 +64,7 @@ end
 local function tapListenerURL(event)
   local assetEditor = require(parent.."asset.index")
   assetEditor.controller:show()
-  local selectors = require(parent.."parts.selectors")
+  local selectors = require(parent.."selectors")
   selectors.assetsSelector:show()
   selectors.assetsSelector:onClick(true, event.target.class.."s") --videos,audios, sprites..
 end
@@ -72,7 +72,7 @@ end
 -- layer
 --
 local function tapListenerLayer(event)
-  local selectors = require(parent.."parts.selectors")
+  local selectors = require(parent.."selectors")
   selectors.componentSelector:onClick(true,  "layerTable")
 end
 

@@ -49,7 +49,7 @@ selectors.lua handles to read values of UI.scene.model.components for xxxTable.
       id = "group"
     }
 
-    local M = require(parent.."baseTable").new(Props)
+    local M = require(parent.."parts.baseTable").new(Props)
     return M
 
     ```
@@ -117,7 +117,7 @@ selectors.lua handles to read values of UI.scene.model.components for xxxTable.
       id = "group"
     }
 
-    local M = require(parent.."baseTable").new(Props)
+    local M = require(parent.."parts.baseTable").new(Props)
     return M
 
     ```

@@ -11,7 +11,7 @@ M.y = 10
 ---
 local util = require("lib.util")
 local yaml = require("server.yaml")
--- local actionbox  = require(parent.."parts.actionbox")
+-- local actionbox  = require(parent.."actionbox")
 ---
 local appFont
 if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
@@ -48,7 +48,7 @@ M.newText = newText
 -- end
 --
 -- touch the props's name such as url to show asset table
-local basePropsControl = require("editor.basePropsControl")
+local basePropsControl = require("editor.parts.basePropsControl")
 --
 M.onTapLayerSet = {}
 --
@@ -205,7 +205,7 @@ function M:createTable(props)
   for i=1, #props do
     local prop = props[i] or {}
     option.text = prop.name
-    -- print("@@ baseProps",i, prop.name, prop.value)
+    -- print("@@ parts.baseProps",i, prop.name, prop.value)
     option.x = self.x
     option.y = i*option.height + self.y
     -- print(self.group, option.x, option.y, option.width, option.height)
@@ -324,7 +324,7 @@ function M:createTable(props)
   -- backRect.isVisible = true
   -- objs[#objs + 1] = backRect
   self.objs = objs
-  -- print("##### baseProps", #self.objs)
+  -- print("##### parts.baseProps", #self.objs)
   -- print(debug.traceback())
   --self.group:translate(300, 0)
 end

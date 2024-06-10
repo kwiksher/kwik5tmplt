@@ -25,7 +25,7 @@ local actionbox = require(root..".parts.actionbox")
 local buttons       = require(parent.."buttons")
 local controller = require("editor.controller.index").new("audio")
 --
-local M = require(root.."baseClassEditor").new(model, controller)
+local M = require(root.."parts.baseClassEditor").new(model, controller)
 
 M.x				= display.contentCenterX + 480/2
 M.y				= 20

@@ -1,7 +1,7 @@
 local current = ...
 local parent,  root = newModule(current)
 --
-local M    = require(root.."baseProps").new()
+local M    = require(root.."parts.baseProps").new()
 
 local assetbox   = require(root.."parts.assetbox")
 local util = require("editor.util")

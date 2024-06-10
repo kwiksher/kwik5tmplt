@@ -10,7 +10,7 @@ props.objs       = {}
 ------------
 -- baseTable
 -----------
-local M, bt, tree = require(root.."baseTable").new(props)
+local M, bt, tree = require(root.."parts.baseTable").new(props)
 
 local propsTable = require(root .. "parts.propsTable")
 

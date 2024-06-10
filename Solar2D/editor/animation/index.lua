@@ -8,7 +8,7 @@ local AtoBbutton    = require(parent.."AtoBbutton")
 local selectbox      = require(root.."parts.selectbox")
 -- local classProps    = require(root.."parts.classProps")
 --
-local classProps    = require("editor.baseProps").new({width=50})
+local classProps    = require("editor.parts.baseProps").new({width=50})
 --
 local pointABbox    = require(parent.."pointABbox")
 local actionbox = require("editor.parts.actionbox")
@@ -20,7 +20,7 @@ local model         = require(parent.."model")
 local controller = require(parent.."controller")
 
 ----------
-local M = require(root.."baseClassEditor").new(model, controller)
+local M = require(root.."parts.baseClassEditor").new(model, controller)
 
 M.x				= display.contentCenterX + 480/2
 M.y				= 20

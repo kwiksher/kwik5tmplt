@@ -14,7 +14,7 @@ local Props = {
       {name="cancel", label="Cancel"}}
 }
 
-local M = require(root.."baseButtons").new(Props)
+local M = require(root.."parts.baseButtons").new(Props)
 
 function M:init(UI, x, y)
   self.objs = {}
