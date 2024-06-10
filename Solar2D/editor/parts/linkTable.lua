@@ -1,4 +1,4 @@
-local M = require("editor.baseProps").new()
+local M = require("editor.parts.baseProps").new()
 ---------------------------
 M.name = "linkTable"
 --

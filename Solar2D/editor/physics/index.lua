@@ -20,7 +20,7 @@ controller:init{
 -- function controller:useClassEditorProps()
 -- end
 
-local M          = require(root.."baseClassEditor").new(model, controller)
+local M          = require(root.."parts.baseClassEditor").new(model, controller)
 
 M.x				= display.contentCenterX + 480/2
 M.y				= 20

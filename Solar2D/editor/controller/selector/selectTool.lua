@@ -9,7 +9,7 @@ local propsTable = require("editor.parts.propsTable")
 --
 -- see index.lua
 --   self.editorTools['editor.parts.toolbar-'..layerTools[i].icon] = module
---   self.editorTools['editor.baseTable-'..v.id] = module
+--   self.editorTools['editor.parts.baseTable-'..v.id] = module
 --
 -- local classMap = {
 --      animation = "animation",

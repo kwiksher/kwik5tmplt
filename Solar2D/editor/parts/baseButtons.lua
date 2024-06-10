@@ -6,7 +6,7 @@ M.name = current
 M.weight = 1
 
 local App = require("Application")
-local rootButtons = require(parent.."parts.buttons")
+local rootButtons = require(parent.."buttons")
 
 --
 -- local button = require("extlib.com.gieson.Button")
@@ -37,7 +37,7 @@ function M:init(UI)
     local entry = self.model[i]
     app.context:mapCommand(
       "editor."..self.commandClass.."." .. entry.name,
-      "editor.parts.controller."..self.commandClass.."." .. entry.name
+      "editor.controller."..self.commandClass.."." .. entry.name
     )
   end
 end

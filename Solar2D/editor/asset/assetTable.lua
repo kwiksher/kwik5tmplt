@@ -20,7 +20,7 @@ props.marginX = nil-- display.contentCenterX
 ------------
 -- baseTable
 -----------
-local M, bt, tree = require(root.."baseTable").new(props)
+local M, bt, tree = require(root.."parts.baseTable").new(props)
 --
 M.x = 22 -- display.contentCenterX + 480*0.75
 M.y = 22

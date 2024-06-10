@@ -28,8 +28,8 @@ local commandbox = require(parent.."commandbox")
 local util = require("lib.util")
 local json = require("json")
 
-local baseProps = require("editor.baseProps")
-local basePropsControl = require("editor.basePropsControl")
+local baseProps = require("editor.parts.baseProps")
+local basePropsControl = require("editor.parts.basePropsControl")
 
 --
 --- I/F ---

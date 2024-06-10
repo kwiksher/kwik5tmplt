@@ -15,13 +15,13 @@ local layersTable      = require(parent.."layersTable")
 -- local propsTable       = require(parent.."propsTable")
 
 local selectbox      = require(parent .. "groupTable")
-local classProps    =  require(root.."baseProps").new()
+local classProps    =  require(root.."parts.baseProps").new()
 -- local actionbox = require(root..".parts.actionbox")
 -- this set editor.timer.save, cacnel
 local buttons       = require(parent.."buttons")
 
 local controller = require(parent.."controller")
-local M = require(root.."baseClassEditor").new(model, controller)
+local M = require(root.."parts.baseClassEditor").new(model, controller)
 
 M.x = display.contentCenterX
 M.y = 55
