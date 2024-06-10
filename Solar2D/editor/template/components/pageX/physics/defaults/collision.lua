@@ -1,10 +1,14 @@
 local M = {
-  name = "collision",
+  name = "",
   class="collision",
-  -- actionName = "",
   properties = {
-    test="collision"
-  }
+    isRemoveOther = true,
+    isRemoveSelf = true
+  },
+  actions = {
+    { onCollision="" }
+  },
+  others = { }
 }
 
 return M

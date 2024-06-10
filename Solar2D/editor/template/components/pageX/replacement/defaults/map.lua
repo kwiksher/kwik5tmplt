@@ -1,8 +1,10 @@
 local M = {
   name = "map",
   class="map",
-  actionName = "",
   properties = {
+  },
+  actions = {
+    actionName = "",
   }
 }
 

@@ -66,7 +66,9 @@ local M = {
     deltaX         = 0,
     deltaY         = 0
   },
-  actionName = nil
+  actions = {
+    actionName = "",
+  }
 }
 
 return M
