@@ -22,7 +22,7 @@ local onMouseHover = function(event)
       align = "left" -- Alignment parameter
     }
     hoverObj = display.newText(textOptions)
-    hoverObj:setFillColor(0, 0, 1)
+    hoverObj:setFillColor(0, 0.5, 1)
     prevHover = event.target.text
     hoverObj.anchorX = 0
     timer.performWithDelay(

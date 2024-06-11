@@ -68,10 +68,10 @@ end
 
 function M:init(UI, x, y, w, h)
   self.UI = UI
-  self.x = x
-  self.y = y
-  self.width = w
-  self.height = h
+  self.x = x or self.x
+  self.y = y or self.y
+  self.width = w or self.width
+  self.height = h or self.height
   self.model = self.model or {}
 end
 --
@@ -84,22 +84,22 @@ function M:create(UI)
   self.group:insert(self.triangle)
   if #self.model > 2 then
     print("selctbox #", #self.model )
-    local scrollView = widget.newScrollView
-    {
-      top                      = self.triangle.contentBounds.yMax,
-      left                     = self.triangle.contentBounds.xMin,
-      width                    = self.width,
-      height                   = #self.model*self.height,
-      scrollHeight             = #self.model*self.height,
-      verticalScrollDisabled   = false,
-      horizontalScrollDisabled = true,
-      friction                 = 2,
-    }
-    UI.editor.rootGroup:insert(self.group)
+    -- local scrollView = widget.newScrollView
+    -- {
+    --   top                      = self.triangle.contentBounds.yMax,
+    --   left                     = self.triangle.contentBounds.xMin,
+    --   width                    = self.width,
+    --   height                   = #self.model*self.height,
+    --   scrollHeight             = #self.model*self.height,
+    --   verticalScrollDisabled   = false,
+    --   horizontalScrollDisabled = true,
+    --   friction                 = 2,
+    -- }
+    -- UI.editor.rootGroup:insert(self.group)
     --scrollView.isVisible = false
     -- this creatTable in baseBox set self.name to the text field next the triangle icon
 
-    self:createTable(self.triangle, self.group, {scrollView = scrollView, isRect = true}) -- isRect
+    self:createTable({scrollView = scrollView, isRect = true}) -- isRect
   end
 end
 --
@@ -123,7 +123,6 @@ function M:textListener(event )
 end
 
 function M:commandHandler(event)
-  print(event.target.name)
   if event.numTaps == 2 then
     print("------double tap --------")
     event.target.field.isVisible = true

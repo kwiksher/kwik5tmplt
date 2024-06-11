@@ -57,7 +57,12 @@ function M:create(UI)
   local layer       = UI.layer
   local bodyA         = sceneGroup[self.properties.bodyA]
   local bodyB       = sceneGroup[self.properties.bodyB]
-  if bodyA == nil or bodyB== nil then return end
+  local body = sceneGroup[self.properties.body] -- for touch
+
+  if (bodyA == nil or bodyB== nil) and body==nil then
+    print("Error no body")
+    return end
+  end
   --
   local obj
   local anchor_x, anchor_y= app.getPosition(params.anchor_x, props.anchor_y)
@@ -81,6 +86,8 @@ function M:create(UI)
     obj = physics.newJoint( "rope", bodyA, bodyB, offsetA_x, offsetA_y, offsetB_x, offsetB_y )
   elseif props.type == "gear" then
     obj = physics.newJoint( "gear", bodyA, bodyB, params.joint1, params.joint2, params.ratio )
+  elseif props.type == "touch" then
+    obj = physics.newJoint(props.type, bodyA, anchor_x, anchor_y)
   else
     obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y)
   end

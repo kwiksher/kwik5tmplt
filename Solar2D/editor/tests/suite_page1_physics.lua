@@ -48,11 +48,11 @@ function M.teardown()
 end
 
 function M.test_select()
-  selectIcon("Physics", "Physics")
+  -- selectIcon("Physics", "Physics")
   -- selectIcon("Physics", "Body")
   -- selectIcon("Physics", "Collision")
   --selectIcon("Physics", "Force")
-  --selectIcon("Physics", "Joint")
+  selectIcon("Physics", "Joint")
 
 end
 
