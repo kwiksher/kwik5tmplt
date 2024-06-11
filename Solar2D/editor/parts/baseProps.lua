@@ -27,7 +27,7 @@ local option, newText = util.newTextFactory {
   y    = 100,
   width    = 72,
   height   = 20,
-  fontSize = 8,
+  fontSize = 10,
 }
 --
 M.option = option
@@ -72,7 +72,7 @@ local function newTextField(option)
     textField = native.newTextField( option.x, option.y, option.width, option.height )
     -- textField = native.newTextBox( option.x, option.y, option.width, option.height )
     -- textField.isEditable = true
-    textField.font = native.newFont( appFont, 8 )
+    textField.font = native.newFont( appFont, option.fontSize )
     --textField:resizeFontToFitHeight()
     textField:setReturnKey( "done" )
     --textField.placeholder = "Enter text"
@@ -93,6 +93,7 @@ function M:init(UI, x, y, w, h)
   self.width = w
   self.height = h
   self.UI = UI
+  option.width = w or option.width
 end
 --
 local yamlArray = {}

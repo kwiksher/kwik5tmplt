@@ -55,6 +55,7 @@ function M:useClassEditorProps()
       isNew = self.isNew,
       --class = self.class,
       index = self.selectbox.selectedIndex,
+      properties = {}
     }
   end
   --
@@ -63,9 +64,9 @@ function M:useClassEditorProps()
     return nil
   end
   local properties = self.classProps:getValue()
-  for i=1, #properties do
+  for i, entry in next, properties do
     -- print("", properties[i].name, type(properties[i].value))
-    props.properties[properties[i].name] = properties[i].value
+    props.properties[entry.name] = entry.value
   end
   --
   props.actionName =self.actionbox.value
@@ -74,7 +75,6 @@ end
 
 -- this handler should be called from selectbox to set one of animtations user selected
 function M:setValue(decoded, index, template)
-  -- print(debug.traceback())
   if decoded == nil then return end
   if not template then
     -- print(json.encode(decoded[index]))
