@@ -197,6 +197,10 @@ function M.commandHandler(layerTable, target, event)
       -- should we enable one of them?
       -- print("", "singleSelection")
         actionCommandPropsTable:setActiveProp(target.layer)
+        --
+        -- setClassProps is used in physics to set the value to physics.classProps
+        --
+        local classProps = layerTable.classProps or classProps
         classProps:setActiveProp(target.layer)
     end
   end

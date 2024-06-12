@@ -73,7 +73,7 @@ function M:setTemplate(template)
    table.sort(self.model,compare)
 
   self.selectedIndex = 5
-  self.selectedTextLabel = template.class
+  self.selectedTextLabel = self.model[self.selectedIndex].entries["_type"]
   -- local pos = name:find("_new")
   -- if pos and  pos > 0 then
   --   for i=1, #self.model do
@@ -215,6 +215,7 @@ function M:commandHandler(event)
       self.selectedObj = event.target
       self.selectedText.text =event.target.text
       self.selectedIndex = event.target.index
+      self.selectedTextLabel = self.model[self.selectedIndex].entries["_type"]
       if self.selectedObj.rect then
         self.selectedObj.rect:setFillColor(0, 1, 0)
       end
@@ -226,7 +227,5 @@ function M:commandHandler(event)
   end
   return true
 end
-
-
 
 return setmetatable( M, {__index=require(root.."parts.selectbox")} )
