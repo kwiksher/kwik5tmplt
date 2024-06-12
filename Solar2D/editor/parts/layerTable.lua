@@ -44,6 +44,12 @@ local function parse(model)
   return name, class, children
 end
 
+--
+-- this is used for physics.classProps
+--
+function M:setClassProps(classProps)
+  self.classProps = classProps
+end
 
 function M:setPosition()
   local marginX, marginY = 74, 44

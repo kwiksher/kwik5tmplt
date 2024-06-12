@@ -36,7 +36,7 @@ local M = {
     motorForce = NIL,
     motorSpeed = NIL,
     axisX = 0,
-    axisY = 0,
+    axisY = -1,
   },
   wheel = {
     bodyA = "",
@@ -61,7 +61,7 @@ local M = {
   rope = {
     bodyA = "",
     bodyB = "",
-  offsetA_x=0, offsetA_y=0, offsetB_x=0, offsetB_y=0},
+    offsetA_x=0, offsetA_y=0, offsetB_x=0, offsetB_y=0},
   gear = {
     bodyA = "",
     bodyB = "",

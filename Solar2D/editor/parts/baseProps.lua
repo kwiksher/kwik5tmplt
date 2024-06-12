@@ -53,6 +53,7 @@ local basePropsControl = require("editor.parts.basePropsControl")
 M.onTapLayerSet = {}
 --
 function M:tapListener(event, type)
+  print("tapListener", type)
   self.activeProp = event.target.text
   event.actionbox = self
   basePropsControl.handler[type](event)
@@ -218,6 +219,7 @@ function M:createTable(props)
     obj.rect = rect
     objs[#objs + 1] = obj
     -- show asset table
+    print("", prop.name)
     if prop.name == 'url' then
        obj.class = self.class
        obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)

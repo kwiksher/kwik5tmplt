@@ -47,13 +47,22 @@ end
 function M.teardown()
 end
 
-function M.test_select()
+function M.xtest_select()
   -- selectIcon("Physics", "Physics")
   -- selectIcon("Physics", "Body")
   -- selectIcon("Physics", "Collision")
   --selectIcon("Physics", "Force")
   selectIcon("Physics", "Joint")
+end
 
+function M.test_new_joint()
+  selectIcon("Physics", "Joint")
+
+  local classProps    = require("editor.physics.classProps")
+  local bodyA = classProps.objs[1]
+  local bodyB = classProps.objs[2]
+  -- bodyA.field.text = "test"
+  bodyA:dispatchEvent{name="tap", target=bodyA}
 end
 
 return M

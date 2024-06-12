@@ -3,10 +3,11 @@ local parent,  root = newModule(current)
 --
 local model      = require(parent.."model")
 
-local selectbox      = require(parent.."selectbox")
-local classProps    = require(root.."parts.classProps")
-local actionbox = require(root.."parts.actionbox")
+local selectbox     = require(parent.."selectbox")
+local classProps    = require(parent.."classProps")
+local actionbox     = require(root.."parts.actionbox")
 local buttons       = require(root.."parts.buttons")
+local layerTable    = require(root.."parts.layerTable")
 local util = require("editor.util")
 local json = require("json")
 
@@ -41,6 +42,8 @@ function M:init(UI)
   -- print("@@@@@", classProps.x + self.width*2, classProps.y)
   actionbox:init(UI, self.x+ self.width, display.contentCenterY)
   buttons:init(UI)
+
+  layerTable:setClassProps(classProps) -- need to change it from parts.classProps to phsyics.classProps
 
   UI.useClassEditorProps = function() return controller:useClassEditorProps() end
 

@@ -2,7 +2,7 @@ local M = require("editor.parts.baseProps").new()
 ---------------------------
 M.name = "classProps"
 
-local Layer     = table:mySet{"over", "mask", "dropLayer"}
+local Layer     = table:mySet{"over", "mask", "dropLayer", "_bodyA", "_bodyB", "_body"}
 local Layer_Class = table:mySet{}
 M.onTapLayerSet = Layer
 --
