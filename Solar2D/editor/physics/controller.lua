@@ -1,9 +1,8 @@
 local current = ...
-local parent,  root = newModule(current)
+local parent,root, M = newModule(current)
 --
 local model      = require(parent.."model")
 
-local M = require(root.."controller.index").new(model.id)
 local selectIndex = 1
 
 function M:setValue(decoded, index, template)
@@ -54,8 +53,11 @@ function M:setValue(decoded, index, template)
 end
 
 function M.new(views)
-  M:init(views)
-  return M
+
+  local module = require(root.."controller.index").new(model.id)
+  module:init(views)
+  module.setValue = M.setValue
+  return module
 end
 
 return M

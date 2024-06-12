@@ -55,14 +55,26 @@ function M.xtest_select()
   selectIcon("Physics", "Joint")
 end
 
-function M.test_new_joint()
+function M.test_select_joints()
+  selectors.componentSelector:onClick(true,  "layerTable")
+  selectors.componentSelector:onClick(true,  "jointTable")
+  local jointTable = require("editor.physics.jointTable")
+  local obj = jointTable.objs[1]
+
+  jointTable.altDown = true
+  obj:touch{phase="ended"}
+  jointTable.altDown = false
+
+end
+
+function M.xtest_new_joint()
   selectIcon("Physics", "Joint")
 
-  local classProps    = require("editor.physics.classProps")
-  local bodyA = classProps.objs[1]
-  local bodyB = classProps.objs[2]
-  -- bodyA.field.text = "test"
-  bodyA:dispatchEvent{name="tap", target=bodyA}
+  -- local classProps    = require("editor.physics.classProps")
+  -- local bodyA = classProps.objs[1]
+  -- local bodyB = classProps.objs[2]
+  -- -- bodyA.field.text = "test"
+  -- bodyA:dispatchEvent{name="tap", target=bodyA}
 end
 
 return M

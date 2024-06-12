@@ -13,6 +13,8 @@ local layerTableCommands = require("editor.parts.layerTableCommands")
 local contextButtons = require("editor.parts.buttons")
 local util = require("lib.util")
 
+M.x       = 100
+M.y       = 44
 M.marginX = 74
 M.marginY = 20
 
@@ -100,6 +102,7 @@ function M:tick(e)
 end
 --
 function M:setPosition()
+  -- print(debug.traceback())
   print("setPosition is not implemented")
 end
 --
@@ -143,7 +146,7 @@ function M:commandHandler(eventObj, event)
   --
   if self.altDown then
     if layerTableCommands.showLayerProps(self, target) then
-      print("TODO show audio props")
+      print("TODO show  props", self.id, target.class)
       -- print(target[self.id])
       tree.backboard = {
         show = true,
@@ -262,7 +265,7 @@ function M:create(UI)
       end
       obj:addEventListener("touch", obj)
       obj:addEventListener("mouse", function(event)
-        print("self.type", self.type)
+        -- print("self.type", self.type)
         self.mouseHandler(event, self.type, self.selections)
       end)
       --
@@ -282,6 +285,7 @@ function M:create(UI)
 
   UI.editor[self.id.."Store"]:listen(
     function(foo, fooValue)
+      print("@@@@", self.id)
       self:destroy()
       self.selection = nil
       self.selections = {}
@@ -324,7 +328,7 @@ function M:didHide(UI)
 end
 
 function M:show()
-  -- print(self.name, "show")
+  print(self.name, "show")
   --print(debug.traceback())
   if self.group then
     self.group.isVisible = true
@@ -341,7 +345,7 @@ function M:show()
 end
 
 function M:hide()
-  -- print(self.name, "hide")
+  print(self.name, "hide")
 
   if self.group then
     self.group.isVisible = false

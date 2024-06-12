@@ -47,13 +47,13 @@ local command = function (params)
 
   local tool = UI.editor:getClassModule(params.class)
   if tool then
+    print("### tool", params.class, tool.id)
     if lastTool then
       -- print("### lastTool", lastTool.name)
       lastTool.controller:hide()
     end
     lastTool= tool
-    -- print("### tool", params.class, tool)
-
+    --
     if params.hide then
       tool.controller:hide()
       return

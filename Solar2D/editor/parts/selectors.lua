@@ -9,10 +9,12 @@ local selectLayerFilter = require(parent .. "selectLayerFilter")
 local propsTable = require(parent .. "propsTable")
 local propsButtons = require(parent .. "propsButtons")
 
-local bookTable = require(parent.."bookTable")
-local pageTable = require(parent.."pageTable")
-local layerTable = require(parent.."layerTable")
+-- local bookTable = require(parent.."bookTable")
+-- local pageTable = require(parent.."pageTable")
+-- local layerTable = require(parent.."layerTable")
 --local audioTable = require(parent.."audioTable")
+
+local jointTable   = require("editor.physics.jointTable")
 ---
 local muiIcon = require("components.mui.icon").new()
 local util = require("lib.util")
@@ -133,6 +135,7 @@ function M:create(UI)
       {label = "Group", command = "selectGroup", store = "groupTable", btree = "select component"},
       {label = "Timer", command = "selectTimer", store = "timerTable", btree = "select component"},
       {label = "Var", command = "selectVariable", store = "variableTable", btree = "select component"},
+      {label = "Joint", command = "selectJoint", store = "jointTable", btree = "select component"},
       -- {label = "Action", command = "selectAction", store = "actionTable"}
     },
     "toolLayer",
@@ -178,6 +181,8 @@ function M:create(UI)
   end
   -------------
 
+  jointTable:create(UI)
+
   -- UI.scene.app:dispatchEvent {
   --   name = "editor.selector.selectLayer",
   --   UI = UI,
@@ -195,6 +200,8 @@ function M:create(UI)
     self.componentSelector:hide()
     self.assetsSelector:hide()
     selectLayerFilter:hide()
+    jointTable:hide()
+
   -- end)
 
 
@@ -233,14 +240,14 @@ function M:didShow(UI)
   self.projectPageSelector:didShow(UI)
   self.componentSelector:didShow(UI)
   self.assetsSelector:didShow(UI)
-
-
+  jointTable:didShow(UI)
 end
 --
 function M:didHide(UI)
   self.projectPageSelector:didHide(UI)
   self.componentSelector:didHide(UI)
   self.assetsSelector:didHide(UI)
+  jointTable:didHide(UI)
 end
 --
 function M:destroy(UI)

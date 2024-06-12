@@ -15,11 +15,14 @@ local function componentHandler(UI, storeTable)
   UI.editor.groupStore:set(nil)
   UI.editor.timerStore:set(nil)
   UI.editor.variableStore:set(nil)
+  UI.editor.jointStore:set(nil)
 
   tree:setConditionStatus("select audio", bt.FAILED)
   tree:setConditionStatus("select group", bt.FAILED)
   tree:setConditionStatus("select timer", bt.FAILED)
   tree:setConditionStatus("select variable", bt.FAILED)
+  tree:setConditionStatus("select joint", bt.FAILED)
+
 
   --
   --
@@ -38,6 +41,9 @@ local function componentHandler(UI, storeTable)
       UI.editor.timerStore:set(UI.scene.model.components.timers)
     elseif storeTable == "variableTable" then
       UI.editor.variableStore:set(UI.scene.model.components.variables)
+    elseif storeTable == "jointTable" then
+      print("jointTable", #UI.scene.model.components.joints)
+      UI.editor.jointStore:set(UI.scene.model.components.joints)
     elseif storeTable == "actionTable" then
       UI.editor.actionStore:set(UI.scene.model.commands)
     end
@@ -56,6 +62,7 @@ function M:addListener(UI, buttons, propsTable)
   local projectPageSelector = self.projectPageSelector
   local componentSelector   = self.componentSelector
   local assetsSelector      = self.assetsSelector
+  --
   -- The icon click callback
   function self.componentSelector:onClick(isVisible, storeTable, isAcvtiveProp)
     -- print("componentSelector", isVisible)

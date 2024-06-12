@@ -11,14 +11,18 @@ local toolbar = require(root.."parts.toolbar")
 function M:init(viewGroup)
   self.viewGroup = viewGroup or {}
   --
+  if self.id == "physics" then
+    print ("@@@@@", self.id)
+    print(debug.traceback())
+  end
   if viewGroup then
-    self.selectbox      = viewGroup.selectbox
-    -- ↑ this override local selectbox and it deletes setTemplate?
-    -- yes, timer.timerTable does not have setTempalte.
-
-    self.classProps    = viewGroup.classProps
-    self.actionbox = viewGroup.actionbox
-    self.buttons       = viewGroup.buttons
+    -- self.selectbox      = viewGroup.selectbox
+    -- self.classProps    = viewGroup.classProps
+    -- self.actionbox = viewGroup.actionbox
+    -- self.buttons       = viewGroup.buttons
+    for k, v in pairs(viewGroup) do
+      self[k] = v
+    end
   else
     self.viewGroup.selectbox = self.selectbox
     self.viewGroup.classProps = self.classProps
@@ -75,6 +79,7 @@ end
 
 -- this handler should be called from selectbox to set one of animtations user selected
 function M:setValue(decoded, index, template)
+  print("$$$$$$$$$$$$", self.id)
   if decoded == nil then return end
   if not template then
     -- print(json.encode(decoded[index]))
@@ -126,6 +131,7 @@ function M:toggle()
 end
 
 function M:show()
+  print(self.id)
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
       v:show()
@@ -392,7 +398,7 @@ function M:command()
     local book = params.book or UI.editor.currentBook
     local page  = params.page or UI.page
 
-    -- for k, v in pairs(params) do print(k, v) end
+    for k, v in pairs(params) do print(k, v) end
     if params.hide then
       -- print("@@@@@")
       self:hide()
@@ -453,7 +459,7 @@ end
 M.new = function(tool)
   local instance = {tool = tool}
   instance.classProps    = require(root.."parts.classProps")
-  instance.actionbox = require(root..".parts.actionbox")
+  instance.actionbox     = require(root..".parts.actionbox")
   instance.selectbox     = require(root.."parts.selectbox")
   instance.buttons       = require(root.."parts.buttons")
 
