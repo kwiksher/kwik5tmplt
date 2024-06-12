@@ -42,6 +42,8 @@ M.commands = {
   {name="selectGroup", btree="load group"},
   {name="selectTimer", btree="load timer"},
   {name="selectVariable", btree="load variable"},
+  {name="selectJoint", btree="load joint"},
+
   -- {name="selectVideo", btree="load video"},
 
 }
@@ -119,6 +121,9 @@ local groups            = nanostores.createStore()
 local timers            = nanostores.createStore()
 local variables         = nanostores.createStore()
 
+local joints            = nanostores.createStore()
+
+
 --
 local App = require("Application")
 
@@ -128,10 +133,10 @@ local mui = require("materialui.mui")
 -- this returns a tool obj
 function M:getClassModule (class)
   local v = self.classMap[class:lower()] or class
-  -- print("@@@@", v)
   -- for k, v in pairs(self.editorTools) do print(k) end
   local mod = self.editorTools[v]
   if mod == nil then
+    -- print("@@@@ Error to find", v)
     return self.editorTools['editor.parts.baseTable-'..v]
   end
   return mod
@@ -166,6 +171,7 @@ function M:initStores()
     self.groupStore = groups -- TBI
     self.timerStore = timers -- TBI
     self.variableStore = variables -- TBI
+    self.jointStore   = joints
 end
 ---
 function M:init(UI)
@@ -193,6 +199,7 @@ function M:init(UI)
     for i=1, #layerTools do
       if layerTools[i].id then
         local module = require(parent..layerTools[i].id..".index")
+        module.id = layerTools[i].id
         self.views[#self.views + 1] = module
         self.editorTools[layerTools[i].id] = module
         for j=1, #layerTools[i].tools do

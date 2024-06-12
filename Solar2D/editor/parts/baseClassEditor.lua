@@ -24,8 +24,6 @@ local esingSelector
 -- etc
 --
 
-local controller
-
 ----------
 local M = {
     x				= display.contentCenterX/2,
@@ -118,8 +116,8 @@ function M:destroy()
 end
 
 M.new = function(model, _controller)
-  controller = _controller or require(root.."controller.index").new()
-  local instance = {model=model, controller = _controller}
+  local controller = _controller or require(root.."controller.index").new()
+  local instance = {model=model, controller = controller}
 	return setmetatable(instance, {__index=M})
 end
 

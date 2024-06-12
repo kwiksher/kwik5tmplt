@@ -80,8 +80,8 @@ function M:setActiveProp(layer, class)
           fields.anchor_x.field.text = bodyA.field.text ..".x"
           fields.anchor_y.field.text = bodyA.field.text ..".y"
         elseif joint == "wheel" then
-          fields.anchor_x.field.text = bodyA.field.text ..".x"
-          fields.anchor_y.field.text = bodyA.field.text ..".y"
+          fields.anchor_x.field.text = bodyB.field.text ..".x"
+          fields.anchor_y.field.text = bodyB.field.text ..".y"
         elseif joint == "distance" then
           fields.anchorA_x.field.text = bodyA.field.text ..".x"
           fields.anchorA_y.field.text = bodyA.field.text ..".y"

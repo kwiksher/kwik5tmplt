@@ -111,6 +111,10 @@ local model = {
       name = "Variable",
       id = "variable"
     },
+    -- joint = {
+    --   name = "Joint",
+    --   id = "joint"
+    -- },
   },
   bookTools = {
     book = {

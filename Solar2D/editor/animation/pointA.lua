@@ -5,6 +5,9 @@ local parent,  root = newModule(M.name)
 local dragger = require("extlib.com.gieson.dragger")
 local popup         = require(parent.."popup")
 
+M.x = display.contentCenterX
+M.y = display.contentCenterY
+
 local Props = {
   popup 			= popup,
   ptTextFont = "Helvetica-Bold",
@@ -17,6 +20,10 @@ function M:setValue(props)
 end
 --
 function M:init(UI, x, y, width, height)
+  self.x = x or self.x
+  self.y = y or self.y
+  self.width = width or self.width
+  self.height = height or self.height
 end
 --
 function M:create(UI)
@@ -30,7 +37,6 @@ function M:create(UI)
 
     local ptAdot = display.newCircle(0, 0, 15)
     ptAdot:setFillColor(unpack(ptAcolor))
-
     local ptAlabel = display.newText("A", 0, 0, Props.ptTextFont,
                                      Props.ptTextSize)
     ptAlabel:setTextColor(unpack(Props.ptTextColor))

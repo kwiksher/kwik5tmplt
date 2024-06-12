@@ -23,6 +23,7 @@ local scene = require('controller.scene').new(sceneName, {
       {{/groups}} },
       timers = { {{#timers}} "{{.}}", {{/timers}} },
       variables = { {{#variables}} "{{.}}", {{/variables}} },
+      joints    = { {{#joints}} "{{.}}", {{/joints}} },
       page = { {{#page}}"{{.}}", {{/page}} }
     },
     commands = { {{#events}}  "{{.}}", {{/events}} },

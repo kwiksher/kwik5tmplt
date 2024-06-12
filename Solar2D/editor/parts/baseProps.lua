@@ -161,7 +161,6 @@ function M:setValue(fooValue)
     end
   else
     for k, v in pairs(params) do
-      print("", k, v)
       --
       if not basePropsControl.filter(k) then
         local prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
@@ -219,7 +218,7 @@ function M:createTable(props)
     obj.rect = rect
     objs[#objs + 1] = obj
     -- show asset table
-    print("", prop.name)
+    -- print("", prop.name)
     if prop.name == 'url' then
        obj.class = self.class
        obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)
