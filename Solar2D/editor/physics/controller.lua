@@ -4,13 +4,12 @@ local parent,  root = newModule(current)
 local model      = require(parent.."model")
 
 local M = require(root.."controller.index").new(model.id)
-local selectIndex = 5
+local selectIndex = 1
 
 function M:setValue(decoded, index, template)
   if decoded == nil then return end
   if not template then
     -- print(json.encode(decoded[index]))
-    self.selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
     self.classProps:setValue(decoded[index].properties)
     local props = {}
     local actions = decoded[index].actions
@@ -21,10 +20,22 @@ function M:setValue(decoded, index, template)
       self.actionbox:setValue(props)
       -- self.actionbox:initActiveProp(actions)
     end
+    if decoded[index].class == "joint" then
+      self.selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
+    else
+      self.selectbox:setValue({})
+    end
   else
-    self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
-    local value = self.selectbox.model[selectIndex]
-    self.classProps:setValue(value.entries)
+    if decoded.class == "joint" then
+      self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
+      local value = self.selectbox.model[selectIndex]
+      self.classProps:setValue(value.entries)
+    else
+      --self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
+      --local value = self.selectbox.model[selectIndex]
+      self.selectbox:setValue({})
+      self.classProps:setValue(decoded)
+    end
     local props = {}
     if decoded.actions then
       for k, v in pairs (decoded.actions) do

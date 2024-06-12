@@ -26,7 +26,7 @@ function M.suite_setup()
   -- useTinyfiledialogs = false -- default
   ---
   bookTable.commandHandler({book="book"}, nil,  true)
-  pageTable.commandHandler({page="page1"},nil,  true)
+  pageTable.commandHandler({page="page4"},nil,  true)
   selectors.componentSelector.iconHander()
   -- selectors.componentSelector:onClick(true,  "layerTable")
 end

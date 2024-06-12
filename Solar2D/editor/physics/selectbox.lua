@@ -33,10 +33,6 @@ function M:setValue(decoded, index)
   end
   --
   table.sort(self.model,compare)
-
-  ---
-  local name = decoded[index].name
-  -- print("selectbox",name)
   self.selectedIndex = index
 end
 
@@ -72,7 +68,7 @@ function M:setTemplate(template)
   --
    table.sort(self.model,compare)
 
-  self.selectedIndex = 5
+  self.selectedIndex = 1
   self.selectedTextLabel = self.model[self.selectedIndex].entries["_type"]
   -- local pos = name:find("_new")
   -- if pos and  pos > 0 then

@@ -12,9 +12,9 @@ local util = require("editor.util")
 local json = require("json")
 
 local controller = require(parent.."controller").new{
-  selectbox      = selectbox,
+  selectbox     = selectbox,
   classProps    = classProps,
-  actionbox = actionbox,
+  actionbox     = actionbox,
   buttons       = buttons,
 }
 --
@@ -34,19 +34,16 @@ function M:init(UI)
   self.group = display.newGroup()
   -- UI.editor.viewStore = self.group
 
-  selectbox     : init(UI, display.contentCenterX-480/1.5, self.y, self.width, self.height)
-  -- selectbox:init(UI, self.x, self.y, self.width/2, self.height)
+  selectbox:init(UI, display.contentCenterX-480/1.5, self.y, self.width, self.height)
   classProps:init(UI, self.x + self.width, self.y, 100, self.height)
   classProps.model = self.model.props
-  --
-  -- print("@@@@@", classProps.x + self.width*2, classProps.y)
   actionbox:init(UI, self.x+ self.width, display.contentCenterY)
-  buttons:init(UI)
+  buttons:init(UI, self.x , display.contentHeight/2)
 
-  layerTable:setClassProps(classProps) -- need to change it from parts.classProps to phsyics.classProps
-
+  -- need to change it from parts.classProps to phsyics.classProps
+  layerTable:setClassProps(classProps)
+  --
   UI.useClassEditorProps = function() return controller:useClassEditorProps() end
-
   --
   self.controller:init()
   self.controller.view = self
