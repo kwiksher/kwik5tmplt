@@ -57,13 +57,16 @@ function M:addListener(UI, buttons, propsTable)
   local componentSelector   = self.componentSelector
   local assetsSelector      = self.assetsSelector
   -- The icon click callback
-  function self.componentSelector:onClick(isVisible, storeTable)
+  function self.componentSelector:onClick(isVisible, storeTable, isAcvtiveProp)
     -- print("componentSelector", isVisible)
     -- for i=1, #UI.scene.model.components.layers do
       -- for k, v in pairs(UI.scene.model.components.layers[i]) do print(k, v) end
     -- end
     --
-    buttons:hide()
+    if isAcvtiveProp  == nil then
+      buttons:hide()
+    end
+
     if isVisible then
       projectPageSelector:hide()
       assetsSelector:hide()

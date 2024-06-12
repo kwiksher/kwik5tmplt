@@ -73,7 +73,7 @@ end
 --
 local function tapListenerLayer(event)
   local selectors = require(parent.."selectors")
-  selectors.componentSelector:onClick(true,  "layerTable")
+  selectors.componentSelector:onClick(true,  "layerTable", true)
 end
 
 -- color

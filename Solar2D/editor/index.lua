@@ -11,6 +11,8 @@ local json = require("json")
 local bt = require(parent..'controller.BTree.btree')
 local tree = require(parent.."controller.BTree.selectorsTree")
 --
+M.lastSelection = { book="book", page="page4"}
+
 local unitTestOn = true
 local httpServerOn = true
 
@@ -271,7 +273,7 @@ function M:runTest()
 end
 
 
-function M:gotoLastSelection()
+function M:gotoLastSelection(_props)
   local UI = self.UI
   local props = {book="book", page="page1", selections={layer="cat", class="linear"}}
   -- Path for the file to read
@@ -280,10 +282,9 @@ function M:gotoLastSelection()
   local file, errorString = io.open( path, "r" )
   --
   --
-  if not file then
+  if _props then
       -- Error occurred; output the cause
-      print( "File error: " .. errorString )
-      return
+      props = _props
   else
       -- Read data from file
       local contents = file:read( "*a" )
@@ -364,7 +365,7 @@ function M:didShow(UI)
       if not self.isReloaded then
         self.isReloaded = true
         ----------------------------
-        self:gotoLastSelection()
+        self:gotoLastSelection(self.lastSelection)
         --------- unit test --------
         if unitTestOn then
           self:runTest()
