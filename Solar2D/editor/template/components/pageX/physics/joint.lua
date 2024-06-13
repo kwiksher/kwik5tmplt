@@ -1,13 +1,18 @@
-local M = {
-  name = NIL,
-  properties = {
-    anchor_x = {{anchor_x}},
-    anchor_y = {{anchor_y}},
-    bodyA = "{{bodyA1}}",
+local M = {}
+
+function M:create(UI)
+{{#properties}}
+  local {{bodyA}} = UI.sceneGroup["{{bodyA}}"]
+  local {{bodyB}} = UI.sceneGroup["{{bodyB}}"]
+  self.name = "{{name}}"
+  self.class ="joint"
+  self.properties = {
+    bodyA = "{{bodyA}}",
     bodyB = "{{bodyB}}",
     type = "{{type}}", --pistoin, distance, pulle, + defaultSet
-  },
-  pivot = {
+  {{#pivot}}
+    anchor_x = {{anchor_x}},
+    anchor_y = {{anchor_y}},
     isMotorEnabled= {{isMotorEnabled}},
     maxMotorTorque = {{maxMotorTorque}},
     motorForce = {{motorForce}},
@@ -15,8 +20,8 @@ local M = {
     isLimitEnabled = {{isLimitEnabled}},
     rotationX = {{rotationX}},
     rotationY = {{rorationY}}
-  },
-  piston = {
+  {{/pivot}}
+  {{#piston}}
     anchor_x = {{anchor_x}},
     anchor_y = {{anchor_y}},
     isMotorEnabled= {{isMotorEnabled}},
@@ -25,20 +30,20 @@ local M = {
     motorSpeed = {{motorSpeed}},
     axisX = {{axisX}},
     axisY = {{axisY}},
-  },
-  wheel = {
+  {{/piston}}
+  {{#wheel}}
     anchor_x = {{anchor_x}},
     anchor_y = {{anchor_y}},
     axisX = {{axisX}},
-    axisY = {{axisY}},
-  },
-  distance = {
+    axisY = {{axisY}}
+  {{/wheel}}
+  {{#distance}}
     anchorA_x = {{anchorA_x}},
     anchorA_y = {{anchorA_y}},
     anchorB_x = {{anchorB_x}},
     anchorB_y = {{anchorB_y}},
-  },
-  pulley = {
+  {{/distance}}
+  {{#pulley}}
     statA_x= {{statA_x}},
     statA_y= {{statA_y}},
     statB_x= {{statB_x}},
@@ -48,19 +53,20 @@ local M = {
     bodyB_x= {{bodyB_x}},
     bodyB_y= {{bodyB_y}},
     ratio  = {{ratio}},
-  },
-  rope = {
+  {{/pulley}}
+  {{#rope}}
     offsetA_x= {{offsetA_x}},
     offsetA_y= {{offsetA_y}},
     offsetB_x = {{offsetB_x}},
     offsetB_y = {{offsetB_y}},
-  },
-  gear = {
+  {{/rope}}
+  {{#gear}}
     joint1="{{joint1}}",
     joint2="{{joint2}}",
     ratio  = {{ratio}},
-  },
+  {{/gear}}
+  }
+{{/properties}}
+end
 
-}
-
-return require("components.kwik.layer_physicsJoint").set(M)
+return require("components.kwik.page_physicsJoint").set(M)

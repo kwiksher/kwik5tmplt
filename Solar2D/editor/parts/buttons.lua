@@ -86,6 +86,9 @@ function M:create(UI)
         props = self.useClassEditorProps()
         print("saving props") -- if nil, command from dispathEvent will skip the process by checking props null
          for k, v in pairs(props) do print("",k, v) end
+         if props.properties then
+            for k, v in pairs(props.properties) do print("",k, v) end
+          end
       end
 
       if props then

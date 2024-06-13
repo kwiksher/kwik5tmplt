@@ -70,11 +70,27 @@ end
 function M.test_new_joint()
   selectIcon("Physics", "Joint")
 
-  -- local classProps    = require("editor.physics.classProps")
-  -- local bodyA = classProps.objs[1]
-  -- local bodyB = classProps.objs[2]
-  -- -- bodyA.field.text = "test"
-  -- bodyA:dispatchEvent{name="tap", target=bodyA}
+  local selectbox = require("editor.physics.selectbox")
+  local obj = selectbox.objs[10] -- wheel
+  obj:dispatchEvent{name="tap", target=obj}
+
+  local classProps    = require("editor.physics.classProps")
+  local bodyA = classProps.objs[1]
+  local bodyB = classProps.objs[2]
+  -- bodyA.field.text = "test"
+  bodyA:dispatchEvent{name="tap", target=bodyA}
+
+  obj = layerTable.objs[8] -- car
+  obj:dispatchEvent{name="touch", target=obj, phase="ended"}
+
+  bodyB:dispatchEvent{name="tap", target=bodyB}
+  obj = layerTable.objs[10] -- wheel1
+  obj:dispatchEvent{name="touch", target=obj, phase="ended"}
+
+  local buttons = require("editor.parts.buttons")
+  local obj = buttons.objs["save"]
+  -- obj.rect:tap()
+
 end
 
 return M

@@ -42,21 +42,36 @@ local instance =
         class = props.class,
         props = props}, controller, params.decoded or {})
     else
-      print("new layer")
+      print("new layer or joint")
       local updatedModel = util.createIndexModel(UI.scene.model)
-      local index = params.index or #updatedModel.components.layers + 1
-      if not props.isMove then
-        local newLayer = {name=props.name}
-        table.insert(updatedModel.components.layers, index, newLayer)
-        print(json.prettify(updatedModel))
-      end
+      if props.class == "joint" then
+        local function isJoint()
+          for i, v in next, updatedModel.components.joints do
+            if v == props.name then
+              return true
+            end
+          end
+          return false
+        end
+        if not isJoint() then
+          local index = params.index or #updatedModel.components.joints + 1
+          table.insert(updatedModel.components.joints, index, {name=props.name})
+        end
 
+      else
+        local index = params.index or #updatedModel.components.layers + 1
+        if not props.isMove then
+          local newLayer = {name=props.name}
+          table.insert(updatedModel.components.layers, index, newLayer)
+          print(json.prettify(updatedModel))
+        end
+      end
       local controller = require("editor.controller.index")
       scripts.publish(UI, {
         book=UI.editor.currentBook, page=UI.editor.currentPage or UI.page,
         updatedModel = updatedModel,
         layer = props.name,
-        class = props.shapedWith, -- rectangle,text, image, ellipse
+        class = props.shapedWith or props.class, -- rectangle,text, image, ellipse
         props = props},
         controller)
 

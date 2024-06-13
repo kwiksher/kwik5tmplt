@@ -318,7 +318,9 @@ local function getModelFrom(args)
           if v.value == "" then
             ret.properties[v.name] = "NIL"
           else
-            ret.properties[v.name] = v.value
+            if v.name then
+              ret.properties[v.name] = v.value
+            end
           end
         end
       end
@@ -423,10 +425,10 @@ end
 
 function M.publishForSelections(UI, args, controller, decoded)
   --
-  -- print("---args.properties----")
-  -- for k, v in pairs(args.properties) do print("", k, v) end
-  -- print("---decoded----")
-  -- for k, v in pairs(decoded) do print("", k, v) end
+  print("---args.props----")
+  for k, v in pairs(args.props) do print("", k, v) end
+  print("---decoded----")
+  for k, v in pairs(decoded) do print("", k, v) end
 
   local files = {}
   local class = (args.class or "layer"):lower()

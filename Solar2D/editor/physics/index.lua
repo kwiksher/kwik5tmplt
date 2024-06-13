@@ -53,7 +53,10 @@ function M:init(UI)
   -- need to change it from parts.classProps to phsyics.classProps
   layerTable:setClassProps(classProps)
   --
-  UI.useClassEditorProps = function() return controller:useClassEditorProps() end
+  UI.useClassEditorProps = function()
+    return controller:useClassEditorProps(UI)
+  end
+  buttons.useClassEditorProps = UI.useClassEditorProps
   --
   self.controller.view = self
   selectbox.classEditorHandler = function(decoded, index)

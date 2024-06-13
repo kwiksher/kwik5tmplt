@@ -92,7 +92,9 @@ local function singleSelection(layerTable, target)
     ---
     UI.editor.currentLayer = target.layer
     -- target.isSelected = true
-    UI.editor.currentClass = target.name
+    if target.name then
+      UI.editor.currentClass = target.name
+    end
     return true
     --
   end
@@ -243,7 +245,9 @@ local function showClassProps(layerTable, target)
     UI.editor.currentLayer = target.layer
     --
     -- target.isSelected = true
-    UI.editor.currentClass = target.name
+    if target.name then
+      UI.editor.currentClass = target.name
+    end
     -- for load layer
     tree.backboard = {
       layer = target.layer,

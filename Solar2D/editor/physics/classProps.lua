@@ -28,10 +28,10 @@ local pointA        = require("editor.animation.pointA")
 local pointB        = require("editor.animation.pointB")
 --
 function M:tapListener(event, type)
-  print("tapListener", type)
+  -- print("tapListener", type)
   -- event.actionbox = self
   if self:isAltDown() then -- show Focus
-    print("altDown")
+    -- print("altDown")
     local bodyA = self.objs[1].field.text
     local bodyB = self.objs[2].field.text
 
@@ -64,17 +64,17 @@ function M:setActiveProp(layer, class)
     local fields = {_bodyA=NIL, _bodyA=NIL, _body=NIL, anchor_x=NIL, anchor_y=NIL, anchorA_x=NIL, anchorA_y=NIL, anchorB_x=NIL, anchorB_y=NIL, statA_x=NIL, statB_x=NIL, statB_y=NIL, bodyA_x, bodyA_y, bodyB_x, bodyB_y}
     for i,v in next, self.objs do
       if v.text == name then
-        print("name", name)
+        -- print("name", name)
         v.field.text = value
       end
-      print("", name)
+      -- print("", name)
       fields[v.text] = v
     end
-    print("joint type", selectbox.selectedTextLabel)
+    -- print("joint type", selectbox.selectedTextLabel)
     local joint = selectbox.selectedTextLabel
     local bodyA, bodyB = self.objs[1], self.objs[2]
 
-    for k, v in pairs(UI.sceneGroup) do print(k) end
+    -- for k, v in pairs(UI.sceneGroup) do print(k) end
 
     local objA = UI.sceneGroup[bodyA.field.text]
     local objB = UI.sceneGroup[bodyB.field.text]
@@ -88,7 +88,7 @@ function M:setActiveProp(layer, class)
     else
       -- for A
       if bodyA.field.text:len() > 0 then
-        print(joint, bodyA.field.text)
+        -- print(joint, bodyA.field.text)
         if joint == "pivot" then
           fields.anchor_x.field.text = bodyA.field.text ..".x"
           fields.anchor_y.field.text = bodyA.field.text ..".y"
