@@ -46,11 +46,6 @@ local M = {
   gear = {joint1="", joint2="", ratio=1},
 }
 
-local defaultSet = table.mySet{
-  "friction",
-  "weld",
-  "touch",
-}
 
 function M:create(UI)
   local sceneGroup  = UI.scene.view
@@ -61,12 +56,21 @@ function M:create(UI)
 
   if (bodyA == nil or bodyB== nil) and body==nil then
     print("Error no body")
-    return end
+    return
   end
-  --
+
+  local defaultSet = table:mySet{
+    "friction",
+    "weld",
+    "touch",
+  }
+
+
   local obj
   local anchor_x, anchor_y= app.getPosition(params.anchor_x, props.anchor_y)
-  local params = self[props.type] or props
+  -- local params = self[props.type] or self.properties
+  local params = self.properties
+
   if props.type == "pistion" or props.type == "wheel" then
     local axisX, axisY = app.getPosition(params.axisX, params.axisY)
     obj = physics.newJoint(props.type, bodyB, bodyA, anchor_x, anchor_y, axisX, axisY)
@@ -91,7 +95,7 @@ function M:create(UI)
   else
     obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y)
   end
-  ---
+  --
   if props.type == "pivot" then
     if props.rotationX or props.rotationY then
       local rotX, rotY =app.getPosition( params.rotationX, params.rotationY)
@@ -99,12 +103,12 @@ function M:create(UI)
       obj:setRotationLimits(rotX, rotY)
     end
   end
-  ---
+  --
   if props.type == "pivot" or props.tyope == "pistion" then
     if params.isMotorEnabled then
       obj.isMotorEnabled = params.isMotorEnabled
       obj.motorSpeed = params.motorSpeed
-      obj.motorForce = params,motorForce
+      obj.motorForce = params.motorForce
       obj.maxMotorTorque = params.maxMotorTorque
     end
   end

@@ -52,11 +52,45 @@ function M:setValue(decoded, index, template)
   end
 end
 
-function M.new(views)
+function M:useClassEditorProps(UI)
+  print("physics.useClassEditorProps")
+  local props = { properties = {}}
+  --
+  if self.classProps == nil then
+    print("#Error self.classProps is nil for ", self.tool)
+  end
 
+  print ("@@", #self.classProps.objs)
+
+  for i, obj in next, self.classProps.objs do
+    local name = obj.text
+    local value = obj.field.text
+    name = name:gsub("_body", "body")
+    props.properties[#props.properties + 1] = {name = name, value=value}
+    if name == "_type" then
+      props.properties[#props.properties + 1] = {name=value, value=true}
+    end
+  end
+  if UI.editor.currentClass == "joint" then
+    local objs = self.classProps.objs
+    local bodyA, bodyB, typeObj = objs[1], objs[2], objs[3]
+    props.name = bodyA.field.text.."_"..bodyB.field.text .."_"..typeObj.field.text
+    props.isNew = true
+  end
+  props.class = UI.editor.currentClass
+  --
+  -- props.actionName =self.actionbox.value
+  return props
+end
+
+
+function M.new(views)
   local module = require(root.."controller.index").new(model.id)
   module:init(views)
   module.setValue = M.setValue
+  module.useClassEditorProps = M.useClassEditorProps
+  module.buttons.useClassEditorProps = M.useClassEditorProps
+
   return module
 end
 

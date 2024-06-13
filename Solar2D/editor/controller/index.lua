@@ -46,7 +46,8 @@ end
 -- I/F
 --
 function M:useClassEditorProps()
-  -- print("useClassEditorProps")
+  print(debug.traceback())
+  print("editor.controller.useClassEditorProps", self.id)
   local props = { properties = {}}
   if self.selectbox.selectedObj and self.selectbox.selectedText then
     props = {
@@ -79,7 +80,7 @@ end
 
 -- this handler should be called from selectbox to set one of animtations user selected
 function M:setValue(decoded, index, template)
-  print("$$$$$$$$$$$$", self.id)
+  print("editro.controller.setValue", self.id)
   if decoded == nil then return end
   if not template then
     -- print(json.encode(decoded[index]))
@@ -190,7 +191,13 @@ M.Shapes = Shapes
 function M:render(book, page, layer, classFolder, class, model)
   print("render()", book, page, layer, classFolder, class, model.name)
   local dst, tmplt
-  if (model.name and model.name:len()>0) and class then
+
+  if classFolder == "physics" then
+    tmplt =  "editor/template/components/pageX/"..classFolder.."/"..class ..".lua"
+    if class == "joint" then
+      dst = "App/"..book.."/components/"..page.."/joints/"..layer ..".lua"
+    end
+  elseif (model.name and model.name:len()>0) and class then
     if model.name == "nil" then
       dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
     else

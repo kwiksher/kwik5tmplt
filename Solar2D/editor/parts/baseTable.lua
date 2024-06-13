@@ -166,7 +166,9 @@ function M:commandHandler(eventObj, event)
     if layerTableCommands.singleSelection(self, target) then
       self.UI.editor.currentLayer = target.layer
       -- target.isSelected = true
-      self.UI.editor.currentClass = target.name
+      if target.name then
+        self.UI.editor.currentClass = target.name
+      end
     end
   end
   return true
@@ -285,7 +287,7 @@ function M:create(UI)
 
   UI.editor[self.id.."Store"]:listen(
     function(foo, fooValue)
-      print("@@@@", self.id)
+      -- print("@@@@", self.id)
       self:destroy()
       self.selection = nil
       self.selections = {}
@@ -328,7 +330,7 @@ function M:didHide(UI)
 end
 
 function M:show()
-  print(self.name, "show")
+  -- print(self.name, "show")
   --print(debug.traceback())
   if self.group then
     self.group.isVisible = true
@@ -345,7 +347,7 @@ function M:show()
 end
 
 function M:hide()
-  print(self.name, "hide")
+  -- print(self.name, "hide")
 
   if self.group then
     self.group.isVisible = false
