@@ -68,7 +68,7 @@ function M:create(UI)
     align = "left"
   }
 
-  function createButton(params)
+  local function createButton(params)
     options.text = params.text
     options.x = params.x
     options.y = params.y

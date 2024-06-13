@@ -55,7 +55,7 @@ function M.xtest_select()
   selectIcon("Physics", "Joint")
 end
 
-function M.test_select_joints()
+function M.xtest_select_joints()
   selectors.componentSelector:onClick(true,  "layerTable")
   selectors.componentSelector:onClick(true,  "jointTable")
   local jointTable = require("editor.physics.jointTable")
@@ -67,7 +67,7 @@ function M.test_select_joints()
 
 end
 
-function M.xtest_new_joint()
+function M.test_new_joint()
   selectIcon("Physics", "Joint")
 
   -- local classProps    = require("editor.physics.classProps")
