@@ -90,13 +90,13 @@ local function tapListenerPosXY(event, classProps)
     end
   end
 
-  local bodyA, bodyB = classProps.objs[1], classProps.objs[2]
+  local bodyA, bodyB, type = classProps.objs[1], classProps.objs[2], classProps.objs[3]
+  local UI = classProps.UI
   -- use bodyB
-  if objX.text:find("B") ~=nil  then
+  if objX.text:find("B") ~=nil or (type and type.field.text == "wheel") then
     if objX.field.text:len() > 0 then
       -- pointA:setValue(objX.field.text)
       print("", objX.field.text)
-      local UI = classProps.UI
       local obj = UI.sceneGroup[bodyB.field.text]
       -- for k, v in pairs(UI.sceneGroup) do print("", k) end
       local x = objX.field.text:gsub(bodyB.field.text..".x", tostring(obj.x))
@@ -109,7 +109,6 @@ local function tapListenerPosXY(event, classProps)
     if objX.field.text:len() > 0 then
       -- pointA:setValue(objX.field.text)
       print("", objX.field.text)
-      local UI = classProps.UI
       local obj = UI.sceneGroup[bodyA.field.text]
       -- for k, v in pairs(UI.sceneGroup) do print("", k) end
       local x = objX.field.text:gsub(bodyA.field.text..".x", tostring(obj.x))
