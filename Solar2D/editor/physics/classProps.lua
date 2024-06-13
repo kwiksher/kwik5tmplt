@@ -24,6 +24,8 @@ local layerTable         = require("editor.parts.layerTable")
 local layerTableCommands = require("editor.parts.layerTableCommands")
 local selectbox          = require("editor.physics.selectbox")
 local model              = require("editor.template.components.pageX.physics.defaults.joint")
+local pointA        = require("editor.animation.pointA")
+local pointB        = require("editor.animation.pointB")
 --
 function M:tapListener(event, type)
   print("tapListener", type)
@@ -43,16 +45,20 @@ function M:tapListener(event, type)
     layerTableCommands.showFocus(layerTable)
   else
     self.activeProp = event.target.text
-    basePropsControl.handler[type](event)
+    basePropsControl.handler[type](event, self)
   end
 end
 
 local Layer     = table:mySet{"_bodyA", "_bodyB", "_body"}
 M.onTapLayerSet = Layer
+
+local PosXY   = table:mySet{"anchor_x", "anchorA_x", "anchorB_x", "statA_x", "stateB_x", "bodyA_x", "bodyB_x", "offsetA_x", "offsetB_x"}
+M.onTapPosXYSet   = PosXY
 --
 function M:setActiveProp(layer, class)
   local name =self.activeProp
   local value = layer
+  local UI = self.UI
   --
   if Layer[self.activeProp] then
     local fields = {_bodyA=NIL, _bodyA=NIL, _body=NIL, anchor_x=NIL, anchor_y=NIL, anchorA_x=NIL, anchorA_y=NIL, anchorB_x=NIL, anchorB_y=NIL, statA_x=NIL, statB_x=NIL, statB_y=NIL, bodyA_x, bodyA_y, bodyB_x, bodyB_y}
@@ -67,10 +73,20 @@ function M:setActiveProp(layer, class)
     print("joint type", selectbox.selectedTextLabel)
     local joint = selectbox.selectedTextLabel
     local bodyA, bodyB = self.objs[1], self.objs[2]
+
+    for k, v in pairs(UI.sceneGroup) do print(k) end
+
+    local objA = UI.sceneGroup[bodyA.field.text]
+    local objB = UI.sceneGroup[bodyB.field.text]
+
     if joint == "touch" then
       fields.anchor_x.field.text = bodyA.field.text ..".x"
       fields.anchor_x.field.text = bodyA.field.text ..".y"
+      pointA:setValue(objA)
+      pointA:setActiveEntry(bodyA)
+      pointB:setValue()
     else
+      -- for A
       if bodyA.field.text:len() > 0 then
         print(joint, bodyA.field.text)
         if joint == "pivot" then
@@ -79,9 +95,6 @@ function M:setActiveProp(layer, class)
         elseif joint == "piston" then
           fields.anchor_x.field.text = bodyA.field.text ..".x"
           fields.anchor_y.field.text = bodyA.field.text ..".y"
-        elseif joint == "wheel" then
-          fields.anchor_x.field.text = bodyB.field.text ..".x"
-          fields.anchor_y.field.text = bodyB.field.text ..".y"
         elseif joint == "distance" then
           fields.anchorA_x.field.text = bodyA.field.text ..".x"
           fields.anchorA_y.field.text = bodyA.field.text ..".y"
@@ -91,8 +104,13 @@ function M:setActiveProp(layer, class)
           fields.bodyA_x.field.text = bodyA.field.text ..".x"
           fields.bodyA_y.field.text = bodyA.field.text ..".y"
         end
+        pointA:setValue(objA)
+        -- pointA:setActiveEntry(bodyA)
+        pointA:setBodyName(bodyA.field.text)
+      else
+        pointA:setValue()
       end
-
+      -- for B
       if bodyB.field.text:len() > 0 then
         if joint == "distance" then
           fields.anchorB_x.field.text = bodyB.field.text ..".x"
@@ -102,7 +120,16 @@ function M:setActiveProp(layer, class)
           fields.statB_y.field.text = bodyB.field.text ..".y"
           fields.bodyB_x.field.text = bodyB.field.text ..".x"
           fields.bodyB_y.field.text = bodyB.field.text ..".y"
+        elseif joint == "wheel" then
+          fields.anchor_x.field.text = bodyB.field.text ..".x"
+          fields.anchor_y.field.text = bodyB.field.text ..".y"
+          pointA:setValue()
         end
+        pointB:setValue(objB)
+        -- pointB:setActiveEntry(bodyB)
+        pointB:setBodyName(bodyB.field.text)
+      else
+        pointB:setValue()
       end
     end
   else

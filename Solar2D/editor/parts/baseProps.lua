@@ -51,12 +51,14 @@ M.newText = newText
 local basePropsControl = require("editor.parts.basePropsControl")
 --
 M.onTapLayerSet = {}
+M.onTapPosXYSet   = {}
+
 --
 function M:tapListener(event, type)
   print("tapListener", type)
   self.activeProp = event.target.text
   event.actionbox = self
-  basePropsControl.handler[type](event)
+  basePropsControl.handler[type](event, self)
 end
 
 -- Input handler for text field/box
@@ -226,6 +228,8 @@ function M:createTable(props)
         obj:addEventListener("tap", function(event) self:tapListener(event, 'action')end)
     elseif self.onTapLayerSet[prop.name] then
         obj:addEventListener("tap", function(event) self:tapListener(event, 'layer')end)
+    elseif self.onTapPosXYSet[prop.name] then
+      obj:addEventListener("tap", function(event) self:tapListener(event, 'posXY')end)
     elseif prop.name == 'alpha' then
       alphaObj = obj
     elseif prop.name == 'color' or prop.name == 'imageFile' then

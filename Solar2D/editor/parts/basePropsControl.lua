@@ -70,10 +70,56 @@ local function tapListenerURL(event)
 end
 
 -- layer
---
 local function tapListenerLayer(event)
   local selectors = require(parent.."selectors")
   selectors.componentSelector:onClick(true,  "layerTable", true)
+end
+
+-- posXY
+local pointA        = require("editor.animation.pointA")
+local pointB        = require("editor.animation.pointB")
+--
+local function tapListenerPosXY(event, classProps)
+  print("show pointA pointB with popup", event.target.text)
+  local objX, objY = event.target, nil
+  local name = event.target.text:gsub("_x", "_y")
+  for i, v in next,  classProps.objs do
+    if name == v.text then
+      objY = v
+      break
+    end
+  end
+
+  local bodyA, bodyB = classProps.objs[1], classProps.objs[2]
+  -- use bodyB
+  if objX.text:find("B") ~=nil  then
+    if objX.field.text:len() > 0 then
+      -- pointA:setValue(objX.field.text)
+      print("", objX.field.text)
+      local UI = classProps.UI
+      local obj = UI.sceneGroup[bodyB.field.text]
+      -- for k, v in pairs(UI.sceneGroup) do print("", k) end
+      local x = objX.field.text:gsub(bodyB.field.text..".x", tostring(obj.x))
+      local y = objY.field.text:gsub(bodyB.field.text..".y", tostring(obj.y))
+      pointB:setBodyName(bodyB.field.text)
+      pointB:setValueXY(x, y)
+      pointB:setActiveEntry(objX, objY )
+   end
+  else -- use bodyA
+    if objX.field.text:len() > 0 then
+      -- pointA:setValue(objX.field.text)
+      print("", objX.field.text)
+      local UI = classProps.UI
+      local obj = UI.sceneGroup[bodyA.field.text]
+      -- for k, v in pairs(UI.sceneGroup) do print("", k) end
+      local x = objX.field.text:gsub(bodyA.field.text..".x", tostring(obj.x))
+      local y = objY.field.text:gsub(bodyA.field.text..".y", tostring(obj.y))
+      pointA:setBodyName(bodyA.field.text)
+      pointA:setValueXY(x, y)
+      pointA:setActiveEntry(objX, objY )
+   end
+  end
+
 end
 
 -- color
@@ -164,7 +210,7 @@ local function tapListenerAction(event)
 
 end
 
-
+-- used in actionCommandPropsStore:listener
 M.CommandForTapSet = table:mySet{"audio", "group", "timer", "variables", "action"}
 --
 M.handler = {
@@ -173,7 +219,8 @@ M.handler = {
   color = tapListenerColor,
   audio = tapListenerAudio,
   imageFile = tapListenerImage,
-  action = tapListenerAction
+  action = tapListenerAction,
+  posXY = tapListenerPosXY
 }
 
 return M
