@@ -1,7 +1,7 @@
 local current = ...
 local parent,root, M = newModule(current)
 --
-local model      = require(parent.."model")
+local model      = require("editor.physics.model")
 
 local selectIndex = 1
 
@@ -85,7 +85,9 @@ end
 
 
 function M.new(views)
-  local module = require(root.."controller.index").new(model.id)
+  local module = require("editor.controller.index").new(model.id)
+  print(module.id, model.id)
+  -- print(debug.traceback())
   module:init(views)
   module.setValue = M.setValue
   module.useClassEditorProps = M.useClassEditorProps

@@ -87,8 +87,8 @@ function M.test_new_joint()
   obj = layerTable.objs[10] -- wheel1
   obj:dispatchEvent{name="touch", target=obj, phase="ended"}
 
-  local buttons = require("editor.parts.buttons")
-  local obj = buttons.objs["save"]
+  local buttons = require("editor.physics.buttons")
+  --local obj = buttons.objs["save"]
   -- obj.rect:tap()
 
 end

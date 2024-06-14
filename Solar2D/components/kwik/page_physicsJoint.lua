@@ -116,5 +116,9 @@ end
 --
 function M:didShow(UI)
 end
+
+M.set = function(instance)
+  return setmetatable(instance, {__index=M})
+end
 --
 return M
