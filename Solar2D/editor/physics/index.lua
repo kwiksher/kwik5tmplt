@@ -24,7 +24,6 @@ local controller = require(parent.."controller.index").new{
   pointA        = pointA,
   pointB        = pointB
 }
-print("#buttons", buttons.id)
 --
 -- function controller:useClassEditorProps()
 -- end
@@ -47,7 +46,7 @@ function M:init(UI)
   --
   actionbox:init(UI, self.x+ self.width, display.contentCenterY)
   buttons:init(UI, self.x , display.contentHeight/2)
-  print("@ buttons", buttons.id)
+  -- print("@ buttons", buttons.id)
   pointA:init(UI, self.x + self.width * 5, self.y,  self.width, self.height)
   pointB:init(UI, self.x + self.width * 7, self.y,  self.width, self.height)
 

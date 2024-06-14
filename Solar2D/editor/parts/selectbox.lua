@@ -24,7 +24,7 @@ function M:setValue(decoded, index)
 end
 
 function M:updateValue(value)
-  print("### updateValue", self.name, value, self.selectedText.isVisible)
+  -- print("### updateValue", self.name, value, self.selectedText.isVisible)
   if self.selectedObj then
     self.selectedObj.text = value
     self.selectedText.text =value
@@ -83,7 +83,7 @@ function M:create(UI)
   self.triangle.alpha = 0
   self.group:insert(self.triangle)
   if #self.model > 2 then
-    print("selctbox #", #self.model )
+    -- print("selctbox #", #self.model )
     -- local scrollView = widget.newScrollView
     -- {
     --   top                      = self.triangle.contentBounds.yMax,
@@ -111,7 +111,7 @@ function M:textListener(event )
       -- Output resulting text from "defaultField"
       self.selectedObj.text = self.selectedObj.field.text
       self.selectedObj.field.isVisible = false
-      print(self.model[self.selectedObj.index].name)
+      -- print(self.model[self.selectedObj.index].name)
       self.model[self.selectedObj.index].name = self.selectedObj.text
 
   elseif ( event.phase == "editing" ) then
@@ -124,10 +124,10 @@ end
 
 function M:commandHandler(event)
   if event.numTaps == 2 then
-    print("------double tap --------")
+    -- print("------double tap --------")
     event.target.field.isVisible = true
   else
-    print("-----single tap------")
+    -- print("-----single tap------")
     if self.selectedObj ~= obj then
       if self.selectedObj then
         if self.selectedObj.rect then

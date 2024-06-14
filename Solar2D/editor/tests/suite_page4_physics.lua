@@ -55,6 +55,35 @@ function M.xtest_select()
   selectIcon("Physics", "Joint")
 end
 
+function M.xtest_new_body()
+
+  -- local classProps    = require("editor.physics.classProps")
+  -- local bodyA = classProps.objs[1]
+  -- local bodyB = classProps.objs[2]
+  -- -- bodyA.field.text = "test"
+  -- bodyA:dispatchEvent{name="tap", target=bodyA}
+
+  layerTable.controlDown = true
+
+  local obj = layerTable.objs[8] -- car
+  obj:dispatchEvent{name="touch", target=obj, phase="ended"}
+
+  obj = layerTable.objs[9] -- wheel2
+  obj:dispatchEvent{name="touch", target=obj, phase="ended"}
+
+  obj = layerTable.objs[10] -- wheel1
+  obj:dispatchEvent{name="touch", target=obj, phase="ended"}
+
+  layerTable.controlDown = false
+
+  selectIcon("Physics", "Body")
+
+  -- local buttons = require("editor.physics.buttons")
+  --local obj = buttons.objs["save"]
+  -- obj.rect:tap()
+
+end
+
 function M.xtest_select_joints()
   selectors.componentSelector:onClick(true,  "layerTable")
   selectors.componentSelector:onClick(true,  "jointTable")
@@ -67,7 +96,7 @@ function M.xtest_select_joints()
 
 end
 
-function M.test_new_joint()
+function M.xtest_new_joint()
   selectIcon("Physics", "Joint")
 
   local selectbox = require("editor.physics.selectbox")
@@ -91,6 +120,10 @@ function M.test_new_joint()
   --local obj = buttons.objs["save"]
   -- obj.rect:tap()
 
+end
+
+function M.test_phsyics_settings()
+  selectIcon("Physics", "Physics")
 end
 
 return M

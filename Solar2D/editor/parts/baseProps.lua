@@ -165,7 +165,11 @@ function M:setValue(fooValue)
     for k, v in pairs(params) do
       --
       if not basePropsControl.filter(k) then
+        -- print("", k)
         local prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
+        if k == "type" or k =="bodyA" or k == "bodyB" then
+          prop.name = "_"..prop.name
+        end
         props[#props+1] = prop
       end
     end
