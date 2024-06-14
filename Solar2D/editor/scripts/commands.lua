@@ -451,6 +451,7 @@ function M.publishForSelections(UI, args, controller, decoded)
 
   for i, obj in next, UI.editor.selections do
     layer = obj.text
+    model.layer = layer
     -- print("", layer)
     updatedModel = util.updateIndexModel(updatedModel, layer, class)
 

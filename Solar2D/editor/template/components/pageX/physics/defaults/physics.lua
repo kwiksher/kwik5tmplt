@@ -1,10 +1,17 @@
 local M = {
-  name = "properties",
-  class="properties",
+  name = "physics",
+  class="page",
   -- actionName = "",
   properties = {
-    test="physics props"
-  }
+    orientation = "landscapeLeft",
+    -- orientation= "portraitUpsideDown"
+    invert = false,
+    scale = 1,
+    gravityX = 0,
+    gravityY = 9.8,
+    drawMode = "hybrid" -- normal, debug
+},
+walls = {top=false, bottom=false, left=false, right=false}
 }
 
 return M

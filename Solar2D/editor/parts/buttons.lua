@@ -14,9 +14,9 @@ local selectbox = require(parent.."selectbox")
 -- local button = require("extlib.com.gieson.Button")
 -- local tools = require("extlib.com.gieson.Tools")
 ---
-local _contextMenu = {"create", "rename", "modify","openEditor", "copy", "paste", "delete"}
-M.contextMenu = _contextMenu
--- M.contextMenu = table:mySet{"edit", "copy", "paste", "delete"}
+local _contextMenus = {"create", "_rename", "modify","openEditor", "copy", "paste", "delete"}
+M.contextButtons = _contextMenus
+-- M.contextButtons = table:mySet{"edit", "copy", "paste", "delete"}
 
 
 M.commands = {"create", "shape.new_rectangle", "shape.new_ellipse", "shape.new_text",
@@ -101,7 +101,7 @@ function M:create(UI)
         props.selections = self.UI.editor.selections
       end
       -- close context menu
-      -- for i, key in next, self.contextMenu do
+      -- for i, key in next, self.contextButtons do
       --   if key == event.eventName then
       --     self:hide()
       --     break
@@ -114,7 +114,7 @@ function M:create(UI)
         props.options = self.contextMenuOptions
       end
 
-      print("@@@@", "editor.classEditor." .. event.eventName)
+      -- print("@@@@", "editor.classEditor." .. event.eventName)
 
       self.UI.scene.app:dispatchEvent {
         name = "editor.classEditor." .. event.eventName,
@@ -144,6 +144,7 @@ function M:create(UI)
     -- obj.anchorX = 0
     obj.eventName = params.eventName
     obj:translate(obj.width/2 + 10, 0)
+    obj.contextButton = params.contextButton
 
     local rect = display.newRoundedRect(obj.x, obj.y, obj.width+10, obj.height + 2, 10)
     group:insert(rect)
@@ -182,7 +183,8 @@ function M:create(UI)
     y = display.actualContentHeight-10,
     eventName = "create",
     alignment = "left",
-    objs = self.objs
+    objs = self.objs,
+    contextButton = true
   }
 
   obj.rect.buttonsInRow = createButtonsInRow(
@@ -200,7 +202,8 @@ function M:create(UI)
     y = display.actualContentHeight-10,
     eventName = "modify",
     alignment = "left",
-    objs = self.objs
+    objs = self.objs,
+    contextButton = true
   }
 
   obj.rect.buttonsInRow = createButtonsInRow(
@@ -234,7 +237,8 @@ function M:create(UI)
     y = obj.y,
     eventName = "delete",
     alignment = "left",
-    objs = self.objs
+    objs = self.objs,
+    contextButton = true
   }
 
   obj = createButton {
@@ -243,7 +247,8 @@ function M:create(UI)
     y = obj.y,
     eventName = "toggle",
     alignment = "left",
-    objs = self.objs
+    objs = self.objs,
+    contextButton = true
   }
 
   obj = createButton {
@@ -269,7 +274,8 @@ function M:create(UI)
     y = obj.y,
     eventName = "openEditor",
     alignment = "right",
-    objs = self.objs
+    objs = self.objs,
+    contextButton = true
   }
 
   obj = createButton {
@@ -278,7 +284,8 @@ function M:create(UI)
     y = obj.y,
     eventName = "rename",
     alignment = "right",
-    objs = self.objs
+    objs = self.objs,
+    contextButton = true
   }
 
   self.openEditorObj = obj
@@ -391,10 +398,10 @@ end
 function M:showContextMenu(x,y, options)
   self.contextMenuOptions = options
   if options then
-    self.contextMenu = options.contextMenu or _contextMenu
+    self.contextButtons = options.contextButtons or _contextMenus
   end
   local indexX, indexY = 0,0
-  for k, key in next, self.contextMenu do
+  for k, key in next, self.contextButtons do
     for k, obj in next, self.objs do
       if key  == obj.rect.eventName then
         obj.isVisible = true
@@ -449,26 +456,44 @@ end
 
 function M:hideContextMenu()
   self.contextMenuOptions = nil -- "actionTable"
-  self.contextMenu = _contextMenu
+  self.contextButtons = _contextMenus
   self.openEditorObj.text = self.openEditorObj.originalText
+
+  if self.objs then
+    for k, obj in pairs(self.objs) do
+      if obj.contextButton or obj.text == "Copy" or obj.text == "Paste" then
+        obj.isVisible = false
+        obj.rect.isVisible = false
+        if obj.rect.buttonsInRow then
+          for i, o in next, obj.rect.buttonsInRow do
+            o.isVisible = false
+            o.rect.isVisible = false
+          end
+        end
+      end
+    end
+  end
+
 end
 
 function M:show()
-  print("@ show", self.id)
+  -- print("@ show", self.id)
   -- print(debug.traceback())
 
   for k, obj in pairs(self.objs) do
     -- print(obj.text, obj.x, obj.y)
-    obj.isVisible = true
-    obj.rect.isVisible = true
-    obj.rect:removeEventListener("mouse", self.mouseOver)
-    if obj.rect.buttonsInRow then
-      for i, o in next, obj.rect.buttonsInRow do -- mouse over to show them
-        o.isVisible = false
-        o.rect.isVisible = false
-        -- o.alpha = 0
-        -- o.rect.alpha = 0
-        o:removeEventListener("mouse", self.mouseOverInRow)
+    if not obj.contextButton then
+      obj.isVisible = true
+      obj.rect.isVisible = true
+      obj.rect:removeEventListener("mouse", self.mouseOver)
+      if obj.rect.buttonsInRow then
+        for i, o in next, obj.rect.buttonsInRow do -- mouse over to show them
+          o.isVisible = false
+          o.rect.isVisible = false
+          -- o.alpha = 0
+          -- o.rect.alpha = 0
+          o:removeEventListener("mouse", self.mouseOverInRow)
+        end
       end
     end
   end

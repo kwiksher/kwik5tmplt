@@ -233,8 +233,13 @@ function M:renderPage(book, page, class, name, model)
   print("", book, page, class, name, #model.properties)
   local dst, tmplt
   if class=="page" then
-    dst = "App/"..book.."/components/"..page.."/"..class.."/"..name ..".lua"
-    tmplt =  "editor/template/components/pageX/"..class.."/"..class ..".lua"
+    if name == "physics" then
+      dst = "App/"..book.."/components/"..page.."/"..class.."/"..name ..".lua"
+      tmplt =  "editor/template/components/pageX/"..class.."/"..name ..".lua"
+    else
+      dst = "App/"..book.."/components/"..page.."/"..class.."/"..name ..".lua"
+      tmplt =  "editor/template/components/pageX/"..class.."/"..class ..".lua"
+    end
     util.mkdir("App", book, "components", page, class)
   else
     dst = "App/"..book.."/components/"..page.."/"..class.."s/"..name ..".lua"

@@ -24,47 +24,52 @@ local instance =
     local selectbox = params.selectbox or controller.selectbox
     args.selected = selectbox.selection or {}
 
-    if args.isNew then
-      if props.class == "joint" then
-        local function isJoint()
-          for i, v in next, args.updatedModel.components.joints do
-            if v == props.name then
-              return true
-            end
+    -- if args.isNew then
+    if props.class == "joint"  then
+      local function isJoint()
+        for i, v in next, args.updatedModel.components.joints do
+          if v == props.name then
+            return true
           end
-          return false
         end
-        if not isJoint() then
-          print("@@@@@@@@")
-          local index = params.index or #args.updatedModel.components.joints + 1
-          table.insert(args.updatedModel.components.joints, index, props.name)
-          print(json.encode(args.updatedModel.components))
-        end
-
-        scripts.publish(UI, args, controller)
-
-        -- args.append = function(value, index)
-        --   local dst = args.updatedModel.components.joints or {}
-        --   if index then
-        --     dst[index] = value
-        --   else
-        --     dst[#dst + 1] = value
-        --   end
-        -- end
+        return false
       end
+      --
+      if not isJoint() then
+        local index = params.index or #args.updatedModel.components.joints + 1
+        table.insert(args.updatedModel.components.joints, index, props.name)
+        print(json.encode(args.updatedModel.components))
+      end
+      --
+      scripts.publish(UI, args, controller)
+    elseif props.class == "physics" then  -- physics env
+      args.class = "page"
+      args.props.name  = "physics"
+      local function isPhysics()
+        for i, v in next, args.updatedModel.components.page do
+          if v == "physics" then
+            return true
+          end
+        end
+        return false
+      end
+      if not isPhysics() then
+        table.insert(args.updatedModel.components.page, "physics")
+      end
+      scripts.publish(UI, args, controller)
     else
-        -- scripts.publishForSelections(
-        --   UI,
-        --   {
-        --     book = props.book,
-        --     page = props.page,
-        --     layer = props.layer,
-        --     class = props.class,
-        --     props = props
-        --   },
-        --   controller,
-        --   params.decoded or {}
-        -- )
+        scripts.publishForSelections(
+          UI,
+          {
+            book = props.book,
+            page = props.page,
+            layer = props.layer,
+            class = props.class,
+            props = props
+          },
+          controller,
+          params.decoded or {}
+        )
     end
   end
 )

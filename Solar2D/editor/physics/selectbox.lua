@@ -16,8 +16,6 @@ local option = {
 }
 
 function M:setValue(decoded, index)
-  print("@@@@@@@@@@")
-  ---
   self.decoded = decoded
   --
   -- print("### setValue", self.name, decoded, index)

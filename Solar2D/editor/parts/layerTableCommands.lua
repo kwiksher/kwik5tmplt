@@ -167,7 +167,7 @@ function M.commandHandler(layerTable, target, event)
   clearSelections(layerTable, "layer")
   --
   --
-  -- buttons:hide()
+  buttons:hideContextMenu()
   ---
   -- print("@@@@@@", layerTable.altDown, layerTable:isAltDown())
   -- print(debug.traceback())
@@ -279,7 +279,7 @@ function M.commandHandlerClass(layerTable, target, event)
   --
   clearSelections(layerTable, "class")
   --
-  -- buttons:hide()
+  buttons:hideContextMenu()
   --
   if layerTable:isAltDown() then
     print("", "isAltDown")
