@@ -12,8 +12,8 @@ function M:init(viewGroup)
   self.viewGroup = viewGroup or {}
   --
   if self.id == "physics" then
-    print ("@@@@@", self.id)
-    print(debug.traceback())
+    -- print ("@@@@@", self.id)
+   -- print(debug.traceback())
   end
   if viewGroup then
     -- self.selectbox      = viewGroup.selectbox
@@ -21,6 +21,9 @@ function M:init(viewGroup)
     -- self.actionbox = viewGroup.actionbox
     -- self.buttons       = viewGroup.buttons
     for k, v in pairs(viewGroup) do
+      -- if self.id == "physics" then
+      --   print(k)
+      -- end
       self[k] = v
     end
   else
@@ -190,32 +193,27 @@ M.Shapes = Shapes
 
 function M:render(book, page, layer, classFolder, class, model)
   print("render()", book, page, layer, classFolder, class, model.name)
-  local dst, tmplt
+
+  local tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
+  local dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
 
   if classFolder == "physics" then
     tmplt =  "editor/template/components/pageX/"..classFolder.."/"..class ..".lua"
     if class == "joint" then
-      dst = "App/"..book.."/components/"..page.."/joints/"..layer ..".lua"
+      dst = "App/"..book.."/components/"..page.."/joints/"..model.name ..".lua"
     end
   elseif (model.name and model.name:len()>0) and class then
-    if model.name == "nil" then
-      dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
-    else
+    if model.name ~= "nil" then
       dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..(model.name) ..".lua"
     end
-    --local dst = layer.."_"..class ..".lua"
-    tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
   elseif Shapes[class] then
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
     --local dst = layer.."_"..class ..".lua"
     tmplt =  "editor/template/components/pageX/"..classFolder.."/"..class..".lua"
   elseif class then
-    dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
     --local dst = layer.."_"..class ..".lua"
     if Animations[class] then
       tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_animation.lua"
-    else
-      tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
     end
   else
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
@@ -226,6 +224,7 @@ function M:render(book, page, layer, classFolder, class, model)
     -- end
   end
   util.mkdir("App", book, "components", page, "layers")
+  util.mkdir("App", book, "components", page, "joints")
   util.saveLua(tmplt, dst, model)
   return dst
 end
@@ -464,7 +463,7 @@ end
 
 
 M.new = function(tool)
-  local instance = {tool = tool}
+  local instance = {tool = tool, id=tool}
   instance.classProps    = require(root.."parts.classProps")
   instance.actionbox     = require(root..".parts.actionbox")
   instance.selectbox     = require(root.."parts.selectbox")

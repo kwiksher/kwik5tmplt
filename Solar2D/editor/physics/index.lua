@@ -6,7 +6,7 @@ local model      = require(parent.."model")
 local selectbox     = require(parent.."selectbox")
 local classProps    = require(parent.."classProps")
 local actionbox     = require(root.."parts.actionbox")
-local buttons       = require(root.."parts.buttons")
+local buttons       = require(parent.."buttons")
 local layerTable    = require(root.."parts.layerTable")
 local jointTable    = require(parent.."jointTable")
 --
@@ -16,7 +16,7 @@ local json = require("json")
 local pointA        = require(root.."animation.pointA")
 local pointB        = require(root.."animation.pointB")
 
-local controller = require(parent.."controller").new{
+local controller = require(parent.."controller.index").new{
   selectbox     = selectbox,
   classProps    = classProps,
   actionbox     = actionbox,
@@ -24,6 +24,7 @@ local controller = require(parent.."controller").new{
   pointA        = pointA,
   pointB        = pointB
 }
+print("#buttons", buttons.id)
 --
 -- function controller:useClassEditorProps()
 -- end
@@ -46,6 +47,7 @@ function M:init(UI)
   --
   actionbox:init(UI, self.x+ self.width, display.contentCenterY)
   buttons:init(UI, self.x , display.contentHeight/2)
+  print("@ buttons", buttons.id)
   pointA:init(UI, self.x + self.width * 5, self.y,  self.width, self.height)
   pointB:init(UI, self.x + self.width * 7, self.y,  self.width, self.height)
 

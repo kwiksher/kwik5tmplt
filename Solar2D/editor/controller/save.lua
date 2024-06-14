@@ -36,37 +36,26 @@ local instance =
     if not props.isNew then
       -- publish
       local controller = UI.editor:getClassModule(params.class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
+
+      -- print("@@@@@@@@@@@", name)
       scripts.publishForSelections(UI, {
         book= props.book, page=props.page,
         layer = props.layer,
         class = props.class,
         props = props}, controller, params.decoded or {})
     else
-      print("new layer or joint")
+      print("new layer")
       local updatedModel = util.createIndexModel(UI.scene.model)
-      if props.class == "joint" then
-        local function isJoint()
-          for i, v in next, updatedModel.components.joints do
-            if v == props.name then
-              return true
-            end
-          end
-          return false
-        end
-        if not isJoint() then
-          local index = params.index or #updatedModel.components.joints + 1
-          table.insert(updatedModel.components.joints, index, {name=props.name})
-        end
-
-      else
-        local index = params.index or #updatedModel.components.layers + 1
-        if not props.isMove then
-          local newLayer = {name=props.name}
-          table.insert(updatedModel.components.layers, index, newLayer)
-          print(json.prettify(updatedModel))
-        end
+      local index = params.index or #updatedModel.components.layers + 1
+      if not props.isMove then
+        local newLayer = {name=props.name}
+        table.insert(updatedModel.components.layers, index, newLayer)
+        print(json.prettify(updatedModel))
       end
       local controller = require("editor.controller.index")
+
+      -- print("$$$$$$$$$$$$$$", name)
+
       scripts.publish(UI, {
         book=UI.editor.currentBook, page=UI.editor.currentPage or UI.page,
         updatedModel = updatedModel,

@@ -1,6 +1,5 @@
-local M = {}
 local current = ...
-local parent,  root = newModule(current)
+local parent,  root, M = newModule(current)
 
 M.name = current
 M.weight = 1
@@ -38,8 +37,13 @@ end
 
 ---
 function M:init(UI, toggleHandler)
-  -- singleton ---
-  if self.objs then return end
+  -- singleton?? ---
+  -- if self.objs then return end
+  --
+  -- if self.id ~="physics" then
+  --   print (debug.traceback())
+  -- end
+
   self.objs = {}
   ---
   if not self.contextInit then
@@ -110,7 +114,7 @@ function M:create(UI)
         props.options = self.contextMenuOptions
       end
 
-      --print("", "editor.classEditor." .. event.eventName)
+      print("@@@@", "editor.classEditor." .. event.eventName)
 
       self.UI.scene.app:dispatchEvent {
         name = "editor.classEditor." .. event.eventName,
@@ -450,7 +454,11 @@ function M:hideContextMenu()
 end
 
 function M:show()
+  print("@ show", self.id)
+  -- print(debug.traceback())
+
   for k, obj in pairs(self.objs) do
+    -- print(obj.text, obj.x, obj.y)
     obj.isVisible = true
     obj.rect.isVisible = true
     obj.rect:removeEventListener("mouse", self.mouseOver)
@@ -488,6 +496,7 @@ function M:show()
 end
 
 function M:hide()
+  -- print("@ hide", self.id)
   if self.objs then
     for k, obj in pairs(self.objs) do
       obj.isVisible = false
@@ -506,5 +515,10 @@ function M:hide()
 
 end
 
+M.new = function(id)
+  local instance = {id=id}
+  instance.contextInit = false
+  return setmetatable(instance, {__index=M})
+end
 --
 return M
