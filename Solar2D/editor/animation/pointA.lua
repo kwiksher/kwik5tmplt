@@ -109,12 +109,14 @@ function M:toggle()
 end
 
 function M:show()
+  -- print("@ show")
   for i, obj in next, self.objs or {} do
     obj.isVisible = true
   end
 end
 
 function M:hide()
+  -- print("@ hide")
   for i, obj in next, self.objs or {} do
     obj.isVisible = false
   end

@@ -6,10 +6,12 @@ local tree = require(root .. "controller.BTree.selectorsTree")
 local buttons  = require("editor.parts.buttons")
 local selectLayerFilter = require("editor.parts.selectLayerFilter")
 
-local function componentHandler(UI, storeTable)
+local function componentHandler(UI, storeTable, isAcvtiveProp)
   -- each table will be reset
   --
-  UI.editor.layerStore:set({})
+  if isAcvtiveProp == nil then
+    UI.editor.layerStore:set({})
+  end
   UI.editor.audioStore:set(nil)
   UI.editor.actionStore:set(nil)
   UI.editor.groupStore:set(nil)
@@ -83,13 +85,23 @@ function M:addListener(UI, buttons, propsTable)
       --   -- print("hiding", k)
       --   tool:hide()
       -- end
-      componentHandler(UI, storeTable, tree)
+      if storeTable == "groupTable" then
+        local groupTable = require("editor.group.groupTable")
+        if isAcvtiveProp then
+          groupTable:setIndent(100, 0)
+        else
+          groupTable:setIndent(0,0)
+        end
+      end
+
+      componentHandler(UI, storeTable, tree, isAcvtiveProp)
       if not UI.editor.toolbar.isVisible  then
           UI.editor.toolbar:show()
         UI.editor.actionIcon.isVisible = true
         -- local width = UI.editor.toolbar:getWidth()
         -- self.assetsSelector.iconObj:move(width)
       end
+
     end
     --
   end

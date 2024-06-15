@@ -28,7 +28,7 @@ local pointA        = require("editor.animation.pointA")
 local pointB        = require("editor.animation.pointB")
 --
 function M:tapListener(event, type)
-  -- print("tapListener", type)
+  print("tapListener", type)
   -- event.actionbox = self
   if self:isAltDown() then -- show Focus
     -- print("altDown")
@@ -60,7 +60,15 @@ function M:setActiveProp(layer, class)
   local value = layer
   local UI = self.UI
   --
-  if Layer[self.activeProp] then
+  if self.activeProp =="othersGroup" then
+    print("@@@@", layer, class)
+    for i,v in next, self.objs do
+      if v.text == "othersGroup" then
+        v.field.text = layer
+        break
+      end
+    end
+  elseif Layer[self.activeProp] then
     local fields = {_bodyA=NIL, _bodyA=NIL, _body=NIL, anchor_x=NIL, anchor_y=NIL, anchorA_x=NIL, anchorA_y=NIL, anchorB_x=NIL, anchorB_y=NIL, statA_x=NIL, statB_x=NIL, statB_y=NIL, bodyA_x, bodyA_y, bodyB_x, bodyB_y}
     for i,v in next, self.objs do
       if v.text == name then

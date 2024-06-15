@@ -2,12 +2,14 @@ local M = {
   name = NIL,
   class="force",
   properties = {
+    {{#properties}}
     event = "{{event}}",
-    isInitail = {{isInitail}},
+    isInitial = {{isInitial}},
     isImpluse = {{isImpluse}},
     type = "{{type}}", -- push, none
-    xForce = {{xforce}},
+    xForce = {{xForce}},
     yForce = {{yForce}},
+    {{/properties}}
   }
 }
 

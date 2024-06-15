@@ -3,12 +3,11 @@ local M = {
   class="collision",
   properties = {
     isRemoveOther = true,
-    isRemoveSelf = true
+    isRemoveSelf = true,
+    othersGroup = NIL
   },
-  actions = {
-    { onCollision="" }
-  },
-  others = { }
+  actions = { onCollision= "" },
+  others = {}
 }
 
 return M

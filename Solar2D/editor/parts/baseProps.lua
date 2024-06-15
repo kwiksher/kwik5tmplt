@@ -230,8 +230,11 @@ function M:createTable(props)
        obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)
     elseif prop.name == 'onComplete' then
         obj:addEventListener("tap", function(event) self:tapListener(event, 'action')end)
+    elseif prop.name == "othersGroup" then
+      print("@@@@@ othersGroup")
+        obj:addEventListener("tap", function(event) self:tapListener(event, 'group')end)
     elseif self.onTapLayerSet[prop.name] then
-        obj:addEventListener("tap", function(event) self:tapListener(event, 'layer')end)
+      obj:addEventListener("tap", function(event) self:tapListener(event, 'layer')end)
     elseif self.onTapPosXYSet[prop.name] then
       obj:addEventListener("tap", function(event) self:tapListener(event, 'posXY')end)
     elseif prop.name == 'alpha' then
