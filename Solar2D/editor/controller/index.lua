@@ -135,7 +135,7 @@ function M:toggle()
 end
 
 function M:show()
-  print(self.id)
+  print(self.id, self.class)
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
       v:show()

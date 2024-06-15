@@ -14,6 +14,7 @@ local tree = require(root .. "controller.BTree.selectorsTree")
 local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 local buttons                 = require("editor.parts.buttons")
 local classProps              = require("editor.parts.classProps")
+local classPropsPhysics         = require("editor.physics.classProps")
 
 M.anchorName = "selectGroup"
 M.icons      = {"groups", "trash"}
@@ -23,11 +24,19 @@ M.id         = "group"
 M.x = display.contentCenterX
 M.y = 20
 
-function M:init(UI, x, y)
+M.indentX = 0
+M.indentY = 0
 
+function M:init(UI, x, y)
   self.x = x or self.x
   self.y = y or self.y
 end
+
+function M:setIndent( x, y)
+  self.indentX = x
+  self.indentY = y
+end
+
 -- function M:setPosition()
 --   self.x = self.rectWidth/2 + 22
 --   self.y = self.rootGroup.selectLayer.y + marginY
@@ -77,6 +86,9 @@ function M:commandHandler(eventObj, event)
       self.UI.editor.currentLayer = target.layer
       -- target.isSelected = true
       self.UI.editor.currentClass = target.name
+      print("@@@@@@", target.layer, target.class)
+      classPropsPhysics:setActiveProp(target.layer, target.class)
+
     end
   end
   return true
@@ -121,6 +133,8 @@ function M:commandHandlerClass(target, event)
       print("", "singleSelection")
       actionCommandPropsTable:setActiveProp(target.layer, target.class)
       classProps:setActiveProp(target.layer, target.class)
+      print("@@@@@@", target.layer, target.class)
+      classPropsPhysics:setActiveProp(target.layer, target.class)
     end
   end
   UI.editor.selections = self.selections
@@ -149,7 +163,8 @@ function M:create(UI)
       self.objs = {}
       self.iconObjs = {}
       if fooValue then
-        self.objs = self:render(fooValue, 0, 0)
+        print("@@@@@", self.indentX, self.indentY)
+        self.objs = self:render(fooValue, self.indentX, self.indentY)
         if #fooValue == 0 then
            self:createIcons(120, 5)
         else

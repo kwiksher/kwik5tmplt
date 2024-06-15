@@ -122,8 +122,21 @@ function M.xtest_new_joint()
 
 end
 
-function M.test_phsyics_settings()
+function M.xtest_phsyics_settings()
   selectIcon("Physics", "Physics")
+end
+
+function M.xtest_phsyics_force()
+  obj = layerTable.objs[8] -- car
+  obj:dispatchEvent{name="touch", target=obj, phase="ended"}
+  selectIcon("Physics", "Force")
+
+end
+
+function M.test_phsyics_collision()
+  obj = layerTable.objs[8] -- car
+  obj:dispatchEvent{name="touch", target=obj, phase="ended"}
+  selectIcon("Physics", "Collision")
 end
 
 return M

@@ -2,12 +2,12 @@ local M = {
   name = "",
   properties = {
     isRemoveOther = true,
-    isRemoveSelf = true
+    isRemoveSelf = true,
+    othersGroup = ""
   },
   actions = {
     { onCollision="" }
   },
-  others = {}
 }
 --
 function M:didShow(UI)
@@ -16,11 +16,14 @@ function M:didShow(UI)
   local props       = self.properties
   ---
   local obj = sceneGroup[self.name]
-  local other = sceneGroup[props.other]
-  if ob== nil then return end
+  local others = props.othersGroup.members
+  for i, other in next, others do
+    print("others", i, other)
+  end
+  if obj== nil then print ("Error missing", self.name) return end
 
    local function onCollision(self, event)
-      for i, other in next, self.others do
+      for i, other in next, others do
         local otherObj = sceneGroup[other]
         if event.phase == "began" and event.other.layer == other then
           if actions[1].onCollision then
@@ -36,8 +39,11 @@ function M:didShow(UI)
     end
     obj.collision = onCollision
     obj:addEventListener("collision", obj)
+  end
 end
 --
 M.set = function(model)
   return setmetatable( model, {__index=M})
 end
+
+return M

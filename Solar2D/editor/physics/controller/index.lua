@@ -7,7 +7,35 @@ local selectIndex = 1
 
 function M:setValue(decoded, index, template)
   if decoded == nil then return end
-  if not template then
+  if template then
+    if decoded.class == "joint" then
+      self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
+      local value = self.selectbox.model[selectIndex]
+      self.classProps:setValue(value.entries)
+    else
+      --self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
+      --local value = self.selectbox.model[selectIndex]
+      self.selectbox:setValue({})
+      decoded.properties["_body"] = self.layer
+      self.classProps:setValue(decoded)
+    end
+    self.class = decoded.class
+
+    local props = {}
+    if decoded.actions then
+      for k, v in pairs (decoded.actions) do
+        print("actions", k)
+        props[#props+1] = {name=k, value=""}
+      end
+      self.actionbox:setValue(props)
+      -- self.actionbox:initActiveProp(props)
+
+    else
+      --self.actionbox:hide()
+      print("no actionbox")
+      self.actionbox:setValue()
+    end
+  else
     -- print(json.encode(decoded[index]))
     self.classProps:setValue(decoded[index].properties)
     local props = {}
@@ -24,36 +52,12 @@ function M:setValue(decoded, index, template)
     else
       self.selectbox:setValue({})
     end
-  else
-    if decoded.class == "joint" then
-      self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
-      local value = self.selectbox.model[selectIndex]
-      self.classProps:setValue(value.entries)
-    else
-      --self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
-      --local value = self.selectbox.model[selectIndex]
-      self.selectbox:setValue({})
-      self.classProps:setValue(decoded)
-    end
-    local props = {}
-    if decoded.actions then
-      for k, v in pairs (decoded.actions) do
-        props[#props+1] = {name=k, value=""}
-      end
-      self.actionbox:setValue(props)
-      -- self.actionbox:initActiveProp(props)
-
-    else
-      print("no actionbox")
-      --self.actionbox:hide()
-      self.actionbox:setValue()
-      -- print(#self.actionbox.objs)
-    end
+    self.class = decoded[index].class
   end
 end
 
 function M:useClassEditorProps(UI)
-  print("physics.useClassEditorProps")
+  print("physics.useClassEditorProps",  self.class)
   local props = { properties = {}}
   --
   if self.classProps == nil then
@@ -70,17 +74,44 @@ function M:useClassEditorProps(UI)
     if name == "_type" then
       props.properties[#props.properties + 1] = {name=value, value=true}
     end
+    if name == "body" then
+      -- props.name = value
+      props.layer = value
+    end
   end
-  if UI.editor.currentClass == "joint" then
+  if self.class == "joint" then
     local objs = self.classProps.objs
     local bodyA, bodyB, typeObj = objs[1], objs[2], objs[3]
     props.name = bodyA.field.text.."_"..bodyB.field.text .."_"..typeObj.field.text
     props.isNew = true
   end
-  props.class = UI.editor.currentClass
+  props.class = self.class
   --
   -- props.actionName =self.actionbox.value
   return props
+end
+
+function M:show()
+  print(self.id, self.class)
+  if self.viewGroup then
+    for k, v in pairs(self.viewGroup) do
+      v:show()
+    end
+    self.view.group.isVisible = true
+  end
+  if self.class ~="joint" then
+    self.pointA:hide()
+    self.pointB:hide()
+  end
+end
+
+function M:hide()
+  if self.viewGroup then
+    for k, v in pairs(self.viewGroup) do
+      v:hide()
+    end
+    self.view.group.isVisible = false
+  end
 end
 
 
@@ -90,6 +121,8 @@ function M.new(views)
   -- print(debug.traceback())
   module:init(views)
   module.setValue = M.setValue
+  module.show = M.show
+  module.hide = M.hide
   module.useClassEditorProps = M.useClassEditorProps
   module.buttons.useClassEditorProps = M.useClassEditorProps
 

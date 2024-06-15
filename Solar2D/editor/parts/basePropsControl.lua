@@ -75,6 +75,12 @@ local function tapListenerLayer(event)
   selectors.componentSelector:onClick(true,  "layerTable", true)
 end
 
+-- group
+local function tapListenerGroup(event)
+  local selectors = require(parent.."selectors")
+  selectors.componentSelector:onClick(true,  "groupTable", true)
+end
+
 -- posXY
 local pointA        = require("editor.animation.pointA")
 local pointB        = require("editor.animation.pointB")
@@ -219,7 +225,8 @@ M.handler = {
   audio = tapListenerAudio,
   imageFile = tapListenerImage,
   action = tapListenerAction,
-  posXY = tapListenerPosXY
+  posXY = tapListenerPosXY,
+  group = tapListenerGroup
 }
 
 return M

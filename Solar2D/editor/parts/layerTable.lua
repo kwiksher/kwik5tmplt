@@ -51,11 +51,14 @@ function M:setClassProps(classProps)
   self.classProps = classProps
 end
 
-function M:setPosition()
-  local marginX, marginY = 74, 44
+function M:setPosition(_xIndex, _yIndex)
+  local xIndex = _xIndex or 0
+  local yIndex = _yIndex or 0
+
+  local marginX, marginY =22 + xIndex, 44 + yIndex
   -- self.x = self.rootGroup.selectLayer.x + marginX
   self.rectWidth = 100 + 10
-  self.x = self.rectWidth/2 + 22
+  self.x = self.rectWidth/2 + marginX
   self.y = self.rootGroup.selectLayer.y + marginY
 end
 
@@ -65,7 +68,7 @@ function M:render(models, xIndex, yIndex, parentObj)
   local objs = {}
   local option = self.option
   --
-  self:setPosition()
+  self:setPosition(xIndex, yIndex)
   --
   for i = 1, #models do
     local model = models[i]
@@ -77,7 +80,7 @@ function M:render(models, xIndex, yIndex, parentObj)
     option.text = entry.name
     -- option.x = self.x + self.rootGroup.selectLayer.width/2 + xIndex *5
     --option.y = self.rootGroup.selectLayer.contentBounds.yMax + 10 + option.height * count
-    option.x = self.x + xIndex * 5
+    option.x = self.x --  + xIndex * 5
     option.y = self.y  + option.height * (count -1 + yIndex)
     -- print("#", count, yIndex, entry.name)
     option.width = 100

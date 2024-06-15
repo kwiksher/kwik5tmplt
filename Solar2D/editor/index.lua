@@ -143,7 +143,7 @@ function M:getClassModule (class)
 end
 
 function M:getClassFolderName (class)
-  -- print(class)
+  print(class)
   return self.classMap[class:lower()]
 end
 
