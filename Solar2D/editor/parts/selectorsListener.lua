@@ -6,10 +6,10 @@ local tree = require(root .. "controller.BTree.selectorsTree")
 local buttons  = require("editor.parts.buttons")
 local selectLayerFilter = require("editor.parts.selectLayerFilter")
 
-local function componentHandler(UI, storeTable, isAcvtiveProp)
+local function componentHandler(UI, storeTable, isActiveProp)
   -- each table will be reset
   --
-  if isAcvtiveProp == nil then
+  if isActiveProp == nil then
     UI.editor.layerStore:set({})
   end
   UI.editor.audioStore:set(nil)
@@ -94,7 +94,7 @@ function M:addListener(UI, buttons, propsTable)
         end
       end
 
-      componentHandler(UI, storeTable, tree, isAcvtiveProp)
+      componentHandler(UI, storeTable, isAcvtiveProp)
       if not UI.editor.toolbar.isVisible  then
           UI.editor.toolbar:show()
         UI.editor.actionIcon.isVisible = true
