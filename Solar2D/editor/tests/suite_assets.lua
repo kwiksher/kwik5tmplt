@@ -7,6 +7,7 @@ local pageTable
 local layerTable
 local buttons = require("editor.parts.buttons")
 local scriptsCommands = require("editor.scripts.commands")
+local assetTable = require("editor.asset.assetTable")
 
 local _TMP = "/Users/ymmtny/Documents/GitHub/kwik-visual-code/test/base-proj/tmp"
 
@@ -421,7 +422,7 @@ function M.xtest_assets_lfs()
 
 end
 
-function M.test_assets_generator()
+function M.xtest_assets_generator()
   -- put media files int assets
   -- run editor to get assets/model.lua by lfs
   -- edit assets/model.lua (lua, yml)
@@ -432,12 +433,12 @@ function M.test_assets_generator()
   --
 end
 
-function M.test_change_replacement_class()
+function M.xtest_change_replacement_class()
   -- for instance, from video to spritsheet
   -- user should delete video and then add spreiteseet
 end
 
-function M.test_edit_index_manually()
+function M.xtest_edit_index_manually()
   -- setup: user edit pageX/index.lua manually to add a compoennent
   -- modify index.lua for a component, CRUD and then run this test
   --
@@ -449,14 +450,14 @@ function M.test_edit_index_manually()
 end
 
 
-function M.test_save_spritesheet_same_size()
+function M.xtest_save_spritesheet_same_size()
   -- user puts an imagesheet
   -- first time sheetInfo is empy
   -- user inputs sheetInfo
   -- assets/model.lua is updated with sheetInfo
 end
 
-function M.test_save_spritesheet_texturePacker()
+function M.xtest_save_spritesheet_texturePacker()
   -- sheetInfo.lua and imageSheet are exported from texture packer
   -- TBI gnerate each sprite automatically one by one from frames
 end
@@ -537,7 +538,7 @@ function M.xtest_load()
 
 end
 
-function M.xtest_load()
+function M.test_load()
   UI.editor.assets = {
     audios = {
       {
@@ -558,16 +559,35 @@ function M.xtest_load()
         links = {}
       }
     },
-    sprites = {}
+    sprites = {
+        {
+          name = "butflysprite.png",
+          path = "sprites",
+          links = {}
+        },
+        {
+          name = "slotes.png",
+          path = "sprites",
+          links = {}
+        },
+        {
+          name = "SpriteTiles/sprites.png",
+          path = "sprites",
+          links = {}
+        }
+    }
 
   }
   ---
   selectors.assetsSelector:show()
   -- selectors.assetsSelector:onClick(true, nil)
-  selectors.assetsSelector:onClick(true, "videos")
+  -- selectors.assetsSelector:onClick(true, "videos")
+  selectors.assetsSelector:onClick(true, "sprites")
+  assetTable.objs[1]:touch({phase="ended"})
+
 end
 
-function M.test_load()
+function M.xtest_load()
   -- UI.editor.assets = {
   --   audios = {
   --     {
@@ -596,18 +616,27 @@ function M.test_load()
   -- }
   -- ---
   selectors.assetsSelector:show()
-  local assetTable = require("editor.asset.assetTable")
 
+  -- selectors.assetsSelector:onClick(true, "audios")
+  -- assetTable.objs[2]:touch({phase="ended"})
+
+  -- selectors.assetsSelector:onClick(true, "videos")
+  -- assetTable.objs[2]:touch({phase="ended"})
+
+  selectors.assetsSelector:onClick(true, "sprites")
+  -- assetTable.objs[2]:touch({phase="ended"})
+
+end
+
+function M.xtest_click_new_icon()
   selectors.assetsSelector:onClick(true, "audios")
   assetTable.objs[2]:touch({phase="ended"})
   assetTable:iconsHandler({target={muiOptions={name="addAudio"}}}, "audio", "selectAudio")
 
-  selectors.assetsSelector:onClick(true, "videos")
-  assetTable.objs[2]:touch({phase="ended"})
+  -- selectors.assetsSelector:onClick(true, "videos")
+  -- assetTable.objs[2]:touch({phase="ended"})
   -- assetTable:iconsHandler({target={muiOptions={name="repVideo-icon"}}}, "video", "selectTool")
 
-
 end
-
 
 return M

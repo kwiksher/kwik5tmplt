@@ -7,18 +7,12 @@ local pageTable
 local layerTable
 local actionTable = require("editor.action.actionTable")
 
+local helper = require("editor.tests.helper")
+
+
+
 --local toolbar  = require("editor.parts.toolbar")
 
-function selectLayer(name)
-  for i, entry in next,layerTable.objs do
-    print("", i, entry.text)
-    if entry.text == name then
-      entry:touch({phase="ended"}) -- animation
-      -- entry.classEntries[1]:touch({phase="ended"}) -- animation
-      break
-    end
-  end
-end
 
 function selectTool(args)
   UI.scene.app:dispatchEvent(
@@ -111,15 +105,6 @@ end
   end
 --]]
 
-local function selectIcon(toolGroup, tool)
-  local toolbar = UI.editor.toolbar
-  local obj = toolbar.layerToolMap[toolGroup]
-  obj.callBack{target=obj}
-  if tool then
-    local obj = toolbar.toolMap[obj.id.."-"..tool]
-    obj.callBack{target=obj}
-  end
-end
 
 local function selectCancel()
   local button = "cancel"
@@ -144,7 +129,7 @@ function M.test_new_button()
     -- for k, v in pairs(toolbar.toolMap) do print(k, v) end
     -- selectTool{class="button", isNew=true}
 
-    selectIcon("Interactions", "Button")
+    helper.selectIcon("Interactions", "Button")
 
     local actionbox = require("editor.parts.actionbox")
     local obj = actionbox.objs[1]
@@ -153,7 +138,6 @@ function M.test_new_button()
     actionTable.altDown = true
     selectAction("eventOne")
     actionTable.altDown = false
-
 
     -- selectCancel()
     --selectIcon("Interactions", "Button")

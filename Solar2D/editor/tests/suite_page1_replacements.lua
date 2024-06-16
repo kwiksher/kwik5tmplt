@@ -8,6 +8,7 @@ local layerTable
 local bookName = "book" -- "bookTest01"
 local pageName = "page1"
 local listbox = require("editor.replacement.listbox")
+local helper = require("editor.tests.helper")
 
 function M.init(props)
   selectors = props.selectors
@@ -48,16 +49,6 @@ end
 --  canvas
 --  sync
 
-function M.xtest_select_layer_gotoBtn()
-  local name = "gotoBtn"
-  for i, entry in next,layerTable.objs do
-    print("", i, entry.text)
-    if entry.text == name then
-      entry:touch({phase="ended"}) -- gotoBtn
-      break
-    end
-  end
-end
 
 function M.xtest_new_video()
   UI.scene.app:dispatchEvent(
@@ -71,48 +62,19 @@ function M.xtest_new_video()
   )
 end
 
-function M.txest_select_layer_video()
-  local name = "imageOne"
-  for i, entry in next,layerTable.objs do
-    print("", i, entry.text)
-    if entry.text == name then
-      for j, e in next, entry.classEntries do
-        if e.text == "video" then
-          print("", "touched", e.text)
-          e:touch({phase="ended"})
-          break
-        end
-      end
-      break
-    end
-  end
-  --
-  -- local button = "save"
-  -- local obj = require("editor.parts.buttons").objs[button]
-  -- obj:tap()
-end
-
 function M.test_new_spritesheet()
-  UI.scene.app:dispatchEvent(
-    {
-      name = "editor.selector.selectTool",
-      UI = UI,
-      class = "spritesheet", -- obj.class,
-      -- toolbar = self,
-      isNew = true
-    }
-  )
-
+  helper.selectLayer("starfish")
+  helper.selectIcon("Replacements", "Sprite")
   --timer.performWithDelay( 1000, function()
-    for i,obj in next, listbox.objs do
-      if obj.index == 1 then
-        listbox.singleClickEvent(obj)
-        break
-      end
-      -- print("----------")
-      -- for k, value in pairs(obj) do print(k, value) end
-    end
-  end
+    -- for i,obj in next, listbox.objs do
+    --   if obj.index == 1 then
+    --     listbox.singleClickEvent(obj)
+    --     break
+    --   end
+    --   -- print("----------")
+    --   -- for k, value in pairs(obj) do print(k, value) end
+    -- end
+ end
 
 ---[[
   function M.xtest_new_sync()
