@@ -4,7 +4,7 @@ function M:create(UI)
   local sceneGroup  = UI.sceneGroup
   local layer       = UI.layer
   if self.sheet == nil then return end
-  local obj = display.newSprite(self.sheet, self.seqeunce ) -- ff_seq is to be used in future
+  local obj = display.newSprite(self.sheet, self.seqeunceData ) -- ff_seq is to be used in future
   if obj == nil then return end
   obj.x        = mX
   obj.y        = mY

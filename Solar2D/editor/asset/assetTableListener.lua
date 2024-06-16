@@ -6,6 +6,7 @@ local selectors = require(root.."parts.selectors")
 
 local layerTableCommands = require("editor.parts.layerTableCommands")
 local contextButtons = require("editor.parts.buttons")
+local handlerMap  = require("editor.asset.model")
 
 local posX = display.contentCenterX*0.75
 
@@ -23,11 +24,6 @@ end
 -- target.class will be audio.long or audio.short or audio.sync
 -- a sync audio can be multiple
 
-local handlerMap = {
-  audios = {class = "audio", modify = require("editor.audio.audioTable").commandHandler, icons = {"addAudio", "trash"}, tool="selectAudio"},
-  videos = {class = "video", modify = require("editor.parts.layerTableCommands").commandHandlerClass, icons={"repVideo", "trash"}, tool="selectTool"},
-
-}
 local lastTool, lastClass
 ---
 function M:iconsHandler(event, class, tool)

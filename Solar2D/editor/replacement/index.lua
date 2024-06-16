@@ -37,7 +37,7 @@ function M:init(UI)
 
   selectbox     : init(UI, self.x + self.width/2, self.y, self.width*0.74, self.height)
   -- selectbox:init(UI, self.x, self.y, self.width/2, self.height)
-  classProps:init(UI, self.x + self.width*1.5, self.y,  self.width, self.height)
+  classProps:init(UI, self.x + self.width, self.y,  self.width+20, self.height)
   classProps.model = self.model.props
   --
   -- print("@@@@@", classProps.x + self.width*2, classProps.y)

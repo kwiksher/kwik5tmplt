@@ -19,7 +19,7 @@ local M = {
   }
 }
 
-M.sequenceData  = {
+M.sequenceData = {
   {{#sequences}}
       {{^count}}
           { name = "{{name}}",

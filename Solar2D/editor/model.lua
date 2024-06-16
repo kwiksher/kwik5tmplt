@@ -22,7 +22,7 @@ local model = {
         {name = "Mask", icon = "repMask"},
         {name = "Multiplier", icon = "repMultiplier"},
         {name = "Particles", icon = "repParticles", id = "particles"}, -- relacement.particles.index is selected
-        {name = "Spritesheet", icon = "repSprite"},
+        {name = "Sprite", icon = "repSprite"},
         {name = "Sync", icon = "repSync"},
         {name = "Text", icon = "repText"},
         {name = "Vector", icon = "repVector"},

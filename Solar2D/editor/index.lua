@@ -11,7 +11,7 @@ local json = require("json")
 local bt = require(parent..'controller.BTree.btree')
 local tree = require(parent.."controller.BTree.selectorsTree")
 --
-M.lastSelection = { book="book", page="page4"}
+M.lastSelection = { book="book", page="page1"}
 
 local unitTestOn = true
 local httpServerOn = true
@@ -206,6 +206,7 @@ function M:init(UI)
           if layerTools[i].tools[j].id then
             -- Aditional editor for particles
             self.classMap[layerTools[i].tools[j].name:lower()] = layerTools[i].id.."."..layerTools[i].tools[j].id
+            print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id.."."..layerTools[i].tools[j].id)
             --
             local module = require(parent..layerTools[i].id.."."..layerTools[i].tools[j].id..".index")
             self.views[#self.views + 1] = module
@@ -213,6 +214,8 @@ function M:init(UI)
 
           else
             self.classMap[layerTools[i].tools[j].name:lower()] = layerTools[i].id
+            print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id)
+
           end
           --print(layerTools[i].tools[j].name, layerTools[i].id)
         end

@@ -151,6 +151,8 @@ function M:addListener(UI, buttons, propsTable)
       tree:setConditionStatus("delete asset", bt.FAILED)
       --
       if assetName then
+        local json = require("json")
+        print(assetName, print(json.encode(UI.editor.assets[assetName])))
         UI.editor.assetStore:set({class = assetName, decoded = UI.editor.assets[assetName]})
       else
         UI.editor.assetStore:set({decoded = UI.editor.assets})

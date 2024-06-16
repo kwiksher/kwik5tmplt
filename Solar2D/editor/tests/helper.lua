@@ -39,6 +39,17 @@ function exports.clickIcon(toolGroup, tool)
   tool.callBack{target=tool}
 end
 
+function exports.selectIcon(toolGroup, tool)
+  -- local toolbar = UI.editor.toolbar
+  local toolbar = require("editor.parts.toolbar")
+  local obj = toolbar.layerToolMap[toolGroup]
+  obj.callBack{target=obj}
+  if tool then
+    local obj = toolbar.toolMap[obj.id.."-"..tool]
+    obj.callBack{target=obj}
+  end
+end
+
 function exports.selectLayer(name, class, isRightClick)
   -- print(name, class)
   for i, obj in next,layerTable.objs do

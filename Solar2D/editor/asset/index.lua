@@ -76,7 +76,7 @@ function controller:save(book, page, class, name, model)
   return dst
 end
 
-local function readAsset(path, folder, map)
+local function readAsset(path, folder, map, parent)
   -- print(path.."/"..folder)
   local entries = {}
   local success = lfs.chdir( path.."/"..folder )
@@ -84,14 +84,18 @@ local function readAsset(path, folder, map)
     for file in lfs.dir( path.."/"..folder ) do
       if util.isDir(file) and file:len() > 3 then
         -- print("", "@Found dir " .. file )
-        local children = readAsset(path.."/"..folder, file, map)
+        local children = readAsset(path.."/"..folder, file, map, folder)
         for i=1, #children do
           entries[#entries + 1] = children[i]
         end
-      elseif file:len() > 3  then
+      elseif file:len() > 3 and file:find(".lua")  ==  nil and file:find("@") == nil then
         local mapEntry = map[file]
         if mapEntry == nil then
-          entries[#entries + 1] = {name=file, path=folder, links={}}
+          if parent==nil then
+            entries[#entries + 1] = {name=file, path=folder, links={}}
+          else
+            entries[#entries + 1] = {name=file, path=parent.."/"..folder, links={}}
+          end
         else
           mapEntry.isExist = true
           entries[#entries + 1] = {name=mapEntry.name, path=mapEntry.path, links=mapEntry.links}
