@@ -40,7 +40,7 @@ local command = function (params)
  	-- print("selectTool", UI.editor:getClassModule(params.class), params.class, params.isNew )
   if params.asset then
     -- links is an array of layer names
-    for k, v in pairs(params.asset) do print(k, v) end
+    for k, v in pairs(params.asset) do print("", k, v) end
   end
 
   -- print(debug.traceback())
@@ -77,8 +77,10 @@ local command = function (params)
       -- should we use name of UI.editor.editor.currentClass?
       -- timer.performWithDelay( 1000, function()
       if params.isUpdatingAsset then
+        print("isUpdatingAsset")
         tool.controller:updateAsset(params.classField, params.asset)
       else
+        -- params.asset is merged in this load()
         tool.controller:load(UI.editor.currentBook, UI.page, UI.editor.currentLayer, params.class, params.isNew, params.asset)
       end
       -- end)

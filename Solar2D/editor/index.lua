@@ -206,7 +206,7 @@ function M:init(UI)
           if layerTools[i].tools[j].id then
             -- Aditional editor for particles
             self.classMap[layerTools[i].tools[j].name:lower()] = layerTools[i].id.."."..layerTools[i].tools[j].id
-            print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id.."."..layerTools[i].tools[j].id)
+            -- print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id.."."..layerTools[i].tools[j].id)
             --
             local module = require(parent..layerTools[i].id.."."..layerTools[i].tools[j].id..".index")
             self.views[#self.views + 1] = module
@@ -214,7 +214,7 @@ function M:init(UI)
 
           else
             self.classMap[layerTools[i].tools[j].name:lower()] = layerTools[i].id
-            print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id)
+            -- print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id)
 
           end
           --print(layerTools[i].tools[j].name, layerTools[i].id)

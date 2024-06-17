@@ -6,6 +6,11 @@ local tree = require(root .. "controller.BTree.selectorsTree")
 local buttons  = require("editor.parts.buttons")
 local selectLayerFilter = require("editor.parts.selectLayerFilter")
 
+---
+local keyboardNavigation = require("components.common.keyboardNavigation")
+---
+
+
 local function componentHandler(UI, storeTable, isActiveProp)
   -- each table will be reset
   --
@@ -78,6 +83,8 @@ function M:addListener(UI, buttons, propsTable)
 
     if isVisible then
       projectPageSelector:hide()
+      keyboardNavigation:removeEventListener(UI)
+      --
       assetsSelector:hide()
       assetsSelector.iconObj.isVisible = true
       propsTable:hide()
@@ -111,6 +118,7 @@ function M:addListener(UI, buttons, propsTable)
     -- print("projectPageSelector", isVisible)
     buttons:hide()
     if isVisible then
+      keyboardNavigation:addEventListener(UI)
       componentSelector:hide()
       assetsSelector:hide()
       assetsSelector.iconObj.isVisible = false

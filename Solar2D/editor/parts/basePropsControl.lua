@@ -60,13 +60,20 @@ function M.filter(k)
     return keySets[k]
 end
 
--- url
-local function tapListenerURL(event)
-  local assetEditor = require(parent.."asset.index")
+-- url or _filename or sheetInfo
+local function tapListenerURL(event, classProps)
+  local assetEditor = require("editor.asset.index")
+  local assetTable  = require("editor.asset.assetTable")
+  assetTable.lastClass = nil
   assetEditor.controller:show()
   local selectors = require(parent.."selectors")
   selectors.assetsSelector:show()
   selectors.assetsSelector:onClick(true, event.target.class.."s") --videos,audios, sprites..
+  assetTable:setClassProps(classProps)
+  local w, h = classProps:showThumnail(event.target.text,event.target.field.text, event.target.class)
+  if event.target.text == "_filename" and classProps.class == "sprite" then
+    classProps:updateSheetInfo(w, h)
+  end
 end
 
 -- layer

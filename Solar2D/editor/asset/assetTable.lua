@@ -33,6 +33,10 @@ function M:setPosition()
   -- self.x = self.rootGroup.layerTable.contentBounds.xMax
 end
 
+function M:setClassProps(classProps)
+  self.classProps = classProps
+end
+
 function M:createIcons (icons, class, tool)
   -- print("createIcons", class, self.anchorName,_marginX, _marginY)
   local marginX = _marginX or self.marginX

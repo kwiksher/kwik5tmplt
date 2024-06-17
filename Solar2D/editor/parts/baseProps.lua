@@ -12,6 +12,8 @@ M.y = 10
 local util = require("lib.util")
 local yaml = require("server.yaml")
 -- local actionbox  = require(parent.."actionbox")
+
+local Prefix_Layers = table:mySet{"type","bodyA","bodyB" ,"width","height", "filename" }
 ---
 local appFont
 if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
@@ -55,7 +57,7 @@ M.onTapPosXYSet   = {}
 
 --
 function M:tapListener(event, type)
-  print("tapListener", type)
+  print("@@tapListener", type, event.target.text)
   self.activeProp = event.target.text
   event.actionbox = self
   basePropsControl.handler[type](event, self)
@@ -167,7 +169,7 @@ function M:setValue(fooValue)
       if not basePropsControl.filter(k) then
         -- print("", k)
         local prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
-        if k == "type" or k =="bodyA" or k == "bodyB" then
+        if Prefix_Layers[k] then
           prop.name = "_"..prop.name
         end
         props[#props+1] = prop
@@ -225,7 +227,7 @@ function M:createTable(props)
     objs[#objs + 1] = obj
     -- show asset table
     -- print("", prop.name)
-    if prop.name == 'url' then
+    if prop.name == 'url' or prop.name == '_filename' or prop.name == 'sheetInfo' then
        obj.class = self.class
        obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)
     elseif prop.name == 'onComplete' then
