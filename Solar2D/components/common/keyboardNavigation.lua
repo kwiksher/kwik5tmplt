@@ -119,31 +119,31 @@ end
 function _M:create(UI)
   local sceneGroup = UI.sceneGroup
 end
---
-function _M:didShow(UI)
+
+function _M:addEventListener()
+  Runtime:addEventListener("key", onKeyEvent)
+end
+
+function _M:removeEventListener(UI)
+
+  Runtime:removeEventListener("key", onKeyEvent)
+
   local sceneGroup = UI.sceneGroup
   local app = App.get()
-  -- print("## keyboardNavigation")
-  Runtime:addEventListener("key", onKeyEvent)
   --
   -- local bg = UI.layers[#UI.layers+1]
   -- if bg == nil then return end
-  -- app.props.Gesture.activate(bg, {swipeLength = swipeLength})
-  -- bg:addEventListener("tap", onTap)
-  -- bg:addEventListener(app.props.Gesture.SWIPE_EVENT, onSwipe)
-  -- -- Add the key event listener
+  -- app.props.Gesture.deactivate(bg)
+  -- bg:removeEventListener(app.props.Gesture.SWIPE_EVENT, onSwipe)
+  -- bg:removeEventListener("tap", onTap)
+end
+
+--
+function _M:didShow(UI)
 end
 --
 function _M:didHide(UI)
-  local sceneGroup = UI.sceneGroup
-  local app = App.get()
-  Runtime:removeEventListener("key", onKeyEvent)
-  --
-  local bg = UI.layers[#UI.layers+1]
-  if bg == nil then return end
-  app.props.Gesture.deactivate(bg)
-  bg:removeEventListener(app.props.Gesture.SWIPE_EVENT, onSwipe)
-  bg:removeEventListener("tap", onTap)
+  self:removeEventListener(UI)
 end
 --
 function _M:destroy()

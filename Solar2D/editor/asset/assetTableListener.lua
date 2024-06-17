@@ -106,12 +106,14 @@ function M:touchHandler(target, event)
   elseif self:isControlDown() then -- mutli selections
     print("multi", #self.selections)
     layerTableCommands.multiSelections(self, target)
+  elseif self.classProps then
+    self.classProps:setActiveProp(target.text)
   else
     if layerTableCommands.singleSelection(self, target) then
       -- TBI
       -- dispatchEvent to the class editor
       if target.class then
-        print(getClassModule(target.class))
+        -- print(getClassModule(target.class))
         self.UI.scene.app:dispatchEvent {
           name = "editor.selector."..getClassModule(target.class),
           UI = self.UI,
@@ -142,7 +144,7 @@ function M:storeListener(foo, fooValue, render)
      if self.lastClass then
       local tool = self.UI.editor:getClassModule(self.lastClass)
        if tool then
-          print("### lastTool", tool.name)
+          print("### lastTool", tool.id)
           tool.controller:hide()
        end
      end

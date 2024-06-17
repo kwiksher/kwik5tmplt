@@ -124,7 +124,7 @@ end
 function M:mergeAsset(value, asset)
   print("mergreAsset", asset.path, asset.name, #asset.links)
   value.properties.url = asset.name
-  for k, v in pairs(value) do print(k,v) end
+  for k, v in pairs(value.properties) do print("", k,v) end
   return value
 end
 

@@ -241,5 +241,7 @@ function controller:updateAsset(book, page, layer, classFolder, class, model, as
   print(json.encode(ret))
   return ret
 end
+
+
 --print(M.hide)
 return M
