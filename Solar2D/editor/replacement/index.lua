@@ -44,7 +44,7 @@ function M:init(UI)
   actionbox:init(UI, self.x + self.width, classProps.y+classProps.height + 3)
   buttons:init(UI)
 
-  UI.useClassEditorProps = function() return controller:useClassEditorProps() end
+  UI.useClassEditorProps = function() return controller:useClassEditorProps(UI) end
 
   --
   self.controller:init{

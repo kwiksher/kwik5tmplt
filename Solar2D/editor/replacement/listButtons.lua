@@ -11,8 +11,9 @@ local App = require("Application")
 -- local button = require("extlib.com.gieson.Button")
 -- local tools = require("extlib.com.gieson.Tools")
 ---
-M.commands = {"delete", "save", "cancel", "select", "add"}
+M.commands = {"delete", "save", "cancel", "select", "add", "preview"}
 M.objs = {}
+M.contextInit = false
 
 local isCancel = function(event)
   local ret = event.phase == "up" and event.keyName == "escape"
@@ -21,12 +22,15 @@ end
 
 ---
 function M:init(UI)
-  local app = App.get()
-  for i = 1, #self.commands do
-    app.context:mapCommand(
-      "editor.replacement.list." .. self.commands[i],
-      "editor.replacement.controller." .. self.commands[i]
-    )
+  if self.contextInit == false then
+    local app = App.get()
+    for i = 1, #self.commands do
+      app.context:mapCommand(
+        "editor.replacement.list." .. self.commands[i],
+        "editor.replacement.controller." .. self.commands[i]
+      )
+    end
+    self.contextInit = true
   end
 end
 --
@@ -34,8 +38,8 @@ function M:create(UI)
   -- print("create", self.name)
   local rootGroup = UI.editor.rootGroup
 
-  local posX = display.contentCenterX
-  local posY = display.actualContentHeight - 10
+  self.x = display.contentCenterX + 280
+  self.y = display.actualContentHeight - 10
 
   local function tap(event)
     -- print("tap")
@@ -109,8 +113,8 @@ function M:create(UI)
   local obj =
     createButton {
     text = "Delete",
-    x = posX,
-    y = posY,
+    x = self.x,
+    y = self.y,
     eventName = "delete"
   }
 
@@ -135,6 +139,14 @@ function M:create(UI)
     y = obj.y,
     eventName = "cancel"
   }
+
+  obj =
+  createButton {
+  text = "Preview",
+  x = obj.x + obj.width + 10,
+  y = obj.y,
+  eventName = "preview"
+}
 
   -- rootGroup.replacementlistButtons = self
   self:hide()

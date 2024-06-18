@@ -232,8 +232,8 @@ end
 
 function exports.newTextField(option)
   		-- Create native text field
-      textField = native.newTextField( option.x+5, option.y, option.width + 5, option.height )
-      textField.font = native.newFont( appFont,12 )
+      textField = native.newTextField( option.x, option.y, option.width, option.height )
+      textField.font = native.newFont( appFont,option.fontSize )
       --textField:resizeFontToFitHeight()
       --textField:setReturnKey( "done" )
       --textField.placeholder = "Enter text"
@@ -242,7 +242,8 @@ function exports.newTextField(option)
       textField.text = option.text
       option.parent:insert(textField)
       return textField
-  end
+end
+
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/templates/components/layer_props.lua
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/../templates/components/layer_props.lua: No such file or directory
 return exports

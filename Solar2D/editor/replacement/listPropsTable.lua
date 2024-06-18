@@ -13,18 +13,10 @@ local linkbox   = require(root.."parts.linkbox").new({width=55})
 local util = require("lib.util")
 local json = require("json")
 
-local function newTextField(option)
-    -- Create native text field
-    textField = native.newTextField( option.x+5, option.y, option.width + 5, option.height )
-    textField.font = native.newFont( appFont,8 )
-    --textField:resizeFontToFitHeight()
-    --textField:setReturnKey( "done" )
-    --textField.placeholder = "Enter text"
-    textField:addEventListener( "userInput", function() print("userInput") end )
-    --native.setKeyboardFocus( textField )
-    textField.text = option.text
-    textField.hasBackground = false
-    return textField
+M.x = display.contentCenterX + 480/2 + 120 -- listbox.scrollView.x - option.width
+M.y  = display.contentCenterY + 40 --listbox.y + 70  -- (display.actualContentHeight - display.contentHeight + option.height)/2
+
+function M:init(UI)
 end
 
 
@@ -35,11 +27,11 @@ local option, newText = util.newTextFactory{
   height = 20,
 }
 
+local newTextField = util.newTextField
+
+
 function M:render(props)
-  local posX = display.contentCenterX + 480/2 + 120 -- listbox.scrollView.x - option.width
-  -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
-  local posY  = display.contentCenterY --listbox.y + 70  -- (display.actualContentHeight - display.contentHeight + option.height)/2
-  -- print("actionCommandPropsStore:listen", posX, posY)
+  -- print("actionCommandPropsStore:listen", self.x, self.y)
   -- print("", debug.traceback())
   local function compare(a,b)
     return a.name < b.name
@@ -55,11 +47,11 @@ function M:render(props)
     -- print(props.index, header, value)
     --
     option.text = header
-    option.x = posX
-    option.y = i*option.height + posY
+    option.x = self.x
+    option.y = i*option.height + self.y
     --
     local rect = display.newRect(option.parent, option.x, option.y, option.width*2, option.height)
-    rect:setFillColor(0.8)
+    rect:setFillColor(1)
     --
     option.x = option.x - option.width/2 + 5
     local obj = newText(option)
@@ -70,7 +62,7 @@ function M:render(props)
       linkbox:load(self.UI, "action", obj.x + obj.width/2, obj.y - obj.height/4, value)
       obj.linkbox = linkbox
     else
-      option.x = posX + option.width/2+5
+      option.x = self.x + option.width/2+5
       option.text = value
       --
       obj.field = newTextField(option)
@@ -160,8 +152,6 @@ function M:setValue(props)
   end
 
 --
-function M:init(UI)
-end
 --
 function M:create(UI)
   local rootGroup = UI.editor.rootGroup

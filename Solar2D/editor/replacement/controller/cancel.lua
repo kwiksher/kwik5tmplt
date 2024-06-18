@@ -4,6 +4,8 @@ local parent, root = newModule(name)
 local listPropsTable = require(root.."listPropsTable")
 local listButtons = require(root.."listButtons")
 local buttons       = require("editor.parts.buttons")
+local previewPanel = require(root.."previewPanel")
+
 
 local instance =
   require("commands.kwik.baseCommand").new(

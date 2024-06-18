@@ -87,7 +87,7 @@ function M:create(UI)
 
       if event.eventName == "copy" then
       elseif event.eventName == "save" then
-        props = self.useClassEditorProps()
+        props = UI.useClassEditorProps()
         print("saving props") -- if nil, command from dispathEvent will skip the process by checking props null
          for k, v in pairs(props) do print("",k, v) end
          if props.properties then

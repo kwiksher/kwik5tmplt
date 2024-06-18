@@ -50,6 +50,33 @@ function exports.selectIcon(toolGroup, tool)
   end
 end
 
+function exports.clickProp(objs, name)
+  for i, obj in next, objs do
+    if obj.text == name then
+      obj:dispatchEvent{name="tap", target=obj}
+      return
+    end
+  end
+end
+
+function exports.setProp(objs, name, value)
+  for i, obj in next, objs do
+    if obj.text == name then
+      obj.field.text = value
+      return
+    end
+  end
+end
+
+function exports.clickAsset(objs, name)
+  for i, obj in next, objs do
+    if obj.text == name then
+        obj:touch({phase="ended"})
+      return
+   end
+  end
+end
+
 function exports.selectLayer(name, class, isRightClick)
   -- print(name, class)
   for i, obj in next,layerTable.objs do
@@ -234,6 +261,14 @@ function exports.getObjs(t, names)
     end
   end
   return ret
+end
+
+function exports.getObj(objs, n)
+    for i, obj in next, objs do
+      if obj.text == n then
+        return obj
+      end
+    end
 end
 
 

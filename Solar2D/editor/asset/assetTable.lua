@@ -216,6 +216,7 @@ function M:renderLink(links)
 end
 
 function M:show()
+  -- print(debug.traceback())
   self.group.isVisible = true
   if self.objs then
     for i=1, #self.objs do

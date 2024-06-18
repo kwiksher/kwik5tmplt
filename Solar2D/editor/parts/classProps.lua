@@ -81,14 +81,14 @@ function M:updateSheetInfo(sheetContentWidth, sheetContentHeight)
     local ratio     = sheetContentWidth/sheetContentHeight
 
     if ratio > 0 then
-      local width = sheetContentWidth/(numFrames/ratio)/ratio
-      local height = sheetContentHeight/(numFrames/ratio)
+      local width = sheetContentWidth/(numFrames/ratio)
+      local height = sheetContentHeight/ratio
       self:getObj("_width").field.text = width
       self:getObj("_height").field.text = height
     else
       ratio     = sheetContentWidth/sheetContentHeight
-      local width = sheetContentWidth/(numFrames/ratio)
-      local height = sheetContentHeight/(numFrames/ratio)/ratio
+      local width = sheetContentWidth/ratio
+      local height = sheetContentHeight/(numFrames/ratio)
       self:getObj("_width").field.text = width
       self:getObj("_height").field.text = height
     end
@@ -113,7 +113,7 @@ function M:showThumnail(name, value, class)
       obj:scale(scaleW, scaleW)
     end
     obj.x = self.x + 40
-    obj.y = display.contentCenterY
+    obj.y = display.contentCenterY - 40
     self.showThumnailObj = obj
     return w, h
   end
