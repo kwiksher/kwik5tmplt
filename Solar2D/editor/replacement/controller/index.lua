@@ -4,6 +4,8 @@ local parent,  root = newModule(current)
 local json = require("json")
 
 local M = require("editor.controller.index").new("replacement")
+local previewPanel = require(root.."previewPanel")
+
 
 
 function M:init(viewGroup)
@@ -58,6 +60,7 @@ function M:hide()
   self.listbox:hide()
   self.listPropsTable:hide()
   self.listButtons:hide()
+  previewPanel:hide()
   --
 end
 

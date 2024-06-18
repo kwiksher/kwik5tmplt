@@ -9,7 +9,7 @@ M.y = display.contentCenterY + 20
 function M:hide()
 
   if self.instance then
-    self.instance:destory{sceneGroup = self.group}
+    self.instance:destroy{sceneGroup = self.group}
     self.instance = nil
     self.group:removeSelf()
   end
@@ -20,6 +20,7 @@ function M:show(UI, props)
 
   if self.instance then
     self.instance:destroy()
+    self.group:removeSelf()
   end
 
   -- props = {
