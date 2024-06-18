@@ -4,7 +4,6 @@ local listPropsTable = require(root.."listPropsTable")
 local listbox = require(root.."listbox")
 local listButtons = require(root.."listButtons")
 local previewPanel = require(root.."previewPanel")
-
 local buttons       = require("editor.parts.buttons")
 local json = require("json")
 --
@@ -16,18 +15,18 @@ local instance =
     print(name, params.index)
     local ret = listPropsTable:getValue()
     print (type, json.encode(ret))
-    -- update
+    print(name)
     print ("@@", json.encode(listbox.value[params.index]))
-    listbox.value[params.index] = ret
-    listbox:destroy()
-    listbox:setValue()
-    listButtons:hide()
-    listPropsTable:hide()
-    buttons:show()
+    --
+    local props = UI.useClassEditorProps()
+    print ("----- classProps ---- /n", json.encode(props))
 
-    previewPanel:hide()
-
+    props.sequenceData = {ret}
+    previewPanel:show(UI, props)
   end
 )
 --
 return instance
+
+-- {"loopDirection":"forward","pause":"","count":4,"time":600,"start":5,"frames":"","name":"tile_02"}
+-- {"properties":{"_filename":"sprites/SpriteTiles/sprites.png","numFrames":64,"_width":50,"_height":50,"sheetContentWidth":800,"sheetContentHeight":200,"sheetInfo":""}

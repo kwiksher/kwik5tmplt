@@ -64,12 +64,14 @@ end
 local function tapListenerURL(event, classProps)
   local assetEditor = require("editor.asset.index")
   local assetTable  = require("editor.asset.assetTable")
+  local assetButtons = require("editor.asset.buttons")
   assetTable.lastClass = nil
   assetEditor.controller:show()
   local selectors = require(parent.."selectors")
   selectors.assetsSelector:show()
   selectors.assetsSelector:onClick(true, event.target.class.."s") --videos,audios, sprites..
   assetTable:setClassProps(classProps)
+  assetButtons:hide()
   local w, h = classProps:showThumnail(event.target.text,event.target.field.text, event.target.class)
   if event.target.text == "_filename" and classProps.class == "sprite" then
     classProps:updateSheetInfo(w, h)
@@ -77,6 +79,7 @@ local function tapListenerURL(event, classProps)
 end
 
 -- layer
+
 local function tapListenerLayer(event)
   local selectors = require(parent.."selectors")
   selectors.componentSelector:onClick(true,  "layerTable", true)

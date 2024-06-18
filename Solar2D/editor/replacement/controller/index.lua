@@ -61,12 +61,12 @@ function M:hide()
   --
 end
 
-function M:useClassEditorProps()
+function M:useClassEditorProps(UI)
   -- print("useClassEditorProps")
   local props = {
     index = self.selectbox.selectedIndex,
-    name = self.selectbox.selectedObj.text, -- UI.editor.currentLayer,
-    class=self.selectbox.selectedText.text,
+    name = UI.editor.currentLayer, -- self.selectbox.selectedObj.text,
+    class= UI.editor.currentClass, -- self.selectbox.selectedText.text,
     properties = {},
   }
   --

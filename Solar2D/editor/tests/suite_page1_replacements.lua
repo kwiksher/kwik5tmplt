@@ -8,7 +8,13 @@ local layerTable
 local bookName = "book" -- "bookTest01"
 local pageName = "page1"
 local listbox = require("editor.replacement.listbox")
+local listPropsTable = require("editor.replacement.listPropsTable")
+
 local helper = require("editor.tests.helper")
+local classProps = require("editor.parts.classProps")
+local assetTable = require("editor.asset.assetTable")
+local listButtons = require("editor.replacement.listButtons")
+
 
 function M.init(props)
   selectors = props.selectors
@@ -65,6 +71,36 @@ end
 function M.test_new_spritesheet()
   helper.selectLayer("starfish")
   helper.selectIcon("Replacements", "Sprite")
+
+  helper.clickProp(classProps.objs, "_filename")
+  helper.clickAsset(assetTable.objs, "sprites/SpriteTiles/sprites.png")
+  helper.setProp(classProps.objs, "numFrames", 64)
+  -- this calculates w, h of sprite
+  helper.clickProp(classProps.objs, "_filename")
+
+  local obj = helper.getObj(listbox.objs, "default")
+  listbox.singleClickEvent(obj)
+
+  -- local rnd = math.random( 1,16 )
+  -- local sequenceData = {
+  --   name = "character",
+  --   start = (rnd * 4) - 3,
+  --   count = 4,
+  --   time = 600
+  -- }
+
+  local rnd = math.random( 1,16 )
+  helper.setProp(listPropsTable.objs, "start",  (rnd * 4) - 3)
+  helper.setProp(listPropsTable.objs, "count", 4)
+  helper.setProp(listPropsTable.objs, "time", 600)
+  helper.setProp(listPropsTable.objs, "loopCount", "")
+  --
+  rnd = string.format( "%02d", rnd )
+  helper.setProp(listPropsTable.objs, "name", "tile_"..rnd)
+
+  obj = helper.getObj(listButtons.objs, "Preview")
+  obj:tap()
+
   --timer.performWithDelay( 1000, function()
     -- for i,obj in next, listbox.objs do
     --   if obj.index == 1 then
