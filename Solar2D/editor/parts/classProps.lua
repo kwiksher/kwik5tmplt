@@ -99,6 +99,7 @@ end
 function M:showThumnail(name, value, class)
   if self.showThumnailObj then
     self.showThumnailObj:removeSelf()
+    self.showThumnailObj = nil
   end
   --
   local path = "App/" ..self.UI.book.."/assets/"..value
