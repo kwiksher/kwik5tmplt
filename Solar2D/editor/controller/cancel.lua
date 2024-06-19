@@ -1,5 +1,6 @@
 local name = ...
 local parent,root = newModule(name)
+-- local previewPanel = require("editor.replacement.previewPanel")
 local instance = require("commands.kwik.baseCommand").new(
   function (params)
     local UI    = params.UI
@@ -8,6 +9,8 @@ local instance = require("commands.kwik.baseCommand").new(
     toolbar:hideToolMap()
     toolbar.selection = nil
     UI.editor.currentTool = nil
+    -- previewPanel:hide()
+
   end
 )
 --

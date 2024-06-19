@@ -5,6 +5,7 @@ local listbox = require(root.."listbox")
 local listButtons = require(root.."listButtons")
 local previewPanel = require(root.."previewPanel")
 local buttons       = require("editor.parts.buttons")
+local controller = require(root.."controller.index")
 local json = require("json")
 --
 local instance =
@@ -18,7 +19,7 @@ local instance =
     print(name)
     print ("@@", json.encode(listbox.value[params.index]))
     --
-    local props = UI.useClassEditorProps()
+    local props = controller:getClassEditorProps(UI)
     print ("----- classProps ---- /n", json.encode(props))
 
     props.sequenceData = {ret}

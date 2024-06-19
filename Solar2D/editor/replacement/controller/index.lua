@@ -64,7 +64,7 @@ function M:hide()
   --
 end
 
-function M:useClassEditorProps(UI)
+function M:getClassEditorProps(UI)
   -- print("useClassEditorProps")
   local props = {
     index = self.selectbox.selectedIndex,
@@ -78,6 +78,65 @@ function M:useClassEditorProps(UI)
     -- print("", properties[i].name, type(properties[i].value))
     props.properties[properties[i].name] = properties[i].value
   end
+  props.book = UI.book
+
+  -- onComplete
+  if self.actionbox.isActive then
+    props.actionName =self.actionbox.value
+  end
+  --
+  -- TBI? listbox
+  --
+  return props
+end
+
+local numParams = table:mySet{"_height", "_width", "numFrames", "sheetContentWidth", "sheetContentHeight"}
+--
+-- local Prefix_Layers = require("editor.parts.baseProps").Prefix_Layers
+--
+function M:useClassEditorProps(UI)
+  -- print("useClassEditorProps")
+  local props = {
+    book  = UI.book,
+    index = self.selectbox.selectedIndex,
+    layer = UI.editor.currentLayer, -- self.selectbox.selectedObj.text,
+    class= UI.editor.currentClass, -- self.selectbox.selectedText.text,
+    properties = {},
+  }
+  --
+  local properties = self.classProps:getValue()
+  local sheetType = "uniform-sized"
+  for i=1, #properties do
+    -- print("", properties[i].name, type(properties[i].value))
+    -- props.properties[properties[i].name] = properties[i].value
+    local name, value = properties[i].name, properties[i].value
+    print(name, value)
+    if numParams[name] and value == "" then
+      value = 0
+    end
+    if name =="_height" then
+      name = "height"
+    elseif name == "_width" then
+      name = "width"
+    elseif name == "_filename" then
+      name = "filename"
+    end
+
+    if name == "sheetInfo" then
+      if value:find(".lua") then
+        sheetType = "TexturePacker"
+      elseif value:find(".json") then
+        sheetType = "Animate"
+      end
+    end
+    if name == "sheetType" and (value == NIL or value == "") then
+      value = sheetType
+    end
+    props.properties[#props.properties+ 1] = {name = name, value = value}
+  end
+
+  props.sequenceData = self.listbox:getValue()
+
   -- onComplete
   if self.actionbox.isActive then
     props.actionName =self.actionbox.value

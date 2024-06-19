@@ -68,7 +68,7 @@ function M.xtest_new_video()
   )
 end
 
-function M.test_new_spritesheet()
+function M.xtest_new_spritesheet()
   helper.selectLayer("starfish")
   helper.selectIcon("Replacements", "Sprite")
 
@@ -100,17 +100,66 @@ function M.test_new_spritesheet()
 
   obj = helper.getObj(listButtons.objs, "Preview")
   obj:tap()
+end
 
-  --timer.performWithDelay( 1000, function()
-    -- for i,obj in next, listbox.objs do
-    --   if obj.index == 1 then
-    --     listbox.singleClickEvent(obj)
-    --     break
-    --   end
-    --   -- print("----------")
-    --   -- for k, value in pairs(obj) do print(k, value) end
-    -- end
- end
+function M.xtest_new_spritesheet_sheetInfo()
+  helper.selectLayer("starfish")
+  helper.selectIcon("Replacements", "Sprite")
+
+  helper.clickProp(classProps.objs, "sheetInfo")
+  helper.clickAsset(assetTable.objs, "sprites/slots.png")
+  --helper.setProp(classProps.objs, "numFrames", 64)
+  -- this calculates w, h of sprite
+  --helper.clickProp(classProps.objs, "_filename")
+
+ local obj = helper.getObj(listbox.objs, "default")
+ listbox.singleClickEvent(obj)
+
+  -- local rnd = math.random( 1,16 )
+  -- helper.setProp(listPropsTable.objs, "start",  (rnd * 4) - 3)
+  helper.setProp(listPropsTable.objs, "count", 16)
+  -- helper.setProp(listPropsTable.objs, "time", 600)
+  -- helper.setProp(listPropsTable.objs, "loopCount", "")
+  -- --
+  -- rnd = string.format( "%02d", rnd )
+  -- helper.setProp(listPropsTable.objs, "name", "tile_"..rnd)
+
+  --obj = helper.getObj(listButtons.objs, "Preview")
+  obj = helper.getObj(listButtons.objs, "Save")
+  obj:tap()
+
+  local controller = require("editor.replacement.controller.index")
+  local props = controller:useClassEditorProps(UI)
+
+end
+
+function M.xtest_new_spritesheet_sheetInfo_Animate()
+  helper.selectLayer("starfish")
+  helper.selectIcon("Replacements", "Sprite")
+
+  helper.clickProp(classProps.objs, "sheetInfo")
+  helper.clickAsset(assetTable.objs, "sprites/girlBicyle.png")
+  --helper.setProp(classProps.objs, "numFrames", 64)
+  -- this calculates w, h of sprite
+  --helper.clickProp(classProps.objs, "_filename")
+
+ local obj = helper.getObj(listbox.objs, "default")
+ listbox.singleClickEvent(obj)
+
+  -- local rnd = math.random( 1,16 )
+  -- helper.setProp(listPropsTable.objs, "start",  (rnd * 4) - 3)
+  helper.setProp(listPropsTable.objs, "count", 48)
+  -- helper.setProp(listPropsTable.objs, "time", 600)
+  helper.setProp(listPropsTable.objs, "loopCount", "")
+  -- --
+  -- rnd = string.format( "%02d", rnd )
+  -- helper.setProp(listPropsTable.objs, "name", "tile_"..rnd)
+
+  obj = helper.getObj(listButtons.objs, "Preview")
+  obj = helper.getObj(listButtons.objs, "Save")
+  obj:tap()
+end
+
 
 ---[[
   function M.xtest_new_sync()
@@ -193,5 +242,55 @@ function M.test_new_spritesheet()
   end
 --]]
 
+
+function M.test_util()
+  local json = require("json")
+  local scene = {
+    components = {
+      layers = {
+        {
+          back = {}
+        },
+        {butBlue = {class = {"button"}}},
+        {
+          groupOne = {
+            -- {A = {}},
+            -- {
+            --   B = {class = {"animation"}},
+            -- },
+            -- {
+            --   groupTwo = {
+            --     {C = {}},
+            --     {D = {class = {"linear"}}}
+            --   }
+            -- }
+          }
+        }
+      },
+      audios = {},
+      groups = {
+        {groupC = {}}
+      },
+      timers = {},
+      variables = {},
+      others = {}
+    },
+    commands = {"blueBTN"},
+    onInit = function(scene)
+      print("onInit")
+    end
+  }
+
+  local util = require("editor.util")
+  local updatedModel = util.updateIndexModel(scene, "back", "sprite")
+  print(json.encode(updatedModel))
+
+  local renderdModel = util.createIndexModel(updatedModel)
+  print(json.encode(renderdModel))
+
+  local controller = require("editor.controller.index")
+  controller:renderIndex("book", "page1", renderdModel)
+
+end
 
 return M

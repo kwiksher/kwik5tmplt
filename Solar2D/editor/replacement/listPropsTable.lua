@@ -1,46 +1,45 @@
 local M = {}
 local current = ...
 local parent = current:match("(.-)[^%.]+$")
-local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
+local root = parent:sub(1, parent:len() - 1):match("(.-)[^%.]+$")
 --
 M.name = current
 M.weight = 1
 
-local listbox = require(parent.."listbox")
-local linkbox   = require(root.."parts.linkbox").new({width=55})
+local listbox = require(parent .. "listbox")
+local linkbox = require(root .. "parts.linkbox").new({width = 55})
 
 ---
 local util = require("lib.util")
 local json = require("json")
 
-M.x = display.contentCenterX + 480/2 + 120 -- listbox.scrollView.x - option.width
-M.y  = display.contentCenterY + 40 --listbox.y + 70  -- (display.actualContentHeight - display.contentHeight + option.height)/2
+M.x = display.contentCenterX + 480 / 2 + 120 -- listbox.scrollView.x - option.width
+M.y = display.contentCenterY + 40 --listbox.y + 70  -- (display.actualContentHeight - display.contentHeight + option.height)/2
 
 function M:init(UI)
 end
 
-
-local option, newText = util.newTextFactory{
+local option, newText =
+  util.newTextFactory {
   x = 0,
   y = 100,
   width = 60,
-  height = 20,
+  height = 20
 }
 
 local newTextField = util.newTextField
 
-
 function M:render(props)
   -- print("actionCommandPropsStore:listen", self.x, self.y)
   -- print("", debug.traceback())
-  local function compare(a,b)
+  local function compare(a, b)
     return a.name < b.name
   end
   --
   local headers = listbox.headers[props.type]
   ---
   local objs = {}
-  for i=1, #headers do
+  for i = 1, #headers do
     -- print("", props[i].name)
     local header = headers[i]
     local value = props.value[i]
@@ -48,21 +47,21 @@ function M:render(props)
     --
     option.text = header
     option.x = self.x
-    option.y = i*option.height + self.y
+    option.y = i * option.height + self.y
     --
-    local rect = display.newRect(option.parent, option.x, option.y, option.width*2, option.height)
+    local rect = display.newRect(option.parent, option.x, option.y, option.width * 2, option.height)
     rect:setFillColor(1)
     --
-    option.x = option.x - option.width/2 + 5
+    option.x = option.x - option.width / 2 + 5
     local obj = newText(option)
     obj.rect = rect
 
     -- Edit
     if header == "action" then
-      linkbox:load(self.UI, "action", obj.x + obj.width/2, obj.y - obj.height/4, value)
+      linkbox:load(self.UI, "action", obj.x + obj.width / 2, obj.y - obj.height / 4, value)
       obj.linkbox = linkbox
     else
-      option.x = self.x + option.width/2+5
+      option.x = self.x + option.width / 2 + 5
       option.text = value
       --
       obj.field = newTextField(option)
@@ -77,7 +76,6 @@ function M:render(props)
   end
   self.objs = objs
   self.model = props
-
 end
 
 --
@@ -86,57 +84,60 @@ end
 function M:getValue()
   --for k, v in pairs(self.model) do print(k, v) end
   local ret = {}
-  for i=1, #self.objs do
-    if self.objs[i] == nil then break end
-    -- print(self.model[i], self.objs[i].text, self.objs[i].field.text )
-      local key = self.objs[i].text
-      local value
-      if self.objs[i].field then
-        value = self.objs[i].field.text
-        print("@", type(self.objs[i].text),key, value)
-        if type(self.model.value[i]) == 'boolean' then
-          if value == nil or value == "" then
-            value = self.model.value[i]
-          end
-          value = tostring(value)
-        elseif type(self.model.value[i]) == 'number' then
-          value = tonumber( value )
-        end
-      else -- action
-        value = self.objs[i].linkbox.value
-      end
-      --
-      ret[key] = value
+  for i = 1, #self.objs do
+    if self.objs[i] == nil then
+      break
     end
-    return ret
+    -- print(self.model[i], self.objs[i].text, self.objs[i].field.text )
+    local key = self.objs[i].text
+    local value
+    if self.objs[i].field then
+      value = self.objs[i].field.text
+      print("@", type(self.objs[i].text), key, value)
+      if type(self.model.value[i]) == "boolean" then
+        if value == nil or value == "" then
+          value = self.model.value[i]
+        end
+        value = tostring(value)
+      elseif type(self.model.value[i]) == "number" then
+        value = tonumber(value)
+      end
+    else -- action
+      value = self.objs[i].linkbox.value
+    end
+    --
+    -- print(key,value)
+    ret[key] = value
+  end
+  return ret
 end
 
 --
 function M:setValue(props)
-    self:didHide(self.UI)
-    self:destroy()
-    print("------- listPropsTable --------")
-    self:render(props)
-    linkbox.callbackTriagnle = function(isOn)
-      if isOn then
-        for i=1, #self.objs do
-          if self.objs[i].field then
-            self.objs[i].field.alpha = 1
-          end
+  self:didHide(self.UI)
+  self:destroy()
+  print("------- listPropsTable --------")
+  self:render(props)
+  linkbox.callbackTriagnle = function(isOn)
+    if isOn then
+      for i = 1, #self.objs do
+        if self.objs[i].field then
+          self.objs[i].field.alpha = 1
         end
-      else
-        for i=1, #self.objs do
-          if self.objs[i].field then
-            self.objs[i].field.alpha = 0.1
-          end
+      end
+    else
+      for i = 1, #self.objs do
+        if self.objs[i].field then
+          self.objs[i].field.alpha = 0.1
         end
       end
     end
-    --
-    --
-    --------
-    -- save
-    --[[
+  end
+  --
+  --
+  --------
+  -- save
+  --[[
 
     local map = {}
     local objs = tableHelper:getTextFields()
@@ -149,15 +150,17 @@ function M:setValue(props)
     local path = UI.currentPage.path .."/"..UI.currentLayer.name.."_props"
     util.renderer(tmplt, path, map)
   --]]
-  end
+end
 
 --
 --
 function M:create(UI)
   local rootGroup = UI.editor.rootGroup
-  if rootGroup.listPropsTable then return end
+  if rootGroup.listPropsTable then
+    return
+  end
   -- print("create", self.name)
-  option.parent= rootGroup
+  option.parent = rootGroup
   rootGroup.listPropsTable = self
   self.UI = UI
 end
@@ -174,7 +177,7 @@ end
 --
 function M:destroy()
   if self.objs then
-    for i=1, #self.objs do
+    for i = 1, #self.objs do
       if self.objs[i].rect then
         self.objs[i].rect:removeSelf()
       end
@@ -189,8 +192,10 @@ end
 --
 function M:hide()
   self.isVisible = false
-  if self.objs == nil then return end
-  for i=1, #self.objs do
+  if self.objs == nil then
+    return
+  end
+  for i = 1, #self.objs do
     self.objs[i].isVisible = false
     if self.objs[i].rect then
       self.objs[i].rect.isVisible = false
@@ -204,8 +209,10 @@ end
 
 function M:show()
   self.isVisible = true
-  if self.objs == nil then return end
-  for i=1, #self.objs do
+  if self.objs == nil then
+    return
+  end
+  for i = 1, #self.objs do
     self.objs[i].isVisible = true
     if self.objs[i].rect then
       self.objs[i].rect.isVisible = true

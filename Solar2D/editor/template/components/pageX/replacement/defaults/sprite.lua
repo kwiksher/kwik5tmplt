@@ -1,8 +1,8 @@
 local M = {
   name = "sprite",
   class = "sprite",
-  type  = "uniform-sized", -- TexturePacker, Animate
   properties = {
+    sheetType  = "uniform-sized", -- TexturePacker, Animate
     filename = "imagesheet.png",
     sheetInfo = NIL,
     sheetContentWidth  = 376, -- same size or loaded from sheetInfo

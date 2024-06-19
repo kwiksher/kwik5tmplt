@@ -7,6 +7,7 @@ function M:setProps(layerProps)
   self.imageWidth  = layerProps.width/4
   self.imageHeight = layerProps.height/4
   self.mX, self.mY   = app.getPosition(layerProps.x, layerProps.y, self.align)
+  layerProps.mX, layerProps.mY = self.mX, self.mY
   --
   self.randXStart  = app.getPosition(layerProps.randXStart)
   self.randXEnd    = app.getPosition(layerProps.randXEnd)
@@ -27,6 +28,7 @@ function M:setPropsFromDisplayObject(layerProps)
   self.imageWidth  = layerProps.width
   self.imageHeight = layerProps.height
   self.mX, self.mY   = layerProps.x, layerProps.y
+  layerProps.mX, layerProps.mY = self.mX, self.mY
   --
   self.randXStart  = layerProps.randXStart
   self.randXEnd    = layerProps.randXEnd
