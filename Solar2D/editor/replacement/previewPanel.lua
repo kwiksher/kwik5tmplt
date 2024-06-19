@@ -2,9 +2,10 @@ local current = ...
 local parent,  root, M = newModule(current)
 
 local spritesheet = require("components.kwik.layer_spritesheet")
+local json = require("json")
 
-M.x = display.contentCenterX + 340
-M.y = display.contentCenterY + 20
+M.x = display.contentCenterX
+M.y =  50
 
 function M:hide()
 
@@ -18,9 +19,12 @@ end
 function M:show(UI, props)
   props.layerProps = {x= self.x, y = self.y}
 
-  if self.instance then
-    self.instance:destroy()
-    self.group:removeSelf()
+  if props.properties.sheetInfo and props.properties.sheetInfo:len() > 0 then
+    if props.properties.sheetInfo:find(".lua") then
+      props.type = "TexturePacker"
+    else
+      props.type = "Animate"
+    end
   end
 
   -- props = {
@@ -60,16 +64,19 @@ function M:show(UI, props)
   local options = nil
   if props.type == "TexturePacker" then
     --
-    props.newSheetInfo = require(props.sheetInfo)
-    options = props.newSheetInfo().sheet
+    local path = "App."..UI.book..".assets."..props.properties.sheetInfo
+    path = path:gsub("/", ".")
+    path = path:gsub(".lua", "")
+    props.newSheetInfo = require(path)
+    options = props.newSheetInfo.sheet
     --
   elseif props.type == "Animate" then
     --
-    props.newSheetInfo = function()
+    local function newSheetInfo()
       local sheetInfo = {}
       sheetInfo.frames = {}
       local jsonFile = function(filename )
-          local path = systeprops.pathForFile(_K.spriteDir..filename, _K.systemDir )
+          local path = system.pathForFile( "App/"..UI.book.."/assets/"..filename, system.ResourceDirectory )
           local contents
           local file = io.open( path, "r" )
           if file then
@@ -80,7 +87,7 @@ function M:show(UI, props)
           return contents
       end
       --
-      local animateJson = json.decode( jsonFile(props.sheetInfo) )
+      local animateJson = json.decode( jsonFile(props.properties.sheetInfo) )
       --print (sheetInfo, #animateJson.frames)
       for i=1, #animateJson.frames do
           local frame = animateJson.frames[i].frame
@@ -92,7 +99,8 @@ function M:show(UI, props)
       return sheetInfo
     end
     --
-    options = props.newSheetInfo()
+    options = newSheetInfo()
+    --props.properties.numFrames = #sheetInfo.frames
   else
     options = {
         width              = props.properties._width,
@@ -107,9 +115,25 @@ function M:show(UI, props)
   ---
   props.sheet = graphics.newImageSheet( "App/"..UI.book.."/assets/"..props.properties._filename, system.ResourceDirectory, options )
   --
-  self.instance = spritesheet.new(props)
+
+  if self.instance then
+    self.instance:destroy()
+    self.group:removeSelf()
+  else
+    self.instance = spritesheet.new(props)
+  end
+
   self.group = display.newGroup()
   self.instance:create{sceneGroup = self.group}
+
+  local obj = self.instance.objs[1]
+  local scaleW = obj.width/100
+  local scaleH = obj.height/100
+  if scaleW > scaleH then
+    obj:scale(1/scaleW, 1/scaleW)
+  else
+    obj:scale(1/scaleH, 1/scaleH)
+  end
 
 end
 

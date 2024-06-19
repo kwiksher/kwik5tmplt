@@ -221,7 +221,7 @@ function M.createLayer(book, page, index, layer, _props)
   local props =
     _props or
     {name = layer, shape = "rect", x = display.contentCenterX, y = display.contentCenterY, width = 100, height = 100}
-  local controller = require("editor.controller")
+  local controller = require("editor.controller.index")
   --
   files[#files + 1] = controller:renderIndex(book, page, updatedModel)
   files[#files + 1] = controller:saveIndex(book, page, layer, nil, updatedModel)
@@ -308,6 +308,9 @@ local function getModelFrom(args)
     print("", k, type(entries))
     if k =="properties" then
       for i, v in next, entries do
+        if type(v) ~= "table" then
+          return print("Error properties are not like {{name=, v=}}")
+        end
         if v.name == "_name" then
           ret.name = v.value
         elseif v.name == "_type" then
@@ -452,7 +455,6 @@ function M.publishForSelections(UI, args, controller, decoded)
   for i, obj in next, UI.editor.selections do
     layer = obj.text
     model.layer = layer
-    -- print("", layer)
     updatedModel = util.updateIndexModel(updatedModel, layer, class)
 
     --- save json

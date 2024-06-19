@@ -23,8 +23,31 @@ headers.sequenceData = {"name", "start", "count", "frames", "loopCount", "loopDi
 
 M.headers = headers
 
+function M:getValue()
+  local ret = {}
+  for i, obj in next, self.objs do
+    if obj.index > 0 then
+      local entry = ret[obj.index]
+      if entry == nil then
+        entry = {}
+        ret[#ret + 1] = entry
+      end
+      entry[obj.name] = obj.text
+      if ( obj.name == "start" or obj.name == "count" ) and obj.text =="" then
+        entry[obj.name] = NIL
+      end
+      if obj.name == "frames" then
+        local len =  obj.text:len()
+        entry[obj.name] = obj.text:sub(2, len-1)
+      end
+    end
+  end
+  -- print(json.encode(ret))
+  return ret
+end
+
 function M:setValue(fooValue, type)
-   self.type = type or self.type
+  self.type = type or self.type
   self.value = fooValue or self.value
   print("####", self.type, #self.value)
   self:createTable()
@@ -153,6 +176,7 @@ function M:createTable ()
       obj.value      = row
       obj.index      = index
       obj.type       = self.type
+      obj.name       = headers[self.type][i]
       --
       local rect = display.newRect(obj.x, obj.y, obj.width, obj.height)
       rect:setFillColor(1)

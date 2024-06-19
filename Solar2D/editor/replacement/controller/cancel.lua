@@ -15,6 +15,7 @@ local instance =
     listButtons:hide()
     listPropsTable:hide()
     buttons:show()
+    previewPanel:hide()
   end
 )
 --

@@ -12,13 +12,22 @@ M.onTapPosXYSet   = PosXY
 function M:setActiveProp(layer, class)
   local name =self.activeProp
   local value = layer
+  local UI = self.UI
   if class then
     value = layer.."_"..class
   end
   if self.activeProp == "sheetInfo" then
      for i, obj in next, self.objs do
       if obj.text == "sheetInfo" then
-        obj.field.text = layer:gsub(".png", ".lua")
+        local filename = layer:gsub(".png", ".lua")
+        local path = system.pathForFile( "App/"..UI.book.."/assets/"..filename , system.ResourceDirectory )
+        if path == nil then
+          filename = layer:gsub(".png", ".json")
+          path = system.pathForFile( "App/"..UI.book.."/assets/"..filename , system.ResourceDirectory )
+        end
+        if path then
+          obj.field.text = filename
+        end
       elseif obj.text == "_filename" then
         obj.field.text = layer
       else
@@ -77,7 +86,7 @@ function M:updateSheetInfo(sheetContentWidth, sheetContentHeight)
     self:getObj("sheetContentWidth").field.text = sheetContentWidth
     self:getObj("sheetContentHeight").field.text = sheetContentHeight
 
-    local numFrames =  tonumber(self:getObj("numFrames").field.text)
+    local numFrames =  tonumber(self:getObj("numFrames").field.text) or 1
     local ratio     = sheetContentWidth/sheetContentHeight
 
     if ratio > 0 then
@@ -110,11 +119,12 @@ function M:showThumnail(name, value, class)
     local scaleH = 200/h
     if scaleW > scaleH then
       obj:scale(scaleH, scaleH)
+      obj.y = display.contentCenterY
     else
       obj:scale(scaleW, scaleW)
+      obj.y = display.contentCenterY
     end
-    obj.x = self.x + 40
-    obj.y = display.contentCenterY - 40
+    obj.x = display.contentCenterX + 340
     self.showThumnailObj = obj
     return w, h
   end

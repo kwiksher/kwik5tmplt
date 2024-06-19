@@ -88,7 +88,7 @@ local function readAsset(path, folder, map, parent)
         for i=1, #children do
           entries[#entries + 1] = children[i]
         end
-      elseif file:len() > 3 and file:find(".lua")  ==  nil and file:find("@") == nil then
+      elseif file:len() > 3 and file:find(".lua")  ==  nil and file:find("@") == nil and file:find(".json")  ==  nil then
         local mapEntry = map[file]
         if mapEntry == nil then
           if parent==nil then
@@ -238,7 +238,7 @@ function controller:updateAsset(book, page, layer, classFolder, class, model, as
     removeDuplicatedLayer("videos", layer)
 
   end
-  print(json.encode(ret))
+  -- print(json.encode(ret))
   return ret
 end
 

@@ -1,4 +1,4 @@
-local M = {}
+local M = {objs = {}}
 --
 function M:create(UI)
   local sceneGroup  = UI.sceneGroup
@@ -8,13 +8,16 @@ function M:create(UI)
     return
   end
   --
-  --self.layerProps = self.layerProps or {}
+  self.layerProps = self.layerProps or {}
   -- for k, v in pairs( self.sequenceData) do print("", k, v) end
   --
   local obj = display.newSprite(self.sheet, self.sequenceData ) -- ff_seq is to be used in future
-  if obj == nil then return end
-  obj.x        = self.layerProps.x or 0
-  obj.y        = self.layerProps.y or 0
+  if obj == nil then
+    print("Error newSprite")
+    return
+  end
+  obj.x        = self.layerProps.mX or 0
+  obj.y        = self.layerProps.mY or 0
   obj.alpha    = self.layerProps.oriAlpha or 1
   obj.oldAlpha = self.layerProps.oriAlpha
   if self.layerProps.randX then
@@ -37,25 +40,33 @@ function M:create(UI)
   if self.layerProps.rotate then
       obj:rotate( self.layerProps.rotate )
   end
-  obj.oriX = obj.x
+  -- obj.oriX = obj.x
   obj.oriY = obj.y
   obj.oriXs = obj.xScale
   obj.oriYs = obj.yScale
   obj.name = self.layerProps.name or "_preview"
   obj.type = "sprite"
-  if self.sequenceData[1].pause and not  obj.name=="_preview" then
-      obj:pause()
-  else
-    obj:play()
-  end
+
+  -- if #self.sequenceData > 0 and self.sequenceData[1].pause and not obj.name=="_preview" then
+  --     obj:pause()
+  -- else
+  --   obj:play()
+  -- end
+  sceneGroup[obj.name]:removeSelf()
   sceneGroup[obj.name] = obj
   sceneGroup:insert( obj)
+  self.objs[#self.objs+1] = obj
+
 end
 --
 function M:didShow()
 end
 --
 function M:destroy()
+  for i, v in next, self.objs do
+    display.remove( v )
+  end
+  self.objs = {}
 end
 
 ---------------------------

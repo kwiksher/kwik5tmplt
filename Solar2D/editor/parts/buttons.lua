@@ -114,7 +114,7 @@ function M:create(UI)
         props.options = self.contextMenuOptions
       end
 
-      -- print("@@@@", "editor.classEditor." .. event.eventName)
+      print("@@@@", "editor.classEditor." .. event.eventName)
 
       self.UI.scene.app:dispatchEvent {
         name = "editor.classEditor." .. event.eventName,
@@ -522,6 +522,7 @@ end
 
 function M:hide()
   -- print("@ hide", self.id)
+  -- print(debug.traceback())
   if self.objs then
     for k, obj in pairs(self.objs) do
       obj.isVisible = false

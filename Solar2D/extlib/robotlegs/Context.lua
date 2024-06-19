@@ -33,9 +33,9 @@ function Context.new(app)
 	end
 
 	function context:onHandleEvent(event)
-		--print("Context::onHandleEvent, name: ", event.name)
+		print("Context::onHandleEvent, name: ", event.name)
 		local commandClassName = context.commands[event.name]
-		--print("commandClassName: ", commandClassName)
+		print("commandClassName: ", commandClassName)
 		if(commandClassName ~= nil) then
 			local command = assert(require(commandClassName):new(), "Failed to find command: ", commandClassName)
 			--print("command: ", command)

@@ -120,7 +120,7 @@ function M:create(UI)
       obj.touch = function(eventObj, event)
         -- print("touch")
         self:touchHandler(eventObj, event)
-        UI.editor.selections = self.selections
+        -- UI.editor.selections = self.selections
         if event.phase == "ended" then
           self.linkGroup:removeSelf()
           self.linkGroup = display.newGroup()

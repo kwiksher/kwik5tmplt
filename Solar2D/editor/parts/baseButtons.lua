@@ -149,7 +149,7 @@ function M:show()
   -- print(self.name, "@@ show")
   -- print(debug.traceback())
 
-  rootButtons:hide()
+  -- rootButtons:hide()
   -- print(debug.traceback())
   if self.objs == nil then return end
   --

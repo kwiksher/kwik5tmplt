@@ -230,17 +230,17 @@ function M.createIndexModel(_scene, layerName, class)
   --
   --if layerName then
   processLayers(copied.components.layers, 1)
-
-  local groups = {}
-  for i, v in next, copied.components.groups do
-    local entry = {}
-    for key, value in pairs(v) do
-      entry.name = key
-      entry.class = value
-    end
-    groups[i] = entry
-  end
-  copied.components.groups = groups
+  print(json.encode(copied.components.groups))
+  -- local groups = {}
+  -- for i, v in next, copied.components.groups do
+  --   local entry = {}
+  --   for key, value in pairs(v) do
+  --     entry.name = key
+  --     entry.class = value
+  --   end
+  --   groups[i] = entry
+  -- end
+  -- copied.components.groups = groups
   --end
   --
   return copied
@@ -372,7 +372,7 @@ function M.saveLua(tmplt, dst, _model, partial)
   print("local tmplt='".. tmplt.. "'")
   print("local dst ='".. dst.. "'")
   local model = M.copyTable(_model)
-  print("local model = json.decode('".. json.encode(model).. "')" )
+  -- print("local model = json.decode('".. json.encode(model).. "')" )
 
   local path = system.pathForFile(tmplt, system.ResourceDirectory)
   local file, errorString = io.open(path, "r")
