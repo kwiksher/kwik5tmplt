@@ -47,12 +47,14 @@ function M:create(UI)
   obj.name = self.layerProps.name or "_preview"
   obj.type = "sprite"
 
-  -- if #self.sequenceData > 0 and self.sequenceData[1].pause and not obj.name=="_preview" then
-  --     obj:pause()
-  -- else
-  --   obj:play()
-  -- end
-  sceneGroup[obj.name]:removeSelf()
+  if #self.sequenceData > 0 and self.sequenceData[1].pause and not obj.name=="_preview" then
+      obj:pause()
+  else
+    obj:play()
+  end
+  if obj.name ~="_preview" then
+    sceneGroup[obj.name]:removeSelf()
+  end
   sceneGroup[obj.name] = obj
   sceneGroup:insert( obj)
   self.objs[#self.objs+1] = obj
