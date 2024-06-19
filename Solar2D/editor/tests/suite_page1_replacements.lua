@@ -15,10 +15,9 @@ local classProps = require("editor.parts.classProps")
 local assetTable = require("editor.asset.assetTable")
 local listButtons = require("editor.replacement.listButtons")
 
-
 function M.init(props)
   selectors = props.selectors
-  UI        = props.UI
+  UI = props.UI
   bookTable = props.bookTable
   pageTable = props.pageTable
   layerTable = props.layerTable
@@ -38,9 +37,7 @@ function M.suite_setup()
   -- bookTable.commandHandler({book=bookName}, nil,  true)
   -- pageTable.commandHandler({page=pageName},nil,  true)
   selectors.componentSelector.iconHander()
-  selectors.componentSelector:onClick(true,  "layerTable")
-
-
+  selectors.componentSelector:onClick(true, "layerTable")
 end
 
 function M.setup()
@@ -54,7 +51,6 @@ end
 --  particles
 --  canvas
 --  sync
-
 
 function M.xtest_new_video()
   UI.scene.app:dispatchEvent(
@@ -89,14 +85,14 @@ function M.xtest_new_spritesheet()
   --   time = 600
   -- }
 
-  local rnd = math.random( 1,16 )
-  helper.setProp(listPropsTable.objs, "start",  (rnd * 4) - 3)
+  local rnd = math.random(1, 16)
+  helper.setProp(listPropsTable.objs, "start", (rnd * 4) - 3)
   helper.setProp(listPropsTable.objs, "count", 4)
   helper.setProp(listPropsTable.objs, "time", 600)
   helper.setProp(listPropsTable.objs, "loopCount", "")
   --
-  rnd = string.format( "%02d", rnd )
-  helper.setProp(listPropsTable.objs, "name", "tile_"..rnd)
+  rnd = string.format("%02d", rnd)
+  helper.setProp(listPropsTable.objs, "name", "tile_" .. rnd)
 
   obj = helper.getObj(listButtons.objs, "Preview")
   obj:tap()
@@ -112,8 +108,8 @@ function M.xtest_new_spritesheet_sheetInfo()
   -- this calculates w, h of sprite
   --helper.clickProp(classProps.objs, "_filename")
 
- local obj = helper.getObj(listbox.objs, "default")
- listbox.singleClickEvent(obj)
+  local obj = helper.getObj(listbox.objs, "default")
+  listbox.singleClickEvent(obj)
 
   -- local rnd = math.random( 1,16 )
   -- helper.setProp(listPropsTable.objs, "start",  (rnd * 4) - 3)
@@ -130,120 +126,140 @@ function M.xtest_new_spritesheet_sheetInfo()
 
   local controller = require("editor.replacement.controller.index")
   local props = controller:useClassEditorProps(UI)
-
 end
 
-function M.xtest_new_spritesheet_sheetInfo_Animate()
-  helper.selectLayer("starfish")
-  helper.selectIcon("Replacements", "Sprite")
+function M.test_new_spritesheet_sheetInfo_Animate()
+  local cnt = 0
 
-  helper.clickProp(classProps.objs, "sheetInfo")
-  helper.clickAsset(assetTable.objs, "sprites/girlBicyle.png")
-  --helper.setProp(classProps.objs, "numFrames", 64)
-  -- this calculates w, h of sprite
-  --helper.clickProp(classProps.objs, "_filename")
+  local function steps()
+    helper.selectLayer("starfish")
+    helper.selectIcon("Replacements", "Sprite")
 
- local obj = helper.getObj(listbox.objs, "default")
- listbox.singleClickEvent(obj)
+    coroutine.yield()
 
-  -- local rnd = math.random( 1,16 )
-  -- helper.setProp(listPropsTable.objs, "start",  (rnd * 4) - 3)
-  helper.setProp(listPropsTable.objs, "count", 48)
-  -- helper.setProp(listPropsTable.objs, "time", 600)
-  helper.setProp(listPropsTable.objs, "loopCount", "")
-  -- --
-  -- rnd = string.format( "%02d", rnd )
-  -- helper.setProp(listPropsTable.objs, "name", "tile_"..rnd)
+    helper.clickProp(classProps.objs, "sheetInfo")
+    helper.clickAsset(assetTable.objs, "sprites/girlBicyle.png")
+    --helper.setProp(classProps.objs, "numFrames", 64)
+    -- this calculates w, h of sprite
+    --helper.clickProp(classProps.objs, "_filename")
+    coroutine.yield()
 
-  obj = helper.getObj(listButtons.objs, "Preview")
-  obj = helper.getObj(listButtons.objs, "Save")
-  obj:tap()
+    local obj = helper.getObj(listbox.objs, "default")
+    listbox.singleClickEvent(obj)
+
+    coroutine.yield()
+
+    -- local rnd = math.random( 1,16 )
+    -- helper.setProp(listPropsTable.objs, "start",  (rnd * 4) - 3)
+    helper.setProp(listPropsTable.objs, "count", 48)
+
+    coroutine.yield()
+
+    -- helper.setProp(listPropsTable.objs, "time", 600)
+    helper.setProp(listPropsTable.objs, "loopCount", "")
+
+    coroutine.yield()
+    -- --
+    -- rnd = string.format( "%02d", rnd )
+    -- helper.setProp(listPropsTable.objs, "name", "tile_"..rnd)
+
+    obj = helper.getObj(listButtons.objs, "Preview")
+    -- obj = helper.getObj(listButtons.objs, "Save")
+    obj:tap()
+  end
+
+  local co = coroutine.create(steps)
+
+  timer.performWithDelay(
+    1000,
+    function()
+      coroutine.resume(co)
+    end,
+    6
+  )
 end
 
-
 ---[[
-  function M.xtest_new_sync()
-    UI.scene.app:dispatchEvent(
-      {
-        name = "editor.selector.selectTool",
-        UI = UI,
-        class = "sync", -- obj.class,
-        -- toolbar = self,
-        isNew = true
-      }
-    )
-  end
+function M.xtest_new_sync()
+  UI.scene.app:dispatchEvent(
+    {
+      name = "editor.selector.selectTool",
+      UI = UI,
+      class = "sync", -- obj.class,
+      -- toolbar = self,
+      isNew = true
+    }
+  )
+end
 --]]
 
 ---[[
-  function M.xtest_new_sync_add_save()
-    UI.scene.app:dispatchEvent(
-      {
-        name = "editor.selector.selectTool",
-        UI = UI,
-        class = "sync", -- obj.class,
-        -- toolbar = self,
-        isNew = true
-      }
-    )
+function M.xtest_new_sync_add_save()
+  UI.scene.app:dispatchEvent(
+    {
+      name = "editor.selector.selectTool",
+      UI = UI,
+      class = "sync", -- obj.class,
+      -- toolbar = self,
+      isNew = true
+    }
+  )
 
-    UI.scene.app:dispatchEvent(
-      {
-        name = "editor.replacement.list.add",
-        UI = UI,
-        type = "line", -- for sync,
-        index = 3 -- number of entries
-      }
-    )
+  UI.scene.app:dispatchEvent(
+    {
+      name = "editor.replacement.list.add",
+      UI = UI,
+      type = "line", -- for sync,
+      index = 3 -- number of entries
+    }
+  )
 
-    local listPropsTable = require("editor.replacement.listPropsTable")
-    -- name props
-    listPropsTable.objs[1].field.text = "myName"
-    -- start
-    listPropsTable.objs[2].field.text = "3000"
+  local listPropsTable = require("editor.replacement.listPropsTable")
+  -- name props
+  listPropsTable.objs[1].field.text = "myName"
+  -- start
+  listPropsTable.objs[2].field.text = "3000"
 
-    UI.scene.app:dispatchEvent(
-      {
-        name = "editor.replacement.list.save",
-        UI = UI,
-        class = "sync", -- obj.class,
-        index = 4
-      }
-    )
-
-  end
+  UI.scene.app:dispatchEvent(
+    {
+      name = "editor.replacement.list.save",
+      UI = UI,
+      class = "sync", -- obj.class,
+      index = 4
+    }
+  )
+end
 --]]
 
 ---[[
-  function M.xtest_new_canvas()
-    UI.scene.app:dispatchEvent(
-      {
-        name = "editor.selector.selectTool",
-        UI = UI,
-        class = "canvas", -- obj.class,
-        -- toolbar = self,
-        isNew = true
-      }
-    )
-  end
+function M.xtest_new_canvas()
+  UI.scene.app:dispatchEvent(
+    {
+      name = "editor.selector.selectTool",
+      UI = UI,
+      class = "canvas", -- obj.class,
+      -- toolbar = self,
+      isNew = true
+    }
+  )
+end
 --]]
 
 ---[[
-  function M.xtest_new_particles()
-    UI.scene.app:dispatchEvent(
-      {
-        name = "editor.selector.selectTool",
-        UI = UI,
-        class = "particles", -- obj.class,
-        -- toolbar = self,
-        isNew = true
-      }
-    )
-  end
+function M.xtest_new_particles()
+  UI.scene.app:dispatchEvent(
+    {
+      name = "editor.selector.selectTool",
+      UI = UI,
+      class = "particles", -- obj.class,
+      -- toolbar = self,
+      isNew = true
+    }
+  )
+end
 --]]
 
-
-function M.test_util()
+function M.xtest_util()
   local json = require("json")
   local scene = {
     components = {
@@ -253,18 +269,7 @@ function M.test_util()
         },
         {butBlue = {class = {"button"}}},
         {
-          groupOne = {
-            -- {A = {}},
-            -- {
-            --   B = {class = {"animation"}},
-            -- },
-            -- {
-            --   groupTwo = {
-            --     {C = {}},
-            --     {D = {class = {"linear"}}}
-            --   }
-            -- }
-          }
+          groupOne = {}
         }
       },
       audios = {},
@@ -290,7 +295,6 @@ function M.test_util()
 
   local controller = require("editor.controller.index")
   controller:renderIndex("book", "page1", renderdModel)
-
 end
 
 return M
