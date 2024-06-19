@@ -64,7 +64,7 @@ function M.xtest_new_video()
   )
 end
 
-function M.xtest_new_spritesheet()
+function M.test_new_spritesheet()
   helper.selectLayer("starfish")
   helper.selectIcon("Replacements", "Sprite")
 
@@ -128,7 +128,7 @@ function M.xtest_new_spritesheet_sheetInfo()
   local props = controller:useClassEditorProps(UI)
 end
 
-function M.test_new_spritesheet_sheetInfo_Animate()
+function M.xtest_new_spritesheet_sheetInfo_Animate()
   local cnt = 0
 
   local function steps()
