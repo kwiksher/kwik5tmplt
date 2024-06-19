@@ -119,17 +119,17 @@ function M:show(UI, props)
   if self.instance then
     self.instance:destroy()
     self.group:removeSelf()
-  else
+  end
     print("@@@", props.layerProps.name)
     props.objs = {}
     self.instance = spritesheet.new(props)
-  end
+  --end
 
   self.group = display.newGroup()
   self.instance:create{sceneGroup = self.group}
 
   local obj = self.instance.objs[1]
-  -- print("@@@@ ", obj.name, obj.width, obj.height)
+  print("@@@@ ", obj.name, obj.width, obj.height)
   local size = 100
   if obj.width > 100 or obj.height > 100 then
     local scaleW = obj.width/100
