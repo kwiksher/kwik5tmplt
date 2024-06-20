@@ -64,68 +64,58 @@ function M.xtest_new_video()
   )
 end
 
-function M.test_new_spritesheet()
-  helper.selectLayer("starfish")
-  helper.selectIcon("Replacements", "Sprite")
+function M.xtest_new_spritesheet()
+  local function steps()
+    helper.selectLayer("starfish")
+    helper.selectIcon("Replacements", "Sprite")
 
-  helper.clickProp(classProps.objs, "_filename")
-  helper.clickAsset(assetTable.objs, "sprites/SpriteTiles/sprites.png")
-  helper.setProp(classProps.objs, "numFrames", 64)
-  -- this calculates w, h of sprite
-  helper.clickProp(classProps.objs, "_filename")
+    coroutine.yield()
 
-  local obj = helper.getObj(listbox.objs, "default")
-  listbox.singleClickEvent(obj)
+    helper.clickProp(classProps.objs, "_filename")
+    helper.clickAsset(assetTable.objs, "sprites/SpriteTiles/sprites.png")
+    helper.setProp(classProps.objs, "numFrames", 64)
+    -- this calculates w, h of sprite
+    helper.clickProp(classProps.objs, "_filename")
 
-  -- local rnd = math.random( 1,16 )
-  -- local sequenceData = {
-  --   name = "character",
-  --   start = (rnd * 4) - 3,
-  --   count = 4,
-  --   time = 600
-  -- }
+    coroutine.yield()
 
-  local rnd = math.random(1, 16)
-  helper.setProp(listPropsTable.objs, "start", (rnd * 4) - 3)
-  helper.setProp(listPropsTable.objs, "count", 4)
-  helper.setProp(listPropsTable.objs, "time", 600)
-  helper.setProp(listPropsTable.objs, "loopCount", "")
-  --
-  rnd = string.format("%02d", rnd)
-  helper.setProp(listPropsTable.objs, "name", "tile_" .. rnd)
+    local obj = helper.getObj(listbox.objs, "default")
+    listbox.singleClickEvent(obj)
 
-  obj = helper.getObj(listButtons.objs, "Preview")
-  obj:tap()
-end
+    coroutine.yield()
 
-function M.xtest_new_spritesheet_sheetInfo()
-  helper.selectLayer("starfish")
-  helper.selectIcon("Replacements", "Sprite")
+    -- local rnd = math.random(1, 16)
+    local rnd = 1
+    helper.setProp(listPropsTable.objs, "start", (rnd * 4) - 3)
+    helper.setProp(listPropsTable.objs, "count", 4)
+    helper.setProp(listPropsTable.objs, "time", 600)
+    helper.setProp(listPropsTable.objs, "loopCount", "")
 
-  helper.clickProp(classProps.objs, "sheetInfo")
-  helper.clickAsset(assetTable.objs, "sprites/slots.png")
-  --helper.setProp(classProps.objs, "numFrames", 64)
-  -- this calculates w, h of sprite
-  --helper.clickProp(classProps.objs, "_filename")
+    coroutine.yield()
 
-  local obj = helper.getObj(listbox.objs, "default")
-  listbox.singleClickEvent(obj)
+    --
+    rnd = string.format("%02d", rnd)
+    helper.setProp(listPropsTable.objs, "name", "tile_" .. rnd)
 
-  -- local rnd = math.random( 1,16 )
-  -- helper.setProp(listPropsTable.objs, "start",  (rnd * 4) - 3)
-  helper.setProp(listPropsTable.objs, "count", 16)
-  -- helper.setProp(listPropsTable.objs, "time", 600)
-  -- helper.setProp(listPropsTable.objs, "loopCount", "")
-  -- --
-  -- rnd = string.format( "%02d", rnd )
-  -- helper.setProp(listPropsTable.objs, "name", "tile_"..rnd)
+    coroutine.yield()
 
-  --obj = helper.getObj(listButtons.objs, "Preview")
-  obj = helper.getObj(listButtons.objs, "Save")
-  obj:tap()
+    obj = helper.getObj(listButtons.objs, "Preview")
+    obj:tap()
 
-  local controller = require("editor.replacement.controller.index")
-  local props = controller:useClassEditorProps(UI)
+    coroutine.yield()
+
+    -- obj = helper.getObj(listButtons.objs, "Save")
+    -- obj:tap()
+  end
+
+  local co = coroutine.create(steps)
+  timer.performWithDelay(
+    1000,
+    function()
+      coroutine.resume(co)
+    end,
+    7
+  )
 end
 
 function M.xtest_new_spritesheet_sheetInfo_Animate()
@@ -177,6 +167,36 @@ function M.xtest_new_spritesheet_sheetInfo_Animate()
     end,
     6
   )
+end
+
+function M.xtest_new_spritesheet_sheetInfo()
+  helper.selectLayer("starfish")
+  helper.selectIcon("Replacements", "Sprite")
+
+  helper.clickProp(classProps.objs, "sheetInfo")
+  helper.clickAsset(assetTable.objs, "sprites/slots.png")
+  --helper.setProp(classProps.objs, "numFrames", 64)
+  -- this calculates w, h of sprite
+  --helper.clickProp(classProps.objs, "_filename")
+
+  local obj = helper.getObj(listbox.objs, "default")
+  listbox.singleClickEvent(obj)
+
+  -- local rnd = math.random( 1,16 )
+  -- helper.setProp(listPropsTable.objs, "start",  (rnd * 4) - 3)
+  helper.setProp(listPropsTable.objs, "count", 16)
+  -- helper.setProp(listPropsTable.objs, "time", 600)
+  -- helper.setProp(listPropsTable.objs, "loopCount", "")
+  -- --
+  -- rnd = string.format( "%02d", rnd )
+  -- helper.setProp(listPropsTable.objs, "name", "tile_"..rnd)
+
+  --obj = helper.getObj(listButtons.objs, "Preview")
+  obj = helper.getObj(listButtons.objs, "Save")
+  obj:tap()
+
+  local controller = require("editor.replacement.controller.index")
+  local props = controller:useClassEditorProps(UI)
 end
 
 ---[[
