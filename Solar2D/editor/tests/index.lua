@@ -5,14 +5,16 @@ local M = {
 
     -- lunatest.suite("editor.tests.suite_assets", props)
     -- lunatest.suite("editor.tests.suite_page1_page_props", props)
-    lunatest.suite("editor.tests.suite_page1_replacements", props)
+    -- lunatest.suite("editor.tests.suite_page1_replacements", props)
     -- lunatest.suite("editor.tests.suite_page1_animation", props)
     -- lunatest.suite("editor.tests.suite_page1_button", props)
     -- lunatest.suite("editor.tests.suite_page1_action", props)
     -- lunatest.suite("editor.tests.suite_page1_group", props)
     -- lunatest.suite("editor.tests.suite_page1_audio", props)
-    -- lunatest.suite("editor.tests.suite_page4_physics", props)
     -- lunatest.suite("editor.tests.suite_page1_select_copy_paste", props)
+
+    lunatest.suite("editor.tests.suite_page2_sync2audio", props)
+    -- lunatest.suite("editor.tests.suite_page4_physics", props)
 
     -- lunatest.suite("editor.tests.suite_new_book_page_layer", props)
     -- lunatest.suite("editor.tests.suite_new_shape_transform", props)

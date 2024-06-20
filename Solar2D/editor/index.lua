@@ -11,7 +11,7 @@ local json = require("json")
 local bt = require(parent..'controller.BTree.btree')
 local tree = require(parent.."controller.BTree.selectorsTree")
 --
-M.lastSelection = { book="book", page="page1"}
+M.lastSelection = { book="book", page="page2"}
 
 local unitTestOn = true
 local httpServerOn = true
