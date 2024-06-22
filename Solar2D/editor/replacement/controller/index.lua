@@ -140,15 +140,14 @@ function M:useClassEditorProps(UI)
     props.properties[#props.properties+ 1] = {name = name, value = value}
   end
 
-  props.sequenceData = self.listbox:getValue()
-
-  -- onComplete
-  if self.actionbox.isActive then
-    props.actionName =self.actionbox.value
+  if self.listbox.type == "sequenceData" then
+    props.sequenceData = self.listbox:getValue()
+  elseif self.listbox.type =="line" then -- this means sync (class == sync)
+    props.line = self.listbox:getValue()
+    props.textProps = self.textProps:getValue()
+    props.audioProps = self.audioProps:getValue()
+    props.onComplete =self.actionbox:getValue("onComplete")
   end
-  --
-  -- TBI? listbox
-  --
   return props
 end
 

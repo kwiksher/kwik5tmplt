@@ -74,7 +74,13 @@ function M.xtest_read_timecode()
   textProps:read("App/book/assets/audios/sync/alphabet.txt")
 end
 
-function M.test_new_sync()
+function M.test_select_sync()
+  layerTable.altDown = true
+  helper.selectLayer("text1", "sync")
+  layerTable.altDown = false
+end
+
+function M.xtest_new_sync()
 
   helper.selectLayer("text1")
   helper.selectIcon("Replacements", "Sync")

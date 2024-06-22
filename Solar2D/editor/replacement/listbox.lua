@@ -27,6 +27,10 @@ headers.sequenceData = {"name", "start", "count", "frames", "loopCount", "loopDi
 
 M.headers = headers
 
+-- name   start   out   dur file action
+--  A   1.00   2.00         a.mp3
+--  B   2.00   4.00         b.mp3
+--
 function M:getValue()
   local ret = {}
   for i, obj in next, self.objs do
@@ -43,6 +47,9 @@ function M:getValue()
       if obj.name == "frames" then
         local len =  obj.text:len()
         entry[obj.name] = obj.text:sub(2, len-1)
+      end
+      if obj.name == "dur" and obj.text == "" then
+        entry.dur = 0
       end
     end
   end
