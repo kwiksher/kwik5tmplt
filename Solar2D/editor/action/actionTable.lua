@@ -133,6 +133,9 @@ function M:create(UI)
       self:destroy()
       if fooValue then
         self.objs, self.newButton, self.editButton = render(fooValue,0,0)
+        -- if #fooValue == 0 then
+        --   self:hide()
+        -- end
       end
     end
   )

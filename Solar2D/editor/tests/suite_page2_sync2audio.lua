@@ -15,6 +15,19 @@ local classProps = require("editor.parts.classProps")
 local assetTable = require("editor.asset.assetTable")
 local listButtons = require("editor.replacement.listButtons")
 local util = require("lib.util")
+local actionTable = require("editor.action.actionTable")
+
+function touchAction(name)
+  actionTable.altDown = true
+  for i, v in next, actionTable.objs do
+    if v.text == name then
+      -- v:dispatchEvent{name="touch", pahse="ended", target=v}
+      v:touch{phase = "ended"}
+      break
+    end
+  end
+  actionTable.altDown = false
+end
 
 function M.init(props)
   selectors = props.selectors
@@ -56,41 +69,61 @@ function M.xtest_slider()
   obj.y = 50
 end
 
-function M.test_read_timecode()
+function M.xtest_read_timecode()
   local textProps  = require("editor.replacement.textProps")
   textProps:read("App/book/assets/audios/sync/alphabet.txt")
 end
 
-function M.xtest_new_sync()
+function M.test_new_sync()
 
   helper.selectLayer("text1")
   helper.selectIcon("Replacements", "Sync")
 
+  -- helper.setProp(classProps.objs, "autoPlay", false)
+
   -- select text & audio
-  -- helper.clickProp(classProps.objs, "audio")
-  -- helper.clickAsset(assetTable.objs, "alphabet.mp3")
+  local audioProps = require("editor.replacement.audioProps")
+  helper.clickProp(audioProps.objs, "_filename")
+  helper.clickAsset(assetTable.objs, "sync/alphabet.mp3")
   ---- helper.clickProp(classProps.objs, "text")
 
-  -- select wordTouch
-  -- helper.clickProp(classProps.objs, "wordTouch")
-  -- helper.clickAsset(assetTable.objs, "sync/alphabet")
+  local actionbox = require("editor.parts.actionbox")
+  local obj = actionbox.objs[1] -- onComplete
+  obj:dispatchEvent({name="tap", target=obj})
+  touchAction("eventOne")
 
-  -- helper.setProp(classProps.objs, "autoPlay", false)
+  local textProps = require("editor.replacement.textProps")
+  helper.clickProp(textProps.objs, "_filename")
+  helper.clickAsset(assetTable.objs, "sync/alphabet.txt")
+
 
   local obj = helper.getObj(listbox.objs, "A")
   listbox.singleClickEvent(obj)
 
   helper.setProp(listPropsTable.objs, "dur", "1000")
 
-  -- select a file
-  -- helper.clickProp(listPropsTable.objs, "file")
-
   -- select an action
-  -- helper.clickProp(listPropsTable.objs, "action")
+  helper.clickProp(listPropsTable.objs, "action")
+  -- helper.clickProp(listPropsTable.objs, "action") -- why needs twice?
+  touchAction("eventTwo")
 
+  helper.setProp(listPropsTable.objs, "dur", "1000")
 
-  -- obj = helper.getObj(listButtons.objs, "Preview")
-  -- obj:tap()
+  obj = helper.getObj(listButtons.objs, "Save")
+  obj:tap()
+
+end
+
+function M.xtest_new_sync_select_listbox()
+
+  helper.selectLayer("text1")
+  helper.selectIcon("Replacements", "Sync")
+
+  local obj = helper.getObj(listbox.objs, "A")
+  listbox.singleClickEvent(obj)
+
+  helper.setProp(listPropsTable.objs, "dur", "1000")
+
 
 end
 
