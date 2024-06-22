@@ -13,17 +13,21 @@ local instance =
   function(params)
     local UI = params.UI
     local type = listPropsTable.model.type
-    print(name, params.index)
-    local ret = listPropsTable:getValue()
-    print (type, json.encode(ret))
-    print(name)
-    print ("@@", json.encode(listbox.value[params.index]))
-    --
-    local props = controller:getClassEditorProps(UI)
-    print ("----- classProps ---- /n", json.encode(props))
+    if type == "sequenceData" then
+      print(name, params.index)
+      local ret = listPropsTable:getValue()
+      print (type, json.encode(ret))
+      print(name)
+      print ("@@", json.encode(listbox.value[params.index]))
+      --
+      local props = controller:getClassEditorProps(UI)
+      print ("----- classProps ---- /n", json.encode(props))
 
-    props.sequenceData = {ret}
-    previewPanel:show(UI, props)
+      props.sequenceData = {ret}
+      previewPanel:show(UI, props)
+    else
+      print("not supported", type)
+    end
   end
 )
 --

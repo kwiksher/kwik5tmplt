@@ -72,7 +72,6 @@ end
 local buttons  = require("editor.action.buttons")
 
 function M:showActionTable(actionbox)
-
   ---
   --- there were multiple instances of actionbox from selectAudio, actionTable and sync's word action
   ---
@@ -86,8 +85,8 @@ function M:showActionTable(actionbox)
     self:show()
     buttons:hide()
   else
-    UI.editor.actionStore:set({})
-    self:hide()
+    -- UI.editor.actionStore:set({})
+    -- self:hide()
   end
 end
 

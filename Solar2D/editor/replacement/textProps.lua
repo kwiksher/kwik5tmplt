@@ -1,27 +1,46 @@
+local current = ...
+local parent, root = newModule(current)
 local M = require("editor.parts.baseProps").new()
 ---------------------------
 local assetTable = require("editor.asset.assetTable")
 
 M.name = "textProps"
 M.class = "audio"
-local obj
+M.type = "line" -- sequenceData
+local obj, sentenceDir
 
 function M:setActiveProp(value)
+  local UI = self.UI
   assetTable:hide()
   local name =self.activeProp or ""
   for i,v in next, self.objs or {} do
     if v.text == name then -- should be _filename
       v.field.text = value
     elseif v.text == "sentenceDir" then
-      v.field.text = value:sub(1, value:len()-4)
+      sentenceDir = value:sub(1, value:len()-4)
+      v.field.text = sentenceDir
     end
     print(v.text)
   end
   --print("Warning activeProp name is not found for", self.activeProp)
 
-  -- TODO
   --  update listbox by reading timecodes txt
   --    check word.mp3 in sentenceDir
+  local listbox = require(parent.."listbox")
+
+  local path = "App/" .. UI.book.."/assets/audios/"..value
+  local sentenceDirPath = "App/"..UI.book.."/assets/audios/"..sentenceDir
+
+
+  local entries = self:read(path)
+  for i, v in next, entries do
+    print(sentenceDir.."/"..v.file)
+    if system.pathForFile(sentenceDirPath.."/"..v.file,  system.ResourceDirectory ) == nil then
+      v.file =""
+    end
+    listbox:setValue(entries, self.type)
+  end
+
 end
 
 
@@ -43,7 +62,7 @@ function M:read(path)
   for line in file:lines() do
       local startTime, endTime, name = line:match("(%S+)%s+(%S+)%s+(%S+)")
       if startTime and endTime and name then
-          table.insert(data, {start = tonumber(startTime), out = tonumber(endTime), name = name, file=name..".mp3", action=""})
+          table.insert(data, {start = string.format("%.3f",tonumber(startTime)), out = string.format("%.3f",tonumber(endTime)), name = name, file=name:lower()..".mp3", action=""})
       else
           print("Invalid line format: " .. line)
       end
@@ -54,9 +73,12 @@ function M:read(path)
 
   -- Print the parsed data (you can modify this part as needed)
   for _, entry in ipairs(data) do
-      print(string.format("start: %.3f, end: %.3f, name: %s", entry.startTime, entry.endTime, entry.name))
+      print(string.format("start: %.3f, end: %.3f, name: %s", entry.start, entry.out, entry.name))
   end
   return data
+end
+
+function M:showThumnail()
 end
 
 return M
