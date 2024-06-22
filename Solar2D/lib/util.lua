@@ -63,6 +63,19 @@ end
 local lustache = require "extlib.lustache"
 local json     = require("json")
 --
+---
+function exports.jsonFile(filename )
+  local path = system.pathForFile(filename, system.ResourceDirectory )
+  local contents
+  local file = io.open( path, "r" )
+  if file then
+     contents = file:read("*a")
+     io.close(file)
+     file = nil
+  end
+  return contents
+end
+
 function exports.renderer (tmpltPath, outPath, model)
 	--- .lua
 	local file, errorString = io.open( tmpltPath..".lua", "r" )

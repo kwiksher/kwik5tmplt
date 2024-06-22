@@ -94,7 +94,9 @@ local function readAsset(path, folder, map, parent)
           if parent==nil then
             entries[#entries + 1] = {name=file, path=folder, links={}}
           else
-            entries[#entries + 1] = {name=file, path=parent.."/"..folder, links={}}
+            local v = parent.."/"..folder
+
+            entries[#entries + 1] = {name=file, path=v:gsub("audios/",""), links={}}
           end
         else
           mapEntry.isExist = true

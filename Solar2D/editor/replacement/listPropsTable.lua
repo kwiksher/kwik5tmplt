@@ -1,13 +1,13 @@
-local M = {}
 local current = ...
-local parent = current:match("(.-)[^%.]+$")
-local root = parent:sub(1, parent:len() - 1):match("(.-)[^%.]+$")
+local parent,  root, M = newModule(current)
 --
-M.name = current
-M.weight = 1
+
+local actionEditor = require("editor.action.index")
+local actionTable = require("editor.action.actionTable")
+--local actoinbox = require(parent.."actionbox")
 
 local listbox = require(parent .. "listbox")
-local linkbox = require(root .. "parts.linkbox").new({width = 55})
+-- local linkbox = require(root .. "parts.linkbox").new({width = 55})
 
 ---
 local util = require("lib.util")
@@ -18,6 +18,29 @@ M.y = display.contentCenterY + 40 --listbox.y + 70  -- (display.actualContentHei
 
 function M:init(UI)
 end
+
+local function tapListenerAction(event)
+  print("action tap listener")
+  M.activeProp = event.target.text
+  actionEditor:showActionTable(M)
+end
+
+function M:setActiveProp(value)
+
+  actionTable:hide()
+  print("@@@", value)
+
+  local name =self.activeProp or ""
+  for i,v in next, self.objs or {} do
+    if v.text == name then
+      v.field.text = value
+      print("###", self.activeProp, value, #self.objs, self)
+      return
+    end
+  end
+  print("Warning activeProp name is not found for", self.activeProp)
+end
+
 
 local option, newText =
   util.newTextFactory {
@@ -58,15 +81,15 @@ function M:render(props)
 
     -- Edit
     if header == "action" then
-      linkbox:load(self.UI, "action", obj.x + obj.width / 2, obj.y - obj.height / 4, value)
-      obj.linkbox = linkbox
-    else
-      option.x = self.x + option.width / 2 + 5
-      option.text = value
-      --
-      obj.field = newTextField(option)
+      -- linkbox:load(self.UI, "action", obj.x + obj.width / 2, obj.y - obj.height / 4, value)
+      -- obj.linkbox = linkbox
+      obj:addEventListener("tap", tapListenerAction)
     end
 
+    option.x = self.x + option.width / 2
+    option.text = value
+    --
+    obj.field = newTextField(option)
     objs[#objs + 1] = obj
 
     -- objs[#objs + 1] = obj
@@ -103,7 +126,7 @@ function M:getValue()
         value = tonumber(value)
       end
     else -- action
-      value = self.objs[i].linkbox.value
+      -- value = self.objs[i].linkbox.value
     end
     --
     -- print(key,value)
@@ -118,22 +141,22 @@ function M:setValue(props)
   self:destroy()
   print("------- listPropsTable --------")
   self:render(props)
-  linkbox.callbackTriagnle = function(isOn)
-    if isOn then
-      for i = 1, #self.objs do
-        if self.objs[i].field then
-          self.objs[i].field.alpha = 1
-        end
-      end
-    else
-      for i = 1, #self.objs do
-        if self.objs[i].field then
-          self.objs[i].field.alpha = 0.1
-        end
-      end
-    end
-  end
-  --
+  -- linkbox.callbackTriagnle = function(isOn)
+  --   if isOn then
+  --     for i = 1, #self.objs do
+  --       if self.objs[i].field then
+  --         self.objs[i].field.alpha = 1
+  --       end
+  --     end
+  --   else
+  --     for i = 1, #self.objs do
+  --       if self.objs[i].field then
+  --         self.objs[i].field.alpha = 0.1
+  --       end
+  --     end
+  --   end
+  -- end
+  -- --
   --
   --------
   -- save
@@ -167,12 +190,12 @@ end
 --
 function M:didShow(UI)
   self:show()
-  linkbox:didShow()
+  -- linkbox:didShow()
 end
 --
 function M:didHide(UI)
   self:hide()
-  linkbox:didHide()
+  -- linkbox:didHide()
 end
 --
 function M:destroy()
@@ -204,7 +227,7 @@ function M:hide()
       self.objs[i].field.isVisible = false
     end
   end
-  linkbox:hide()
+  -- linkbox:hide()
 end
 
 function M:show()
@@ -221,7 +244,7 @@ function M:show()
       self.objs[i].field.isVisible = true
     end
   end
-  linkbox:show()
+  -- linkbox:show()
 end
 --
 return M

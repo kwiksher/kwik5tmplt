@@ -74,10 +74,11 @@ local buttons  = require("editor.action.buttons")
 function M:showActionTable(actionbox)
 
   ---
-  --- there were two instances of actionbox from selectAudio actionTable
-  ---  s
+  --- there were multiple instances of actionbox from selectAudio, actionTable and sync's word action
+  ---
   local actionTable = require("editor.action.actionTable")
   actionTable.actionbox = actionbox
+  actionTable:show()
 
   local UI = self.UI
   if not self.isVisible then

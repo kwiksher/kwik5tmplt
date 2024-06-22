@@ -20,6 +20,9 @@ function M:init(viewGroup)
   self.listPropsTable = viewGroup.listPropsTable
   self.listButtons = viewGroup.listButtons
 
+  self.audioProps = viewGroup.audioProps
+  self.textProps  = viewGroup.textProps
+
   self.listButtons:init()
   --print(debug.traceback())
   --
@@ -42,7 +45,9 @@ function M:show()
     self.classProps,
     self.actionbox,
     self.buttons,
-    self.listbox
+    self.listbox,
+    self.textProps,
+    self.audioProps
   }
   for k, v in pairs(viewGroup) do
     v:show()
@@ -179,6 +184,13 @@ function M:setValue(decoded, index, template)
       end
       self.listbox:setValue(decoded.sequenceData or  decoded.line, type)
       self.listbox.isActive = true
+    end
+    --
+    if decoded.audioProps then
+      self.audioProps:setValue(decoded.audioProps)
+    end
+    if decoded.textProps then
+      self.textProps:setValue(decoded.textProps)
     end
   end
 end

@@ -153,6 +153,19 @@ function M:didHide(UI)
   end
   Runtime:removeEventListener("key", onKeyEvent)
 end
+
+function M:hide()
+  if self.objs then
+    self.group.isVisible = false
+  end
+end
+
+function M:show()
+  if self.objs then
+    self.group.isVisible = true
+  end
+end
+
 --
 function M:destroy()
   if self.objs then

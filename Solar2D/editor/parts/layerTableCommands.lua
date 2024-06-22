@@ -77,13 +77,18 @@ local function singleSelection(layerTable, target)
     end
     layerTable.selection = nil
   else
-    layerTable.selection = target
-    for i = 1, #layerTable.selections do
-      if layerTable.selections[i].rect then
-        layerTable.selections[i].rect:setFillColor(0.8)
-        layerTable.selections[i].rect:setStrokeColor(0.8)
+    if layerTable.selections then
+      print("@@",#layerTable.selections)
+      for i = 1, #layerTable.selections do
+        local obj = layerTable.selections[i]
+        print("", obj.text)
+        if obj.rect and obj.setFillColor then
+          obj.rect:setFillColor(0.8)
+          obj.rect:setStrokeColor(0.8)
+        end
       end
     end
+    layerTable.selection = target
     --
     layerTable.selections = {target}
     target.isSelected = true

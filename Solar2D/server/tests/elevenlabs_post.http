@@ -1,16 +1,18 @@
-# @host=https://api.elevenlabs.io/v1
-# # text-to-speech/{voice_id}/with-timestamps \
-# GET /voices
-# xi_api_key: sk_f750d17592caac9551f6736bab0027d58c49a1d1b4e96000
+@host=https://api.elevenlabs.io/v1
+@voice_id=21m00Tcm4TlvDq8ikWAM
 
 # https://elevenlabs.io/docs/voices/premade-voices#languages
-
 # https://help.elevenlabs.io/hc/en-us/articles/21811236079505-How-do-I-find-the-model-ID
 
-@voice_id=21m00Tcm4TlvDq8ikWAM
-@host=https://api.elevenlabs.io/v1
+#####
 
-POST /text-to-speech/21m00Tcm4TlvDq8ikWAM/with-timestamps
+GET /voices
+xi_api_key: sk_f750d17592caac9551f6736bab0027d58c49a1d1b4e96000
+
+
+#####
+
+POST /text-to-speech/{{voice_id}}/with-timestamps
 xi_api_key: sk_f750d17592caac9551f6736bab0027d58c49a1d1b4e96000
 Content-Type: application/json
 
@@ -23,19 +25,21 @@ Content-Type: application/json
   }
 }
 
->>! ./outputRedirection.json
+>>! ./outputRedirection_jp.json
 
-# POST /text-to-speech/21m00Tcm4TlvDq8ikWAM/with-timestamps
-# xi_api_key: sk_f750d17592caac9551f6736bab0027d58c49a1d1b4e96000
-# Content-Type: application/json
+#####
 
-# {
-#   "text": "Born and raised in the charming south, \n I can add a touch of sweet southern hospitality \n to your audiobooks and podcasts \n",
-#   "model_id": "eleven_multilingual_v2",
-#   "voice_settings": {
-#     "stability": 0.5,
-#     "similarity_boost": 0.75
-#   }
-# }
+POST /text-to-speech/{{voice_id}}/with-timestamps
+xi_api_key: sk_f750d17592caac9551f6736bab0027d58c49a1d1b4e96000
+Content-Type: application/json
 
-# >>! ./outputRedirection.json
+{
+  "text": "Born and raised in the charming south, \n I can add a touch of sweet southern hospitality \n to your audiobooks and podcasts \n",
+  "model_id": "eleven_multilingual_v2",
+  "voice_settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75
+  }
+}
+
+>>! ./outputRedirection_en.json

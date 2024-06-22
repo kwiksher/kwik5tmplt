@@ -214,7 +214,7 @@ function M:createTable(props)
   for i=1, #props do
     local prop = props[i] or {}
     option.text = prop.name
-    -- print("@@ parts.baseProps",i, prop.name, prop.value)
+    print("@@ parts.baseProps",i, prop.name, prop.value)
     option.x = self.x
     option.y = i*option.height + self.y
     -- print(self.group, option.x, option.y, option.width, option.height)
@@ -241,13 +241,18 @@ function M:createTable(props)
       obj:addEventListener("tap", function(event) self:tapListener(event, 'posXY')end)
     elseif prop.name == 'alpha' then
       alphaObj = obj
-    elseif prop.name == 'color' or prop.name == 'imageFile' then
+    elseif prop.name == 'color' or prop.name:find("Color")  or prop.name == 'imageFile' then
+      -- obj.fieldAlpha = alphaObj.field
+      imageObj = obj
+      obj.targetObject = self.targetObject
+      obj.page = "*"..UI.page .."*"
+      obj:addEventListener("tap", function(event) self:tapListener(event, 'color') end)
+    elseif  prop.name == 'imageFile' then
       -- obj.fieldAlpha = alphaObj.field
       imageObj = obj
       obj.targetObject = self.targetObject
       obj.page = "*"..UI.page .."*"
       obj:addEventListener("tap", function(event) self:tapListener(event, prop.name)end)
-
     elseif prop.name == "imageFolder" then
         local onMouseHover = function(event)
           local hoverText = event.target.field.text
@@ -406,7 +411,7 @@ function M:destroy()
 end
 --
 function M:hide()
-  -- print("hide")
+  print("hide", self.name)
   -- print(debug.traceback())
   if self.objs == nil then return end
   for i=1, #self.objs do
@@ -445,6 +450,7 @@ end
 
 
 function M:show()
+  print("show", self.name)
   if self.objs == nil then return end
   for i=1, #self.objs do
     self.objs[i].isVisible = true

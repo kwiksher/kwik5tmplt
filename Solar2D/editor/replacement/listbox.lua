@@ -1,3 +1,6 @@
+local current = ...
+local parent,  root = newModule(current)
+
 local M = {
   x = display.contentCenterX - 480/2 + 10, --10, -- display.contentCenterX/2,
   y = display.contentCenterY + 320/2+5,
@@ -13,6 +16,7 @@ local widget = require("widget")
 local json = require("json")
 local util = require("lib.util")
 
+local textProps = require(parent.."textProps")
 --I/F
 
 local headers = {}
@@ -72,6 +76,8 @@ function M:create(UI)
     end
     self.selection = obj
     self.selection.rect:setFillColor(0,1,0)
+
+    textProps:hide()
   end
   --
   self.addEvent = function(obj)
