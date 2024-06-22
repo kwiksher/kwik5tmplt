@@ -4,7 +4,7 @@ local current = ...
 local parent = current:match("(.-)[^%.]+$")
 local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 
-local utileditor = require(root.."util")
+local editorUtil = require(root.."util")
 local shapes = require("extlib.shapes")
 local widget = require( "widget" )
 local App = require "Application"
@@ -31,7 +31,7 @@ local nodeMap = {} -- for hiding children
 function M:load(UI, type, x, y, selectedValue)
   self:didHide()
   self:destroy()
-  self:init(UI, x, y, type)
+  self:init(UI, x, y, nil, nil, type)
   self:create(UI)
   self:setValue(selectedValue)
   self:didShow()
@@ -42,8 +42,11 @@ function M:setValue(selectedValue)
   local UI = self.UI
   local book = UI.editor.currentBook or App.get().name
   local page = UI.editor.currentPage or UI.page
-  print("linkbox", book, page)
-  self.model = utileditor.read(book, page)
+  print("linkbox", book, page, self.type)
+
+  local scene = require("App." .. book .. ".components." .. page .. ".index")
+
+  self.model = editorUtil.updateIndexModel(scene.model)
   local class = typeMap[self.type]
 
   -- print(debug.traceback())
@@ -197,7 +200,10 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
         obj:addEventListener("touch", obj)
       end
       -- check
-      local path = utileditor.getParent(obj)
+
+  local scene = require("App." .. book .. ".components." .. page .. ".index")
+
+      local path = editorUtil.getParent(obj)
       if obj.layer and selectedValue == path..obj.layer then -- layer is used for audio, action too
         self.selectedIndex = index
         obj.rect:setFillColor(0,1,0)

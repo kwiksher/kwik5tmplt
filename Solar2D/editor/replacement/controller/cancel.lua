@@ -5,6 +5,7 @@ local listPropsTable = require(root.."listPropsTable")
 local listButtons = require(root.."listButtons")
 local buttons       = require("editor.parts.buttons")
 local previewPanel = require(root.."previewPanel")
+local textProps    = require(root.."textProps")
 
 
 local instance =
@@ -16,6 +17,7 @@ local instance =
     listPropsTable:hide()
     buttons:show()
     previewPanel:hide()
+    textProps:show()
   end
 )
 --

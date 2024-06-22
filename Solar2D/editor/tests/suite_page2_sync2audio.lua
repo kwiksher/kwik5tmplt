@@ -14,6 +14,7 @@ local helper = require("editor.tests.helper")
 local classProps = require("editor.parts.classProps")
 local assetTable = require("editor.asset.assetTable")
 local listButtons = require("editor.replacement.listButtons")
+local util = require("lib.util")
 
 function M.init(props)
   selectors = props.selectors
@@ -36,20 +37,56 @@ end
 function M.teardown()
 end
 
+function M.xtest_slider()
+  local slider = require("extlib.slider")
+
+  -- Example usage
+  local obj = slider.createSlider({
+    width = 300,
+    height = 6,
+    thumbRadius = 12,
+    minValue = 0,
+    maxValue = 100,
+    startValue = 50,
+    onChange = function(value)
+        print("Slider value: " .. value)
+    end
+  })
+  obj.x = display.contentCenterX
+  obj.y = 50
+end
+
+function M.test_read_timecode()
+  local textProps  = require("editor.replacement.textProps")
+  textProps:read("App/book/assets/audios/sync/alphabet.txt")
+end
+
 function M.xtest_new_sync()
 
   helper.selectLayer("text1")
   helper.selectIcon("Replacements", "Sync")
 
-  -- helper.clickProp(classProps.objs, "_filename")
-  -- helper.clickAsset(assetTable.objs, "sprites/SpriteTiles/sprites.png")
-  -- helper.setProp(classProps.objs, "numFrames", 64)
-  -- -- this calculates w, h of sprite
-  -- helper.clickProp(classProps.objs, "_filename")
+  -- select text & audio
+  -- helper.clickProp(classProps.objs, "audio")
+  -- helper.clickAsset(assetTable.objs, "alphabet.mp3")
+  ---- helper.clickProp(classProps.objs, "text")
 
-  -- local obj = helper.getObj(listbox.objs, "default")
-  -- listbox.singleClickEvent(obj)
-  -- helper.setProp(listPropsTable.objs, "loopCount", "")
+  -- select wordTouch
+  -- helper.clickProp(classProps.objs, "wordTouch")
+  -- helper.clickAsset(assetTable.objs, "sync/alphabet")
+
+  -- helper.setProp(classProps.objs, "autoPlay", false)
+
+  local obj = helper.getObj(listbox.objs, "A")
+  listbox.singleClickEvent(obj)
+
+  helper.setProp(listPropsTable.objs, "dur", "1000")
+
+  -- select a file
+  -- helper.clickProp(listPropsTable.objs, "file")
+
+  -- select an action
+  -- helper.clickProp(listPropsTable.objs, "action")
 
 
   -- obj = helper.getObj(listButtons.objs, "Preview")
@@ -93,25 +130,14 @@ function M.xtest_new_sync_add_save()
   )
 end
 
-local jsonFile = function(filename )
-  local path = system.pathForFile(filename, system.ResourceDirectory )
-  local contents
-  local file = io.open( path, "r" )
-  if file then
-     contents = file:read("*a")
-     io.close(file)
-     file = nil
-  end
-  return contents
-end
 
 
 
-function M.test_decode64_words()
+function M.xtest_decode64_words()
   local json = require("json")
   local mime = require("mime")
   local path = "server/tests/outputRedirection.json"
-  local data = json.decode(jsonFile(path))
+  local data = json.decode(util.jsonFile(path))
   local alignment = data.alignment
   local normalized_alignment = data.normalized_alignment
 

@@ -500,7 +500,7 @@ end
 
 function M.read(book, page, filter)
   local path = system.pathForFile("App/" .. book .. "/models/" .. page .. "/index.json", system.ResourceDirectory)
-  -- print(path)
+  print("@@@@", path)
 
   local ret = {}
   --
