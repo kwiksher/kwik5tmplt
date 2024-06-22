@@ -60,7 +60,9 @@ end
 function M:newIcon (UI)
   local sceneGroup  = UI.sceneGroup
 
-  local x, y = App.getPosition(self.x + 15, self.y-30)
+  -- local x, y = App.getPosition(self.x + 15, self.y-30)
+  local x, y = self.mX + 15, self.mY-30
+
   -- x = display.contentCenterX
   -- y = display.contentCenterY
   local audioImage = "kAudio.png"
@@ -95,16 +97,16 @@ function M:create(UI)
 
   if self.audioProps == nil then return end
   --
-  local path =  App.getProps().audioDir.."sync/"..self.audioProps.filename
+  local path =  App.getProps().audioDir..self.audioProps.filename
   if self.language then
     if self.folder then
-      path = App.getProps().audioDir.."sync/"..App.getProps().lang.."/"..self.folder.."/"..self.audioProps.filename
+      path = App.getProps().audioDir..App.getProps().lang.."/"..self.folder.."/"..self.audioProps.filename
     else
-      path = App.getProps().audioDir.."sync/"..App.getProps().lang.."/"..self.audioProps.filename
+      path = App.getProps().audioDir..App.getProps().lang.."/"..self.audioProps.filename
     end
   else
     if self.folder then
-      path = App.getProps().audioDir.."sync/"..self.folder.."/"..self.audioProps.filename
+      path = App.getProps().audioDir..self.folder.."/"..self.audioProps.filename
     end
   end
 
@@ -112,7 +114,8 @@ function M:create(UI)
   -- print(path)
   self.audioObj =  audio.loadStream(path , App.getProps().systemDir)
 
-  local x,y = App.getPosition(self.x, self.y)
+  -- local x,y = App.getPosition(self.x, self.y)
+  local x,y = self.mX, self.mY
 
   -- need this?
   -- if self.speakerIcon then
@@ -146,8 +149,8 @@ function M:create(UI)
       fontColor    = self.textProps.fontColor,
       fontSize     = self.textProps.fontSize,
       fontColorHi  = self.textProps.fontColorHi,
-      fadeDuration = self.controls.fadeDuration,
-      wordTouch    = self.controls.wordTouch,
+      fadeDuration = self.properties.fadeDuration,
+      wordTouch    = self.properties.wordTouch,
       readDir      = self.textProps.readDir,
       sentenceDir  = self.textProps.sentenceDir,
       channel      = self.audioProps.channel,
@@ -156,6 +159,7 @@ function M:create(UI)
 
 
   sceneGroup:insert(self.syncObj)
+  sceneGroup[self.layer] = self.syncObj
   --
 
   UI.audios[self.name] = self

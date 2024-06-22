@@ -146,7 +146,7 @@ local function showFocus(layerTable)
     -- print(i, v.text)
     local obj = UI.sceneGroup[v.text]
     if obj then
-      -- print("@", v.text, obj.x, obj.y)
+      print("@", v.text, obj.x, obj.y)
       local posX, posY = obj.x, obj.y
       local rect = display.newRect(UI.editor.focusGroup, posX, posY, obj.width, obj.height)
       rect:setFillColor(1, 0, 0, 0)

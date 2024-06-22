@@ -78,6 +78,19 @@ function M:read(path)
   return data
 end
 
+function M:getValue()
+  local ret = {}
+  for i, v in next, self.objs do
+    local key, value = v.text,  v.field.text
+    if key == "_filename" then
+      key = "filename"
+    end
+    ret[key] = value
+    print("", key, value)
+  end
+  return ret
+end
+
 function M:showThumnail()
 end
 

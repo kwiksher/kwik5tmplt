@@ -4,9 +4,10 @@ local M = {
   folder = "audios/sync",
   properties = {
     autoPlay     = true,
-    delay        = nil,
+    delay        = NIL,
     fadeDuration = 1000,
     speakerIcon  = true,
+    wordTouch    = true
   },
   actions = {onComplete = ""},
   audioProps = {
@@ -18,11 +19,11 @@ local M = {
   textProps = {
     filename        = "alphabet.txt",
     -- folder       = nil,
-    font         = nil1,
-    fontColor   = { 1,1,1 },
+    font         = NIL,
+    fontColor   = { 0,0,1 },
     fontColorHi = { 1, 1, 0 },
     fontSize    = 36,
-    language    = nil,
+    language    = NIL,
     padding     = 10,
     readDir     = "leftToRight",
     sentenceDir = "alphabet", -- wordTouch
