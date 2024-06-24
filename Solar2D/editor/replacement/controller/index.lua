@@ -155,7 +155,8 @@ end
 function M:setValue(decoded, index, template)
   if decoded == nil then print("## Error setValue ##") return end
   if not template then
-    print(json.encode(decoded[index]))
+    -- print(json.encode(decoded[index]))
+    for k, v in pairs(decoded[index]) do print(k, v) end
     self.selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
     self.classProps:setValue(decoded[index].properties)
     self.classProps.class = decoded[index].class
@@ -165,9 +166,18 @@ function M:setValue(decoded, index, template)
     end
     -- for sprite.sequenceData, sync.line
     if decoded[index].sequenceData or decoded[index].line then
-      self.listbox:setValue(decoded[index].sequenceData or  decoded[index].line)
+      local type = (decoded.sequenceData) and "sequenceData" or  "line"
+      self.listbox:setValue(decoded[index].sequenceData or  decoded[index].line, type)
       self.listbox.isActive = true
     end
+
+    if decoded[index].audioProps then
+      self.audioProps:setValue(decoded[index].audioProps)
+    end
+    if decoded[index].textProps then
+      self.textProps:setValue(decoded[index].textProps)
+    end
+
   else
     self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
     self.classProps:setValue(decoded.properties)
@@ -177,10 +187,7 @@ function M:setValue(decoded, index, template)
         self.actionbox.isActive = true
     end
     if decoded.sequenceData or decoded.line then
-      local type = "sequenceData"
-      if decoded.line then
-        type = "line"
-      end
+      local type = (decoded.sequenceData) and "sequenceData" or  "line"
       self.listbox:setValue(decoded.sequenceData or  decoded.line, type)
       self.listbox.isActive = true
     end

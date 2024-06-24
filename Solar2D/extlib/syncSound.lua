@@ -104,7 +104,7 @@ local function displayText(params)
       xOffset = 0
     end
   end
-  line.soundLength = line[#line].out
+  soundLength = line[#line].out
   --
   return words
 end
@@ -169,6 +169,8 @@ function M.saySentence(params)
   local transIn = button.transIn
   local sentence, line, delay1, delay2, trans1, trans2 = params.sentence, params.line, 0, 0, fadeInDur, fadeOutDur
   --print("saySentence channel",channel)
+  local soundLength = 0
+  --
   local syncClosure = function()
     audio.rewind(sentence)
     audio.setVolume(_volume, {channel = channel})
@@ -177,9 +179,9 @@ function M.saySentence(params)
     table.insert(activeRead2me.buttons, transition.to(button, {time = trans2, delay = 0, alpha = .01}))
     table.insert(
       activeRead2me.buttons,
-      transition.to(button, {time = trans2, delay = line.soundLength + trans1, alpha = talkButton_oriAlpha})
+      transition.to(button, {time = trans2, delay = soundLength + trans1, alpha = talkButton_oriAlpha})
     )
-    local loops = math.floor(line.soundLength / 1000 * 3.4)
+    local loops = math.floor(soundLength / 1000 * 3.4)
     if button.animation then
       button:setSpeed(.2) -- use .4 if we're running at 30fps
       button:play {startFrame = 2, endFrame = button.numChildren, loop = loops}
@@ -232,8 +234,8 @@ local function touchSentence(event)
     audio.play(sentence, {channel = channel})
     -- fade button so it's not touchable
     transition.to(button, {time = trans2, delay = 0, alpha = .9})
-    transition.to(button, {time = trans2, delay = line.soundLength + trans1, alpha = 1})
-    local loops = math.floor(line.soundLength / 1000 * 3.4)
+    transition.to(button, {time = trans2, delay = soundLength + trans1, alpha = 1})
+    local loops = math.floor(soundLength / 1000 * 3.4)
     if button.animation then
       button:setSpeed(.2) -- use .4 if we're running at 30fps
       button:play {startFrame = 2, endFrame = button.numChildren, loop = loops}

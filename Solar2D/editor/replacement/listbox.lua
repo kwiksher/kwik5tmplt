@@ -60,7 +60,8 @@ end
 function M:setValue(fooValue, type)
   self.type = type or self.type
   self.value = fooValue or self.value
-  print("####", self.type, #self.value)
+  -- print("####", self.type, #self.value)
+  -- print(json.encode(self.value))
   self:createTable()
 end
 
@@ -70,7 +71,7 @@ function M:create(UI)
   self.rootGroup.listPropsTable = display.newGroup()
   --
   self.singleClickEvent = function(obj)
-    print("@@@", obj.index)
+    -- print("@@@", obj.index)
     UI.scene.app:dispatchEvent {
       name = "editor.replacement.list.select",
       UI = UI,
@@ -237,16 +238,18 @@ function M:createTable ()
   --index = 0
   createRow(headers[self.type])
   --  --
-  for i, entry in pairs(self.value) do
+  for i, entry in next, self.value do
+    -- print(i, entry)
     local row = {}
-    for i=1, #headers[self.type] do
+    for k, header in next ,headers[self.type] do
       -- if headers[i] == "_name" then
       --   row[i] = entry["name"]
       -- else
-      row[i] = entry[headers[self.type][i]] or ""
+      -- print("", header)
+      row[k] = entry[header] or ""
       -- end
     end
-    print(i, json.encode(row))
+    -- print(i, json.encode(row))
     createRow(row)
   end
 

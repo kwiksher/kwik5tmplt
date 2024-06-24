@@ -381,7 +381,7 @@ function M:load(book, page, layer, class, isNew, asset)
     -- this comes from clicking layerTable.class
     local layerName = layer or "index"
     --local path      = page .."/"..layerName.."_"..self.tool..".json"
-    local path      = system.pathForFile( "App/"..book.."/models/"..page .."/"..layerName.."_"..self.tool..".json", system.ResourceDirectory)
+    local path      = system.pathForFile( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
     -- print("", path)
     if self.lastSelection ~= path then
       self.lastSelection   = path
