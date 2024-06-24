@@ -286,7 +286,7 @@ function M:createTable(props)
       obj:addEventListener("mouseHover", onMouseHover)
     end
     -- Edit
-    option.x =rect.x + rect.width/2
+    option.x =rect.x + rect.width/2 - (self.marginFieldX or 0)
     option.y = rect.y
     if type(prop.value) == "boolean" then
       option.text = tostring(prop.value)

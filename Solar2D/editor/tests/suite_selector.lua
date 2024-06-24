@@ -102,4 +102,24 @@ function M.xtest_action()
   }
 end
 
+function M.xtest_slider()
+  local slider = require("extlib.slider")
+
+  -- Example usage
+  local obj = slider.createSlider({
+    width = 300,
+    height = 6,
+    thumbRadius = 12,
+    minValue = 0,
+    maxValue = 100,
+    startValue = 50,
+    onChange = function(value)
+        print("Slider value: " .. value)
+    end
+  })
+  obj.x = display.contentCenterX
+  obj.y = 50
+end
+
+
 return M

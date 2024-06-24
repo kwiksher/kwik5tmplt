@@ -6,50 +6,20 @@ local M = {
     onReleased ="",
     onMoved= "" },
   properties = {
-    constrainAngle = nil,
+    constrainAngle = NIL,
     isActive = true,
     isFocus = true,
-    isPage = false,
+    isGroup = false,
     --
     isFlip = true,
-    flip = "right",  -- flipSet.right
-    flipSet  = {
-      right = {
-        axis = "x",
-        from = "right",
-        to = "left",
-        scaleStart = 1,
-        scaleEnd = -1,
-      },
-      left = {
-        axis = "x",
-        from = "right",
-        to = "left",
-        scaleStart = -1,
-        scaleEnd = 1,
-      },
-      bottom={
-        axis = "y",
-        from = "bottom",
-        to = "top",
-        scaleStart = 1,
-        scaleEnd = -1,
-      },
-      top = {
-        axis = "y",
-        from = "bottom",
-        to = "top",
-        scaleStart = -1,
-        scaleEnd = 1,
-      },
-    },
+    flipInitialDirection = "right",  -- flipSet.right
     isDrop = true,
-    dropLayer = "",
-    dropMargin = 10,
+    dropArea = "",
+    dropAreaMargin = 10,
     --
-    dropBound = {xStart=0, xEnd=0, yStart = 0, yEnd=0},
+    boundaries = {x=0, y=0, w=1920, h=1280}, -- select a layer
     --
-    rock = 1 ,-- 0,
+    rockingEnable = 1 ,-- 0,
     backToOrigin = true,
 
   }
