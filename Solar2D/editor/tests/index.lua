@@ -13,7 +13,8 @@ local M = {
     -- lunatest.suite("editor.tests.suite_page1_audio", props)
     -- lunatest.suite("editor.tests.suite_page1_select_copy_paste", props)
 
-    lunatest.suite("editor.tests.suite_page2_sync2audio", props)
+    -- lunatest.suite("editor.tests.suite_page2_sync2audio", props)
+    lunatest.suite("editor.tests.suite_page3_drag", props)
     -- lunatest.suite("editor.tests.suite_page4_physics", props)
 
     -- lunatest.suite("editor.tests.suite_new_book_page_layer", props)
@@ -26,7 +27,6 @@ local M = {
     -- lunatest.suite("editor.tests.bookTest_importer", props)
     -- lunatest.suite("editor.tests.suite_controller")
     --  lunatest.suite("editor.tests.suite_open_vscode", props)
-    -- lunatest.suite("editor.tests.suite_page1_drag", props)
     -- lunatest.suite("editor.tests.suite_page3_audio", props)
     -- lunatest.suite("editor.tests.suite_selector", props)
     -- lunatest.suite("editor.tests.suite_settings", props)

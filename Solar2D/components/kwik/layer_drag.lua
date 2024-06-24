@@ -1,5 +1,38 @@
 local M = {}
 --
+M.flipSet  = {
+  right = {
+    axis = "x",
+    from = "right",
+    to = "left",
+    scaleStart = 1,
+    scaleEnd = -1,
+  },
+  left = {
+    axis = "x",
+    from = "right",
+    to = "left",
+    scaleStart = -1,
+    scaleEnd = 1,
+  },
+  bottom={
+    axis = "y",
+    from = "bottom",
+    to = "top",
+    scaleStart = 1,
+    scaleEnd = -1,
+  },
+  top = {
+    axis = "y",
+    from = "bottom",
+    to = "top",
+    scaleStart = -1,
+    scaleEnd = 1,
+  },
+}
+
+M.boundaries = {xStart=0, xEnd=0, yStart = 0, yEnd=0}
+
 local app = require "controller.Application"
 local MultiTouch = require("extlib.dmc_multitouch")
 --[[
@@ -48,7 +81,7 @@ M.dragHandler = function (self, event )
     target.oriBodyType = target.bodyType
     target.bodyType ="kinematic"
     -- self.layer = nil
-    -- self.dropLayer = nil
+    -- self.dropArea = nil
 
   elseif event.phase == "moved" then
     if self.isFlip then
@@ -67,24 +100,24 @@ M.dragHandler = function (self, event )
     end
     ---
     if self.isDrop then
-        function hitTest(dropLayer)
-            target.posX = target.x - dropLayer.x
-            target.posY = target.y - dropLayer.y
+        function hitTest(dropArea)
+            target.posX = target.x - dropArea.x
+            target.posY = target.y - dropArea.y
         if target.posX < 0 then
           target.posX = target.posX * -1
         end
         if target.posY < 0  then
           target.posY = target.posY * -1
         end
-        if target.posX <= self.dropdBound.xEnd and target.posY <= self.dropdBound.yEnd  then  --in position\r\n'
-              target.x = dropLayer.x
-              target.y = dropLayer.y
+        if target.posX <= self.boundaries.xEnd and target.posY <= self.boundaries.yEnd  then  --in position\r\n'
+              target.x = dropArea.x
+              target.y = dropArea.y
           target.lock = 1
         else
           target.lock = 0
         end
         end
-        hitTest(self.dropLayer)
+        hitTest(self.dropArea)
     end
     if self.actions.onMoved then
       --  self.layer = target
@@ -93,9 +126,9 @@ M.dragHandler = function (self, event )
   elseif event.phase == "ended" or event.phase == "cancelled" then
       target.bodyType = target.oriBodyType
       if self.isDrop then
-        if target.lock == 1 and target.posX <= self.dropdBound.xEnd and target.posY <= self.dropdBound.xEnd then
-           target.x = target.dropLayer.x
-           target.y = target.dropLayer.y
+        if target.lock == 1 and target.posX <= self.boundaries.xEnd and target.posY <= self.boundaries.xEnd then
+           target.x = target.dropArea.x
+           target.y = target.dropArea.y
 
           --  if self.actions.onReleased then
           --    MultiTouch.deactivate(target)
@@ -103,7 +136,7 @@ M.dragHandler = function (self, event )
 
            if self.actions.onDropped then
             -- self.layer = target
-            -- self.dropLayer = target.dropLayer
+            -- self.dropArea = target.dropArea
             UI.scene:dispatchEvent({name=self.onDropped, event={UI=UI} })
            end
         elseif self.backToOrigin then

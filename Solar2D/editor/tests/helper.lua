@@ -77,6 +77,18 @@ function exports.clickAsset(objs, name)
   end
 end
 
+function exports.touchAction(name)
+  actionTable.altDown = true
+  for i, v in next, actionTable.objs do
+    if v.text == name then
+      -- v:dispatchEvent{name="touch", pahse="ended", target=v}
+      v:touch{phase = "ended"}
+      break
+    end
+  end
+  actionTable.altDown = false
+end
+
 function exports.selectLayer(name, class, isRightClick)
   -- print(name, class)
   for i, obj in next,layerTable.objs do

@@ -11,7 +11,7 @@ local json = require("json")
 local bt = require(parent..'controller.BTree.btree')
 local tree = require(parent.."controller.BTree.selectorsTree")
 --
-M.lastSelection = { book="book", page="page2"}
+M.lastSelection = { book="book", page="page3"}
 
 local unitTestOn = true
 local httpServerOn = true
@@ -270,12 +270,14 @@ local pageTable = require(parent.."parts.pageTable")
 local layerTable = require("editor.parts.layerTable")
 
 function M:runTest()
+  local actionTable = require("editor.action.actionTable")
   require("editor.tests.index").run{
     selectors = selectors,
     UI = self.UI,
     bookTable = bookTable,
     pageTable = pageTable,
-    layerTable = layerTable
+    layerTable = layerTable,
+    actionTable = actionTable,
   }
   if self.UI.testCallback then
     self.UI.testCallback()

@@ -45,7 +45,7 @@ local command = function (params)
 
   -- print(debug.traceback())
 
-  local tool = UI.editor:getClassModule(params.class)
+  local tool = (params.class) and UI.editor:getClassModule(params.class) or nil
   if tool then
     print("### tool", params.class, tool.id)
     if lastTool then

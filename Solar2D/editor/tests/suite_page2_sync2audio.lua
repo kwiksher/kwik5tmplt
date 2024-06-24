@@ -5,6 +5,7 @@ local UI
 local bookTable
 local pageTable
 local layerTable
+local actionTable
 local bookName = "book" -- "bookTest01"
 local pageName = "page2"
 local listbox = require("editor.replacement.listbox")
@@ -15,19 +16,8 @@ local classProps = require("editor.parts.classProps")
 local assetTable = require("editor.asset.assetTable")
 local listButtons = require("editor.replacement.listButtons")
 local util = require("lib.util")
-local actionTable = require("editor.action.actionTable")
+--local actionTable = require("editor.action.actionTable")
 
-function touchAction(name)
-  actionTable.altDown = true
-  for i, v in next, actionTable.objs do
-    if v.text == name then
-      -- v:dispatchEvent{name="touch", pahse="ended", target=v}
-      v:touch{phase = "ended"}
-      break
-    end
-  end
-  actionTable.altDown = false
-end
 
 function M.init(props)
   selectors = props.selectors
@@ -50,24 +40,6 @@ end
 function M.teardown()
 end
 
-function M.xtest_slider()
-  local slider = require("extlib.slider")
-
-  -- Example usage
-  local obj = slider.createSlider({
-    width = 300,
-    height = 6,
-    thumbRadius = 12,
-    minValue = 0,
-    maxValue = 100,
-    startValue = 50,
-    onChange = function(value)
-        print("Slider value: " .. value)
-    end
-  })
-  obj.x = display.contentCenterX
-  obj.y = 50
-end
 
 function M.xtest_read_timecode()
   local textProps  = require("editor.replacement.textProps")
@@ -96,7 +68,7 @@ function M.xtest_new_sync()
   local actionbox = require("editor.parts.actionbox")
   local obj = actionbox.objs[1] -- onComplete
   obj:dispatchEvent({name="tap", target=obj})
-  touchAction("eventOne")
+  helper.touchAction("eventOne")
 
   local textProps = require("editor.replacement.textProps")
   helper.clickProp(textProps.objs, "_filename")
@@ -111,7 +83,7 @@ function M.xtest_new_sync()
   -- select an action
   helper.clickProp(listPropsTable.objs, "action")
   -- helper.clickProp(listPropsTable.objs, "action") -- why needs twice?
-  touchAction("eventTwo")
+  helper.touchAction("eventTwo")
 
   helper.setProp(listPropsTable.objs, "dur", "1000")
 
