@@ -11,7 +11,7 @@ end
 function M:setActiveProp(value)
 
   assetTable:hide()
-  print("@@@", value)
+  print("setActiveProp", self.name)
 
   local name =self.activeProp or ""
   for i,v in next, self.objs or {} do

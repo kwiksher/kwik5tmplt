@@ -13,7 +13,7 @@ local util = require("lib.util")
 local yaml = require("server.yaml")
 -- local actionbox  = require(parent.."actionbox")
 
-local Prefix_Layers = table:mySet{"type","bodyA","bodyB" ,"width","height", "filename" }
+local Prefix_Layers = table:mySet{"target", "type","bodyA","bodyB" ,"width","height", "filename" }
 ---
 local appFont
 if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
@@ -53,6 +53,7 @@ M.newText = newText
 local basePropsControl = require("editor.parts.basePropsControl")
 --
 M.onTapLayerSet = {}
+M.onTapActionSet = {}
 M.onTapPosXYSet   = {}
 
 --
@@ -214,7 +215,7 @@ function M:createTable(props)
   for i=1, #props do
     local prop = props[i] or {}
     option.text = prop.name
-    -- print("@@ parts.baseProps",i, prop.name, prop.value)
+    print("@@ parts.baseProps",i, prop.name, prop.value)
     option.x = self.x
     option.y = i*option.height + self.y
     -- print(self.group, option.x, option.y, option.width, option.height)
@@ -226,14 +227,14 @@ function M:createTable(props)
     obj.rect = rect
     objs[#objs + 1] = obj
     -- show asset table
-    -- print("", prop.name)
+    print("", prop.name)
     if prop.name == 'url' or prop.name == '_filename' or prop.name == 'sheetInfo' then
        obj.class = self.class
        obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)
-    elseif prop.name == 'onComplete' then
+    elseif self.onTapActionSet[prop.name] then
+      print("@@@@@ onTapActionSet", prop.name)
         obj:addEventListener("tap", function(event) self:tapListener(event, 'action')end)
     elseif prop.name == "othersGroup" then
-      print("@@@@@ othersGroup")
         obj:addEventListener("tap", function(event) self:tapListener(event, 'group')end)
     elseif self.onTapLayerSet[prop.name] then
       obj:addEventListener("tap", function(event) self:tapListener(event, 'layer')end)

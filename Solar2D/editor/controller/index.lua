@@ -100,6 +100,9 @@ function M:setValue(decoded, index, template)
     end
   else
     self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
+    if decoded.properties.target then
+      decoded.properties.target = self.layer
+    end
     self.classProps:setValue(decoded.properties)
     local props = {}
     if decoded.actions then

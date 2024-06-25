@@ -45,7 +45,7 @@ local function parse(model)
 end
 
 --
--- this is used for physics.classProps
+-- this is used for physics.classProps, must be reset for other tools
 --
 function M:setClassProps(classProps)
   self.classProps = classProps
@@ -187,6 +187,11 @@ function M:create(UI)
       self.selections = {}
       -- local json = require("json")
       -- print(json.encode(fooValue))
+      --
+      -- reset classProps to be used for setActiveProp
+      if #fooValue == 0 then
+        self.classProps = nil
+      end
       self.objs = self:render(fooValue, 0, 0)
     end
   )

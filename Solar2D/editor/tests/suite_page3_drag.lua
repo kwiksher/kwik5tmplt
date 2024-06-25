@@ -14,7 +14,6 @@ function M.init(props)
   bookTable = props.bookTable
   pageTable = props.pageTable
   layerTable = props.layerTable
-  actionTable = props.actionProps
 end
 
 function M.suite_setup()
@@ -31,7 +30,7 @@ end
 function M.teardown()
 end
 
-function M.test_rectTool()
+function M.xtest_rectTool()
   local rectTool = require("editor.shape.rectTool")
 
   helper.selectLayer("ball")
@@ -41,15 +40,34 @@ function M.test_rectTool()
   local classProps = require("editor.parts.classProps")
   local obj = classProps.objs[2] -- boundaries
   -- rectTool:setActiveEntry(obj)
-  rectTool:setActiveEntry({text="0,0,0,0"})
+  rectTool:setActiveEntry({text="0,1920,0,1080"})
   rectTool:drawRect()
 
 end
 
-function M.xtest_new_drag()
+function M.test_new_drag()
   helper.selectLayer("ball")
   helper.selectLayer("fish")
   helper.selectIcon("Interactions", "Drag")
+
+  local classProps = require("editor.parts.classProps")
+
+  helper.clickProp(classProps.objs, "dropArea")
+  helper.selectLayer("baloon")
+
+  local actionbox = require("editor.parts.actionbox")
+  helper.actionTable = require("editor.action.actionTable")
+
+  -- select an action
+  helper.clickProp(actionbox.objs, "onMoved")
+  helper.touchAction("eventOne")
+
+  helper.clickProp(actionbox.objs, "onDropped")
+  helper.touchAction("eventTwo")
+
+  helper.clickProp(actionbox.objs, "onReleased")
+  helper.touchAction("eventThree")
+
 
 -- selectors.componentSelector:onClick(true,  "actionTable")
 -- selectAction("eventOne")

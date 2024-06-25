@@ -78,7 +78,8 @@ function exports.clickAsset(objs, name)
 end
 
 function exports.touchAction(name)
-  actionTable.altDown = true
+  local actionTable = actionTable or exports.actionTable
+  --actionTable.altDown = true
   for i, v in next, actionTable.objs do
     if v.text == name then
       -- v:dispatchEvent{name="touch", pahse="ended", target=v}
@@ -86,7 +87,7 @@ function exports.touchAction(name)
       break
     end
   end
-  actionTable.altDown = false
+  --actionTable.altDown = false
 end
 
 function exports.selectLayer(name, class, isRightClick)

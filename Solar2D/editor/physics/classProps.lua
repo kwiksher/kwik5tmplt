@@ -49,13 +49,12 @@ function M:tapListener(event, type)
   end
 end
 
-local Layer     = table:mySet{"_bodyA", "_bodyB", "_body"}
-M.onTapLayerSet = Layer
-
-local PosXY   = table:mySet{"anchor_x", "anchorA_x", "anchorB_x", "statA_x", "stateB_x", "bodyA_x", "bodyB_x", "offsetA_x", "offsetB_x"}
-M.onTapPosXYSet   = PosXY
+M.onTapLayerSet = table:mySet{"_target", "_bodyA", "_bodyB", "_body"}
+M.onTapActionSet =  table:mySet{"onComplete"}
+M.onTapPosXYSet = table:mySet{"anchor_x", "anchorA_x", "anchorB_x", "statA_x", "stateB_x", "bodyA_x", "bodyB_x", "offsetA_x", "offsetB_x"}
 --
 function M:setActiveProp(layer, class)
+  print("setActiveProp", self.name)
   local name =self.activeProp
   local value = layer
   local UI = self.UI
@@ -68,7 +67,7 @@ function M:setActiveProp(layer, class)
         break
       end
     end
-  elseif Layer[self.activeProp] then
+  elseif self.onTapLayerSet[self.activeProp] then
     local fields = {_bodyA=NIL, _bodyA=NIL, _body=NIL, anchor_x=NIL, anchor_y=NIL, anchorA_x=NIL, anchorA_y=NIL, anchorB_x=NIL, anchorB_y=NIL, statA_x=NIL, statB_x=NIL, statB_y=NIL, bodyA_x, bodyA_y, bodyB_x, bodyB_y}
     for i,v in next, self.objs do
       if v.text == name then

@@ -28,7 +28,7 @@ end
 function M:setActiveProp(value)
 
   actionTable:hide()
-  print("@@@", value)
+  print("activeProp", value)
 
   local name =self.activeProp or ""
   for i,v in next, self.objs or {} do
