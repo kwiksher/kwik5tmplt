@@ -39,24 +39,27 @@ function M:selectHandler(target)
   local UI = self.UI
   layerTableCommands.clearSelections(self, "action")
   if self.controlDown then
-    print("controlDown")
+    -- print("controlDown")
     layerTableCommands.multiSelections(self, target)
     UI.editor.selections = self.selections
     -- print("%%%%", #self.selections)
   elseif self.altDown then
-    print("setActiveProp", target.action)
-    if layerTableCommands.singleSelection(self, target) then
-      self.actionbox:setActiveProp(target.action) -- nil == activeProp
-    else
-      print("Error for setting activeProp")
-    end
-  else
     self.lastTarget = target
     self.UI.scene.app:dispatchEvent {
       name = "editor.action.selectAction",
       action = target.action,
       UI = self.UI
     }
+
+  else
+    -- print("setActiveProp", target.action)
+    if layerTableCommands.singleSelection(self, target) then
+      self.actionbox:setActiveProp(target.action) -- nil == activeProp
+    else
+      print("Error for setting activeProp")
+      self:hide()
+    end
+
   end
 end
 -- edit button

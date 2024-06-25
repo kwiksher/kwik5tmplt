@@ -10,6 +10,7 @@ M.type = "line" -- sequenceData
 local obj, sentenceDir
 
 function M:setActiveProp(value)
+  print("setActiveProp", self.name)
   local UI = self.UI
   assetTable:hide()
   local name =self.activeProp or ""

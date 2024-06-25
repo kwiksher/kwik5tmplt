@@ -2,14 +2,13 @@ local M = require("editor.parts.baseProps").new()
 ---------------------------
 M.name = "classProps"
 
-local Layer     = table:mySet{"over", "mask", "dropLayer", "_filename", "sheetInfo"}
 local Layer_Class = table:mySet{}
-M.onTapLayerSet = Layer
-
-local PosXY = table:mySet{"x", "y"}
-M.onTapPosXYSet   = PosXY
+M.onTapLayerSet = table:mySet{"target", "over", "mask", "dropArea", "_filename", "sheetInfo"}
+M.onTapActionSet = table:mySet{"onComplete"}
+M.onTapPosXYSet = table:mySet{"x", "y"}
 --
 function M:setActiveProp(layer, class)
+  print("activeProp", self.name)
   local name =self.activeProp
   local value = layer
   local UI = self.UI
@@ -43,7 +42,7 @@ function M:setActiveProp(layer, class)
     local isValid = function(class)
       if Layer_Class[self.activeProp] then
         return self.activeProp == class
-      elseif Layer[self.activeProp] then
+      elseif self.onTapLayerSet[self.activeProp] then
         return class == nil
       end
     end

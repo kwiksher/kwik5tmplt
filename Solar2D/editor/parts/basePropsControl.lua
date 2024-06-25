@@ -16,6 +16,8 @@ function M._yamlValue(k, v, params)
   local key = k
   if k == "name" then
     key = "_name"
+  elseif k == "target" then
+    key = "_target"
   elseif k =="type" then
     key = "_type"
   elseif k =="filename" then

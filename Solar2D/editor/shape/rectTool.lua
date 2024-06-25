@@ -103,20 +103,25 @@ function M:drawRect()
   end
   ---
   if self.xMin + self.xMax + self.yMin + self.yMax ~= 0 then
-    local rectangle = display.newRect( (self.xMin+self.xMax)/2, (self.yMin + self.yMax)/2, self.xMax - self.xMin, self.yMax-self.yMin)
-    self.obj = rectangle
-    rectangle.alpha = 0.5
-    -- popup:pos(rectangle.x, rectange.y)
-    popup:text(string.format("xMin: %d xMax: %d \n yMin: %d yMax: %d",
-    tools:round(rectangle.contentBounds.xMin, 2),
-    tools:round(rectangle.contentBounds.xMax, 2),
-    tools:round(rectangle.contentBounds.yMin, 2),
-    tools:round(rectangle.contentBounds.yMax, 2)))
+    self.obj = display.newRect(
+      (self.xMin+self.xMax)/2*0.25 + display.contentWidth/4,
+      (self.yMin + self.yMax)/2*0.25+display.contentHeight/4,
+      (self.xMax - self.xMin)*0.25,
+      (self.yMax-self.yMin)*0.25)
   else
-    popup:pos(display.contentCenterX, display.contentCenterY-400/2)
-    Runtime:addEventListener( "touch", touchListener )
-    Runtime:addEventListener("key", onKeyEvent)
+    local margin = 50
+    self.obj = display.newRect( display.contentCenterX, display.contentCenterY, 480-margin, 320-margin)
+    -- Runtime:addEventListener( "touch", touchListener )
+    -- Runtime:addEventListener("key", onKeyEvent)
   end
+  popup:pos(display.contentCenterX, display.contentCenterY-400/2)
+  self.obj.alpha = 0.5
+  -- popup:pos(rectangle.x, rectange.y)
+  popup:text(string.format("xMin: %d xMax: %d \n yMin: %d yMax: %d",
+    tools:round(self.obj.contentBounds.xMin, 2),
+    tools:round(self.obj.contentBounds.xMax, 2),
+    tools:round(self.obj.contentBounds.yMin, 2),
+    tools:round(self.obj.contentBounds.yMax, 2)))
 end
 
 --
@@ -185,7 +190,7 @@ function M:move()
     },
     --
     isDrop = false,
-    dropLayer = "",
+    dropArea = "",
     dropMargin = 10,
     --
     dropBound = {xStart=0, xEnd=0, yStart = 0, yEnd=0},
@@ -283,6 +288,10 @@ end
 function M:save()
   print("save")
   popup:destory()
+  if self.obj then
+    self.obj:removeSelf()
+    self.obj = nil
+  end
   if self.removeEventListener then
     self:removeEventListener()
   end
@@ -291,6 +300,10 @@ end
 function M:cancel()
   print("cancel")
   popup:destory()
+  if self.obj then
+    self.obj:removeSelf()
+    self.obj = nil
+  end
   if self.removeEventListener then
     self:removeEventListener()
   end

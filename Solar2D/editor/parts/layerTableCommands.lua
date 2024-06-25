@@ -204,10 +204,11 @@ function M.commandHandler(layerTable, target, event)
     if singleSelection(layerTable, target) then
       -- should we enable one of them?
       -- print("", "singleSelection")
-        actionCommandPropsTable:setActiveProp(target.layer)
-        --
-        -- setClassProps is used in physics to set the value to physics.classProps
-        --
+      actionCommandPropsTable:setActiveProp(target.layer)
+      --
+      -- setClassProps is used in physics to set the value to physics.classProps
+      --
+      print("########## @@@@@@")
         local classProps = layerTable.classProps or classProps
         classProps:setActiveProp(target.layer)
     end
