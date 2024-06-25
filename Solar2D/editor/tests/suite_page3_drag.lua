@@ -31,7 +31,22 @@ end
 function M.teardown()
 end
 
-function M.test_new_drag()
+function M.test_rectTool()
+  local rectTool = require("editor.shape.rectTool")
+
+  helper.selectLayer("ball")
+  helper.selectLayer("fish")
+  helper.selectIcon("Interactions", "Drag")
+
+  local classProps = require("editor.parts.classProps")
+  local obj = classProps.objs[2] -- boundaries
+  -- rectTool:setActiveEntry(obj)
+  rectTool:setActiveEntry({text="0,0,0,0"})
+  rectTool:drawRect()
+
+end
+
+function M.xtest_new_drag()
   helper.selectLayer("ball")
   helper.selectLayer("fish")
   helper.selectIcon("Interactions", "Drag")

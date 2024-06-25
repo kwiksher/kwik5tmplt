@@ -78,10 +78,10 @@ local function singleSelection(layerTable, target)
     layerTable.selection = nil
   else
     if layerTable.selections then
-      print("@@",#layerTable.selections)
+      -- print("@@",#layerTable.selections)
       for i = 1, #layerTable.selections do
         local obj = layerTable.selections[i]
-        print("", obj.text)
+        -- print("", obj.text)
         if obj.rect and obj.setFillColor then
           obj.rect:setFillColor(0.8)
           obj.rect:setStrokeColor(0.8)
@@ -146,7 +146,7 @@ local function showFocus(layerTable)
     -- print(i, v.text)
     local obj = UI.sceneGroup[v.text]
     if obj then
-      print("@", v.text, obj.x, obj.y)
+      -- print("@", v.text, obj.x, obj.y)
       local posX, posY = obj.x, obj.y
       local rect = display.newRect(UI.editor.focusGroup, posX, posY, obj.width, obj.height)
       rect:setFillColor(1, 0, 0, 0)

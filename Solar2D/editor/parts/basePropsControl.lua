@@ -30,7 +30,9 @@ function M._yamlValue(k, v, params)
     if type(v) == "table" and v~= NIL then
       if key == "color" then
         value, yamltype = yaml.getYaml({math.floor(v[1]*255), math.floor(v[2]*255), math.floor(v[3]*255), math.ceil(v[4] * 1000) / 1000})
-      else
+      elseif key == "boundaries" then
+        value, yamltype = yaml.getYaml({v.xMin, v.xMax, v.yMin, v.yMax})
+     else
         value, yamltype = yaml.getYaml(v)
       end
       if yamltype == "array" then
@@ -89,6 +91,12 @@ end
 local function tapListenerGroup(event)
   local selectors = require(parent.."selectors")
   selectors.componentSelector:onClick(true,  "groupTable", true)
+end
+
+local function tapListenerShape(event)
+  print("action tap listener")
+  local actionEditor = require("editor.action.index")
+  actionEditor:showActionTable(event.actionbox)
 end
 
 -- posXY
@@ -221,9 +229,8 @@ local function tapListenerAction(event)
   print("action tap listener")
   local actionEditor = require("editor.action.index")
   actionEditor:showActionTable(event.actionbox)
-
-
 end
+
 
 -- used in actionCommandPropsStore:listener
 M.CommandForTapSet = table:mySet{"audio", "group", "timer", "variables", "action"}
@@ -236,7 +243,8 @@ M.handler = {
   imageFile = tapListenerImage,
   action = tapListenerAction,
   posXY = tapListenerPosXY,
-  group = tapListenerGroup
+  group = tapListenerGroup,
+  boundaries = tapListenerShape
 }
 
 return M
