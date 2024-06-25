@@ -155,7 +155,9 @@ M.dragHandler = function (self, event )
       --   if self.actions.onReleased then
       if target.lock == nil or target.lock == 0 then
         -- self.layer = target
-        UI.scene:dispatchEvent({name=self.actions.onReleased, event={UI=UI} })
+        if UI then
+          UI.scene:dispatchEvent({name=self.actions.onReleased, event={UI=UI} })
+        end
       end
       -- end
       -- end

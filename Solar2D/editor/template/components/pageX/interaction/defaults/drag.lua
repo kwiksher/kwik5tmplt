@@ -17,7 +17,7 @@ local M = {
     dropArea = "",
     dropAreaMargin = 10,
     --
-    boundaries = {x=0, y=0, w=1920, h=1280}, -- select a layer
+    boundaries = {xMin=0, xMax=1920, yMin=0, yMax=1280},
     --
     rockingEnable = 1 ,-- 0,
     backToOrigin = true,

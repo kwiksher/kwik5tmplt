@@ -93,7 +93,7 @@ function exports.selectLayer(name, class, isRightClick)
   -- print(name, class)
   for i, obj in next,layerTable.objs do
     if obj.text == name then
-      print("", i, obj.text, obj.name)
+      -- print("", i, obj.text, obj.name)
       if class == nil then
         if isRightClick then
           obj:dispatchEvent{name="mouse", target=obj, isSecondaryButtonDown=true, x =obj.x, y=obj.y}
