@@ -1,15 +1,15 @@
 local M = {
   name = "button",
   class="button",
-  actionName = "",
   properties = {
+    target = NIL,
     isActive = true,
-    type  = "", -- tap, press
-    over = "",
+    type  = "tap", -- tap, touch
+    over = NIL,
     btaps = 1,
-    mask = "",
+    mask = NIL,
   },
-  actions = {onComplete = ""}
+  actions = {onTap = ""}
 }
 
 return M
