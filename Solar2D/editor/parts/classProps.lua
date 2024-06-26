@@ -8,10 +8,11 @@ M.onTapActionSet = table:mySet{"onComplete"}
 M.onTapPosXYSet = table:mySet{"x", "y"}
 --
 function M:setActiveProp(layer, class)
-  print("activeProp", self.name)
+  -- print("activeProp", self.name)
   local name =self.activeProp
   local value = layer
   local UI = self.UI
+
   if class then
     value = layer.."_"..class
   end

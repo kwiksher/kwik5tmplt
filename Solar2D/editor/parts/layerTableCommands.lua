@@ -176,7 +176,8 @@ function M.commandHandler(layerTable, target, event)
   ---
   -- print("@@@@@@", layerTable.altDown, layerTable:isAltDown())
   -- print(debug.traceback())
-  if layerTable:isAltDown() then
+
+    if layerTable:isAltDown() then
     if showLayerProps(layerTable, target) then
       --
       tree.backboard = {
@@ -208,9 +209,8 @@ function M.commandHandler(layerTable, target, event)
       --
       -- setClassProps is used in physics to set the value to physics.classProps
       --
-      print("########## @@@@@@")
-        local classProps = layerTable.classProps or classProps
-        classProps:setActiveProp(target.layer)
+      local classProps = layerTable.classProps or classProps
+      classProps:setActiveProp(target.layer)
     end
   end
   --
@@ -218,7 +218,18 @@ function M.commandHandler(layerTable, target, event)
   --
   showFocus(layerTable)
   --
-  UI.editor.selections = layerTable.selections
+
+  if  UI.editor.selections_backup == nil then
+    UI.editor.selections = layerTable.selections
+  else
+    UI.editor.selections = {}
+    for i, v in next, UI.editor.selections_backup do
+      print("recover", i, v.text)
+      -- layerTable.selections[i] = v
+      UI.editor.selections[i] = v
+    end
+end
+
   return true
 end
 
@@ -287,6 +298,7 @@ function M.commandHandlerClass(layerTable, target, event)
   --
   buttons:hideContextMenu()
   --
+
   if layerTable:isAltDown() then
     print("", "isAltDown")
     showClassProps(layerTable, target)
@@ -298,9 +310,21 @@ function M.commandHandlerClass(layerTable, target, event)
       print("", "singleSelection")
       actionCommandPropsTable:setActiveProp(target.layer, target.class)
       classProps:setActiveProp(target.layer, target.class)
+
+      -- recover selections
+      if UI.editor.selections_backup and #UI.editor.selections_backup > 0 then
+        UI.editor.selections = {}
+        for i, v in next, UI.editor.selections_backup do
+          print("recover", i, v.text)
+          -- layerTable.selections[i] = v
+          UI.editor.selections[i] = v
+        end
+      end
     end
   end
+
   UI.editor.selections = layerTable.selections
+
   return true
 end
 --

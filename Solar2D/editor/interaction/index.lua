@@ -46,5 +46,43 @@ function M:init(UI)
   self.controller:init()
   self.controller.view = self
 end
+
+function controller:useClassEditorProps()
+  -- print(debug.traceback())
+  print("editor.controller.useClassEditorProps", self.id)
+  local props = { properties = {}}
+  if self.selectbox.selectedObj and self.selectbox.selectedText then
+    props = {
+      name = self.selectbox.selectedObj.text, -- UI.editor.currentLayer,
+      class= self.selectbox.selectedText.text:lower(),
+      actionName = nil,
+      -- the following vales come from read()
+      page = self.page,
+      layer = self.layer,
+      isNew = self.isNew,
+      --class = self.class,
+      index = self.selectbox.selectedIndex,
+      properties = {}
+    }
+  end
+  --
+  local properties = self.classProps:getValue()
+  for i, entry in next, properties do
+    -- print("", properties[i].name, type(properties[i].value))
+    if entry.name == "_target" then
+      props.properties[#props.properties+1] = {name = "target", value = entry.value}
+      props.layer = entry.value
+    else
+      props.properties[#props.properties+1] = {name = entry.name, value = entry.value}
+    end
+  end
+  --
+  props.actions ={}
+  for i, obj in next, self.actionbox.objs do
+    props.actions[obj.text] =  obj.field.text
+  end
+  return props
+end
+
 --
 return M

@@ -26,7 +26,7 @@ function M:setActiveProp(value)
   for i,v in next, self.objs or {} do
     if v.text == name then
       v.field.text = value
-      print("###", self.activeProp, value, #self.objs, self)
+      -- print("###", self.activeProp, value, #self.objs, self)
       return
     end
   end

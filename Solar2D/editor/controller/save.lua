@@ -30,14 +30,23 @@ local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
-    -- print(name, params.class,  params.decoded)
     local props = params.props
     if props == nil then print("Error") return end
-    if not props.isNew then
-      -- publish
-      local controller = UI.editor:getClassModule(params.class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
 
-      -- print("@@@@@@@@@@@", name)
+    -- props = UI.useClassEditorProps()
+    -- print("saving props") -- if nil, command from dispathEvent will skip the process by checking props null
+      -- for k, v in pairs(props) do print("",k, v) end
+      -- if props.properties then
+      --   for k, v in pairs(props.properties) do print("",k, v) end
+      -- end
+
+    local controller = UI.editor:getClassModule(props.class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
+    for k, v in pairs(controller:useClassEditorProps()) do
+      print(k, v)
+      props[k] = v
+    end
+
+    if not props.isNew then
       scripts.publishForSelections(UI, {
         book= props.book, page=props.page,
         layer = props.layer,
@@ -52,7 +61,7 @@ local instance =
         table.insert(updatedModel.components.layers, index, newLayer)
         print(json.prettify(updatedModel))
       end
-      local controller = require("editor.controller.index")
+      -- local controller = require("editor.controller.index")
 
       -- print("$$$$$$$$$$$$$$", name)
 

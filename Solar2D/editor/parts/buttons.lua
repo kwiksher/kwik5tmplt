@@ -85,15 +85,15 @@ function M:create(UI)
       local props = {}
       transition.from(obj, {time=500, xScale=2, yScale=2})
 
-      if event.eventName == "copy" then
-      elseif event.eventName == "save" then
-        props = UI.useClassEditorProps()
-        print("saving props") -- if nil, command from dispathEvent will skip the process by checking props null
-         for k, v in pairs(props) do print("",k, v) end
-         if props.properties then
-            for k, v in pairs(props.properties) do print("",k, v) end
-          end
-      end
+      -- if event.eventName == "copy" then
+      -- elseif event.eventName == "save" then
+      --   props = UI.useClassEditorProps()
+      --   print("saving props") -- if nil, command from dispathEvent will skip the process by checking props null
+      --    for k, v in pairs(props) do print("",k, v) end
+      --    if props.properties then
+      --       for k, v in pairs(props.properties) do print("",k, v) end
+      --     end
+      -- end
 
       if props then
         props.layer=self.UI.editor.currentLayer
@@ -114,7 +114,7 @@ function M:create(UI)
         props.options = self.contextMenuOptions
       end
 
-      print("@@@@", "editor.classEditor." .. event.eventName)
+      print("@@@@", "editor.classEditor." .. event.eventName, props.class)
 
       self.UI.scene.app:dispatchEvent {
         name = "editor.classEditor." .. event.eventName,
