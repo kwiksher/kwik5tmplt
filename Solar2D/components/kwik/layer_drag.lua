@@ -1,205 +1,161 @@
 local M = {}
+local MultiTouch = require("extlib.dmc_multitouch")
+
 --
-M.flipSet  = {
+local flipSet = {
   right = {
     axis = "x",
     from = "right",
     to = "left",
     scaleStart = 1,
-    scaleEnd = -1,
+    scaleEnd = -1
   },
   left = {
     axis = "x",
     from = "right",
     to = "left",
     scaleStart = -1,
-    scaleEnd = 1,
+    scaleEnd = 1
   },
-  bottom={
+  bottom = {
     axis = "y",
     from = "bottom",
     to = "top",
     scaleStart = 1,
-    scaleEnd = -1,
+    scaleEnd = -1
   },
   top = {
     axis = "y",
     from = "bottom",
     to = "top",
     scaleStart = -1,
-    scaleEnd = 1,
-  },
+    scaleEnd = 1
+  }
 }
 
-M.boundaries = {xStart=0, xEnd=0, yStart = 0, yEnd=0}
-
-local app = require "controller.Application"
-local MultiTouch = require("extlib.dmc_multitouch")
---[[
-  function M.add(layer, onComplete)
-    if layer == nil then return end
-    MultiTouch.activate( layer, "move", "single", {})
-    --
-    local eventHandler = function (event )
-      local t = event.target
-      if event.phase == "began" then
-        local parent = t.parent; parent:insert(t); display.getCurrentStage():setFocus(t); t.isFocus = true
-      elseif event.phase == "moved" then
-      elseif event.phase == "ended" or event.phase == "cancelled" then
-        --UI.scene:dispatchEvent({name="dragComplete", event={UI=UI, target=t} })
-        onComplete(t)
-        display.getCurrentStage():setFocus(nil); t.isFocus = false
-      end
-      return true
-    end
-    --
-    layer:addEventListener( MultiTouch.MULTITOUCH_EVENT, eventHandler )
-  end
-  --
-  function M.remove(layer)
-    if layer then
-      layer:removeEventListener ( MultiTouch.MULTITOUCH_EVENT,  eventHandler );
-    end
-  end
---]]
---
-
-M.dragHandler = function (self, event )
+M.dragHandler = function(self, event)
+  local props = self.properties
   local UI = self.UI
   local target = event.target
-  local flip = self.flipSet[self.flipDirection]
-  local tesX, tesY = target:localToContent(target.x, target.y)
+  local dropArea = target.dropArea
+  local flip = flipSet[props.flipInitialDirection]
+
+  local function isHit()
+    local boundsA =  dropArea.contentBounds
+    local boundsB =  target.contentBounds
+    return boundsA.xMin <= boundsB.xMin and
+    boundsA.xMax >= boundsB.xMax and
+    boundsA.yMin <= boundsB.yMin and
+    boundsA.yMax >= boundsB.yMax
+  end
+  -- print(hitX, hitY)
+  -- print(dropArea.contentBounds.xMin,dropArea.contentBounds.xMax,dropArea.contentBounds.yMin,dropArea.contentBounds.yMax)
+
+  -- print(xMin, yMin, xMax, yMax)
   if self.actions.onShapeHandler then
     self.actions.onShapeHandler(event)
   end
   if event.phase == "began" then
-    if not target.isFocus then
-        local parent = target.parent
-        parent:insert(target)
-        display.getCurrentStage():setFocus(target)
-        target.isFocus = true
-    end
-    target.oriBodyType = target.bodyType
-    target.bodyType ="kinematic"
     -- self.layer = nil
     -- self.dropArea = nil
-
+    if not target.isFocus then
+      local parent = target.parent
+      parent:insert(target)
+      display.getCurrentStage():setFocus(target)
+      target.isFocus = true
+    end
+    target.oriBodyType = target.bodyType
+    target.bodyType = "kinematic"
   elseif event.phase == "moved" then
     if self.isFlip then
       if (target[flip.axis] < self.flipValue) then
-        if target.flipDirection == flip.from then
+        if target.flipInitialDirection == flip.from then
           target.flipScale = flip.scaleStart
-          target.flipDirection = flip.to
+          target.flipInitialDirection = flip.to
         end
       elseif (target[flip.axis] > self.flipValue) then
-        if target.flipDirection == flip.to then
+        if target.flipInitialDirection == flip.to then
           target.flipScale = flip.scaleEnd
-          target.flipDirection = flip.from
+          target.flipInitialDirection = flip.from
         end
       end
       self.flipValue = target[flip.axis]
     end
     ---
-    if self.isDrop then
-        function hitTest(dropArea)
-            target.posX = target.x - dropArea.x
-            target.posY = target.y - dropArea.y
-        if target.posX < 0 then
-          target.posX = target.posX * -1
-        end
-        if target.posY < 0  then
-          target.posY = target.posY * -1
-        end
-        -- if target.posX <= self.boundaries.xEnd and target.posY <= self.boundaries.yEnd  then  --in position\r\n'
-        if dropArea.contentBounds.xMin <  tesX and tesX <= dropArea.contentBounds.xMax and dropArea.contentBounds.yMin < tesY and tesY<= dropArea.contentBounds.yMax  then  --in position\r\n'
-              target.x = dropArea.x
-              target.y = dropArea.y
+    if props.isDrop then
+        if isHit() then
+          target.x = dropArea.x
+          target.y = dropArea.y
           target.lock = 1
         else
           target.lock = 0
         end
-        end
-        hitTest(target.dropArea)
     end
     if self.actions.onMoved then
       --  self.layer = target
-       UI.scene:dispatchEvent({name=self.actions.onMoved, event={UI=UI} })
+      UI.scene:dispatchEvent({name = self.actions.onMoved, event = {UI = UI}})
     end
   elseif event.phase == "ended" or event.phase == "cancelled" then
-      target.bodyType = target.oriBodyType
-      if self.isDrop then
-        local dropArea = target.dropArea
-        if target.lock == 1 and dropArea.contentBounds.xMin <  tesX and tesX <= dropArea.contentBounds.xMax and dropArea.contentBounds.yMin < tesY and tesY<= dropArea.contentBounds.yMax  then
-           target.x = target.dropArea.x
-           target.y = target.dropArea.y
-
-          --  if self.actions.onReleased then
-          --    MultiTouch.deactivate(target)
-          --  end
-
-           if self.actions.onDropped then
-            -- self.layer = target
-            -- self.dropArea = target.dropArea
-            UI.scene:dispatchEvent({name=self.onDropped, event={UI=UI} })
-           end
-        elseif self.backToOrigin then
-          target.x = target.oriX
-          target.y = target.oriY
+    target.bodyType = target.oriBodyType
+    if props.isDrop then
+      if target.lock == 1 and isHit() then
+        target.x = target.dropArea.x
+        target.y = target.dropArea.y
+        if self.actions.onDropped then
+          -- self.layer = target
+          -- self.dropArea = target.dropArea
+          UI.scene:dispatchEvent({name = self.actions.onDropped, event = {UI = UI}})
         end
+      elseif props.backToOrigin then
+        target.x = target.oriX
+        target.y = target.oriY
       end
-      -- if self.onReleased then
-      --     if self.actions.onReleased then
-      --       if target.lock == nil or target.lock == 0 then
-      --           -- self.layer = target
-      --           UI.scene:dispatchEvent({name=self.actions.onReleased, event={UI=UI} })
-      --       end
-      --     end
-      -- else
-      --   if self.actions.onReleased then
-      if target.lock == nil or target.lock == 0 then
-        -- self.layer = target
-        if UI then
-          UI.scene:dispatchEvent({name=self.actions.onReleased, event={UI=UI} })
-        end
+    end
+
+    if target.lock == nil or target.lock == 0 then
+      -- self.layer = target
+      if UI then
+        UI.scene:dispatchEvent({name = self.actions.onReleased, event = {UI = UI}})
       end
-      -- end
-      -- end
-      if target.isFocus then
-        display.getCurrentStage():setFocus(nil); target.isFocus = false
-      end
+    end
+
+    if target.isFocus then
+      display.getCurrentStage():setFocus(nil)
+      target.isFocus = false
+    end
   end
   return true
 end
 
 --
 function M:activate(obj)
-  if obj == nil then return end
+  if obj == nil then
+    return
+  end
+  local props = self.properties
   ---
   local options = {}
-  if self.constrainAngle then
-    options.constrainAngle=self.constrainAngle
+  if props.constrainAngle then
+    options.constrainAngle = props.constrainAngle
   end
-  if self.bounds.xStart then
-    options.xBounds ={ self.bounds.xStart, self.bounds.xEnd }
+  if props.boundaries.xMin then
+    options.xBounds = {props.boundaries.xMin, props.boundaries.xMax}
   end
-  if self.bounds.yStart then
-    options.yBounds ={ self.bounds.yStart, sefl.bounds.yEnd }
+  if props.boundaries.yMin then
+    options.yBounds = {props.boundaries.yMin, props.boundaries.yMax}
   end
   --
-  -- print("@@@@@@@", obj.text)
-
-  -- MultiTouch.activate( obj, "move", "single", options)
-  MultiTouch.activate( obj, "move", "single")
+  MultiTouch.activate(obj, "move", "single")
   --
   if self.isDrop then
     obj.lock = 0
-    obj.posX = 0
-    obj.posY = 0
+    -- obj.posX = 0
+    -- obj.posY = 0
   end
   --
   if self.isFlip then
-    obj.flipDirection = self.flipDirection
-    local axis = self.flipSet[self.flipDirection].axis
+    obj.flipInitialDirection = props.flipInitialDirection
+    local axis = flipSet[props.flipInitialDirection].axis
     self.flipValue = obj[axis]
   end
   --
@@ -211,17 +167,17 @@ function M:activate(obj)
     --   see setmetatable is used for the model not to object
     self:dragHandler(event)
   end
-  print(MultiTouch.MULTITOUCH_EVENT)
+  -- print(MultiTouch.MULTITOUCH_EVENT)
   -- obj:addEventListener( MultiTouch.MULTITOUCH_EVENT, self.listener)
 end
 
 function M:deactivate(obj)
   -- obj:removeEventListener( MultiTouch.MULTITOUCH_EVENT, self.listener)
-  MultiTouch.deactivate( obj, "move", "single")
+  MultiTouch.deactivate(obj, "move", "single")
 end
 
 M.set = function(model)
-  return setmetatable( model, {__index=M})
+  return setmetatable(model, {__index = M})
 end
 --
 return M
