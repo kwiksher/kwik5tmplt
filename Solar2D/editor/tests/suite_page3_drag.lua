@@ -68,6 +68,8 @@ function M.test_new_drag()
   helper.clickProp(actionbox.objs, "onReleased")
   helper.touchAction("eventThree")
 
+  helper.setProp(classProps.objs, "constrainAngle", "90")
+
 
 -- selectors.componentSelector:onClick(true,  "actionTable")
 -- selectAction("eventOne")

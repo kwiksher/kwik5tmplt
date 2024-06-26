@@ -58,7 +58,17 @@ M.onTapPosXYSet   = {}
 
 --
 function M:tapListener(event, type)
-  print("@@tapListener", type, event.target.text)
+  -- print("@@tapListener", type, event.target.text)
+  local UI = self.UI
+  if type == "layer" then
+    UI.editor.selections_backup = {}
+    for i, v in next, UI.editor.selections do
+      print(i, v.text)
+      UI.editor.selections_backup[i] = {text=v.text}
+    end
+  else
+    UI.editor.selections_backup = nil
+  end
   self.activeProp = event.target.text
   event.actionbox = self
   basePropsControl.handler[type](event, self)
@@ -215,7 +225,7 @@ function M:createTable(props)
   for i=1, #props do
     local prop = props[i] or {}
     option.text = prop.name
-    print("@@ parts.baseProps",i, prop.name, prop.value)
+    -- print("@@ parts.baseProps",i, prop.name, prop.value)
     option.x = self.x
     option.y = i*option.height + self.y
     -- print(self.group, option.x, option.y, option.width, option.height)
@@ -227,12 +237,12 @@ function M:createTable(props)
     obj.rect = rect
     objs[#objs + 1] = obj
     -- show asset table
-    print("", prop.name)
+    -- print("", prop.name)
     if prop.name == 'url' or prop.name == '_filename' or prop.name == 'sheetInfo' then
        obj.class = self.class
        obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)
     elseif self.onTapActionSet[prop.name] then
-      print("@@@@@ onTapActionSet", prop.name)
+      -- print("@@@@@ onTapActionSet", prop.name)
         obj:addEventListener("tap", function(event) self:tapListener(event, 'action')end)
     elseif prop.name == "othersGroup" then
         obj:addEventListener("tap", function(event) self:tapListener(event, 'group')end)

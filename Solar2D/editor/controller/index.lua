@@ -49,7 +49,7 @@ end
 -- I/F
 --
 function M:useClassEditorProps()
-  print(debug.traceback())
+  -- print(debug.traceback())
   print("editor.controller.useClassEditorProps", self.id)
   local props = { properties = {}}
   if self.selectbox.selectedObj and self.selectbox.selectedText then
@@ -74,7 +74,11 @@ function M:useClassEditorProps()
   local properties = self.classProps:getValue()
   for i, entry in next, properties do
     -- print("", properties[i].name, type(properties[i].value))
-    props.properties[entry.name] = entry.value
+    if entry.name == "_target" then
+      props.properties[#props.properties+1] = {name = "target", value = entry.value}
+    else
+      props.properties[#props.properties+1] = {name = entry.name, value = entry.value}
+    end
   end
   --
   props.actionName =self.actionbox.value
@@ -83,7 +87,7 @@ end
 
 -- this handler should be called from selectbox to set one of animtations user selected
 function M:setValue(decoded, index, template)
-  print("editro.controller.setValue", self.id)
+  -- print("editro.controller.setValue", self.id)
   if decoded == nil then return end
   if not template then
     -- print(json.encode(decoded[index]))
@@ -138,7 +142,7 @@ function M:toggle()
 end
 
 function M:show()
-  print(self.id, self.class)
+  -- print(self.id, self.class)
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
       v:show()

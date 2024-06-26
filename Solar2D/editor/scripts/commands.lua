@@ -439,7 +439,7 @@ function M.publishForSelections(UI, args, controller, decoded)
   -------------
   local book = args.book or UI.editor.currentBook
   local page = args.page or UI.page
-  local layer = args.layer or UI.editor.currentLayer
+  local layer = args.layer or UI.editor.currentLayer or args.props.properties.target
 
   print("publishForSelections", book, page, layer, class, "classFolder="..classFolder)
   -- print(json.encode(args))

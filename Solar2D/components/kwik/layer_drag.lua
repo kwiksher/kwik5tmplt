@@ -67,7 +67,8 @@ local MultiTouch = require("extlib.dmc_multitouch")
 M.dragHandler = function (self, event )
   local UI = self.UI
   local target = event.target
-  local flip = self.flipSet[self.flip]
+  local flip = self.flipSet[self.flipDirection]
+  local tesX, tesY = target:localToContent(target.x, target.y)
   if self.actions.onShapeHandler then
     self.actions.onShapeHandler(event)
   end
@@ -109,7 +110,8 @@ M.dragHandler = function (self, event )
         if target.posY < 0  then
           target.posY = target.posY * -1
         end
-        if target.posX <= self.boundaries.xEnd and target.posY <= self.boundaries.yEnd  then  --in position\r\n'
+        -- if target.posX <= self.boundaries.xEnd and target.posY <= self.boundaries.yEnd  then  --in position\r\n'
+        if dropArea.contentBounds.xMin <  tesX and tesX <= dropArea.contentBounds.xMax and dropArea.contentBounds.yMin < tesY and tesY<= dropArea.contentBounds.yMax  then  --in position\r\n'
               target.x = dropArea.x
               target.y = dropArea.y
           target.lock = 1
@@ -117,7 +119,7 @@ M.dragHandler = function (self, event )
           target.lock = 0
         end
         end
-        hitTest(self.dropArea)
+        hitTest(target.dropArea)
     end
     if self.actions.onMoved then
       --  self.layer = target
@@ -126,7 +128,8 @@ M.dragHandler = function (self, event )
   elseif event.phase == "ended" or event.phase == "cancelled" then
       target.bodyType = target.oriBodyType
       if self.isDrop then
-        if target.lock == 1 and target.posX <= self.boundaries.xEnd and target.posY <= self.boundaries.xEnd then
+        local dropArea = target.dropArea
+        if target.lock == 1 and dropArea.contentBounds.xMin <  tesX and tesX <= dropArea.contentBounds.xMax and dropArea.contentBounds.yMin < tesY and tesY<= dropArea.contentBounds.yMax  then
            target.x = target.dropArea.x
            target.y = target.dropArea.y
 
@@ -196,7 +199,8 @@ function M:activate(obj)
   --
   if self.isFlip then
     obj.flipDirection = self.flipDirection
-    self.flipValue = obj[self.flipSet[self.flip].axis]
+    local axis = self.flipSet[self.flipDirection].axis
+    self.flipValue = obj[axis]
   end
   --
   -- obj.dragHandler = self.dragHandler
@@ -208,11 +212,11 @@ function M:activate(obj)
     self:dragHandler(event)
   end
   print(MultiTouch.MULTITOUCH_EVENT)
-  obj:addEventListener( MultiTouch.MULTITOUCH_EVENT, self.listener)
+  -- obj:addEventListener( MultiTouch.MULTITOUCH_EVENT, self.listener)
 end
 
 function M:deactivate(obj)
-  obj:removeEventListener( MultiTouch.MULTITOUCH_EVENT, self.listener)
+  -- obj:removeEventListener( MultiTouch.MULTITOUCH_EVENT, self.listener)
   MultiTouch.deactivate( obj, "move", "single")
 end
 

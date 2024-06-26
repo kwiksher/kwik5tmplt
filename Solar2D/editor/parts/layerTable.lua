@@ -95,7 +95,7 @@ function M:render(models, xIndex, yIndex, parentObj)
     obj.touch = function(eventObj, event)
       -- print("touch")
       self:commandHandler(eventObj, event)
-      UI.editor.selections = self.selections
+      -- UI.editor.selections = self.selections
       return true
     end
     obj:addEventListener("touch", obj)

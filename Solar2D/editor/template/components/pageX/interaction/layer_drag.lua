@@ -3,21 +3,8 @@ local parent,root = newModule(name)
 
 local layerProps = require(parent.."{{layer}}")
 
--- layerProps
--- local layerProps = {
---   blendMode = "{{blendMode}}",
---   height    =  {{bounds.bottom}} - {{bounds.top}},
---   width     = {{bounds.right}} - {{bounds.left}} ,
---   kind      = {{kind}},
---   name      = "{{parent}}{{name}}",
---   type      = "png",
---   x         = {{bounds.right}} + ({{bounds.left}} -{{bounds.right}})/2,
---   y         = {{bounds.top}} + ({{bounds.bottom}} - {{bounds.top}})/2,
---   alpha     = {{opacity}}/100,
--- }
-
 local M = {
-  name ="{{name}}",
+  name ="{{layer}}",
   -- commonAsset = "{{common}}",
   -- class = "{{class}}", -- button, drag, canvas ...
   --
@@ -33,12 +20,10 @@ local M = {
   flipAxis = "x", -- "y",
   flipValue      = 0,
   flipDirection  = "right", -- "left", "bottom", "top"
-  flipDirecttion1 = "right",
-  flipDirecttion2 = "left",
   flipScale = 1, -- -1
   --
   isDrop = true,
-  dropArea = "",
+  dropArea = "{{dropArea}}",
   dropMargin = 10,
   --
   dropBound = {xStart=0, xEnd=0, yStart = 0, yEnd=0},
@@ -48,9 +33,11 @@ local M = {
   {{/properties}}
   --
   actions={
-    onDropped = "{{actionName}}",
-    onReleased ="{{}}",
-    onMoved="{{}}" },
+    {{#actions}}
+    onDropped = "{{onDropped}}",
+    onReleased ="{{onReleased}}",
+    onMoved="{{onMoved}}" },
+    {{/actions}}
   --
   layerProps = layerProps
 }
@@ -64,6 +51,7 @@ function M:create(UI)
     self.obj = sceneGroup
   end
   --
+  self.obj.dropArea = sceneGroup[self.dropArea]
   self:activate(self.obj)
 end
 
