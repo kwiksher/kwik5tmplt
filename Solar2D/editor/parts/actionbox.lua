@@ -5,7 +5,7 @@ local M = require("editor.parts.baseProps").new()
 ---------------------------
 M.name = "onComplete"
 M.selectedTextLabel = ""
-M.onTapActionSet = table:mySet{"onComplete", "onMoved", "onDropped", "onReleased"}
+M.onTapActionSet = table:mySet{"onTap", "onComplete", "onMoved", "onDropped", "onReleased"}
 M.props = {
   -- {name="onComplete", value=""}
 }

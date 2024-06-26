@@ -11,10 +11,11 @@ function M:createButton(UI)
   local path = UI.props.imgDir .. layerName
   -- Tap
   local props = self.properties
-  if props.btaps  > 0 then
+  if props.type == "touch"   then
       local function onReleaseHandler(event)
+        print("onReleaseHandler")
           if event.target.enabled == nil or event.target.enabled then
-              event.target.type = "press"
+              event.target.type = "touch"
               if self.TV then
                   if event.target.isKey then
                       UI.scene:dispatchEvent({name = self.actions.onTap, layers = event.target})
@@ -27,9 +28,18 @@ function M:createButton(UI)
       end
 
       local path1 = system.pathForFile( UI.props.imgDir ..self.layerProps.imagePath, system.ResourceDirectory)
-      local path2 = system.pathForFile( UI.props.imgDir ..props.over..".png", system.ResourceDirectory)
+      local path2 = system.pathForFile( UI.props.imgDir ..UI.page.."/"..props.over..".png", system.ResourceDirectory)
+
+      local path1 =  UI.props.imgDir ..self.layerProps.imagePath
+      local path2 =  UI.props.imgDir ..UI.page.."/"..props.over..".png"
 
       if path1 and path2 then
+        print("------- widget.newButton")
+
+        local posX, posY = obj.x, obj.y
+        local alpha = obj.alpha
+        obj.alpha = 0 -- remove?
+
         obj =
             widget.newButton {
             id          = self.name,
@@ -38,11 +48,20 @@ function M:createButton(UI)
             width       = self.layerProps.imageWidth,
             height      = self.layerProps.imageHeight,
             onRelease   = onReleaseHandler,
-            baseDir     = UI.props.systemDir
+            baseDir     =  system.ResourceDirectory, -- UI.props.systemDir
         }
         --
+        if obj == nil then
+          print ("@@@@ Error create widget @@@@", path1, path2)
+        end
+        obj.x, obj.y  = posX, posY
+        obj.alpha = alpha
+        sceneGroup:insert(obj)
+        sceneGroup[self.name] = obj
         obj.on = onReleaseHandler
-    end
+      else
+          print ("@@@@ Error@@@@", path1, path2)
+      end
   end
 
     --
@@ -95,9 +114,9 @@ function M:addEventListener(UI)
     local layers = UI.layers
     local props = self.properties
     -- Tap
-    if props.btaps and layers[self.name] then
+    if props.type  == "tap" and props.btaps and sceneGroup[self.name] then
         --
-        local obj = layers[self.name]
+        local obj = sceneGroup[self.name]
         local eventName = props.onTap
 
         function obj:tap(event)
@@ -122,7 +141,7 @@ function M:addEventListener(UI)
         --Hide button if purchase was already made
         if IAP.getInventoryValue("unlock_" .. props.product) then
             --This page was purchased, do not show the BUY button
-            layers[self.name].alpha = 0
+            sceneGroup[self.name].alpha = 0
         end
     end
 end
@@ -132,8 +151,8 @@ function M:removeEventListener(UI)
     local sceneGroup = UI.sceneGroup
     local props = self.properties
     -- Tap
-    if props.btaps and layers[self.name] then
-      local obj = layers[self.name]
+    if props.btaps and sceneGroup[self.name] then
+      local obj = sceneGroup[self.name]
       obj:removeEventListener("tap", obj)
     end
 end

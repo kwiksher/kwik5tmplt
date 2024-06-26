@@ -14,7 +14,9 @@ local M = {
     -- lunatest.suite("editor.tests.suite_page1_select_copy_paste", props)
 
     -- lunatest.suite("editor.tests.suite_page2_sync2audio", props)
-    lunatest.suite("editor.tests.suite_page3_drag", props)
+    -- lunatest.suite("editor.tests.suite_page3_drag", props)
+    lunatest.suite("editor.tests.suite_page3_button", props)
+
     -- lunatest.suite("editor.tests.suite_page4_physics", props)
 
     -- lunatest.suite("editor.tests.suite_new_book_page_layer", props)
