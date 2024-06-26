@@ -72,6 +72,9 @@ function controller:useClassEditorProps()
     if entry.name == "_target" then
       props.properties[#props.properties+1] = {name = "target", value = entry.value}
       props.layer = entry.value
+    elseif entry.name == "boundaries" then
+      local v = {xMin=entry.value[1], xMax = entry.value[2], yMin = entry.value[3], yMax = entry.value[4]}
+      props.properties[#props.properties+1] = {name = "boundaries", value = v}
     else
       props.properties[#props.properties+1] = {name = entry.name, value = entry.value}
     end

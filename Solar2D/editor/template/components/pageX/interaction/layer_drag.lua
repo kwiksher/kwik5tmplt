@@ -2,6 +2,8 @@ local name = ...
 local parent,root = newModule(name)
 
 local layerProps = require(parent.."{{layer}}")
+local MultiTouch = require("extlib.dmc_multitouch")
+
 
 local M = {
   name ="{{layer}}",
@@ -10,37 +12,38 @@ local M = {
   --
   -- dragProps
   {{#properties}}
-  constrainAngle = nil,
-  bounds = {xStart=nil, xEnd=nil, yStart=nil, yEnd=nil},
+  constrainAngle = {{constrainAngle}},
+  bounds = {xMin={{xMin}}, xMax={{xMax}}, yMin={{yMin}}, yMax={{yMax}}},
   isActive = "{{isActive}}",
   isFocus = true,
   isPage = false,
   --
   isFlip = true,
-  flipAxis = "x", -- "y",
-  flipValue      = 0,
-  flipDirection  = "right", -- "left", "bottom", "top"
-  flipScale = 1, -- -1
-  --
+  flipInitialDirection  = "right", -- "left", "bottom", "top"
+  -- flipAxis = "x", -- "y",
+  -- flipValue      = 0,
+  -- flipScale = 1, -- -1
+  -- --
   isDrop = true,
   dropArea = "{{dropArea}}",
   dropMargin = 10,
   --
-  dropBound = {xStart=0, xEnd=0, yStart = 0, yEnd=0},
+  -- dropBound = {xMin=0, xMax=0, yMin = 0, yMax=0},
   --
   rock = 1, -- 0,
   backToOrigin = true,
   {{/properties}}
   --
-  actions={
-    {{#actions}}
-    onDropped = "{{onDropped}}",
-    onReleased ="{{onReleased}}",
-    onMoved="{{onMoved}}" },
-    {{/actions}}
-  --
-  layerProps = layerProps
 }
+
+M.layerProps = layerProps
+M.actions={
+  {{#actions}}
+  onDropped = "{{onDropped}}",
+  onReleased ="{{onReleased}}",
+  onMoved="{{onMoved}}" },
+  {{/actions}}
+
 
 function M:create(UI)
   self.UI = UI
