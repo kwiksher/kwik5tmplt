@@ -29,8 +29,8 @@ function M:init(viewGroup)
   buttons       = viewGroup.buttons
 
 
-  AtoBbutton.useClassEditorProps = function() return self:useClassEditorProps() end
-  buttons.useClassEditorProps = function() return self:useClassEditorProps() end
+  AtoBbutton.useClassEditorProps = function(UI) return self:useClassEditorProps(UI) end
+  buttons.useClassEditorProps = function(UI) return self:useClassEditorProps(UI) end
 
   --AtoBbutton.useBreadcrumbProps = useBreadcrumbProps
   -- buttons.useBreadcrumbProps = useBreadcrumbProps
@@ -40,7 +40,7 @@ function M:init(viewGroup)
   --   self:redraw()
   -- end
   -- --
-  selectbox.useClassEditorProps = function() self:useClassEditorProps() end
+  selectbox.useClassEditorProps = function(UI) self:useClassEditorProps(UI) end
 
   selectbox.classEditorHandler = function(decoded, index)
     self:reset()
@@ -53,8 +53,8 @@ end
   -------
 -- I/F
 --
-function M:useClassEditorProps()
-  -- print("useClassEditorProps")
+function M:useClassEditorProps(UI)
+  print("useClassEditorProps", UI)
   local props = {
     properties = {},
     easing="Linear",
@@ -62,9 +62,9 @@ function M:useClassEditorProps()
     from={},
     actionName = nil,
     layerOptions = {
-      isGroup = tostring(false),
-      isSceneGroup = tostring(false),
-      isSpritesheet = tostring(false),
+      isGroup = false,
+      isSceneGroup = false,
+      isSpritesheet = false,
       referencePoint = "Center",
       -- for text
       deltaX         = 0,
@@ -80,8 +80,10 @@ function M:useClassEditorProps()
 
   if selectbox.selectedObj then
     props.index = selectbox.selectedIndex
-    props.name = selectbox.selectedObj.text -- UI.editor.currentLayer,
+    props.layer = selectbox.selectedObj.text -- UI.editor.currentLayer,
     props.class=selectbox.selectedText.text
+  else
+    props.layer = UI.editor.currentLayer
   end
   --
   local properties = classProps:getValue()
@@ -96,7 +98,7 @@ function M:useClassEditorProps()
     props.from[AB[i].name] = tonumber(AB[i].A )
     props.to[AB[i].name] = tonumber(AB[i].B )
   end
-  props.actionName = actionbox.getValue("onComplete") --selectedTextLabel
+  props.actions = {onComplete = actionbox.getValue("onComplete")} --selectedTextLabel
   --breadcrumbs
   return props
 end

@@ -10,8 +10,8 @@ local M = {
     rotation = 0
   },
   to = {
-    x = 100,
-    y = 400,
+    x = 200,
+    y = 0,
     alpha = 1,
     xScale = 1.5,
     yScale = 1.5,

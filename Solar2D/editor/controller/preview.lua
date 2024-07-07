@@ -6,27 +6,34 @@ local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
-    print(name)
+    print(name, params.layer, params.class)
     local props = params.props
     --print(props.class)
     for k, v in pairs(props.to) do
       print("", k, v)
     end
 
-    if params.class =="animation" then
-      local player = Animation.new(props)
+    if params.class == "animation" then
+      local player = Animation.set(props)
       --
       local function onEndHandler(UI)
-        if props.actionName:len() > 0 then
-          Runtime:dispatchEvent({name = UI.page .. props.actionName, event = {}, UI = UI})
+        if props.actions.onComplete then
+          UI.scene.app:dispatchEvent {
+            name = props.actions.onComplete,
+            event = {UI = UI},
+            UI = UI
+          }
+        -- Runtime:dispatchEvent({name = UI.page .. props.actions.onComplete, event = {}, UI = UI})
         end
       end
       --
-      local rootGroup = UI.rootGroup
-      player:initAnimation(UI, rootGroup[props.name], onEndHandler)
-      player.tween = player:buildAnim(UI)
+      local sceneGroup = UI.sceneGroup
+      player:initAnimation(UI, sceneGroup[props.layer], onEndHandler)
+      player.tweenFrom, player.tweenTo = player:buildAnim(UI)
       -- player.tween:pause()
-      player.tween:play()
+      player:init()
+      player.tweenFrom:play()
+      -- player.tweenTo:play()
     end
   end
 )

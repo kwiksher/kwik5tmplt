@@ -24,7 +24,7 @@ function M:setBodyName (name)
 end
 
 function M:setActiveEntry(objX, objY)
-  print("@@@setActtiveEntry", objX)
+  -- print("@@@setActtiveEntry", objX)
   popup.activeEntryX = objX
   popup.activeEntryY = objY
 end
@@ -48,7 +48,10 @@ function M:setValue(objA)
     self.group.y = y
     self.oriX = x
     self.oriX = y
-    end
+    self.x = x
+    self.y = y
+    -- print(self.name, x, y)
+  end
 end
 --
 function M:init(UI, x, y, width, height)
@@ -86,6 +89,8 @@ function M:create(UI)
   )
     --self.group:translate(display.contentCenterX-100, display.contentCenterY)
     self.group.ptA = ptA
+    self.group.x = self.x
+    self.group.y = self.y
 end
 --
 function M:didShow(UI) end

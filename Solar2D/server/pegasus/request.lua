@@ -156,7 +156,7 @@ function Request:headers()
     local key, value = string.match(data, Request.PATTERN_HEADER)
 
     if key and value then
-      self._headers[key] = value
+      self._headers[key:lower()] = value
     end
 
     data = self.client:receive()

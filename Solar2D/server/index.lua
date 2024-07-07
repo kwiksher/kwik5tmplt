@@ -18,7 +18,22 @@ local app
 
 local parsers = {
   lua = function(data)
-		return loadstring('return '.. data)()
+    if data  then
+      print(data)
+      local f = loadstring(data)
+      local status, arg = pcall(f)
+      if status then
+        return json.encode(arg) or "true"
+      else
+        local pos = arg:find("stack traceback")
+        if pos then
+          return arg:sub(1, pos-1)
+        else
+          return arg
+        end
+      end
+      -- return loadstring('return '.. data)()
+    end
 	end,
 	yaml = function(data)
 		return yaml.eval(data)
@@ -64,13 +79,23 @@ function M.run (params)
   server:start(function (request, response)
     print "It's running..."
     print(request._method, request._path)
-    local ret = nil
+    local ret, error = nil
     if request._method == "POST" then
-      ret = doPost:process(request)
+      if request._path == "/hprint" then
+      	local data = request:post()
+        if type(data) == "string" then
+          local _type = request._headers["content-type"]:sub(string.len("application/") + 1)
+          ret = parsers[_type](data)
+          print(ret)
+        end
+      else
+        ret = doPost:process(request, parsers)
+      end
+
     elseif request._method == "GET" then
       ret = doGet:process(request)
     elseif request._method == "PUT" then
-      ret = doPut:process(request)
+      ret = doPut:process(request, parsers)
     elseif request._method == "DELETE" then
       ret = doDelete:process(request)
     end

@@ -72,7 +72,7 @@ local function createTable(triangle, group)
 
   local obj = display.newText{
     parent = group,
-    text = "Point         A                 B",
+    text = "Point      From A     To B",
     x = triangle.x + 4,
     y = triangle.y,
     fontSize = 10,
