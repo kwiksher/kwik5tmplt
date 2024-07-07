@@ -146,19 +146,21 @@ local function createOptions(self, UI)
 		delay       = self.properties.delay,
 	}
 	if self.breadcrumbs then
+    for k, v in pairs(self.breadcrumbs) do print("", k, v ) end
 		options.breadcrumb = true
 		options.breadAnchor = 5
 		options.breadShape = self.breadcrumbs.shape
 		options.breadW =self.breadcrumbs.width
 		options.breadH = self.breadcrumbs.height
 		if self.breadcrumbs.color then
-			options.breadColor = self.breadcrumbs.color
+      local values =  util.split(self.breadcrumbs.color, ",")
+      options.breadColor = {tonumber(values[1])/255, tonumber(values[2])/255, tonumber(values[3])/255, tonumber(values[4])}
 		else
 			options.breadColor = {"rand"}
 		end
 		options.breadInterval = self.breadcrumbs.interval
 		if self.breadcrumbs.dispose then
-			options.breadTimer = self.breadcrumbs.time
+			options.breadTimer = self.breadcrumbs.time/1000
 		end
 	end
 	return options

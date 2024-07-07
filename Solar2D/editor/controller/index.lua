@@ -172,7 +172,9 @@ function M:redraw()
   self.view:create(UI)
   self.view:didShow(UI)
   self:show()
-
+  if self.onShow then
+    self:onShow()
+  end
   --
 
 end
@@ -381,7 +383,7 @@ function M:load(book, page, layer, class, isNew, asset)
       model = self:mergeAsset(decoded[1], asset)
     end
     self:setValue(model, nil, true)
-    -- print(json.encode(model))
+    print(json.encode(model))
     self:redraw()
   elseif layer then
 

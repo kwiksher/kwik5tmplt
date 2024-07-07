@@ -23,6 +23,15 @@ local model = {
     {name="easing", value=nil},
     {name="xSwipe", value=nil},
     {name="ySwipe", value=nil},
+  },
+  breadcrumbs = {
+    {name = "dispose",value = true},
+    {name = "shape" ,value = ""},
+    {name = "color",value = {1, 0, 1}},
+    {name = "interval",value = 300},
+    {name = "time",value = 2000},
+    {name = "width",value = 30},
+    {name = "height",value = 3},
   }
 }
 return model

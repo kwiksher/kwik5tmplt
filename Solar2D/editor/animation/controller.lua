@@ -8,6 +8,7 @@ local pointB
 local AtoBbutton
 local selectbox
 local classProps
+local breadcrumbsProps
 local pointABbox
 local actionbox
 local popup
@@ -23,11 +24,11 @@ function M:init(viewGroup)
   AtoBbutton    = viewGroup.AtoBbutton
   selectbox      = viewGroup.selectbox
   classProps    = viewGroup.classProps
+  breadcrumbsProps = viewGroup.breadcrumbsProps
   pointABbox    = viewGroup.pointABbox
   actionbox = viewGroup.actionbox
   popup         = viewGroup.popup
   buttons       = viewGroup.buttons
-
 
   AtoBbutton.useClassEditorProps = function(UI) return self:useClassEditorProps(UI) end
   buttons.useClassEditorProps = function(UI) return self:useClassEditorProps(UI) end
@@ -48,15 +49,25 @@ function M:init(viewGroup)
     self:redraw()
   end
 
-
 end
-  -------
+
+--- this is a callback from redraw
+function M:onShow()
+  pointA:setActiveEntryObjs(pointABbox.objs.A[1],pointABbox.objs.A[2])
+  pointB:setActiveEntryObjs(pointABbox.objs.B[1],pointABbox.objs.B[2])
+  breadcrumbsProps.targetObject = nil
+  classProps.targetObject = nil
+  local basePropsControl = require("editor.parts.basePropsControl")
+  basePropsControl.enableFillColor = false
+end
+-------
 -- I/F
 --
 function M:useClassEditorProps(UI)
   print("useClassEditorProps", UI)
   local props = {
     properties = {},
+    breadcrumbs = {},
     easing="Linear",
     to = {},
     from={},
@@ -91,6 +102,20 @@ function M:useClassEditorProps(UI)
     -- print("", properties[i].name, type(properties[i].value))
     props.properties[properties[i].name] = properties[i].value
   end
+  --
+  local breadcrumbsProperties = breadcrumbsProps:getValue()
+  for i=1, #breadcrumbsProperties do
+    -- print("", properties[i].name, type(properties[i].value))
+    local name = breadcrumbsProperties[i].name
+    if name == "_width" then
+      props.breadcrumbs.width = breadcrumbsProperties[i].value
+    elseif name == "_height" then
+      props.breadcrumbs.height = breadcrumbsProperties[i].value
+    else
+      props.breadcrumbs[name] = breadcrumbsProperties[i].value
+    end
+  end
+
   --from
   --to
   local AB = pointABbox:getValue()
@@ -117,19 +142,24 @@ function M:setValue(decoded, index, template)
     -- print(json.encode(decoded[index]))
     selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
     classProps:setValue(decoded[index].properties)
+    breadcrumbsProps:setValue(decoded[index].breadcrumbs)
     pointA:setValue(decoded[index].from)
     pointB:setValue(decoded[index].to)
     -- -- breadcrumbs:setValue(decoded[index].breadcrumbs)
     pointABbox:setValue(decoded[index].from, decoded[index].to)
-    actionbox:setValue({name = "onComplete", value=decoded[index].actions.onComplete})
+    actionbox:setValue{{name = "onComplete", value=decoded[index].actions.onComplete}}
   else
+    if decoded.properties.target then
+      decoded.properties.target = self.layer
+    end
     selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
     classProps:setValue(decoded.properties)
+    breadcrumbsProps:setValue(decoded.breadcrumbs)
     pointA:setValue(decoded.from)
     pointB:setValue(decoded.to)
     -- -- breadcrumbs:setValue(decoded.breadcrumbs)
     pointABbox:setValue(decoded.from, decoded.to)
-    actionbox:setValue({name="onComplete", decoded.actions.onComplete})
+    actionbox:setValue{{name="onComplete", decoded.actions.onComplete}}
   end
 end
 

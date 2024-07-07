@@ -6,7 +6,7 @@ local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
-    print(name, params.layer, params.class)
+    print(name, params.props.layer, params.class)
     local props = params.props
     --print(props.class)
     for k, v in pairs(props.to) do

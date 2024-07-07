@@ -63,7 +63,9 @@ function M:commandHandler(target, event)
     layerTableCommands.multiSelections(self, target)
   else
     if layerTableCommands.singleSelection(self, target) then
-      UI.editor.currentLayer = target.audio
+      if target.audio then
+        UI.editor.currentLayer = target.audio
+      end
       -- target.isSelected = true
       UI.editor.currentClass = target.name
       --

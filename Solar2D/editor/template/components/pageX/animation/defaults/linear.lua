@@ -18,9 +18,10 @@ local M = {
     rotation = 90
   },
   properties = {
+    target = NIL,
     autoPlay=true,
     delay=0,
-    duration=1000,
+    duration=2000,
     loop=1,
     reverse=false,
     resetAtEnd=false,
@@ -37,11 +38,12 @@ local M = {
     repeatable = false
   },
   breadcrumbs = {
+    enable  = false,
     dispose = true,
-    shape = "",
-    color = {1, 0, 1},
-    interval = 300,
-    time = 2000,
+    shape = "circle",
+    color = {1, 0, 0, 0.2},
+    interval = 50,
+    time = 1000,
     width = 30,
     height = 30
   },
@@ -66,7 +68,7 @@ local M = {
     deltaX         = 0,
     deltaY         = 0
   },
-  actions = {onComplete = nil}
+  actions = {onComplete = ""}
 }
 
 return M
