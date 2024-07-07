@@ -136,26 +136,6 @@ local function createOptions(self, UI)
   local layer = self.obj
   self.properties = self.properties or {}
   --
-	local onEndHandler = function()
-		if self.properties.resetAtEnd then
-			if self.class == "Shake" then
-				layer.rotation = 0
-			end
-      layer.x				 = layer.oriX
-      layer.y				 = layer.oriY
-			layer.alpha		 = layer.oldAlpha
-			layer.rotation	= 0
-			layer.isVisible = true
-			layer.xScale		= layer.oriXs
-			layer.yScale		= layer.oriYs
-
-			if self.layerOptions.isSpritesheet then
-				layer:pause()
-				layer.currentFrame = 1
-			end
-		end
-    self.onEndHandler(UI)
-	end
 
 	local options = {
 		ease        = gtween.easing[self.properties.easing],
@@ -164,7 +144,6 @@ local function createOptions(self, UI)
 		xSwipe      = self.properties.xSwipe,
 		ySwipe      = self.properties.ySwipe,
 		delay       = self.properties.delay,
-		onComplete  = onEndHandler
 	}
 	if self.breadcrumbs then
 		options.breadcrumb = true
@@ -186,8 +165,9 @@ local function createOptions(self, UI)
 end
 --
 
-local function createProps(self, layer, mX, mY)
-  -- print("createProps", mX, mY)
+local function createPropsTo(self, layer, _mX, _mY)
+  local mX, mY = _mX or self.to.x, _mY or self.to.y
+  print("createProps", self.class, mX, mY, self.to.x, self.to.y)
 	local props = {}
   if self.class == "Pulse" then
     props.xScale = self.to.xScale
@@ -227,9 +207,51 @@ local function createProps(self, layer, mX, mY)
 	return props
 end
 
+local function createPropsFrom(self, layer, _mX, _mY)
+  local mX, mY = _mX or layer.x, _mY or layer.y
+  print("createProps", self.class, mX, mY, self.from.x, self.from.y)
+	local props = {}
+  if self.class == "Pulse" then
+    props.xScale = layer.xScale
+    props.yScale = layer.yScale
+  elseif self.class == "Rotation" then
+    props.rotation =  layer.rotation
+  elseif self.class == "Shake" then
+    props.rotation =  layer.rotation
+  elseif self.class == "Bounce" then
+    props.y=mY
+  elseif self.class == "Blink" then
+    props.xScale =  layer.xScale
+    props.yScale = layer.yScale
+  elseif (self.class == "linear" or self.class == "Dissolve" or self.class == "Path") then
+    if self.from.x then
+      props.x = mX
+    end
+    if self.from.y then
+      props.y = mY
+    end
+    if self.from.rotation then
+      props.rotation = layer.rotation
+    end
+    if self.from.xScale then
+      props.xScale= layer.xScale
+    end
+    if self.from.yScale then
+      props.yScale= layer.yScale
+    end
+    if self.pathProps and self.pathProps.newAngle then -- path
+      props.newAngle = layer.newAngle
+    end
+  end
+  if self.from.alpha then
+    props.alpha= layer.alpha
+  end
+	return props
+end
+
 local function createAnimationFunc(self, UI, class)
-	return function(self, UI)
-    local animObj = {}
+  print("createAnimationFunc", class)
+    local animObj, animObjTo, animObjFrom = {}, {}, {}
 		local layer = self.obj
 		local sceneGroup = UI.sceneGroup
 		--
@@ -239,20 +261,51 @@ local function createAnimationFunc(self, UI, class)
 		layer.yScale = layer.oriYs
 
     self.to = self.to or {}
+    self.class = class:lower()
 		--
     local   mX, mY= getPos(self, layer, self.to.x, self.to.y, self.isSceneGroup)
+    print(mX, mY)
     --
 		local options = createOptions(self, UI)
-		local props = createProps(self, layer, mX, mY)
-		---
+		-- local props = createProps(self, layer, mX, mY)
+		local propsTo = createPropsTo(self, layer)
+		local propsFrom = createPropsFrom(self, layer)
+    ---
+    local onEndHandler = function()
+      local layer = self.obj
+      if self.properties.resetAtEnd then
+        if self.class == "Shake" then
+          layer.rotation = 0
+        end
+        layer.x				 = layer.oriX
+        layer.y				 = layer.oriY
+        layer.alpha		 = layer.oldAlpha
+        layer.rotation	= 0
+        layer.isVisible = true
+        layer.xScale		= layer.oriXs
+        layer.yScale		= layer.oriYs
+
+        if self.layerOptions.isSpritesheet then
+          layer:pause()
+          layer.currentFrame = 1
+        end
+      end
+      self.onEndHandler(UI)
+    end
+    ---
 		if class== "Linear" then
-      -- print("--- Linear ---", props.x, props.y, self.properties.duration)
-      -- for k, v in pairs(props) do print(k ,v) end
-      -- print ("-------")
-      -- for k, v in pairs(options) do print(k ,v) end
+      print("--- Linear ---", propsTo.x, propsTo.y, self.properties.duration)
+      for k, v in pairs(propsTo) do print(k ,v) end
+      print ("-------")
+      for k, v in pairs(options) do print(k ,v) end
 
       self.properties.duration = self.properties.duration or 1000
-			animObj = gtween.new( layer, self.properties.duration/1000, props, options)
+      options.onComplete = function() animObjTo:play() end
+			animObjFrom = gtween.new( layer, self.properties.duration/1000, propsFrom, options)
+      options.onComplete  = onEndHandler
+			animObjTo = gtween.new( layer, self.properties.duration/1000, propsTo, options)
+      animObjFrom:pause()
+      animObjTo:pause()
 		elseif class == "Path" then
 			animObj = btween.new(
 				layer,
@@ -265,13 +318,18 @@ local function createAnimationFunc(self, UI, class)
 				props)
 
 			animObj.pathAnim = true
+    else
+      print("Error")
 		end
-    return animObj
-	end
+    -- for k, v in pairs(animObj) do print(k, v) end
+    return animObjFrom, animObjTo
 end
 --
-animationFactory.Linear  = createAnimationFunc(self, UI, "Linear")
-animationFactory.Path     = createAnimationFunc(self, UI, "Path")
+animationFactory.Linear  = function(self,UI)
+  print("@@Linear")
+  return createAnimationFunc(self, UI, "Linear")
+end
+animationFactory.Path     = function(self, UI) return createAnimationFunc(self, UI, "Path") end
 animationFactory.Dissolve = function(self, UI)
 	local layer = self.obj
 	local sceneGroup = UI.sceneGroup
@@ -292,12 +350,38 @@ animationFactory.Dissolve = function(self, UI)
   return animObj
 end
 
+function M:init()
+  print("@@@", self.from.x, self.from.y)
+  if self.from.x then
+    self.obj.x = self.from.x
+  end
+  if self.from.y then
+    self.obj.y = self.from.y
+  end
+  if self.from.rotation then
+    self.obj.rotation = self.from.rotation
+  end
+  if self.from.xScale then
+    self.obj.xScale=self.from.xScale * self.obj.xScale
+  end
+  if self.from.yScale then
+    self.obj.yScale=self.from.yScale * self.obj.yScale
+  end
+  if self.pathProps and self.pathProps.newAngle then -- path
+    self.obj.newAngle = self.pathProps.newAngle
+  end
+  if self.from.alpha then
+    self.obj.alpha=self.from.alpha
+  end
+end
+
 --
 function M:initAnimation(UI, layer, onEndHandler)
   self.onEndHandler = onEndHandler
   --
   if not(self.class == "Dissolve" or self.class =="Path") then
     self.buildAnim = animationFactory["Linear"]
+    print("self.buildAnim", self.buildAnim)
   else
     self.buildAnim = animationFactory[M.class]
   end

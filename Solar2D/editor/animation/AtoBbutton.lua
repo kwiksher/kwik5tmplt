@@ -27,17 +27,22 @@ local props = {
 
 ---
 function M:init(UI)
-  local app = App.get()
-  for i = 1, #self.commands do
-    app.context:mapCommand(
-      "editor.classEditor." .. self.commands[i],
-      "editor.controller." .. self.commands[i]
-    )
-  end
+  -- if not self.contextInit then
+  --   print(debug.traceback())
+  --   local app = App.get()
+  --   for i = 1, #self.commands do
+  --     app.context:mapCommand(
+  --       "editor.classEditor." .. self.commands[i],
+  --       "editor.controller." .. self.commands[i]
+  --     )
+  --   end
+  --   self.contextInit = true
+  -- end
 end
 --
 function M:create(UI)
-    -- print("create", self.name)
+  self.UI = UI
+    print("create", self.name, UI)
     self.group = display.newGroup()
 
     local function doAB(event)
@@ -64,10 +69,11 @@ function M:create(UI)
         --     onComplete = killAB
         -- })
         -- abTimer = timer.performWithDelay(1, doAB, 0)
-
+        print(UI)
         UI.scene.app:dispatchEvent {
-          name = "editor.anim.preview" ,
+          name = "editor.classEditor.preview" ,
           UI = UI,
+          class = "animation",
           props = self.useClassEditorProps(UI)
         }
 

@@ -120,11 +120,11 @@ function M:addEventListener(UI)
         local eventName = props.onTap
 
         function obj:tap(event)
-          print("tap")
           event.UI = UI
           if props.enabled or props.enabled == nil then
             if props.btaps and event.numTaps then
               if event.numTaps == props.btaps then
+                print("tap")
                   UI.scene:dispatchEvent({name=eventName, event = event})
               end
             else

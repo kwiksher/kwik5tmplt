@@ -34,13 +34,13 @@ function M:init(UI)
   UI.editor.viewStore.animation = self.group
 
   selectbox     : init(UI, self.x + self.width/2, self.y, self.width*0.74, self.height)
-  classProps   : init(UI, self.x + self.width*1.5 + 2, self.y,  self.width, self.height)
+  classProps   : init(UI, self.x + self.width, self.y,  self.width, self.height)
   classProps.model = model.props
   --
   -- pointABbox   : init(UI, display.contentWidth*0.25,  display.contentHeight*0.75,  self.width, self.height)
-  pointABbox   : init(UI,  self.x + self.width/2,  display.contentHeight*0.5,  self.width, self.height)
-  pointA       : init(UI, self.x + self.width * 5, self.y,  self.width, self.height)
-  pointB       : init(UI, self.x + self.width * 7, self.y,  self.width, self.height)
+  pointABbox   : init(UI,  self.x + self.width/2,  display.contentHeight*0.75,  self.width, self.height)
+  pointA       : init(UI, -10, 0,  self.width, self.height)
+  pointB       : init(UI, 10, 0,  self.width, self.height)
   AtoBbutton   : init(UI, self.x + self.width * 9, self.y,  self.width, self.height)
   actionbox: init(UI, self.x + self.width, display.contentHeight*0.75, self.width, self.height)
   actionbox.props = {
@@ -63,7 +63,7 @@ function M:init(UI)
 
   controller.view = self
 
-  UI.useClassEditorProps = function() return controller:useClassEditorProps() end
+  --UI.useClassEditorProps = function(self) return controller:useClassEditorProps(self) end
 
 
   --self.group:translate(200, 0)

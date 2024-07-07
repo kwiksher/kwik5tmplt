@@ -15,7 +15,7 @@ local layerManager = require(parent.."controller.toolLayerManager")
 --
 
 --
-function M:process(request)
+function M:process(request, parsers)
   local ret
 	local data = request:put()
   local args = util.split(request._path, "/")
