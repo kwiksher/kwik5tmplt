@@ -9,6 +9,7 @@ local selectbox      = require(root.."parts.selectbox")
 -- local classProps    = require(root.."parts.classProps")
 --
 local classProps    = require("editor.parts.baseProps").new({width=50})
+local breadcrumbsProps = require("editor.parts.baseProps").new({width=50})
 --
 local pointABbox    = require(parent.."pointABbox")
 local actionbox = require("editor.parts.actionbox")
@@ -36,16 +37,20 @@ function M:init(UI)
   selectbox     : init(UI, self.x + self.width/2, self.y, self.width*0.74, self.height)
   classProps   : init(UI, self.x + self.width, self.y,  self.width, self.height)
   classProps.model = model.props
+
+  breadcrumbsProps   : init(UI, self.x + self.width, self.y+210,  self.width, self.height)
+  breadcrumbsProps.model = model.breadcrumbs
+
   --
   -- pointABbox   : init(UI, display.contentWidth*0.25,  display.contentHeight*0.75,  self.width, self.height)
-  pointABbox   : init(UI,  self.x + self.width/2,  display.contentHeight*0.75,  self.width, self.height)
+  pointABbox   : init(UI,  self.x + self.width/2 + 10,  display.contentHeight*0.78,  self.width, self.height)
   pointA       : init(UI, -10, 0,  self.width, self.height)
   pointB       : init(UI, 10, 0,  self.width, self.height)
   AtoBbutton   : init(UI, self.x + self.width * 9, self.y,  self.width, self.height)
-  actionbox: init(UI, self.x + self.width, display.contentHeight*0.75, self.width, self.height)
-  actionbox.props = {
-    {name="onComplete", value=""}
-  }
+  actionbox: init(UI, self.x + self.width, display.contentCenterY - 80, self.width, self.height)
+  -- actionbox.props = {
+  --   {name="onComplete", value=""}
+  -- }
 
   buttons:init(UI)
   -- --
@@ -53,6 +58,7 @@ function M:init(UI)
   controller:init{
     selectbox      = selectbox,
     classProps    = classProps,
+    breadcrumbsProps = breadcrumbsProps,
     pointA        = pointA,
     pointB        = pointB,
     AtoBbutton    = AtoBbutton,

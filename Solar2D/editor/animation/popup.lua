@@ -21,8 +21,14 @@ local function tap(event)
         end
         return t ..num
       end
-      M.activeEntryX.field.text = M.bodyName..".x" .. getValue(M.pointA.newX)
-      M.activeEntryY.field.text = M.bodyName ..".y" ..getValue(M.pointA.newY)
+      if M.bodyName then
+        M.activeEntryX.field.text = M.bodyName..".x" .. getValue(M.pointA.newX)
+        M.activeEntryY.field.text = M.bodyName ..".y" ..getValue(M.pointA.newY)
+      else
+        print(M.pointA.newX, M.pointA.newY)
+        M.activeEntryX.text = M.pointA.newX
+        M.activeEntryY.text = M.pointA.newY
+      end
     end
   else -- cancel
     M.pointA:setValueXY(M.pointA.oriX, M.pointA.oriY)

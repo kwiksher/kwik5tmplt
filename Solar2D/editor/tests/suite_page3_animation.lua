@@ -31,8 +31,16 @@ function M.teardown()
 end
 
 function M.test_new_animation()
+
+  local actionbox = require("editor.parts.actionbox")
+  helper.actionTable = require("editor.action.actionTable")
+
   helper.selectLayer("ball")
   helper.selectIcon("Animations", "Linear")
+  -- select an action
+  helper.clickProp(actionbox.objs, "onComplete")
+  helper.touchAction("eventOne")
+
 end
 
 function M.xtest_new_multi_animation()

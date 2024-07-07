@@ -178,7 +178,7 @@ function M:setValue(fooValue)
     for k, v in pairs(params) do
       --
       if not basePropsControl.filter(k) then
-        -- print("", k)
+        print("", k)
         local prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
         if Prefix_Layers[k] then
           prop.name = "_"..prop.name
@@ -221,10 +221,10 @@ function M:createTable(props)
   local UI = self.UI
   local objs = {}
   local alphaObj, imageObj
-  -- print(#props)
+  print(#props)
   for i=1, #props do
     local prop = props[i] or {}
-    option.text = prop.name
+    option.text = prop.name or ""
     -- print("@@ parts.baseProps",i, prop.name, prop.value)
     option.x = self.x
     option.y = i*option.height + self.y
@@ -237,7 +237,7 @@ function M:createTable(props)
     obj.rect = rect
     objs[#objs + 1] = obj
     -- show asset table
-    -- print("", prop.name)
+    print("", prop.name)
     if prop.name == 'url' or prop.name == '_filename' or prop.name == 'sheetInfo' then
        obj.class = self.class
        obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)

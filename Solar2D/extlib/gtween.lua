@@ -343,7 +343,7 @@ function new(target, duration, values, props)
 		end
 		self.isPlaying = true
 		for i=1, #crumbs do
-      crumbs[i].alpha = 1
+      -- crumbs[i].alpha = 1
 		end
 		if self.position == nil or self.repeatCount ~= 0 and self.position >= self.repeatCount * self.duration then
 			-- reached the end, reset.
@@ -481,12 +481,12 @@ function new(target, duration, values, props)
 				  --2.3 breadcrumbs
 				  numCrumbs = numCrumbs+1
 
-
 				  if tween.breadcrumb and value > 0 and value < maxPosition -1 then
 
 
 				    local xPos, yPos
 				  	local c1, c2, c3
+            local alpha = tween.breadColor[4]
 				  	local bW = tween.breadW or 10
 				  	local bH = tween.breadH or 10
 				  	local bI = tween.breadInterval or 50
@@ -537,43 +537,53 @@ function new(target, duration, values, props)
 				  	   c3 = tween.breadColor[3]
 				  	end
 
+          local obj
 					if (numCrumbs == 1) then
 					    if (tween.breadShape == "circle") then
-					    	crumbs[numCrumbs] = display.newCircle( target.x, target.y, bW)
+					    	obj = display.newCircle( target.x, target.y, bW)
 					    else
-							crumbs[numCrumbs] = display.newRect( target.x, target.y, bW, bH )
+							obj = display.newRect( target.x, target.y, bW, bH )
 						end
-						crumbs[numCrumbs]:setFillColor(c1, c2, c3 )
-						crumbs[numCrumbs].x = xPos
-						crumbs[numCrumbs].y = yPos
-						crumbGroup:insert(crumbs[numCrumbs])
+						obj:setFillColor(c1, c2, c3 )
+            obj.alpha = alpha
+						obj.x = xPos + display.contentCenterX
+						obj.y = yPos + display.contentCenterY
+            obj.xScale = target.xScale
+            obj.yScale = target.yScale
+						crumbGroup:insert(obj)
+            crumbs[numCrumbs] = obj
 
 						-- fade after x seconds
-						local function dispCrumb()
-						    crumbs[numCrumbs] = nil
+						local function dispCrumb(obj)
+						    obj:removeSelf()
 						end
 						if (btime ~= nil) then
-							transition.to( crumbs[numCrumbs], { time=btime, alpha=0, onComplete=dispCrumb })
+							transition.to( obj, { time=btime, alpha=0, onComplete=dispCrumb })
 						end
 
 					elseif ((numCrumbs)%bI == 0) then -- this is the INTERVAL
 						if (display.contentWidth >= xPos and display.contentHeight >= yPos) then
 							if (tween.breadShape == "circle") then
-					    		crumbs[numCrumbs] = display.newCircle( target.x, target.y, bW)
+					    		obj = display.newCircle( target.x, target.y, bW)
 					    	else
-								crumbs[numCrumbs] = display.newRect( target.x, target.y, bW, bH )
+								obj = display.newRect( target.x, target.y, bW, bH )
 							end
-							crumbs[numCrumbs]:setFillColor(c1, c2, c3 )
-							crumbs[numCrumbs].x = xPos
-							crumbs[numCrumbs].y = yPos
-							crumbGroup:insert(crumbs[numCrumbs])
+							obj:setFillColor(c1, c2, c3 )
+              obj.alpha = alpha
+							obj.x = xPos +  display.contentCenterX
+							obj.y = yPos +  display.contentCenterY
+              obj.xScale = target.xScale
+              obj.yScale = target.yScale
+
+							crumbGroup:insert(obj)
+              crumbs[numCrumbs] = obj
 
 							-- fade after x seconds
-						    local function dispCrumb()
-						    	crumbs[numCrumbs] = nil
+						    local function dispCrumb(obj)
+                  obj:removeSelf()
 						    end
 						    if (btime ~= nil) then
-								transition.to( crumbs[numCrumbs], { time=btime, alpha=0, onComplete=dispCrumb })
+								transition.to( obj, { time=btime, alpha=0, onComplete=dispCrumb })
 							end
 
 						end

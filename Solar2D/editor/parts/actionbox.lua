@@ -43,8 +43,6 @@ end
     -- end
 
 function M:setValue(value)
-  -- print("@@@@", _name)
-  -- print(debug.traceback())
   if value == nil then
     self.props = {}
   else

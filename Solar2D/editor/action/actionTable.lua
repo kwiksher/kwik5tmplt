@@ -10,7 +10,7 @@ local util = require("lib.util")
 M.selections = {}
 M.x = nil
 M.y = nil
-M.width = 48
+M.width = 52
 M.groupName = "rootGroup"
 
 local option, newText = util.newTextFactory{anchorX=0}

@@ -23,6 +23,11 @@ function M:setBodyName (name)
   popup.bodyName = name
 end
 
+function M:setActiveEntryObjs(objX, objY)
+  self.activeEntryX = objX
+  self.activeEntryY = objY
+end
+
 function M:setActiveEntry(objX, objY)
   -- print("@@@setActtiveEntry", objX)
   popup.activeEntryX = objX
@@ -81,7 +86,13 @@ function M:create(UI)
 
     local ptA = dragger:newDragger{
         img = self.group,
-        callback = function(x, y) popup:onMove(self, x, y) end,
+        callback = function(x, y)
+          if self.activeEntryX then -- for animation
+            popup.activeEntryX = self.activeEntryX
+            popup.activeEntryY = self.activeEntryY
+          end
+          popup:onMove(self, x, y)
+        end,
         popup = Props.popup
     }
     self.group:insert(ptAdot)

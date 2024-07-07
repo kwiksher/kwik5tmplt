@@ -164,7 +164,9 @@ function M:commandHandler(eventObj, event)
     layerTableCommands.multiSelections(self, target)
   else
     if layerTableCommands.singleSelection(self, target) then
-      self.UI.editor.currentLayer = target.layer
+      if target.layer then
+        self.UI.editor.currentLayer = target.layer
+      end
       -- target.isSelected = true
       if target.name then
         self.UI.editor.currentClass = target.name

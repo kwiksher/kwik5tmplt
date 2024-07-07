@@ -2,6 +2,7 @@ local name = ...
 local parent, root = newModule(name)
 --
 local M = {}
+M.enableFillColor = true
 --
 local util = require("lib.util")
 local yaml = require("server.yaml")
@@ -31,6 +32,7 @@ function M._yamlValue(k, v, params)
   if value == nil then
     if type(v) == "table" and v~= NIL then
       if key == "color" then
+        print(v[1], v[2], v[3], v[4])
         value, yamltype = yaml.getYaml({math.floor(v[1]*255), math.floor(v[2]*255), math.floor(v[3]*255), math.ceil(v[4] * 1000) / 1000})
       elseif key == "boundaries" then
         value, yamltype = yaml.getYaml({v.xMin, v.xMax, v.yMin, v.yMax})
@@ -167,8 +169,9 @@ local function tapListenerColor(event)
       obj.field.text = M._yamlValue("color", {r, g, b, a})
       -- obj.field.text = M._yamlValue("color", {RGB[1],RGB[2], RGB[3], a})
     end
-
-    obj.targetObject:setFillColor(r, g, b, a)
+    if M.enableFillColor then
+      obj.targetObject:setFillColor(r, g, b, a)
+    end
 
   end
   local fieldText = obj.field.text

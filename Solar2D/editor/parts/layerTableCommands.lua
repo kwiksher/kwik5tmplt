@@ -95,7 +95,12 @@ local function singleSelection(layerTable, target)
     target.rect:setFillColor(0,1,0)
     --target.rect:setStrokeColor(0, 1, 0)
     ---
-    UI.editor.currentLayer = target.layer
+    if target.layer and target.layer:len() then
+      UI.editor.currentLayer = target.layer
+    else
+      print("Warning target.layer is not found")
+      --print(debug.traceback())
+    end
     -- target.isSelected = true
     if target.name then
       UI.editor.currentClass = target.name
