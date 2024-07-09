@@ -173,7 +173,7 @@ function M:redraw()
   self.view:didShow(UI)
   self:show()
   if self.onShow then
-    self:onShow()
+    self:onShow(UI)
   end
   --
 

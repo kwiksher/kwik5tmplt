@@ -2,49 +2,51 @@ local M = {
   name = "blink",
   class="Blink",
   from = {
-    x = 100,
-    y = 100,
-    alpha = 0,
+    x = nil,
+    y = nil,
+    alpha = 1,
+    xScale = 1,
+    yScale = 0.1,
+    rotation = 0
+  },
+  to = {
+    x = nil,
+    y = nil,
+    alpha = 1,
     xScale = 1,
     yScale = 1,
     rotation = 0
   },
-  to = {
-    x = 100,
-    y = 100,
-    alpha = 1,
-    xScale = 1.5,
-    yScale = 1.5,
-    rotation = 90
-  },
   properties = {
+    target = NIL,
     autoPlay=true,
-    delay=1000,
-    duration=3000,
-    loop=1,
+    delay = 1000,
+    duration=500,
+    loop=3,
     reverse=false,
     resetAtEnd=false,
-    easing=nil,
     xSwipe=nil,
-    ySwipe=nil
+    ySwipe=nil,
+    easing   = "inOutBack",
+  -- 'Linear'
+  -- 'inOutExpo'
+  -- 'inOutQuad'
+  -- 'outExpo'
+  -- 'outQuad'
+  -- 'inExpo'
+  -- 'inQuad'
+  -- 'inBounce'
+  -- 'outBounce'
+  -- 'inOutBounce'
+  -- 'inElastic'
+  -- 'outElastic'
+  -- 'inOutElastic'
+  -- 'inBack'
+  -- 'outBack'
+  -- 'inOutBack'
+  ------------
   },
-  audio = {
-    name = "",
-    volume = 5,
-    channel = 1,
-    loop = 1,
-    fadeIn = false,
-    repeatable = false
-  },
-  breadcrumbs = {
-    dispose = true,
-    shape = "",
-    color = {1, 0, 1},
-    interval = 300,
-    time = 2000,
-    width = 30,
-    height = 30
-  },
+  breadcrumbs = nil,
   layerOptions = {
     -- layerProps
     isGroup = false,
@@ -66,7 +68,7 @@ local M = {
     deltaX         = 0,
     deltaY         = 0
   },
-  actions = {onComplete = nil}
+  actions = {onComplete = NIL}
 }
 
 return M

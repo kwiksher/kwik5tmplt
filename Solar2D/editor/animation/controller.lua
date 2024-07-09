@@ -52,13 +52,18 @@ function M:init(viewGroup)
 end
 
 --- this is a callback from redraw
-function M:onShow()
+function M:onShow(UI)
   pointA:setActiveEntryObjs(pointABbox.objs.A[1],pointABbox.objs.A[2])
   pointB:setActiveEntryObjs(pointABbox.objs.B[1],pointABbox.objs.B[2])
   breadcrumbsProps.targetObject = nil
   classProps.targetObject = nil
   local basePropsControl = require("editor.parts.basePropsControl")
   basePropsControl.enableFillColor = false
+
+  if UI.editor.currentClass ~= "Linear" then
+    pointA:hide()
+    pointB:hide()
+  end
 end
 -------
 -- I/F

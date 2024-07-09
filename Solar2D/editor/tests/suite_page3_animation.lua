@@ -36,7 +36,17 @@ function M.test_new_animation()
   helper.actionTable = require("editor.action.actionTable")
 
   helper.selectLayer("ball")
-  helper.selectIcon("Animations", "Linear")
+  -- helper.selectIcon("Animations", "Linear")
+  -- helper.selectIcon("Animations", "Blink")
+  helper.selectIcon("Animations", "Bounce")
+  -- helper.selectIcon("Animations", "Pulse")
+  -- helper.selectIcon("Animations", "Rotation")
+
+  -- helper.selectIcon("Animations", "Path")
+  -- helper.selectIcon("Animations", "Shake")
+  -- helper.selectIcon("Animations", "Switch")
+  -- helper.selectIcon("Animations", "Filter")
+
   -- select an action
   helper.clickProp(actionbox.objs, "onComplete")
   helper.touchAction("eventOne")
@@ -61,6 +71,16 @@ function M.xtest_new_multi_animation()
   local obj = require("editor.parts.buttons").objs[button]
   obj.rect:tap()
 
+end
+
+function M.xtest_easing()
+  local easing = require("editor.easing.index")
+  easing:create(UI)
+  easing.listener = function(name)
+    print(name)
+    easing:destroy()
+  end
+  easing:show(UI)
 end
 
 return M
