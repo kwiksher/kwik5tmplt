@@ -238,7 +238,9 @@ function M:createTable(props)
     objs[#objs + 1] = obj
     -- show asset table
     print("", prop.name)
-    if prop.name == 'url' or prop.name == '_filename' or prop.name == 'sheetInfo' then
+    if prop.name == 'easing' then
+      obj:addEventListener("tap", function(event) self:tapListener(event, 'easing')end)
+    elseif prop.name == 'url' or prop.name == '_filename' or prop.name == 'sheetInfo' then
        obj.class = self.class
        obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)
     elseif self.onTapActionSet[prop.name] then

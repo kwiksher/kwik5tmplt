@@ -143,7 +143,7 @@ local function createOptions(self, UI)
 		reflect     = self.properties.reverse,
 		xSwipe      = self.properties.xSwipe,
 		ySwipe      = self.properties.ySwipe,
-		delay       = self.properties.delay,
+		delay       = self.properties.delay/1000,
 	}
 	if self.breadcrumbs then
     for k, v in pairs(self.breadcrumbs) do print("", k, v ) end
@@ -163,6 +163,7 @@ local function createOptions(self, UI)
 			options.breadTimer = self.breadcrumbs.time/1000
 		end
 	end
+
 	return options
 end
 --
@@ -296,15 +297,23 @@ local function createAnimationFunc(self, UI, class)
     end
     ---
 		if class== "Linear" then
-      print("--- Linear ---", propsTo.x, propsTo.y, self.properties.duration)
+      print("--- Linear propsFrom ---", propsFrom.x, propsFrom.y, self.properties.duration)
+      for k, v in pairs(propsFrom) do print(k ,v) end
+      print ("-------")
+
+      print("--- Linear propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
       for k, v in pairs(propsTo) do print(k ,v) end
       print ("-------")
       for k, v in pairs(options) do print(k ,v) end
 
       self.properties.duration = self.properties.duration or 1000
-      options.onComplete = function() animObjTo:play() end
+      options.onComplete = function()
+        print("Done From")
+        animObjTo:play()
+      end
 			animObjFrom = gtween.new( layer, self.properties.duration/1000, propsFrom, options)
       options.onComplete  = onEndHandler
+      options.delay = 0
 			animObjTo = gtween.new( layer, self.properties.duration/1000, propsTo, options)
       animObjFrom:pause()
       animObjTo:pause()

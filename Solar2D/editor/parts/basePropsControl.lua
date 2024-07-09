@@ -230,11 +230,25 @@ local function tapListenerImage(event)
 
 end
 
+local function tapListenerEasing(event)
+  local easing = require("editor.easing.index")
+  local obj = event.target
+  easing:create(UI)
+  easing.listener = function(name)
+    print(name)
+    obj.field.text = name
+    easing:destroy()
+  end
+  easing:show()
+end
+
+
 local function tapListenerAction(event)
   -- print("action tap listener")
   local actionEditor = require("editor.action.index")
   actionEditor:showActionTable(event.actionbox)
 end
+
 
 
 -- used in actionCommandPropsStore:listener
@@ -249,7 +263,8 @@ M.handler = {
   action = tapListenerAction,
   posXY = tapListenerPosXY,
   group = tapListenerGroup,
-  boundaries = tapListenerShape
+  boundaries = tapListenerShape,
+  easing     = tapListenerEasing
 }
 
 return M

@@ -79,6 +79,23 @@ local function showLabels(fooValue, rootGroup)
   labelLayer.x = labelPage.contentBounds.xMax + labelLayer.width / 2 + 2
   labelLayer:setFillColor(1)
 
+  if fooValue.currentClass then
+    local labelClass = newText {
+      parent = rootGroup,
+      text = "> " .. (fooValue.currentClass or ""),
+      x = 10,
+      y = 16,
+      -- y = (display.actualContentHeight - 1280 / 4) / 2,
+      width = nil,
+      height = 18,
+      font = native.systemFont,
+      fontSize = 10,
+      align = "center"
+    }
+    labelClass.anchorY = 1
+    labelClass.x = labelLayer.contentBounds.xMax + labelClass.width / 2 + 2
+    labelClass:setFillColor(1)
+    end
   -- local rect = display.newRect(labelPage.x, labelPage.y, labelPage.width, labelPage.height)
   -- rect:setFillColor(0.5,0,0,0.5)
 

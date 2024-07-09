@@ -20,6 +20,7 @@ local M = {
     rotation = 90
   },
   properties = {
+    target = NIL,
     autoPlay=true,
     delay=0,
     duration=3000,
@@ -41,7 +42,7 @@ local M = {
   breadcrumbs = {
     dispose = true,
     shape = "",
-    color = {1, 0, 1},
+    color = {1, 0, 1, 1},
     interval = 300,
     time = 2000,
     width = 30,

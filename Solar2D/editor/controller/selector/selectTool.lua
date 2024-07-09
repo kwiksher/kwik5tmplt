@@ -82,6 +82,13 @@ local command = function (params)
       else
         -- params.asset is merged in this load()
         tool.controller:load(UI.editor.currentBook, UI.page, UI.editor.currentLayer, params.class, params.isNew, params.asset)
+
+        UI.editor.rootGroup:dispatchEvent{name="labelStore",
+        currentBook= UI.editor.currentBook,
+        currentPage= UI.page,
+        currentLayer = UI.editor.currentLayer,
+        currentClass = UI.editor.currentClass}
+
       end
       -- end)
     end
