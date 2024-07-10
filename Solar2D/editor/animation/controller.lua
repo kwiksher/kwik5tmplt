@@ -109,15 +109,19 @@ function M:useClassEditorProps(UI)
   end
   --
   local breadcrumbsProperties = breadcrumbsProps:getValue()
-  for i=1, #breadcrumbsProperties do
-    -- print("", properties[i].name, type(properties[i].value))
-    local name = breadcrumbsProperties[i].name
-    if name == "_width" then
-      props.breadcrumbs.width = breadcrumbsProperties[i].value
-    elseif name == "_height" then
-      props.breadcrumbs.height = breadcrumbsProperties[i].value
-    else
-      props.breadcrumbs[name] = breadcrumbsProperties[i].value
+  if #breadcrumbsProperties == 0 then
+    props.breadcrumbs = nil
+  else
+    for i=1, #breadcrumbsProperties do
+      print("", properties[i].name, type(properties[i].value))
+      local name = breadcrumbsProperties[i].name
+      if name == "_width" then
+        props.breadcrumbs.width = breadcrumbsProperties[i].value
+      elseif name == "_height" then
+        props.breadcrumbs.height = breadcrumbsProperties[i].value
+      else
+        props.breadcrumbs[name] = breadcrumbsProperties[i].value
+      end
     end
   end
 

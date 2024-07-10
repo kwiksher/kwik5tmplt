@@ -30,10 +30,10 @@ local M = {
     easing   = "inOutBack",
   -- 'Linear'
   -- 'inOutExpo'
-  -- 'inOutQuad'
-  -- 'outExpo'
-  -- 'outQuad'
   -- 'inExpo'
+  -- 'outExpo'
+  -- 'inOutQuad'
+  -- 'outQuad'
   -- 'inQuad'
   -- 'inBounce'
   -- 'outBounce'

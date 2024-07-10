@@ -47,7 +47,7 @@ function M:init(UI)
   pointA       : init(UI, -10, 0,  self.width, self.height)
   pointB       : init(UI, 10, 0,  self.width, self.height)
   AtoBbutton   : init(UI, self.x + self.width * 9, self.y,  self.width, self.height)
-  actionbox: init(UI, self.x + self.width, display.contentCenterY - 80, self.width, self.height)
+  actionbox: init(UI, self.x + self.width, display.contentCenterY - 60, self.width, self.height)
   -- actionbox.props = {
   --   {name="onComplete", value=""}
   -- }

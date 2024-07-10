@@ -8,24 +8,28 @@ local useJson = false
 --
 local command = function (params)
 	local UI    = params.UI
-  print("anim.preview")
 
-  local props = params.props
-  --print(props.class)
-  for k, v in pairs(props.to) do print("", k, v) end
+  if params.tool == "animation" then
+    print("anim.preview")
 
-  local player = Animation.new(props)
-  --
-  local function onEndHandler (UI)
-    if props.actionName:len() > 0  then
-      Runtime:dispatchEvent({name=UI.page..props.actionName, event={}, UI=UI})
+    local props = params.props
+    --print(props.class)
+    for k, v in pairs(props.to) do print("", k, v) end
+
+    local player = Animation.new(props, params.class)
+    --
+    local function onEndHandler (UI)
+      if props.actionName:len() > 0  then
+        Runtime:dispatchEvent({name=UI.page..props.actionName, event={}, UI=UI})
+      end
     end
+    --
+    local rootGroup = UI.rootGroup
+    player:initAnimation(UI, rootGroup[props.name], onEndHandler)
+    player.tween = player:buildAnim(UI)
+    player.tween:play()
+
   end
-  --
-  local rootGroup = UI.rootGroup
-  player:initAnimation(UI, rootGroup[props.name], onEndHandler)
-  player.tween = player:buildAnim(UI)
-  player.tween:play()
 
 --
 end
