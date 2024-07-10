@@ -137,23 +137,24 @@ local function createOptions(self, UI)
   self.properties = self.properties or {}
   --
   print("--- options ---")
-  local easingName = self.properties.easing:gsub("Expo", "Exponential")
-  easingName = easingName:gsub("Quad", "Quadratic")
-  easingName = easingName:gsub("Quart", "Quartic")
-  easingName = easingName:gsub("Quint", "Quintic")
-  easingName = easingName:gsub("Circ", "Circular")
-
-
-
-  print("", "easing",self.properties.easing, gtween.easing[easingName] )
-	local options = {
-		ease        = gtween.easing[easingName],
+  local options = {
 		repeatCount = tonumber(self.properties.loop),
 		reflect     = self.properties.reverse == "true",
 		xSwipe      = self.properties.xSwipe,
 		ySwipe      = self.properties.ySwipe,
 		delay       = self.properties.delay/1000,
 	}
+
+  if self.properties.easing then
+    local easingName = self.properties.easing:gsub("Expo", "Exponential")
+    easingName = easingName:gsub("Quad", "Quadratic")
+    easingName = easingName:gsub("Quart", "Quartic")
+    easingName = easingName:gsub("Quint", "Quintic")
+    easingName = easingName:gsub("Circ", "Circular")
+      print("", "easing",self.properties.easing, gtween.easing[easingName] )
+    options.ease        = gtween.easing[easingName]
+  end
+
 	if self.breadcrumbs and #self.breadcrumbs then
 		options.breadcrumb = true
 		options.breadAnchor = 5
@@ -187,7 +188,7 @@ local function createPropsTo(self, layer, _mX, _mY)
 
   elseif self.class == "rotation" then
     props.rotation =  self.to.rotation
-  elseif self.class == "shake" then
+  elseif self.class == "tremble" then
     props.rotation =  self.to.rotation
   elseif self.class == "bounce" then
     props.y=mY
@@ -367,8 +368,8 @@ end
 animationFactory.gtween  = function(self,UI)
   return createAnimationFunc(self, UI, "gtween")
 end
-animationFactory.Path     = function(self, UI) return createAnimationFunc(self, UI, "btween") end
-animationFactory.Dissolve = function(self, UI)
+animationFactory.path     = function(self, UI) return createAnimationFunc(self, UI, "btween") end
+animationFactory.switch = function(self, UI)
 	local layer = self.obj
 	local sceneGroup = UI.sceneGroup
 	--
@@ -376,10 +377,14 @@ animationFactory.Dissolve = function(self, UI)
 	--
 	layer.xScale = layer.oriXs
 	layer.yScale = layer.oriYs
+  local newLayer = sceneGroup[self.properties.to]
   --
 	local animObj = {}
 	animObj.play = function()
-		transition.dissolve(layer, self:getDssolvedLayer(UI),	self.properties.duration, self.properties.delay)
+    print(layer.imagePath, newLayer.imagePath)
+    newLayer.x = layer.x
+    newLayer.y = layer.y
+		transition.dissolve(layer, newLayer,	self.properties.duration, self.properties.delay)
   end
   --
 	animObj.pause = function()
@@ -417,11 +422,12 @@ end
 function M:initAnimation(UI, layer, onEndHandler)
   self.onEndHandler = onEndHandler
   --
-  if not(self.class == "Dissolve" or self.class =="Path") then
+  if not(self.class == "switch" or self.class =="path") then
     self.buildAnim = animationFactory["gtween"]
     print("self.buildAnim", self.buildAnim)
   else
-    self.buildAnim = animationFactory[M.class]
+    print(self.class)
+    self.buildAnim = animationFactory[self.class]
   end
   ---
 	self.obj = layer

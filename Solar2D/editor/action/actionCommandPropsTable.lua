@@ -210,7 +210,7 @@ end
 --
 --
 --
-local Animation = table:mySet{"linear", "blink", "bounce", "pulse", "rotaion", "shake"}
+local Animation = table:mySet{"linear", "blink", "bounce", "pulse", "rotaion", "tremble"}
 local Layer     = table:mySet{"image", "layer", "audio"}
 local Layer_Class = table:mySet{ "button", "countdown", "filter", "multiplier", "particles", "sprite", "readme", "video", "web"}
 --

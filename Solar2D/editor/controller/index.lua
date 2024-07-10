@@ -196,7 +196,7 @@ function M:renderAssets(book, page, layer, classFolder, class, model)
 end
 
 local Shapes = table:mySet{"new_image", "new_rectangle", "new_ellipse", "new_text"}
-local Animations = table:mySet{"linear", "blink", "bounce", "pulse", "rotation", "shake"}
+local Animations = table:mySet{"linear", "blink", "bounce", "pulse", "rotation", "tremble"}
 
 M.Shapes = Shapes
 
@@ -383,7 +383,7 @@ function M:load(book, page, layer, class, isNew, asset)
       model = self:mergeAsset(decoded[1], asset)
     end
     self:setValue(model, nil, true)
-    print(json.encode(model))
+    -- print(json.encode(model))
     self:redraw()
   elseif layer then
 

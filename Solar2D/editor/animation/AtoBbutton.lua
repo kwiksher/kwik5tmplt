@@ -42,7 +42,7 @@ end
 --
 function M:create(UI)
   self.UI = UI
-    print("create", self.name, UI)
+    -- print("create", self.name, UI)
     self.group = display.newGroup()
 
     local function doAB(event)

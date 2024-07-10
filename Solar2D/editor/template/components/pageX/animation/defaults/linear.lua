@@ -25,7 +25,7 @@ local M = {
     loop=1,
     reverse=false,
     resetAtEnd=false,
-    easing=nil,
+    easing="outCirc",
     xSwipe=nil,
     ySwipe=nil
   },

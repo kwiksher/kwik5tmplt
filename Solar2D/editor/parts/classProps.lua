@@ -3,7 +3,7 @@ local M = require("editor.parts.baseProps").new()
 M.name = "classProps"
 
 local Layer_Class = table:mySet{}
-M.onTapLayerSet = table:mySet{"target", "over", "mask", "dropArea", "_filename", "sheetInfo"}
+M.onTapLayerSet = table:mySet{"target", "over", "mask", "dropArea", "_filename", "sheetInfo", "to"}
 M.onTapActionSet = table:mySet{"onComplete"}
 M.onTapPosXYSet = table:mySet{"x", "y"}
 --

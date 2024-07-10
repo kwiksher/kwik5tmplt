@@ -32,6 +32,8 @@ local util = require("lib.util")
 local option, newText = util.newTextFactory()
 
 local function showLabels(fooValue, rootGroup)
+  print (fooValue.currentBook, fooValue.currentPage, fooValue.currentLayer, fooValue.currentClass)
+  -- print(debug.traceback())
   local labelBook = newText {
     parent = rootGroup,
     text = fooValue.currentBook or "",
@@ -79,8 +81,10 @@ local function showLabels(fooValue, rootGroup)
   labelLayer.x = labelPage.contentBounds.xMax + labelLayer.width / 2 + 2
   labelLayer:setFillColor(1)
 
+  local labelClass
   if fooValue.currentClass then
-    local labelClass = newText {
+    -- print("++++++++", fooValue.currentClass)
+    labelClass = newText {
       parent = rootGroup,
       text = "> " .. (fooValue.currentClass or ""),
       x = 10,
@@ -104,7 +108,7 @@ local function showLabels(fooValue, rootGroup)
 
   --
   -- print("", labelBook.text, labelPage.text, labelLayer.text)
-  return {labelBook, labelPage, labelLayer}
+  return {labelBook, labelPage, labelLayer, labelClass}
 end
 
 
@@ -228,12 +232,14 @@ function M:create(UI)
   --
   UI.editor.rootGroup:addEventListener("labelStore", function(event)
     self:destroy()
-    timer.performWithDelay( 10,
-    function()
-      if self.objs == nil then
-        self.objs = showLabels(event, self.rootGroup)
-      end
-    end )
+    self.objs = showLabels(event, self.rootGroup)
+
+    -- timer.performWithDelay( 10,
+    -- function()
+    --   if self.objs == nil then
+    --     self.objs = showLabels(event, self.rootGroup)
+    --   end
+    -- end )
   end)
   -- UI.editor.labelStore:listen(
   --   function(foo, fooValue)
