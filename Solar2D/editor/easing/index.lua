@@ -14,19 +14,19 @@ M.model = {
   -- linear = {},
   -- continuousLoop = nil,
   expo = {"inExpo","outExpo","inOutExpo"}, --outInExpo
-  -- sine = {"inSine",outSine","inOutSine"},--outInSine
+  sine = {"inSine","outSine","inOutSine"},--outInSine
   quad = {"inQuad","outQuad","inOutQuad"}, --outInQuad
-  -- cubic = {"inCubic",outCubic","inOutCubic"},--outInCubic
-  -- quart = {"inQuart",outQuart","inOutQuart"},--outInQuart
-  -- quint = {"inQuint",outQuint","inOutQuint"},--outInQuint
-  -- circ = {"inCirc",outCirc","inOutCirc"},--outInCirc
+  cubic = {"inCubic","outCubic","inOutCubic"},--outInCubic
+  quart = {"inQuart","outQuart","inOutQuart"},--outInQuart
+  quint = {"inQuint","outQuint","inOutQuint"},--outInQuint
+  circ = {"inCirc","outCirc","inOutCirc"},--outInCirc
   back = {"inBack","outBack","inOutBack"},--outInBack
   elastic = {"inElastic","outElastic","inOutElastic"},-- outInElastic
   bounce = {"inBounce","outBounce","inOutBounce"},--outInBounce
 }
 
 M.x = display.contentCenterX
-M.y = display.contentCenterY
+M.y = display.contentCenterY-200
 M.width = 80
 M.height = 40
 

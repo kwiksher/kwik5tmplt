@@ -349,7 +349,7 @@ function new(target, duration, values, props)
       -- crumbs[i].alpha = 1
     end
     if self.position == nil or self.repeatCount ~= 0 and self.position >= self.repeatCount * self.duration then
-      -- reached the end, reset.
+      print("reached the end, reset.")
       self.inited = false
       self.positionOld = 0
       self.calculatedPosition = 0
@@ -357,6 +357,8 @@ function new(target, duration, values, props)
       self.ratio = 0
       self.ratioOld = 0
       self.position = -self.delay
+    else
+      print("not reached", self.position, self.repeatCount, self.duration)
     end
     registerTween(self)
   end
@@ -404,14 +406,20 @@ function new(target, duration, values, props)
     self.calculatedPositionOld = self.calculatedPosition
 
     local maxPosition = self.repeatCount * self.duration
+    if self.reflect then
+      maxPosition = maxPosition*2
+    end
     -- print(type(value), type(maxPosition), self.repeatCount)
     local hasEnded = value >= maxPosition and self.repeatCount > 0
     if hasEnded then
+      print("hasEnded", value,maxPosition, self.repeatCount )
       if self.calculatedPositionOld == maxPosition then
+        print("self.calculatedPositionOld == maxPosition")
         return
       end
       self.position = maxPosition
       if self.reflect and (self.repeatCount % 2 == 0) then
+        print("self.reflect and self.repeatCount % 2 == 0")
         self.calculatedPosition = 0
       else
         self.calculatedPosition = self.duration
@@ -425,6 +433,7 @@ function new(target, duration, values, props)
       end
 
       if self.reflect and math.floor(self.position / self.duration) % 2 ~= 0 then
+        -- print("not ended, self.reflect and self.repeatCount % 2 == 0")
         self.calculatedPosition = self.duration - self.calculatedPosition
       end
 
@@ -613,6 +622,8 @@ function new(target, duration, values, props)
       self:pause()
       if self.nextTween then
         self.nextTween:play()
+      else
+        print("no nextTween")
       end
       if not self.suppressEvents then
         if self.onComplete ~= nil then
@@ -620,7 +631,7 @@ function new(target, duration, values, props)
         end
       end
     end
-  end
+  end -- end of setPosition()
 
   tween.target = target
   if duration == nil then
@@ -629,6 +640,12 @@ function new(target, duration, values, props)
     tween.duration = duration
   end
   if props then
+    for k, v in pairs(props) do
+      -- if props[k] and type(v) ~= type(props[k]) then
+      --   print(k)
+      -- end
+      print("", k, type(v), v)
+    end
     copyTableTo(props, tween)
   end
   if values == nil then

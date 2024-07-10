@@ -73,7 +73,8 @@ function M:create(UI)
         UI.scene.app:dispatchEvent {
           name = "editor.classEditor.preview" ,
           UI = UI,
-          class = "animation",
+          tool = "animation",
+          class = UI.editor.currentClass,
           props = self.useClassEditorProps(UI)
         }
 

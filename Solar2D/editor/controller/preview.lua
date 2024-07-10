@@ -13,7 +13,8 @@ local instance =
       print("", k, v)
     end
 
-    if params.class == "animation" then
+    if params.tool == "animation" then
+      props.class = params.class
       local player = Animation.set(props)
       --
       local function onEndHandler(UI)
@@ -29,11 +30,14 @@ local instance =
       --
       local sceneGroup = UI.sceneGroup
       player:initAnimation(UI, sceneGroup[props.layer], onEndHandler)
-      player.tweenFrom, player.tweenTo = player:buildAnim(UI)
+      player.tweenTo, player.tweenFrom = player:buildAnim(UI)
       -- player.tween:pause()
       player:init()
-      player.tweenFrom:play()
-      -- player.tweenTo:play()
+      if player.tweenFrom then
+        player.tweenFrom:play()
+      else
+        player.tweenTo:play()
+      end
     end
   end
 )
