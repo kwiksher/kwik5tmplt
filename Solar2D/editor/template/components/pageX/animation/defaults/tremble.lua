@@ -1,53 +1,37 @@
 local M = {
-  name = "shake",
-  class="Shake",
+  name = "tremble",
+  class="Tremble",
   from = {
-    x = 0,
-    y = 0,
-    alpha = 0,
+    x = nil,
+    y = nil,
+    alpha = 1,
     duration = 1000,
     xScale = 1,
     yScale = 1,
     rotation = 0
   },
   to = {
-    x = 100,
-    y = 100,
+    x = nil,
+    y = nil,
     alpha = 1,
     duration = 2000,
-    xScale = 1.5,
-    yScale = 1.5,
-    rotation = 90
+    xScale = 1,
+    yScale = 1,
+    rotation = 15
   },
   properties = {
     target = NIL,
     autoPlay=true,
     delay=0,
-    duration=3000,
-    loop=1,
+    duration=100,
+    loop=3,
     reverse=false,
     resetAtEnd=false,
-    easing=nil,
+    easing=NIL,
     xSwipe=nil,
     ySwipe=nil
   },
-  audio = {
-    name = "",
-    volume = 5,
-    channel = 1,
-    loop = 1,
-    fadeIn = false,
-    repeatable = false
-  },
-  breadcrumbs = {
-    dispose = true,
-    shape = "",
-    color = {1, 0, 1, 1},
-    interval = 300,
-    time = 2000,
-    width = 30,
-    height = 30
-  },
+  breadcrumbs = nil,
   layerOptions = {
     -- layerProps
     isGroup = false,

@@ -229,7 +229,7 @@ function M.commandHandler(layerTable, target, event)
   else
     UI.editor.selections = {}
     for i, v in next, UI.editor.selections_backup do
-      print("recover", i, v.text)
+      -- print("recover", i, v.text)
       -- layerTable.selections[i] = v
       UI.editor.selections[i] = v
     end

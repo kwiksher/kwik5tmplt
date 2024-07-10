@@ -18,7 +18,7 @@ local propsTable = require("editor.parts.propsTable")
 --      bounce    = "animation",
 --      pulse     = "animation",
 --      rotation  = "animation",
---      shake     = "animation",
+--      tremble    = "animation",
 --      switch    = "animation",
 --   -- filter    = "animation",
 --   -- path      = "animation",
@@ -47,7 +47,7 @@ local command = function (params)
 
   local tool = (params.class) and UI.editor:getClassModule(params.class) or nil
   if tool then
-    print("### tool", params.class, tool.id)
+    -- print("### tool", params.class, tool.id)
     if lastTool then
       -- print("### lastTool", lastTool.name)
       lastTool.controller:hide()
@@ -82,7 +82,7 @@ local command = function (params)
       else
         -- params.asset is merged in this load()
         tool.controller:load(UI.editor.currentBook, UI.page, UI.editor.currentLayer, params.class, params.isNew, params.asset)
-
+        -- print("******", UI.editor.currentClass)
         UI.editor.rootGroup:dispatchEvent{name="labelStore",
         currentBook= UI.editor.currentBook,
         currentPage= UI.page,

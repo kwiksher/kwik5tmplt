@@ -394,10 +394,10 @@ function M:didShow(UI)
       end
     end
 
-    UI.editor.rootGroup:dispatchEvent{name="labelStore",
-      currentBook= UI.editor.currentBook,
-      currentPage= UI.page,
-      currentLayer = UI.editor.currentayer}
+    -- UI.editor.rootGroup:dispatchEvent{name="labelStore",
+    --   currentBook= UI.editor.currentBook,
+    --   currentPage= UI.page,
+    --   currentLayer = UI.editor.currentayer}
     -- print ("------------ UI.editor.rootGroup ---------")
     -- for k, v in pairs(UI.editor.rootGroup) do print("", k) end
     -- print ("------------ UI.editor.viewStore ---------")

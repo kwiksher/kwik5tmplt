@@ -8,7 +8,21 @@ local AtoBbutton    = require(parent.."AtoBbutton")
 local selectbox      = require(root.."parts.selectbox")
 -- local classProps    = require(root.."parts.classProps")
 --
-local classProps    = require("editor.parts.baseProps").new({width=50})
+-- local classProps    = require("editor.parts.baseProps").new({width=50})
+local classProps              = require("editor.parts.classProps")
+
+-- classProps.onTapLayerSet = table:mySet{"to"}
+-- function classProps:setActiveProp(layer, class)
+--   print("setActiveProp", layer)
+--   local name =self.activeProp
+--   local value = layer
+--   local UI = self.UI
+--   local obj = self:getObj(name)
+--   obj.field.text = value
+--   --
+-- end
+
+
 local breadcrumbsProps = require("editor.parts.baseProps").new({width=50})
 --
 local pointABbox    = require(parent.."pointABbox")

@@ -63,7 +63,7 @@ function M:tapListener(event, type)
   if type == "layer" then
     UI.editor.selections_backup = {}
     for i, v in next, UI.editor.selections do
-      print(i, v.text)
+      -- print(i, v.text)
       UI.editor.selections_backup[i] = {text=v.text}
     end
   else
@@ -178,7 +178,7 @@ function M:setValue(fooValue)
     for k, v in pairs(params) do
       --
       if not basePropsControl.filter(k) then
-        print("", k)
+        -- print("", k)
         local prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
         if Prefix_Layers[k] then
           prop.name = "_"..prop.name
@@ -221,7 +221,9 @@ function M:createTable(props)
   local UI = self.UI
   local objs = {}
   local alphaObj, imageObj
-  print(#props)
+  -- print(#props)
+  -- for k, v in pairs(self.onTapLayerSet) do print("@@@@", k, v) end
+
   for i=1, #props do
     local prop = props[i] or {}
     option.text = prop.name or ""
@@ -237,7 +239,7 @@ function M:createTable(props)
     obj.rect = rect
     objs[#objs + 1] = obj
     -- show asset table
-    print("", prop.name)
+    -- print("", prop.name)
     if prop.name == 'easing' then
       obj:addEventListener("tap", function(event) self:tapListener(event, 'easing')end)
     elseif prop.name == 'url' or prop.name == '_filename' or prop.name == 'sheetInfo' then

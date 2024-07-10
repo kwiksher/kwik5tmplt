@@ -40,7 +40,7 @@ local model = {
         {name = "Bounce", icon = "animBounce"},
         {name = "Pulse", icon = "animPulse"},
         {name = "Rotation", icon = "animRotation"},
-        {name = "Shake", icon = "animShake"},
+        {name = "Tremble", icon = "animShake"},
         {name = "Switch", icon = "animSwitch"},
         {name = "Filter", icon = "animFilter"},
         {name = "Path", icon = "animPath"}

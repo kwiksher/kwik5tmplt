@@ -9,7 +9,7 @@ local M = {
     -- "Linear"
     -- "Pulse"
     -- "Rotation"
-    -- "Shake"
+    -- "Tremble"
     -- "Bounce"
     -- "Blink"
   --

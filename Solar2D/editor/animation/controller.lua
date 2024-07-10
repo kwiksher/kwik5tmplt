@@ -60,9 +60,12 @@ function M:onShow(UI)
   local basePropsControl = require("editor.parts.basePropsControl")
   basePropsControl.enableFillColor = false
 
-  if UI.editor.currentClass ~= "Linear" then
+  if UI.editor.currentClass ~= "linear" then
     pointA:hide()
     pointB:hide()
+  end
+  if UI.editor.currentClass == "switch" then
+    pointABbox:hide()
   end
 end
 -------
@@ -99,7 +102,7 @@ function M:useClassEditorProps(UI)
     props.layer = selectbox.selectedObj.text -- UI.editor.currentLayer,
     props.class=selectbox.selectedText.text
   else
-    props.layer = UI.editor.currentLayer
+    props.layer = UI.editor.currentLayer -- will be overwritten by classProps._target
   end
   --
   local properties = classProps:getValue()
@@ -107,13 +110,17 @@ function M:useClassEditorProps(UI)
     -- print("", properties[i].name, type(properties[i].value))
     props.properties[properties[i].name] = properties[i].value
   end
+
+  if props.properties._target then
+    props.layer = props.properties._target
+  end
   --
   local breadcrumbsProperties = breadcrumbsProps:getValue()
   if #breadcrumbsProperties == 0 then
     props.breadcrumbs = nil
   else
     for i=1, #breadcrumbsProperties do
-      print("", properties[i].name, type(properties[i].value))
+      -- print("", properties[i].name, type(properties[i].value))
       local name = breadcrumbsProperties[i].name
       if name == "_width" then
         props.breadcrumbs.width = breadcrumbsProperties[i].value
