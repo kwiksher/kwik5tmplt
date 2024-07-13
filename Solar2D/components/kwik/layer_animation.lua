@@ -213,8 +213,8 @@ local function createPropsTo(self, layer, _mX, _mY)
     if self.to.yScale then
       props.yScale=self.to.yScale * layer.yScale
     end
-    if self.pathProps and self.pathProps.newAngle then -- path
-      props.newAngle = self.pathProps.newAngle
+    if self.path and self.path.newAngle then -- path
+      props.newAngle = tonumber(self.path.newAngle)
     end
   end
   if self.to.alpha then
@@ -347,18 +347,19 @@ local function createAnimationFunc(self, UI, tool)
             -- for k, v in pairs(animObj) do print(k, v) end
         return  animObjTo, animObjFrom
       end
-		elseif class == "btween" then
+		elseif tool == "btween" then
+      self.path.newAngle = tonumber(self.path.newAngle)
+      local extraValues = createPropsTo(self, layer)
 			animObj = btween.new(
 				layer,
-				self.properties.duration,
-				{
-          self.curve,
-          angle = self.pathProps.angle
-        },
-				options,
-				props)
+				self.properties.duration/1000,
+        self.curve,
+				extraValues,
+				options)
 
 			animObj.pathAnim = true
+      print("@@@@@ btween", animObj)
+      animObj:pause()
       return animObj
     else
       print("Error")
@@ -411,7 +412,7 @@ function M:init()
     self.obj.yScale=self.from.yScale * self.obj.yScale
   end
   if self.pathProps and self.pathProps.newAngle then -- path
-    self.obj.newAngle = self.pathProps.newAngle
+    self.obj.newAngle = tonumber(self.pathProps.newAngle)
   end
   if self.from.alpha then
     self.obj.alpha=self.from.alpha
@@ -427,6 +428,19 @@ function M:initAnimation(UI, layer, onEndHandler)
     print("self.buildAnim", self.buildAnim)
   else
     print(self.class)
+    if self.class == "path" then
+      local json = require("json")
+      local path = system.pathForFile("App/" .. UI.book .. "/assets/images/" .. UI.page .. "/" .. self.path.filename, system.ResourceDirectory)
+      if path then
+        local decoded, pos, msg = json.decodeFile(path)
+        if not decoded then
+          print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg))
+          return
+        end
+        self.curve =  self:setCurve(decoded, self.path.closed, self.path.pause)
+        print("@@@@",self.curve)
+      end
+    end
     self.buildAnim = animationFactory[self.class]
   end
   ---
@@ -480,6 +494,81 @@ function M:initAnimation(UI, layer, onEndHandler)
 	end
 end
 
+function M:setCurve(pathPoints, closed, pause)
+  local pathCurve = {}
+
+  local curX = 0;
+  local curY = 0;
+  local curLX = 0;
+  local curLY = 0;
+  local curRX = 0;
+  local curRY = 0;
+  local nextX = 0;
+  local nextY = 0;
+  local nextLX = 0;
+  local nextLY = 0;
+  local nextRX = 0;
+  local nextRY = 0;
+  local closed1;
+  local closed2;
+  local closed3;
+  local closed4;
+  local firstY = 0;
+
+  --var bodyShape = []; //FOR THE FUTURE, WHEN PATHS CAN BE EXPORTED AS SHAPES
+
+  for i, point in next,pathPoints do
+    --builds the pathCurve
+    local  pointA = pathPoints[i]
+    local  pointB = pathPoints[i + 1]
+    curX, curY   = app.getPosition(pointA[1], pointA[2])
+    curLX, curLY = app.getPosition(pointA[3], pointA[4])
+    curRX, curRY = app.getPosition(pointA[5], pointA[6])
+    if i == 1 then
+      firstY = curY;
+      --saves for closed paths
+      closed3 = {x=curX, y=curY}
+      -- bodyShape.push(curX); bodyShape.push(curY)
+    end
+    if i < #pathPoints then
+      nextX, nextY =   app.getPosition(pointB[1], pointB[2]) -- anchor[0] anchor[1]
+      nextLX, nextLY = app.getPosition(pointB[3], pointB[4]) -- leftDirection[0] leftDirection[1]
+      nextRX, nextRY = app.getPosition(pointB[5],pointB[6]) -- rightDirection[0] rightDirection[1]
+      --builds the pathCurve
+      pathCurve[#pathCurve+1] = {x=curX, y= curY} --regular curve
+      pathCurve[#pathCurve+1] = {x=curLX, y= curLY}
+      pathCurve[#pathCurve+1] = {x=nextRX, y= nextRY}
+      pathCurve[#pathCurve+1] = {x=nextX, y= nextY}
+      closed4 = {x=nextX, y=nextY}  --used for Pause when complete
+      -- bodyShape.push(curX); bodyShape.push(curY)
+    end
+    if i == #pathPoints then
+      --saves for closed paths
+      closed1 = {x=nextX, y=nextY}
+      closed2 = {x=nextX, y=firstY}
+    end
+  end
+  --this is used only when a path is set to CLOSED
+  if closed then
+    pathCurve[#pathCurve + 1] = closed1
+    pathCurve[#pathCurve + 1] = closed3
+    pathCurve[#pathCurve + 1] = closed3
+    pathCurve[#pathCurve + 1] = closed3
+    closed4 = closed3;
+  end
+  --Repeats the last set of path - makes no sense for almost all situations and do not render if a path is set to CLOSED
+  --DO NOT RETURN TO THE ORIGINAL POSITION AT END - this is used only when a path is set to CLOSED
+  --********* REMOVE WHEN FIND A WAY TO STOP THE ANGLE APPLICATION IN THE LAST PATH POINT IN BTWEEN
+  if pause  then
+    pathCurve[#pathCurve+1] = closed4
+    pathCurve[#pathCurve+1] = closed4
+    pathCurve[#pathCurve+1] = closed4
+    pathCurve[#pathCurve+1] = closed4
+  end
+  local json = require("json")
+  print(json.encode(pathCurve))
+  return pathCurve;
+end
 ---------------------------
 M.set = function(instance)
 	return setmetatable(instance, {__index=M})

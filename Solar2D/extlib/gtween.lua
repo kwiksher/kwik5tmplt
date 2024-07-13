@@ -412,9 +412,9 @@ function new(target, duration, values, props)
     -- print(type(value), type(maxPosition), self.repeatCount)
     local hasEnded = value >= maxPosition and self.repeatCount > 0
     if hasEnded then
-      print("hasEnded", value,maxPosition, self.repeatCount )
+      -- print("hasEnded", value,maxPosition, self.repeatCount )
       if self.calculatedPositionOld == maxPosition then
-        print("self.calculatedPositionOld == maxPosition")
+        -- print("self.calculatedPositionOld == maxPosition")
         return
       end
       self.position = maxPosition
@@ -488,13 +488,14 @@ function new(target, duration, values, props)
       if not self.inited then
         init(self)
       end
-
-      for i, v in pairs(values) do
-        local initVal = self.initValues[i]
-        local rangeVal = self.rangeValues[i]
+      for key, v in pairs(values) do
+        local initVal = self.initValues[key]
+        local rangeVal = self.rangeValues[key]
         if (initVal ~= nil and rangeVal ~= nil and self.ratio ~= nil) then
           local val = initVal + rangeVal * self.ratio
-          self.target[i] = val
+          self.target[key] = val
+
+          -- print(key, val)
 
           --2.3 breadcrumbs
           numCrumbs = numCrumbs + 1

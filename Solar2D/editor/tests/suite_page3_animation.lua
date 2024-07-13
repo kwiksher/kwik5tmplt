@@ -49,7 +49,7 @@ function M.xtest_new_animation()
 
 end
 
-function M.test_new_animation()
+function M.xtest_new_switch()
   local classProps = require("editor.parts.classProps")
   local actionbox = require("editor.parts.actionbox")
   helper.actionTable = require("editor.action.actionTable")
@@ -60,9 +60,23 @@ function M.test_new_animation()
   -- helper.selectIcon("Animations", "Path")
   -- helper.selectIcon("Animations", "Filter")
 
-  -- select an action
+  -- select a layer
   helper.clickProp(classProps.objs, "to")
   helper.selectLayer("fish")
+
+end
+
+function M.test_new_path()
+  local classProps = require("editor.parts.classProps")
+  local pathProps = require("editor.animation.pathProps")
+  local actionbox = require("editor.parts.actionbox")
+  helper.actionTable = require("editor.action.actionTable")
+
+  helper.selectLayer("ball")
+  helper.selectIcon("Animations", "Path")
+  -- helper.selectIcon("Animations", "Filter")
+  helper.setProp(pathProps.objs, "_filename", "path1_Shape_Path_closed.json")
+
 
 end
 
