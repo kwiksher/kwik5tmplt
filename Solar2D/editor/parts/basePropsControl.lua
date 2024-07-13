@@ -66,21 +66,40 @@ function M.filter(k)
     return keySets[k]
 end
 
+
 -- url or _filename or sheetInfo
 local function tapListenerURL(event, classProps)
-  local assetEditor = require("editor.asset.index")
-  local assetTable  = require("editor.asset.assetTable")
-  local assetButtons = require("editor.asset.buttons")
-  assetTable.lastClass = nil
-  assetEditor.controller:show()
-  local selectors = require(parent.."selectors")
-  selectors.assetsSelector:show()
-  selectors.assetsSelector:onClick(true, event.target.class.."s") --videos,audios, sprites..
-  assetTable:setClassProps(classProps)
-  assetButtons:hide()
-  local w, h = classProps:showThumnail(event.target.text,event.target.field.text, event.target.class)
-  if event.target.text == "_filename" and classProps.class == "sprite" then
-    classProps:updateSheetInfo(w, h)
+  if event.target.class == "path" then
+    print(event.target.class)
+    local UI = classProps.UI
+    local path = system.pathForFile("App/"..UI.book.."/assets/images/"..UI.page)
+    local tfd = require("plugin.tinyfiledialogs")
+    local pathFile = tfd.openFileDialog({
+			title = "select .json",
+			default_path =path,
+      filter_description = "json path data",
+      -- filter_patterns = {"*.json"},
+    	})
+    if pathFile then
+        print("", pathFile)
+        local filename = pathFile:sub(path:len())
+        event.target.field.text = filename
+    end
+  else -- sprite?
+    local assetEditor = require("editor.asset.index")
+    local assetTable  = require("editor.asset.assetTable")
+    local assetButtons = require("editor.asset.buttons")
+    assetTable.lastClass = nil
+    assetEditor.controller:show()
+    local selectors = require(parent.."selectors")
+    selectors.assetsSelector:show()
+    selectors.assetsSelector:onClick(true, event.target.class.."s") --videos,audios, sprites..
+    assetTable:setClassProps(classProps)
+    assetButtons:hide()
+    local w, h = classProps:showThumnail(event.target.text,event.target.field.text, event.target.class)
+    if event.target.text == "_filename" and classProps.class == "sprite" then
+      classProps:updateSheetInfo(w, h)
+    end
   end
 end
 

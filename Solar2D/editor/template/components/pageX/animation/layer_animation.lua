@@ -104,7 +104,7 @@ M.breadcrumbs = {
 {{/breadcrumb}}
 
 {{#path}}
-if M.animation.Class == "Path" then
+if M.animation.Class == "path" then
 	M.pathProps = {
     curve = 	{{pathCurve}},
     angle = {{angle}},

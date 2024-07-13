@@ -221,6 +221,9 @@ function M:createTable(props)
   local UI = self.UI
   local objs = {}
   local alphaObj, imageObj
+
+  option.parent = self.group
+
   -- print(#props)
   -- for k, v in pairs(self.onTapLayerSet) do print("@@@@", k, v) end
 
@@ -366,7 +369,6 @@ end
 
 function M:create(UI)
   -- print("@@create", self.name)
-  -- if self.group == nil then
     self.UI = UI
     if UI.editor.currentLayer then
       self.targetObject = UI.sceneGroup[UI.editor.currentLayer]
@@ -374,21 +376,7 @@ function M:create(UI)
     --
     self.group = display.newGroup()
     UI.editor.viewStore.propsTable = self.group
-  -- end
-  -- local commandHandler = function(event)
-  --   UI.editor.currentLayer = event.layer
-  --   UI.editor.currentClass = event.class
-  --   -- for k ,v in pairs(event) do print(k, v) end
-  --   UI.scene.app:dispatchEvent {
-  --     name = "editor.selector.selectLayer",
-  --     UI = UI
-  --   }
-  -- end
-
-  --UI.editor.propsStore:listen(self.setValue)
-  --UI.editor.propsTable = self
   --
-  option.parent = self.group
   if self.props then
     self:createTable(self.props)
   else

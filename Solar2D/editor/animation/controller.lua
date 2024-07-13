@@ -25,6 +25,7 @@ function M:init(viewGroup)
   selectbox      = viewGroup.selectbox
   classProps    = viewGroup.classProps
   breadcrumbsProps = viewGroup.breadcrumbsProps
+  pathProps    = viewGroup.pathProps
   pointABbox    = viewGroup.pointABbox
   actionbox = viewGroup.actionbox
   popup         = viewGroup.popup
@@ -66,6 +67,9 @@ function M:onShow(UI)
   end
   if UI.editor.currentClass == "switch" then
     pointABbox:hide()
+  end
+  if UI.editor.currentClass ~="path" then
+    pathProps:hide()
   end
 end
 -------
@@ -132,6 +136,24 @@ function M:useClassEditorProps(UI)
     end
   end
 
+  local pathProperties = pathProps:getValue()
+  if #pathProperties == 0 then
+    props.path = nil
+  else
+    props.path = {}
+    for i=1, #pathProperties do
+      local name = pathProperties[i].name
+      if name == "_filename" then
+        props.path.filename = pathProperties[i].value
+      else
+        props.path[name] = pathProperties[i].value
+      end
+    end
+    if props.path.closed == nil then
+      props.path.closed = path.filename:find("closed") > 0
+    end
+  end
+
   --from
   --to
   local AB = pointABbox:getValue()
@@ -159,6 +181,9 @@ function M:setValue(decoded, index, template)
     selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
     classProps:setValue(decoded[index].properties)
     breadcrumbsProps:setValue(decoded[index].breadcrumbs)
+    if decoded[index].path then
+      pathProps:setValue(decoded[index].path)
+    end
     pointA:setValue(decoded[index].from)
     pointB:setValue(decoded[index].to)
     -- -- breadcrumbs:setValue(decoded[index].breadcrumbs)
@@ -171,6 +196,9 @@ function M:setValue(decoded, index, template)
     selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
     classProps:setValue(decoded.properties)
     breadcrumbsProps:setValue(decoded.breadcrumbs)
+    if decoded.path then
+      pathProps:setValue(decoded.path)
+    end
     pointA:setValue(decoded.from)
     pointB:setValue(decoded.to)
     -- -- breadcrumbs:setValue(decoded.breadcrumbs)

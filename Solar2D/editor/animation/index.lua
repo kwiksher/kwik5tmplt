@@ -10,7 +10,6 @@ local selectbox      = require(root.."parts.selectbox")
 --
 -- local classProps    = require("editor.parts.baseProps").new({width=50})
 local classProps              = require("editor.parts.classProps")
-
 -- classProps.onTapLayerSet = table:mySet{"to"}
 -- function classProps:setActiveProp(layer, class)
 --   print("setActiveProp", layer)
@@ -23,7 +22,8 @@ local classProps              = require("editor.parts.classProps")
 -- end
 
 
-local breadcrumbsProps = require("editor.parts.baseProps").new({width=50})
+local breadcrumbsProps = require(parent.."breadCrumbProps")
+local pathProps= require(parent.."pathProps")
 --
 local pointABbox    = require(parent.."pointABbox")
 local actionbox = require("editor.parts.actionbox")
@@ -52,9 +52,10 @@ function M:init(UI)
   classProps   : init(UI, self.x + self.width, self.y,  self.width, self.height)
   classProps.model = model.props
 
-  breadcrumbsProps   : init(UI, self.x + self.width, self.y+210,  self.width, self.height)
+  breadcrumbsProps   : init(UI, self.x + self.width, self.y+235,  self.width, self.height)
   breadcrumbsProps.model = model.breadcrumbs
 
+  pathProps:init(UI, self.x + self.width, self.y+240,  self.width, self.height)
   --
   -- pointABbox   : init(UI, display.contentWidth*0.25,  display.contentHeight*0.75,  self.width, self.height)
   pointABbox   : init(UI,  self.x + self.width/2 + 10,  display.contentHeight*0.78,  self.width, self.height)
@@ -73,6 +74,7 @@ function M:init(UI)
     selectbox      = selectbox,
     classProps    = classProps,
     breadcrumbsProps = breadcrumbsProps,
+    pathProps = pathProps,
     pointA        = pointA,
     pointB        = pointB,
     AtoBbutton    = AtoBbutton,
