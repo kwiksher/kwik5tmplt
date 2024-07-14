@@ -407,15 +407,14 @@ function new(target, duration, values, props)
 
     local maxPosition = self.repeatCount * self.duration
     if self.reflect then
-      maxPosition = maxPosition*2
+      maxPosition = maxPosition * 2
     end
     -- print(type(value), type(maxPosition), self.repeatCount)
     local hasEnded = value >= maxPosition and self.repeatCount > 0
     if hasEnded then
       -- print("hasEnded", value,maxPosition, self.repeatCount )
       if self.calculatedPositionOld == maxPosition then
-        -- print("self.calculatedPositionOld == maxPosition")
-        return
+      -- print("self.calculatedPositionOld == maxPosition")
       end
       self.position = maxPosition
       if self.reflect and (self.repeatCount % 2 == 0) then
@@ -423,6 +422,19 @@ function new(target, duration, values, props)
         self.calculatedPosition = 0
       else
         self.calculatedPosition = self.duration
+      end
+
+      self:pause()
+
+      if self.nextTween then
+        self.nextTween:play()
+      else
+        print("no nextTween")
+      end
+      if not self.suppressEvents then
+        if self.onComplete ~= nil then
+          self.onComplete(self)
+        end
       end
     else
       self.position = value
@@ -469,171 +481,155 @@ function new(target, duration, values, props)
           self:forceValue("yScale", _scaleY)
         end
       end
-    end
-
-    if self.duration == 0 and self.position >= 0 then
-      self.ratio = 1
-    else
-      if self.ease ~= nil then
-        self.ratio = self.ease(self.calculatedPosition / self.duration, 0, 1, 1)
-      elseif self.transitionEase ~= nil then
-        self.ratio = self.transitionEase(self.calculatedPosition, self.duration, 0, 1)
-      end
-    end
-
-    if
-      self.target and (self.position >= 0 or self.positionOld >= 0) and
-        self.calculatedPosition ~= self.calculatedPositionOld
-     then
-      if not self.inited then
-        init(self)
-      end
-      for key, v in pairs(values) do
-        local initVal = self.initValues[key]
-        local rangeVal = self.rangeValues[key]
-        if (initVal ~= nil and rangeVal ~= nil and self.ratio ~= nil) then
-          local val = initVal + rangeVal * self.ratio
-          self.target[key] = val
-
-          -- print(key, val)
-
-          --2.3 breadcrumbs
-          numCrumbs = numCrumbs + 1
-
-          if tween.breadcrumb and value > 0 and value < maxPosition - 1 then
-            local xPos, yPos
-            local c1, c2, c3
-            local alpha = tween.breadColor[4]
-            local bW = tween.breadW or 10
-            local bH = tween.breadH or 10
-            local bI = tween.breadInterval or 50
-            local btime = tween.breadTimer or nil
-            if btime ~= nil then
-              btime = btime * 1000
-            end
-
-            --Sets the anchor point for the crumb
-            if tween.breadAnchor == 1 then -- top, left
-              xPos = target.x - (target.width / 2)
-              yPos = target.y - (target.height / 2)
-            elseif tween.breadAnchor == 2 then -- top, center
-              xPos = target.x
-              yPos = target.y - (target.height / 2)
-            elseif tween.breadAnchor == 3 then -- top, right
-              xPos = target.x + (target.width / 2)
-              yPos = target.y - (target.height / 2)
-            elseif tween.breadAnchor == 4 then -- center, left
-              xPos = target.x - (target.width / 2)
-              yPos = target.y
-            elseif tween.breadAnchor == 5 then -- center, center
-              xPos = target.x
-              yPos = target.y
-            elseif tween.breadAnchor == 6 then -- center, right
-              xPos = target.x + (target.width / 2)
-              yPos = target.y
-            elseif tween.breadAnchor == 7 then -- bottom, left
-              xPos = target.x - (target.width / 2)
-              yPos = target.y + (target.height / 2)
-            elseif tween.breadAnchor == 8 then -- bottom, center
-              xPos = target.x
-              yPos = target.y + (target.height / 2)
-            elseif tween.breadAnchor == 9 then -- bottom, right
-              xPos = target.x + (target.width / 2)
-              yPos = target.y + (target.height / 2)
-            end
-
-            --Set color
-            if (tween.breadColor[1] == "rand") then
-              c1 = math.random(255) / 255
-              c2 = math.random(255) / 255
-              c3 = math.random(255) / 255
-            else
-              c1 = tween.breadColor[1]
-              c2 = tween.breadColor[2]
-              c3 = tween.breadColor[3]
-            end
-
-            local obj
-            if (numCrumbs == 1) then
-              if (tween.breadShape == "circle") then
-                obj = display.newCircle(target.x, target.y, bW)
-              else
-                obj = display.newRect(target.x, target.y, bW, bH)
-              end
-              obj:setFillColor(c1, c2, c3)
-              obj.alpha = alpha
-              obj.x = xPos + display.contentCenterX
-              obj.y = yPos + display.contentCenterY
-              obj.xScale = target.xScale
-              obj.yScale = target.yScale
-              crumbGroup:insert(obj)
-              crumbs[numCrumbs] = obj
-
-              -- fade after x seconds
-              local function dispCrumb(obj)
-                obj:removeSelf()
-              end
-              if (btime ~= nil) then
-                transition.to(obj, {time = btime, alpha = 0, onComplete = dispCrumb})
-              end
-            elseif ((numCrumbs) % bI == 0) then -- this is the INTERVAL
-              if (display.contentWidth >= xPos and display.contentHeight >= yPos) then
-                if (tween.breadShape == "circle") then
-                  obj = display.newCircle(target.x, target.y, bW)
-                else
-                  obj = display.newRect(target.x, target.y, bW, bH)
-                end
-                obj:setFillColor(c1, c2, c3)
-                obj.alpha = alpha
-                obj.x = xPos + display.contentCenterX
-                obj.y = yPos + display.contentCenterY
-                obj.xScale = target.xScale
-                obj.yScale = target.yScale
-
-                crumbGroup:insert(obj)
-                crumbs[numCrumbs] = obj
-
-                -- fade after x seconds
-                local function dispCrumb(obj)
-                  obj:removeSelf()
-                end
-                if (btime ~= nil) then
-                  transition.to(obj, {time = btime, alpha = 0, onComplete = dispCrumb})
-                end
-              end
-            end
-
-            --search for group position
-            target:toFront()
-          end
-
-        --self.target[i] = val
-        --target:toFront()
+      --
+      -- Ratio
+      if self.duration == 0 and self.position >= 0 then
+        self.ratio = 1
+      else
+        if self.ease ~= nil then
+          self.ratio = self.ease(self.calculatedPosition / self.duration, 0, 1, 1)
+        elseif self.transitionEase ~= nil then
+          self.ratio = self.transitionEase(self.calculatedPosition, self.duration, 0, 1)
         end
       end
-    end
 
-    if not self.suppressEvents then
-      if self.onChange ~= nil then
-        self.onChange(self)
-      end
-    end
+      if  self.target and (self.position >= 0 or self.positionOld >= 0) and self.calculatedPosition ~= self.calculatedPositionOld then
+        if not self.inited then
+          init(self)
+        end
 
-    if hasEnded then
-      self:pause()
-      if self.nextTween then
-        self.nextTween:play()
-      else
-        print("no nextTween")
+        for key, v in pairs(values) do
+          local initVal = self.initValues[key]
+          local rangeVal = self.rangeValues[key]
+          if (initVal ~= nil and rangeVal ~= nil and self.ratio ~= nil) then
+            local val = initVal + rangeVal * self.ratio
+            self.target[key] = val
+            --
+            -- 2.3 breadcrumbs
+            if self.breadcrumb and value > 0 and value < maxPosition - 1 then
+              numCrumbs = numCrumbs + 1
+              self:playBreadCrumbs(target, value, maxPosition, numCrumbs)
+            end
+          --self.target[i] = val
+          --target:toFront()
+          end
+        end
       end
+
       if not self.suppressEvents then
-        if self.onComplete ~= nil then
-          self.onComplete(self)
+        if self.onChange ~= nil then
+          self.onChange(self)
         end
       end
     end
   end -- end of setPosition()
 
+  function tween:playBreadCrumbs(target, value, maxPosition, numCrumbs)
+    local xPos, yPos
+    local c1, c2, c3
+    local alpha = self.breadColor[4]
+    local bW = self.breadW or 10
+    local bH = self.breadH or 10
+    local bI = self.breadInterval or 50
+    local btime = self.breadTimer or nil
+    if btime ~= nil then
+      btime = btime * 1000
+    end
+
+    --Sets the anchor point for the crumb
+    if self.breadAnchor == 1 then -- top, left
+      xPos = target.x - (target.width / 2)
+      yPos = target.y - (target.height / 2)
+    elseif self.breadAnchor == 2 then -- top, center
+      xPos = target.x
+      yPos = target.y - (target.height / 2)
+    elseif self.breadAnchor == 3 then -- top, right
+      xPos = target.x + (target.width / 2)
+      yPos = target.y - (target.height / 2)
+    elseif self.breadAnchor == 4 then -- center, left
+      xPos = target.x - (target.width / 2)
+      yPos = target.y
+    elseif self.breadAnchor == 5 then -- center, center
+      xPos = target.x
+      yPos = target.y
+    elseif self.breadAnchor == 6 then -- center, right
+      xPos = target.x + (target.width / 2)
+      yPos = target.y
+    elseif self.breadAnchor == 7 then -- bottom, left
+      xPos = target.x - (target.width / 2)
+      yPos = target.y + (target.height / 2)
+    elseif self.breadAnchor == 8 then -- bottom, center
+      xPos = target.x
+      yPos = target.y + (target.height / 2)
+    elseif self.breadAnchor == 9 then -- bottom, right
+      xPos = target.x + (target.width / 2)
+      yPos = target.y + (target.height / 2)
+    end
+
+    --Set color
+    if (self.breadColor[1] == "rand") then
+      c1 = math.random(255) / 255
+      c2 = math.random(255) / 255
+      c3 = math.random(255) / 255
+    else
+      c1 = self.breadColor[1]
+      c2 = self.breadColor[2]
+      c3 = self.breadColor[3]
+    end
+
+    local obj
+    if (numCrumbs == 1) then
+      if (self.breadShape == "circle") then
+        obj = display.newCircle(target.x, target.y, bW)
+      else
+        obj = display.newRect(target.x, target.y, bW, bH)
+      end
+      obj:setFillColor(c1, c2, c3)
+      obj.alpha = alpha
+      obj.x = xPos + display.contentCenterX
+      obj.y = yPos + display.contentCenterY
+      obj.xScale = target.xScale
+      obj.yScale = target.yScale
+      crumbGroup:insert(obj)
+      crumbs[numCrumbs] = obj
+
+      -- fade after x seconds
+      local function dispCrumb(obj)
+        obj:removeSelf()
+      end
+      if (btime ~= nil) then
+        transition.to(obj, {time = btime, alpha = 0, onComplete = dispCrumb})
+      end
+    elseif ((numCrumbs) % bI == 0) then -- this is the INTERVAL
+      if (display.contentWidth >= xPos and display.contentHeight >= yPos) then
+        if (self.breadShape == "circle") then
+          obj = display.newCircle(target.x, target.y, bW)
+        else
+          obj = display.newRect(target.x, target.y, bW, bH)
+        end
+        obj:setFillColor(c1, c2, c3)
+        obj.alpha = alpha
+        obj.x = xPos + display.contentCenterX
+        obj.y = yPos + display.contentCenterY
+        obj.xScale = target.xScale
+        obj.yScale = target.yScale
+
+        crumbGroup:insert(obj)
+        crumbs[numCrumbs] = obj
+
+        -- fade after x seconds
+        local function dispCrumb(obj)
+          obj:removeSelf()
+        end
+        if (btime ~= nil) then
+          transition.to(obj, {time = btime, alpha = 0, onComplete = dispCrumb})
+        end
+      end
+    end
+    --search for group position
+    target:toFront()
+  end
+  ---
   tween.target = target
   if duration == nil then
     tween.duration = 1
@@ -641,12 +637,12 @@ function new(target, duration, values, props)
     tween.duration = duration
   end
   if props then
-    for k, v in pairs(props) do
-      -- if props[k] and type(v) ~= type(props[k]) then
-      --   print(k)
-      -- end
-      print("", k, type(v), v)
-    end
+    -- for k, v in pairs(props) do
+    --   -- if props[k] and type(v) ~= type(props[k]) then
+    --   --   print(k)
+    --   -- end
+    --   print("", k, type(v), v)
+    -- end
     copyTableTo(props, tween)
   end
   if values == nil then
@@ -655,10 +651,12 @@ function new(target, duration, values, props)
   if tween.delay ~= 0 then
     tween.position = -tween.delay
   end
+  --
   resetValues(tween, values)
+  --
   if tween.duration == 0 and tween.delay == 0 and tween.autoPlay then
     tween:setPosition(0)
   end
-
+  --
   return tween
 end

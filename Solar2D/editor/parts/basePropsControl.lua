@@ -250,7 +250,7 @@ local function tapListenerImage(event)
 end
 
 local function tapListenerEasing(event)
-  local easing = require("editor.easing.index")
+  local easing = require("editor.picker.easing")
   local obj = event.target
   easing:create(UI)
   easing.listener = function(name)
@@ -259,6 +259,18 @@ local function tapListenerEasing(event)
     easing:destroy()
   end
   easing:show()
+end
+
+local function tapListenerFilters(event)
+  local filters = require("editor.picker.filters")
+  local obj = event.target
+  filters:create(UI)
+  filters.listener = function(name)
+    print(name)
+    obj.field.text = name
+    filters:destroy()
+  end
+  filters:show()
 end
 
 
@@ -283,7 +295,8 @@ M.handler = {
   posXY = tapListenerPosXY,
   group = tapListenerGroup,
   boundaries = tapListenerShape,
-  easing     = tapListenerEasing
+  easing     = tapListenerEasing,
+  filters = tapListenerFilters
 }
 
 return M

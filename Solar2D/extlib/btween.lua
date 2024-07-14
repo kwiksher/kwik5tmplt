@@ -17,8 +17,6 @@ local function copyTable(t)
 end
 
 function new(target, duration, values, extraValues,_option)
-  print("@@@@@values", values)
-
 	-- these three arguments are absolutely required
 	if not target or not duration or not values then
 		--error("btween.new() requires target, duration, and values arguments.")
@@ -60,7 +58,6 @@ function new(target, duration, values, extraValues,_option)
 	local oldOnChange = option.onChange
 
 	option.onInit = function(tween)
-
 		local p1 = tween.pathCurves[1]
 		tween.prevX = p1.x
 		tween.prevY = p1.y
@@ -70,7 +67,7 @@ function new(target, duration, values, extraValues,_option)
 		end
 	end
 
-  for k, v in pairs(extraValues) do print(k, v) end
+  -- for k, v in pairs(extraValues) do print(k, v) end
 
 	option.onChange = function(tween)
 		if not tween.prevX then

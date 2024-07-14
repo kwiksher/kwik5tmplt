@@ -257,6 +257,32 @@ function exports.newTextField(option)
       return textField
 end
 
+function exports.download(url, filename, dir)
+  local function networkListener( event )
+    if ( event.isError ) then
+        print( "Network error - download failed: ", event.response )
+    elseif ( event.phase == "began" ) then
+        print( "Progress Phase: began" )
+    elseif ( event.phase == "ended" ) then
+        print( "Displaying response image file" )
+        -- myImage = display.newImage( event.response.filename, event.response.baseDirectory, 60, 40 )
+        -- myImage.alpha = 0
+        -- transition.to( myImage, { alpha=1.0 } )
+    end
+  end
+
+  local params = {}
+  params.progress = true
+
+  network.download(
+    url,
+    "GET",
+    networkListener,
+    params,
+    filename,
+    dir or system.TemporaryDirectory
+  )
+end
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/templates/components/layer_props.lua
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/../templates/components/layer_props.lua: No such file or directory
 return exports

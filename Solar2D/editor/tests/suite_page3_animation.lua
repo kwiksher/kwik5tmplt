@@ -66,7 +66,7 @@ function M.xtest_new_switch()
 
 end
 
-function M.test_new_path()
+function M.xtest_new_path()
   local classProps = require("editor.parts.classProps")
   local pathProps = require("editor.animation.pathProps")
   local actionbox = require("editor.parts.actionbox")
@@ -76,6 +76,19 @@ function M.test_new_path()
   helper.selectIcon("Animations", "Path")
   -- helper.selectIcon("Animations", "Filter")
   helper.setProp(pathProps.objs, "_filename", "path1_Shape_Path_closed.json")
+
+end
+
+function M.test_new_filter()
+  local classProps = require("editor.parts.classProps")
+  local pathProps = require("editor.animation.pathProps")
+  local actionbox = require("editor.parts.actionbox")
+  helper.actionTable = require("editor.action.actionTable")
+
+  helper.selectLayer("ball")
+  helper.selectIcon("Animations", "Filter")
+
+  --helper.setProp(pathProps.objs, "_filename", "path1_Shape_Path_closed.json")
 
 
 end
@@ -110,4 +123,24 @@ function M.xtest_easing()
   easing:show(UI)
 end
 
+function M.xtest_download()
+  local util  = require("lib.util")
+  -- util.download("https://docs.coronalabs.com/images/simulator/fx-base-church-comp.png","fx-base-church-comp.png")
+
+  local data = require("editor.template.components.pageX.animation.defaults.filters_ref")
+  for k,v in pairs (data) do
+    print(v.image1, v.image2)
+    util.download("https://docs.coronalabs.com/images/simulator/"..v.image1, v.image1)
+    if v.image2 then
+      util.download("https://docs.coronalabs.com/images/simulator/"..v.image2, v.image2)
+    end
+  end
+end
+
+function M.xtest_picker_filters ()
+  local picker = require("editor.picker.filters")
+  picker.listener = function(name) print(name) end
+  picker:create(UI)
+  picker:show(UI)
+end
 return M
