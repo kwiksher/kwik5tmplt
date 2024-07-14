@@ -230,20 +230,22 @@ function M:createTable(props)
   for i=1, #props do
     local prop = props[i] or {}
     option.text = prop.name or ""
-    -- print("@@ parts.baseProps",i, prop.name, prop.value)
+    --print("@@ parts.baseProps",i, prop.name, prop.value)
     option.x = self.x
-    option.y = i*option.height + self.y
+    option.y = i*(self.height or option.height) + self.y
     -- print(self.group, option.x, option.y, option.width, option.height)
-    local rect = display.newRect(self.group, option.x, option.y, option.width, option.height)
+    local rect = display.newRect(self.group, option.x, option.y, self.width or option.width, (self.height or option.height))
     rect:setFillColor(1)
 
     option.x = self.x + 2
+    option.height = (self.height or option.height)
+    option.width = self.width or option.width
     local obj = newText(option)
     obj.rect = rect
     objs[#objs + 1] = obj
     -- show asset table
     -- print("", prop.name)
-    if prop.name == 'effect' then
+    if prop.name == '_effect' then
       obj:addEventListener("tap", function(event) self:tapListener(event, 'filters')end)
     elseif prop.name == 'easing' then
       obj:addEventListener("tap", function(event) self:tapListener(event, 'easing')end)
@@ -306,7 +308,7 @@ function M:createTable(props)
       obj:addEventListener("mouseHover", onMouseHover)
     end
     -- Edit
-    option.x =rect.x + rect.width/2 - (self.marginFieldX or 0)
+    option.x =rect.x + rect.width/2
     option.y = rect.y
     if type(prop.value) == "boolean" then
       option.text = tostring(prop.value)
@@ -332,6 +334,7 @@ function M:createTable(props)
         end
       --]]
     -- else
+
       local objField = newTextField(option)
       obj.field = objField
       self.group:insert(objField)
@@ -416,7 +419,7 @@ function M:destroy()
 end
 --
 function M:hide()
-  -- print("hide", self.name)
+  -- print("@@@hide", self.name)
   -- print(debug.traceback())
   if self.objs == nil then return end
   for i=1, #self.objs do
@@ -455,7 +458,7 @@ end
 
 
 function M:show()
-  -- print("show", self.name)
+  -- print("@@@show", self.name)
   if self.objs == nil then return end
   for i=1, #self.objs do
     self.objs[i].isVisible = true

@@ -5,7 +5,7 @@ local option, newText = util.newTextFactory {
   text = "",
   x    = 0,
   y    = 100,
-  width    = 72,
+  width    = 80,
   height   = 30,
   fontSize = 12,
 }
@@ -16,11 +16,12 @@ M.x = display.contentCenterX
 M.y = display.contentCenterY-200
 M.width = 80
 M.height = 40
-M.buttons = {"filter", "composite", "generator"}
-M.buttonObjs = {}
+M.buttons = {"filter", "composite", "generator", "CANCEL"}
 --
 function M:create(UI)
   -- buttons
+  self.buttonObjs = {}
+
   for i, v in next, self.buttons do
     local _option = {}
     _option.y = self.y -32
@@ -33,7 +34,12 @@ function M:create(UI)
       obj.x = self.x
     end
     obj:addEventListener("tap", function(event)
-      self:createTable(event.target.text)
+      if event.target.text == "CANCEL" then
+        self:destroy()
+      else
+        self:createTable(event.target.text)
+        self:show()
+      end
     end)
     self.buttonObjs[#self.buttonObjs + 1 ] = obj
 
@@ -62,7 +68,8 @@ function M:createTable(name)
   self.objs = {}
   local rowNum = 0
   local colNum = 0
-  for k, v in pairs(self.model) do
+  for i, v in next, self.model do
+    local k = v.name
     local sPos, ePos = k:find(name)
     if sPos  then
       colNum = colNum % 4
@@ -72,7 +79,11 @@ function M:createTable(name)
       option.text = k:sub(ePos+2)
       local path = "assets/images/filters/"
       local obj = newText(option)
-      obj:setFillColor(1,1,1)
+      if name =="composite" then
+        obj:setFillColor(1,0,0)
+      else
+        obj:setFillColor(0,1,1)
+      end
       obj.anchorY = 0.6
       obj.filter_name = k
       -- print(path..v.image1)
@@ -120,6 +131,7 @@ function M:destroy(UI)
   for i, obj in next, self.buttonObjs do
     obj:removeSelf()
   end
+  self.objs = nil
 end
 
 return M

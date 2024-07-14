@@ -14,32 +14,27 @@ local M = {
   },
   -- composite = {
   --   effect   = "composite.normalMapWith1PointLight",
+  --   type      = "composite"
   --   paint1 = "image01.png",
   --   paint2 = "texture.png",
   --   folder = NIL,
   -- },
   filter = {
-    effect = "filter.bloom",
+    effect = "bloom",
+    type   = "filter"
+
   } ,
+  -- generator = {
+  --   effect = "checkerboard",
+  --   type   = "generator"
+  -- } ,
   actions = {onComplete = NIL},
 }
 --
 M.filterTable = {}
 --
-local json = require("json")
-local path = system.pathForFile( "editor/template/components/pageX/animation/defaults/filters.json", system.ResourceDirectory )
-local file, errorString = io.open( path, "r" )
-local contents = file:read( "*a" )
-io.close( file )
-local data = json.decode(contents)
 
-local function getFilterParams(name)
-  for i, v in next, data do
-    if v.name == name then
-      return v
-    end
-  end
-end
+local getFilterParams = require("editor.animation.filterProps").getFilterParams
 
 --
 M.filterTable["filter.bloom"] = {
@@ -115,4 +110,38 @@ M.filterTable["composite.normalMapWith1PointLight"] = {
     end
 }
 
+M.filterTable["generator.checkerboard"] = {
+  set = function(effect, value)
+    if value then
+      effect.color1 = value.color1
+      effect.color2 = value.color2
+      effect.xStep  = value.xStep
+      effect.yStep  = value.yStep
+     end
+  end,
+  get = function()
+    if M.effect == nil then
+      local params = getFilterParams("generator.checkerboard")
+        local effect = {}
+      effect.color1 = {
+        params.color1[1],
+        params.color1[2],
+        params.color1[3],
+        params.color1[4]
+      }
+      effect.color2 = {
+        params.color2[1],
+        params.color2[2],
+        params.color2[3],
+        params.color2[4]
+      }
+      effect.xStep  = params.xStep
+      effect.yStep  = params.yStep
+      M.effect = effect
+    end
+    return M.effect
+  end
+}
+
+M.filter.params = M.filterTable[M.filter.type.."."..M.filter.effect].get()
 return M

@@ -9,6 +9,8 @@ local AtoBbutton
 local selectbox
 local classProps
 local breadcrumbsProps
+local pathProps
+local filterProps
 local pointABbox
 local actionbox
 local popup
@@ -25,6 +27,7 @@ function M:init(viewGroup)
   selectbox      = viewGroup.selectbox
   classProps    = viewGroup.classProps
   breadcrumbsProps = viewGroup.breadcrumbsProps
+  filterProps      = viewGroup.filterProps
   pathProps    = viewGroup.pathProps
   pointABbox    = viewGroup.pointABbox
   actionbox = viewGroup.actionbox
@@ -65,11 +68,15 @@ function M:onShow(UI)
     pointA:hide()
     pointB:hide()
   end
-  if UI.editor.currentClass == "switch" then
+  if UI.editor.currentClass == "switch" or  UI.editor.currentClass == "filter" then
     pointABbox:hide()
   end
   if UI.editor.currentClass ~="path" then
     pathProps:hide()
+  end
+  print("UI.editor.currentClass", UI.editor.currentClass)
+  if UI.editor.currentClass ~="filter" then
+    filterProps:hide()
   end
 end
 -------
@@ -154,6 +161,24 @@ function M:useClassEditorProps(UI)
     end
   end
 
+  local filterProperties = filterProps:getValue()
+  if #filterProperties ~= 0 then
+    local util = require("lib.util")
+    local params = {}
+    for i=1, #filterProperties do
+      local name = filterProperties[i].name
+      if name == "_effect" then
+        params.effect = filterProperties[i].value
+      elseif name == "_type" then
+          params.type = filterProperties[i].value
+      else
+        params[name] = filterProperties[i].value
+      end
+    end
+    local name = util.split(filterProperties.effect, ".")[1]
+    props[name] = params
+  end
+
   --from
   --to
   local AB = pointABbox:getValue()
@@ -181,6 +206,13 @@ function M:setValue(decoded, index, template)
     selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
     classProps:setValue(decoded[index].properties)
     breadcrumbsProps:setValue(decoded[index].breadcrumbs)
+    if decoded[index].composite then
+      filterProps:setValue(decoded[index].composite)
+    elseif decoded[index].filter then
+      filterProps:setValue(decoded[index].filter)
+    elseif decoded[index].generator then
+      filterProps:setValue(decoded[index].generator)
+    end
     if decoded[index].path then
       pathProps:setValue(decoded[index].path)
     end
@@ -196,6 +228,14 @@ function M:setValue(decoded, index, template)
     selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
     classProps:setValue(decoded.properties)
     breadcrumbsProps:setValue(decoded.breadcrumbs)
+    ---
+    if decoded.composite then
+      filterProps:setValue(decoded.composite)
+    elseif decoded.filter then
+      filterProps:setValue(decoded.filter)
+    elseif decoded.generator then
+      filterProps:setValue(decoded.generator)
+    end
     if decoded.path then
       pathProps:setValue(decoded.path)
     end
