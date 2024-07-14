@@ -32,12 +32,16 @@ function M:create(UI)
     self:createTable(self.props)
   else
     -- print("no props")
+    header.isVisible = false
   end
 end
 
 function M:show(skip)
   -- print("show", self.name)
-  if self.objs == nil then return end
+  if self.objs == nil or #self.objs == 0 then
+    header.isVisible = false
+    return
+  end
   for i=1, #self.objs do
     self.objs[i].isVisible = true
     if self.objs[i].rect then
