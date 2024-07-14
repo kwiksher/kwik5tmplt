@@ -9,12 +9,13 @@ local M = {
   reverse    = nil,
   resetAtEnd = nil,
   xSwipe     = nil,
-  ySwipe     = nil
+  ySwipe     = nil,
   {{#composite}}
   composite = {
     name   = NIL,
     paint1 = NIL,
     paint2 = NIL,
+    folder = NIL
   },
   {{/composite}}
   {{#filter}}
@@ -22,6 +23,11 @@ local M = {
     name = NIL,
   } ,
   {{/filter}}
+  {{#generator}}
+  generator = {
+    name = NIL,
+  } ,
+  {{/generator}}
   actions = {onComplete = NIL},
 }
 --

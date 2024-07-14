@@ -1,4 +1,5 @@
 local M= require("editor.parts.baseProps").new({width=50})
+M.name = "breadCrumbProps"
 
 local header = display.newText("Breadcrumbs (optional)", 0, 0, native.systemFont, 10)
 header:addEventListener("tap", function()

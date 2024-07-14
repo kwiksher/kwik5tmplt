@@ -267,7 +267,7 @@ local function tapListenerFilters(event)
   filters:create(UI)
   filters.listener = function(name)
     print(name)
-    obj.field.text = name
+    obj:setValue( name )
     filters:destroy()
   end
   filters:show()

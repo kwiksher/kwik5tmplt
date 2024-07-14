@@ -21,7 +21,7 @@ local classProps              = require("editor.parts.classProps")
 --   --
 -- end
 
-
+local filterProps = require(parent.."filterProps")
 local breadcrumbsProps = require(parent.."breadCrumbProps")
 local pathProps= require(parent.."pathProps")
 --
@@ -54,7 +54,9 @@ function M:init(UI)
 
   breadcrumbsProps   : init(UI, self.x + self.width, self.y+235,  self.width, self.height)
   breadcrumbsProps.model = model.breadcrumbs
-
+  -- as same position as breadcrumbs
+  filterProps   : init(UI, self.x + self.width-12, self.y+235,  self.width+30, self.height)
+  ---
   pathProps:init(UI, self.x + self.width, self.y+240,  self.width, self.height)
   --
   -- pointABbox   : init(UI, display.contentWidth*0.25,  display.contentHeight*0.75,  self.width, self.height)
@@ -75,6 +77,7 @@ function M:init(UI)
     classProps    = classProps,
     breadcrumbsProps = breadcrumbsProps,
     pathProps = pathProps,
+    filterProps = filterProps,
     pointA        = pointA,
     pointB        = pointB,
     AtoBbutton    = AtoBbutton,
