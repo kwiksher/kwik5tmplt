@@ -85,52 +85,17 @@ function M:create(UI)
 end
 
 function M:getValue()
-  local props = self.props or {}
-  for i, v in next, props do
-    if self.objs[i] == nil then break end
-    -- print(props[i].name, self.objs[i].field.text )
-    local fieldText =  self.objs[i].field.text
-    local asset = self.objs[i].assetbox or {}
-    local value = M:_getValue(props[i].name, fieldText, v.value, asset.value  )
-    v.value = value or v.value
+  local props =  {}
+  for i, obj in next, self.objs do
+      props[#props+1] = {name = obj.text, value = obj.field.text}
   end
-  local json = require("json")
-  -- print (json.encode(props))
   return props
-end
-
--- https://stackoverflow.com/questions/7526223/how-do-i-know-if-a-table-is-an-array
-
-local function isArray(t)
-  return #t > 0 and next(t, #t) == nil
 end
 
 
 -- "levels", "blur.vertical","blur.horixaontal" "add"
 -- "vertical", "horizontal"
 
-local function flattenKeys(_parentKey, v)
-  local ret = {}
-  local parentKey = _parentKey or ""
-  if type(v) == "table" then
-    for key, value in pairs(v) do
-      if type(value) ~="table" or isArray(value) then
-        flatten_key = parentKey .."_"..key
-        ret[flatten_key] = value
-      else
-        local _ret = flattenKeys(parentKey .."_"..key, value)
-        for kk, vv in pairs(_ret) do
-          ret[kk] = vv
-        end
-      end
-    end
-  else
-    ret[parentKey] = v
-  end
-  return ret
-end
-
-M.flattenKeys = flattenKeys
 
 local colorSet = table:mySet{"color", "darkColor", "lightColor", "color1", "color2", " dirLightColor", " pointLightColor"}
 
@@ -144,7 +109,7 @@ function M:setValue(fooValue)
     if not basePropsControl.filter(k) then
       local prop
       if k == "params" then
-        local entries = flattenKeys(nil, v)
+        local entries = util.flattenKeys(nil, v)
         for name, value in pairs(entries) do
           print("", name:sub(2), value)
           local _name = name:sub(2)

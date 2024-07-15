@@ -1,14 +1,14 @@
 local M = {}
 --
-function M:filters(name, effect, UI)
+function M:applyFilterTable(name, effect, UI)
   if effect then
-     filterTable[name].set(effect)
+     self.filterTable[name].set(effect)
   else
     local param = {}
     if self.animation then
       param.time   = self.duration
       param.delay  = self.delay
-      param.filterTable = filterTable[name]
+      param.filterTable = self.filterTable[name]
       param.loop = self.loop
       -- param.effectTo = filterTable[name].get()
       -- param.effectFrom = {}
@@ -37,14 +37,20 @@ function M:create(UI)
       if not self.autoPlay then
         --
         if self.filter then
-          if self.filter.name == "generator.marchingAnts" then
+          self.effect = "filter."..self.effect
+          obj.fill.effect = self.effect
+          self:applyFilterTable(self.effect, obj.fill.effect)
+        elseif self.generator then
+          self.effect = "generator."..self.effect
+          if self.effect == "generator.marchingAnts" then
             obj.strokeWidth = 2
             obj.stroke.effect = self.effect
           else
             obj.fill.effect = self.effect
           end
-          self:filters(self.effect, obj.fill.effect)
+          self:applyFilterTable(self.effect, obj.fill.effect)
         else
+          self.effect = "composite."..self.effect
           local folder = UI.props.imgDir
           if self.composite.folder then
             folder = "App/"..UI.book "/assets/images/"..self.composite.folder
@@ -58,34 +64,39 @@ function M:create(UI)
           obj.fill.effect = self.effect
           --
           if self.composite.name == "composite.normalMapWith1PointLight" or self.composite.name == "composite.normalMapWith1DirLight" then
-            self:filters(self.effect, obj.fill.effect)
+            self:applyFilterTable(self.effect, obj.fill.effect)
           elseif self.composite then
-            self:filters(self.effect, obj.fill)
+            self:applyFilterTable(self.effect, obj.fill)
           end
         end
       end
-      transition.kwikFilter(obj, self:filters(self.effect, nil, UI) )
+      transition.kwikFilter(obj, self:applyFilterTable(self.effect, nil, UI) )
     end)
   end
 end
 --
 function M:didShow(UI)
-  local sceneGroup  = UI.scene.view
-  local layer       = UI.layer
-  local obj = obj
+  local sceneGroup = UI.sceneGroup
+  local obj = sceneGroup[self.layer]
 
 --
   if self.autoPlay then
-    if self.filter or self.generator then
-      if self.fitler.name == "generator.marchingAnts" then
+    if self.filter then
+      obj.fill.effect = self.effect
+      self:applyFilterTable(self.effect, obj.fill.effect)
+      if self.animation then
+        transition.kwikFilter(obj, self:applyFilterTable(self.effect, nil, UI) )
+      end
+    elseif self.generator then
+      if self.generator.name == "generator.marchingAnts" then
         obj.strokeWidth = 2
         obj.stroke.effect = self.effect
       else
         obj.fill.effect = self.effect
       end
-      self:filters(self.effect, obj.fill.effect)
+      self:applyFilterTable(self.effect, obj.fill.effect)
       if self.animation then
-        transition.kwikFilter(obj, self:filters(self.effect, nil, UI) )
+        transition.kwikFilter(obj, self:applyFilterTable(self.effect, nil, UI) )
       end
     else
       local folder = UI.props.imgDir
@@ -101,14 +112,14 @@ function M:didShow(UI)
       obj.fill.effect = self.effect
 
       if self.composite.name == "composite.normalMapWith1PointLight" or self.composite.name == "composite.normalMapWith1DirLight" then
-        self:filters(self.effect, obj.fill.effect)
+        self:applyFilterTable(self.effect, obj.fill.effect)
         if self.animation then
-            transition.kwikFilter(obj, self:filters(self.effect, nil, UI) )
+            transition.kwikFilter(obj, self:applyFilterTable(self.effect, nil, UI) )
         end
       elseif self.composite then
-        self:filters(self.effect, obj.fill)
+        self:applyFilterTable(self.effect, obj.fill)
         if self.animation then
-            local param = self:filters(self.effect, nil, UI)
+            local param = self:applyFilterTable(self.effect, nil, UI)
             transition.to(obj, {time = param.time, delay = param.delay, alpha = param.effect.alpha} )
         end
       end
@@ -120,7 +131,7 @@ function M:Destroy()
 end
 
 M.set = function(model)
-  for k, v in pairs(model) do print(k, v) end
+  -- for k, v in pairs(model) do print(k, v) end
   return setmetatable(model, {__index = M})
 end
 
