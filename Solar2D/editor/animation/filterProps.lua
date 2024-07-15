@@ -98,6 +98,7 @@ end
 
 
 local colorSet = table:mySet{"color", "darkColor", "lightColor", "color1", "color2", " dirLightColor", " pointLightColor"}
+M.colorSet = colorSet
 
 function M:setValue(fooValue)
   local props = {}

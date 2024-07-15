@@ -177,6 +177,7 @@ function M:useClassEditorProps(UI)
     end
     print("@@@", params.type)
     props[params.type] = params
+    props.from = params
   end
 
   --from
