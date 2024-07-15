@@ -1,8 +1,21 @@
 local M = {}
+local json  = require ("json")
 --
 function M:applyFilterTable(name, effect, UI)
+  print(name)
   if effect then
      self.filterTable[name].set(effect)
+
+      -- effect.color1 = { 0.8, 0, 0.2, 1 }
+      -- effect.color2 = { 0.2, 0.2, 0.2, 1 }
+      -- effect.xStep = 8
+      -- effect.yStep = 8
+
+      print(json.encode(effect.color1))
+      print(json.encode(effect.color2))
+      print(effect.xStep)
+      print(effect.yStep)
+
   else
     local param = {}
     if self.animation then
@@ -32,16 +45,23 @@ function M:create(UI)
   local obj = sceneGroup[self.layer]
 
   if obj == nil then return end
+
+  if self.filter then
+    self.effect = "filter."..self.filter.effect
+  elseif self.generator then
+    self.effect = "generator."..self.generator.effect
+  else
+    self.effect = "composite."..self.composite.effect
+  end
+  --
   if self.animation then
     obj:addEventListener( "playFilterAnim", function()
       if not self.autoPlay then
         --
         if self.filter then
-          self.effect = "filter."..self.effect
           obj.fill.effect = self.effect
           self:applyFilterTable(self.effect, obj.fill.effect)
         elseif self.generator then
-          self.effect = "generator."..self.effect
           if self.effect == "generator.marchingAnts" then
             obj.strokeWidth = 2
             obj.stroke.effect = self.effect
@@ -50,7 +70,6 @@ function M:create(UI)
           end
           self:applyFilterTable(self.effect, obj.fill.effect)
         else
-          self.effect = "composite."..self.effect
           local folder = UI.props.imgDir
           if self.composite.folder then
             folder = "App/"..UI.book "/assets/images/"..self.composite.folder
@@ -127,12 +146,28 @@ function M:didShow(UI)
   end
 end
 --
-function M:Destroy()
+function M:destroy()
 end
 
-M.set = function(model)
-  -- for k, v in pairs(model) do print(k, v) end
-  return setmetatable(model, {__index = M})
+M.set = function(props)
+  -- for k, v in pairs(props) do print(k, v) end
+  local layer_filterTable = require("editor.template.components.pageX.animation.layer_filterTable")
+
+  local filterProps = require("editor.animation.filterProps")
+  local basePropsControl = require("editor.parts.basePropsControl")
+  local yaml = require("server.yaml")
+
+    for k, v in pairs(props.from) do
+    if filterProps.colorSet[k]  then
+      print(v)
+      local value = yaml.eval('[ '..v..' ]' )
+      print(k, value[1], value[2], value[3], value[4])
+      props.from[k] ={value[1]/255, value[2]/255, value[3]/255, value[4]}
+    end
+  end
+  local instance = setmetatable( {to=props.to, from=props.from}, {__index=layer_filterTable} )
+  props.filterTable = instance.filterTable
+  return setmetatable(props, {__index = M})
 end
 
 return M
