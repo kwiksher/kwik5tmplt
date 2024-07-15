@@ -283,6 +283,36 @@ function exports.download(url, filename, dir)
     dir or system.TemporaryDirectory
   )
 end
+
+
+-- https://stackoverflow.com/questions/7526223/how-do-i-know-if-a-table-is-an-array
+
+local function isArray(t)
+  return #t > 0 and next(t, #t) == nil
+end
+
+function exports.flattenKeys(_parentKey, v)
+  local ret = {}
+  local parentKey = _parentKey or ""
+  if type(v) == "table" then
+    for key, value in pairs(v) do
+      if type(value) ~="table" or isArray(value) then
+        flatten_key = parentKey .."_"..key
+        ret[flatten_key] = value
+      else
+        local _ret = exports.flattenKeys(parentKey .."_"..key, value)
+        for kk, vv in pairs(_ret) do
+          ret[kk] = vv
+        end
+      end
+    end
+  else
+    ret[parentKey] = v
+  end
+  return ret
+end
+
+
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/templates/components/layer_props.lua
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/../templates/components/layer_props.lua: No such file or directory
 return exports

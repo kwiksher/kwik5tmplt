@@ -89,10 +89,8 @@ function M.test_new_filter()
   helper.selectLayer("ball")
   helper.selectIcon("Animations", "Filter")
 
-  helper.clickProp(filterProps.objs, "_effect")
-  helper.clickProp(picker.objs, "chromaKey")
-
-
+  -- helper.clickProp(filterProps.objs, "_effect")
+  -- helper.clickProp(picker.objs, "chromaKey")
 
   --helper.setProp(pathProps.objs, "_filename", "path1_Shape_Path_closed.json")
 

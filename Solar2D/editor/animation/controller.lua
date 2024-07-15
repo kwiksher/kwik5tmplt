@@ -175,8 +175,8 @@ function M:useClassEditorProps(UI)
         params[name] = filterProperties[i].value
       end
     end
-    local type = params.type
-    props[type] = params
+    print("@@@", params.type)
+    props[params.type] = params
   end
 
   --from
@@ -188,6 +188,7 @@ function M:useClassEditorProps(UI)
   end
   props.actions = {onComplete = actionbox.getValue("onComplete")} --selectedTextLabel
   --breadcrumbs
+  printTable(props)
   return props
 end
 
