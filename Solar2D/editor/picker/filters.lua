@@ -82,7 +82,7 @@ function M:createTable(name)
       if name =="composite" then
         obj:setFillColor(1,0,0)
       else
-        obj:setFillColor(0,1,1)
+        obj:setFillColor(0.5,1,0.5)
       end
       obj.anchorY = 0.6
       obj.filter_name = k

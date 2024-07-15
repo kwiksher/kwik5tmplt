@@ -1,5 +1,4 @@
 local M = {}
-local transitionfilter = require("extlib.transitionfilter")
 --
 function M:filters(name, effect, UI)
   if effect then
@@ -30,7 +29,7 @@ end
 function M:create(UI)
   local layer       = UI.layer
   local sceneGroup = UI.sceneGroup
-  local obj = sceneGroup[self.target]
+  local obj = sceneGroup[self.layer]
 
   if obj == nil then return end
   if self.animation then
@@ -77,7 +76,7 @@ function M:didShow(UI)
 
 --
   if self.autoPlay then
-    if self.filter then
+    if self.filter or self.generator then
       if self.fitler.name == "generator.marchingAnts" then
         obj.strokeWidth = 2
         obj.stroke.effect = self.effect
@@ -121,6 +120,7 @@ function M:Destroy()
 end
 
 M.set = function(model)
+  for k, v in pairs(model) do print(k, v) end
   return setmetatable(model, {__index = M})
 end
 

@@ -1,6 +1,8 @@
 local name = ...
 local parent, root = newModule(name)
 local Animation = require("components.kwik.layer_animation")
+local Filter = require("components.kwik.layer_filter")
+
 
 local instance =
   require("commands.kwik.baseCommand").new(
@@ -28,15 +30,22 @@ local instance =
         end
       end
       --
-      local sceneGroup = UI.sceneGroup
-      player:initAnimation(UI, sceneGroup[props.layer], onEndHandler)
-      player.tweenTo, player.tweenFrom = player:buildAnim(UI)
-      -- player.tween:pause()
-      player:init()
-      if player.tweenFrom then
-        player.tweenFrom:play()
+      if params.class == "filter" then
+        local player = Filter.set(props)
+        props.autoPlay = true
+        player:create(UI)
+        player:didShow(UI)
       else
-        player.tweenTo:play()
+        local sceneGroup = UI.sceneGroup
+        player:initAnimation(UI, sceneGroup[props.layer], onEndHandler)
+        player.tweenTo, player.tweenFrom = player:buildAnim(UI)
+        -- player.tween:pause()
+        player:init()
+        if player.tweenFrom then
+          player.tweenFrom:play()
+        else
+          player.tweenTo:play()
+        end
       end
     end
   end

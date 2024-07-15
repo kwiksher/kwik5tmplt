@@ -91,7 +91,7 @@ function M:getValue()
     -- print(props[i].name, self.objs[i].field.text )
     local fieldText =  self.objs[i].field.text
     local asset = self.objs[i].assetbox or {}
-    local value = _getValue(props[i].name, fieldText, v.value, asset.value  )
+    local value = M:_getValue(props[i].name, fieldText, v.value, asset.value  )
     v.value = value or v.value
   end
   local json = require("json")
@@ -132,6 +132,8 @@ end
 
 M.flattenKeys = flattenKeys
 
+local colorSet = table:mySet{"color", "darkColor", "lightColor", "color1", "color2", " dirLightColor", " pointLightColor"}
+
 function M:setValue(fooValue)
   local props = {}
   local _fooValue = fooValue or {}
@@ -140,22 +142,28 @@ function M:setValue(fooValue)
   for k, v in pairs(params) do
     --
     if not basePropsControl.filter(k) then
+      local prop
       if k == "params" then
         local entries = flattenKeys(nil, v)
         for name, value in pairs(entries) do
-          -- print("", name:sub(2), value)
-          local prop = {name=name:sub(2), value=basePropsControl._yamlValue(name, value, params)}
+          print("", name:sub(2), value)
+          local _name = name:sub(2)
+          if colorSet[_name] then
+            prop = {name=_name, value=basePropsControl._yamlValue("color", value)}
+          else
+            prop = {name=_name, value=basePropsControl._yamlValue(_name, value, params)}
+          end
           -- print("","", prop.value)
           props[#props+1] = prop
         end
       elseif k == "effect" then
-        local prop = {name="_effect", value=basePropsControl._yamlValue(k, v, params)}
+        prop = {name="_effect", value=basePropsControl._yamlValue(k, v, params)}
         props[#props+1] = prop
       elseif k == "type" then
-        local prop = {name="_type", value=basePropsControl._yamlValue(k, v, params)}
+        prop = {name="_type", value=basePropsControl._yamlValue(k, v, params)}
         props[#props+1] = prop
       else
-        local prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
+        prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
         props[#props+1] = prop
       end
     end

@@ -175,8 +175,8 @@ function M:useClassEditorProps(UI)
         params[name] = filterProperties[i].value
       end
     end
-    local name = util.split(filterProperties.effect, ".")[1]
-    props[name] = params
+    local type = params.type
+    props[type] = params
   end
 
   --from
