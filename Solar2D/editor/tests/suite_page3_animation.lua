@@ -81,14 +81,45 @@ end
 
 function M.test_new_filter()
   local classProps = require("editor.parts.classProps")
-  local pathProps = require("editor.animation.pathProps")
+  local filterProps = require("editor.animation.filterProps")
+  local picker      = require("editor.picker.filters")
   local actionbox = require("editor.parts.actionbox")
   helper.actionTable = require("editor.action.actionTable")
 
   helper.selectLayer("ball")
   helper.selectIcon("Animations", "Filter")
 
+  helper.clickProp(filterProps.objs, "_effect")
+  helper.clickProp(picker.objs, "chromaKey")
+
+
+
   --helper.setProp(pathProps.objs, "_filename", "path1_Shape_Path_closed.json")
+
+  -- COLOR
+  -- chromaKey
+  --   color
+  -- duotone
+  --  darkColor
+  --  lightColor
+
+  -- checkerboard
+  --   color1
+  --   color2
+  -- linearGradient
+  --   color1
+  --   color2
+  -- perlinNoise
+  --   color1
+  --   color2
+    -- radialGradient
+  --   color1
+  --   color2
+  --
+  -- normalMapWith1DirLight
+  --   dirLightColor
+  -- normalMapWith1PointLight
+  --   pointLightColor
 
 
 end
@@ -143,4 +174,11 @@ function M.xtest_picker_filters ()
   picker:create(UI)
   picker:show(UI)
 end
+
+function M.xtest_eyedropper()
+  local picker = require("editor.picker.eyedropper")
+  picker:create()
+  picker:show()
+end
+
 return M

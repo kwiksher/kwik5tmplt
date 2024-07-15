@@ -171,9 +171,10 @@ end
 -- color
 local colorPicker = require("extlib.colorPicker")
 local converter = require("extlib.convertcolor")
+local eyedropper = require("editor.picker.eyedropper")
 ---
 local function tapListenerColor(event)
-  -- print("tap")
+  print("tap", event.numTaps)
   local obj = event.target
   --
   local function pickerListener(r, g, b, a)
@@ -193,21 +194,27 @@ local function tapListenerColor(event)
     end
 
   end
-  local fieldText = obj.field.text
-  local value = '[ '..fieldText..' ]'
-  value = yaml.eval(value)
-  --
-  local json = require("json")
-  --print(obj.text, json.encode(value))
-  if obj.fieldAlpha then
-    print(obj.fieldAlpha.text)
-    colorPicker.show(pickerListener, tonumber(value[1])/255, tonumber(value[2])/255, tonumber(value[3])/255, tonumber(obj.fieldAlpha.text))
+
+  if event.numTaps == 2 then
+    eyedropper:create(pickerListener)
+    eyedropper:show()
   else
-    local alpha = 1.0
-    if value[4] then
-      alpha  = tonumber(value[4])
+    local fieldText = obj.field.text
+    local value = '[ '..fieldText..' ]'
+    value = yaml.eval(value)
+    --
+    local json = require("json")
+    --print(obj.text, json.encode(value))
+    if obj.fieldAlpha then
+      print(obj.fieldAlpha.text)
+      colorPicker.show(pickerListener, tonumber(value[1])/255, tonumber(value[2])/255, tonumber(value[3])/255, tonumber(obj.fieldAlpha.text))
+    else
+      local alpha = 1.0
+      if value[4] then
+        alpha  = tonumber(value[4])
+      end
+      colorPicker.show(pickerListener, tonumber(value[1])/255, tonumber(value[2])/255, tonumber(value[3])/255, alpha)
     end
-    colorPicker.show(pickerListener, tonumber(value[1])/255, tonumber(value[2])/255, tonumber(value[3])/255, alpha)
   end
 end
 --
