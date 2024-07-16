@@ -79,7 +79,7 @@ function M.xtest_new_path()
 
 end
 
-function M.test_new_filter()
+function M.xtest_new_filter()
   local classProps = require("editor.parts.classProps")
   local filterProps = require("editor.animation.filterProps")
   local picker      = require("editor.picker.filters")
@@ -92,25 +92,13 @@ function M.test_new_filter()
   --helper.clickProp(filterProps.objs, "_effect")
   --helper.clickProp(picker.objs, "chromaKey")
 
-  if false then
-    helper.clickProp(picker.buttonObjs, "generator")
-    helper.clickProp(picker.objs, "checkerboard")
-    -- checker animation
-    helper.setProp(filterProps.objs, "xStep", 4)
-    helper.setProp(filterProps.objs, "yStep", 4)
-  end
-
   --bloom animation
   helper.setProp(filterProps.objs, "add_alpha", 0.2)
   helper.setProp(filterProps.objs, "blur_vertical_blurSize", 5)
   helper.setProp(filterProps.objs, "blur_horizontal_blurSize", 5)
   helper.setProp(filterProps.objs, "levels_white", 0.2)
 
-
-
   helper.setProp(classProps.objs, "animation", "true")
-
-
 
   --helper.setProp(pathProps.objs, "_filename", "path1_Shape_Path_closed.json")
 
@@ -138,6 +126,53 @@ function M.test_new_filter()
   --   dirLightColor
   -- normalMapWith1PointLight
   --   pointLightColor
+
+
+end
+
+function M.xtest_new_filter_generator()
+  local classProps = require("editor.parts.classProps")
+  local filterProps = require("editor.animation.filterProps")
+  local picker      = require("editor.picker.filters")
+  local actionbox = require("editor.parts.actionbox")
+  helper.actionTable = require("editor.action.actionTable")
+
+  helper.selectLayer("ball")
+  helper.selectIcon("Animations", "Filter")
+
+  helper.clickProp(filterProps.objs, "_effect")
+  helper.clickProp(picker.buttonObjs, "generator")
+  helper.clickProp(picker.objs, "checkerboard")
+  -- checker animation
+  helper.setProp(filterProps.objs, "xStep", 4)
+  helper.setProp(filterProps.objs, "yStep", 4)
+  helper.setProp(classProps.objs, "animation", "true")
+end
+
+function M.test_new_filter_composite()
+  local classProps = require("editor.parts.classProps")
+  local filterProps = require("editor.animation.filterProps")
+  local picker      = require("editor.picker.filters")
+  local actionbox = require("editor.parts.actionbox")
+  helper.actionTable = require("editor.action.actionTable")
+
+  helper.selectLayer("ball")
+  helper.selectIcon("Animations", "Filter")
+
+  helper.clickProp(filterProps.objs, "_effect")
+  helper.clickProp(picker.buttonObjs, "composite")
+  -- helper.clickProp(picker.objs, "add")
+  helper.clickProp(picker.objs, "linearLight")
+  -- helper.clickProp(picker.objs,"normalMapWith1DirLight")
+  -- helper.clickProp(picker.objs,"normalMapWith1PointLight")
+
+  helper.setProp(filterProps.objs, "paint1", "cat_face1.png")
+  helper.setProp(filterProps.objs, "paint2", "background1.png")
+
+  -- -- animation
+  helper.setProp(filterProps.objs, "alpha", 0.1)
+  -- helper.setProp(filterProps.objs, "yStep", 4)
+  helper.setProp(classProps.objs, "animation", "true")
 
 
 end

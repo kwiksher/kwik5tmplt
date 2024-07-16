@@ -178,8 +178,9 @@ function M:useClassEditorProps(UI)
     --
     props[params.type] = params
     props.from = params
-    -- printTable(props.from)
-    --
+    -- print("------------------")
+    -- printTable(props.from, true)
+    -- --
     params = {}
     for i=1, #filterPropertiesTo do
       local name = filterPropertiesTo[i].name
@@ -191,10 +192,12 @@ function M:useClassEditorProps(UI)
 
   --from
   --to
-  local AB = pointABbox:getValue()
-  for i=1, #AB do
-    props.from[AB[i].name] = tonumber(AB[i].A )
-    props.to[AB[i].name] = tonumber(AB[i].B )
+  if #pointABbox.objs > 0 then
+    local AB = pointABbox:getValue()
+    for i=1, #AB do
+      props.from[AB[i].name] = tonumber(AB[i].A )
+      props.to[AB[i].name] = tonumber(AB[i].B )
+    end
   end
   props.actions = {onComplete = actionbox.getValue("onComplete")} --selectedTextLabel
   --breadcrumbs
