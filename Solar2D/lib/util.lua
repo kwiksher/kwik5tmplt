@@ -312,6 +312,7 @@ function exports.flattenKeys(_parentKey, v)
   return ret
 end
 
+exports.isArray = isArray
 
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/templates/components/layer_props.lua
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/../templates/components/layer_props.lua: No such file or directory

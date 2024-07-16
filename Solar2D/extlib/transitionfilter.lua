@@ -3,7 +3,8 @@
 -- Project: {{ProjName}}
 --
 transition.callback = transition.to ;
-
+local util = require("lib.util")
+--
 function _copy(t)
     local new_table = {}
     for k,v in pairs(t) do
@@ -19,9 +20,19 @@ end
 function makeDiff(from, to)
     local diff_table = {}
     for k, v in pairs(from) do
+      print("", k)
       if type(v) == "table" then  -- v = {0.1, 0.2. 0.3}
-          diff_table[k] = makeDiff(v ,to[k])
-      else
+        if util.isArray(v) then
+          local ret = {}
+          for ii, vv in next, v do
+            ret[#ret+1] = v[ii]-vv
+          end
+          diff_table[k] = ret
+        else
+          --diff_table[k] = makeDiff(v ,to[k])
+        end
+      elseif type(v) == "number" then
+        print(k, to[k], v)
           diff_table[k] = to[k]-v
       end
     end
@@ -31,13 +42,30 @@ end
 function setEffect(from, diff_table, val)
   local value = {}
     for k, v in pairs(diff_table) do
-         -- print(k)
+          -- print(k)
         if type(v) == "table" then
           -- print("table:"..k)
-          value[k] = setEffect(from[k], v, val)
+          if util.isArray(v) then
+            local ret = {}
+            for ii, vv in next, v do
+              -- print(ii, vv)
+              if vv ~=0 then -- no difference
+                ret[#ret+1] = vv*val
+              else
+                ret[#ret+1] = from[k][ii]
+              end
+            end
+            value[k] = ret
+          else
+            value[k] = setEffect(from[k], v, val)
+          end
         else
             -- print(k, from[k] + v*val)
-            value[k] = from[k] + v*val
+            if k == "xStep" or k =="yStep" then
+              value[k] = from[k] + math.floor(v*val)
+            else
+              value[k] = from[k] + v*val
+            end
         end
     end
     return value
@@ -52,9 +80,14 @@ function transition.kwikFilter(obj, params)
   local complete = params.onComplete
   local loop = params.loop
 
-  local from =   params.filterTable.get()
-  params.filterTable.set(from)
-  local to = params.filterTable.get()
+  local from =   params.filterTable.from
+  local to = params.filterTable.to
+  print("--------from")
+  printTable(from)
+  print("--------to")
+  printTable(to)
+  -- local to = params.filterTable.get()
+  params.filterTable:set(params.effect, from)
   local diffTable = makeDiff(from, to)
   local t = nil ;
   local p = {} --hold parameters here
@@ -76,7 +109,7 @@ function transition.kwikFilter(obj, params)
         else
           if(_obj.fill and _obj.fill.effect and _obj.isPlay) then
             local value = setEffect(from, diffTable, v)
-            params.filterTable.set(_obj.fill.effect, value)
+            params.filterTable:set(params.effect, _obj.fill.effect, value)
           end
           t["step"] = v ;
         end

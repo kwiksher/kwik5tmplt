@@ -36,7 +36,7 @@ print = function(...)
   end
 end
 
-printTable = function(tbl)
+printTable = function(tbl, printType)
   local flatten_tbl = util.flattenKeys(nil, tbl)
   local t = debug.traceback()
   local stacks = t:mySplit("[^\r\n]+")
@@ -70,7 +70,11 @@ printTable = function(tbl)
 
   table.sort(array_tbl, compare)
   for i, v in next, array_tbl do
-    _print(header, v.name, v.value)
+    if printType then
+      _print(header, v.name, type(v.value))
+    else
+      _print(header, v.name, v.value)
+    end
   end
 end
 

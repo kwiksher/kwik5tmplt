@@ -11,8 +11,10 @@ local instance =
     print(name, params.props.layer, params.class)
     local props = params.props
     --print(props.class)
-    for k, v in pairs(props.to) do
-      print("", k, v)
+    if props.to.color1 then
+      for k, v in pairs(props.to.color1) do
+        print("", k, v)
+      end
     end
 
     if params.tool == "animation" then
@@ -32,7 +34,7 @@ local instance =
       --
       if params.class == "filter" then
         local player = Filter.set(props)
-        props.autoPlay = true
+        props.properties.autoPlay = true
         player:create(UI)
         player:didShow(UI)
       else
