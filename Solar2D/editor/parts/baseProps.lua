@@ -263,7 +263,7 @@ function M:createTable(props)
       obj:addEventListener("tap", function(event) self:tapListener(event, 'posXY')end)
     elseif prop.name == 'alpha' then
       alphaObj = obj
-    elseif prop.name == 'color' or prop.name:find("Color")  or prop.name == 'imageFile' then
+    elseif prop.name == 'color' or prop.name:find("color")  or prop.name == 'imageFile' then
       -- obj.fieldAlpha = alphaObj.field
       imageObj = obj
       obj.targetObject = self.targetObject

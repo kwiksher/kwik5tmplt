@@ -1,26 +1,34 @@
-local M= require("editor.parts.baseProps").new({width=50})
+local M = require("editor.parts.baseProps").new({width = 50})
 M.name = "filterProps"
 M.marginFieldX = -10
 
-
 local util = require("lib.util")
 local basePropsControl = require("editor.parts.basePropsControl")
+
+local yaml = require("server.yaml")
+local stringSet = table:mySet {"_effect", "_type", "image1", "image2", "folder"}
+local colorSet =
+  table:mySet {"color", "darkColor", "lightColor", "color1", "color2", " dirLightColor", " pointLightColor"}
 --
-local header = display.newText("", 0, 0, native.systemFont, 10)
-header:addEventListener("tap", function()
-  if M.group.isVisible then
-    M:hide(header)
-  else
-    M:show(header)
+local header = display.newText("transition.to", 0, 0, native.systemFont, 10)
+header:addEventListener(
+  "tap",
+  function()
+    if M.group.isVisible then
+      M:hide(header)
+    else
+      M:show(header)
+    end
+    header.isVisible = true
   end
-  header.isVisible = true
-end)
+)
 
 local json = require("json")
-local path = system.pathForFile( "editor/template/components/pageX/animation/defaults/filters.json", system.ResourceDirectory )
-local file, errorString = io.open( path, "r" )
-local contents = file:read( "*a" )
-io.close( file )
+local path =
+  system.pathForFile("editor/template/components/pageX/animation/defaults/filters.json", system.ResourceDirectory)
+local file, errorString = io.open(path, "r")
+local contents = file:read("*a")
+io.close(file)
 --
 local data = json.decode(contents)
 --
@@ -33,24 +41,126 @@ function M.getFilterParams(name)
   end
 end
 
+local option, newText, newTextField = M.option, M.newText, M.newTextField
+
+function M:createTable(props)
+  local UI = self.UI
+  local objs = {}
+  local alphaObj, imageObj
+
+  option.parent = self.group
+
+  for i = 1, #props do
+    local prop = props[i] or {}
+    option.text = prop.name or ""
+    --print("@@ parts.baseProps",i, prop.name, prop.value)
+    option.x = self.x
+    option.y = i * (self.height or option.height) + self.y
+    -- print(self.group, option.x, option.y, option.width, option.height)
+    local rect =
+      display.newRect(self.group, option.x, option.y, self.width or option.width, (self.height or option.height))
+    rect:setFillColor(1)
+
+    option.x = self.x + 2
+    option.height = (self.height or option.height)
+    option.width = self.width or option.width
+    local obj = newText(option)
+    obj.rect = rect
+    objs[#objs + 1] = obj
+    -- show asset table
+    -- print("", prop.name)
+    if prop.name == "_effect" then
+      obj:addEventListener(
+        "tap",
+        function(event)
+          self:tapListener(event, "filters")
+        end
+      )
+    elseif prop.name == "color" or prop.name:find("color") or prop.name == "imageFile" then
+      -- obj.fieldAlpha = alphaObj.field
+      imageObj = obj
+      obj.targetObject = self.targetObject
+      obj.page = "*" .. UI.page .. "*"
+      obj:addEventListener(
+        "tap",
+        function(event)
+          self:tapListener(event, "color")
+        end
+      )
+    elseif prop.name == "imageFile" then
+      -- obj.fieldAlpha = alphaObj.field
+      imageObj = obj
+      obj.targetObject = self.targetObject
+      obj.page = "*" .. UI.page .. "*"
+      obj:addEventListener(
+        "tap",
+        function(event)
+          self:tapListener(event, prop.name)
+        end
+      )
+    end
+    -- Edit
+    option.x = rect.x + rect.width / 2
+    option.y = rect.y
+    if type(prop.value) == "boolean" then
+      option.text = tostring(prop.value)
+    else
+      option.text = prop.value
+    end
+
+    local objField = newTextField(option)
+    obj.field = objField
+
+    -- TO
+    if  not stringSet[prop.name] then
+      obj.field.width = obj.field.width/2
+      option.x = rect.x + rect.width / 2 + option.width/2
+      local objFieldTo = newTextField(option)
+      obj.fieldTo = objFieldTo
+      objFieldTo.width = obj.field.width
+      self.group:insert(objFieldTo)
+    end
+
+    self.group:insert(objField)
+    self.group:insert(obj.rect)
+    self.group:insert(obj)
+  end
+
+  -- set alpha obj to color.fieldAlpha
+  for i, obj in next, objs do
+    -- print(obj.text)
+    if obj.text == "color" then
+      if alphaObj then
+        obj.fieldAlpha = alphaObj.field
+      end
+    end
+    if obj.text == "imageFolder" then
+      if imageObj then
+        imageObj.imageFolder = obj
+      end
+    end
+  end
+
+  self.objs = objs
+end
+
 function M:create(UI)
   -- print("@@create", self.name)
   -- if self.group == nil then
-    self.UI = UI
-    if UI.editor.currentLayer then
-      self.targetObject = UI.sceneGroup[UI.editor.currentLayer]
-    end
-    --
-    self.group = display.newGroup()
-    UI.editor.viewStore.propsTable = self.group
-    --
-    header.x, header.y = self.x, self.y
-    header.anchorX = 0.35
-    header.anchorY = 0.3
+  self.UI = UI
+  if UI.editor.currentLayer then
+    self.targetObject = UI.sceneGroup[UI.editor.currentLayer]
+  end
+  --
+  self.group = display.newGroup()
+  UI.editor.viewStore.propsTable = self.group
+  --
+  header.x, header.y = self.x + 100, self.y
+  header.anchorX = 0
+  header.anchorY = 0.3
 
-
-    header.isVisible = true
-    -- self.group:insert(header)
+  header.isVisible = true
+  -- self.group:insert(header)
   --
   if self.props then
     local addSetValue
@@ -59,9 +169,9 @@ function M:create(UI)
       local params = M.getFilterParams(value)
       local entries = util.split(value, ".")
       if entries[1] == "composite" then
-        M:setValue({params=params, effect = entries[2], type = entries[1], paint1=NIL, paint2=NIL, folder=NIL })
+        M:setValue({params = params, effect = entries[2], type = entries[1], paint1 = NIL, paint2 = NIL, folder = NIL})
       else
-        M:setValue({params=params, effect = entries[2], type = entries[1] })
+        M:setValue({params = params, effect = entries[2], type = entries[1]})
       end
       M:destroy()
       M:createTable(M.props)
@@ -85,20 +195,40 @@ function M:create(UI)
 end
 
 function M:getValue()
-  local props =  {}
+  local props = {}
+  local propsTo = {}
   for i, obj in next, self.objs do
-      props[#props+1] = {name = obj.text, value = obj.field.text}
+    local value = obj.field.text
+    local valueTo
+    local key = obj.text
+    if colorSet[key] then -- from
+      value = yaml.eval("[ " .. value .. " ]")
+      value = {value[1] / 255, value[2] / 255, value[3] / 255, value[4]}
+      --
+      valueTo =  obj.fieldTo.text
+      valueTo = yaml.eval("[ " .. valueTo .. " ]")
+      valueTo = {valueTo[1] / 255, valueTo[2] / 255, valueTo[3] / 255, valueTo[4]}
+    elseif value:find(",") then
+      value = yaml.eval("[ " .. value .. " ]")
+      --
+      valueTo =  obj.fieldTo.text
+      valueTo = yaml.eval("[ " .. valueTo .. " ]")
+    elseif not stringSet[key] then
+      value = tonumber(value)
+      --
+      valueTo =  obj.fieldTo.text
+      valueTo = tonumber(valueTo)
+    end
+    props[#props + 1] = {name = obj.text, value = value}
+    if valueTo then
+      propsTo[#propsTo + 1] = {name = obj.text, value = valueTo}
+    end
   end
-  return props
+  return props, propsTo
 end
-
 
 -- "levels", "blur.vertical","blur.horixaontal" "add"
 -- "vertical", "horizontal"
-
-
-local colorSet = table:mySet{"color", "darkColor", "lightColor", "color1", "color2", " dirLightColor", " pointLightColor"}
-M.colorSet = colorSet
 
 function M:setValue(fooValue)
   local props = {}
@@ -115,31 +245,31 @@ function M:setValue(fooValue)
           print("", name:sub(2), value)
           local _name = name:sub(2)
           if colorSet[_name] then
-            prop = {name=_name, value=basePropsControl._yamlValue("color", value)}
+            prop = {name = _name, value = basePropsControl._yamlValue("color", value)}
           else
-            prop = {name=_name, value=basePropsControl._yamlValue(_name, value, params)}
+            prop = {name = _name, value = basePropsControl._yamlValue(_name, value, params)}
           end
           -- print("","", prop.value)
-          props[#props+1] = prop
+          props[#props + 1] = prop
         end
       elseif k == "effect" then
-        prop = {name="_effect", value=basePropsControl._yamlValue(k, v, params)}
-        props[#props+1] = prop
+        prop = {name = "_effect", value = basePropsControl._yamlValue(k, v, params)}
+        props[#props + 1] = prop
       elseif k == "type" then
-        prop = {name="_type", value=basePropsControl._yamlValue(k, v, params)}
-        props[#props+1] = prop
+        prop = {name = "_type", value = basePropsControl._yamlValue(k, v, params)}
+        props[#props + 1] = prop
       else
-        prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
-        props[#props+1] = prop
+        prop = {name = k, value = basePropsControl._yamlValue(k, v, params)}
+        props[#props + 1] = prop
       end
     end
   end
   --
-  local function compare(a,b)
+  local function compare(a, b)
     return a.name < b.name
   end
   --
-  table.sort(props,compare)
+  table.sort(props, compare)
   self.props = props
 end
 
@@ -149,13 +279,16 @@ function M:show(skip)
     header.isVisible = false
     return
   end
-  for i=1, #self.objs do
+  for i = 1, #self.objs do
     self.objs[i].isVisible = true
     if self.objs[i].rect then
       self.objs[i].rect.isVisible = true
     end
     if self.objs[i].field then
       self.objs[i].field.isVisible = true
+    end
+    if self.objs[i].fieldTo then
+        self.objs[i].fieldTo.isVisible = true
     end
     if self.objs[i].actionbox then
       self.objs[i].actionbox:show()
@@ -168,20 +301,24 @@ function M:show(skip)
   -- if skip == nil then
   --   self:hide(true)
   -- end
-
 end
 
 function M:hide(skip)
   -- print("hide", self.name)
   -- print(debug.traceback())
-  if self.objs == nil then return end
-  for i=1, #self.objs do
+  if self.objs == nil then
+    return
+  end
+  for i = 1, #self.objs do
     self.objs[i].isVisible = false
     if self.objs[i].rect then
       self.objs[i].rect.isVisible = false
     end
     if self.objs[i].field then
       self.objs[i].field.isVisible = false
+    end
+    if self.objs[i].fieldTo then
+        self.objs[i].fieldTo.isVisible = false
     end
     if self.objs[i].actionbox then
       self.objs[i].actionbox:hide()
@@ -192,6 +329,32 @@ function M:hide(skip)
   if skip == nil then
     header.isVisible = false
   end
+end
+
+function M:destroy()
+  if self.objs then
+    for i=1, #self.objs do
+      if self.objs[i].rect then
+        self.objs[i].rect:removeSelf()
+      end
+      if self.objs[i].field then
+        self.objs[i].field:removeSelf()
+      end
+      if self.objs[i].fieldTo then
+        self.objs[i].fieldTo:removeSelf()
+      end
+
+      if self.objs[i].actionbox then
+        self.objs[i].actionbox:destroy()
+      end
+      if self.objs[i].radioGroup then
+        self.objs[i].radioGroup:removeSelf()
+      end
+      self.objs[i]:removeSelf()
+    end
+    self.objs = nil
+  end
+
 end
 
 return M

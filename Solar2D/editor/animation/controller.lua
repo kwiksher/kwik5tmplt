@@ -161,7 +161,7 @@ function M:useClassEditorProps(UI)
     end
   end
 
-  local filterProperties = filterProps:getValue()
+  local filterProperties, filterPropertiesTo = filterProps:getValue()
   if #filterProperties ~= 0 then
     local util = require("lib.util")
     local params = {}
@@ -175,9 +175,18 @@ function M:useClassEditorProps(UI)
         params[name] = filterProperties[i].value
       end
     end
-    print("@@@", params.type)
+    --
     props[params.type] = params
     props.from = params
+    -- printTable(props.from)
+    --
+    params = {}
+    for i=1, #filterPropertiesTo do
+      local name = filterPropertiesTo[i].name
+      params[name] = filterPropertiesTo[i].value
+    end
+    props.to = params
+    --
   end
 
   --from
@@ -189,7 +198,7 @@ function M:useClassEditorProps(UI)
   end
   props.actions = {onComplete = actionbox.getValue("onComplete")} --selectedTextLabel
   --breadcrumbs
-  printTable(props)
+  -- printTable(props, true)
   return props
 end
 

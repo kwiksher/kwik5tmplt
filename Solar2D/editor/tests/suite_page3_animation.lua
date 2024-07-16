@@ -89,10 +89,27 @@ function M.test_new_filter()
   helper.selectLayer("ball")
   helper.selectIcon("Animations", "Filter")
 
-  helper.clickProp(filterProps.objs, "_effect")
-  -- helper.clickProp(picker.objs, "chromaKey")
-  helper.clickProp(picker.buttonObjs, "generator")
-  helper.clickProp(picker.objs, "checkerboard")
+  --helper.clickProp(filterProps.objs, "_effect")
+  --helper.clickProp(picker.objs, "chromaKey")
+
+  if false then
+    helper.clickProp(picker.buttonObjs, "generator")
+    helper.clickProp(picker.objs, "checkerboard")
+    -- checker animation
+    helper.setProp(filterProps.objs, "xStep", 4)
+    helper.setProp(filterProps.objs, "yStep", 4)
+  end
+
+  --bloom animation
+  helper.setProp(filterProps.objs, "add_alpha", 0.2)
+  helper.setProp(filterProps.objs, "blur_vertical_blurSize", 5)
+  helper.setProp(filterProps.objs, "blur_horizontal_blurSize", 5)
+  helper.setProp(filterProps.objs, "levels_white", 0.2)
+
+
+
+  helper.setProp(classProps.objs, "animation", "true")
+
 
 
   --helper.setProp(pathProps.objs, "_filename", "path1_Shape_Path_closed.json")

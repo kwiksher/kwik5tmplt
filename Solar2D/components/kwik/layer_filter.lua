@@ -1,37 +1,50 @@
 local M = {}
 local json  = require ("json")
+require("extlib.transitionfilter")
 --
-function M:applyFilterTable(name, effect, UI)
-  print(name)
-  if effect then
-     self.filterTable[name].set(effect)
+function M:applyFilterTable(obj)
+  local UI = self.UI
+  if obj then
+     if self.composite then
+      self.filterTable:set(self.effect, obj.fill)
+     else
+      self.filterTable:set(self.effect, obj.fill.effect)
+     end
 
+-- obj.fill.effect.levels.white = 0.8
+-- obj.fill.effect.levels.black = 0.4
+-- obj.fill.effect.levels.gamma = 1
       -- effect.color1 = { 0.8, 0, 0.2, 1 }
       -- effect.color2 = { 0.2, 0.2, 0.2, 1 }
       -- effect.xStep = 8
       -- effect.yStep = 8
 
-      print(json.encode(effect.color1))
-      print(json.encode(effect.color2))
-      print(effect.xStep)
-      print(effect.yStep)
+      -- print(json.encode(effect.color1))
+      -- print(json.encode(effect.color2))
+      -- print(effect.xStep)
+      -- print(effect.yStep)
 
   else
     local param = {}
-    if self.animation then
-      param.time   = self.duration
-      param.delay  = self.delay
-      param.filterTable = self.filterTable[name]
-      param.loop = self.loop
+    if self.properties.animation then
+      param.effect = self.effect
+      param.filterTable = self.filterTable
+      param.time   = self.properties.duration
+      param.delay  = self.properties.delay/1000
+      param.loop = self.properties.loop
       -- param.effectTo = filterTable[name].get()
       -- param.effectFrom = {}
       -- filterTable[name].set(param.effectFrom)
       param.onComplete = function()
-        if self.action.onComplete then
-          Runtime:dispatchEvent({name=UI.page..self.action.onComplete, event={}, UI=UI})
+        if self.actions.onComplete then
+          Runtime:dispatchEvent({name=UI.page..self.actions.onComplete, event={}, UI=UI})
         end
       end
+     if self.composite then
+      param.alpha = self.filterTable.to.alpha
+     end
     end
+    -- printTable(param)
     return param
   end
 end
@@ -43,6 +56,7 @@ function M:create(UI)
   local layer       = UI.layer
   local sceneGroup = UI.sceneGroup
   local obj = sceneGroup[self.layer]
+  self.UI = UI
 
   if obj == nil then return end
 
@@ -54,13 +68,14 @@ function M:create(UI)
     self.effect = "composite."..self.composite.effect
   end
   --
-  if self.animation then
+  print("self.animation", self.properties.animation)
+  if self.properties.animation then
     obj:addEventListener( "playFilterAnim", function()
       if not self.autoPlay then
         --
         if self.filter then
           obj.fill.effect = self.effect
-          self:applyFilterTable(self.effect, obj.fill.effect)
+          self:applyFilterTable(obj)
         elseif self.generator then
           if self.effect == "generator.marchingAnts" then
             obj.strokeWidth = 2
@@ -68,7 +83,7 @@ function M:create(UI)
           else
             obj.fill.effect = self.effect
           end
-          self:applyFilterTable(self.effect, obj.fill.effect)
+          self:applyFilterTable(obj)
         else
           local folder = UI.props.imgDir
           if self.composite.folder then
@@ -83,13 +98,13 @@ function M:create(UI)
           obj.fill.effect = self.effect
           --
           if self.composite.name == "composite.normalMapWith1PointLight" or self.composite.name == "composite.normalMapWith1DirLight" then
-            self:applyFilterTable(self.effect, obj.fill.effect)
+            self:applyFilterTable(obj)
           elseif self.composite then
-            self:applyFilterTable(self.effect, obj.fill)
+            self:applyFilterTable(obj)
           end
         end
       end
-      transition.kwikFilter(obj, self:applyFilterTable(self.effect, nil, UI) )
+      transition.kwikFilter(obj, self:applyFilterTable(nil) )
     end)
   end
 end
@@ -97,14 +112,14 @@ end
 function M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   local obj = sceneGroup[self.layer]
-
---
-  if self.autoPlay then
+  local animation = self.properties.animation == "true"
+  --
+  if self.properties.autoPlay then
     if self.filter then
       obj.fill.effect = self.effect
-      self:applyFilterTable(self.effect, obj.fill.effect)
-      if self.animation then
-        transition.kwikFilter(obj, self:applyFilterTable(self.effect, nil, UI) )
+      self:applyFilterTable(obj)
+      if animation then
+        transition.kwikFilter(obj, self:applyFilterTable(nil) )
       end
     elseif self.generator then
       if self.generator.name == "generator.marchingAnts" then
@@ -113,9 +128,9 @@ function M:didShow(UI)
       else
         obj.fill.effect = self.effect
       end
-      self:applyFilterTable(self.effect, obj.fill.effect)
-      if self.animation then
-        transition.kwikFilter(obj, self:applyFilterTable(self.effect, nil, UI) )
+      self:applyFilterTable(obj)
+      if animation then
+        transition.kwikFilter(obj, self:applyFilterTable(nil) )
       end
     else
       local folder = UI.props.imgDir
@@ -124,22 +139,21 @@ function M:didShow(UI)
       end
       local compositePaint = {
           type="composite",
-          paint1={ type="image", filename=folder..self.paint1, baseDir=UI.props.systemDir },
-          paint2={ type="image", filename=folder..self.paint2, baseDir=UI.props.systemDir }
+          paint1={ type="image", filename=folder..self.composite.paint1, baseDir=UI.props.systemDir },
+          paint2={ type="image", filename=folder..self.composite.paint2, baseDir=UI.props.systemDir }
       }
       obj.fill = compositePaint
       obj.fill.effect = self.effect
 
       if self.composite.name == "composite.normalMapWith1PointLight" or self.composite.name == "composite.normalMapWith1DirLight" then
-        self:applyFilterTable(self.effect, obj.fill.effect)
-        if self.animation then
-            transition.kwikFilter(obj, self:applyFilterTable(self.effect, nil, UI) )
+        self:applyFilterTable(obj)
+        if animation then
+            transition.kwikFilter(obj, self:applyFilterTable(nil) )
         end
       elseif self.composite then
-        self:applyFilterTable(self.effect, obj.fill)
-        if self.animation then
-            local param = self:applyFilterTable(self.effect, nil, UI)
-            transition.to(obj, {time = param.time, delay = param.delay, alpha = param.effect.alpha} )
+        self:applyFilterTable(obj)
+        if animation then
+            transition.to(obj, self:applyFilterTable(nil) )
         end
       end
     end
@@ -152,21 +166,8 @@ end
 M.set = function(props)
   -- for k, v in pairs(props) do print(k, v) end
   local layer_filterTable = require("editor.template.components.pageX.animation.layer_filterTable")
-
-  local filterProps = require("editor.animation.filterProps")
-  local basePropsControl = require("editor.parts.basePropsControl")
-  local yaml = require("server.yaml")
-
-    for k, v in pairs(props.from) do
-    if filterProps.colorSet[k]  then
-      print(v)
-      local value = yaml.eval('[ '..v..' ]' )
-      print(k, value[1], value[2], value[3], value[4])
-      props.from[k] ={value[1]/255, value[2]/255, value[3]/255, value[4]}
-    end
-  end
   local instance = setmetatable( {to=props.to, from=props.from}, {__index=layer_filterTable} )
-  props.filterTable = instance.filterTable
+  props.filterTable = instance
   return setmetatable(props, {__index = M})
 end
 
