@@ -6,6 +6,8 @@ local M = {
 
 --
 function M:set(name, effect, value)
+  -- print(name, effect, value)
+  -- for k, v in pairs(self.from) do print(k, v) end
   self.filterTable[name].set(effect, value or self.from)
 end
 
@@ -961,6 +963,7 @@ M.filterTable["composite.lighten"] = {
 M.filterTable["composite.linearLight"] = {
   set = function(effect, value)
     if value then
+      -- print(value.alpha, type(value.alpha))
       effect.alpha = value.alpha
     end
   end,

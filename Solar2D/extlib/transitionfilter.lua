@@ -20,7 +20,7 @@ end
 function makeDiff(from, to)
     local diff_table = {}
     for k, v in pairs(from) do
-      print("", k)
+      -- print("", k)
       if type(v) == "table" then  -- v = {0.1, 0.2. 0.3}
         if util.isArray(v) then
           local ret = {}
@@ -32,7 +32,7 @@ function makeDiff(from, to)
           --diff_table[k] = makeDiff(v ,to[k])
         end
       elseif type(v) == "number" then
-        print(k, to[k], v)
+        -- print(k, to[k], v)
           diff_table[k] = to[k]-v
       end
     end
@@ -82,11 +82,11 @@ function transition.kwikFilter(obj, params)
 
   local from =   params.filterTable.from
   local to = params.filterTable.to
-  print("--------from")
-  printTable(from)
-  print("--------to")
-  printTable(to)
-  -- local to = params.filterTable.get()
+  -- print("--------from")
+  -- printTable(from)
+  -- print("--------to")
+  -- printTable(to)
+  -- -- local to = params.filterTable.get()
   params.filterTable:set(params.effect, from)
   local diffTable = makeDiff(from, to)
   local t = nil ;

@@ -6,7 +6,7 @@ local util = require("lib.util")
 local basePropsControl = require("editor.parts.basePropsControl")
 
 local yaml = require("server.yaml")
-local stringSet = table:mySet {"_effect", "_type", "image1", "image2", "folder"}
+local stringSet = table:mySet {"_effect", "_type", "paint1", "paint2", "folder"}
 local colorSet =
   table:mySet {"color", "darkColor", "lightColor", "color1", "color2", " dirLightColor", " pointLightColor"}
 --
@@ -32,6 +32,18 @@ io.close(file)
 --
 local data = json.decode(contents)
 --
+
+function M:setActiveProp(layer, class)
+  -- print(layer, class)
+  if layer == nil then return end
+  for i, obj in next, self.objs do
+    if obj.text == self.activeProp then
+      obj.field.text = layer..".png"
+      break
+    end
+  end
+end
+
 function M.getFilterParams(name)
   for i, v in next, data do
     if v.name == name then
@@ -87,17 +99,13 @@ function M:createTable(props)
           self:tapListener(event, "color")
         end
       )
-    elseif prop.name == "imageFile" then
-      -- obj.fieldAlpha = alphaObj.field
-      imageObj = obj
-      obj.targetObject = self.targetObject
-      obj.page = "*" .. UI.page .. "*"
-      obj:addEventListener(
-        "tap",
-        function(event)
-          self:tapListener(event, prop.name)
-        end
-      )
+    elseif prop.name == "paint1" or prop.name == "paint2" then
+      local layerTable = require("editor.parts.layerTable")
+      layerTable.classProps = M
+      obj:addEventListener("tap", function(event)
+        self.activeProp = event.target.text
+        self:tapListener(event, 'layer')
+      end)
     end
     -- Edit
     option.x = rect.x + rect.width / 2
@@ -242,7 +250,7 @@ function M:setValue(fooValue)
       if k == "params" then
         local entries = util.flattenKeys(nil, v)
         for name, value in pairs(entries) do
-          print("", name:sub(2), value)
+          -- print("", name:sub(2), value)
           local _name = name:sub(2)
           if colorSet[_name] then
             prop = {name = _name, value = basePropsControl._yamlValue("color", value)}
@@ -257,6 +265,14 @@ function M:setValue(fooValue)
         props[#props + 1] = prop
       elseif k == "type" then
         prop = {name = "_type", value = basePropsControl._yamlValue(k, v, params)}
+        props[#props + 1] = prop
+      elseif k == "paint1" then
+        local UI = M.UI
+        prop = {name = k, value = UI.editor.currentLayer..".png"}
+        props[#props + 1] = prop
+      elseif k == "folder" then
+        local UI = M.UI
+        prop = {name = k, value = "images/"..UI.page}
         props[#props + 1] = prop
       else
         prop = {name = k, value = basePropsControl._yamlValue(k, v, params)}

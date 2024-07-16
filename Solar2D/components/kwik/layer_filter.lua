@@ -1,12 +1,37 @@
 local M = {}
 local json  = require ("json")
 require("extlib.transitionfilter")
+
+function M:getCompositePaint()
+  local UI = self.UI
+  local folder = UI.props.imgDir
+  if self.composite.folder then
+    folder = "App/"..UI.book.."/assets/"..self.composite.folder.."/"
+  end
+  local path1 = system.pathForFile(folder..self.composite.paint1)
+  local path2 = system.pathForFile(folder..self.composite.paint2)
+  if path1 ==nil or path2 == nil then
+    print("### Error: composite paint1 or paint2", path1, path2)
+    return
+  end
+  local compositePaint = {
+    type="composite",
+    paint1={ type="image", filename=folder..self.composite.paint1, baseDir=UI.props.systemDir },
+    paint2={ type="image", filename=folder..self.composite.paint2, baseDir=UI.props.systemDir }
+    -- paint1={ type="image", filename="assets/images/filters/fx-base-church.png", baseDir=UI.props.systemDir },
+    -- paint2={ type="image", filename="assets/images/filters/fx-base-texture.png", baseDir=UI.props.systemDir },
+  }
+  return compositePaint
+end
 --
 function M:applyFilterTable(obj)
   local UI = self.UI
   if obj then
      if self.composite then
-      self.filterTable:set(self.effect, obj.fill)
+      obj.fill = self:getCompositePaint()
+      obj.fill.effect = self.effect -- "composite.add"
+      self.filterTable:set(self.effect, obj.fill.effect)
+      --obj.fill.effect.alpha = 0.9
      else
       self.filterTable:set(self.effect, obj.fill.effect)
      end
@@ -68,7 +93,7 @@ function M:create(UI)
     self.effect = "composite."..self.composite.effect
   end
   --
-  print("self.animation", self.properties.animation)
+  -- print("self.animation", self.properties.animation)
   if self.properties.animation then
     obj:addEventListener( "playFilterAnim", function()
       if not self.autoPlay then
@@ -84,24 +109,12 @@ function M:create(UI)
             obj.fill.effect = self.effect
           end
           self:applyFilterTable(obj)
-        else
-          local folder = UI.props.imgDir
-          if self.composite.folder then
-            folder = "App/"..UI.book "/assets/images/"..self.composite.folder
-          end
-          local compositePaint = {
-            type="composite",
-            paint1={ type="image", filename=folder..self.paint1, baseDir=UI.props.systemDir },
-            paint2={ type="image", filename=folder..self.paint2, baseDir=UI.props.systemDir }
-          }
-          obj.fill = compositePaint
+        else -- composite
+
+          obj.fill = self:getCompositePaint()
           obj.fill.effect = self.effect
           --
-          if self.composite.name == "composite.normalMapWith1PointLight" or self.composite.name == "composite.normalMapWith1DirLight" then
-            self:applyFilterTable(obj)
-          elseif self.composite then
-            self:applyFilterTable(obj)
-          end
+          self:applyFilterTable(obj)
         end
       end
       transition.kwikFilter(obj, self:applyFilterTable(nil) )
@@ -132,28 +145,34 @@ function M:didShow(UI)
       if animation then
         transition.kwikFilter(obj, self:applyFilterTable(nil) )
       end
-    else
+    else -- composite
       local folder = UI.props.imgDir
       if self.composite.folder then
-        folder = "App/"..UI.book "/assets/images/"..self.composite.folder
+        folder = "App/"..UI.book.. "/assets/"..self.composite.folder.."/"
       end
-      local compositePaint = {
-          type="composite",
-          paint1={ type="image", filename=folder..self.composite.paint1, baseDir=UI.props.systemDir },
-          paint2={ type="image", filename=folder..self.composite.paint2, baseDir=UI.props.systemDir }
-      }
-      obj.fill = compositePaint
-      obj.fill.effect = self.effect
+      -- local compositePaint = {
+      --     type="composite",
+      --     paint1={ type="image", filename=folder..self.composite.paint1, baseDir=UI.props.systemDir },
+      --     paint2={ type="image", filename=folder..self.composite.paint2, baseDir=UI.props.systemDir }
+      -- }
+      -- obj.fill = compositePaint
+      -- obj.fill.effect = self.effect
 
       if self.composite.name == "composite.normalMapWith1PointLight" or self.composite.name == "composite.normalMapWith1DirLight" then
         self:applyFilterTable(obj)
         if animation then
             transition.kwikFilter(obj, self:applyFilterTable(nil) )
         end
-      elseif self.composite then
+      else
         self:applyFilterTable(obj)
         if animation then
-            transition.to(obj, self:applyFilterTable(nil) )
+            -- -- print(" ---- transition.to -----")
+            -- local param = self:applyFilterTable(nil)
+            -- printTable(param)
+            --transition.to(obj, param )
+            --transition.to(obj, {filter ={effect={alpha=0.5}}} )
+            transition.kwikFilter(obj, self:applyFilterTable(nil) )
+
         end
       end
     end
