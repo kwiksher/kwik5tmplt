@@ -16,15 +16,16 @@ local M = {
     -- lunatest.suite("editor.tests.suite_page2_sync2audio", props)
     -- lunatest.suite("editor.tests.suite_page3_drag", props)
     -- lunatest.suite("editor.tests.suite_page3_button", props)
-    lunatest.suite("editor.tests.suite_page3_animation", props)
+    -- lunatest.suite("editor.tests.suite_page3_animation", props)
 
     -- lunatest.suite("editor.tests.suite_page4_physics", props)
+
+    lunatest.suite("editor.tests.suite_page12_canvas", props)
 
     -- lunatest.suite("editor.tests.suite_new_book_page_layer", props)
     -- lunatest.suite("editor.tests.suite_new_shape_transform", props)
     -- lunatest.suite("editor.tests.suite_new_timer", props)
     -- lunatest.suite("editor.tests.suite_new_variable", props)
-    -- lunatest.suite("editor.tests.suite_new_canvas", props)
     -- lunatest.suite("editor.tests.suite_page1_new_audio_timer_group_variable", props)
 
     -- lunatest.suite("editor.tests.bookTest_importer", props)
