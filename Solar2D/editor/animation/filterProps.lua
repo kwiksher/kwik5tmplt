@@ -205,6 +205,7 @@ end
 function M:getValue()
   local props = {}
   local propsTo = {}
+  if self.objs == nil then return end
   for i, obj in next, self.objs do
     local value = obj.field.text
     local valueTo

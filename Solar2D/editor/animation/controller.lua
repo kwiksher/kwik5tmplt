@@ -162,7 +162,7 @@ function M:useClassEditorProps(UI)
   end
 
   local filterProperties, filterPropertiesTo = filterProps:getValue()
-  if #filterProperties ~= 0 then
+  if filterProperties and #filterProperties ~= 0 then
     local util = require("lib.util")
     local params = {}
     for i=1, #filterProperties do
@@ -192,7 +192,7 @@ function M:useClassEditorProps(UI)
 
   --from
   --to
-  if #pointABbox.objs > 0 then
+  if #pointABbox.objs.A > 0 then
     local AB = pointABbox:getValue()
     for i=1, #AB do
       props.from[AB[i].name] = tonumber(AB[i].A )
@@ -201,7 +201,7 @@ function M:useClassEditorProps(UI)
   end
   props.actions = {onComplete = actionbox.getValue("onComplete")} --selectedTextLabel
   --breadcrumbs
-  -- printTable(props, true)
+  printTable(props)
   return props
 end
 

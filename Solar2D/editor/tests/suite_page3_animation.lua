@@ -30,7 +30,7 @@ end
 function M.teardown()
 end
 
-function M.xtest_new_animation()
+function M.test_new_animation()
 
   local actionbox = require("editor.parts.actionbox")
   helper.actionTable = require("editor.action.actionTable")
@@ -149,7 +149,7 @@ function M.xtest_new_filter_generator()
   helper.setProp(classProps.objs, "animation", "true")
 end
 
-function M.test_new_filter_composite()
+function M.xtest_new_filter_composite()
   local classProps = require("editor.parts.classProps")
   local filterProps = require("editor.animation.filterProps")
   local picker      = require("editor.picker.filters")

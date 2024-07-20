@@ -25,7 +25,7 @@ function lib.bootstrap(Props)
         timerStash  = {},
         allAudios   = {kAutoPlay = 5},
         kBidi       = false,
-        goPage      = Props.sceneIndex,
+        goPage      = Props.goPage, -- sceneIndex,
         scenes       = require("App."..Props.name..".index"),
         kAutoPlay   = 0,
         lang        = "en",
