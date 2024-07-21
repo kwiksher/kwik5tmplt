@@ -76,7 +76,7 @@ function M:create(UI)
     local editButton = newText{
       x = newButton.contentBounds.xMax +4,
       y = newButton.y,
-      text = "Set"
+      text = "Edit"
     }
     editButton:setFillColor(1, 1, 0)
     editButton.tap = function(event)self:editHandler(event)end

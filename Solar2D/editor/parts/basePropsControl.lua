@@ -31,7 +31,7 @@ function M._yamlValue(k, v, params)
 
   if value == nil then
     if type(v) == "table" and v~= NIL then
-      if key == "color" then
+      if key == "color" or key =="canvasColor" then
         print(v[1], v[2], v[3], v[4])
         value, yamltype = yaml.getYaml({math.floor(v[1]*255), math.floor(v[2]*255), math.floor(v[3]*255), math.ceil(v[4] * 1000) / 1000})
       elseif key == "boundaries" then
