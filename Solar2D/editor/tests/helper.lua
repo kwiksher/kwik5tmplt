@@ -41,12 +41,35 @@ end
 
 function exports.selectIcon(toolGroup, tool)
   -- local toolbar = UI.editor.toolbar
-  local toolbar = require("editor.parts.toolbar")
-  local obj = toolbar.layerToolMap[toolGroup]
-  obj.callBack{target=obj}
-  if tool then
-    local obj = toolbar.toolMap[obj.id.."-"..tool]
+  if toolGroup == "action" then
+    local obj = UI.editor.actionIcon
     obj.callBack{target=obj}
+  else
+    local toolbar = require("editor.parts.toolbar")
+    local obj = toolbar.layerToolMap[toolGroup]
+    obj.callBack{target=obj}
+    if tool then
+      local obj = toolbar.toolMap[obj.id.."-"..tool]
+      obj.callBack{target=obj}
+    end
+  end
+end
+
+function exports.selectActionGroup(name)
+  local muiName = "action.commandView-"
+  local controller = require("editor.action.controller.index")
+  controller.commandGroupHandler{target={muiOptions={name=muiName..name}}}
+end
+
+function exports.selectActionCommand(class, name)
+  local controller = require("editor.action.controller.index")
+  controller.commandHandler{model={commandClass=class}}
+  local commandbox = require("editor.action.commandbox")
+  for i, obj in next, commandbox.objs do
+    if obj.text == name then
+      obj:tap{numTaps=1}
+      break
+    end
   end
 end
 

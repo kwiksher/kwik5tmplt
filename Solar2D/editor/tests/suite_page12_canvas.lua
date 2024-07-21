@@ -9,9 +9,8 @@ local actionTable = require("editor.action.actionTable")
 local actionCommandTable = require("editor.action.actionCommandTable")
 local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 local actionEditor = require("editor.action.index")
-
 local colorPicker = require("extlib.colorPicker")
-
+local classProps = require("editor.parts.classProps")
 
 local helper = require("editor.tests.helper")
 
@@ -28,16 +27,6 @@ end
 function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
-  -- --
-  -- UI.scene.app:dispatchEvent {
-  --   name = "editor.selector.selectApp",
-  --   UI = UI
-  -- }
-  -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
-  -- useTinyfiledialogs = false -- default
-  ---
-  -- bookTable.commandHandler({book="book"}, nil,  true)
-  -- pageTable.commandHandler({page="page12"},nil,  true)
   selectors.componentSelector.iconHander()
 end
 
@@ -47,10 +36,77 @@ end
 function M.teardown()
 end
 
-function M.test_new_canvas()
+function M.xtest_new_canvas()
   helper.selectLayer("canvas")
   helper.selectIcon("Interactions", "Canvas")
+end
 
+function M.xtest_new_brush_size()
+  helper.selectLayer("brush1")
+  helper.selectIcon("Interactions", "Button")
+
+  helper.selectLayer("brush2")
+  helper.selectIcon("Interactions", "Button")
+
+  helper.selectLayer("brush3")
+  helper.selectIcon("Interactions", "Button")
+end
+
+function M.xtest_new_brush_color()
+  helper.selectLayer("color8")
+  helper.selectIcon("Interactions", "Button")
+
+  helper.selectLayer("color7")
+  helper.selectIcon("Interactions", "Button")
+
+  helper.selectLayer("color6")
+  helper.selectIcon("Interactions", "Button")
+
+  helper.selectLayer("color5")
+  helper.selectIcon("Interactions", "Button")
+
+  helper.selectLayer("color4")
+  helper.selectIcon("Interactions", "Button")
+
+  helper.selectLayer("color3")
+  helper.selectIcon("Interactions", "Button")
+
+  helper.selectLayer("color2")
+  helper.selectIcon("Interactions", "Button")
+
+  helper.selectLayer("color1")
+  helper.selectIcon("Interactions", "Button")
+end
+
+function M.xtest_new_buttons()
+  helper.selectLayer("save1")
+  helper.selectIcon("Interactions", "Button")
+  helper.clickProp(classProps.objs, "over")
+  helper.selectLayer("save2")
+  -- todo new action
+
+  helper.selectLayer("reload1")
+  helper.selectIcon("Interactions", "Button")
+  helper.clickProp(classProps.objs, "over")
+  helper.selectLayer("reload2")
+  -- todo new action
+
+  helper.selectLayer("back1")
+  helper.selectIcon("Interactions", "Button")
+  helper.clickProp(classProps.objs, "over")
+  helper.selectLayer("back2")
+  -- todo new action
+end
+
+function M.test_new_actions_for_buttons()
+  helper.selectIcon("action")
+  helper.selectIcon("action", "Button")
+  actionTable.newButton:tap()
+  helper.selectActionGroup("Interactions")
+  helper.selectActionCommand("canvas", "brush")
+  -- helper.selectActionCommand("canvas", "erase")
+  -- helper.selectActionCommand("canvas", "redo")
+  -- helper.selectActionCommand("canvas", "undo")
 end
 
 function M.xtest_blueBTN_brushColor()
