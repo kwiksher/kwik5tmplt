@@ -20,7 +20,6 @@ function ActionCommand:new()
     local expressions = require("App." .. UI.book.."common.expressions")
 
 {{#actions}}
-
   {{#condition}}
     {{#__if}}
     if {{exp1}}  {{exp1Op}} {{exp1Comp}} {{exp2Cond}}  {{exp2}}  {{exp2Op}} {{exp2Comp}} then
@@ -46,7 +45,6 @@ function ActionCommand:new()
     end
     {{/_end}}
   {{/condition}}
-
   {{#loop}}
     {{#_while}}
       while  {{condition}} do
@@ -72,8 +70,7 @@ function ActionCommand:new()
       until( {{condition}} )
     {{/_until}}
 
-  {{#loop}}
-
+  {{/loop}}
   {{#animation}}
     --
     -- target layer :sceneGroup[layerName]
@@ -94,9 +91,22 @@ function ActionCommand:new()
      AC.Button:onOff("{{target}}", {{enable}}, {{toggle}} ) -- enable, toggle
     {{/onOff}}
   {{/button}}
+  {{#canvas}}
+      local canvas = UI.sceneGroup[UI.canvas]
+      {{#color}}
+      AC.Canvas:brushColor(canvas, {{color}}  )
+      {{/color}}
+      {{#size}}
+      AC.Canvas:brushSize(canvas, {{size}}  )
+      {{/size}}
+  {{/canvas}}
 {{/actions}}
 	end
 	return setmetatable( command, {__index=AC})
 end
+--
+ActionCommand.model = [[
+{{model}}
+]]
 --
 return ActionCommand

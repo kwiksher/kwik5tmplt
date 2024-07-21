@@ -63,7 +63,7 @@ function M:create(UI)
       y = self.y + 4,
       text = "New"
     }
-    newButton:setFillColor(1, 1, 0)
+    newButton:setFillColor(0, 1, 0)
 
     newButton.rect = display.newRect(self.group, newButton.x, newButton.y, newButton.width, newButton.height)
     newButton.rect:setFillColor(0.8)
@@ -78,7 +78,7 @@ function M:create(UI)
       y = newButton.y,
       text = "Edit"
     }
-    editButton:setFillColor(1, 1, 0)
+    editButton:setFillColor(0, 1, 0)
     editButton.tap = function(event)self:editHandler(event)end
     editButton:addEventListener("tap", editButton)
     -- editButton.rect = display.newRect(self.group, editButton.x, editButton.y, editButton.width, editButton.height)
@@ -86,6 +86,16 @@ function M:create(UI)
     -- editButton.rect.anchorX = 0
     editButton.alpha = 1
     -- editButton.rect.alpha = 0
+
+    local registerButton = newText{
+      x = newButton.contentBounds.xMax +44,
+      y = newButton.y,
+      text = "Regist"
+    }
+    registerButton:setFillColor(0, 1, 0)
+    registerButton.tap = function(event)self:registerHandler(event)end
+    registerButton:addEventListener("tap", registerButton)
+    registerButton.alpha = 1
 
     for i = 1, #models do
       option.text = models[i]
@@ -124,7 +134,7 @@ function M:create(UI)
       newButton.rect.height = objs[#objs-1].rect.height
     end
 
-    return objs, newButton, editButton
+    return objs, newButton, editButton, registerButton
   end
 
   UI.editor.actionStore:listen(
@@ -132,7 +142,7 @@ function M:create(UI)
       -- print(debug.traceback())
       self:destroy()
       if fooValue then
-        self.objs, self.newButton, self.editButton = render(fooValue,0,0)
+        self.objs, self.newButton, self.editButton, self.registerButton = render(fooValue,0,0)
         -- if #fooValue == 0 then
         --   self:hide()
         -- end
@@ -183,6 +193,7 @@ function M:destroy()
   if self.newButton then
     self.newButton:removeSelf()
     self.editButton:removeSelf()
+    self.registerButton:removeSelf()
     self.newButton = nil
   end
 end

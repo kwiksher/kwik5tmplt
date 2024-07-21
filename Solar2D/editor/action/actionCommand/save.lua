@@ -1,18 +1,23 @@
 local AC = require("commands.kwik.actionCommand")
 local json = require("json")
 local actionCommandTable = require("editor.action.actionCommandTable")
+local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
+local actionButtons = require("editor.action.buttons")
+
 local util = require("editor.util")
 local controller = require("editor.action.controller.index")
 local scripts = require("editor.scripts.commands")
+local picker             = require("editor.picker.name")
+
 --
 local command = function (params)
 	local UI    = params.UI
   local page = params.page or UI.page
   print("actionCommand.save")
   UI.editor.actionEditor:hideCommandPropsTable(true)
-  UI.editor.actionEditor.viewStore.actionButtons:show()
+  actionButtons:show()
   --
-  local props, selected = UI.editor.actionEditor.viewStore.actionCommandPropsTable:getValue()
+  local props, selected = actionCommandPropsTable:getValue()
   print("",selected, json.encode(props))
   ---
   local actions = actionCommandTable.actions
@@ -30,7 +35,7 @@ local command = function (params)
   --
   --local updatedModel = util.createIndexModel(UI.scene.model, "", "")
   local updatedModel = util.createIndexModel(UI.scene.model)
-  local nameText     = UI.editor.actionEditor.selectbox.selectedObj.text
+  local nameText     = picker.obj.field.text
   local currentIndex = UI.editor.currentActionCommandIndex
   local files = {}
 

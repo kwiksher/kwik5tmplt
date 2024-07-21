@@ -253,7 +253,9 @@ function exports.newTextField(option)
       textField:addEventListener( "userInput", function() print("userInput") end )
       --native.setKeyboardFocus( textField )
       textField.text = option.text
-      option.parent:insert(textField)
+      if option.parent then
+        option.parent:insert(textField)
+      end
       return textField
 end
 

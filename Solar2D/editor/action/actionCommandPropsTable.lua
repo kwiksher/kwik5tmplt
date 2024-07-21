@@ -156,7 +156,7 @@ function M:create(UI)
           if alphaObj then
             obj.fieldAlpha = alphaObj.field
           end
-          obj:addEventListener("tap", function(event) basePropsControl.tapListener(event, "color") end)
+          obj:addEventListener("tap", function(event) basePropsControl.handler.color(event) end)
         end
         option.x = posX + option.width
         option.text = basePropsControl._yamlValue(entry.name, entry.value)

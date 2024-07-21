@@ -21,6 +21,7 @@ function M:onKeyEvent(event)
 end
 
 function M:singleClickEvent(obj)
+  print("------- singleClickEvent ----- ")
   local target = obj
   local UI = self.UI
   layerTableCommands.clearSelections(self, "actionCommand")

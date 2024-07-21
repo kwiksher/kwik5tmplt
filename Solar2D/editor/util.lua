@@ -377,19 +377,19 @@ function M.saveLua(tmplt, dst, _model, partial)
   local path = system.pathForFile(tmplt, system.ResourceDirectory)
   local file, errorString = io.open(path, "r")
   if not file then
-    print("File error: " .. errorString)
+    print("ERROR:" .. errorString)
     return nil
   else
     local contents = file:read("*a")
     io.close(file)
-    print(json.encode(model))
+    print(json.encode(model.events))
     -- print(contents)
     local output = lustache:render(contents, model, partial)
     local path = system.pathForFile(dst, system.TemporaryDirectory) --system.TemporaryDirectory)
     --print(path)
     local file, errorString = io.open(path, "w+")
     if not file then
-      print("File error: " .. errorString)
+      print("ERROR:" .. errorString)
     else
       output = string.gsub(output, "\r\n", "\n")
       output = output:gsub("&#x2F;", "/")
@@ -414,7 +414,7 @@ function M.writeLines(_path, lines)
   local file, errorString = io.open(path, "w")
   if not file then
     -- Error occurred; output the cause
-    print("File error: " .. errorString)
+    print("ERROR: " .. errorString)
   else
     for i, l in ipairs(lines) do io.write(l, "\n") end
     io.close(file)
@@ -431,7 +431,7 @@ function M.saveJson(_path, _model)
   local file, errorString = io.open(path, "w")
   if not file then
     -- Error occurred; output the cause
-    print("File error: " .. errorString)
+    print("ERROR: " .. errorString)
     return false
   else
     -- Write encoded JSON data to file
@@ -652,8 +652,10 @@ function M.renderIndex(book, page, model)
   local dst = "App/" .. book .. "/components/" .. page .. "/index.lua"
   --local dst = "index.lua"
   local tmplt = "editor/template/components/pageX/index.lua"
-  local n = ""
 
+  M.mkdir("App", book, "components", page)
+
+  local n = ""
   local function getRecursive(n)
     return [[
     {

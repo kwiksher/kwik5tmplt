@@ -6,7 +6,7 @@ local widget = require("widget")
 local actionCommandTableListener = require(parent.."actionCommandtableListener")
 local util = require("lib.util")
 
-M.top = 22
+M.top = display.contentCenterY-- 22
 M.left = nil
 M.width = 136
 M.height = 240
