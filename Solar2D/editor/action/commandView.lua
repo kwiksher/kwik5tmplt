@@ -1,6 +1,6 @@
 local name = ...
 local parent,root, M = newModule(name)
-M.width  = display.contentWidth*0.5
+M.width  = 136
 M.height = 240
 M.top    = nil
 M.left   = nil -- display.contentCenterX --  - 480*0.5 - M.width
@@ -15,7 +15,8 @@ local controller     = require(parent.."controller.index")
 local util = require("lib.util")
 
 local option, newText = util.newTextFactory{
-  width    = 100,
+  width    = M.width,
+  fontSize = 11,
   height   = 16,
 }
 
@@ -23,21 +24,19 @@ function M:createTable(parent)
   local UI = self.UI
   --
   -- self.left = UI.editor[self.groupName].selectAction.rect.contentBounds.xMin
-  self.top  = display.contentCenterY
+  self.top  = self.y or display.contentCenterY
   -- UI.editor[self.groupName].selectAction.y + 100
 
-  self.left = UI.editor.viewStore.actionCommandTable.left
+  self.left = self.x or UI.editor.viewStore.actionCommandTable.left
   -- + UI.editor.viewStore.actionCommandTable.width
   -- print("@@@@", UI.editor.viewStore.actionCommandTable.left, UI.editor.viewStore.actionCommandTable.width)
 
-
-  self.y = self.top
   --
   local scrollListener  = function(e) end
   local  scrollView = widget.newScrollView{
        top                    = self.top,
        left                   = self.left, --display.contentCenterX-200,
-       width                  = 100,
+       width                  = self.width,
        height                 = 240,
     -- height                 = #models*18,
        scrollWidth            = display.contentWidth*0.5,
@@ -63,7 +62,7 @@ function M:createTable(parent)
       y         = count*18,
       width     = 110,
       height    = 22,
-      fontSize  = 12,
+      fontSize  = 10,
       iconSize  = 20,
       listener  = controller.commandGroupHandler,
       fillColor = {1.0}
@@ -101,8 +100,8 @@ function M:createTable(parent)
         -- }
         --
         option.text = entry.name
-        option.x = 80
-        option.y = option.height * count + 14
+        option.x = 120
+        option.y = option.height * count + 30
         --
         local obj = newText(option)
         obj.name = entry.name
@@ -125,7 +124,11 @@ function M:set(models, commandMap)
   self.commandMap = commandMap
 end
 
-function M:init(UI)
+function M:init(UI,x ,y, models, commandMap)
+  self.x = x
+  self.y = y
+  self.models = models
+  self.commandMap = commandMap
 end
 
 function M:createCommandview()

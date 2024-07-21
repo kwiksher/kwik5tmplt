@@ -22,6 +22,7 @@ local muiData = require("materialui.mui-data")
 local models         = require(parent.."model").menu
 local controller     = require(parent.."controller.index")
 local commandView    = require(parent.."commandView")
+local actionCommandTable = require(parent.."actionCommandTable")
 local selectbox      = require(root.."parts.selectbox"):newInstance()
 local toolbar        = require(root .."parts.toolbar")
 local selectors      = require(root.."parts.selectors")
@@ -148,7 +149,7 @@ function M:create(UI)
   -----------------------------------------
 
   -- self:createCommandview()
-  commandView:set(models, self.commandMap)
+  commandView:init(UI, actionCommandTable.left, 22, models, self.commandMap)
 
   UI.editor.actionEditor = self
   --

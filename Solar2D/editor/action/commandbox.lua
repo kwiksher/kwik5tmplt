@@ -10,7 +10,7 @@ M.x = display.contentCenterX*0.5
 M.y = display.actualContentHeight - 30
 M.width = 96
 M.top = 22
-M.left = display.contentCenterX -480/2 + 4
+M.left = display.contentCenterX +480/4
 ---------------------------
 -- animation = {
 --   pause = {target = ""},
@@ -25,7 +25,7 @@ function M:setPosition(entries, model)
   -- self.x = self.x
   -- self.y = display.actualContentHeight- math.max(#entries, #model) * 20 -50
   self.y = 22
-  self.selectedText.x = self.x
+  self.selectedText.x = self.left
   self.selectedText.y = self.y
 
   if self.scrollView then

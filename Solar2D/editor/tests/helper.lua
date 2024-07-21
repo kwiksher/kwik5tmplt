@@ -73,6 +73,16 @@ function exports.selectActionCommand(class, name)
   end
 end
 
+function exports.hasObj(tbl, name)
+  if tbl.objs == nil then return false end
+  for i, obj in next, tbl.objs do
+    if obj.text == name then
+      return true
+    end
+  end
+  return false
+end
+
 function exports.clickProp(objs, name)
   for i, obj in next, objs do
     if obj.text == name then
@@ -99,6 +109,17 @@ function exports.clickAsset(objs, name)
    end
   end
 end
+
+function exports.singelClick(tbl, name)
+  for i, obj in next, tbl.objs do
+    print(obj.text, name, obj.text == name)
+    if obj.text == name then
+      tbl:singleClickEvent(obj)
+      return
+    end
+  end
+end
+
 
 function exports.touchAction(name)
   local actionTable = actionTable or exports.actionTable
@@ -228,8 +249,9 @@ function exports.getPage(name, isRightClick)
   end
 end
 
-function exports.clickButton(name)
-  for i, v in next, buttons.objs do
+function exports.clickButton(name, actionButtons)
+  local _buttons = actionButtons or buttons
+  for i, v in next, _buttons.objs do
     -- print(v.text)
     if v.eventName == name then -- {name="add", label="->"}
         if v.rect.tap then

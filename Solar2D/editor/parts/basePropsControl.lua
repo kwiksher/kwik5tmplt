@@ -189,7 +189,7 @@ local function tapListenerColor(event)
       obj.field.text = M._yamlValue("color", {r, g, b, a})
       -- obj.field.text = M._yamlValue("color", {RGB[1],RGB[2], RGB[3], a})
     end
-    if M.enableFillColor then
+    if M.enableFillColor and obj.targetObject then
       obj.targetObject:setFillColor(r, g, b, a)
     end
 
@@ -200,6 +200,10 @@ local function tapListenerColor(event)
     eyedropper:show()
   else
     local fieldText = obj.field.text
+    if fieldText == "" or fieldText ==nil then
+      fieldText = "1,1,1,1"
+    end
+    print("@@@@", fieldText)
     local value = '[ '..fieldText..' ]'
     value = yaml.eval(value)
     --

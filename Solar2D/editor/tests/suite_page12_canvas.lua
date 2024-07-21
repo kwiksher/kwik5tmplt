@@ -11,7 +11,10 @@ local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 local actionEditor = require("editor.action.index")
 local colorPicker = require("extlib.colorPicker")
 local classProps = require("editor.parts.classProps")
-
+----
+local buttons = require("editor.action.buttons")
+local actionCommandButtons = require("editor.action.actionCommandButtons")
+----
 local helper = require("editor.tests.helper")
 
 function M.init(props)
@@ -21,6 +24,7 @@ function M.init(props)
   pageTable = props.pageTable
   layerTable = props.layerTable
   props.actionTable = actionTable
+  props.buttons = buttons
   helper.init(props)
 end
 
@@ -98,17 +102,50 @@ function M.xtest_new_buttons()
   -- todo new action
 end
 
-function M.test_new_actions_for_buttons()
+function M.xtest_get_action()
   helper.selectIcon("action")
-  helper.selectIcon("action", "Button")
-  actionTable.newButton:tap()
-  helper.selectActionGroup("Interactions")
-  helper.selectActionCommand("canvas", "brush")
+  if helper.hasObj(actionTable, "brushBlack") then
+    helper.clickAsset(actionTable.objs, "brushBlack")
+    actionTable.editButton:tap()
+  end
+end
+
+function M.test_modify_action()
+  helper.selectIcon("action")
+  if helper.hasObj(actionTable, "brushBlack") then
+    helper.clickAsset(actionTable.objs, "brushBlack")
+    actionTable.editButton:tap()
+    helper.singelClick(actionCommandTable, "canvas.brush")
+  end
+end
+
+function M.xtest_new_action_for_buttons()
+  local picker = require("editor.picker.name")
+  --
+  if not helper.hasObj(actionTable, "brushBlack") then
+    helper.selectIcon("action")
+    actionTable.newButton:tap()
+    picker:continue("brushBlack")
+    helper.selectActionGroup("Interactions")
+    helper.selectActionCommand("canvas", "brush")
+    helper.setProp(actionCommandPropsTable.objs, "color", "0,0,0,1")
+    -- helper.clickButton("save", actionCommandButtons)
+  end
+
+  if not helper.hasObj(actionTable, "brushErase") then
+    helper.selectIcon("action")
+    actionTable.newButton:tap()
+    picker:continue("brushErase")
+    helper.selectActionGroup("Interactions")
+    helper.selectActionCommand("canvas", "erase")
+    -- helper.clickButton("save", actionCommandButtons)
+  end
+
   -- helper.selectActionCommand("canvas", "erase")
   -- helper.selectActionCommand("canvas", "redo")
   -- helper.selectActionCommand("canvas", "undo")
 end
-
+--
 function M.xtest_blueBTN_brushColor()
   UI.testCallback = function()
     selectors.componentSelector:onClick(true,  "actionTable")

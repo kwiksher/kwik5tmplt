@@ -91,6 +91,8 @@ local command = function (params)
   commandbox:show()
   actionCommandButtons:show()
 
+  UI.editor.viewStore.commandView:toFront()
+
 end
 --
 local instance = AC.new(command)

@@ -22,7 +22,7 @@ local function saveScript(filename, model)
   local cmdFile
 
   if not file then
-    print("File error: " .. errorString)
+    print("ERROR: " .. errorString)
   else
     local contents = file:read("*a")
     io.close(file)
@@ -34,7 +34,7 @@ local function saveScript(filename, model)
     --print(path)
     local file, errorString = io.open(path, "w+")
     if not file then
-      print("File error: " .. errorString)
+      print("ERROR: " .. errorString)
     else
       output = string.gsub(output, "\r\n", "\n")
       file:write(output)
@@ -363,7 +363,7 @@ local function saveSelection(book, page, selections)
 
   if not file then
     -- Error occurred; output the cause
-    print("File error: " .. errorString)
+    print("ERROR: " .. errorString)
   else
     -- Write data to file
     file:write(json.encode(saveData))

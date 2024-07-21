@@ -52,11 +52,14 @@ function M:selectHandler(target)
     }
 
   else
+    self.lastTarget = target
     -- print("setActiveProp", target.action)
     if layerTableCommands.singleSelection(self, target) then
-      self.actionbox:setActiveProp(target.action) -- nil == activeProp
+      if self.actionbox then
+        self.actionbox:setActiveProp(target.action) -- nil == activeProp
+      end
     else
-      print("Error for setting activeProp")
+      print("WARNING: setting activeProp")
       self:hide()
     end
 
@@ -64,6 +67,18 @@ function M:selectHandler(target)
 end
 -- edit button
 function M:editHandler(target)
+  print("editHandler")
+  if self.lastTarget then
+    print("", self.lastTarget.action)
+    self.UI.scene.app:dispatchEvent {
+      name = "editor.action.selectAction",
+      action = self.lastTarget.action,
+      UI = self.UI
+    }
+  end
+end
+
+function M:registerHandler(target)
   if self.lastTarget then
     if layerTableCommands.showLayerProps(self, self.lastTarget) then
        print("TODO show action props")
