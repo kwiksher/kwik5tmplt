@@ -25,7 +25,7 @@ local command = function (params)
   local action = {command=props.type.."."..(selected or ""), params = {}}
   for i=1, #props.properties do
     local entry = props.properties[i]
-    print(entry.name, entry.value)
+    -- print(entry.name, entry.value)
     if entry.name == '_target' then
       action.params.target = entry.value
     else
@@ -48,44 +48,50 @@ local command = function (params)
     }
     UI.editor.currentAction = newAction
     UI.editor.actionCommandStore:set(newAction)
-    print(json.encode(newAction))
-    -- Update components/pageX/index.lua model/pageX/index.json
-    updatedModel.commands[#updatedModel.commands + 1] = newAction.name
-    --
-    files[#files+1] = util.renderIndex(UI.editor.currentBook, page,updatedModel)
-    files[#files+1] = util.saveIndex(UI.editor.currentBook, page, props.layer,props.class, updatedModel)
-    --
-    -- if name contains '.', should we create a folder? maybe later
-    --
+    --[[
+      print(json.encode(newAction))
+      -- Update components/pageX/index.lua model/pageX/index.json
+      updatedModel.commands[#updatedModel.commands + 1] = newAction.name
+      --
+      files[#files+1] = util.renderIndex(UI.editor.currentBook, page,updatedModel)
+      files[#files+1] = util.saveIndex(UI.editor.currentBook, page, props.layer,props.class, updatedModel)
+      --
+      -- if name contains '.', should we create a folder? maybe later
+      --
+    --]]
   else
-    print("",currentIndex)
+    -- print("",currentIndex)
     actions[currentIndex] = action
     UI.editor.actionCommandStore:set{actions=actions}
-    UI.editor.currentAction = {
-      name= nameText,
-      actions = actions
-    }
-    --
-    local current = updatedModel.commands[currentIndex]
-    -- Update components/pageX/index.lua model/pageX/index.json
-    if current.name ~= nameText then
+    --[[
+      UI.editor.currentAction = {
+        name= nameText,
+        actions = actions
+      }
       --
-      -- TODO
-      -- delete .json, .lua
-      --
-      updatedModel.commands[currentIndex] = UI.editor.currentAction
-      --
-      files[#files+1] = util.renderIndex(UI.editor.currentBook, page, updatedModel)
-      files[#files+1] = util.saveIndex(UI.editor.currentBook, page, props.layer,props.class, updatedModel)
-    end
+      local current = updatedModel.commands[currentIndex]
+      -- Update components/pageX/index.lua model/pageX/index.json
+      if current.name ~= nameText then
+        --
+        -- TODO
+        -- delete .json, .lua
+        --
+        updatedModel.commands[currentIndex] = UI.editor.currentAction
+        --
+        files[#files+1] = util.renderIndex(UI.editor.currentBook, page, updatedModel)
+        files[#files+1] = util.saveIndex(UI.editor.currentBook, page, props.layer,props.class, updatedModel)
+      end
+    --]]
   end
-  -- save lua
-  files[#files+1] = controller:render(UI.editor.currentBook, page, nameText, actions)
-  -- save json
-  files[#files+1] = controller:save(UI.editor.currentBook, page, nameText, {name=nameText, actions = actions})
-  -- publish
-  scripts.backupFiles(files)
-  scripts.copyFiles(files)
+  --[[
+    -- save lua
+    files[#files+1] = controller:render(UI.editor.currentBook, page, nameText, actions)
+    -- save json
+    files[#files+1] = controller:save(UI.editor.currentBook, page, nameText, {name=nameText, actions = actions})
+    -- publish
+    scripts.backupFiles(files)
+    scripts.copyFiles(files)
+  --]]
 
   --[[
     {

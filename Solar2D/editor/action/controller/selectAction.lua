@@ -43,6 +43,8 @@ local command = function (params)
     end
     --UI.editor.actionEditor.selectbox:updateValue(decoded.name)
     showEditor(decoded)
+    picker:create()
+    picker.obj.field.text = decoded.name or params.action
   end
   --
 end

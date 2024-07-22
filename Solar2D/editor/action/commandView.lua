@@ -115,7 +115,7 @@ function M:createTable(parent)
       end
     end
   end
-  print("###", scrollView.x, scrollView.y, scrollView.contentBounds.xMin, scrollView.contentBounds.xMax, scrollView.contentBounds.yMin, scrollView.contentBounds.yMax)
+  -- print("###", scrollView.x, scrollView.y, scrollView.contentBounds.xMin, scrollView.contentBounds.xMax, scrollView.contentBounds.yMin, scrollView.contentBounds.yMax)
   return scrollView
 end
 

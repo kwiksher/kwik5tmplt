@@ -67,9 +67,9 @@ function M:selectHandler(target)
 end
 -- edit button
 function M:editHandler(target)
-  print("editHandler")
+  -- print("editHandler")
   if self.lastTarget then
-    print("", self.lastTarget.action)
+    -- print("", self.lastTarget.action)
     self.UI.scene.app:dispatchEvent {
       name = "editor.action.selectAction",
       action = self.lastTarget.action,

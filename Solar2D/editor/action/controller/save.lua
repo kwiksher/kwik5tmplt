@@ -16,7 +16,7 @@ local command = function (params)
   if UI.editor.actionEditor.selectbox.selectedObj then
     nameText = UI.editor.actionEditor.selectbox.selectedObj.text
   end
-  printTable(UI.editor,currentAction)
+  -- printTable(UI.editor,currentAction)
   if UI.editor.currentAction.isNew then
     table.insert(updatedModel.commands, nameText)
   elseif nameText ~= UI.editor.currentAction.name then

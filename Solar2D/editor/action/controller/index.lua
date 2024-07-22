@@ -143,7 +143,7 @@ end
 --
 -- [{"command":"animation.play","params":{"target":""}}]
 --
-function M:render(book, page, command, props)
+function M:render(book, page, command, actions)
   local dst = "App/"..book.."/commands/"..page .."/"..command..".lua"
   --local dst = layer.."_"..class ..".lua"
   local tmplt =  "editor/template/commands/pageX/actionX.lua"
@@ -153,17 +153,17 @@ function M:render(book, page, command, props)
   --   {animation = {pause = {target="layerTwo", sec=2}}},
   -- }})
   local model ={}
-  -- print(json.encode(props))
-  for i=1, #props do
+  -- print(json.encode(actions))
+  for i=1, #actions do
     local entry = {}
-    local out = util.split(props[i].command, '.')
+    local out = util.split(actions[i].command, '.')
     -- print(unpack(out))
     entry[out[1]] = {}
-    entry[out[1]][out[2]]  = props[i].params
+    entry[out[1]][out[2]]  = actions[i].params
     model[i] = entry
   end
   -- print("###", json.encode(model))
-  util.saveLua(tmplt, dst, {actions = model})
+  util.saveLua(tmplt, dst, { actions = model, encoded = json.encode({name=command, actions=actions})})
   return dst
 end
 

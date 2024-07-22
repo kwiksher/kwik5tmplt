@@ -230,7 +230,7 @@ function M.createIndexModel(_scene, layerName, class)
   --
   --if layerName then
   processLayers(copied.components.layers, 1)
-  print(json.encode(copied.components.groups))
+  -- print(json.encode(copied.components.groups))
   -- local groups = {}
   -- for i, v in next, copied.components.groups do
   --   local entry = {}
@@ -395,6 +395,8 @@ function M.saveLua(tmplt, dst, _model, partial)
       output = output:gsub("&#x2F;", "/")
       output = output:gsub("&#39;", '"')
       output = output:gsub("class={  }", "")
+      output = output:gsub("&quot;", '"')
+
       local formatted = formatter.indentcode(output, "\n", true, "  ")
       if formatted then
         -- print(formatted)

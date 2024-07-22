@@ -23,7 +23,7 @@ local command = function (params)
   local model = {}
   local index = params.index  or 1
 
-  print("selectActionCommand", commandClass)
+  -- print("selectActionCommand", commandClass)
 
   local Layer = table:mySet { "animation", "image", "button" }
 
@@ -68,8 +68,8 @@ local command = function (params)
     -- commandbox.group.y = display.actualContentHeight- #properties * 20 -40
     --
   else
-    print("",  UI.page.."/commands/"..UI.editor.currentAction.name..".json", UI.editor.currentActionCommandIndex)
-    for k, v in pairs(commandClass) do print("###",k, v) end
+    -- print("",  UI.page.."/commands/"..UI.editor.currentAction.name..".json", UI.editor.currentActionCommandIndex)
+    -- for k, v in pairs(commandClass) do print("###",k, v) end
     --
     local out = util.split(commandClass.command, '.')
     type = out[1]

@@ -94,12 +94,12 @@ function M:create(UI)
     function(foo, props)
       M:didHide(UI)
       M:destroy()
-      print("------- actionCommandPropsStore --------")
+      -- print("------- actionCommandPropsStore --------")
       local alphaObj = nil
 
 
       local posX = self.x
-      print("#### commandbox.x", commandbox.x)
+      -- print("#### commandbox.x", commandbox.x)
       -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
       local posY  = self.y
       -- print("actionCommandPropsStore:listen", posX, posY)
