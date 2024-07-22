@@ -90,7 +90,7 @@ function M:create(UI)
     local registerButton = newText{
       x = newButton.contentBounds.xMax +44,
       y = newButton.y,
-      text = "Regist"
+      text = "Attach"
     }
     registerButton:setFillColor(0, 1, 0)
     registerButton.tap = function(event)self:registerHandler(event)end

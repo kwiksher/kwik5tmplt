@@ -8,7 +8,7 @@ function M:setValue(UI, command, model, selected)
   self.command           = command -- animation
   self.model             = model
   self.selectedText.text = command -- audio, animation, image ...
-  print("action command", command)
+  -- print("action command", command)
   -- self.selectedTextValue = nil
   self.selectedIndex     = nil
   self.selectedObj       = nil

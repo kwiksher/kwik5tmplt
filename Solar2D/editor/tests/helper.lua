@@ -112,8 +112,8 @@ end
 
 function exports.singelClick(tbl, name)
   for i, obj in next, tbl.objs do
-    print(obj.text, name, obj.text == name)
-    if obj.text == name then
+    -- print(obj.text:len(), name:len(), obj.text == name)
+    if obj.text:gsub("%s+", "") == name then
       tbl:singleClickEvent(obj)
       return
     end

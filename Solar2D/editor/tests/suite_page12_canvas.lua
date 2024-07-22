@@ -48,38 +48,30 @@ end
 function M.xtest_new_brush_size()
   helper.selectLayer("brush1")
   helper.selectIcon("Interactions", "Button")
+  -- onTap small
 
   helper.selectLayer("brush2")
   helper.selectIcon("Interactions", "Button")
+  -- onTap middle
 
   helper.selectLayer("brush3")
   helper.selectIcon("Interactions", "Button")
+  -- onTap large
 end
 
-function M.xtest_new_brush_color()
+function M.test_new_brush_color()
+  layerTable.controlDown = true
   helper.selectLayer("color8")
-  helper.selectIcon("Interactions", "Button")
-
   helper.selectLayer("color7")
-  helper.selectIcon("Interactions", "Button")
-
   helper.selectLayer("color6")
-  helper.selectIcon("Interactions", "Button")
-
   helper.selectLayer("color5")
-  helper.selectIcon("Interactions", "Button")
-
   helper.selectLayer("color4")
-  helper.selectIcon("Interactions", "Button")
-
   helper.selectLayer("color3")
-  helper.selectIcon("Interactions", "Button")
-
   helper.selectLayer("color2")
-  helper.selectIcon("Interactions", "Button")
-
   helper.selectLayer("color1")
   helper.selectIcon("Interactions", "Button")
+  layerTable.controlDown = false
+  -- each onTap is attached with action brush{Black, Blue, Red, ...}
 end
 
 function M.xtest_new_buttons()
@@ -87,36 +79,19 @@ function M.xtest_new_buttons()
   helper.selectIcon("Interactions", "Button")
   helper.clickProp(classProps.objs, "over")
   helper.selectLayer("save2")
-  -- todo new action
+  -- onTap save(screen shot)
 
   helper.selectLayer("reload1")
   helper.selectIcon("Interactions", "Button")
   helper.clickProp(classProps.objs, "over")
   helper.selectLayer("reload2")
-  -- todo new action
+  -- onTap reload
 
   helper.selectLayer("back1")
   helper.selectIcon("Interactions", "Button")
   helper.clickProp(classProps.objs, "over")
   helper.selectLayer("back2")
-  -- todo new action
-end
-
-function M.xtest_get_action()
-  helper.selectIcon("action")
-  if helper.hasObj(actionTable, "brushBlack") then
-    helper.clickAsset(actionTable.objs, "brushBlack")
-    actionTable.editButton:tap()
-  end
-end
-
-function M.test_modify_action()
-  helper.selectIcon("action")
-  if helper.hasObj(actionTable, "brushBlack") then
-    helper.clickAsset(actionTable.objs, "brushBlack")
-    actionTable.editButton:tap()
-    helper.singelClick(actionCommandTable, "canvas.brush")
-  end
+  -- onTap goto previous page
 end
 
 function M.xtest_new_action_for_buttons()
@@ -146,84 +121,34 @@ function M.xtest_new_action_for_buttons()
   -- helper.selectActionCommand("canvas", "undo")
 end
 --
-function M.xtest_blueBTN_brushColor()
-  UI.testCallback = function()
-    selectors.componentSelector:onClick(true,  "actionTable")
-    helper.selectAction("blueBTN")
+function M.xtest_get_action()
+  helper.selectIcon("action")
+  if helper.hasObj(actionTable, "brushBlack") then
+    helper.clickAsset(actionTable.objs, "brushBlack")
     actionTable.editButton:tap()
-    -- actionTable.newButton:tap()
-
-    local obj = actionCommandTable.objs[2]
-    actionCommandTable.singleClickEvent(obj)
-
-    local objColorEntry = actionCommandPropsTable.objs[2]
-    objColorEntry:dispatchEvent{name="tap", target=objColorEntry}
-
-    timer.performWithDelay( 2000, function()
-      --
-      local colorBox = colorPicker.colorBox
-      colorBox:dispatchEvent{name="touch", phase="began", target=colorBox,
-      x = display.contentWidth*0.5, y = display.contentHeight*0.5}
-      colorBox:dispatchEvent{name="touch", phase="ended", target=colorBox}
-      -- close
-      timer.performWithDelay( 2000, function()
-        colorPicker.background:dispatchEvent{name="tap"}
-      end)
-    end)
-    -- --
-    -- local button = "save"
-    -- local obj = require("editor.parts.buttons").objs[button]
-    -- obj:tap()
-    --
-    -- Cancel
-    -- local button = "cancel"
-    -- local obj = require("editor.parts.buttons").objs[button]
-    -- obj:tap()
   end
 end
 
-function M.xtest_colorPicker()
-  -- https://github.com/andrewyavors/Lua-Color-Converter
-  local converter = require("extlib.convertcolor")
-  -- print(converter.tohex(10))
-  print(converter.tohex(1.0, 0, 0))
-
-  --
-  ---[[
-  -- https://www.jasonschroeder.com/2014/03/24/add-a-color-picker-to-your-corona-app-with-one-line-of-code/
-  -- require the colorPicker module
-  local colorPicker = require("extlib.colorPicker")
-  -- draw a rectangle on the screen
-  local myRect = display.newRect(0, 0, display.contentWidth * .5, display.contentWidth * .5)
-  myRect.x, myRect.y = display.contentCenterX, display.contentCenterY
-  myRect.r, myRect.g, myRect.b, myRect.a = 1, 1, 1, 1
-
-  -- here is our listener function to change the rectangle's color
-  local function pickerListener(r, g, b, a)
-    print(r, g, b, a)
-    -- print("#"..converter.tohex(r)..converter.tohex(g)..converter.tohex(b))
-    print(converter.tohex(r, g, b))
-    myRect:setFillColor(r, g, b, a)
-    myRect.r, myRect.g, myRect.b, myRect.a = r, g, b, a
+function M.xtest_modify_action()
+  helper.selectIcon("action")
+  if helper.hasObj(actionTable, "brushBlack") then
+    helper.clickAsset(actionTable.objs, "brushBlack")
+    actionTable.editButton:tap()
+    helper.singelClick(actionCommandTable, "canvas.brush")
   end
-
-  colorPicker.show(pickerListener, myRect.r, myRect.g, myRect.b, myRect.a)
- --]]
-
 end
 
-function M.xtest_snapshot_paint()
-  -- https://forums.solar2d.com/t/snapshot-as-paint-input/319084/29?page=2
-  -- /Applications/Corona/SampleCode/Graphics/SnapshotEraser
-  -- /Applications/Corona/SampleCode/Graphics/SnapshotPaint
-  -- https://docs.coronalabs.com/guide/graphics/snapshot.html
-
-  -- https://forums.solar2d.com/t/simple-trail-finally-a-corona-plugin-to-render-trails/150187/12
-
-    -- https://github.com/H0neyP0ney/SimpleTrail
-
-    -- https://github.com/ponywolf/ponyblitz/tree/master
-
+function M.xtest_copy_paste_actions()
+  -- brushBlack, brushRed, brushBlue ...
+  helper.clickAsset(actionTable.objs, "brushBlack")
+  -- click Copy
+  -- click Paste
+  -- helper.clickAsset(actionTable.objs, "brushBlack copied")
+  -- actionTable.editButton:tap()
+  -- picker.obj.field.text = "brushRed"
+  -- helper.singelClick(actionCommandTable, "canvas.brush")
+  -- use eyedropper(picker)?
+  -- helper.setProp(actionCommandPropsTable.objs, "color", "1,0,0,1")
 end
 
 return M

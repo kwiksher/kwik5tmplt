@@ -93,12 +93,14 @@ function ActionCommand:new()
   {{/button}}
   {{#canvas}}
       local canvas = UI.sceneGroup[UI.canvas]
+      {{#brush}}
       {{#color}}
       AC.Canvas:brushColor(canvas, {{color}}  )
       {{/color}}
       {{#size}}
       AC.Canvas:brushSize(canvas, {{size}}  )
       {{/size}}
+      {{/brush}}
   {{/canvas}}
 {{/actions}}
 	end
@@ -106,7 +108,7 @@ function ActionCommand:new()
 end
 --
 ActionCommand.model = [[
-{{model}}
+{{encoded}}
 ]]
 --
 return ActionCommand

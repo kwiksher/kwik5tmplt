@@ -53,7 +53,7 @@ function M:create(callback)
   option.x = self.x
   option.y = self.y
   option.text = "Input Name"
-  for k,v in pairs(option) do print(k ,v ) end
+  -- for k,v in pairs(option) do print(k ,v ) end
   local obj = newText(option)
   obj:setFillColor(1)
 

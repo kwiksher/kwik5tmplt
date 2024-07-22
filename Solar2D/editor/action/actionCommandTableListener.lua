@@ -21,15 +21,15 @@ function M:onKeyEvent(event)
 end
 
 function M:singleClickEvent(obj)
-  print("------- singleClickEvent ----- ")
+  -- print("------- singleClickEvent ----- ")
   local target = obj
   local UI = self.UI
   layerTableCommands.clearSelections(self, "actionCommand")
   if self.controlDown then
-    print("controlDown")
+    -- print("controlDown")
     layerTableCommands.multiSelections(self, target)
     UI.editor.selections = self.selections
-    print("%%%%", #self.selections)
+    -- print("%%%%", #self.selections)
   else
     self.lastTarget = target
     self.UI.scene.app:dispatchEvent {
@@ -59,7 +59,7 @@ end
 
     -- create a listener to handle drag-item commands
 function M:listener( item, touchevent )
-  print("@@@@@@ actionCommandTableListener UI", self.UI)
+  -- print("@@@@@@ actionCommandTableListener UI", self.UI)
   if touchevent.phase  == "ended" then
     -- print("single click event")
     -- this opens a commond editor table
