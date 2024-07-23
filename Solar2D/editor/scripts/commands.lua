@@ -393,9 +393,19 @@ function M.publish(UI, args, controller, decoded)
   -- print(json.encode(_dump))
 
   local files = {}
+  --
+  if UI.editor.currentActionForSave  then
+    local name, actions = UI.editor.currentActionForSave.name, UI.editor.currentActionForSave.actions
+    table.insert(updatedModel.commands, name)
+    files[#files+1] = controller:render(book, page, name, actions)
+    -- save json
+    files[#files+1] = controller:save(book, page, name, {name=name, actions = actions})
+    UI.editor.currentActionForSave = nil
+  end
+  --
   files[#files + 1] = util.renderIndex(book, page, updatedModel)
   files[#files + 1] = util.saveIndex(book, page, layer, class, updatedModel)
-
+  --
   if pageTools[class] then
     -- local classFolder = class
     -- save lua
@@ -418,12 +428,12 @@ function M.publish(UI, args, controller, decoded)
       files[#files + 1] = controller:renderAssets(book, page, layer, classFolder, class, model)
     end
   end
-  -- save the lastSelection
-
+    -- save the lastSelection
   saveSelection(book, page, {{name = layer, class = class}})
   -- publish
   backupFiles(files)
   currentScript = copyFiles(files)
+
 end
 
 function M.publishForSelections(UI, args, controller, decoded)
@@ -484,6 +494,16 @@ function M.publishForSelections(UI, args, controller, decoded)
   local renderdModel = util.createIndexModel(updatedModel)
   -- print("------------------------------")
   -- print(json.encode(renderdModel))
+
+  --
+  if UI.editor.currentActionForSave  then
+    local name, actions = UI.editor.currentActionForSave.name, UI.editor.currentActionForSave.actions
+    table.insert(renderdModel.commands, name)
+    files[#files+1] = controller:render(book, page, name, actions)
+    -- save json
+    files[#files+1] = controller:save(book, page, name, {name=name, actions = actions})
+    UI.editor.currentActionForSave = nil
+  end
 
   files[#files + 1] = controller:renderIndex(book, page, renderdModel)
   files[#files + 1] = controller:saveIndex(book, page, nil, nil, renderdModel)

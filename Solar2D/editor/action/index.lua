@@ -13,6 +13,8 @@ local M = {name = name, views = {
 }}
 
 M.weight = 1
+M.x = 54
+M.y = -2
 ---
 local muiIcon = require("components.mui.icon").new()
 local util    = require("lib.util")
@@ -74,6 +76,14 @@ local buttons  = require("editor.action.buttons")
 
 function M:showActionTable(actionbox, isNew)
   if isNew then
+    self.UI.scene.app:dispatchEvent {
+      name = "editor.action.selectAction",
+      action = {},
+      isNew = true,
+      UI = self.UI
+    }
+    local buttons       = require("editor.parts.buttons")
+    buttons:hide()
   else
     ---
     --- there were multiple instances of actionbox from selectAudio, actionTable and sync's word action
@@ -94,13 +104,13 @@ function M:showActionTable(actionbox, isNew)
   end
 end
 
-function M:createIcon(UI, posX, posY)
+function M:createIcon(UI)
   local actionIcon = muiIcon:create {
     icon     = {"actions_over", "actions_over","actions_over"},
     text     = "",
     name     = "action-icon",
-    x        = posX,
-    y        = posY,
+    x        = self.x,
+    y        = self.y,
 -- y        = (display.actualContentHeight - display.contentHeight)/2 -2,
     width    = 22,
     height   = 22,
@@ -113,9 +123,9 @@ function M:createIcon(UI, posX, posY)
   UI.editor.rootGroup:insert(actionIcon)
 end
 
-function M:createSelectbox(UI, posX, posY)
+function M:createSelectbox(UI)
   -- UI.editor.viewStore = self.group -- used in selecbox:create()
-  selectbox:init(UI, posX + 22, posY+24, 96, 22)
+  selectbox:init(UI, self.x + 22, self.y+24, 96, 22)
   selectbox:setValue(
     {
       {name="new-action", class="action"},
@@ -144,11 +154,10 @@ function M:create(UI)
   --
   controller:init(UI, self.commandMap, selectbox)
   -- print("create", self.name)
-  local posX, posY =  54, -2 --display.contentCenterX/2 + 42, -2
   -----------------------------------------
-  self:createIcon(UI, posX, posY)
+  self:createIcon(UI)
   -----------------------------------------
-  self:createSelectbox(UI, posX, posY)
+  self:createSelectbox(UI)
   -----------------------------------------
 
   -- self:createCommandview()

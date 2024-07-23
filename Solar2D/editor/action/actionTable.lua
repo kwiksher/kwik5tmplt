@@ -35,7 +35,6 @@ function M:setPosition()
 
   -- self.x = self.rootGroup.selectAction.contentBounds.xMax
   -- self.y = self.rootGroup.selectAction.y
-
 end
 
 function M:init(UI)
@@ -93,7 +92,7 @@ function M:create(UI)
       text = "Attach"
     }
     registerButton:setFillColor(0, 1, 0)
-    registerButton.tap = function(event)self:registerHandler(event)end
+    registerButton.tap = function(event)self:attachHandler(event)end
     registerButton:addEventListener("tap", registerButton)
     registerButton.alpha = 1
 
