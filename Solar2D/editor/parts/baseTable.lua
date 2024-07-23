@@ -28,7 +28,6 @@ local option, newText = util.newTextFactory{
 local posX = display.contentCenterX*0.75
 
 function M.mouseHandler(event, type, selections)
-  -- print("@@@@selected", type)
   if event.isSecondaryButtonDown then -- event.target.isSelected
     contextButtons:showContextMenu(posX, event.y,  {type=type, selections=selections})
   else

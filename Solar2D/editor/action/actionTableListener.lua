@@ -57,6 +57,7 @@ function M:selectHandler(target)
     if layerTableCommands.singleSelection(self, target) then
       if self.actionbox then
         self.actionbox:setActiveProp(target.action) -- nil == activeProp
+        self:hide()
       end
     else
       print("WARNING: setting activeProp")

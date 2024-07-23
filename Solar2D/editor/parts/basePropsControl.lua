@@ -288,7 +288,7 @@ end
 local function tapListenerAction(event)
   -- print("action tap listener")
   local actionEditor = require("editor.action.index")
-  actionEditor:showActionTable(event.actionbox)
+  actionEditor:showActionTable(event.actionbox, event.isNew)
 end
 
 
@@ -309,5 +309,10 @@ M.handler = {
   easing     = tapListenerEasing,
   filters = tapListenerFilters
 }
+
+function M.buttonContextListener (name, target)
+  print("buttonContext", name)
+  tapListenerAction{actionbox=actionbox, isNew = (name=="New")}
+end
 
 return M

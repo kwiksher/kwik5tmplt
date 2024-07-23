@@ -1,0 +1,191 @@
+local current = ...
+local parent,  root, M = newModule(current)
+
+M.name = current
+M.width = 60
+M.contextButtons = {"New", "Select"}
+
+local isCancel = function(event)
+  local ret = event.phase == "up" and event.keyName == 'escape'
+  return ret or (system.getInfo("platform") == "android" and event.keyName == "back")
+end
+
+---
+function M:init(UI)
+end
+--
+function M:create(UI, listener)
+  local group = display.newGroup()
+  self.UI = UI
+  self.listener = listener
+  self.objs = {}
+  self.group = group
+
+  local function tapHandler(target, event)
+      local props = {}
+      transition.from(target, {time=500, xScale=2, yScale=2})
+      self.listener(target.eventName, self.target)
+      self:hide()
+      --
+    return true
+  end
+
+  local options = {
+    parent = group,
+    text = "",
+    font = native.systemFont,
+    fontSize = 12,
+    align = "center"
+  }
+
+  local function createButton(params)
+    local option = params.option
+    options.text = params.text
+    options.x = params.x
+    options.y = params.y
+
+    local obj = display.newText(options)
+    -- obj.anchorY=0.5
+    -- obj.anchorX = 0
+    obj.eventName = params.eventName
+    obj:translate(obj.width/2 + 10, 0)
+
+    local rect = display.newRoundedRect(obj.x, obj.y, obj.width+10, obj.height + 2, 10)
+    group:insert(rect)
+    group:insert(obj)
+    rect:setFillColor(0, 0, 0.8)
+    obj.rect = rect
+    --
+    obj.rect.tap = params.tapHandler
+    obj.rect.eventName = params.eventName
+
+    obj.alignment = params.alignment
+    -- rect.anchorX = 0
+    if params.objs then
+      params.objs[params.eventName] = obj
+    end
+    return obj
+  end
+
+
+  local obj = createButton {
+    text = "New",
+    x = display.contentCenterX - 480/2,
+    y = display.actualContentHeight-10,
+    eventName = "New",
+    alignment = "left",
+    objs = self.objs,
+    tapHandler = tapHandler
+  }
+
+  obj = createButton {
+    text = "Select",
+    x = display.contentCenterX - 480/2,
+    y = display.actualContentHeight-10,
+    eventName = "Select",
+    alignment = "left",
+    objs = self.objs,
+    tapHandler = tapHandler
+  }
+
+  for k, obj in pairs(self.objs) do
+    obj.rect:addEventListener("tap", obj.rect)
+  end
+  self:hide()
+end
+--
+function M:didShow(UI)
+  self.UI = UI
+
+end
+--
+function M:didHide(UI)
+end
+--
+function M:destroy()
+  if self.objs then
+    for k, obj in next, self.objs do
+      obj.rect:removeEventListener("tap", obj)
+      obj.rect:removeSelf()
+      obj:removeSelf()
+    end
+  end
+  self.objs = nil
+end
+
+function M.mouseOver(event)
+  local obj = M.lastButtonRect
+  if obj then
+    obj.alpha = 0.5
+  end
+  --
+  local target = event.target
+  target.alpha = 1
+  --
+  M.lastButtonRect = target
+end
+
+function M:showContextMenu(x,y, target)
+  print("showContextMenu target", target.text)
+  self.target = target
+  local indexX, indexY = 0,0
+  for k, key in next, self.contextButtons do
+    for k, obj in next, self.objs do
+      if key  == obj.rect.eventName then
+        obj.isVisible = true
+        obj.rect.isVisible = obj.isVisible
+        obj.x = x --+ obj.width
+        obj.y = y + indexY * obj.rect.height
+        indexY = indexY + 1
+        obj.rect.x = obj.x
+        obj.rect.y = obj.y
+        obj.rect.alpha = 0.5
+        -- obj.rect:toFront()
+        -- obj:toFront()
+        obj.rect:addEventListener("mouse", self.mouseOver)
+        break
+      end
+    end
+  end
+  self.group:toFront()
+end
+
+function M:hideContextMenu()
+  if self.objs then
+    for k, obj in pairs(self.objs) do
+        obj.isVisible = false
+        obj.rect.isVisible = false
+        obj.rect:removeEventListener("mouse", self.mouseOver)
+    end
+  end
+
+end
+
+function M:show()
+  self.onKeyEvent = function(event)
+    if isCancel(event)  then
+      self:hide()
+      --Android, prevent it from backing out of the app
+      return true
+    end
+    return false
+  end
+  Runtime:addEventListener("key", self.onKeyEvent)
+end
+
+function M:hide()
+  if self.objs then
+    for k, obj in pairs(self.objs) do
+      obj.isVisible = false
+      obj.rect.isVisible = false
+    end
+  end
+  Runtime:removeEventListener("key", self.onKeyEvent)
+end
+
+M.new = function()
+  local instance = {}
+  return setmetatable(instance, {__index=M})
+end
+--
+return M
