@@ -171,11 +171,21 @@ function M:hide()
   if self.objs then
     self.group.isVisible = false
   end
+  if self.newButton then
+    self.newButton.isVisible = false
+    self.editButton.isVisible = false
+    self.registerButton.isVisible = false
+  end
 end
 
 function M:show()
   if self.objs then
     self.group.isVisible = true
+  end
+  if self.newButton then
+    self.newButton.isVisible = true
+    self.editButton.isVisible = true
+    self.registerButton.isVisible = true
   end
 end
 

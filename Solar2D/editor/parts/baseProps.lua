@@ -51,6 +51,8 @@ M.newText = newText
 --
 -- touch the props's name such as url to show asset table
 local basePropsControl = require("editor.parts.basePropsControl")
+local buttonContext = require("editor.parts.buttonContext")
+
 --
 M.onTapLayerSet = {}
 M.onTapActionSet = {}
@@ -253,8 +255,21 @@ function M:createTable(props)
        obj.class = self.class
        obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)
     elseif self.onTapActionSet[prop.name] then
-      -- print("@@@@@ onTapActionSet", prop.name)
-        obj:addEventListener("tap", function(event) self:tapListener(event, 'action')end)
+      local function mouseHandler(event)
+        -- print("@@@@@ mouseHandler", event.isSecondaryButtonDown )
+        if event.type == "down" then
+          if event.isPrimaryButtonDown then
+              -- print( "Left mouse button clicked." )
+          elseif event.isSecondaryButtonDown then
+              -- print( "Right mouse button clicked." )
+              self.activeProp = event.target.text
+              buttonContext:showContextMenu(event.x-20, event.y, self) -- actionbox
+          end
+        end
+        return true
+      end
+      obj:addEventListener("mouse", mouseHandler)
+      -- obj:addEventListener("tap", function(event) self:tapListener(event, 'action')end)
     elseif prop.name == "othersGroup" then
         obj:addEventListener("tap", function(event) self:tapListener(event, 'group')end)
     elseif self.onTapLayerSet[prop.name] then
@@ -381,6 +396,8 @@ function M:create(UI)
     --
     self.group = display.newGroup()
     UI.editor.viewStore.propsTable = self.group
+    buttonContext:create(UI,basePropsControl.buttonContextListener)
+
   --
   if self.props then
     self:createTable(self.props)

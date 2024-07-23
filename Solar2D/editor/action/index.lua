@@ -72,22 +72,25 @@ end
 
 local buttons  = require("editor.action.buttons")
 
-function M:showActionTable(actionbox)
-  ---
-  --- there were multiple instances of actionbox from selectAudio, actionTable and sync's word action
-  ---
-  local actionTable = require("editor.action.actionTable")
-  actionTable.actionbox = actionbox
-  actionTable:show()
-
-  local UI = self.UI
-  if not self.isVisible then
-    UI.editor.actionStore:set(UI.scene.model.commands)
-    self:show()
-    buttons:hide()
+function M:showActionTable(actionbox, isNew)
+  if isNew then
   else
-    -- UI.editor.actionStore:set({})
-    -- self:hide()
+    ---
+    --- there were multiple instances of actionbox from selectAudio, actionTable and sync's word action
+    ---
+    local actionTable = require("editor.action.actionTable")
+    actionTable.actionbox = actionbox
+    actionTable:show()
+
+    local UI = self.UI
+    if not self.isVisible then
+      UI.editor.actionStore:set(UI.scene.model.commands)
+      self:show()
+      buttons:hide()
+    else
+      -- UI.editor.actionStore:set({})
+      -- self:hide()
+    end
   end
 end
 
