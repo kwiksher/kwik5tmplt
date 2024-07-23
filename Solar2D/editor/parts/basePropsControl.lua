@@ -286,9 +286,25 @@ end
 
 
 local function tapListenerAction(event)
+  local buttonContext = require("editor.parts.buttonContext")
+  buttonContext:showContextMenu(event.x-20, event.y, event.actionbox) -- actionbox
   -- print("action tap listener")
-  local actionEditor = require("editor.action.index")
-  actionEditor:showActionTable(event.actionbox, event.isNew)
+  -- actionEditor:showActionTable(event.actionbox, event.isNew)
+  -- local function mouseHandler(event)
+  --   -- print("@@@@@ mouseHandler", event.isSecondaryButtonDown )
+  --   if event.type == "down" then
+  --     if event.isPrimaryButtonDown then
+  --         -- print( "Left mouse button clicked." )
+  --     elseif event.isSecondaryButtonDown then
+  --         -- print( "Right mouse button clicked." )
+  --         self.activeProp = event.target.text
+  --         buttonContext:showContextMenu(event.x-20, event.y, self) -- actionbox
+  --     end
+  --   end
+  --   return true
+  -- end
+  -- obj:addEventListener("mouse", mouseHandler)
+
 end
 
 
@@ -310,9 +326,10 @@ M.handler = {
   filters = tapListenerFilters
 }
 
-function M.buttonContextListener (name, target)
+function M.buttonContextListener (name, actionbox)
   print("buttonContext", name)
-  tapListenerAction{actionbox=actionbox, isNew = (name=="New")}
+  local actionEditor = require("editor.action.index")
+  actionEditor:showActionTable(actionbox, name=="New")
 end
 
 return M

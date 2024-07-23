@@ -34,7 +34,12 @@ function M:createTable (foo, fooValue)
   local group = display.newGroup()
   --
   -- self.left = UI.editor.viewStore.commandView.contentBounds.xMax
-  self.left = UI.editor.rootGroup.actionTable.contentBounds.xMax
+  if UI.editor.rootGroup.actionTable then
+    self.left = UI.editor.rootGroup.actionTable.contentBounds.xMax
+  else
+    local actionTable = require("editor.action.actionTable")
+    self.left = actionTable.x
+  end
   -- print("@@@@@@@ actionCommandTable", self.left)
   --
   option.parent = self.group

@@ -4,6 +4,7 @@ local controller         = require("editor.action.controller.index")
 local actionCommandTable = require("editor.action.actionCommandTable")
 local scripts = require("editor.scripts.commands")
 local picker             = require("editor.picker.name")
+local actionTable        = require("editor.action.actionTable")
 --
 local command = function (params)
 	local UI    = params.UI
@@ -42,16 +43,25 @@ local command = function (params)
     actions = actions
   }
   UI.editor.currentAction = newAction
-  -- save index lua
-  files[#files+1] = util.renderIndex(UI.editor.currentBook, page,updatedModel)
-  -- save index json
-  files[#files+1] = util.saveIndex(UI.editor.currentBook, page, nil, nil, updatedModel)
-  -- save lua
-  files[#files+1] = controller:render(UI.editor.currentBook, page, nameText, actions)
-  -- save json
-  files[#files+1] = controller:save(UI.editor.currentBook, page, nameText, {name=nameText, actions = actions})
-  scripts.backupFiles(files)
-  scripts.copyFiles(files)
+
+  if actionTable.actionbox then
+    --
+    UI.editor.currentActionForSave = newAction
+    local buttons       = require("editor.parts.buttons")
+    buttons:show()
+
+  else
+    -- save index lua
+    files[#files+1] = util.renderIndex(UI.editor.currentBook, page,updatedModel)
+    -- save index json
+    files[#files+1] = util.saveIndex(UI.editor.currentBook, page, nil, nil, updatedModel)
+    -- save lua
+    files[#files+1] = controller:render(UI.editor.currentBook, page, nameText, actions)
+    -- save json
+    files[#files+1] = controller:save(UI.editor.currentBook, page, nameText, {name=nameText, actions = actions})
+    scripts.backupFiles(files)
+    scripts.copyFiles(files)
+  end
 --
 end
 --

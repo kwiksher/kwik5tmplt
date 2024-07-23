@@ -57,6 +57,7 @@ function M:selectHandler(target)
     if layerTableCommands.singleSelection(self, target) then
       if self.actionbox then
         self.actionbox:setActiveProp(target.action) -- nil == activeProp
+        self.actionbox = nil
         self:hide()
       end
     else
@@ -79,12 +80,13 @@ function M:editHandler(target)
   end
 end
 
-function M:registerHandler(target)
+function M:attachHandler(target)
   if self.lastTarget then
     if layerTableCommands.showLayerProps(self, self.lastTarget) then
        print("TODO show action props")
-       if layerTableCommands.singleSelection(self, self.lastTarget) then
+       if layerTableCommands.singleSelection(self, self.lastTarget) and self.actionbox then
          self.actionbox:setActiveProp(self.lastTarget.action) -- nil == activeProp
+         self.actionbox = nil
        end
     end
   end
