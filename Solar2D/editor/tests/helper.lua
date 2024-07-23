@@ -86,11 +86,13 @@ end
 function exports.clickProp(objs, name)
   for i, obj in next, objs do
     if obj.text == name then
-      obj:dispatchEvent{name="tap", target=obj}
+      obj:dispatchEvent{name="tap", target=obj, x=obj.x, y=obj.y}
       return
     end
   end
 end
+
+exports.clickObj = exports.clickProp
 
 function exports.setProp(objs, name, value)
   for i, obj in next, objs do

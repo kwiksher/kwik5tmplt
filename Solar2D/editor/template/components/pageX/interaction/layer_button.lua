@@ -5,13 +5,15 @@ local layerProps = require(parent.."{{layer}}")
 
 local M = {
   name ="{{layer}}_button",
-  {{#properties}}
-  target = "{{layer}}",
-  type  = "{{type}}", -- tap, touch
-  over = "{{over}}",
-  btaps = {{btaps}},
-  mask = "{{mask}}",
-  {{/properties}}
+  properties = {
+    {{#properties}}
+    target = "{{layer}}",
+    type  = "{{type}}", -- tap, touch
+    over = "{{over}}",
+    btaps = {{btaps}},
+    mask = "{{mask}}",
+   {{/properties}}
+  },
   actions={
   {{#actions}}
     onTap = "{{onTap}}"
