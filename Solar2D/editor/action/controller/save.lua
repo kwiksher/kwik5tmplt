@@ -9,26 +9,34 @@ local actionTable        = require("editor.action.actionTable")
 local command = function (params)
 	local UI    = params.UI
   local page = params.page or UI.page
-  print("action.save")
   --local updatedModel = util.createIndexModel(UI.scene.model, "", "")
   local updatedModel = util.createIndexModel(UI.scene.model)
   local nameText     = picker.obj.field.text
 
-  if UI.editor.actionEditor.selectbox.selectedObj then
-    nameText = UI.editor.actionEditor.selectbox.selectedObj.text
-  end
+  print("action.save", nameText)
+
+  -- if UI.editor.actionEditor.selectbox.selectedObj then
+  --   nameText = UI.editor.actionEditor.selectbox.selectedObj.text
+  -- end
   -- printTable(UI.editor,currentAction)
   if UI.editor.currentAction.isNew then
-    table.insert(updatedModel.commands, nameText)
-  elseif nameText ~= UI.editor.currentAction.name then
-    local newEntryies = {}
     for i, v in next, updatedModel.commands do
-      if UI.editor.currentAction.name ~= v then
-        newEntries [#newEntries+1] = v
-      else
-        newEntries [#newEntries+1] = nameText
+      if v == nameText then
+        nameText = nameText..math.random()
+        break
       end
     end
+    table.insert(updatedModel.commands, nameText)
+  elseif nameText ~= UI.editor.currentAction.name then
+    local updated = {}
+    for i, v in next, updatedModel.commands do
+      if UI.editor.currentAction.name ~= v then
+        updated [#updated+1] = v
+      else
+        updated [#updated+1] = nameText
+      end
+    end
+    updatedModel.commands = updated
   end
 
   local currentIndex = UI.editor.currentActionCommandIndex
@@ -46,10 +54,15 @@ local command = function (params)
 
   if actionTable.actionbox then
     --
-    UI.editor.currentActionForSave = newAction
-    local buttons       = require("editor.parts.buttons")
-    buttons:show()
-
+    newAction.controller = controller
+    UI.editor.currentActionForSave = function() return newAction.name, newAction.actions, newAction.controller end
+    local partsButtons       = require("editor.parts.buttons")
+    local classProps    = require("editor.parts.classProps")
+    local actionEditor  = require("editor.action.index")
+    actionTable.actionbox:setActiveProp(newAction.name)
+    actionEditor:hide()
+    partsButtons:show()
+    classProps:show()
   else
     -- save index lua
     files[#files+1] = util.renderIndex(UI.editor.currentBook, page,updatedModel)

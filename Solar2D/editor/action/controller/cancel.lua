@@ -10,7 +10,9 @@ local command = function (params)
   if actionTable.actionbox then
     --
     local buttons       = require("editor.parts.buttons")
+    local classProps    = require("editor.parts.classProps")
     buttons:show()
+    classProps:show()
   end
 --
 end

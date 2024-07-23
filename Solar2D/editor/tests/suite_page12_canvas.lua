@@ -11,6 +11,7 @@ local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 local actionEditor = require("editor.action.index")
 local colorPicker = require("extlib.colorPicker")
 local classProps = require("editor.parts.classProps")
+local actionbox = require("editor.parts.actionbox")
 ----
 local buttons = require("editor.action.buttons")
 local actionCommandButtons = require("editor.action.actionCommandButtons")
@@ -59,7 +60,31 @@ function M.xtest_new_brush_size()
   -- onTap large
 end
 
-function M.test_new_brush_color()
+function M.test_new_button_with_brush_color_new_action()
+  helper.selectLayer("color8")
+  helper.selectIcon("Interactions", "Button")
+  --
+  helper.clickProp(actionbox.objs, "onTap")
+  --
+  local buttonContext = require("editor.parts.buttonContext")
+  buttonContext.objs.New.rect:tap()
+  --
+  -- picker:continue("tapHandler")
+  --
+  local picker = require("editor.picker.name")
+  picker.obj.field.text = "tapHandler"
+  --
+  helper.clickObj(picker.buttonObjs, "Continue")
+  --
+  helper.selectActionGroup("Interactions")
+  helper.selectActionCommand("canvas", "brush")
+  helper.setProp(actionCommandPropsTable.objs, "color", "0,0,0,1")
+  helper.clickButton("save", actionCommandButtons)
+  helper.clickButton("save") -- editor.action.buttons
+
+end
+
+function M.xtest_new_brush_color()
   layerTable.controlDown = true
   helper.selectLayer("color8")
   helper.selectLayer("color7")
@@ -71,6 +96,7 @@ function M.test_new_brush_color()
   helper.selectLayer("color1")
   helper.selectIcon("Interactions", "Button")
   layerTable.controlDown = false
+  helper.setProp(actionbox.objs, "onTap", "colorHandler")
   -- each onTap is attached with action brush{Black, Blue, Red, ...}
 end
 

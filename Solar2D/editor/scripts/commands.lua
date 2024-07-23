@@ -395,7 +395,7 @@ function M.publish(UI, args, controller, decoded)
   local files = {}
   --
   if UI.editor.currentActionForSave  then
-    local name, actions = UI.editor.currentActionForSave.name, UI.editor.currentActionForSave.actions
+    local name, actions, controller = UI.editor.currentActionForSave()
     table.insert(updatedModel.commands, name)
     files[#files+1] = controller:render(book, page, name, actions)
     -- save json
@@ -497,7 +497,7 @@ function M.publishForSelections(UI, args, controller, decoded)
 
   --
   if UI.editor.currentActionForSave  then
-    local name, actions = UI.editor.currentActionForSave.name, UI.editor.currentActionForSave.actions
+    local name, actions, controller = UI.editor.currentActionForSave()
     table.insert(renderdModel.commands, name)
     files[#files+1] = controller:render(book, page, name, actions)
     -- save json

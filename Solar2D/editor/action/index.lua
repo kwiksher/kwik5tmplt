@@ -28,6 +28,8 @@ local actionCommandTable = require(parent.."actionCommandTable")
 local selectbox      = require(root.."parts.selectbox"):newInstance()
 local toolbar        = require(root .."parts.toolbar")
 local selectors      = require(root.."parts.selectors")
+local picker = require("editor.picker.name")
+
 selectbox.name = "actionName"
 selectbox.create = function(UI) end -- see createSelectbox below
 
@@ -73,8 +75,12 @@ function M.iconHander()
 end
 
 local buttons  = require("editor.action.buttons")
+local partsButtons       = require("editor.parts.buttons")
+local classProps    = require("editor.parts.classProps")
+local actionTable = require("editor.action.actionTable")
 
 function M:showActionTable(actionbox, isNew)
+  actionTable.actionbox = actionbox
   if isNew then
     self.UI.scene.app:dispatchEvent {
       name = "editor.action.selectAction",
@@ -82,14 +88,12 @@ function M:showActionTable(actionbox, isNew)
       isNew = true,
       UI = self.UI
     }
-    local buttons       = require("editor.parts.buttons")
-    buttons:hide()
+    partsButtons:hide()
+    classProps:hide()
   else
     ---
     --- there were multiple instances of actionbox from selectAudio, actionTable and sync's word action
     ---
-    local actionTable = require("editor.action.actionTable")
-    actionTable.actionbox = actionbox
     actionTable:show()
 
     local UI = self.UI
@@ -203,11 +207,13 @@ end
 function M:show()
   controller:show()
   self.isVisible = true
+  picker:show()
 end
 
 function M:hide(cancel)
   controller:hide()
   self.isVisible = false
+  picker:hide()
 end
 
 function M:hideCommandPropsTable()

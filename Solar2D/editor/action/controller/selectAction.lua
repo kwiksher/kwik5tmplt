@@ -29,6 +29,7 @@ local command = function (params)
         showEditor(decoded)
       else
         print("TODO popup error message")
+        picker:destroy()
       end
     end
     picker:create(listener)

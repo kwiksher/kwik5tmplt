@@ -35,12 +35,20 @@ function M:create(callback)
         obj.x = self.x
       end
       obj:addEventListener("tap", function(event)
+        print("@@@@@", self.obj.field.text)
         if event.target.text == "CANCEL" then
           self:destroy()
         else
           if callback then
+            if self.obj.field.text == nil or self.obj.field.text:len() == 0 then
+              self.obj.field.text = "name"..math.random(100)
+            end
             callback(self.obj.field.text)
-            self:destroy()
+            -- self:destroy()
+            for i, _obj in next, self.buttonObjs do
+              _obj.isVisible = false
+            end
+
           end
         end
       end)
@@ -72,7 +80,28 @@ function M:continue(value)
   self:destroy()
 end
 
+function M:hide()
+  if self.obj then
+    self.obj.isVisible = false
+    self.obj.field.isVisible = false
+  end
+  if self.buttonObjs then
+    for i, obj in next, self.buttonObjs do
+      obj.isVisible = false
+    end
+  end
+end
+
+function M:show()
+  self.obj.field.isVisible = true
+  self.obj.isVisible = true
+  for i, obj in next, self.buttonObjs do
+    obj.isVisible = true
+  end
+end
+
 function M:destroy()
+  self.obj.field:removeSelf()
   self.obj:removeSelf()
   for i, obj in next, self.buttonObjs do
     obj:removeSelf()
