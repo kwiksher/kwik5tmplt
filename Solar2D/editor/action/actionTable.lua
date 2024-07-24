@@ -53,7 +53,7 @@ function M:create(UI)
    local function render (models, xIndex, yIndex)
     -- print("actionStore", #models)
     M:destroy()
-    buttons:show()
+    -- buttons:show()
 
     local objs = {}
 
@@ -69,7 +69,10 @@ function M:create(UI)
     newButton.rect.anchorX = 0
     newButton.alpha = 1
     newButton.rect.alpha = 0
-    newButton.tap = function(event) self:newHandler(event) end
+    newButton.tap = function(event)
+      self:newHandler(event)
+      buttons:show()
+    end
     newButton:addEventListener("tap", newButton)
 
     local editButton = newText{
@@ -78,7 +81,10 @@ function M:create(UI)
       text = "Edit"
     }
     editButton:setFillColor(0, 1, 0)
-    editButton.tap = function(event)self:editHandler(event)end
+    editButton.tap = function(event)
+      self:editHandler(event)
+      buttons:show()
+    end
     editButton:addEventListener("tap", editButton)
     -- editButton.rect = display.newRect(self.group, editButton.x, editButton.y, editButton.width, editButton.height)
     -- editButton.rect:setFillColor(0.8)
@@ -86,15 +92,17 @@ function M:create(UI)
     editButton.alpha = 1
     -- editButton.rect.alpha = 0
 
-    local registerButton = newText{
+    local attachButton = newText{
       x = newButton.contentBounds.xMax +44,
       y = newButton.y,
       text = "Attach"
     }
-    registerButton:setFillColor(0, 1, 0)
-    registerButton.tap = function(event)self:attachHandler(event)end
-    registerButton:addEventListener("tap", registerButton)
-    registerButton.alpha = 1
+    attachButton:setFillColor(0, 1, 0)
+    attachButton.tap = function(event)
+      self:attachHandler(event)
+    end
+    attachButton:addEventListener("tap", attachButton)
+    attachButton.alpha = 1
 
     for i = 1, #models do
       option.text = models[i]
@@ -133,7 +141,7 @@ function M:create(UI)
       newButton.rect.height = objs[#objs-1].rect.height
     end
 
-    return objs, newButton, editButton, registerButton
+    return objs, newButton, editButton, attachButton
   end
 
   UI.editor.actionStore:listen(
@@ -141,7 +149,7 @@ function M:create(UI)
       -- print(debug.traceback())
       self:destroy()
       if fooValue then
-        self.objs, self.newButton, self.editButton, self.registerButton = render(fooValue,0,0)
+        self.objs, self.newButton, self.editButton, self.attachButton = render(fooValue,0,0)
         -- if #fooValue == 0 then
         --   self:hide()
         -- end
@@ -173,7 +181,7 @@ function M:hide()
   if self.newButton then
     self.newButton.isVisible = false
     self.editButton.isVisible = false
-    self.registerButton.isVisible = false
+    self.attachButton.isVisible = false
   end
 end
 
@@ -184,7 +192,7 @@ function M:show()
   if self.newButton then
     self.newButton.isVisible = true
     self.editButton.isVisible = true
-    self.registerButton.isVisible = true
+    self.attachButton.isVisible = true
   end
 end
 
@@ -202,7 +210,7 @@ function M:destroy()
   if self.newButton then
     self.newButton:removeSelf()
     self.editButton:removeSelf()
-    self.registerButton:removeSelf()
+    self.attachButton:removeSelf()
     self.newButton = nil
   end
 end

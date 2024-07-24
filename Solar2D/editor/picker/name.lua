@@ -93,10 +93,14 @@ function M:hide()
 end
 
 function M:show()
-  self.obj.field.isVisible = true
-  self.obj.isVisible = true
-  for i, obj in next, self.buttonObjs do
-    obj.isVisible = true
+  if self.obj then
+    self.obj.field.isVisible = true
+    self.obj.isVisible = true
+  end
+  if self.buttonObjs then
+    for i, obj in next, self.buttonObjs do
+      obj.isVisible = true
+    end
   end
 end
 

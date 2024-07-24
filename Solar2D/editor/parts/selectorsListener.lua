@@ -30,7 +30,6 @@ local function componentHandler(UI, storeTable, isActiveProp)
   tree:setConditionStatus("select variable", bt.FAILED)
   tree:setConditionStatus("select joint", bt.FAILED)
 
-
   --
   --
   if storeTable then

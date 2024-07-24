@@ -17,6 +17,8 @@ local buttons = require("editor.action.buttons")
 local actionCommandButtons = require("editor.action.actionCommandButtons")
 ----
 local helper = require("editor.tests.helper")
+local picker = require("editor.picker.name")
+
 
 function M.init(props)
   selectors = props.selectors
@@ -60,7 +62,7 @@ function M.xtest_new_brush_size()
   -- onTap large
 end
 
-function M.test_new_button_with_brush_color_new_action()
+function M.xtest_new_button_with_brush_color_new_action()
   helper.selectLayer("color8")
   helper.selectIcon("Interactions", "Button")
   --
@@ -71,7 +73,6 @@ function M.test_new_button_with_brush_color_new_action()
   --
   -- picker:continue("tapHandler")
   --
-  local picker = require("editor.picker.name")
   picker.obj.field.text = "tapHandler"
   --
   helper.clickObj(picker.buttonObjs, "Continue")
@@ -81,8 +82,13 @@ function M.test_new_button_with_brush_color_new_action()
   helper.setProp(actionCommandPropsTable.objs, "color", "0,0,0,1")
   helper.clickButton("save", actionCommandButtons)
   helper.clickButton("save") -- editor.action.buttons
-
+  -- helper.clickButton("save", require("editor.parts.buttons")
 end
+
+function M.xtest_modify_button_with_brush_color_new_action()
+ helper.selectLayerProps("color8", "button") -- altDown
+end
+
 
 function M.xtest_new_brush_color()
   layerTable.controlDown = true
@@ -121,7 +127,6 @@ function M.xtest_new_buttons()
 end
 
 function M.xtest_new_action_for_buttons()
-  local picker = require("editor.picker.name")
   --
   if not helper.hasObj(actionTable, "brushBlack") then
     helper.selectIcon("action")
@@ -164,17 +169,27 @@ function M.xtest_modify_action()
   end
 end
 
-function M.xtest_copy_paste_actions()
-  -- brushBlack, brushRed, brushBlue ...
-  helper.clickAsset(actionTable.objs, "brushBlack")
-  -- click Copy
-  -- click Paste
-  -- helper.clickAsset(actionTable.objs, "brushBlack copied")
-  -- actionTable.editButton:tap()
-  -- picker.obj.field.text = "brushRed"
-  -- helper.singelClick(actionCommandTable, "canvas.brush")
-  -- use eyedropper(picker)?
-  -- helper.setProp(actionCommandPropsTable.objs, "color", "1,0,0,1")
+function M.test_copy_paste_actions()
+  helper.selectIcon("action")
+    -- brushBlack, brushRed, brushBlue ...
+  if not helper.hasObj(actionTable, "brushRed") then
+    helper.clickAsset(actionTable.objs, "brushBlack")
+    actionTable.editButton:tap()
+    helper.clickButton("copy") -- editor.action.buttons
+    helper.clickButton("cancel") -- editor.action.buttons
+    actionTable.newButton:tap()
+    helper.clickButton("paste") -- editor.action.buttons
+    -- picker.obj.field.text = "brushRed"
+    -- helper.singelClick(actionCommandTable, "canvas.brush")
+    -- use eyedropper(picker)?
+    -- helper.setProp(actionCommandPropsTable.objs, "color", "1,0,0,1")
+    -- helper.clickButton("save", actionCommandButtons)
+    -- helper.clickButton("save") -- editor.action.buttons
+  end
+end
+
+function M.xtest_copy_brush_action()
+  helper.selectLayerProps("color8", "button") -- altDown
 end
 
 return M

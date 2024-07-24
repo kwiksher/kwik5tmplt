@@ -97,7 +97,7 @@ function M:setValue(decoded, index, template)
     local actions = decoded[index].actions
     if actions then
       for k, v in pairs (actions) do
-        props[#props+1] = {name=k, value=""}
+        props[#props+1] = {name=k, value=v}
       end
       self.actionbox:setValue(props)
       -- self.actionbox:initActiveProp(actions)
@@ -111,7 +111,7 @@ function M:setValue(decoded, index, template)
     local props = {}
     if decoded.actions then
       for k, v in pairs (decoded.actions) do
-        props[#props+1] = {name=k, value=""}
+        props[#props+1] = {name=k, value=v}
       end
       self.actionbox:setValue(props)
       -- self.actionbox:initActiveProp(props)
@@ -142,7 +142,8 @@ function M:toggle()
 end
 
 function M:show()
-  -- print(self.id, self.class)
+  -- print("show",self.id, self.class)
+  -- print(debug.traceback())
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
       v:show()
@@ -152,6 +153,7 @@ function M:show()
 end
 
 function M:hide()
+  -- print("hide", self.id, self.class)
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
       v:hide()
