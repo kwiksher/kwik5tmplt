@@ -4,6 +4,7 @@ local parent,root, M = newModule(name)
 --
 
 local contextButtons = require("editor.parts.buttons")
+local buttonContext = require(parent.."buttonContext")
 local layerTableCommands = require("editor.parts.layerTableCommands")
 
 function M:onKeyEvent(event)
@@ -62,10 +63,11 @@ function M:selectHandler(target)
       end
     else
       print("WARNING: setting activeProp")
-      self:hide()
+      -- self:hide()
     end
-
   end
+  buttonContext:hide()
+  contextButtons:hide()
 end
 -- edit button
 function M:editHandler(target)

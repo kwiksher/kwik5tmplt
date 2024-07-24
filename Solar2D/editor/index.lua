@@ -18,6 +18,7 @@ local httpServerOn = true
 
 M.rootGroup = display.newGroup()
 M.viewStore = {}
+M.clipboard = require("editor.clipboard")
 --
 -- print(current, parent ,root)
 --

@@ -14,22 +14,25 @@ M._init = M.init
 M.handler = {}
 ---
 function M:init(UI)
-  self:_init(UI, function(eventName)
+  self.UI = UI
+  self:_init(UI, function(eventName, target, class)
     print(eventName)
-    self.handler[eventName](self)
+    self.handler[eventName](self.UI, target, UI.editor.selections. class)
   end)
 end
 
 -- edit button
-function M.handler.Edit(self)
+function M.handler.Edit(UI, target, selections, class)
   -- print("editHandler")
-  if self.target then
+  if class=="action" then
     -- print("", self.target.action)
-    self.UI.scene.app:dispatchEvent {
+    UI.scene.app:dispatchEvent {
       name = "editor.action.selectAction",
-      action = self.target.action,
-      UI = self.UI
+      action = target.action,
+      class = class,
+      UI = UI
     }
+  elseif class =="actionCommand" then
   end
 end
 
@@ -50,22 +53,55 @@ function M.handler.Attach(self)
 end
 --]]
 
-function M.handler.New(self)
-  self.UI.scene.app:dispatchEvent {
+function M.handler.New(UI, target, selections, class)
+  UI.scene.app:dispatchEvent {
     name = "editor.action.selectAction",
     action = {},
     isNew = true,
-    UI = self.UI
+    class = class,
+    UI = UI
   }
 end
 
-function M.handler.Copy(self)
+function M.handler.Copy(UI, target, selections, class)
+  if class == "action" then    -- print("", self.target.action)
+    UI.scene.app:dispatchEvent {
+      name = "editor.action.copy",
+      action = target.action,
+      selections = selections,
+      class = class,
+      UI = UI
+    }
+  elseif class =="actionCommand" then
+  end
 end
 
-function M.handler.Paste(self)
+function M.handler.Paste(UI, target, selections, class)
+  if class == "action" then
+    -- print("", self.target.action)
+    UI.scene.app:dispatchEvent {
+      name = "editor.action.paste",
+      action = target.action,
+      selections = selections,
+      class = class,
+      UI = UI
+    }
+  elseif class =="actionCommand" then
+  end
 end
 
-function M.handler.Delete(self)
+function M.handler.Delete(UI, target, selections, class)
+  if class == "action" then
+    -- print("", self.target.action)
+    UI.scene.app:dispatchEvent {
+      name = "editor.action.delete",
+      action = target.action,
+      selections = selections,
+      class = class,
+      UI = UI
+    }
+  elseif class =="actionCommand" then
+  end
 end
 
 return M

@@ -299,9 +299,11 @@ function exports.flattenKeys(_parentKey, v)
   if type(v) == "table" then
     for key, value in pairs(v) do
       if type(value) ~="table" or isArray(value) then
-        flatten_key = parentKey .."_"..key
-        ret[flatten_key] = value
-      else
+        if key ~="_proxy" then
+          flatten_key = parentKey .."_"..key
+          ret[flatten_key] = value
+        end
+      elseif (key ~= "__index" and key~="_class" and key ~="_functionListeners" and key~="_tableListeners" and key~="_proxy") then
         local _ret = exports.flattenKeys(parentKey .."_"..key, value)
         for kk, vv in pairs(_ret) do
           ret[kk] = vv
