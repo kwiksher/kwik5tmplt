@@ -3,6 +3,7 @@ local json = require("json")
 local util = require("lib.util")
 local App = require("controller.Application")
 local picker = require("editor.picker.name")
+local buttons = require("editor.action.buttons")
 
 --
 local command = function (params)
@@ -15,9 +16,11 @@ local command = function (params)
     -- if UI.editor.actionEditor.isVisible then
     --   UI.editor.actionEditor:hide()
     -- else
-      UI.editor.actionEditor:show()
+      UI.editor.actionEditor:show(true)
       --UI.editor.editPropsLabel = UI.editor.currentAction.name
       UI.editor.actionCommandStore:set(decoded)
+      buttons:show()
+
     -- end
   end
   ---

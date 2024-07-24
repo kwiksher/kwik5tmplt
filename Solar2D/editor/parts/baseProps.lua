@@ -112,6 +112,7 @@ function M:init(UI, x, y, w, h)
   self.height = h
   self.UI = UI
   option.width = w or option.width
+  buttonContext:init(UI, basePropsControl.buttonContextListener)
 end
 --
 local yamlArray = {}
@@ -382,7 +383,7 @@ function M:create(UI)
     --
     self.group = display.newGroup()
     UI.editor.viewStore.propsTable = self.group
-    buttonContext:create(UI,basePropsControl.buttonContextListener)
+    buttonContext:create(UI)
   --
   if self.props then
     self:createTable(self.props)
