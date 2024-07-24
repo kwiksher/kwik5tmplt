@@ -215,10 +215,10 @@ function M:commandViewHandler(name, selectLayer)
   commandView:createCommandview()
 end
 -----------------------------------------
-function M:show()
-  controller:show()
+function M:show(editing)
+  controller:show(editing)
   self.isVisible = true
-  picker:show()
+  -- picker:show()
 end
 
 function M:hide(cancel)

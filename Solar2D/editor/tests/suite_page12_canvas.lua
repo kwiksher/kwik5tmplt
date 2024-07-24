@@ -18,6 +18,7 @@ local actionCommandButtons = require("editor.action.actionCommandButtons")
 ----
 local helper = require("editor.tests.helper")
 local picker = require("editor.picker.name")
+local buttonContext = require("editor.action.buttonContext")
 
 
 function M.init(props)
@@ -169,7 +170,7 @@ function M.xtest_modify_action()
   end
 end
 
-function M.test_copy_paste_actions()
+function M.xtest_copy_paste_actions()
   helper.selectIcon("action")
     -- brushBlack, brushRed, brushBlue ...
   if not helper.hasObj(actionTable, "brushRed") then
@@ -190,6 +191,15 @@ end
 
 function M.xtest_copy_brush_action()
   helper.selectLayerProps("color8", "button") -- altDown
+end
+
+function M.test_copy_paste()
+  helper.selectIcon("action")
+  helper.touchAction("brushBlack")
+  helper.selectAction("brushBlack", true)
+  helper.clickButton("Copy", buttonContext)
+  -- helper.clickButton("Edit", buttonContext)
+
 end
 
 return M

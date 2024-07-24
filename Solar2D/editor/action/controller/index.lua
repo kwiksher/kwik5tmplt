@@ -68,16 +68,18 @@ end
 function M:toggle()
 end
 
-function M:show()
+function M:show(editing)
   local UI = self.UI
   self.selectbox:show()
   --
+  if editing then
   local scrollView = UI.editor.viewStore.commandView
   if scrollView then
     for k, v in pairs(self.commandMap) do
       v.alpha = 1
     end
     scrollView.isVisible = true
+  end
   end
   --
   -- if UI.editor.viewStore.actionButtons then
@@ -101,7 +103,7 @@ function M:show()
     actionTable.attachButton.alpha = 1
   end
 
-  picker:show()
+  -- picker:show()
 
 end
 

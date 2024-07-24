@@ -3,7 +3,7 @@ local parent,  root, M = newModule(current)
 
 M.name = current
 M.width = 60
-M.contextButtons = {"New", "Select"}
+M.model = {"New", "Select"}
 
 local isCancel = function(event)
   local ret = event.phase == "up" and event.keyName == 'escape'
@@ -11,13 +11,13 @@ local isCancel = function(event)
 end
 
 ---
-function M:init(UI)
+function M:init(UI, listener)
+  self.listener = listener
 end
 --
-function M:create(UI, listener)
+function M:create(UI)
   local group = display.newGroup()
   self.UI = UI
-  self.listener = listener
   self.objs = {}
   self.group = group
 
@@ -67,26 +67,17 @@ function M:create(UI, listener)
     return obj
   end
 
-
-  local obj = createButton {
-    text = "New",
-    x = display.contentCenterX - 480/2,
-    y = display.actualContentHeight-10,
-    eventName = "New",
-    alignment = "left",
-    objs = self.objs,
-    tapHandler = tapHandler
-  }
-
-  obj = createButton {
-    text = "Select",
-    x = display.contentCenterX - 480/2,
-    y = display.actualContentHeight-10,
-    eventName = "Select",
-    alignment = "left",
-    objs = self.objs,
-    tapHandler = tapHandler
-  }
+  for i, name in next, self.model do
+    createButton {
+      text = name,
+      x = display.contentCenterX - 480/2,
+      y = display.actualContentHeight-10,
+      eventName = name,
+      alignment = "left",
+      objs = self.objs,
+      tapHandler = tapHandler
+    }
+  end
 
   for k, obj in pairs(self.objs) do
     obj.rect:addEventListener("tap", obj.rect)
@@ -129,7 +120,7 @@ function M:showContextMenu(x,y, target)
   print("showContextMenu target", target.text)
   self.target = target
   local indexX, indexY = 0,0
-  for k, key in next, self.contextButtons do
+  for k, key in next, self.model do
     for k, obj in next, self.objs do
       if key  == obj.rect.eventName then
         obj.isVisible = true
@@ -183,8 +174,7 @@ function M:hide()
   Runtime:removeEventListener("key", self.onKeyEvent)
 end
 
-M.new = function()
-  local instance = {}
+M.new = function(instance)
   return setmetatable(instance, {__index=M})
 end
 --

@@ -2,8 +2,8 @@ local name = ...
 local parent,root, M = newModule(name)
 -- local actionbox = require(root.."parts.actionbox")
 local actionTableListener = require(parent.."actionTableListener")
-local buttons = require(parent.."buttons")
-local contextButtons = require("editor.parts.buttons")
+-- local buttons = require(parent.."buttons")
+local buttonContext = require(parent.."buttonContext")
 local layerTableCommands = require("editor.parts.layerTableCommands")
 local util = require("lib.util")
 --
@@ -19,9 +19,6 @@ local function onKeyEvent(event)
   return M:onKeyEvent(event)
 end
 
-local function mouseHandler(event)
-  return  M:mouseHandler(event)
-end
 --
 --  Selector will show action Table
 --
@@ -38,8 +35,22 @@ function M:setPosition()
 end
 
 function M:init(UI)
+  buttonContext:init(UI)
 end
 --
+
+function M.mouseHandler(event)
+  -- print(event.isSecondaryButtonDown,event.target.isSelected )
+  if event.isSecondaryButtonDown and event.target.isSelected then
+    -- print("@@@@selected")
+    buttonContext:showContextMenu(event.x + 20, event.y,  event.target)
+    --self.target = event.target
+  else
+    -- print("@@@@not selected")
+  end
+  return true
+end
+
 
 function M:create(UI)
   -- if self.rootGroup then return end
@@ -47,6 +58,7 @@ function M:create(UI)
   self.group = display.newGroup()
   self.UI = UI
   self:setPosition()
+  buttonContext:create(UI)
 
   option.width = self.width -- nil makes newText automatically adjust the width
 
@@ -71,7 +83,7 @@ function M:create(UI)
     newButton.rect.alpha = 0
     newButton.tap = function(event)
       self:newHandler(event)
-      buttons:show()
+      -- buttons:show()
     end
     newButton:addEventListener("tap", newButton)
 
@@ -83,7 +95,7 @@ function M:create(UI)
     editButton:setFillColor(0, 1, 0)
     editButton.tap = function(event)
       self:editHandler(event)
-      buttons:show()
+      -- buttons:show()
     end
     editButton:addEventListener("tap", editButton)
     -- editButton.rect = display.newRect(self.group, editButton.x, editButton.y, editButton.width, editButton.height)
@@ -117,12 +129,9 @@ function M:create(UI)
         end
         return true
       end
-      obj.mouse = function(event)self:mouseHandler(event)
-        return true
-      end
       obj.action = obj.text
       obj:addEventListener("touch", obj)
-      obj:addEventListener("mouse",obj)
+      obj:addEventListener("mouse",self.mouseHandler)
 
       local rect = display.newRect(obj.x, obj.y, obj.width+10,option.height)
       rect:setFillColor(0.8)
