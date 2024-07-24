@@ -5,6 +5,7 @@ local util = require("editor.util")
 local json = require("json")
 local lustache = require "extlib.lustache"
 local actionTable = require("editor.action.actionTable")
+local picker = require("editor.picker.name")
 
 function M:init(UI, commandMap, selectbox)
   self.commandMap = commandMap
@@ -79,9 +80,9 @@ function M:show()
     scrollView.isVisible = true
   end
   --
-  if UI.editor.viewStore.actionButtons then
-    UI.editor.viewStore.actionButtons:show()
-  end
+  -- if UI.editor.viewStore.actionButtons then
+  --   UI.editor.viewStore.actionButtons:show()
+  -- end
 
   if UI.editor.viewStore.actionCommandTable then
     UI.editor.viewStore.actionCommandTable.isVisible = true
@@ -97,11 +98,14 @@ function M:show()
   if actionTable.newButton then
     actionTable.newButton.alpha = 1
     actionTable.editButton.alpha = 1
+    actionTable.attachButton.alpha = 1
   end
+
+  picker:show()
 
 end
 
-function M:hide()
+function M:hide(cancel)
   local UI = self.UI
   self.selectbox:hide()
   --
@@ -128,10 +132,14 @@ function M:hide()
     end
     UI.editor.viewStore.actionCommandButtons:hide()
   end
-  if actionTable.newButton then
+  if actionTable.newButton and not cancel then
     actionTable.newButton.alpha = 0
     actionTable.editButton.alpha = 0
+    actionTable.attachButton.alpha = 0
   end
+
+  picker:hide()
+
 end
 
 function M:reset()

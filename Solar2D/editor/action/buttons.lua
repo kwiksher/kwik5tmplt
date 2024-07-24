@@ -178,6 +178,7 @@ function M:toggle()
 end
 
 function M:show()
+  -- print(debug.traceback())
   if self.objs == nil then return end
   for k, obj in pairs(self.objs) do
     obj.isVisible = true

@@ -57,6 +57,8 @@ for i=1, #M.commands do
 end
 -- BTree calls this when activating actionNode
 M.BThandler = function(name, status)
+  -- print(debug.traceback())
+
   print("#BTHandler: dispathEvent")
   --  print("", name,  bt.getFriendlyStatus( nil,status ))
   local target = BTMap[name]

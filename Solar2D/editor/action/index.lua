@@ -29,6 +29,9 @@ local selectbox      = require(root.."parts.selectbox"):newInstance()
 local toolbar        = require(root .."parts.toolbar")
 local selectors      = require(root.."parts.selectors")
 local picker = require("editor.picker.name")
+--
+local bt = require('editor.controller.BTree.btree')
+local tree = require("editor.controller.BTree.selectorsTree")
 
 selectbox.name = "actionName"
 selectbox.create = function(UI) end -- see createSelectbox below
@@ -56,6 +59,10 @@ function M.iconHander()
   local UI = self.UI
     if self.isVisible then
 
+      tree:setConditionStatus("select layer", bt.FAILED, false)
+      -- tree:setActionStatus("load layer", bt.RUNNING, true)
+      -- tree:setConditionStatus("select props", bt.FAILED)
+
       selectors.componentSelector:onClick(self.isVisible, "actionTable")
 
       --UI.editor.actionStore:set(UI.scene.model.commands)
@@ -66,6 +73,7 @@ function M.iconHander()
       --     UI = self.UI,
       --   }
       -- )
+
 
       self:show()
     else
@@ -182,6 +190,9 @@ function M:create(UI)
     local delta_x = 400
     self.group:translate(delta_x/2, 0)
   end
+
+  buttons:hide()
+
 end
 
 -- function M:createCommandview()
@@ -211,8 +222,8 @@ function M:show()
 end
 
 function M:hide(cancel)
-  controller:hide()
-  self.isVisible = false
+  controller:hide(cancel)
+  --self.isVisible = false
   picker:hide()
 end
 
