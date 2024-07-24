@@ -43,7 +43,7 @@ function M.mouseHandler(event)
   -- print(event.isSecondaryButtonDown,event.target.isSelected )
   if event.isSecondaryButtonDown and event.target.isSelected then
     -- print("@@@@selected")
-    buttonContext:showContextMenu(event.x + 20, event.y,  event.target)
+    buttonContext:showContextMenu(event.x + 20, event.y,  event.target, "action")
     --self.target = event.target
   else
     -- print("@@@@not selected")
@@ -104,17 +104,17 @@ function M:create(UI)
     editButton.alpha = 1
     -- editButton.rect.alpha = 0
 
-    local attachButton = newText{
-      x = newButton.contentBounds.xMax +44,
-      y = newButton.y,
-      text = "Attach"
-    }
-    attachButton:setFillColor(0, 1, 0)
-    attachButton.tap = function(event)
-      self:attachHandler(event)
-    end
-    attachButton:addEventListener("tap", attachButton)
-    attachButton.alpha = 1
+    -- local attachButton = newText{
+    --   x = newButton.contentBounds.xMax +44,
+    --   y = newButton.y,
+    --   text = "Attach"
+    -- }
+    -- attachButton:setFillColor(0, 1, 0)
+    -- attachButton.tap = function(event)
+    --   self:attachHandler(event)
+    -- end
+    -- attachButton:addEventListener("tap", attachButton)
+    -- attachButton.alpha = 1
 
     for i = 1, #models do
       option.text = models[i]
@@ -150,7 +150,7 @@ function M:create(UI)
       newButton.rect.height = objs[#objs-1].rect.height
     end
 
-    return objs, newButton, editButton, attachButton
+    return objs, newButton, editButton --, attachButton
   end
 
   UI.editor.actionStore:listen(
@@ -158,7 +158,9 @@ function M:create(UI)
       -- print(debug.traceback())
       self:destroy()
       if fooValue then
-        self.objs, self.newButton, self.editButton, self.attachButton = render(fooValue,0,0)
+        -- self.objs, self.newButton, self.editButton, self.attachButton = render(fooValue,0,0)
+        self.objs, self.newButton, self.editButton = render(fooValue,0,0)
+
         -- if #fooValue == 0 then
         --   self:hide()
         -- end
@@ -190,7 +192,7 @@ function M:hide()
   if self.newButton then
     self.newButton.isVisible = false
     self.editButton.isVisible = false
-    self.attachButton.isVisible = false
+    -- self.attachButton.isVisible = false
   end
 end
 
@@ -201,7 +203,7 @@ function M:show()
   if self.newButton then
     self.newButton.isVisible = true
     self.editButton.isVisible = true
-    self.attachButton.isVisible = true
+    -- self.attachButton.isVisible = true
   end
 end
 
@@ -219,7 +221,7 @@ function M:destroy()
   if self.newButton then
     self.newButton:removeSelf()
     self.editButton:removeSelf()
-    self.attachButton:removeSelf()
+    -- self.attachButton:removeSelf()
     self.newButton = nil
   end
 end

@@ -100,7 +100,7 @@ function M:show(editing)
   if actionTable.newButton then
     actionTable.newButton.alpha = 1
     actionTable.editButton.alpha = 1
-    actionTable.attachButton.alpha = 1
+    -- actionTable.attachButton.alpha = 1
   end
 
   -- picker:show()
@@ -137,7 +137,7 @@ function M:hide(cancel)
   if actionTable.newButton and not cancel then
     actionTable.newButton.alpha = 0
     actionTable.editButton.alpha = 0
-    actionTable.attachButton.alpha = 0
+    -- actionTable.attachButton.alpha = 0
   end
 
   picker:hide()

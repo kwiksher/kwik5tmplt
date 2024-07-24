@@ -2,7 +2,7 @@ local AC = require("commands.kwik.actionCommand")
 --
 local command = function (params)
 	local UI    = params.UI
-  print("action.delete")
+  print("action.delete", params.action)
   if UI.editor.selections then
     for i, obj in next, UI.editor.selections do
       if obj.command then

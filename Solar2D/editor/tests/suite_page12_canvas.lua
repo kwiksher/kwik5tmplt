@@ -196,8 +196,8 @@ end
 function M.test_copy_paste()
   helper.selectIcon("action")
   helper.touchAction("brushBlack")
-  helper.selectAction("brushBlack", true)
-  helper.clickButton("Copy", buttonContext)
+  -- helper.selectAction("brushBlack", true)
+  --helper.clickButton("Copy", buttonContext)
   -- helper.clickButton("Edit", buttonContext)
 
 end

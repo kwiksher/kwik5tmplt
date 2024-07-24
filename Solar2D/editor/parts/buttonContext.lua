@@ -24,7 +24,7 @@ function M:create(UI)
   local function tapHandler(target, event)
       local props = {}
       transition.from(target, {time=500, xScale=2, yScale=2})
-      self.listener(target.eventName, self.target)
+      self.listener(target.eventName, self.target, self.class)
       self:hide()
       --
     return true
@@ -116,7 +116,8 @@ function M.mouseOver(event)
   M.lastButtonRect = target
 end
 
-function M:showContextMenu(x,y, target)
+function M:showContextMenu(x,y, target, class)
+  self.class = class
   print("showContextMenu target", target.text)
   self.target = target
   local indexX, indexY = 0,0
