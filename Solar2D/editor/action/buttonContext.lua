@@ -7,7 +7,7 @@ local buttonContext = require("editor.parts.buttonContext")
 -- local buttonsContextListener = require(parent.."buttonsContextListener")
 -- local layerTableCommands = require("editor.parts.layerTableCommands")
 
-local model = {"New", "Edit", "Copy", "Paste", "Delete"}
+local model = {"New", "Edit", "In vscode", "Copy", "Paste", "Delete"}
 
 local M = buttonContext.new{model=model}
 M._init = M.init
@@ -17,7 +17,7 @@ function M:init(UI)
   self.UI = UI
   self:_init(UI, function(eventName, target, class)
     print(eventName)
-    self.handler[eventName](self.UI, target, UI.editor.selections. class)
+    self.handler[eventName](self.UI, target, UI.editor.selections, class)
   end)
 end
 
@@ -98,6 +98,23 @@ function M.handler.Delete(UI, target, selections, class)
       action = target.action,
       selections = selections,
       class = class,
+      UI = UI
+    }
+  elseif class =="actionCommand" then
+  end
+end
+
+function M.handler.Invscode(UI, target, selections, class)
+  if class == "action" then
+    -- print("", self.target.action)
+    local options = {selections = selections, type="action"}
+    if selections == nil or #selections ==0 then
+      options.selections = {target}
+    end
+    --
+    UI.scene.app:dispatchEvent {
+      name = "editor.classEditor.openEditor",
+      props = {options = options},
       UI = UI
     }
   elseif class =="actionCommand" then
