@@ -193,12 +193,20 @@ function M.xtest_copy_brush_action()
   helper.selectLayerProps("color8", "button") -- altDown
 end
 
-function M.test_copy_paste()
+function M.xtest_copy_paste()
   helper.selectIcon("action")
   helper.touchAction("brushBlack")
   -- helper.selectAction("brushBlack", true)
   --helper.clickButton("Copy", buttonContext)
+  --helper.clickButton("Paste", buttonContext)
   -- helper.clickButton("Edit", buttonContext)
+end
+
+function M.test_delete_action()
+  helper.selectIcon("action")
+  helper.touchAction("brushBlack_copied")
+  helper.selectAction("brushBlack", true)
+  --helper.clickButton("Delete", buttonContext)
 
 end
 

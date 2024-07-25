@@ -1,14 +1,18 @@
 local AC = require("commands.kwik.actionCommand")
 -- local App = require("controller.Application")
+local json = require("json")
 --
 local command = function (params)
 	local UI    = params.UI
   print("action.copy", params.action, params.class)
-  print(#params.selections)
+  -- print(#params.selections)
 
   local clipboard = UI.editor.clipboard
-  clipboard.actions = {}
-  clipboard.actionCommands = {}
+  local data = {}
+  data.actions = {}
+  data.actionCommands = {}
+  data.book = UI.book
+  data.page = UI.page
   --
   if params.class == "action" then
     if params.selections then
@@ -20,19 +24,16 @@ local command = function (params)
           print( "Decode failed at "..tostring(pos)..": "..tostring(msg) )
           break
         end
-        clipboard.actions[#clipboard.actions + 1] = decoded
+        data.actions[#data.actions + 1] = decoded
       end
     else
       local model = require("App."..UI.book..".commands."..UI.page.."."..params.action).model
-      decoded, pos, msg = json.decode( model )
-      if not decoded then
-        print( "Decode failed at "..tostring(pos)..": "..tostring(msg) )
-        return
-      end
-      clipboard.actions[#clipboard.actions + 1] = decoded
+      print(model)
+      data.actions[#data.actions + 1] = model
     end
   elseif params.class == "actionCommand" then
   end
+  UI.editor.clipboard:save(data)
 --
 end
 --

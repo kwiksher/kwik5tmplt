@@ -68,11 +68,12 @@ function M:create(UI)
   end
 
   for i, name in next, self.model do
+    -- print(i, name:gsub("%s+",""))
     createButton {
       text = name,
       x = display.contentCenterX - 480/2,
       y = display.actualContentHeight-10,
-      eventName = name,
+      eventName = name:gsub("%s+",""),
       alignment = "left",
       objs = self.objs,
       tapHandler = tapHandler
@@ -123,7 +124,7 @@ function M:showContextMenu(x,y, target, class)
   local indexX, indexY = 0,0
   for k, key in next, self.model do
     for k, obj in next, self.objs do
-      if key  == obj.rect.eventName then
+      if key:gsub("%s+", "")  == obj.rect.eventName then
         obj.isVisible = true
         obj.rect.isVisible = obj.isVisible
         obj.x = x --+ obj.width
