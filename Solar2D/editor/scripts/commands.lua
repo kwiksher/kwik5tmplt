@@ -431,7 +431,7 @@ function M.publish(UI, args, controller, decoded)
     -- print("@@@", model.name)
     files[#files + 1] = controller:render(book, page, layer, classFolder, class, model)
     -- save json
-    files[#files + 1] = controller:save(book, page, layer, classFolder, decoded) -- decoded will be nil
+    files[#files + 1] = controller:save(book, page, layer, classFolder, decoded or model) -- decoded will be nil
     -- save asset
     if classWithAssets[class] then
       files[#files + 1] = controller:renderAssets(book, page, layer, classFolder, class, model)
@@ -608,5 +608,6 @@ end
 
 M.copyFiles = copyFiles
 M.backupFiles = backupFiles
+M.saveSelection = saveSelection
 
 return M
