@@ -42,6 +42,7 @@ local command = function (params)
       -- save index json
       files[#files+1] = util.saveIndex(UI.editor.currentBook, UI.page, nil, nil, updatedModel)
 
+      scripts.saveSelection(book, page, {{name = "action pasted"}})
       scripts.backupFiles(files)
       scripts.copyFiles(files)
     end
