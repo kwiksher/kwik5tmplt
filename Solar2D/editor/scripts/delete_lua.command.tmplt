@@ -1,0 +1,9 @@
+cd {{dst}}
+
+{{#files}}
+if test -f {{file}}; then
+  rm {{file}}
+fi
+{{/files}}
+
+exit
