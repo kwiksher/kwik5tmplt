@@ -465,7 +465,7 @@ function M.decode(book, page, class, _name, options)
 end
 
 function M.decodeJson(book, page, class, name, options)
-  print("$$$$", options.isNew)
+  -- print("$$$$", options.isNew)
   if options.isNew then
     local path = "editor.template.components.pageX." .. class .. ".defaults." .. class
     return require(path)
@@ -503,7 +503,7 @@ end
 
 function M.read(book, page, filter)
   local path = system.pathForFile("App/" .. book .. "/models/" .. page .. "/index.json", system.ResourceDirectory)
-  print("@@@@", path)
+  -- print("@@@@", path)
 
   local ret = {}
   --

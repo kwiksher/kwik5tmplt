@@ -145,7 +145,6 @@ local function backupFiles(files, _dst)
   -- cd (system.ResourceDirectory)..; source copy_lua.command
   --
   local entries = {}
-  local commnans_undo = {}
   for i = 1, #files do
     print(files[i])
     local src = system.pathForFile(files[i], system.TemporaryDirectory)
@@ -183,7 +182,6 @@ local function copyFiles(files, _dst)
   -- cd (system.ResourceDirectory)..; source copy_lua.command
   --
   local commands = {}
-  local commnans_undo = {}
   for i = 1, #files do
     print(files[i])
     local src = system.pathForFile(files[i], system.TemporaryDirectory)
@@ -206,7 +204,7 @@ local function copyFiles(files, _dst)
       commands[#commands + 1] = tmp
     end
   end
-  return executeScript("copy_lua.", {dst = root, cmd = commands})
+  return root, commands
 end
 
 function M.createLayer(book, page, index, layer, _props)
@@ -229,7 +227,9 @@ function M.createLayer(book, page, index, layer, _props)
   files[#files + 1] = controller:render(book, page, layer, "layers", "shape", props)
   -- save json
   files[#files + 1] = controller:save(book, page, layer, nil, props)
-  currentScript = copyFiles(files)
+  ---
+  local  root, commands = copyFiles(files)
+  return executeScript("copy_lua.", {dst = root, cmd = commands})
 end
 
 function M.createLayerWithClass(book, page, layer, class, _dst)
@@ -237,7 +237,7 @@ end
 
 function M.renameLayer(book, page, layer, newName, _dst)
   local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
-  local path = system.pathForFile("App/" .. book .. "/index.lua", system.ResourceDirectory)
+  local path = system.pathForFile("App/" .. book .. "/components/"..page.."/index.lua", system.ResourceDirectory)
   local contents
   local file = io.open(path, "r")
   if file then
@@ -247,16 +247,24 @@ function M.renameLayer(book, page, layer, newName, _dst)
   end
 
   print('"' .. layer .. '"', '"' .. newName .. '"', contents)
+  --
+  -- name in index.lua, use gsub
+  --
   contents = contents:gsub('"' .. layer .. '"', '"' .. newName .. '"')
-
+  --
+  util.mkdir("App", book, "components", page)
+  --
   local nfile = io.open(newFile, "w+")
   if nfile then
     contents = nfile:write(contents)
     io.close(nfile)
     nfile = nil
   end
-  local class = {}
 
+  --
+  -- layer.lua and layer_xxx.lua
+  --
+  local classEntries = {}
   local scene = require("App." .. book .. ".components." .. page .. ".index")
   local model = util.selectFromIndexModel(scene, {layer})
 
@@ -264,6 +272,7 @@ function M.renameLayer(book, page, layer, newName, _dst)
     print(k, v)
     if k == "class" then
       for class in v do
+        classEntries[#classEntries+1] = class
         print(class)
       end
     end
@@ -271,7 +280,7 @@ function M.renameLayer(book, page, layer, newName, _dst)
 
   return executeScript(
     "rename_layer.",
-    {dst = root, book = book, page = page, layer = layer, newName = newName, newIndex = newFile, class = class}
+    {dst = root, book = book, page = page, layer = layer, newName = newName, newIndex = newFile, class = classEntries}
   )
 end
 
@@ -432,8 +441,9 @@ function M.publish(UI, args, controller, decoded)
   saveSelection(book, page, {{name = layer, class = class}})
   -- publish
   backupFiles(files)
-  currentScript = copyFiles(files)
-
+  --
+  local  root, commands = copyFiles(files)
+  return executeScript("copy_lua.", {dst = root, cmd = commands})
 end
 
 function M.publishForSelections(UI, args, controller, decoded)
@@ -511,10 +521,12 @@ function M.publishForSelections(UI, args, controller, decoded)
   saveSelection(book, page, UI.editor.selections)
   ----------
   backupFiles(files)
-  currentScript = copyFiles(files)
+  --
+  local  root, commands = copyFiles(files)
+  return executeScript("copy_lua.", {dst = root, cmd = commands})
 end
 
-function M.delete(UI)
+function M.delete_(UI)
   for i, obj in next, UI.editor.selections do
     local class, name
     for k, v in pairs(pageTools) do
@@ -536,6 +548,11 @@ function M.delete(UI)
     ---
     -- removeFromIndex, deleteFile
   end
+end
+
+function M.delete(files)
+  local  root, commands = copyFiles(files)
+  return executeScript("delete_lua.", {dst = root, cmd = commands})
 end
 
 function M.getScript()
