@@ -32,6 +32,17 @@ local command = function (params)
       data.actions[#data.actions + 1] = model
     end
   elseif params.class == "actionCommand" then
+    local name = UI.editor.currentAction.name
+    local model = require("App."..book..".commands."..page.."."..name).model
+    local decoded = json.decode(model)
+    if params.selections then
+      for i, v in next, UI.editor.selections do
+        table.insert(data.actionCommands, decoded.actions[v.index])
+      end
+    else
+      data.actionCommands[1] = decoded.actions[params.index]
+    end
+
   end
   UI.editor.clipboard:save(data)
 --
