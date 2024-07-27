@@ -5,6 +5,7 @@ local dragItemScrollView = require("extlib.dragitemscrollview")
 local widget = require("widget")
 local actionCommandTableListener = require(parent.."actionCommandtableListener")
 local util = require("lib.util")
+local buttonContext = require(parent.."buttonCommandContext")
 
 M.top = display.contentCenterY-- 22
 M.left = nil
@@ -81,6 +82,7 @@ function M:createTable (foo, fooValue)
 
     scrollView:attachListener(obj,
       function(item, touchevent )
+         item:addEventListener( "mouse", self.mouseHandler)
          self:listener(item, touchevent)
       end,
       self.dragtime, self.angle, self.radius) -- item, listener, dragtime, angle, radius, touchthreshold
@@ -113,7 +115,21 @@ function M:createTable (foo, fooValue)
 end
 
 function M:init(UI)
+  buttonContext:init(UI)
 end
+
+function M.mouseHandler(event)
+  -- print(event.isSecondaryButtonDown,event.target.isSelected )
+  if event.isSecondaryButtonDown and event.target.isSelected then
+    -- print("@@@@selected")
+    buttonContext:showContextMenu(event.x + 20, event.y,  event.target, "actionCommand")
+    --self.target = event.target
+  else
+    -- print("@@@@not selected")
+  end
+  return true
+end
+
 --
 function M:create(UI)
   self.UI = UI

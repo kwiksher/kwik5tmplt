@@ -8,7 +8,8 @@ local scripts = require("editor.scripts.commands")
 local command = function (params)
 	local UI    = params.UI
   print("action.paste at", params.action, params.class)
-
+  local book = UI.editor.currentBook
+  local page = UI.page
   local data = UI.editor.clipboard:read()
   -- clipboard.actions = {}
   -- clipboard.actionCommands = {}
@@ -32,22 +33,38 @@ local command = function (params)
             end
             table.insert(updatedModel.commands, decoded.name)
             -- save lua
-            files[#files+1] = controller:render(UI.editor.currentBook, UI.page, decoded.name, decoded.actions)
+            files[#files+1] = controller:render(book, page, decoded.name, decoded.actions)
             -- save json
-            files[#files+1] = controller:save(UI.editor.currentBook, UI.page, decoded.name, decoded)
+            files[#files+1] = controller:save(book, page, decoded.name, decoded)
         end
       end
       -- save index lua
-      files[#files+1] = util.renderIndex(UI.editor.currentBook, UI.page,updatedModel)
+      files[#files+1] = util.renderIndex(book, page,updatedModel)
       -- save index json
-      files[#files+1] = util.saveIndex(UI.editor.currentBook, UI.page, nil, nil, updatedModel)
+      files[#files+1] = util.saveIndex(book, page, nil, nil, updatedModel)
 
       scripts.saveSelection(book, page, {{name = "action pasted"}})
       scripts.backupFiles(files)
       scripts.copyFiles(files)
     end
   elseif params.class =="actoinCommand" then
-  end
+    local name = UI.editor.currentAction.name
+    local path = "App."..book..".commands."..page.."."..name
+    local model = require(path).model
+    local decoded = json.decode(model)
+
+    for i, v in next, data.actionCommands do
+      table.insert(decoded.actions, params.index+i, v)
+    end
+    -- save lua
+    files[#files+1] = controller:render(book, page, name, decoded.actions)
+    -- save json
+    files[#files+1] = controller:save(book, page, name, decoded)
+
+    scripts.saveSelection(book, page, {{name = "actionCommand pasted"}})
+    scripts.backupFiles(files)
+    scripts.copyFiles(files)
+end
 --
 end
 --

@@ -210,4 +210,13 @@ function M.test_delete_action()
 
 end
 
+function M.xtest_copy_paste_delete_layers()
+end
+
+function M.xtest_copy_paste_delete_actions()
+end
+
+function M.xtest_copy_paste_delete_actionCommands()
+end
+
 return M

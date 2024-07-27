@@ -18,7 +18,8 @@ function(params)
 
   local classFolder = UI.editor:getClassFolderName(data.class)
   local book, page, class = UI.book, UI.page, data.class
-
+  local isLayerClass = false
+  --
   if params.selections then
   else
     local mod, entries, entriesMap
@@ -47,31 +48,44 @@ function(params)
       mod = class and UI.editor:getClassModule(class) or {}
       entries = data.componets.layers
       entriesMap = indexModel.componets.layers
+      isLayerClass = #indexModel.componets.layers == 1
     else --class==nil
       mod = {controller=require("editor.control.index")}
       entries = data.componets.layers
       entriesMap = indexModel.componets.layers
     end
 
-    for i, v in next, entriesMap do
-      namesMap[v.name] = i
-    end
-
-    for i, model in next, entries do
-      local layer = model.name
-      local index = namesMap[model.name]
-      --
-      if index then
-        model.name = util.uniqueName(model.name)
+    if not isLayerClass then
+      for i, v in next, entriesMap do
+        namesMap[v.name] = i
       end
-      --
-      updatedModel = util.updateIndexModel(updatedModel, layer, class)
-      -- save lua
-      files[#files+1] = controller:render(book, page, layer, classFolder, class, model)
-          -- save json
-      files[#files+1] = controller:save(book, page, layer, classFolder, model)
-    end
 
+      for i, model in next, entries do
+        local layer = model.name
+        local index = namesMap[model.name]
+        --
+        if index then
+          model.name = util.uniqueName(model.name)
+        end
+        --
+        updatedModel = util.updateIndexModel(updatedModel, layer, class)
+        -- save lua
+        files[#files+1] = controller:render(book, page, layer, classFolder, class, model)
+            -- save json
+        files[#files+1] = controller:save(book, page, layer, classFolder, model)
+      end
+    else -- copy a class model to selected layers
+      local model = entries[1]
+      for i, v in next, UI.editor.selections do
+        local layer = v.layer
+        updatedModel = util.updateIndexModel(updatedModel, layer, class)
+        -- save lua
+        files[#files+1] = controller:render(book, page, layer, classFolder, class, model)
+            -- save json
+        files[#files+1] = controller:save(book, page, layer, classFolder, model)
+
+      end
+    end
     local renderdModel = util.createIndexModel(updatedModel)
     -- save index lua
     files[#files+1] = util.renderIndex(book,page,renderdModel)

@@ -79,7 +79,10 @@ local instance =
 
   local targetsDelete = {}
   for i, v in next, targets do
-    table.remove(indexModel,v.index)
+    if class == nil then
+      table.remove(indexModel,v.index)
+    else
+    end
     files[#files+1] = v.path
     targetsDelete[#targetsDelete + 1] = v.path
   end

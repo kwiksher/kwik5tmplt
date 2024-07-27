@@ -2,6 +2,8 @@ local AC = require("commands.kwik.actionCommand")
 --
 local command = function (params)
 	local UI    = params.UI
+  local book = UI.editor.currentBook
+  local page = UI.page
   print("action.delete", params.action)
   if UI.editor.selections then
     for i, obj in next, UI.editor.selections do
@@ -40,20 +42,37 @@ local command = function (params)
       end
     end
     updatedModel.commands = actions
-  elseif params.class == "actionCommand" then
-  end
+    -- save index lua
+    local indexFile = util.renderIndex(book, page,updatedModel)
+    files[#files+1] = indexFile
+    -- save index json
+    local indexJson = util.saveIndex(book, page, nil, nil, updatedModel)
+    files[#files+1] = indexJson
 
-  -- save index lua
-  local indexFile = util.renderIndex(UI.editor.currentBook, page,updatedModel)
-  files[#files+1] = indexFile
-  -- save index json
-  local indexJson = util.saveIndex(UI.editor.currentBook, page, nil, nil, updatedModel)
-  files[#files+1] = indexJson
+    scripts.saveSelection(book, page, {{name = "action deleted", class= class}})
+    scripts.backupFiles(files)
+    scripts.copyFiles({indexFile})
+    scripts.delete(targets)
+  elseif params.class == "actionCommand" then
+    local name = UI.editor.currentAction.name
+    local model = require("App."..book..".commands."..page.."."..name).model
+    local actions = json.decode(model.actions)
+    table.sort(UI.editor.selections, function(a,b) return a.index > b.index end)
+    for i, v in next, UI.editor.selections do
+      table.remove(model.actions, v.index)
+    end
+
+    scripts.saveSelection(book, page, {{name = "actionCommand deleted", acion= name}})
+
+    files[#files+1] = controller:render(book, page, name, actions)
+    -- save json
+    files[#files+1] = controller:save(book, page, name, {name=name, actions = actions})
+
+    scripts.backupFiles(files)
+    scripts.copyFiles({indexFile})
+
+  end
   ---
-  scripts.saveSelection(book, page, {{name = "action deleted", class= class}})
-  scripts.backupFiles(files)
-  scripts.copyFiles({indexFile})
-  scripts.delete(targets)
 --
 end
 --
