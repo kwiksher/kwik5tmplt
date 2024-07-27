@@ -804,6 +804,19 @@ function M.split(str, sep)
   end
   return out
 end
+
+function M.uniqueName(str, _sep)
+  local sep = _sep or "_"
+  local out = M.split(str, sep)
+  if #out == 1 then
+    return str
+  else
+    local num = tonumber(out[#out]) + 1
+    out[#out] = tostring(num)
+    return table.concat(out, "_")
+  end
+end
+
 --
 -- merge
 local exports = require("lib.util")

@@ -28,7 +28,9 @@ local command = function (params)
         for ii, vv in next, UI.editor.selections do
           if vv.action == v then
             isDelete = true
-            files[#files+1] = "App/"..book.."/commands/"..page.."/"..v..".lua"
+            local path =  "App/"..book.."/commands/"..page.."/"..v..".lua"
+            files[#files+1] = path
+            targets[#targets+1] = path
             break
           end
         end
@@ -45,10 +47,10 @@ local command = function (params)
   local indexFile = util.renderIndex(UI.editor.currentBook, page,updatedModel)
   files[#files+1] = indexFile
   -- save index json
-  local deleteFile = util.saveIndex(UI.editor.currentBook, page, nil, nil, updatedModel)
-  files[#files+1] = deleteFile
-  targets[#targets] = deleteFile
+  local indexJson = util.saveIndex(UI.editor.currentBook, page, nil, nil, updatedModel)
+  files[#files+1] = indexJson
   ---
+  scripts.saveSelection(book, page, {{name = "action deleted", class= class}})
   scripts.backupFiles(files)
   scripts.copyFiles({indexFile})
   scripts.delete(targets)
