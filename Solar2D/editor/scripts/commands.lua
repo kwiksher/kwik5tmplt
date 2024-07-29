@@ -606,6 +606,45 @@ function M.openFinder(book, folder)
   os.execute(cmd)
 end
 
+local function deleteFiles(files, _dst)
+  local root = _dst or "Solar2D"
+  --
+  -- cp (system.TemporaryDirectory)copy_lua.command ( system.ResourceDirectory)../copy_lua.command
+  -- cd (system.ResourceDirectory)..; source copy_lua.command
+  --
+  local commands = {}
+  for i = 1, #files do
+    print(files[i])
+    local src = system.pathForFile(files[i], system.TemporaryDirectory)
+    --local dst = system.pathForFile(nil, system.ResourceDirectory )
+    local dir = util.getPath(files[i])
+    local dst = files[i]
+    local tmp
+    if platform == "win32" then
+      tmp = "del " .. src .. " " .. dst
+      tmp = '"' .. tmp:gsub("/", "\\") .. '"'
+      commands[#commands + 1] = tmp
+    else
+      src = src:gsub(" ", "\\ ")
+      dst = dst:gsub(" ", "\\ ")
+      dir = dir:gsub(" ", "\\ ")
+      tmp = "rm " .. src
+      -- tmp = "mkdir -p " .. dir .. ";cp " .. src .. " " .. dst
+      -- tmp = tmp:gsub('/','')
+
+      -- print ("cp "..tmp.." "..pathDst)
+      commands[#commands + 1] = tmp
+    end
+  end
+  return root, commands
+end
+
+function M.executeCopyFiles(files, _dst)
+  local dst, commands = copyFiles(files, _dst)
+  executeScript("copy_lua.", {dst = dst, cmd = commands})
+end
+
+M.deleteFiles = deleteFiles
 M.copyFiles = copyFiles
 M.backupFiles = backupFiles
 M.saveSelection = saveSelection

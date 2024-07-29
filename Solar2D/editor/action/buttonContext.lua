@@ -10,13 +10,15 @@ local buttonContext = require("editor.parts.buttonContext")
 local model = {"New", "Edit", "In vscode", "Copy", "Paste", "Delete"}
 
 local M = buttonContext.new{model=model}
+M.class ="action"
+
 M._init = M.init
 M.handler = {}
 ---
 function M:init(UI)
   self.UI = UI
   self:_init(UI, function(eventName, target, class)
-    print(eventName)
+    print(eventName, target.text, class, target.action)
     self.handler[eventName](self.UI, target, UI.editor.selections, class)
   end)
 end
@@ -92,7 +94,7 @@ end
 
 function M.handler.Delete(UI, target, selections, class)
   if class == "action" then
-    -- print("", self.target.action)
+    print("@", target.action)
     UI.scene.app:dispatchEvent {
       name = "editor.action.delete",
       action = target.action,

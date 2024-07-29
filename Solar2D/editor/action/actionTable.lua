@@ -42,7 +42,6 @@ end
 function M.mouseHandler(event)
   -- print(event.isSecondaryButtonDown,event.target.isSelected )
   if event.isSecondaryButtonDown and event.target.isSelected then
-    -- print("@@@@selected")
     buttonContext:showContextMenu(event.x + 20, event.y,  event.target, "action")
     --self.target = event.target
   else

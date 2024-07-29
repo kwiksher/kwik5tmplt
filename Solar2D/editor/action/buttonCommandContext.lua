@@ -10,6 +10,8 @@ local buttonContext = require("editor.parts.buttonContext")
 local model = {"Copy", "Paste", "Delete"}
 
 local M = buttonContext.new{model=model}
+M.class ="actionCommand"
+--
 M._init = M.init
 M.handler = {}
 ---

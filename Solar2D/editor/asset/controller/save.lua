@@ -91,7 +91,8 @@ local instance = require("commands.kwik.baseCommand").new(
     files[#files+1] = controller:save(book, page, props.subclass, props.name, props.properties)
     -- publish
     scripts.backupFiles(files)
-    scripts.copyFiles(files)
+    scripts.executeCopyFiles(files)
+    scripts.delete(files)
 
   end
 )

@@ -1,46 +1,42 @@
 local AC = require("commands.kwik.actionCommand")
+local util = require("editor.util")
+local scripts = require("editor.scripts.commands")
+
 --
 local command = function (params)
 	local UI    = params.UI
   local book = UI.editor.currentBook
   local page = UI.page
-  print("action.delete", params.action)
-  if UI.editor.selections then
-    for i, obj in next, UI.editor.selections do
-      if obj.command then
-        print("", obj.index, obj.action)
-      else
-        if type(obj.action) == "table" then
-          print("", obj.index, obj.action.command)
-        else
-          print("", obj.action)
-        end
-      end
-    end
-  end
+  print("action.delete", params.action, params.class)
+  local selections = params.selections or {}
   --
-  local files, targets = {}
+  if #selections == 0 then
+    selections = {params.action}
+  end
+
+  --
+  local files, targets = {},{}
   local updatedModel = util.createIndexModel(UI.scene.model)
   local actions = {}
   if params.class == "action" then
-    if params.selections then
-      for i, v in next, updatedModel.commands do
-        print(i, v)
-        local isDelete = false
-        for ii, vv in next, UI.editor.selections do
-          if vv.action == v then
-            isDelete = true
-            local path =  "App/"..book.."/commands/"..page.."/"..v..".lua"
-            files[#files+1] = path
-            targets[#targets+1] = path
-            break
-          end
-        end
-        if not isDelete then
-          actions[#actions + 1] = v
+    for i, v in next, updatedModel.commands do
+      print(i, v)
+      local isDelete = false
+      for ii, vv in next, selections do
+        print(ii, vv)
+        if vv == v then
+          isDelete = true
+          local path =  "App/"..book.."/commands/"..page.."/"..v..".lua"
+          files[#files+1] = path
+          targets[#targets+1] = path
+          break
         end
       end
+      if not isDelete then
+        actions[#actions + 1] = v
+      end
     end
+
     updatedModel.commands = actions
     -- save index lua
     local indexFile = util.renderIndex(book, page,updatedModel)
@@ -48,17 +44,18 @@ local command = function (params)
     -- save index json
     local indexJson = util.saveIndex(book, page, nil, nil, updatedModel)
     files[#files+1] = indexJson
-
+    --
     scripts.saveSelection(book, page, {{name = "action deleted", class= class}})
     scripts.backupFiles(files)
-    scripts.copyFiles({indexFile})
+    --
+    scripts.executeCopyFiles({indexFile})
     scripts.delete(targets)
   elseif params.class == "actionCommand" then
     local name = UI.editor.currentAction.name
     local model = require("App."..book..".commands."..page.."."..name).model
     local actions = json.decode(model.actions)
-    table.sort(UI.editor.selections, function(a,b) return a.index > b.index end)
-    for i, v in next, UI.editor.selections do
+    table.sort(selections, function(a,b) return a.index > b.index end)
+    for i, v in next, selections do
       table.remove(model.actions, v.index)
     end
 
@@ -69,8 +66,7 @@ local command = function (params)
     files[#files+1] = controller:save(book, page, name, {name=name, actions = actions})
 
     scripts.backupFiles(files)
-    scripts.copyFiles({indexFile})
-
+    scripts.executeCopyFiles({indexFile})
   end
   ---
 --
