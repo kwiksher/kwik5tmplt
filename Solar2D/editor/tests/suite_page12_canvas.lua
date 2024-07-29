@@ -20,7 +20,6 @@ local helper = require("editor.tests.helper")
 local picker = require("editor.picker.name")
 local buttonContext = require("editor.action.buttonContext")
 
-
 function M.init(props)
   selectors = props.selectors
   UI        = props.UI
@@ -205,8 +204,8 @@ end
 function M.test_delete_action()
   helper.selectIcon("action")
   helper.touchAction("brushBlack_copied")
-  helper.selectAction("brushBlack", true)
-  --helper.clickButton("Delete", buttonContext)
+  helper.selectAction("brushBlack_copied", true)
+  -- helper.clickButton("Delete", buttonContext)
 
 end
 

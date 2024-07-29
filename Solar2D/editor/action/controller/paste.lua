@@ -6,6 +6,7 @@ local scripts = require("editor.scripts.commands")
 
 --
 local command = function (params)
+  local root, commands
 	local UI    = params.UI
   print("action.paste at", params.action, params.class)
   local book = UI.editor.currentBook
@@ -45,7 +46,8 @@ local command = function (params)
 
       scripts.saveSelection(book, page, {{name = "action pasted"}})
       scripts.backupFiles(files)
-      scripts.copyFiles(files)
+      scripts.executeCopyFiles(files)
+
     end
   elseif params.class =="actoinCommand" then
     local name = UI.editor.currentAction.name
@@ -63,8 +65,8 @@ local command = function (params)
 
     scripts.saveSelection(book, page, {{name = "actionCommand pasted"}})
     scripts.backupFiles(files)
-    scripts.copyFiles(files)
-end
+    scripts.executeCopyFiles(files)
+  end
 --
 end
 --

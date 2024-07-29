@@ -119,7 +119,7 @@ end
 
 function M:showContextMenu(x,y, target, class)
   self.class = class
-  print("showContextMenu target", target.text)
+  print("showContextMenu target", target.text, class)
   self.target = target
   local indexX, indexY = 0,0
   for k, key in next, self.model do

@@ -94,8 +94,7 @@ function(params)
 
     scripts.saveSelection(book, page, {{name = "pasted", class= class}})
     scripts.backupFiles(files)
-    scripts.copyFiles(files)
-
+    scripts.executeCopyFiles(files)
   end
 end)
 --

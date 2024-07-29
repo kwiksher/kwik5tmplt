@@ -90,7 +90,7 @@ local command = function (params)
     files[#files+1] = controller:save(UI.editor.currentBook, page, nameText, {name=nameText, actions = actions})
     -- publish
     scripts.backupFiles(files)
-    scripts.copyFiles(files)
+    scripts.executeCopyFiles(files)
   --]]
 
   --[[

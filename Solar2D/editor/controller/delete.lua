@@ -91,7 +91,7 @@ local instance =
   --
   scripts.saveSelection(book, page, {{name = "deleted", class= class}})
   scripts.backupFiles(files)
-  scripts.copyFiles({indexFile})
+  scripts.executeCopyFiles({indexFile})
   scripts.delete(targetsDelete)
 
 end
