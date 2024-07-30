@@ -189,15 +189,24 @@ function M.xtest_copy_paste_actions()
   end
 end
 
-function M.test_copy_paste_brush_action()
+function M.xtest_copy_paste_button()
   helper.selectLayer("color8", "button", false) -- isRightClick
   helper.selectLayer("color8", "button", true) -- isRightClick
   --
   local buttonContext = require("editor.parts.buttonContext")
-  -- buttonContext.objs.New.rect:tap()
-  -- helper.clickButton("Copy", buttonContext)
+  helper.clickButton("Copy", buttonContext)
   --
-  -- helper.selectLayer("color7", "button", false) -- isRightClick
+  helper.selectLayer("color7", "button", false) -- isRightClick
+  --
+  -- then paste
+end
+
+function M.test_delete_button()
+  helper.selectLayer("color7", "button", false) -- isRightClick
+  helper.selectLayer("color7", "button", true) -- isRightClick
+  local buttonContext = require("editor.parts.buttonContext")
+  --
+  -- then delete
 
 end
 
