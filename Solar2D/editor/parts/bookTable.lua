@@ -50,7 +50,7 @@ local function mouseHandler(event)
   if event.isSecondaryButtonDown then
     print(event.target.book)
     buttons:showContextMenu(event.x+20, event.y-10,
-      {type=event.target.text, selections={event.target},
+      {class=event.target.text, selections={event.target},
       contextMenu = {"create", "rename", "delete"}, orientation = "horizontal"})
   else
     -- print("@@@@not selected")

@@ -24,7 +24,11 @@ function M.mouseHandler(event)
     -- local posX, posY = event.target:contentToLocal(event.x, event.y)
     -- local posX, posY = event.target:localToContent(event.x, event.y)
     -- print(posX, posY)
-    buttons:showContextMenu(posX, event.y)
+    buttons:showContextMenu(posX, event.y, {class = event.target.class})
+
+      -- {class=event.target.text, selections={event.target},
+      -- contextMenu = {"create", "rename", "delete"}, orientation = "horizontal"})
+
     -- buttons:showContextMenu(posX, posY)
   else
     -- print("@@@@not selected")

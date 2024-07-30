@@ -20,7 +20,7 @@ function M:read()
   if not file then
     print("ERROR: " .. errorString)
   else
-    contents = file:read()
+    contents = file:read("*a")
     io.close(file)
   end
   return json.decode(contents)

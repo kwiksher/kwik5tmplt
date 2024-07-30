@@ -95,11 +95,11 @@ function M:create(UI)
       --     end
       -- end
 
-      if props then
-        props.layer=self.UI.editor.currentLayer
-        props.class= self.UI.editor.currentClass
-        props.selections = self.UI.editor.selections
-      end
+      -- if props then
+        -- props.layer=self.UI.editor.currentLayer
+        -- props.class= self.UI.editor.currentClass
+        -- props.selections = self.UI.editor.selections
+      -- end
       -- close context menu
       -- for i, key in next, self.contextButtons do
       --   if key == event.eventName then
@@ -111,7 +111,12 @@ function M:create(UI)
       self:hide()
       --
       if self.contextMenuOptions then
-        props.options = self.contextMenuOptions
+        props.class = self.contextMenuOptions.class
+        --print(self.contextMenuOptions.class)
+        --
+        -- {class=event.target.text, selections={event.target},
+        -- contextMenu = {"create", "rename", "delete"}, orientation = "horizontal"})
+
       end
 
       print("@@@@", "editor.classEditor." .. event.eventName, props.class)
