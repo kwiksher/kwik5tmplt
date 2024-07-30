@@ -251,8 +251,8 @@ function exports.getPage(name, isRightClick)
   end
 end
 
-function exports.clickButton(name, actionButtons)
-  local _buttons = actionButtons or buttons
+function exports.clickButton(name, buttonsContext)
+  local _buttons = buttonsContext or buttons
   for i, v in next, _buttons.objs do
     -- print(v.text)
     if v.eventName == name then -- {name="add", label="->"}

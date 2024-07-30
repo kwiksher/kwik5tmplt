@@ -14,7 +14,7 @@ function M.mouseHandler(event)
   if event.isSecondaryButtonDown and event.target.isSelected then
     -- print("@@@@selected")
     contextButtons.openEditorObj.text = "open folder"
-    contextButtons:showContextMenu(posX, event.y,  {type="asset", folder=M.class.."s", selections=M.selections})
+    contextButtons:showContextMenu(posX, event.y,  {class="asset", folder=M.class.."s", selections=M.selections})
   else
     -- print("@@@@not selected")
   end

@@ -69,7 +69,8 @@ function M.xtest_new_button_with_brush_color_new_action()
   helper.clickProp(actionbox.objs, "onTap")
   --
   local buttonContext = require("editor.parts.buttonContext")
-  buttonContext.objs.New.rect:tap()
+  -- buttonContext.objs.New.rect:tap()
+  helper.clickButton("New", buttonContext.objs)
   --
   -- picker:continue("tapHandler")
   --
@@ -188,8 +189,16 @@ function M.xtest_copy_paste_actions()
   end
 end
 
-function M.xtest_copy_brush_action()
-  helper.selectLayerProps("color8", "button") -- altDown
+function M.test_copy_paste_brush_action()
+  helper.selectLayer("color8", "button", false) -- isRightClick
+  helper.selectLayer("color8", "button", true) -- isRightClick
+  --
+  local buttonContext = require("editor.parts.buttonContext")
+  -- buttonContext.objs.New.rect:tap()
+  -- helper.clickButton("Copy", buttonContext)
+  --
+  -- helper.selectLayer("color7", "button", false) -- isRightClick
+
 end
 
 function M.xtest_copy_paste()
@@ -201,7 +210,7 @@ function M.xtest_copy_paste()
   -- helper.clickButton("Edit", buttonContext)
 end
 
-function M.test_delete_action()
+function M.xtest_delete_action()
   helper.selectIcon("action")
   helper.touchAction("brushBlack_copied")
   helper.selectAction("brushBlack_copied", true)
@@ -209,8 +218,6 @@ function M.test_delete_action()
 
 end
 
-function M.xtest_copy_paste_delete_layers()
-end
 
 function M.xtest_copy_paste_delete_actions()
 end

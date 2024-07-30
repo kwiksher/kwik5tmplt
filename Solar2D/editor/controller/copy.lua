@@ -6,7 +6,7 @@ local function getModel(params)
   local model = {}
   for k, v in pairs(params) do
     if not basePropsControl.filter(k) then
-      model[#model+1] = prop
+      model[k] = v
     end
   end
   return model
@@ -15,12 +15,15 @@ end
 local instance = require("commands.kwik.baseCommand").new(
   function (params)
     local UI    = params.UI
-    print(name)
     local props = params.props
-    print(props.class, props.layer)
+
+    local layer= UI.editor.currentLayer
+    local selections = UI.editor.selections or {layer}
+    local class= props.class
+    print(layer, #selections, class)
     --
     local clipboard = UI.editor.clipboard
-    local components = {}
+    local data, components = {}, {}
     --- these are tables in index.lua
     components.layers = {}
     components.audios = {}
@@ -34,7 +37,7 @@ local instance = require("commands.kwik.baseCommand").new(
     data.page = UI.page
     data.class = props.class -- if not nil, components.layers have a class's model.
 
-    for i, v in next, UI.editor.selections do
+    for i, v in next, selections do
       local params, model
       if props.class =="audio" then
         params = require("App."..UI.book..".components."..UI.page..".audios."..v.subclass.."."..v.audio)
@@ -59,6 +62,7 @@ local instance = require("commands.kwik.baseCommand").new(
       elseif props.class =="page" then
         table.insert(components.page, v.page)
       elseif props.class then -- layer's class like linear, button, sprite ..
+        print("App."..UI.book..".components."..UI.page..".layers."..v.layer.."_"..v.class)
         params = require("App."..UI.book..".components."..UI.page..".layers."..v.layer.."_"..v.class)
         model = getModel(params)
         table.insert(components.layers, model)
