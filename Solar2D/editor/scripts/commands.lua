@@ -551,7 +551,7 @@ function M.delete_(UI)
 end
 
 function M.delete(files)
-  local  root, commands = copyFiles(files)
+  local  root, commands = deleteFiles(files)
   return executeScript("delete_lua.", {dst = root, cmd = commands})
 end
 
@@ -628,7 +628,7 @@ local function deleteFiles(files, _dst)
       src = src:gsub(" ", "\\ ")
       dst = dst:gsub(" ", "\\ ")
       dir = dir:gsub(" ", "\\ ")
-      tmp = "rm " .. src
+      tmp = "mv " .. src .." "..src..".bak"
       -- tmp = "mkdir -p " .. dir .. ";cp " .. src .. " " .. dst
       -- tmp = tmp:gsub('/','')
 
