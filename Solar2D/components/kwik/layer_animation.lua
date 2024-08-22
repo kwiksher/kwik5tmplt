@@ -134,72 +134,70 @@ end
 --
 local function createOptions(self, UI)
   local layer = self.obj
-	local onEndHandler = function()
-		if self.controls.resetAtEnd then
-			if self.class == "Shake" then
-				layer.rotation = 0
-			end
-      layer.x				 = layer.oriX
-      layer.y				 = layer.oriY
-			layer.alpha		 = layer.oldAlpha
-			layer.rotation	= 0
-			layer.isVisible = true
-			layer.xScale		= layer.oriXs
-			layer.yScale		= layer.oriYs
-
-			if self.layerOptions.isSpritesheet then
-				layer:pause()
-				layer.currentFrame = 1
-			end
-		end
-    self.onEndHandler(UI)
-	end
-
-	local options = {
-		ease        = gtween.easing[self.controls.easing],
-		repeatCount = self.controls.loop,
-		reflect     = self.controls.reverse,
-		xSwipe      = self.controls.xSwipe,
-		ySwipe      = self.controls.ySwipe,
-		delay       = self.controls.delay,
-		onComplete  = onEndHandler
+  self.properties = self.properties or {}
+  --
+  print("--- options ---")
+  local options = {
+		repeatCount = tonumber(self.properties.loop),
+		reflect     = self.properties.reverse == "true",
+		xSwipe      = self.properties.xSwipe,
+		ySwipe      = self.properties.ySwipe,
+		delay       = self.properties.delay/1000,
 	}
-	if self.breadcrumbs then
+
+  if self.properties.easing then
+    local easingName = self.properties.easing:gsub("Expo", "Exponential")
+    easingName = easingName:gsub("Quad", "Quadratic")
+    easingName = easingName:gsub("Quart", "Quartic")
+    easingName = easingName:gsub("Quint", "Quintic")
+    easingName = easingName:gsub("Circ", "Circular")
+      print("", "easing",self.properties.easing, gtween.easing[easingName] )
+    options.ease        = gtween.easing[easingName]
+  end
+
+	if self.breadcrumbs and #self.breadcrumbs then
 		options.breadcrumb = true
 		options.breadAnchor = 5
 		options.breadShape = self.breadcrumbs.shape
 		options.breadW =self.breadcrumbs.width
 		options.breadH = self.breadcrumbs.height
 		if self.breadcrumbs.color then
-			options.breadColor = self.breadcrumbs.color
+      local values =  util.split(self.breadcrumbs.color, ",")
+      options.breadColor = {tonumber(values[1])/255, tonumber(values[2])/255, tonumber(values[3])/255, tonumber(values[4])}
 		else
 			options.breadColor = {"rand"}
 		end
 		options.breadInterval = self.breadcrumbs.interval
 		if self.breadcrumbs.dispose then
-			options.breadTimer = self.breadcrumbs.time
+			options.breadTimer = self.breadcrumbs.time/1000
 		end
 	end
+
 	return options
 end
 --
 
-local function createProps(self, layer, mX, mY)
-  -- print("createProps", mX, mY)
+local function createPropsTo(self, layer, _mX, _mY)
+  local mX, mY = _mX or self.to.x, _mY or self.to.y
+  print("createProps", self.class, mX, mY, self.to.x, self.to.y)
 	local props = {}
-  if self.class == "Pulse" then
+  if self.class == "pulse" then
     props.xScale = self.to.xScale
     props.yScale = self.to.yScale
-  elseif self.class == "Rotation" then
     props.rotation =  self.to.rotation
-  elseif self.class == "Shake" then
+
+  elseif self.class == "rotation" then
     props.rotation =  self.to.rotation
-  elseif self.class == "Bounce" then
+  elseif self.class == "tremble" then
+    props.rotation =  self.to.rotation
+  elseif self.class == "bounce" then
     props.y=mY
-  elseif self.class == "Blink" then
+    props.rotation =  self.to.rotation
+
+  elseif self.class == "blink" then
     props.xScale =  self.to.xScale
     props.yScale = self.to.yScale
-  elseif (self.class == "Linear" or self.class == "Dissolve" or self.class == "Path") then
+  elseif (self.class == "linear" or self.class == "dissolve" or self.class == "path") then
     if self.to.x then
       props.x = mX
     end
@@ -215,8 +213,8 @@ local function createProps(self, layer, mX, mY)
     if self.to.yScale then
       props.yScale=self.to.yScale * layer.yScale
     end
-    if self.pathProps and self.pathProps.newAngle then -- path
-      props.newAngle = self.pathProps.newAngle
+    if self.path and self.path.newAngle then -- path
+      props.newAngle = tonumber(self.path.newAngle)
     end
   end
   if self.to.alpha then
@@ -225,48 +223,154 @@ local function createProps(self, layer, mX, mY)
 	return props
 end
 
-local function createAnimationFunc(self, UI, class)
-	return function(self, UI)
-    local animObj = {}
+local function createPropsFrom(self, layer, _mX, _mY)
+  local mX, mY = _mX or layer.x, _mY or layer.y
+  print("createProps", self.class, mX, mY, self.from.x, self.from.y)
+	local props = {}
+  if self.class == "pulse" then
+    props.xScale = layer.xScale
+    props.yScale = layer.yScale
+  elseif self.class == "rotation" then
+    props.rotation =  layer.rotation
+  elseif self.class == "shake" then
+    props.rotation =  layer.rotation
+  elseif self.class == "bounce" then
+    props.y=mY
+  elseif self.class == "blink" then
+    props.xScale =  layer.xScale
+    props.yScale = layer.yScale
+  elseif (self.class == "linear" or self.class == "Dissolve" or self.class == "Path") then
+    if self.from.x then
+      props.x = mX
+    end
+    if self.from.y then
+      props.y = mY
+    end
+    if self.from.rotation then
+      props.rotation = layer.rotation
+    end
+    if self.from.xScale then
+      props.xScale= layer.xScale
+    end
+    if self.from.yScale then
+      props.yScale= layer.yScale
+    end
+    if self.pathProps and self.pathProps.newAngle then -- path
+      props.newAngle = layer.newAngle
+    end
+  end
+  if self.from.alpha then
+    props.alpha= layer.alpha
+  end
+	return props
+end
+
+local function createAnimationFunc(self, UI, tool)
+  print("createAnimationFunc", tool)
+    local animObj, animObjTo, animObjFrom = {}, {}, {}
 		local layer = self.obj
 		local sceneGroup = UI.sceneGroup
 		--
-		if layer == nil then return end
+		if layer == nil then print("Error failed to create animation") return end
 		--
 		layer.xScale = layer.oriXs
 		layer.yScale = layer.oriYs
+
+    self.to = self.to or {}
+    local class = self.class:lower()
 		--
     local   mX, mY= getPos(self, layer, self.to.x, self.to.y, self.isSceneGroup)
+    -- print("@@@@@", layer.x, layer.y)
+    -- print("@@@@@", self.to.x, self.to.y, mX, mY)
+    -- print("@@@@@", self.from.x, self.from.y)
+
     --
 		local options = createOptions(self, UI)
-		local props = createProps(self, layer, mX, mY)
-		---
-		if class== "Linear" then
-      -- print("--- Linear ---", props.x, props.y, self.controls.duration)
-      -- for k, v in pairs(props) do print(k ,v) end
-      -- print ("-------")
-      -- for k, v in pairs(options) do print(k ,v) end
-			animObj = gtween.new( layer, self.controls.duration/1000, props, options)
-		elseif class == "Path" then
+		-- local props = createProps(self, layer, mX, mY)
+		local propsTo = createPropsTo(self, layer)
+		local propsFrom = createPropsFrom(self, layer)
+    ---
+    local onEndHandler = function()
+      local layer = self.obj
+      if self.properties.resetAtEnd then
+        if self.subclass == "Shake" then
+          layer.rotation = 0
+        end
+        layer.x				 = layer.oriX
+        layer.y				 = layer.oriY
+        layer.alpha		 = layer.oldAlpha
+        layer.rotation	= 0
+        layer.isVisible = true
+        layer.xScale		= layer.oriXs
+        layer.yScale		= layer.oriYs
+
+        if self.layerOptions.isSpritesheet then
+          layer:pause()
+          layer.currentFrame = 1
+        end
+      end
+      self.onEndHandler(UI)
+    end
+    ---
+		if tool== "gtween" then
+      if class =="blink" or class == "bounce" or class=="pulse" or class == "rotation" then
+        options.onComplete  = onEndHandler
+
+        print(class, "--- propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
+        for k, v in pairs(propsTo) do print(k ,v) end
+        animObjTo = gtween.new( layer, self.properties.duration/1000, propsTo, options)
+        animObjTo:pause()
+        return  animObjTo
+      else -- linear
+        print("--- Linear propsFrom ---", propsFrom.x, propsFrom.y, self.properties.duration)
+        for k, v in pairs(propsFrom) do print(k ,v) end
+        print ("-------")
+
+        print("--- Linear propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
+        for k, v in pairs(propsTo) do print(k ,v) end
+
+        self.properties.duration = self.properties.duration or 1000
+        --
+        -- for from
+        options.onComplete = function()
+          print("Done From")
+          animObjTo:play()
+        end
+        animObjFrom = gtween.new( layer, self.properties.duration/1000, propsFrom, options)
+        --
+        -- for to
+        options.onComplete  = onEndHandler
+        options.delay = 0
+        animObjTo = gtween.new( layer, self.properties.duration/1000, propsTo, options)
+        animObjFrom:pause()
+        animObjTo:pause()
+            -- for k, v in pairs(animObj) do print(k, v) end
+        return  animObjTo, animObjFrom
+      end
+		elseif tool == "btween" then
+      self.path.newAngle = tonumber(self.path.newAngle)
+      local extraValues = createPropsTo(self, layer)
 			animObj = btween.new(
 				layer,
-				self.controls.duration,
-				{
-          self.curve,
-          angle = self.pathProps.angle
-        },
-				options,
-				props)
+				self.properties.duration/1000,
+        self.curve,
+				extraValues,
+				options)
 
 			animObj.pathAnim = true
+      print("@@@@@ btween", animObj)
+      animObj:pause()
+      return animObj
+    else
+      print("Error")
 		end
-    return animObj
-	end
 end
 --
-animationFactory.Linear  = createAnimationFunc(self, UI, "Linear")
-animationFactory.Path     = createAnimationFunc(self, UI, "Path")
-animationFactory.Dissolve = function(self, UI)
+animationFactory.gtween  = function(self,UI)
+  return createAnimationFunc(self, UI, "gtween")
+end
+animationFactory.path     = function(self, UI) return createAnimationFunc(self, UI, "btween") end
+animationFactory.switch = function(self, UI)
 	local layer = self.obj
 	local sceneGroup = UI.sceneGroup
 	--
@@ -274,10 +378,14 @@ animationFactory.Dissolve = function(self, UI)
 	--
 	layer.xScale = layer.oriXs
 	layer.yScale = layer.oriYs
+  local newLayer = sceneGroup[self.properties.to]
   --
 	local animObj = {}
 	animObj.play = function()
-		transition.dissolve(layer, self:getDssolvedLayer(UI),	self.controls.duration, self.controls.delay)
+    print(layer.imagePath, newLayer.imagePath)
+    newLayer.x = layer.x
+    newLayer.y = layer.y
+		transition.dissolve(layer, newLayer,	self.properties.duration, self.properties.delay)
   end
   --
 	animObj.pause = function()
@@ -286,14 +394,54 @@ animationFactory.Dissolve = function(self, UI)
   return animObj
 end
 
+function M:init()
+  -- print("@@@", self.from.x, self.from.y)
+  if self.from.x then
+    self.obj.x = self.from.x
+  end
+  if self.from.y then
+    self.obj.y = self.from.y
+  end
+  if self.from.rotation then
+    self.obj.rotation = self.from.rotation
+  end
+  if self.from.xScale then
+    self.obj.xScale=self.from.xScale * self.obj.xScale
+  end
+  if self.from.yScale then
+    self.obj.yScale=self.from.yScale * self.obj.yScale
+  end
+  if self.pathProps and self.pathProps.newAngle then -- path
+    self.obj.newAngle = tonumber(self.pathProps.newAngle)
+  end
+  if self.from.alpha then
+    self.obj.alpha=self.from.alpha
+  end
+end
+
 --
 function M:initAnimation(UI, layer, onEndHandler)
   self.onEndHandler = onEndHandler
   --
-  if not(self.class == "Dissolve" or self.class =="Path") then
-    self.buildAnim = animationFactory["Linear"]
+  if not(self.class == "switch" or self.class =="path") then
+    self.buildAnim = animationFactory["gtween"]
+    print("self.buildAnim", self.buildAnim)
   else
-    self.buildAnim = animationFactory[M.class]
+    print(self.class)
+    if self.class == "path" then
+      local json = require("json")
+      local path = system.pathForFile("App/" .. UI.book .. "/assets/images/" .. UI.page .. "/" .. self.path.filename, system.ResourceDirectory)
+      if path then
+        local decoded, pos, msg = json.decodeFile(path)
+        if not decoded then
+          print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg))
+          return
+        end
+        self.curve =  self:setCurve(decoded, self.path.closed, self.path.pause)
+        print("@@@@",self.curve)
+      end
+    end
+    self.buildAnim = animationFactory[self.class]
   end
   ---
 	self.obj = layer
@@ -302,6 +450,7 @@ function M:initAnimation(UI, layer, onEndHandler)
   self.obj.oriXs = layer.xScale
   self.obj.oriYs = layer.yScale
 
+  self.layerOptions =  self.layerOptions or {}
 	local referencePoint = self.layerOptions.referencePoint
 	if referencePoint == "TopLeft" then
 		layer.anchorX = 0
@@ -345,6 +494,81 @@ function M:initAnimation(UI, layer, onEndHandler)
 	end
 end
 
+function M:setCurve(pathPoints, closed, pause)
+  local pathCurve = {}
+
+  local curX = 0;
+  local curY = 0;
+  local curLX = 0;
+  local curLY = 0;
+  local curRX = 0;
+  local curRY = 0;
+  local nextX = 0;
+  local nextY = 0;
+  local nextLX = 0;
+  local nextLY = 0;
+  local nextRX = 0;
+  local nextRY = 0;
+  local closed1;
+  local closed2;
+  local closed3;
+  local closed4;
+  local firstY = 0;
+
+  --var bodyShape = []; //FOR THE FUTURE, WHEN PATHS CAN BE EXPORTED AS SHAPES
+
+  for i, point in next,pathPoints do
+    --builds the pathCurve
+    local  pointA = pathPoints[i]
+    local  pointB = pathPoints[i + 1]
+    curX, curY   = app.getPosition(pointA[1], pointA[2])
+    curLX, curLY = app.getPosition(pointA[3], pointA[4])
+    curRX, curRY = app.getPosition(pointA[5], pointA[6])
+    if i == 1 then
+      firstY = curY;
+      --saves for closed paths
+      closed3 = {x=curX, y=curY}
+      -- bodyShape.push(curX); bodyShape.push(curY)
+    end
+    if i < #pathPoints then
+      nextX, nextY =   app.getPosition(pointB[1], pointB[2]) -- anchor[0] anchor[1]
+      nextLX, nextLY = app.getPosition(pointB[3], pointB[4]) -- leftDirection[0] leftDirection[1]
+      nextRX, nextRY = app.getPosition(pointB[5],pointB[6]) -- rightDirection[0] rightDirection[1]
+      --builds the pathCurve
+      pathCurve[#pathCurve+1] = {x=curX, y= curY} --regular curve
+      pathCurve[#pathCurve+1] = {x=curLX, y= curLY}
+      pathCurve[#pathCurve+1] = {x=nextRX, y= nextRY}
+      pathCurve[#pathCurve+1] = {x=nextX, y= nextY}
+      closed4 = {x=nextX, y=nextY}  --used for Pause when complete
+      -- bodyShape.push(curX); bodyShape.push(curY)
+    end
+    if i == #pathPoints then
+      --saves for closed paths
+      closed1 = {x=nextX, y=nextY}
+      closed2 = {x=nextX, y=firstY}
+    end
+  end
+  --this is used only when a path is set to CLOSED
+  if closed then
+    pathCurve[#pathCurve + 1] = closed1
+    pathCurve[#pathCurve + 1] = closed3
+    pathCurve[#pathCurve + 1] = closed3
+    pathCurve[#pathCurve + 1] = closed3
+    closed4 = closed3;
+  end
+  --Repeats the last set of path - makes no sense for almost all situations and do not render if a path is set to CLOSED
+  --DO NOT RETURN TO THE ORIGINAL POSITION AT END - this is used only when a path is set to CLOSED
+  --********* REMOVE WHEN FIND A WAY TO STOP THE ANGLE APPLICATION IN THE LAST PATH POINT IN BTWEEN
+  if pause  then
+    pathCurve[#pathCurve+1] = closed4
+    pathCurve[#pathCurve+1] = closed4
+    pathCurve[#pathCurve+1] = closed4
+    pathCurve[#pathCurve+1] = closed4
+  end
+  local json = require("json")
+  print(json.encode(pathCurve))
+  return pathCurve;
+end
 ---------------------------
 M.set = function(instance)
 	return setmetatable(instance, {__index=M})

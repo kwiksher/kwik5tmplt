@@ -3,17 +3,31 @@ M.name = ...
 -- attach drag-item scrollview to widget library
 require("extlib.dragitemscrollview")
 
-local util = require("editor.util")
+local utileditor = require("editor.util")
+local util = require("lib.util")
+
+-- local layerTableCommands = require("editor.parts.layerTableCommands")
+
+
+
+local option, newText = util.newTextFactory{
+  height = 20,
+  -- fontSize = 10,
+  anchorX = 0
+}
 
 -- load widget library
 local widget = require("widget")
 
 function M:getValue()
-  return self.objs
+  -- for i, v in next, self.members do
+  --   print("", v)
+  -- end
+  return self.members or {}
 end
 
 function M:getLayers()
-  return self.layers
+  return self.members
 end
 
 function M:getSelections()
@@ -34,7 +48,7 @@ local function onKeyEvent(event)
   end
 end
 
-function M:init(x, y, width, height)
+function M:init(UI, x, y, width, height)
   self.x = x
   self.y = y
   self.width= width or 80*2
@@ -43,32 +57,47 @@ function M:init(x, y, width, height)
 
 end
 --
+
+function M:showFocus()
+  local UI = self.UI
+  if UI.editor.focusGroup then
+    UI.editor.focusGroup:removeSelf()
+  end
+  local group = display.newGroup()
+  UI.sceneGroup:insert(group)
+  UI.editor.focusGroup = group
+  --
+  for i, v in next, self.selections do
+    print(i, v.obj.text)
+    local obj = UI.sceneGroup[v.obj.text]
+    if obj then
+      -- print("@", v.text, obj.x, obj.y)
+      local posX, posY = obj.x, obj.y
+      local rect = display.newRect(UI.editor.focusGroup, posX, posY, obj.width, obj.height)
+      rect:setFillColor(1, 0, 0, 0)
+      rect:setStrokeColor(0, 1, 0)
+      rect.strokeWidth = 1
+      rect.xScale = obj.xScale
+      rect.yScale = obj.yScale
+      rect.anchorX = obj.anchorX
+      rect.anchorY = obj.anchorY
+      rect.rotation = obj.rotation
+      transition.from(rect, {time=100, xScale=3, yScale=3})
+    end
+  end
+end
+
 function M:create(UI)
+  self.UI = UI
   -- if self.group then return end
   self.group = display.newGroup()
   --UI.editor.viewStore:insert(self.group)
 
-  local option = {
-    parent = self.group,
-    text = "",
-    x = 0,
-    y = 0,
-    width = self.width,
-    height = 20,
-    font = native.systemFont,
-    fontSize = 10,
-    align = "left"
-  }
-
-  local function newText(option)
-    local obj = display.newText(option)
-    obj:setFillColor(0)
-    obj.anchorX = 0
-    return obj
-  end
+  option.parent = self.group
+  option.width = self.width
 
   self.singleClickEvent = function(obj)
-    util.setSelection(self, obj)
+    utileditor.setSelection(self, obj)
   end
 
 
@@ -83,6 +112,8 @@ function M:create(UI)
       -- print("single click event")
       -- this opens a commond editor table
       self.singleClickEvent(item)
+      --for k, v in pairs (self.selections[1]) do print(k, v) end
+      self:showFocus()
     else
 
       local function touch(e)
@@ -123,7 +154,7 @@ function M:create(UI)
               _layers[i] = v.text
             end
             -- reset
-            UI.editor.groupLayersStore:set{layers=_layers} -- layersTable
+            UI.editor.groupLayersStore:set{members=_layers} -- layersTable
             --
           end
           return true
@@ -163,10 +194,10 @@ function M:create(UI)
         local last_x, last_y = 2, 0 -- scrollView.x , scrollView.y
 
 
-        for i=1, #fooValue.layers do
+        for i=1, #fooValue.members do
           local _group = display.newGroup()
 
-          local name = fooValue.layers[i]
+          local name = fooValue.members[i]
           option.text = name
           local obj = newText(option)
 
@@ -189,7 +220,7 @@ function M:create(UI)
           objs[#objs+1] = obj
 
         end
-        self.layers = fooValue.layers
+        self.members = fooValue.members
         self.objs = objs
       end
     )
@@ -214,6 +245,7 @@ function M:hide(UI)
     end
   end
   if self.scrollView then
+    self.group.isVisible = false
     self.scrollView.isVisible = false
   end
 end
@@ -228,6 +260,7 @@ function M:show(UI)
     end
   end
   if self.scrollView then
+    self.group.isVisible = true
     self.scrollView.isVisible = true
   end
 end
@@ -247,6 +280,18 @@ function M:destroy()
     self.scrollView:removeSelf()
     self.scrollView = nil
   end
+end
+
+function M:isAltDown()
+  return self.altDown
+end
+--
+function M:isControlDown()
+  return self.controlDown
+end
+--
+function M:isShiftDown()
+  return self.shiftDown
 end
 
 

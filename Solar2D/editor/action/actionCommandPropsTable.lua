@@ -2,9 +2,25 @@ local M = {}
 local current = ...
 local parent = current:match("(.-)[^%.]+$")
 local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
+local util = require("lib.util")
 --
 M.name = current
 M.weight = 1
+-- M.groupName = nil
+M.groupName = "rootGroup"
+-- M.x =  display.contentCenterX + 28 -- UI.editor.viewStore.actionCommandTable.left + UI.editor.viewStore.actionCommandTable.width -- commandbox.x + option.width/2
+-- M.x = display.contentCenterX + 480/2
+M.x = display.actualContentWidth -50
+M.y =  22
+M.width = 100
+      -- commandbox.y  -- (display.actualContentHeight - display.contentHeight + option.height)/2
+
+local option, newText = util.newTextFactory{
+  x = 0,
+  y = 100,
+  width = M.width,
+  height = 20
+}
 
 local commandbox = require(parent.."commandbox")
 -- local linkbox   = require(root.."parts.linkbox").new()
@@ -12,8 +28,8 @@ local commandbox = require(parent.."commandbox")
 local util = require("lib.util")
 local json = require("json")
 
-local baseProps = require("editor.baseProps")
-local basePropsControl = require("editor.basePropsControl")
+local baseProps = require("editor.parts.baseProps")
+local basePropsControl = require("editor.parts.basePropsControl")
 
 --
 --- I/F ---
@@ -26,7 +42,7 @@ local basePropsControl = require("editor.basePropsControl")
     -- if name == "_target" then
     --   value = self.objs[i].linkbox.value
     -- end
-    -- print("@", type(self.model.entries[i].value))
+    -- print("@", type(self.model.properties[i].value))
     if _type == 'boolean' then
       if value == nil or value == "" then
         value = currentValue
@@ -42,10 +58,10 @@ local basePropsControl = require("editor.basePropsControl")
 function M:getValue()
   -- print(json.encode(self.model))
   -- for k, v in pairs(linkbox) do print(k, v) end
-  for i=1, #self.model.entries do
+  for i=1, #self.model.properties do
     if self.objs[i] == nil then break end
     -- print(self.model[i], self.objs[i].text, self.objs[i].field.text )
-    self.model.entries[i].value = baseProps._getValue(self.model.entries[i].name, self.objs[i].field.text, self.model.entries[i].value)
+    self.model.properties[i].value = baseProps._getValue(self.model.properties[i].name, self.objs[i].field.text, self.model.properties[i].value)
   end
   if commandbox.selectedObj then -- create
     return self.model, commandbox.selectedObj.text
@@ -57,6 +73,7 @@ end
 function M:init(UI)
   -- self.linkbox = linkbox
 end
+
 --
 function M:create(UI)
   -- if viewStore.actionCommandPropsTable then return end
@@ -64,90 +81,54 @@ function M:create(UI)
   self.group = display.newGroup()
   UI.editor.viewStore.actionCommandPropsTable = self
 
-  local option = {
-    parent = self.group,
-    text = "",
-    x = 0,
-    y = 100,
-    --viewStore.selectLayer.y,
-    width = 60,
-    height = 20,
-    font = appFont,
-    fontSize = 8,
-    align = "left"
-  }
-
-  local appFont
-  if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
-    appFont = native.systemFont
-  else
-    -- appFont = "HelveticaNeue-Light"
-    appFont = "HelveticaNeue"
-  end
-
-
-  local function newText(option)
-    local obj = display.newText(option)
-    obj:setFillColor(0)
-    return obj
-  end
+  option.parent = self.group
 
 
     -- Create invisible background element for hiding the keyboard (when applicable)
 
 
-  local function newTextField(option)
-  		-- Create native text field
-      textField = native.newTextField( option.x+5, option.y, option.width + 5, option.height )
-      textField.font = native.newFont( appFont,8 )
-      --textField:resizeFontToFitHeight()
-      --textField:setReturnKey( "done" )
-      --textField.placeholder = "Enter text"
-      textField:addEventListener( "userInput", function() print("userInput") end )
-      --native.setKeyboardFocus( textField )
-      textField.text = option.text
-      option.parent:insert(textField)
-      return textField
-  end
+  local newTextField = util.newTextField
 
   --
   UI.editor.actionCommandPropsStore:listen(
     function(foo, props)
       M:didHide(UI)
       M:destroy()
-      print("------- actionCommandPropsStore --------")
+      -- print("------- actionCommandPropsStore --------")
       local alphaObj = nil
-      local posX = commandbox.triangle.x + option.width/2
-      print("#### commandbox.triangle.x", commandbox.triangle.x)
+
+
+      local posX = self.x
+      -- print("#### commandbox.x", commandbox.x)
       -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
-      local posY  = commandbox.triangle.y  -- (display.actualContentHeight - display.contentHeight + option.height)/2
+      local posY  = self.y
       -- print("actionCommandPropsStore:listen", posX, posY)
       -- print("", debug.traceback())
       local function compare(a,b)
         return a.name < b.name
       end
       --
-      for i=1, #props.entries do
-        if props.entries[i].name == "target" then
-          props.entries[i].name = "_target"
+      for i=1, #props.properties do
+        if props.properties[i].name == "target" then
+          props.properties[i].name = "_target"
         end
       end
-      table.sort(props.entries,compare)
+      table.sort(props.properties,compare)
       ---
       local objs = {}
-      for i=1, #props.entries do
-        local entry = props.entries[i]
+      for i=1, #props.properties do
+        local entry = props.properties[i]
         option.text = entry.name
         option.x = posX
         option.y = i*option.height + posY
         option.text = entry.name
-        -- print("", entry.name)
         local rect = display.newRect(option.parent, option.x, option.y, option.width*1.2, option.height)
         rect:setFillColor(1)
         --
         local obj
         obj = newText(option)
         obj.rect = rect
+        obj.anchorY = 0.25
         objs[#objs + 1] = obj
 
         -- Edit
@@ -172,8 +153,10 @@ function M:create(UI)
         elseif entry.name == "alpha" then
           alphaObj = obj
         elseif entry.name == "color" then
-          obj.fieldAlpha = alphaObj.field
-          obj:addEventListener("tap", baseProps.tapListenerColor)
+          if alphaObj then
+            obj.fieldAlpha = alphaObj.field
+          end
+          obj:addEventListener("tap", function(event) basePropsControl.handler.color(event) end)
         end
         option.x = posX + option.width
         option.text = basePropsControl._yamlValue(entry.name, entry.value)
@@ -191,6 +174,7 @@ function M:create(UI)
       end
       M.objs = objs
       M.model = props
+
       --
       --
       --------
@@ -222,11 +206,13 @@ function M:create(UI)
     self.group:translate(-130, 0)
   end
 
+
+
 end
 --
 --
 --
-local Animation = table:mySet{"linear", "blink", "bounce", "pulse", "rotaion", "shake"}
+local Animation = table:mySet{"linear", "blink", "bounce", "pulse", "rotaion", "tremble"}
 local Layer     = table:mySet{"image", "layer", "audio"}
 local Layer_Class = table:mySet{ "button", "countdown", "filter", "multiplier", "particles", "sprite", "readme", "video", "web"}
 --

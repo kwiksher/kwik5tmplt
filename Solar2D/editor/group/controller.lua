@@ -9,7 +9,7 @@ local M = require("editor.controller.index").new("group")
 -- I/F
 --
 function M:useClassEditorProps()
-  -- print("useClassEditorProps")
+  print("useClassEditorProps")
   local props = {}
 
   local selectbox = self.viewGroup.selectbox
@@ -19,7 +19,7 @@ function M:useClassEditorProps()
   local layersbox = self.viewGroup.layersbox
   local layersTable = self.viewGroup.layersTable
 
-  props.name = classProps.name or ""
+  props.properties = classProps:getValue() or {} -- name or ""
   --
   props.layersTableSelections = layersTable:getSelections()
   props.layersboxSelections = layersbox:getSelections()

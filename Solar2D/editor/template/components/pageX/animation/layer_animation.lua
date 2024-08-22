@@ -1,5 +1,7 @@
+local parent,root = newModule(...)
+
 local M = {
-  name = "{{name}}",
+  name = "{{layer}}",
   --
   class = "{{class}}",
     -- "Dissolve"
@@ -7,7 +9,7 @@ local M = {
     -- "Linear"
     -- "Pulse"
     -- "Rotation"
-    -- "Shake"
+    -- "Tremble"
     -- "Bounce"
     -- "Blink"
   --
@@ -37,8 +39,8 @@ M.layerOptions = {
 }
 {{/layerOptions}}
 -- animationProps
-M.settings = {
-{{#settings}}
+M.properties = {
+{{#properties}}
   autoPlay = {{autoPlay}},
   delay    = {{delay}},
   duration = {{duration}},
@@ -67,8 +69,8 @@ M.settings = {
   -- flip
   xSwipe   = {{xSwipe}},
   ySwipe   = {{ySwipe}},
+{{/properties}}
 }
-{{/settings}}
   --
 
 {{#to}}
@@ -102,7 +104,7 @@ M.breadcrumbs = {
 {{/breadcrumb}}
 
 {{#path}}
-if M.animation.Class == "Path" then
+if M.animation.Class == "path" then
 	M.pathProps = {
     curve = 	{{pathCurve}},
     angle = {{angle}},
@@ -113,13 +115,14 @@ end
 ---------------------------------------
 --
 local function onEndHandler (UI)
-  if M.actionName:len() > 0  then
+  if M.actionName and M.actionName:len() > 0  then
     Runtime:dispatchEvent({name=UI.page..M.actionName, event={}, UI=UI})
   end
 end
 --
 function M:create(UI)
-  self:init(UI, onEndHandler)
+  self.obj = UI.sceneGroup[self.name]
+  self:initAnimation(UI, self.obj, onEndHandler)
   self.animation = self:buildAnim(UI)
 end
 --

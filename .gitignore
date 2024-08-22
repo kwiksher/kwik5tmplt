@@ -6,3 +6,11 @@ BookServer/copyright.txt
 Photoshop/DeskTopIcon
 errors.txt
 Solar2D/editor/template/assets
+Solar2D/models
+backup_lua.command
+copy_lua.command
+undo_lua.command
+Solar2D/server/tests/outputRedirection.json
+Solar2D/server/tests/outputRedirection_en.json
+Solar2D/server/tests/outputRedirection_jp.json
+tmp.log

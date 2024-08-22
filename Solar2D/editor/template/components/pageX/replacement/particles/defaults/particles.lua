@@ -17,7 +17,7 @@ local M = {
     yScale = 1.5,
     rotation = 90
   },
-  settings = {
+  properties = {
     autoPlay=true,
     delay=1000,
     duration=3000,
@@ -66,7 +66,9 @@ local M = {
     deltaX         = 0,
     deltaY         = 0
   },
-  actionName = nil
+  actions = {
+    actionName = "",
+  }
 }
 
 return M

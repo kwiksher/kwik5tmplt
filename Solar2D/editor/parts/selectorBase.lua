@@ -1,6 +1,8 @@
 local Class, M = {}, {}
 M.name = ...
 M.weight = 1
+M.widthRect = 48 -- for rect
+M.heightRect = 22
 
 local parent = M.name:match("(.-)[^%.]+$")
 local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
@@ -16,15 +18,14 @@ local widget = require("widget")
 local bt = require(root..'controller.BTree.btree')
 local tree = require(root.."controller.BTree.selectorsTree")
 
-local option = {
-  text = "",
+local util = require("lib.util")
+
+local option, newText = util.newTextFactory{
   x = 20,
   y = 0,
-  width = 30,
+  width = nil, --30,
   height = 20,
-  font = native.systemFont,
-  fontSize = 8,
-  align = "left"
+  -- fontSize = 8,
 }
 
 ---
@@ -32,7 +33,7 @@ function M:init(UI)
 end
 --
 function M:create(UI)
-  -- print("create", self.name)
+  -- print("@@@create", self.name, self.iconName)
   if self.rootGroup then return end
   self.rootGroup = UI.editor.rootGroup
 
@@ -51,6 +52,7 @@ function M:create(UI)
     width = 22,
     height = 22,
     fontSize =16,
+    iconSize = 18,
     listener = self.iconHander
   }
 
@@ -76,30 +78,36 @@ function M:create(UI)
 
   end
 
-  option.parent = self.rootGroup
-
-  local function newText(option)
-    local obj=display.newText(option)
-    obj:setFillColor( 0 )
-    return obj
-  end
-
   self.objs = {}
-  local createSelection = function(event)
+  local createSelection = function(vertical)
     for index=1, #self.rows do
       local row = self.rows[index]
       option.text =  row.label
-      option.y = (self.marginY or 0) + option.height * (index)  - option.height/2 + 22
-      -- option.y = option.height * (index) + (display.actualContentHeight-1280/4 )/2 - option.height/2
       --
-      option.x = self.marginX or option.x
-      option.width = self.optionWidth or option.width
-      --
-      local rect = display.newRect(self.rootGroup,option.x, option.y, option.width+18,option.height)
-      rect:setFillColor(0.8)
-      --
+      option.width = nil
+      if vertical then
+        option.x = self.marginX or option.x
+      else
+        option.x = self.marginX or option.x
+        option.y = self.marginY or option.y
+      end
+
       local obj = newText(option)
+      -- obj.anchorY = 0.2
       obj.command = row.command
+
+      if vertical then
+        option.y = (self.marginY or 0) + self.heightRect * (index)  - self.heightRect/2 + 22
+      else
+        obj.x = self.marginX + obj.width/2
+        if index > 1 then
+          obj.x = self.objs[index-1].rect.contentBounds.xMax + obj.width/2
+        end
+      end
+      -- option.width = self.optionWidth or option.width
+
+      local rect = display.newRect(obj.x, obj.y, obj.width +4, self.heightRect)
+      rect:setFillColor(0.8)
       -- if row.command and row.btree == nil then
       --   obj.tap = commandHandler
       --   obj:addEventListener("tap", obj)
@@ -130,16 +138,18 @@ function M:create(UI)
 
       obj.rect = rect
       obj.btree = row.btree
+      self.rootGroup:insert(obj.rect)
+      self.rootGroup:insert(obj.rect)
       self.rootGroup[row.command] = obj
       if row.filter then
         -- filter
-        obj.filter = self.filter:create(UI, obj.contentBounds.xMax, obj.y)
+        obj.filter = self.filter:create(UI, obj.contentBounds.xMax, obj.contentBounds.yMax+10)
         self.rootGroup:insert(obj.filter)
       end
       self.objs[#self.objs + 1] = obj
     end
   end
-  createSelection() -- create but do not show panel demo
+  createSelection(self.vertical) -- create but do not show panel demo
   --
   function self:show ()
     -- print("@@@ show @@@", self.iconName)
@@ -230,7 +240,7 @@ function M:destroy()
 end
 --
 --
-function Class.new(UI, x,y, rows, iconName, filter, propsTable, propsButtons, mouseHandler)
+function Class.new(UI, x,y, rows, iconName, filter, propsTable, propsButtons, mouseHandler, vertical)
   local instance = {}
   instance.x = x
   instance.y = y
@@ -243,6 +253,8 @@ function Class.new(UI, x,y, rows, iconName, filter, propsTable, propsButtons, mo
   instance.height = #rows*option.height
   instance.isVisible = false
   instance.mouseHandler = mouseHandler
+  instance.vertical = vertical or false
+  instance.onClick = nil
   return setmetatable(instance, {__index=M})
 end
 --

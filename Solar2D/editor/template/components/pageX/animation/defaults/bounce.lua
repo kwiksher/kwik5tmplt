@@ -1,50 +1,28 @@
 local M = {
   name = "bounce",
   class="Bounce",
-  from = {
-    x = 0,
-    y = 0,
-    alpha = 0,
+  from = nil,
+  to = {
+    x = nil,
+    y = -100,
+    alpha = 1,
     xScale = 1,
     yScale = 1,
-    rotation = 0
+    rotation = 360
   },
-  to = {
-    x = 100,
-    y = 100,
-    alpha = 1,
-    xScale = 1.5,
-    yScale = 1.5,
-    rotation = 90
-  },
-  settings = {
+  properties = {
+    target = NIL,
     autoPlay=true,
     delay=0,
-    duration=3000,
-    loop=1,
-    reverse=false,
+    duration=500,
+    loop=2,
+    reverse=true,
     resetAtEnd=false,
-    easing=nil,
+    easing="outCirc",
     xSwipe=nil,
     ySwipe=nil
   },
-  audio = {
-    name = "",
-    volume = 5,
-    channel = 1,
-    loop = 1,
-    fadeIn = false,
-    repeatable = false
-  },
-  breadcrumbs = {
-    dispose = true,
-    shape = "",
-    color = {1, 0, 1},
-    interval = 300,
-    time = 2000,
-    width = 30,
-    height = 30
-  },
+  breadcrumbs = nil,
   layerOptions = {
     -- layerProps
     isGroup = false,

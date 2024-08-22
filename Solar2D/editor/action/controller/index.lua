@@ -1,12 +1,11 @@
-local current = ...
-local parent,  root = newModule(current)
---
-local M = {}
+local name = ...
+local parent,  root, M = newModule(name)
 local util = require("editor.util")
 --
 local json = require("json")
 local lustache = require "extlib.lustache"
 local actionTable = require("editor.action.actionTable")
+local picker = require("editor.picker.name")
 
 function M:init(UI, commandMap, selectbox)
   self.commandMap = commandMap
@@ -18,7 +17,7 @@ end
 --
 M.commandGroupHandler = function(event)
   local UI = M.UI
-  print(event.target.muiOptions.name)
+  -- print(event.target.muiOptions.name)
   -- local len = string.len("editor.action.actionEditor-")
   local name = event.target.muiOptions.name
   local obj = M.commandMap[name]
@@ -26,6 +25,11 @@ M.commandGroupHandler = function(event)
   -- TBI
   --   dispatchEvent selectXXX for linking target and xxx componetns
   --
+
+  if obj == nil then
+    print("Error name not found:", name)
+    for k,v in pairs(M.commandMap) do print(k, v) end
+  end
 
   if obj.model.commandClass then
     UI.scene.app:dispatchEvent {
@@ -64,16 +68,24 @@ end
 function M:toggle()
 end
 
-function M:show()
+function M:show(editing)
   local UI = self.UI
   self.selectbox:show()
   --
+  if editing then
   local scrollView = UI.editor.viewStore.commandView
-  for k, v in pairs(self.commandMap) do
-    v.alpha = 1
+  if scrollView then
+    for k, v in pairs(self.commandMap) do
+      v.alpha = 1
+    end
+    scrollView.isVisible = true
   end
-  scrollView.isVisible = true
+  end
   --
+  -- if UI.editor.viewStore.actionButtons then
+  --   UI.editor.viewStore.actionButtons:show()
+  -- end
+
   if UI.editor.viewStore.actionCommandTable then
     UI.editor.viewStore.actionCommandTable.isVisible = true
     if UI.editor.viewStore.actionCommandButtons.lastVisible then
@@ -81,18 +93,21 @@ function M:show()
         UI.editor.viewStore.actionCommandPropsTable:show()
         UI.editor.viewStore.actionCommandButtons:show()
     else
-      UI.editor.viewStore.actionCommandButtons:show()
+        --UI.editor.viewStore.actionCommandButtons:show()
     end
   end
 --
   if actionTable.newButton then
     actionTable.newButton.alpha = 1
     actionTable.editButton.alpha = 1
+    -- actionTable.attachButton.alpha = 1
   end
+
+  -- picker:show()
 
 end
 
-function M:hide()
+function M:hide(cancel)
   local UI = self.UI
   self.selectbox:hide()
   --
@@ -109,7 +124,7 @@ function M:hide()
   end
   --
   if UI.editor.viewStore.actionCommandTable then
-    UI.editor.viewStore.actionCommandTable.isVisible = false
+    UI.editor.viewStore.actionCommandTable:hide()
     UI.editor.viewStore.commandbox:hide()
     UI.editor.viewStore.actionCommandPropsTable:hide()
     if cancel then
@@ -119,10 +134,14 @@ function M:hide()
     end
     UI.editor.viewStore.actionCommandButtons:hide()
   end
-  if actionTable.newButton then
+  if actionTable.newButton and not cancel then
     actionTable.newButton.alpha = 0
     actionTable.editButton.alpha = 0
+    -- actionTable.attachButton.alpha = 0
   end
+
+  picker:hide()
+
 end
 
 function M:reset()
@@ -134,7 +153,7 @@ end
 --
 -- [{"command":"animation.play","params":{"target":""}}]
 --
-function M:render(book, page, command, props)
+function M:render(book, page, command, actions)
   local dst = "App/"..book.."/commands/"..page .."/"..command..".lua"
   --local dst = layer.."_"..class ..".lua"
   local tmplt =  "editor/template/commands/pageX/actionX.lua"
@@ -144,17 +163,17 @@ function M:render(book, page, command, props)
   --   {animation = {pause = {target="layerTwo", sec=2}}},
   -- }})
   local model ={}
-  print(json.encode(props))
-  for i=1, #props do
+  -- print(json.encode(actions))
+  for i=1, #actions do
     local entry = {}
-    local out = util.split(props[i].command, '.')
-    print(unpack(out))
+    local out = util.split(actions[i].command, '.')
+    -- print(unpack(out))
     entry[out[1]] = {}
-    entry[out[1]][out[2]]  = props[i].params
+    entry[out[1]][out[2]]  = actions[i].params
     model[i] = entry
   end
-  print("###", json.encode(model))
-  util.saveLua(tmplt, dst, {actions = model})
+  -- print("###", json.encode(model))
+  util.saveLua(tmplt, dst, { actions = model, encoded = json.encode({name=command, actions=actions})})
   return dst
 end
 

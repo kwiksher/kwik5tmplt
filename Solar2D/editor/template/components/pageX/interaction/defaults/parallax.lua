@@ -1,7 +1,7 @@
 local M = {
   name = "parallax",
   class="parallax",
-  settings = {
+  properties = {
     isActive = true
   }
 }

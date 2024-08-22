@@ -4,7 +4,7 @@ local model = {
   tools = {
     {name = "Properties", icon = "LayerProp"},
     {name = "Language", icon = "Lang"},
-    {name = "setLanguage", icon = "setLang"}
+    -- {name = "setLanguage", icon = "setLang"}
   },
   id = "page",
     props = {

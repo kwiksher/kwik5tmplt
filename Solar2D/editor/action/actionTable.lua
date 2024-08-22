@@ -1,31 +1,22 @@
 local name = ...
-local parent,root = newModule(name)
-local actionbox = require(root.."parts.actionbox")
---
-local M = {
-  selections = {}
-}
-M.name = name
-
-local buttons = require(parent.."buttons")
-local contextButtons = require("editor.parts.buttons")
+local parent,root, M = newModule(name)
+-- local actionbox = require(root.."parts.actionbox")
+local actionTableListener = require(parent.."actionTableListener")
+-- local buttons = require(parent.."buttons")
+local buttonContext = require(parent.."buttonContext")
 local layerTableCommands = require("editor.parts.layerTableCommands")
+local util = require("lib.util")
+--
+M.selections = {}
+M.x = nil
+M.y = nil
+M.width = 52
+M.groupName = "rootGroup"
+
+local option, newText = util.newTextFactory{anchorX=0}
 
 local function onKeyEvent(event)
-  -- Print which key was pressed down/up
-  -- local message = "Key '" .. event.keyName .. "' was pressed " .. event.phase
-  -- for k, v in pairs(event) do print(k, v) end
-  M.altDown = false
-  M.controlDown = false
-  if (event.keyName == "leftAlt" or event.keyName == "rightAlt") and event.phase == "down" then
-    -- print(message)
-    M.altDown = true
-  elseif (event.keyName == "leftControl" or event.keyName == "rightControl") and event.phase == "down" then
-    M.controlDown = true
-  elseif (event.keyName == "leftShift" or event.keyName == "rightShift") and event.phase == "down" then
-    M.shiftDown = true
-  end
-  -- print("controlDown", M.controlDown)
+  return M:onKeyEvent(event)
 end
 
 --
@@ -34,102 +25,65 @@ end
 -- load widget library
 local widget = require("widget")
 
-function M:init(UI) end
+function M:setPosition()
+  -- self.x = self.rootGroup.selectAction.rect.contentBounds.xMax
+  self.x = display.contentCenterX - 480*0.95
+  self.y = 22 -- self.rootGroup.selectAction.y
+
+  -- self.x = self.rootGroup.selectAction.contentBounds.xMax
+  -- self.y = self.rootGroup.selectAction.y
+end
+
+function M:init(UI)
+  buttonContext:init(UI)
+end
 --
 
-local posX = display.contentCenterX*0.75
-
 function M.mouseHandler(event)
+  -- print(event.isSecondaryButtonDown,event.target.isSelected )
   if event.isSecondaryButtonDown and event.target.isSelected then
-    -- print("@@@@selected")
-    contextButtons:showContextMenu(posX, event.y,  {type="action", selections=M.selections})
+    buttonContext:showContextMenu(event.x + 20, event.y,  event.target, "action")
+    --self.target = event.target
   else
     -- print("@@@@not selected")
   end
   return true
 end
 
+
 function M:create(UI)
   -- if self.rootGroup then return end
-  self.rootGroup = UI.editor.rootGroup
+  self.rootGroup = UI.editor[self.groupName]
   self.group = display.newGroup()
   self.UI = UI
+  self:setPosition()
+  buttonContext:create(UI)
 
-  buttons:show()
-  -- click an action
-  local selectHandler = function(target)
-    layerTableCommands.clearSelections(self, "action")
-    if self.altDown then
-      if layerTableCommands.showLayerProps(self, target) then
-        print("TODO show action props")
-      end
-    elseif self.controlDown then
-      print("controlDown")
-      layerTableCommands.multiSelections(self, target)
-    else
-      if layerTableCommands.singleSelection(self, target) then
-        actionbox:setActiveProp(target.action) -- nil == activeProp
-      end
-    end
-  end
-  -- edit button
-  local editHandler = function(target)
-    if self.lastTarget then
-      self.UI.scene.app:dispatchEvent {
-        name = "editor.action.selectAction",
-        action = self.lastTarget.action,
-        UI = self.UI
-      }
-    end
-  end
+  option.width = self.width -- nil makes newText automatically adjust the width
 
-  local newHandler = function(target)
-    self.UI.scene.app:dispatchEvent {
-      name = "editor.action.selectAction",
-      action = {},
-      isNew = true,
-      UI = self.UI
-    }
-end
-
-  local option = {
-    text = "",
-    x = 0,
-    y = 0,
-    width = nil,
-    height = 20,
-    font = native.systemFont,
-    fontSize = 10,
-    align = "left"
-  }
-
-  local function newText(option)
-    local obj = display.newText(option)
-    obj:setFillColor(0)
-    obj.anchorX = 0
-    return obj
-  end
-
-  local function render (models, xIndex, yIndex)
+   local function render (models, xIndex, yIndex)
     -- print("actionStore", #models)
     M:destroy()
-    --buttons:show()
+    -- buttons:show()
 
     local objs = {}
 
     local newButton = newText{
-      x = self.rootGroup.selectAction.contentBounds.xMax,
-      y = self.rootGroup.selectAction.y,
+      x = self.x,
+      y = self.y + 4,
       text = "New"
     }
-    newButton:setFillColor(1, 1, 0)
+    newButton:setFillColor(0, 1, 0)
 
     newButton.rect = display.newRect(self.group, newButton.x, newButton.y, newButton.width, newButton.height)
     newButton.rect:setFillColor(0.8)
     newButton.rect.anchorX = 0
     newButton.alpha = 1
     newButton.rect.alpha = 0
-    newButton.tap = newHandler
+    newButton.tap = function(event)
+      self:newHandler(event)
+      -- buttons:show()
+    end
     newButton:addEventListener("tap", newButton)
 
     local editButton = newText{
@@ -137,8 +91,11 @@ end
       y = newButton.y,
       text = "Edit"
     }
-    editButton:setFillColor(1, 1, 0)
-    editButton.tap = editHandler
+    editButton:setFillColor(0, 1, 0)
+    editButton.tap = function(event)
+      self:editHandler(event)
+      -- buttons:show()
+    end
     editButton:addEventListener("tap", editButton)
     -- editButton.rect = display.newRect(self.group, editButton.x, editButton.y, editButton.width, editButton.height)
     -- editButton.rect:setFillColor(0.8)
@@ -146,16 +103,34 @@ end
     editButton.alpha = 1
     -- editButton.rect.alpha = 0
 
+    -- local attachButton = newText{
+    --   x = newButton.contentBounds.xMax +44,
+    --   y = newButton.y,
+    --   text = "Attach"
+    -- }
+    -- attachButton:setFillColor(0, 1, 0)
+    -- attachButton.tap = function(event)
+    --   self:attachHandler(event)
+    -- end
+    -- attachButton:addEventListener("tap", attachButton)
+    -- attachButton.alpha = 1
+
     for i = 1, #models do
       option.text = models[i]
       option.x = newButton.x
-      option.y = newButton.contentBounds.yMin+ option.height * i
+      option.y = newButton.y+ option.height * i
       --option.width = 100
       local obj = newText(option)
-      obj.tap = selectHandler
+      obj.touch = function(target, event)
+        -- print(event)
+        if event.phase =="ended" then
+          self:selectHandler(target)
+        end
+        return true
+      end
       obj.action = obj.text
-      obj:addEventListener("tap", obj)
-      obj:addEventListener("mouse", self.mouseHandler)
+      obj:addEventListener("touch", obj)
+      obj:addEventListener("mouse",self.mouseHandler)
 
       local rect = display.newRect(obj.x, obj.y, obj.width+10,option.height)
       rect:setFillColor(0.8)
@@ -174,14 +149,20 @@ end
       newButton.rect.height = objs[#objs-1].rect.height
     end
 
-    return objs, newButton, editButton
+    return objs, newButton, editButton --, attachButton
   end
 
   UI.editor.actionStore:listen(
     function(foo, fooValue)
+      -- print(debug.traceback())
       self:destroy()
       if fooValue then
+        -- self.objs, self.newButton, self.editButton, self.attachButton = render(fooValue,0,0)
         self.objs, self.newButton, self.editButton = render(fooValue,0,0)
+
+        -- if #fooValue == 0 then
+        --   self:hide()
+        -- end
       end
     end
   )
@@ -202,6 +183,29 @@ function M:didHide(UI)
   end
   Runtime:removeEventListener("key", onKeyEvent)
 end
+
+function M:hide()
+  if self.objs then
+    self.group.isVisible = false
+  end
+  if self.newButton then
+    self.newButton.isVisible = false
+    self.editButton.isVisible = false
+    -- self.attachButton.isVisible = false
+  end
+end
+
+function M:show()
+  if self.objs then
+    self.group.isVisible = true
+  end
+  if self.newButton then
+    self.newButton.isVisible = true
+    self.editButton.isVisible = true
+    -- self.attachButton.isVisible = true
+  end
+end
+
 --
 function M:destroy()
   if self.objs then
@@ -216,9 +220,9 @@ function M:destroy()
   if self.newButton then
     self.newButton:removeSelf()
     self.editButton:removeSelf()
+    -- self.attachButton:removeSelf()
     self.newButton = nil
   end
 end
 
-
-return M
+return setmetatable(M, {__index=actionTableListener})

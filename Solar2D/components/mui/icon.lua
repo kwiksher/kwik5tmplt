@@ -13,17 +13,18 @@ local onMouseHover = function(event)
     local textOptions = {
       --   parent = group,
       text = event.target.hoverText,
-      x = event.x,
+      x = event.target.x + 10,
        --display.contentCenterX,
-      y = event.y + 20,
+      y = event.y ,
       width = event.target.hoverText:len() * 10,
       font = native.systemFont,
       fontSize = 12,
       align = "left" -- Alignment parameter
     }
     hoverObj = display.newText(textOptions)
-    hoverObj:setFillColor(1, 1, 0)
+    hoverObj:setFillColor(0, 0.5, 1)
     prevHover = event.target.text
+    hoverObj.anchorX = 0
     timer.performWithDelay(
       500,
       function()
@@ -45,8 +46,10 @@ function M:create(Props)
     width = Props.width or 30,
     height = Props.height or 30,
     fontSize = Props.fontSize or 30,
+    iconSize = Props.iconSize or 16,
     fillColor = {0, 0, 0},
     textAlign = "center",
+    iconAlign ="center",
     state = {
       value = "on",
       off = {
@@ -70,6 +73,10 @@ function M:create(Props)
   local obj = mui.getWidgetBaseObject(Props.name)
   --obj:addEventListener("mouseHover", onMouseHover)
   obj.anchorY = 0
+  obj.name = Props.name
+  obj.callBack = Props.listener
+  obj.muiOptions = {name= Props.name}
+
   return obj
 end
 
@@ -88,8 +95,10 @@ function M:createImage(Props)
     rectWidth = 100,
     height = Props.height or 16,
     fontSize = Props.fontSize or 16,
+    iconSize = Props.iconSize or 16,
     fillColor = {0, 0, 0},
     textAlign = "center",
+    iconAlign = Props.iconAlign or "left",
     state = {
       value = "on",
       off = {
@@ -99,7 +108,7 @@ function M:createImage(Props)
       },
       on = {
         textColor = {0, 0, 0, 1},
-        fillColor = {.8, .8, .8, 1},
+        fillColor = Props.fillColor or {.8, .8, .8, 1},
         iconImage = "assets/images/icons/" .. Props.icon .. "Color.png"
       },
       disabled = {
@@ -114,6 +123,9 @@ function M:createImage(Props)
   obj.name = Props.name
   --obj:addEventListener("mouseHover", onMouseHover)
   obj.anchorY = 0
+  obj.callBack = Props.listener
+  obj.muiOptions = {name= Props.name}
+
   return obj
 end
 
@@ -127,9 +139,11 @@ function M:createToolImage(Props)
     width = Props.width or 30,
     rectWidth = 100,
     height = Props.height or 30,
-    fontSize = 30,
+    fontSize = Props.width or 30, -- this fontSize is also applied to the image size
+    iconSize = Props.iconSize or 16,
     fillColor = {0, 0, 0},
     textAlign = "center",
+    iconAlign ="center",
     state = {
       value = "on",
       off = {
@@ -154,6 +168,8 @@ function M:createToolImage(Props)
   obj.hoverText = Props.hoverText
   obj.anchorY = 0
   obj:addEventListener("mouseHover", onMouseHover)
+  obj.callBack = Props.listener
+  obj.muiOptions = {name= Props.name}
   return obj
 end
 

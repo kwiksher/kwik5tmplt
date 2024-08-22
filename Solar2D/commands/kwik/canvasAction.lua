@@ -11,11 +11,11 @@ function _M:brushSize(canvas, psize, pal)
   canvas.brushAlpha = pal
 end
 --
-function _M:brushColor( canvas, r, g, b)
-  canvas.cR, canvas.cG, canvas.cB = r, g, b
+function _M:brushColor( canvas, r, g, b, a)
+  canvas.cR, canvas.cG, canvas.cB, canvas.alpha = r, g, b, a
 end
 --
-function _M:eraseCanvas(canvas)
+function _M:erase(canvas)
   _K.reloadCanvas = 0
   local lineTable = canvas.lineTable
   for i=1, #lineTable do

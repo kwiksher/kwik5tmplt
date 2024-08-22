@@ -179,8 +179,8 @@ M.commands = {
   },
   canvas = {
     brush = {
-      size = {size = 10, alpha = 1},
-      color = {0,0,0,1}
+      size = NIL,
+      color = NIL,
     },
     erase = {},
     undo  = {},

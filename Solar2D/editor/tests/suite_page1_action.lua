@@ -8,16 +8,7 @@ local actionTable = require("editor.action.actionTable")
 local commandbox = require("editor.action.commandbox")
 local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 
-function selectLayer(name)
-  for i, entry in next,layerTable.objs do
-    print("", i, entry.text)
-    if entry.text == name then
-      entry:touch({phase="ended"}) -- animation
-      -- entry.classEntries[1]:touch({phase="ended"}) -- animation
-      break
-    end
-  end
-end
+local helper = require("editor.tests.helper")
 
 function selectTool(args)
   UI.scene.app:dispatchEvent(
@@ -31,9 +22,10 @@ function selectTool(args)
   )
 end
 
-local muiName = "editor.action.commandView-"
+local muiName = "action.commandView-"
 local actionTable = require("editor.action.actionTable")
 local controller = require("editor.action.controller.index")
+
 --
 function selectAction(name)
   for i, v in next, actionTable.objs do
@@ -55,21 +47,22 @@ function M.init(props)
 end
 
 function M.suite_setup()
-  selectors.projectPageSelector:show()
-  selectors.projectPageSelector:onClick(true)
+  -- selectors.projectPageSelector:show()
+  -- selectors.projectPageSelector:onClick(true)
   --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
-  bookTable.commandHandler({book="bookFree"}, nil,  true)
-  pageTable.commandHandler({page="page1"},nil,  true)
+  -- bookTable.commandHandler({book="book"}, nil,  true)
+  -- pageTable.commandHandler({page="page1"},nil,  true)
   -- timer.performWithDelay( 1000, function()
-  selectors.componentSelector.iconHander()
   -- end)
+
+  --selectors.componentSelector:onClick(true,  "layerTable")
 
 end
 
@@ -83,10 +76,65 @@ end
 --     selectors.projectPageSelector:show()
 -- end
 
-function M.xtest_action()
-  selectors.componentSelector:onClick(true,  "actionTable")
+function M.xtest_new_action()
+  UI.editor.actionEditor.iconHander()
+  actionTable.newButton:tap{target=editor.newButton}
+end
+
+function M.xtest_select_action()
+  UI.testCallback = function()
+    --
+    UI.editor.actionEditor.iconHander()
+
+    selectAction("eventOne")
+
+   --- select a command
+   local commandsTable = require("editor.action.actionCommandTable")
+   local obj = commandsTable.objs[1]
+   commandsTable:singleClickEvent(obj)
+
+    -- select a layer
+    -- local propsTable = require("editor.action.actionCommandPropsTable")
+    -- local linkbox = propsTable.linkbox
+    -- local obj = linkbox.objs[1]
+    -- obj:tap({numTaps = 1})
+
+   -- save command props
+      -- UI.scene.app:dispatchEvent {
+      --   name = "editor.actionCommand.save",
+      --   UI = UI,
+      -- }
+
+  -- -- editor.editButton:tap{target=editor.editButton}
+  -- controller.commandGroupHandler{target={muiOptions={name=muiName.."Page"}}}
+  end
+end
+
+function M.xtest_select_multi_actions()
+  -- UI.testCallback = function()
+  --
+  UI.editor.actionEditor.iconHander()
+  actionTable.controlDown = true
   selectAction("eventOne")
-  editor.newButton:tap{target=editor.newButton}
+  selectAction("eventTwo")
+  actionTable.controlDown = false
+  -- end
+
+  local buttons = require("editor.action.buttons")
+  buttons.objs.cancel.tap{eventName="delete"}
+end
+
+function M.xtest_select_multi_actionCommands()
+  -- UI.testCallback = function()
+  --
+  UI.editor.actionEditor.iconHander()
+  selectAction("eventOne")
+  -- end
+
+  local buttons = require("editor.action.actionCommandButtons")
+  buttons.objs.cancel.tap{eventName="delete"}
+
+
 end
 
 --[[
@@ -125,7 +173,7 @@ function M.test_commandEditorShow()
     local obj = actionTable.objs[1]
     editor.singleClickEvent(obj)
     --
-    local buttons = require("editor.action.buttons")
+    alocal buttons = require("editor.action.buttons")
     buttons.objs["cancel"].tap{eventName="cancel"}
   end)
   --
@@ -182,7 +230,7 @@ function M.test_newActionButton()
   local objEntry = actionCommandPropsTable.objs[1]
   objEntry:dispatchEvent{name="tap", target=objEntry}
 
-
+  helper.selectLayer("cat", "linear")
 
 -- select a layer's animation (one of animation class)
 

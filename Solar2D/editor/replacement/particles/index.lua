@@ -6,7 +6,7 @@ local AtoBbutton    = require(parent.."AtoBbutton")
 local selectbox      = require("editor.parts.selectbox")
 -- local classProps    = require(root.."parts.classProps")
 --
-local classProps    = require("editor.baseProps").new({width=50})
+local classProps    = require("editor.parts.baseProps").new({width=50})
 --
 local pointABbox    = require(parent.."pointABbox")
 local actionbox = require("editor.parts.linkbox").new()
@@ -18,7 +18,7 @@ local model         = require(parent.."model")
 local controller = require(parent.."controller")
 
 ----------
-local M = require("editor.baseClassEditor").new(model, controller)
+local M = require("editor.parts.baseClassEditor").new(model, controller)
 
 function M:init(UI)
   self.UI = UI

@@ -11,7 +11,7 @@
 --     {name="anchor", value = "CenterReferencePoint"}
 --   }
 
-local M = require("editor.baseBox").new()
+local M = require("editor.parts.baseBox").new()
 
 -- these props are converted to the props of gtween in kwik/lauer_animation.lua
 M.model = {

@@ -1,7 +1,7 @@
 local M = {
   name = "swipe",
   class="swipe",
-  settings = {
+  properties = {
     isActive = true
   }
 }

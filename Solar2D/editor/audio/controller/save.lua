@@ -17,26 +17,26 @@ local instance = require("commands.kwik.baseCommand").new(
 
     print(name)
     local props = {
-      name       = selected.audio,               -- UI.editor.currentLayer,
+      name       =  selected.audio,               -- UI.editor.currentLayer,
       class      = "audio",
       subclass   = selected.subclass or "short",
-      settings   = {},
+      properties   = {},
       actionName = nil,
       -- the following vales come from read()
       --class = self.class,
       index   = selected.index,
     }
     --
-    local settings = params.settings or classProps:getValue()
-    for i=1, #settings do
-      -- print("", settings[i].name, type(settings[i].value), settings[i].value)
-      print("", settings[i].name, settings[i].value)
+
+    local properties = params.properties or classProps:getValue()
+    for i=1, #properties do
+      -- print("", properties[i].name, type(properties[i].value), properties[i].value)
       --
       -- props.subclass
       --
-      local name = settings[i].name
+      local name = properties[i].name
       if name =="_type" then
-        local t = settings[i].value or "short"
+        local t = properties[i].value or "short"
         if t:len() == 0 then
           t = "short"
         elseif t=="audioshort"then
@@ -51,21 +51,32 @@ local instance = require("commands.kwik.baseCommand").new(
       elseif name== "_file" then
         name = "filename"
       end
-      props.settings[name] = settings[i].value
+      props.properties[name] = properties[i].value
     end
     --
     -- props.name
     --
     if props.name == nil then -- NEW
-      print("#NEW",props.settings.name)
-      -- local t = util.split(props.settings.file or "", '.')
+      print("#NEW",props.properties.name)
+      -- local t = util.split(props.properties.file or "", '.')
       -- props.name = t[1]
-      props.name = props.settings.name
     end
+
+    if props.properties._name then
+      props.name = props.properties._name
+    end
+
+    if props.properties.folder then
+      props.subclass = props.properties.folder
+    end
+
     -- props.actionName
-    props.actionName = actionbox.selectedTextLabel
-    print("porps")
-    for k, v in pairs(props) do print("", k, v) end
+    -- props.actionName = actionbox.selectedTextLabel
+    props.actionName = actionbox:getValue("onComplete")
+
+    print("props")
+    for k, v in pairs(props) do print( k, v) end
+    for k,v in pairs(props.properties) do print("", k, v) end
     --
     local updatedModel = util.createIndexModel(UI.scene.model)
     -- print(json.encode(updatedModel))
@@ -84,11 +95,13 @@ local instance = require("commands.kwik.baseCommand").new(
     files[#files+1] = util.renderIndex(book, page,updatedModel)
     files[#files+1] = util.saveIndex(book, page, props.layer,props.class, updatedModel)
     -- save lua
-    files[#files+1] = controller:render(book, page, props.subclass, props.name, props.settings)
+    files[#files+1] = controller:render(book, page, props.subclass, props.name, props.properties)
     -- save json
-    files[#files+1] = controller:save(book, page, props.subclass, props.name, props.settings)
+    files[#files+1] = controller:save(book, page, props.subclass, props.name, props.properties)
     -- publish
-    scripts.copyFiles(files)
+    scripts.backupFiles(files)
+    scripts.executeCopyFiles(files)
+    scripts.delete(files)
   end
 )
 --[[

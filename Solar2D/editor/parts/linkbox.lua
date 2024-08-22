@@ -4,11 +4,12 @@ local current = ...
 local parent = current:match("(.-)[^%.]+$")
 local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 
-local util = require(root.."util")
+local editorUtil = require(root.."util")
 local shapes = require("extlib.shapes")
 local widget = require( "widget" )
 local App = require "Application"
 
+local util = require("lib.util")
 
 -- linkbox has a rect only not having native.textField. boxbase implements it with native.textField
 ---------------------------
@@ -30,7 +31,7 @@ local nodeMap = {} -- for hiding children
 function M:load(UI, type, x, y, selectedValue)
   self:didHide()
   self:destroy()
-  self:init(UI, x, y, type)
+  self:init(UI, x, y, nil, nil, type)
   self:create(UI)
   self:setValue(selectedValue)
   self:didShow()
@@ -41,8 +42,11 @@ function M:setValue(selectedValue)
   local UI = self.UI
   local book = UI.editor.currentBook or App.get().name
   local page = UI.editor.currentPage or UI.page
-  print("linkbox", book, page)
-  self.model = util.read(book, page)
+  print("linkbox", book, page, self.type)
+
+  local scene = require("App." .. book .. ".components." .. page .. ".index")
+
+  self.model = editorUtil.updateIndexModel(scene.model)
   local class = typeMap[self.type]
 
   -- print(debug.traceback())
@@ -67,12 +71,7 @@ function M:setValue(selectedValue)
   end
 end
 
-local function newText(option)
-  local obj=display.newText(option)
-  obj:setFillColor( 0 )
-  return obj
-end
-
+local option, newText = util.newTextFactory()
 M.newText = newText
 
 function M:createTable(UI, rows, selectedIndex, selectedValue)
@@ -201,7 +200,10 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
         obj:addEventListener("touch", obj)
       end
       -- check
-      local path = util.getParent(obj)
+
+  local scene = require("App." .. book .. ".components." .. page .. ".index")
+
+      local path = editorUtil.getParent(obj)
       if obj.layer and selectedValue == path..obj.layer then -- layer is used for audio, action too
         self.selectedIndex = index
         obj.rect:setFillColor(0,1,0)
@@ -253,17 +255,8 @@ function M:_init(UI, x, y, w, h, type)
   -- local path =system.pathForFile( "App/"..App.get().name.."/models/"..UI.page.."/commands/"..UI.editor.currentAction..".json", system.ResourceDirectory)
   --
 
-  local option = {
-    text     = "",
-    x        = 0,
-    y        = 0,
-    width    = self.width,
-    height   = self.height,
-    font     = native.systemFont,
-    fontSize = 10,
-    align    = "left"
-  }
-
+  option.width    = self.width
+  option.height   = self.height
   self.option = option
 
 end
@@ -373,9 +366,11 @@ function M:hide()
   if self.radioGroup then
     self.radioGroup.isVisible = false
   end
+  --self.group.isVisible = false
 end
 --
 function M:show ()
+  --self.group.isVisible = true
   -- print("show", self.name)
   if self.scrollView then
     self.triangle.isVisible = true
@@ -416,6 +411,19 @@ end
 
 function M:removeSelf()
   self:destroy()
+end
+
+--
+function M:isAltDown()
+  return self.altDown
+end
+--
+function M:isControlDown()
+  return self.controlDown
+end
+--
+function M:isShiftDown()
+  return self.shiftDown
 end
 
 function Class.new(t)

@@ -2,58 +2,48 @@ local name = ...
 local parent,root = newModule(name)
 
 local layerProps = require(parent.."{{layer}}")
+local MultiTouch = require("extlib.dmc_multitouch")
 
--- layerProps
--- local layerProps = {
---   blendMode = "{{blendMode}}",
---   height    =  {{bounds.bottom}} - {{bounds.top}},
---   width     = {{bounds.right}} - {{bounds.left}} ,
---   kind      = {{kind}},
---   name      = "{{parent}}{{name}}",
---   type      = "png",
---   x         = {{bounds.right}} + ({{bounds.left}} -{{bounds.right}})/2,
---   y         = {{bounds.top}} + ({{bounds.bottom}} - {{bounds.top}})/2,
---   alpha     = {{opacity}}/100,
--- }
 
 local M = {
-  name ="{{name}}",
+  name ="{{layer}}",
   -- commonAsset = "{{common}}",
   -- class = "{{class}}", -- button, drag, canvas ...
   --
   -- dragProps
-  {{#settings}}
-  constrainAngle = nil,
-  bounds = {xStart=nil, xEnd=nil, yStart=nil, yEnd=nil},
+  {{#properties}}
+  constrainAngle = {{constrainAngle}},
+  bounds = {xMin={{xMin}}, xMax={{xMax}}, yMin={{yMin}}, yMax={{yMax}}},
   isActive = "{{isActive}}",
   isFocus = true,
   isPage = false,
   --
   isFlip = true,
-  flipAxis = "x", -- "y",
-  flipValue      = 0,
-  flipDirection  = "right", -- "left", "bottom", "top"
-  flipDirecttion1 = "right",
-  flipDirecttion2 = "left",
-  flipScale = 1, -- -1
-  --
+  flipInitialDirection  = "right", -- "left", "bottom", "top"
+  -- flipAxis = "x", -- "y",
+  -- flipValue      = 0,
+  -- flipScale = 1, -- -1
+  -- --
   isDrop = true,
-  dropLayer = "",
+  dropArea = "{{dropArea}}",
   dropMargin = 10,
   --
-  dropBound = {xStart=0, xEnd=0, yStart = 0, yEnd=0},
+  -- dropBound = {xMin=0, xMax=0, yMin = 0, yMax=0},
   --
   rock = 1, -- 0,
   backToOrigin = true,
-  {{/settings}}
+  {{/properties}}
   --
-  actions={
-    onDropped = "{{actionName}}",
-    onReleased ="{{}}",
-    onMoved="{{}}" },
-  --
-  layerProps = layerProps
 }
+
+M.layerProps = layerProps
+M.actions={
+  {{#actions}}
+  onDropped = "{{onDropped}}",
+  onReleased ="{{onReleased}}",
+  onMoved="{{onMoved}}" },
+  {{/actions}}
+
 
 function M:create(UI)
   self.UI = UI
@@ -64,6 +54,7 @@ function M:create(UI)
     self.obj = sceneGroup
   end
   --
+  self.obj.dropArea = sceneGroup[self.dropArea]
   self:activate(self.obj)
 end
 

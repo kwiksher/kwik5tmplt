@@ -213,7 +213,8 @@ function M.new(Props)
         self.context:init(app.props.scenes, app.props)
 
         if #self.props.scenes > 0 then
-          self.startSceneName = "components." .. self.props.scenes[self.props.goPage]..".index"
+          -- self.startSceneName = "components." .. self.props.scenes[self.props.goPage]..".index"
+          self.startSceneName = "components." .. self.props.goPage..".index"
           --
           self:dispatchEvent({name = "app.statsuBar", event = "init"})
           self:dispatchEvent({name = "app.droidHWKey", event = "init"})

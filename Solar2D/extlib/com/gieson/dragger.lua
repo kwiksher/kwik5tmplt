@@ -26,7 +26,7 @@ function retObj:newDragger(params)
 	end
 
 	function dragger:onRelease(touchData)
-		popup:off()
+		popup:off(self)
 		self.touched = false
 	end
 

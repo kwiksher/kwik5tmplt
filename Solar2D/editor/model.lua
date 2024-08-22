@@ -1,15 +1,15 @@
 local model = {
   layerTools = {
     {
-      name = "Page",
+      name = "Layer",
       icon = "toolPage",
       tools = {
-        {name = "add Page", icon = "newPage"},
-        {name = "Properties", icon = "LayerProp"},
-        {name = "Language", icon = "Lang"},
+        -- {name = "addPage", icon = "newPage"},
+        {name = "Properties", icon = "layerProp"},
+        -- {name = "Language", icon = "Lang"},
         {name = "setLanguage", icon = "setLang"}
       },
-      id = "page"
+      id = "layer"
     },
     {
       name = "Replacements",
@@ -22,7 +22,7 @@ local model = {
         {name = "Mask", icon = "repMask"},
         {name = "Multiplier", icon = "repMultiplier"},
         {name = "Particles", icon = "repParticles", id = "particles"}, -- relacement.particles.index is selected
-        {name = "Spritesheet", icon = "repSprite"},
+        {name = "Sprite", icon = "repSprite"},
         {name = "Sync", icon = "repSync"},
         {name = "Text", icon = "repText"},
         {name = "Vector", icon = "repVector"},
@@ -40,7 +40,7 @@ local model = {
         {name = "Bounce", icon = "animBounce"},
         {name = "Pulse", icon = "animPulse"},
         {name = "Rotation", icon = "animRotation"},
-        {name = "Shake", icon = "animShake"},
+        {name = "Tremble", icon = "animShake"},
         {name = "Switch", icon = "animSwitch"},
         {name = "Filter", icon = "animFilter"},
         {name = "Path", icon = "animPath"}
@@ -67,11 +67,11 @@ local model = {
       name = "Physics",
       icon = "toolPhysics",
       tools = {
-        {name = "Properties", icon = "PhyProp"},
-        {name = "Body", icon = "PhyBody"},
-        {name = "Collision", icon = "PhyColl"},
-        {name = "Force", icon = "PhyForce"},
-        {name = "Joint", icon = "PhyJoint"}
+        {name = "Physics", icon = "phyProp"},
+        {name = "Body", icon = "phyBody"},
+        {name = "Collision", icon = "phyColl"},
+        {name = "Force", icon = "phyForce"},
+        {name = "Joint", icon = "phyJoint"}
       },
       id = "physics"
     },
@@ -85,8 +85,14 @@ local model = {
         {name = "new_image", icon = ""},
       },
       id = "shape"
+    },
+    {
+      name = "Trash",
+      icon = "toolTrash",
+      tools = {},
+      id = "trash",
+      command = "delete"
     }
-
   },
   pageTools = {
     audio = {
@@ -105,6 +111,10 @@ local model = {
       name = "Variable",
       id = "variable"
     },
+    -- joint = {
+    --   name = "Joint",
+    --   id = "joint"
+    -- },
   },
   bookTools = {
     book = {

@@ -3,6 +3,9 @@ local parent, root = newModule(name)
 local listPropsTable = require(root.."listPropsTable")
 local listbox = require(root.."listbox")
 local listButtons = require(root.."listButtons")
+local previewPanel = require(root.."previewPanel")
+local textProps    = require(root.."textProps")
+
 local buttons       = require("editor.parts.buttons")
 local json = require("json")
 --
@@ -22,6 +25,9 @@ local instance =
     listButtons:hide()
     listPropsTable:hide()
     buttons:show()
+
+    previewPanel:hide()
+    textProps:show()
 
   end
 )

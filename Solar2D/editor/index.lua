@@ -11,11 +11,14 @@ local json = require("json")
 local bt = require(parent..'controller.BTree.btree')
 local tree = require(parent.."controller.BTree.selectorsTree")
 --
-local unitTestOn = false
+M.lastSelection = { book="book", page="page12"}
+
+local unitTestOn = true
 local httpServerOn = true
 
 M.rootGroup = display.newGroup()
 M.viewStore = {}
+M.clipboard = require("editor.clipboard")
 --
 -- print(current, parent ,root)
 --
@@ -40,6 +43,8 @@ M.commands = {
   {name="selectGroup", btree="load group"},
   {name="selectTimer", btree="load timer"},
   {name="selectVariable", btree="load variable"},
+  {name="selectJoint", btree="load joint"},
+
   -- {name="selectVideo", btree="load video"},
 
 }
@@ -53,12 +58,14 @@ for i=1, #M.commands do
 end
 -- BTree calls this when activating actionNode
 M.BThandler = function(name, status)
-  -- print("#BTHandler: dispathEvent")
+  -- print(debug.traceback())
+
+  print("#BTHandler: dispathEvent")
   --  print("", name,  bt.getFriendlyStatus( nil,status ))
   local target = BTMap[name]
   -- print("", target)
   if  target and M.UI then
-    --  print("", target.eventName)
+    print("", target.eventName)
     --local obj = M.UI.editor.rootGroup[target.name]
     local params = {
       name = target.eventName,
@@ -67,6 +74,7 @@ M.BThandler = function(name, status)
     }
     if tree.backboard then
       for k, v in pairs(tree.backboard) do
+        print("", k, v)
         params[k] = v
       end
     end
@@ -116,6 +124,9 @@ local groups            = nanostores.createStore()
 local timers            = nanostores.createStore()
 local variables         = nanostores.createStore()
 
+local joints            = nanostores.createStore()
+
+
 --
 local App = require("Application")
 
@@ -125,7 +136,13 @@ local mui = require("materialui.mui")
 -- this returns a tool obj
 function M:getClassModule (class)
   local v = self.classMap[class:lower()] or class
-  return self.editorTools[v]
+  -- for k, v in pairs(self.editorTools) do print(k) end
+  local mod = self.editorTools[v]
+  if mod == nil then
+    -- print("@@@@ Error to find", v)
+    return self.editorTools['editor.parts.baseTable-'..v]
+  end
+  return mod
 end
 
 function M:getClassFolderName (class)
@@ -157,6 +174,7 @@ function M:initStores()
     self.groupStore = groups -- TBI
     self.timerStore = timers -- TBI
     self.variableStore = variables -- TBI
+    self.jointStore   = joints
 end
 ---
 function M:init(UI)
@@ -168,12 +186,13 @@ function M:init(UI)
     --
     local app = App.get()
     for i=1, #self.commands do
-      app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.parts.controller.selector."..self.commands[i].name)
+      app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.controller.selector."..self.commands[i].name)
     end
     for i=1, #self.models do
       self.views[i] = require(parent.."parts."..self.models[i])
     end
     for i=1, #self.actionViews do
+      -- print(parent.."action."..self.actionViews[i])
       self.views[#self.views + 1] = require(parent.."action."..self.actionViews[i])
     end
     -- Here linking toolbar-xx with view.animation, ...
@@ -183,12 +202,14 @@ function M:init(UI)
     for i=1, #layerTools do
       if layerTools[i].id then
         local module = require(parent..layerTools[i].id..".index")
+        module.id = layerTools[i].id
         self.views[#self.views + 1] = module
         self.editorTools[layerTools[i].id] = module
         for j=1, #layerTools[i].tools do
           if layerTools[i].tools[j].id then
             -- Aditional editor for particles
             self.classMap[layerTools[i].tools[j].name:lower()] = layerTools[i].id.."."..layerTools[i].tools[j].id
+            -- print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id.."."..layerTools[i].tools[j].id)
             --
             local module = require(parent..layerTools[i].id.."."..layerTools[i].tools[j].id..".index")
             self.views[#self.views + 1] = module
@@ -196,6 +217,8 @@ function M:init(UI)
 
           else
             self.classMap[layerTools[i].tools[j].name:lower()] = layerTools[i].id
+            -- print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id)
+
           end
           --print(layerTools[i].tools[j].name, layerTools[i].id)
         end
@@ -208,7 +231,7 @@ function M:init(UI)
         -- print("@@@", parent..v.id..".index")
         local module = require(parent..v.id..".index")
         self.views[#self.views + 1] = module
-        self.editorTools['editor.baseTable-'..v.id] = module
+        self.editorTools['editor.parts.baseTable-'..v.id] = module
       end
     end
 
@@ -216,7 +239,7 @@ function M:init(UI)
     -- asset tool
     local mod  = require(parent..assetTool.id..".index")
     self.views[#self.views + 1] = mod
-    self.editorTools['editor.baseTable-'..assetTool.id] = mod
+    self.editorTools['editor.parts.baseTable-'..assetTool.id] = mod
 
     self:initStores()
     --
@@ -255,7 +278,8 @@ function M:runTest()
     UI = self.UI,
     bookTable = bookTable,
     pageTable = pageTable,
-    layerTable = layerTable
+    layerTable = layerTable,
+    actionTable = actionTable,
   }
   if self.UI.testCallback then
     self.UI.testCallback()
@@ -263,24 +287,23 @@ function M:runTest()
 end
 
 
-function M:gotoLastSelection()
+function M:gotoLastSelection(_props)
   local UI = self.UI
-  local props = {book="bookFree", page="page1", selections={layer="title", class="linear"}}
+  local props = {book="book", page="page1", selections={layer="cat", class="linear"}}
   -- Path for the file to read
   local path = system.pathForFile( "kwik.json", system.ApplicationSupportDirectory )
   -- Open the file handle
   local file, errorString = io.open( path, "r" )
   --
   --
-  if not file then
+  if _props then
       -- Error occurred; output the cause
-      print( "File error: " .. errorString )
-      return
+      props = _props
   else
       -- Read data from file
       local contents = file:read( "*a" )
       -- Output the file contents
-      print( "Contents of " .. path .. "\n" .. contents )
+      -- print( "Contents of " .. path .. "\n" .. contents )
       -- Close the file handle
       io.close( file )
       props = json.decode(contents)
@@ -297,10 +320,10 @@ function M:gotoLastSelection()
   --
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
 
   local obj = helper.getBook(props.book)
   bookTable.commandHandler(obj, {phase="ended"},  true)
@@ -311,7 +334,24 @@ function M:gotoLastSelection()
   selectors.componentSelector:onClick(true,  "layerTable")
 
   if props.selections then
-    if Shapes[props.selections[1].class] then
+    if props.selections[1].name == "action pasted" then
+      helper.selectIcon("action")
+    elseif props.selections[1].name == "pasted" then
+      local class = props.selections[1].class
+      if class == "audio" then
+        selectors.componentSelector:onClick(true,  "audioTable")
+      elseif class == "group" then
+        selectors.componentSelector:onClick(true,  "groupTable")
+      elseif class == "timer" then
+        selectors.componentSelector:onClick(true,  "timerTable")
+      elseif class == "variable" then
+        selectors.componentSelector:onClick(true,  "variableTable")
+      elseif class == "joint" then
+        selectors.componentSelector:onClick(true,  "jointTable")
+      elseif class == "page" then
+        selectors.projectPageSelector:onClick(true)
+      end
+    elseif Shapes[props.selections[1].class] then
       helper.selectLayer(props.selections[1].name)
     else
       helper.selectLayer(props.selections[1].name, props.selections[1].class)
@@ -356,7 +396,7 @@ function M:didShow(UI)
       if not self.isReloaded then
         self.isReloaded = true
         ----------------------------
-        self:gotoLastSelection()
+        self:gotoLastSelection(self.lastSelection)
         --------- unit test --------
         if unitTestOn then
           self:runTest()
@@ -374,10 +414,14 @@ function M:didShow(UI)
       end
     end
 
-    UI.editor.rootGroup:dispatchEvent{name="labelStore",
-      currentBook= UI.editor.currentBook,
-      currentPage= UI.page,
-      currentLayer = UI.editor.currentayer}
+    -- UI.editor.rootGroup:dispatchEvent{name="labelStore",
+    --   currentBook= UI.editor.currentBook,
+    --   currentPage= UI.page,
+    --   currentLayer = UI.editor.currentayer}
+    -- print ("------------ UI.editor.rootGroup ---------")
+    -- for k, v in pairs(UI.editor.rootGroup) do print("", k) end
+    -- print ("------------ UI.editor.viewStore ---------")
+    -- for k, v in pairs(UI.editor.viewStore) do print("", k) end
   end
 --
 function M:didHide(UI)

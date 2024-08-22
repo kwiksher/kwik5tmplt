@@ -11,7 +11,7 @@ local instance = require("commands.kwik.baseCommand").new(
       book          = params.book or  UI.editor.currentBook,
       page          = params.page or params.UI.page,
       updatedModel  = util.createIndexModel(params.UI.scene.model),
-      settings      = params.settings or controller.classProps:getValue(),
+      properties      = params.properties or controller.classProps:getValue(),
       completebox   = params.actionbox or controller.actionbox,
       isNew         = params.isNew
     }

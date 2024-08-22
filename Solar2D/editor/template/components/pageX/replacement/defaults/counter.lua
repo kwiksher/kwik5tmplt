@@ -1,8 +1,10 @@
 local M = {
   name = "counter",
   class="counter",
-  actionName = "",
-  settings = {
+  properties = {
+  },
+  actions = {
+    actionName = "",
   }
 }
 

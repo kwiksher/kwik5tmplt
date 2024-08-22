@@ -12,20 +12,25 @@ local model = {
   }
 }
 
-local selectbox      = require(parent .. "assetTable")
+local assetTable      = require(parent .. "assetTable")
 local classProps    = require(parent.."classProps")
 local buttons       = require(parent.."buttons")
 local controller = require("editor.controller.index").new("asset")
 
 --
-local M = require(root.."baseClassEditor").new(model, controller)
+local M = require(root.."parts.baseClassEditor").new(model, controller)
+
+M.x = display.contentCenterX +  480/2
+M.y	= 20
+M.width = 80
+M.height = 16
 
 function M:init(UI)
   self.UI = UI
   self.group = display.newGroup()
   UI.editor.assetEditorGroup = self.group
   --
-  selectbox:init()
+  assetTable:init(UI, display.contentCenterX, 40, self.width*0.74, self.height)
   classProps:init(UI, self.x + self.width*1.5, self.y,  self.width, self.height)
   classProps.model = model.props
   classProps.UI = UI
@@ -35,8 +40,8 @@ function M:init(UI)
 
   -- --
   controller:init{
-    selectbox      = selectbox,
-    classProps    = classProps,
+    selectbox      = assetTable, -- Audio, Particles, Spritesheet, SyncText, Video
+    classProps    = classProps, -- select a media entry then click the icon to insert media, it can be a layer replacement
     buttons       = buttons
   }
   controller.view = self
@@ -46,6 +51,8 @@ function M:init(UI)
 end
 
 function controller:toggle()
+  print("@@@@@@@@@@@@@")
+
   self.isVisible = not self.isVisible
   if self.isVisible then
     self:show()
@@ -69,7 +76,7 @@ function controller:save(book, page, class, name, model)
   return dst
 end
 
-local function readAsset(path, folder, map)
+local function readAsset(path, folder, map, parent)
   -- print(path.."/"..folder)
   local entries = {}
   local success = lfs.chdir( path.."/"..folder )
@@ -77,14 +84,20 @@ local function readAsset(path, folder, map)
     for file in lfs.dir( path.."/"..folder ) do
       if util.isDir(file) and file:len() > 3 then
         -- print("", "@Found dir " .. file )
-        local children = readAsset(path.."/"..folder, file, map)
+        local children = readAsset(path.."/"..folder, file, map, folder)
         for i=1, #children do
           entries[#entries + 1] = children[i]
         end
-      elseif file:len() > 3  then
+      elseif file:len() > 3 and file:find(".lua")  ==  nil and file:find("@") == nil and file:find(".json")  ==  nil then
         local mapEntry = map[file]
         if mapEntry == nil then
-          entries[#entries + 1] = {name=file, path=folder, links={}}
+          if parent==nil then
+            entries[#entries + 1] = {name=file, path=folder, links={}}
+          else
+            local v = parent.."/"..folder
+
+            entries[#entries + 1] = {name=file, path=v:gsub("audios/",""), links={}}
+          end
         else
           mapEntry.isExist = true
           entries[#entries + 1] = {name=mapEntry.name, path=mapEntry.path, links=mapEntry.links}
@@ -97,6 +110,7 @@ local function readAsset(path, folder, map)
 end
 
 function controller:read(book, _model)
+  -- print(debug.traceback())
   local assets = {}
   local model = _model or require("App." ..book..".assets.model")
   local map = {}
@@ -104,7 +118,7 @@ function controller:read(book, _model)
     for i, entry in next, v do
       entry.index = i
       map[entry.name] = entry
-      print(k, i, entry.name)
+      -- print(k, i, entry.name)
     end
   end
   --
@@ -226,8 +240,10 @@ function controller:updateAsset(book, page, layer, classFolder, class, model, as
     removeDuplicatedLayer("videos", layer)
 
   end
-  print(json.encode(ret))
+  -- print(json.encode(ret))
   return ret
 end
+
+
 --print(M.hide)
 return M

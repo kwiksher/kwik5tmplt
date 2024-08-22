@@ -1,6 +1,7 @@
 local name = ...
 local parent = name:match("(.-)[^%.]+$")
 local util = require("editor.util")
+local layerTableCommands = require("editor.parts.layerTableCommands")
 
 local M = {
   model = {},
@@ -41,13 +42,13 @@ function M:didHide(UI)
 end
 
 function M:commandHandler(eventObj, event)
-  print(event.phase)
+  -- print(event.phase)
   if event.phase == "began" or event.phase == "moved" then
     return
   end
 
   util.setSelection(self, eventObj)
-
+  layerTableCommands.showFocus(self)
   -- local target = eventObj -- or event.target
   -- --
   -- if not self.controlDown then

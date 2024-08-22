@@ -20,7 +20,7 @@ controller:init{
 -- function controller:useClassEditorProps()
 -- end
 
-local M          = require(root.."baseClassEditor").new(model, controller)
+local M          = require(root.."parts.baseClassEditor").new(model, controller)
 --
 function M:init(UI)
   self.UI = UI

@@ -11,14 +11,21 @@ local toolbar = require(root.."parts.toolbar")
 function M:init(viewGroup)
   self.viewGroup = viewGroup or {}
   --
+  if self.id == "physics" then
+    -- print ("@@@@@", self.id)
+   -- print(debug.traceback())
+  end
   if viewGroup then
-    self.selectbox      = viewGroup.selectbox
-    -- ↑ this override local selectbox and it deletes setTemplate?
-    -- yes, timer.timerTable does not have setTempalte.
-
-    self.classProps    = viewGroup.classProps
-    self.actionbox = viewGroup.actionbox
-    self.buttons       = viewGroup.buttons
+    -- self.selectbox      = viewGroup.selectbox
+    -- self.classProps    = viewGroup.classProps
+    -- self.actionbox = viewGroup.actionbox
+    -- self.buttons       = viewGroup.buttons
+    for k, v in pairs(viewGroup) do
+      -- if self.id == "physics" then
+      --   print(k)
+      -- end
+      self[k] = v
+    end
   else
     self.viewGroup.selectbox = self.selectbox
     self.viewGroup.classProps = self.classProps
@@ -42,13 +49,13 @@ end
 -- I/F
 --
 function M:useClassEditorProps()
-  -- print("useClassEditorProps")
-  local props = {}
+  -- print(debug.traceback())
+  print("editor.controller.useClassEditorProps", self.id)
+  local props = { properties = {}}
   if self.selectbox.selectedObj and self.selectbox.selectedText then
     props = {
       name = self.selectbox.selectedObj.text, -- UI.editor.currentLayer,
       class= self.selectbox.selectedText.text:lower(),
-      settings = {},
       actionName = nil,
       -- the following vales come from read()
       page = self.page,
@@ -56,17 +63,22 @@ function M:useClassEditorProps()
       isNew = self.isNew,
       --class = self.class,
       index = self.selectbox.selectedIndex,
+      properties = {}
     }
   end
   --
   if self.classProps == nil then
     print("#Error self.classProps is nil for ", self.tool)
-    return {}
+    return nil
   end
-  local settings = self.classProps:getValue()
-  for i=1, #settings do
-    -- print("", settings[i].name, type(settings[i].value))
-    props.settings[settings[i].name] = settings[i].value
+  local properties = self.classProps:getValue()
+  for i, entry in next, properties do
+    -- print("", properties[i].name, type(properties[i].value))
+    if entry.name == "_target" then
+      props.properties[#props.properties+1] = {name = "target", value = entry.value}
+    else
+      props.properties[#props.properties+1] = {name = entry.name, value = entry.value}
+    end
   end
   --
   props.actionName =self.actionbox.value
@@ -75,33 +87,39 @@ end
 
 -- this handler should be called from selectbox to set one of animtations user selected
 function M:setValue(decoded, index, template)
+  -- print("editro.controller.setValue", self.id)
   if decoded == nil then return end
   if not template then
-    print(json.encode(decoded[index]))
+    -- print(json.encode(decoded[index]))
     self.selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
-    self.classProps:setValue(decoded[index].settings)
+    self.classProps:setValue(decoded[index].properties)
     local props = {}
-    for k, v in pairs (decoded[index].actions) do
-      props[#props+1] = {name=k, value=""}
-    end
-    for k, v in pairs (decoded[index].actions) do
-      self.actionbox:setValue(k, v)
+    local actions = decoded[index].actions
+    if actions then
+      for k, v in pairs (actions) do
+        props[#props+1] = {name=k, value=v}
+      end
+      self.actionbox:setValue(props)
+      -- self.actionbox:initActiveProp(actions)
     end
   else
     self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
-    self.classProps:setValue(decoded.settings)
+    if decoded.properties.target then
+      decoded.properties.target = self.layer
+    end
+    self.classProps:setValue(decoded.properties)
     local props = {}
     if decoded.actions then
       for k, v in pairs (decoded.actions) do
-        props[#props+1] = {name=k, value=""}
+        props[#props+1] = {name=k, value=v}
       end
-      self.actionbox.props = props
-      for k, v in pairs (decoded.actions) do
-        self.actionbox:setValue(k, v)
-      end
+      self.actionbox:setValue(props)
+      -- self.actionbox:initActiveProp(props)
+
     else
-      print("@@@@@@@@@@@@@@")
-      self.actionbox:hide()
+      print("no actionbox")
+      --self.actionbox:hide()
+      self.actionbox:setValue()
       -- print(#self.actionbox.objs)
     end
   end
@@ -124,6 +142,8 @@ function M:toggle()
 end
 
 function M:show()
+  -- print("show",self.id, self.class)
+  -- print(debug.traceback())
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
       v:show()
@@ -133,6 +153,7 @@ function M:show()
 end
 
 function M:hide()
+  -- print("hide", self.id, self.class)
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
       v:hide()
@@ -153,7 +174,9 @@ function M:redraw()
   self.view:create(UI)
   self.view:didShow(UI)
   self:show()
-
+  if self.onShow then
+    self:onShow(UI)
+  end
   --
 
 end
@@ -175,32 +198,69 @@ function M:renderAssets(book, page, layer, classFolder, class, model)
 end
 
 local Shapes = table:mySet{"new_image", "new_rectangle", "new_ellipse", "new_text"}
+local Animations = table:mySet{"linear", "blink", "bounce", "pulse", "rotation", "tremble"}
+
 M.Shapes = Shapes
 
 function M:render(book, page, layer, classFolder, class, model)
-  print(book, page, layer, classFolder, class, model.name)
-  local dst, tmplt
-  if class == nil or model.name == nil then
-    dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
-    --local dst = layer.."_"..class ..".lua"
-    tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_text.lua"
+  print("render()", book, page, layer, classFolder, class, model.name)
+
+  local tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
+  local dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
+
+  if classFolder == "physics" then
+    tmplt =  "editor/template/components/pageX/"..classFolder.."/"..class ..".lua"
+    if class == "joint" then
+      dst = "App/"..book.."/components/"..page.."/joints/"..model.name ..".lua"
+    end
+  elseif (model.name and model.name:len()>0) and class then
+    if model.name ~= "nil" then
+      dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..(model.name) ..".lua"
+    end
   elseif Shapes[class] then
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
     --local dst = layer.."_"..class ..".lua"
     tmplt =  "editor/template/components/pageX/"..classFolder.."/"..class..".lua"
-
-  else
-    dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..model.name ..".lua"
+  elseif class then
     --local dst = layer.."_"..class ..".lua"
-    tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
+    if Animations[class] then
+      tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_animation.lua"
+    end
+  else
+    dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
+    --local dst = layer.."_"..class ..".lua"
+    tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_text.lua"
     -- if tool == "animation" then
     --   tmplt =  "editor/template/components/pageX/animations/layer_animation.lua"
     -- end
   end
   util.mkdir("App", book, "components", page, "layers")
+  util.mkdir("App", book, "components", page, "joints")
   util.saveLua(tmplt, dst, model)
   return dst
 end
+
+function M:renderPage(book, page, class, name, model)
+  print("", book, page, class, name, #model.properties)
+  local dst, tmplt
+  if class=="page" then
+    if name == "physics" then
+      dst = "App/"..book.."/components/"..page.."/"..class.."/"..name ..".lua"
+      tmplt =  "editor/template/components/pageX/"..class.."/"..name ..".lua"
+    else
+      dst = "App/"..book.."/components/"..page.."/"..class.."/"..name ..".lua"
+      tmplt =  "editor/template/components/pageX/"..class.."/"..class ..".lua"
+    end
+    util.mkdir("App", book, "components", page, class)
+  else
+    dst = "App/"..book.."/components/"..page.."/"..class.."s/"..name ..".lua"
+    tmplt =  "editor/template/components/pageX/"..class.."/"..class ..".lua"
+    util.mkdir("App", book, "components", page, class.."s")
+  end
+  util.saveLua(tmplt, dst, model)
+  return dst
+end
+
 
 function M:save(book, page, layer, class, model, entry)
   local dst
@@ -227,6 +287,7 @@ function M:saveIndex(book, page, layer, class, model)
   return util.saveIndex(book, page, layer, class, model)
 end
 
+
 function M:read(book, page, layer,class, isNew)
   self.page = page
   self.layer = layer
@@ -235,8 +296,11 @@ function M:read(book, page, layer,class, isNew)
   local decoded,  pos, msg
   if isNew then
     local path = "editor.template.components.pageX."..self.tool..".defaults."..class
-    print(path)
+    -- print(path)
     local data = require(path)
+    -- for k, v in pairs(data) do
+    --   print("@", k, v)
+    -- end
     decoded = {data}
   elseif layer then
     local layerName = layer or "index"
@@ -282,9 +346,15 @@ function M:loadLua(book, page, layer,class, isNew)
   end
 end
 
-function M:mergeAsset(value, asset)
-  -- print("@@@@@", asset.path, asset.name, #asset.links)
-  return value
+function M:mergeAsset(model, asset)
+   print(json.encode(asset))
+   model.properties["file"] = asset.name
+   model.properties["folder"] = asset.path
+
+   local tmps = util.split(asset.name, ".")
+   model.properties["_name"] = tmps[1]
+
+  return model
 end
 
 function M:updateAsset(text, asset)
@@ -300,7 +370,7 @@ function M:updateAsset(text, asset)
 end
 
 function M:load(book, page, layer, class, isNew, asset)
-  print("read", page, layer, class, isNew)
+  -- print("read", page, layer, class, isNew)
   -- the values are used in useClassEdtiorProps()
   self.page = page
   self.layer = layer
@@ -310,20 +380,20 @@ function M:load(book, page, layer, class, isNew, asset)
   if isNew then
     local decoded = self:read(book, page, layer, class, isNew)
     self:reset()
-    local value = decoded[1]
+    local model = decoded[1]
     if asset then
-      value = self:mergeAsset(decoded[1], asset)
+      model = self:mergeAsset(decoded[1], asset)
     end
-    self:setValue(value, nil, true)
+    self:setValue(model, nil, true)
+    -- print(json.encode(model))
     self:redraw()
   elseif layer then
 
     -- this comes from clicking layerTable.class
     local layerName = layer or "index"
     --local path      = page .."/"..layerName.."_"..self.tool..".json"
-    local path      = system.pathForFile( "App/"..book.."/models/"..page .."/"..layerName.."_"..self.tool..".json", system.ResourceDirectory)
-
-    print("", path)
+    local path      = system.pathForFile( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
+    -- print("", path)
     if self.lastSelection ~= path then
       self.lastSelection   = path
       local decoded = self:loadLua(book, page, layer, class, isNew)
@@ -370,17 +440,22 @@ function M:command()
       end
     else
       -- read from models/{class}/{name}.json
-      local decoded = util.decode(book, page, params.class, params.name, {subclass = params.subClass, isNew = params.isNew, isDelete = params.isDelete}) -- this reads models/xx.json
+      local decoded = util.decode(book, page, params.class, name, {subclass = params.subclass, isNew = params.isNew, isDelete = params.isDelete}) -- this reads models/xx.json
       --
       print("From selectors")
       self.classProps:didHide(UI)
       self.classProps:destroy(UI)
       self.classProps:init(UI)
-      local value = decoded
+      local model = decoded
       if params.isNew and params.asset then
-        value = self:mergeAsset(decoded, params.asset)
+        model = self:mergeAsset(decoded, params.asset)
       end
-      self.classProps:setValue(value)
+      if model and model.properties == nil then
+          print("#Warning properties are missing", params.class, name)
+      else
+        print(json.encode(model.properties))
+      end
+      self.classProps:setValue(model)
       self.classProps.isNew = params.isNew
       --
       self.classProps:create(UI)
@@ -404,9 +479,9 @@ end
 
 
 M.new = function(tool)
-  local instance = {tool = tool}
+  local instance = {tool = tool, id=tool}
   instance.classProps    = require(root.."parts.classProps")
-  instance.actionbox = require(root..".parts.actionbox")
+  instance.actionbox     = require(root..".parts.actionbox")
   instance.selectbox     = require(root.."parts.selectbox")
   instance.buttons       = require(root.."parts.buttons")
 

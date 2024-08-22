@@ -54,10 +54,10 @@ function M:create(UI)
         -- --
         -- -- control
         -- local props = M.useClassEditorProps()
-        -- print(props.settings.duration)
+        -- print(props.properties.duration)
 
         -- transition.to(self.target, {
-        --     time =tonumber(props.settings.duration),
+        --     time =tonumber(props.properties.duration),
         --     x = group.ptB.x,
         --     y = group.ptB.y,
         --     onComplete = killAB

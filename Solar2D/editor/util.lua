@@ -15,10 +15,10 @@ function M.getFileName(str)
 end
 
 local isTarget = function(layer, layerName)
-  for entry, v in pairs(layer) do
-    if entry == "class" then
-    elseif entry == "event" then
-    elseif entry == layerName then
+  for key, v in pairs(layer) do
+    if key == "class" then
+    elseif key == "event" then
+    elseif key == layerName then
       return true
     end
   end
@@ -39,6 +39,105 @@ function M.isExist(book, page, layer, class)
   return path
 end
 
+function M.updateIndexModel(_scene, layerName, class)
+  local scene = _scene or {
+    components = {
+      layers = {  },
+      audios = {  },
+      groups = {  },
+      timers = {  },
+      variables = {  },
+      others = {  }
+     }
+  }
+  --
+  local onInit = scene.onInit
+  scene.onInit = nil
+  local copied = M.copyTable(scene)
+  scene.onInit = onInit
+
+  -- print("%%%", layerName)
+  local function processLayers(layers, nLevel)
+    for i = 1, #layers do
+      -- print("%%%", i)
+      local layer = layers[i]
+      local children = {}
+      --
+      if isTarget(layer, layerName) then
+        -- print("%%%", layerName)
+        local target = layer[layerName]
+        if target.class == nil then
+          target.class = {}
+        end
+        --
+        if not isClass(target, class) then
+          table.insert(target.class, class)
+        end
+      end
+
+      --
+      local children = {}
+      for key, value in pairs(layer) do
+        -- print(key, value)
+        if key == "class" then
+        elseif key == "event" then
+        else
+          if type(value)=="table" and next(value) then
+            if value.class == nil then
+              --
+              -- {aName = {A={}, B={}}}
+              --
+              children[#children + 1] = value
+            else
+              local field, child = next(value, nil)
+              while field do
+                -- print(field, "=", child, #children +1)
+                if field ~= "class" then
+                  -- child.layers = false
+                  children[#children + 1] = child
+                -- elseif newEntry.class == nil then
+                --   newEntry.class = child
+                end
+                field, child = next(value, field)
+              end
+            end
+          end
+        end
+      end
+      if #children > 0 then
+        -- if next(v) == nil then
+        --   -- just empty layer without class nor event
+        --   v.class = {class}
+        -- end
+        processLayers(children, nLevel + 1)
+      else
+        -- newEntry.layers = false
+      end
+    end
+  end
+  --
+  --if layerName then
+  processLayers(copied.components.layers, 1)
+  --end
+  --
+
+  local groups = {}
+  for i, v in next, copied.components.groups do
+    local entry = {}
+    for key, value in pairs(v) do
+      entry.name = key
+      entry.class = value
+    end
+    groups[i] = entry
+  end
+  copied.components.groups = groups
+
+  return copied
+end
+
+--
+-- nLevel is used for lustache render in createIndexModel
+--
 function M.createIndexModel(_scene, layerName, class)
   local scene = _scene or {
     components = {
@@ -86,7 +185,7 @@ function M.createIndexModel(_scene, layerName, class)
         elseif key == "event" then
         else
           newEntry.name = key
-          if next(value) then
+          if type(value)=="table" and next(value) then
             if value.class == nil then
               --
               -- {aName = {A={}, B={}}}
@@ -131,6 +230,17 @@ function M.createIndexModel(_scene, layerName, class)
   --
   --if layerName then
   processLayers(copied.components.layers, 1)
+  -- print(json.encode(copied.components.groups))
+  -- local groups = {}
+  -- for i, v in next, copied.components.groups do
+  --   local entry = {}
+  --   for key, value in pairs(v) do
+  --     entry.name = key
+  --     entry.class = value
+  --   end
+  --   groups[i] = entry
+  -- end
+  -- copied.components.groups = groups
   --end
   --
   return copied
@@ -201,16 +311,45 @@ function M.selectFromIndexModel(scene, args)
 end
 
 
-function M.copyTable(decoded)
-  if decoded then
-    return json.decode(json.encode(decoded))
+-- https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value
+function M.copyTable(tbl)
+
+  local new_tbl = {}
+  if tbl then
+    for key,value in pairs(tbl) do
+        local valid =  key ~="__index"  and key ~="_class" and key ~="_tableListeners" and key ~="_proxy" and key ~="_functionListeners" and key ~="selections" and key ~="rect"
+        local value_type = type(value)
+        local new_value
+        if value_type == "function" then
+            -- new_value = loadstring(string.dump(value))
+            -- Problems may occur if the function has upvalues.
+        elseif value_type == "table" and valid then
+            -- print(key)
+            new_value = M.copyTable(value)
+        else
+            new_value = value
+        end
+
+        if value_type ~= "function" and valid  then
+          new_tbl[key] = new_value
+        end
+    end
   else
-    return {}
+    print("#Error tbl is nil")
   end
+  return new_tbl
+
+  -- if decoded then
+  --   local ret = json.encode(decoded)
+  --   ret = ret:gsub("<type 'function' is not supported by JSON.>", "nil")
+  --   return json.decode(ret)
+  -- else
+  --   return {}
+  -- end
 end
 
 function M.mkdir(...)
-  print("#### mkdir")
+  -- print("#### mkdir")
   local folders = {...}
   local path = system.pathForFile(nil, system.TemporaryDirectory)
   lfs.chdir(path)
@@ -229,27 +368,35 @@ function M.mkdir(...)
   -- print(parent)
 end
 
-function M.saveLua(tmplt, dst, model, partial)
+function M.saveLua(tmplt, dst, _model, partial)
+  print("local tmplt='".. tmplt.. "'")
+  print("local dst ='".. dst.. "'")
+  local model = M.copyTable(_model)
+  -- print("local model = json.decode('".. json.encode(model).. "')" )
+
   local path = system.pathForFile(tmplt, system.ResourceDirectory)
   local file, errorString = io.open(path, "r")
   if not file then
-    print("File error: " .. errorString)
+    print("ERROR:" .. errorString)
     return nil
   else
     local contents = file:read("*a")
     io.close(file)
-    --print(json.encode(model))
+    print(json.encode(model.events))
+    -- print(contents)
     local output = lustache:render(contents, model, partial)
     local path = system.pathForFile(dst, system.TemporaryDirectory) --system.TemporaryDirectory)
     --print(path)
     local file, errorString = io.open(path, "w+")
     if not file then
-      print("File error: " .. errorString)
+      print("ERROR:" .. errorString)
     else
       output = string.gsub(output, "\r\n", "\n")
       output = output:gsub("&#x2F;", "/")
       output = output:gsub("&#39;", '"')
       output = output:gsub("class={  }", "")
+      output = output:gsub("&quot;", '"')
+
       local formatted = formatter.indentcode(output, "\n", true, "  ")
       if formatted then
         -- print(formatted)
@@ -269,7 +416,7 @@ function M.writeLines(_path, lines)
   local file, errorString = io.open(path, "w")
   if not file then
     -- Error occurred; output the cause
-    print("File error: " .. errorString)
+    print("ERROR: " .. errorString)
   else
     for i, l in ipairs(lines) do io.write(l, "\n") end
     io.close(file)
@@ -278,13 +425,15 @@ function M.writeLines(_path, lines)
   return false
 end
 
-function M.saveJson(_path, model)
+function M.saveJson(_path, _model)
   local path = system.pathForFile(_path, system.TemporaryDirectory)
+  local model = M.copyTable(_model)
+
   -- print(_path)
   local file, errorString = io.open(path, "w")
   if not file then
     -- Error occurred; output the cause
-    print("File error: " .. errorString)
+    print("ERROR: " .. errorString)
     return false
   else
     -- Write encoded JSON data to file
@@ -296,8 +445,27 @@ function M.saveJson(_path, model)
 end
 
 
-function M.decode(book, page, class, name, options)
-  print("$$$$", options.isNew)
+function M.decode(book, page, class, _name, options)
+  print("", class, _name, options.subclass)
+  local name = _name
+  if options.isNew then
+    local path = "editor.template.components.pageX." .. class .. ".defaults." .. class
+    return require(path)
+  elseif options.isDelete then
+    print(class, "delete")
+    return {}
+  else
+    if options.subclass then
+      name = options.subclass .. "." .. name
+    end
+    local path = "App." .. book .. ".components." .. page .. "." .. class .. "s." .. name
+    print(path)
+    return require(path)
+  end
+end
+
+function M.decodeJson(book, page, class, name, options)
+  -- print("$$$$", options.isNew)
   if options.isNew then
     local path = "editor.template.components.pageX." .. class .. ".defaults." .. class
     return require(path)
@@ -335,7 +503,7 @@ end
 
 function M.read(book, page, filter)
   local path = system.pathForFile("App/" .. book .. "/models/" .. page .. "/index.json", system.ResourceDirectory)
-  -- print(path)
+  -- print("@@@@", path)
 
   local ret = {}
   --
@@ -345,11 +513,12 @@ function M.read(book, page, filter)
   if not decoded then
     print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg))
   else
-    local function parser(decoded, parent)
+    local function parser(entries, parent)
       local layers = nil
-      for i = 1, #decoded do
+      for i = 1, #entries do
         local name = nil
-        for k, v in pairs(decoded[i]) do
+        local entry = entries[i]
+        for k, v in pairs(entry) do
           if k ~= "class" and k ~= "commands" and k ~= "weight" then
             local layer = {name = k, parent = parent}
             --  ret.layers[#ret.layers+1] = {name=k}
@@ -364,14 +533,18 @@ function M.read(book, page, filter)
             name = k
             --print(k)
             if parent then
-              layer.children = parser(v, parent .. "." .. k)
+              if type(v) == "table" then
+                layer.children = parser(v, parent .. "." .. k)
+              end
             else
-              layer.children = parser(v, k)
+              if type(v) == "table" then
+                layer.children = parser(v, k)
+              end
             end
             break
           end
         end
-        local classEntries = decoded[i].class or {}
+        local classEntries = entry.class or {}
         for j = 1, #classEntries do
           local className = classEntries[j]
           -- print("", name.."_"..className)
@@ -381,13 +554,16 @@ function M.read(book, page, filter)
             ret[className] = t
           end
           local f = name .. "_" .. className .. ".json"
+          print(f)
           local path = system.pathForFile("App/" .. book .. "/models/" .. page .. "/" .. f, system.ResourceDirectory)
-          local decoded, pos, msg = json.decodeFile(path)
-          if not decoded then
-            print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg))
-          else
-            for l = 1, #decoded do
-              t[#t + 1] = {name = decoded[l].name, file = name .. "_" .. className, index = l}
+          if path then
+            local decoded, pos, msg = json.decodeFile(path)
+            if not decoded then
+              print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg))
+            else
+              for l = 1, #decoded do
+                t[#t + 1] = {name = decoded[l].name, file = name .. "_" .. className, index = l}
+              end
             end
           end
         end
@@ -395,7 +571,8 @@ function M.read(book, page, filter)
       return layers
     end
     --
-    ret.layers = parser(decoded)
+    --print(json.encode(decoded))
+    ret.layers = parser(decoded.components.layers)
     --
     ret.audios = {}
     ret.groups = {}
@@ -477,8 +654,10 @@ function M.renderIndex(book, page, model)
   local dst = "App/" .. book .. "/components/" .. page .. "/index.lua"
   --local dst = "index.lua"
   local tmplt = "editor/template/components/pageX/index.lua"
-  local n = ""
 
+  M.mkdir("App", book, "components", page)
+
+  local n = ""
   local function getRecursive(n)
     return [[
     {
@@ -513,6 +692,7 @@ function M.renderIndex(book, page, model)
       timers = model.components.timers,
       groups = model.components.groups,
       variables = model.components.variables,
+      joints = model.components.joints,
       page = model.components.page
     },
     partial
@@ -527,14 +707,14 @@ function M.saveIndex(book, page, layer, class, model)
   if layer then
     for i = 1, #decoded.components.layers do
       local entry = decoded.components.layers[i]
-      -- for k, v in pairs(entry) do print(i, k) end
-      if entry[layer] then
-        if entry[layer].class == nil then
-          entry[layer].class = {}
+      -- for k, v in pairs(entry) do print(k,v) end
+      if entry.name == layer then
+        if entry.class == nil then
+          entry.class = {}
         end
-        table.insert(entry[layer].class, class)
-        for j = 1, #entry[layer].class do
-          print(entry[layer].class[j])
+        table.insert(entry.class, class)
+        for j = 1, #entry.class do
+          print(entry.class[j])
         end
         break
       end
@@ -624,6 +804,19 @@ function M.split(str, sep)
   end
   return out
 end
+
+function M.uniqueName(str, _sep)
+  local sep = _sep or "_"
+  local out = M.split(str, sep)
+  if #out == 1 then
+    return str
+  else
+    local num = tonumber(out[#out]) + 1
+    out[#out] = tostring(num)
+    return table.concat(out, "_")
+  end
+end
+
 --
 -- merge
 local exports = require("lib.util")
