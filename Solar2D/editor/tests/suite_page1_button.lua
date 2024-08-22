@@ -7,16 +7,12 @@ local pageTable
 local layerTable
 local actionTable = require("editor.action.actionTable")
 
-function selectLayer(name)
-  for i, entry in next,layerTable.objs do
-    print("", i, entry.text)
-    if entry.text == name then
-      entry:touch({phase="ended"}) -- animation
-      -- entry.classEntries[1]:touch({phase="ended"}) -- animation
-      break
-    end
-  end
-end
+local helper = require("editor.tests.helper")
+
+
+
+--local toolbar  = require("editor.parts.toolbar")
+
 
 function selectTool(args)
   UI.scene.app:dispatchEvent(
@@ -32,10 +28,9 @@ end
 
 function selectAction(name)
   for i, v in next, actionTable.objs do
-    print("###", v.text)
     if v.text == name then
       -- v:dispatchEvent{name="touch", pahse="ended", target=v}
-      v:tap{target=v}
+      v:touch{phase = "ended"}
       return
     end
   end
@@ -62,14 +57,14 @@ function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
   --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
-  bookTable.commandHandler({book="bookFree"}, nil,  true)
+  bookTable.commandHandler({book="book"}, nil,  true)
   pageTable.commandHandler({page="page1"},nil,  true)
   selectors.componentSelector.iconHander()
 end
@@ -110,23 +105,50 @@ end
   end
 --]]
 
+
+local function selectCancel()
+  local button = "cancel"
+  local obj = require("editor.parts.buttons").objs[button]
+  obj.rect:tap()
+end
+
 ---[[
-  function M.test_new_button()
-    selectors.componentSelector:onClick(true,  "layerTable")
+function M.test_new_button()
+  selectors.componentSelector:onClick(true,  "layerTable")
 
-    local name = "gotoBtn"
-    for i, entry in next,layerTable.objs do
-      print("", i, entry.text)
-      if entry.text == name then
-        entry:touch({phase="ended"}) -- gotoBtn
-        break
-      end
+  local name = "cat"
+  for i, entry in next,layerTable.objs do
+    print("", i, entry.text)
+    if entry.text == name then
+      entry:touch({phase="ended"}) -- gotoBtn
+      break
     end
+  end
+    --print("-----------------")
+    -- for k, v in pairs(toolbar.layerToolMap.Interactions) do print(k, v) end
+    -- for k, v in pairs(toolbar.toolMap) do print(k, v) end
+    -- selectTool{class="button", isNew=true}
 
-    selectTool{class="button", isNew=true}
+    helper.selectIcon("Interactions", "Button")
 
-  selectors.componentSelector:onClick(true,  "actionTable")
-  selectAction("eventOne")
+    local actionbox = require("editor.parts.actionbox")
+    local obj = actionbox.objs[1]
+    obj:dispatchEvent({name="tap", target=obj})
+
+    actionTable.altDown = true
+    selectAction("eventOne")
+    actionTable.altDown = false
+
+    -- selectCancel()
+    --selectIcon("Interactions", "Button")
+
+
+    -- local button = "save"
+    -- local obj = require("editor.parts.buttons").objs[button]
+    -- obj.rect:tap()
+
+  -- selectors.componentSelector:onClick(true,  "actionTable")
+  -- selectAction("eventOne")
 
   --  select an over-layer
     -- click "over" of the prop's name to make it active
@@ -144,9 +166,6 @@ end
     --   select a layer
 
     -- --
-    -- local button = "save"
-    -- local obj = require("editor.parts.buttons").objs[button]
-    -- obj:tap()
   end
 --]]
 

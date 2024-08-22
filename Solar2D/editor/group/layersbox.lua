@@ -55,6 +55,7 @@ function M:create(UI)
 end
 
 function M:setValue(layers)
+--  print(debug.traceback())
   local UI = self.UI
   local book = UI.editor.currentBook or App.get().name
   local page = UI.editor.currentPage or UI.page

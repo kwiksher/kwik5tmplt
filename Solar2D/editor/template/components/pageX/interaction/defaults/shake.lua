@@ -1,7 +1,7 @@
 local M = {
   name = "shake",
   class="shake",
-  settings = {
+  properties = {
     isActive = true
   }
 }

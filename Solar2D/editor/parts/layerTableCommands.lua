@@ -12,7 +12,7 @@ local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 local classProps              = require("editor.parts.classProps")
 local buttons                 = require("editor.parts.buttons")
 
-local posX = display.contentCenterX*0.75
+local posX = display.contentCenterX*0.4
 
 local isLastSelection = "class"
 
@@ -24,7 +24,11 @@ function M.mouseHandler(event)
     -- local posX, posY = event.target:contentToLocal(event.x, event.y)
     -- local posX, posY = event.target:localToContent(event.x, event.y)
     -- print(posX, posY)
-    buttons:showContextMenu(posX, event.y)
+    buttons:showContextMenu(posX, event.y, {class = event.target.class})
+
+      -- {class=event.target.text, selections={event.target},
+      -- contextMenu = {"create", "rename", "delete"}, orientation = "horizontal"})
+
     -- buttons:showContextMenu(posX, posY)
   else
     -- print("@@@@not selected")
@@ -36,8 +40,10 @@ local function clearSelections(layerTable, current)
   if isLastSelection ~= current then
     for i, v in next, layerTable.selections do
       v.isSelected = false
-      v.rect:setStrokeColor(0.8)
-      v.rect:setFillColor(0.8)
+      if v.rect.setStrokeColor then
+        v.rect:setStrokeColor(0.8)
+        v.rect:setFillColor(0.8)
+      end
     end
   end
   isLastSelection = current
@@ -47,11 +53,11 @@ local function multiSelections(layerTable, target)
   if not target.isSelected then
     layerTable.selections[#layerTable.selections + 1] = target
     target.isSelected = true
-    -- target.rect:setFillColor(0, 1, 0)
+    target.rect:setFillColor(0, 1, 0)
     target.rect:setStrokeColor(0, 1, 0)
   else
     target.isSelected = false
-    -- target.rect:setFillColor(0.8)
+    target.rect:setFillColor(0.8)
     target.rect:setStrokeColor(0.8)
     for i, v in next, layerTable.selections do
        if v == target then
@@ -77,20 +83,34 @@ local function singleSelection(layerTable, target)
     end
     layerTable.selection = nil
   else
-    layerTable.selection = target
-    for i = 1, #layerTable.selections do
-      layerTable.selections[i].rect:setFillColor(0.8)
-      layerTable.selections[i].rect:setStrokeColor(0.8)
+    if layerTable.selections then
+      -- print("@@",#layerTable.selections)
+      for i = 1, #layerTable.selections do
+        local obj = layerTable.selections[i]
+        -- print("", obj.text)
+        if obj.rect and obj.setFillColor then
+          obj.rect:setFillColor(0.8)
+          obj.rect:setStrokeColor(0.8)
+        end
+      end
     end
+    layerTable.selection = target
     --
     layerTable.selections = {target}
     target.isSelected = true
-    -- target.rect:setFillColor(0,1,0)
-    target.rect:setStrokeColor(0, 1, 0)
+    target.rect:setFillColor(0,1,0)
+    --target.rect:setStrokeColor(0, 1, 0)
     ---
-    UI.editor.currentLayer = target.layer
+    if target.layer and target.layer:len() then
+      UI.editor.currentLayer = target.layer
+    else
+      print("Warning target.layer is not found")
+      --print(debug.traceback())
+    end
     -- target.isSelected = true
-    UI.editor.currentClass = target.name
+    if target.name then
+      UI.editor.currentClass = target.name
+    end
     return true
     --
   end
@@ -134,9 +154,10 @@ local function showFocus(layerTable)
   UI.editor.focusGroup = group
   --
   for i, v in next, layerTable.selections do
+    -- print(i, v.text)
     local obj = UI.sceneGroup[v.text]
     if obj then
-      print("@", v.text, obj.x, obj.y)
+      -- print("@", v.text, obj.x, obj.y)
       local posX, posY = obj.x, obj.y
       local rect = display.newRect(UI.editor.focusGroup, posX, posY, obj.width, obj.height)
       rect:setFillColor(1, 0, 0, 0)
@@ -161,11 +182,13 @@ function M.commandHandler(layerTable, target, event)
   --
   clearSelections(layerTable, "layer")
   --
-  buttons:hide()
+  --
+  buttons:hideContextMenu()
   ---
-  print("@@@@@@", layerTable.altDown, layerTable:isAltDown())
+  -- print("@@@@@@", layerTable.altDown, layerTable:isAltDown())
   -- print(debug.traceback())
-  if layerTable:isAltDown() then
+
+    if layerTable:isAltDown() then
     if showLayerProps(layerTable, target) then
       --
       tree.backboard = {
@@ -173,7 +196,7 @@ function M.commandHandler(layerTable, target, event)
         path = path
         -- class = target.class
       }
-      print("###", target.layer)
+      -- print("###", target.layer)
       tree:setConditionStatus("select layer", bt.SUCCESS, true)
       tree:setActionStatus("load layer", bt.RUNNING, true)
       tree:setConditionStatus("select props", bt.SUCCESS)
@@ -187,13 +210,18 @@ function M.commandHandler(layerTable, target, event)
       --
     end
   elseif layerTable:isControlDown() then -- mutli selections
-    print("multi selection")
+    -- print("multi selection")
     multiSelections(layerTable, target)
   else
     if singleSelection(layerTable, target) then
       -- should we enable one of them?
-        actionCommandPropsTable:setActiveProp(target.layer)
-        classProps:setActiveProp(target.layer)
+      -- print("", "singleSelection")
+      actionCommandPropsTable:setActiveProp(target.layer)
+      --
+      -- setClassProps is used in physics to set the value to physics.classProps
+      --
+      local classProps = layerTable.classProps or classProps
+      classProps:setActiveProp(target.layer)
     end
   end
   --
@@ -201,12 +229,24 @@ function M.commandHandler(layerTable, target, event)
   --
   showFocus(layerTable)
   --
-  UI.editor.selections = layerTable.selections
+
+  if  UI.editor.selections_backup == nil then
+    UI.editor.selections = layerTable.selections
+  else
+    UI.editor.selections = {}
+    for i, v in next, UI.editor.selections_backup do
+      -- print("recover", i, v.text)
+      -- layerTable.selections[i] = v
+      UI.editor.selections[i] = v
+    end
+end
+
   return true
 end
 
 local function showClassProps(layerTable, target)
   local UI = layerTable.UI
+  local type = "layer"
   local path = util.getParent(target)
   if layerTable.selection == target then
     print("let's toogle")
@@ -233,30 +273,33 @@ local function showClassProps(layerTable, target)
     UI.editor.currentLayer = target.layer
     --
     -- target.isSelected = true
-    UI.editor.currentClass = target.name
+    if target.name then
+      UI.editor.currentClass = target.name
+    end
     -- for load layer
     tree.backboard = {
       layer = target.layer,
       class = target.class,
       path = path
     }
-    tree:setConditionStatus("select layer", bt.SUCCESS, true)
-    tree:setActionStatus("load layer", bt.RUNNING) -- need tick to process load layer with tree.backboard
-    tree:setConditionStatus("select props", bt.FAILED, true)
+      tree:setConditionStatus("select "..type, bt.SUCCESS, true)
+      tree:setActionStatus("load "..type, bt.RUNNING) -- need tick to process load layer with tree.backboard
+      tree:setConditionStatus("select props", bt.FAILED, true)
 
-    -- For editor compoent. this fires selectTool event with backboard params
-    tree.backboard = {
-      class = target.class,
-      isNew = false,
-      layer = target.layer,
-      path = path
-    }
-    tree:setConditionStatus("modify component", bt.SUCCESS)
-    tree:setActionStatus("editor component", bt.RUNNING, true)
+      -- For editor compoent. this fires selectTool event with backboard params
+      tree.backboard = {
+        class = target.class,
+        isNew = false,
+        layer = target.layer,
+        path = path
+      }
+      tree:setConditionStatus("modify component", bt.SUCCESS)
+      tree:setActionStatus("editor component", bt.RUNNING, true)
   end
 end
 
 function M.commandHandlerClass(layerTable, target, event)
+  print("commandHandlerClass", target.layer, target.text)
   local UI = layerTable.UI
   if event.phase == "began" or event.phase == "moved" then
     return
@@ -264,19 +307,35 @@ function M.commandHandlerClass(layerTable, target, event)
   --
   clearSelections(layerTable, "class")
   --
-  buttons:hide()
+  buttons:hideContextMenu()
   --
+
   if layerTable:isAltDown() then
+    print("", "isAltDown")
     showClassProps(layerTable, target)
-  elseif layerTable.isControlDown() then -- mutli selections
+  elseif layerTable:isControlDown() then -- mutli selections
+    print("", "isControlDown")
     multiSelections(layerTable, target)
   else
     if singleSelection(layerTable, target) then
+      print("", "singleSelection")
       actionCommandPropsTable:setActiveProp(target.layer, target.class)
       classProps:setActiveProp(target.layer, target.class)
+
+      -- recover selections
+      if UI.editor.selections_backup and #UI.editor.selections_backup > 0 then
+        UI.editor.selections = {}
+        for i, v in next, UI.editor.selections_backup do
+          print("recover", i, v.text)
+          -- layerTable.selections[i] = v
+          UI.editor.selections[i] = v
+        end
+      end
     end
   end
+
   UI.editor.selections = layerTable.selections
+
   return true
 end
 --
@@ -316,5 +375,6 @@ M.singleSelection = singleSelection
 M.clearSelections = clearSelections
 M.multiSelections = multiSelections
 M.showLayerProps = showLayerProps
-
+M.showClassProps = showClassProps
+M.showFocus      = showFocus
 return M

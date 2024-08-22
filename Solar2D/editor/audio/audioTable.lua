@@ -10,7 +10,7 @@ props.objs       = {}
 ------------
 -- baseTable
 -----------
-local M, bt, tree = require(root.."baseTable").new(props)
+local M, bt, tree = require(root.."parts.baseTable").new(props)
 
 local propsTable = require(root .. "parts.propsTable")
 
@@ -22,10 +22,15 @@ local contextButtons = require("editor.parts.buttons")
 
 local posX = display.contentCenterX*0.75
 
+function M:setPosition()
+  self.x = 77
+  self.y = 74 -- self.rootGroup.selectAudio.y
+end
+
 function M.mouseHandler(event)
   if event.isSecondaryButtonDown and event.target.isSelected then
     -- print("@@@@selected")
-    contextButtons:showContextMenu(posX, event.y,  {type="audio", selections=M.selections})
+    contextButtons:showContextMenu(posX, event.y,  {class="audio", selections=M.selections})
   else
     -- print("@@@@not selected")
   end
@@ -36,9 +41,10 @@ end
 -- a sync audio can be multiple
 
 function M:commandHandler(target, event)
+  local UI = self.UI
   if event.phase == "began" or event.phase == "moved" then  return end
   layerTableCommands.clearSelections(self, "audio")
-  if self.isAltDown() then
+  if self:isAltDown() then
     if layerTableCommands.showLayerProps(self, target) then
       print("TODO show audio props")
       print(target.audio)
@@ -50,14 +56,16 @@ function M:commandHandler(target, event)
         subclass = target.subclass
       }
       tree:setConditionStatus("select component", bt.SUCCESS, true)
-      tree:setActionStatus("load audio", bt.RUNNING, true)
       tree:setConditionStatus("select audio", bt.SUCCESS)
+      tree:setActionStatus("load audio", bt.RUNNING, true)
     end
-  elseif self.isControlDown() then -- mutli selections
+  elseif self:isControlDown() then -- mutli selections
     layerTableCommands.multiSelections(self, target)
   else
     if layerTableCommands.singleSelection(self, target) then
-      UI.editor.currentLayer = target.audio
+      if target.audio then
+        UI.editor.currentLayer = target.audio
+      end
       -- target.isSelected = true
       UI.editor.currentClass = target.name
       --
@@ -71,14 +79,17 @@ end
 
 --
 function M:create(UI)
-  if self.rootGroup then return end
+  -- print(debug.traceback())
+  -- if self.rootGroup then return end
   self:initScene(UI)
+  self:setPosition()
+
   self.UI = UI
 
   self.option = {
     text = "",
     x = 0,
-    y = self.rootGroup.selectAudio.y,
+    y = self.y,
     width = 100,
     height = 20,
     font = native.systemFont,
@@ -92,21 +103,24 @@ function M:create(UI)
   --
 
   local function render(_models, xIndex, yIndex)
-    local count = 0
-    local marginX, marginY = 74, 20
     local option = self.option
 
     local function newAudio(models, subclass)
+      local count = 0
       if models == nil then
         return
       end
       for i = 1, #models do
         local name = models[i]
-        print(i)
+        print(i, name)
 
         option.text = name
-        option.x = self.rootGroup.selectAudio.x + marginX + xIndex * 5
-        option.y = self.rootGroup.selectAudio.y + marginY + option.height * (count-1)
+        if subclass == "long" then
+          option.x = self.x +  xIndex * 5 + option.width
+        else
+          option.x = self.x +  xIndex * 5
+        end
+        option.y = self.y + option.height * (count-1)
         option.width = 100
         local obj = self.newText(option)
         obj.audio = name
@@ -136,12 +150,8 @@ function M:create(UI)
     end
     --
     newAudio(_models.short, "short")
-    --
-    marginX = marginX + option.width
-    count = 0
     newAudio(_models.long, "long")
     --
-    self.marginX = marginX
     self.rootGroup:insert(self.group)
     self.rootGroup.audioTable = self.group
     -- self.group.isVisible = true
@@ -150,18 +160,19 @@ function M:create(UI)
   UI.editor.audioStore:listen(
     function(foo, fooValue)
       self:destroy()
-      -- print("layerStore", #fooValue)
       self.selection = nil
       self.selections = {}
       self.objs = {}
+      self.iconObjs = {}
       if fooValue == nil then
         render({}, 0, 0)
       else
+        -- print("@@@@",#fooValue.short, #fooValue.long)
         render(fooValue, 0, 0)
         if fooValue.short == nil then
-          self:createIcons(11, 22)
+          self:createIcons(0, -21)
         else
-          self:createIcons(self.marginX)
+          self:createIcons(0, -21)
         end
       end
       self:show()
@@ -170,44 +181,44 @@ function M:create(UI)
 end
 --
 
-function M:show()
-  self.group.isVisible = true
-  if self.objs then
-    for i=1, #self.objs do
-      self.objs[i].isVisible = true
-    end
-  end
-end
+-- function M:show()
+--   self.group.isVisible = true
+--   if self.objs then
+--     for i=1, #self.objs do
+--       self.objs[i].isVisible = true
+--     end
+--   end
+-- end
 
-function M:hide()
-  self.group.isVisible = false
-  if self.objs then
-    for i=1, #self.objs do
-      self.objs[i].isVisible = false
-    end
-  end
-end
+-- function M:hide()
+--   self.group.isVisible = false
+--   if self.objs then
+--     for i=1, #self.objs do
+--       self.objs[i].isVisible = false
+--     end
+--   end
+-- end
 
 --
-function M:destroy()
-  if self.objs then
-    for i = 1, #self.objs do
-      if self.objs[i].isMUI then
-        -- print("@@@@@", self.objs[i].name)
-        mui.removeWidgetByName(self.objs[i].name)
-      else
-        if self.objs[i].rect then
-          self.objs[i].rect:removeSelf()
-        end
-        if self.objs[i].removeSelf then
-          self.objs[i]:removeSelf()
-        end
-      end
-    end
-  end
-  self.objs = nil
-  self.selection = nil
-  self.rootGroup.audioTable = nil
-end
+-- function M:destroy()
+--   if self.objs then
+--     for i = 1, #self.objs do
+--       if self.objs[i].isMUI then
+--         -- print("@@@@@", self.objs[i].name)
+--         mui.removeWidgetByName(self.objs[i].name)
+--       else
+--         if self.objs[i].rect then
+--           self.objs[i].rect:removeSelf()
+--         end
+--         if self.objs[i].removeSelf then
+--           self.objs[i]:removeSelf()
+--         end
+--       end
+--     end
+--   end
+--   self.objs = nil
+--   self.selection = nil
+--   self.rootGroup.audioTable = nil
+-- end
 --
 return M

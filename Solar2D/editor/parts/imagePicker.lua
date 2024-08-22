@@ -102,7 +102,7 @@ M.new = function(_params, listener)
 
   --Loads all images to the table
   --images = loadImages(params.path or "App/bookFree/assets/images/page1/", params.baseDir or system.ResourceDirectory)
-  local book = params.book or "bookFree"
+  local book = params.book or "book"
   local asset = util.readAssets(book, "images")
   -- scrollview
   local nTop, nLeft, nWidth, nHeight, nVert, nHor

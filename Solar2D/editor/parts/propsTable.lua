@@ -8,5 +8,5 @@ local Props = {
   anchorName = "selectLayer"
 }
 
-local M = require(root.."baseProps").new(Props)
+local M = require(parent.."baseProps").new(Props)
 return M

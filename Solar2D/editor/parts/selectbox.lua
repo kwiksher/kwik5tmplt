@@ -1,10 +1,10 @@
-local M = require("editor.baseBox").new()
+local M = require("editor.parts.baseBox").new()
 local shapes = require("extlib.shapes")
 local widget = require( "widget" )
 
 ---------------------------
 M.name = "class"
-M.selectedTextLabel =  "Class" -- class
+M.selectedTextLabel =  "" -- class
 --
 -- I/F
 function M:setValue(decoded, index)
@@ -24,15 +24,16 @@ function M:setValue(decoded, index)
 end
 
 function M:updateValue(value)
-  print("### updateValue", self.name, value, self.selectedText.isVisible)
-
-  self.selectedObj.text = value
-  self.selectedText.text =value
+  -- print("### updateValue", self.name, value, self.selectedText.isVisible)
+  if self.selectedObj then
+    self.selectedObj.text = value
+    self.selectedText.text =value
+  end
 end
 
 
 function M:setTemplate(template)
-  print("### setTemplate", #self.model)
+  -- print("### setTemplate", #self.model)
   local last = self.model[#self.model]
   local suffix
   if last and last.isTemplate then
@@ -67,10 +68,10 @@ end
 
 function M:init(UI, x, y, w, h)
   self.UI = UI
-  self.x = x
-  self.y = y
-  self.width = w
-  self.height = h
+  self.x = x or self.x
+  self.y = y or self.y
+  self.width = w or self.width
+  self.height = h or self.height
   self.model = self.model or {}
 end
 --
@@ -79,23 +80,27 @@ function M:create(UI)
   --  print("### create", #self.model)
   self.group = display.newGroup()
   self.triangle = self:createTriangle( self.x,self.y+5, 10 )
+  self.triangle.alpha = 0
   self.group:insert(self.triangle)
-  local scrollView = widget.newScrollView
-  {
-    top                      = self.triangle.contentBounds.yMax,
-    left                     = self.triangle.contentBounds.xMin,
-    width                    = self.width,
-    height                   = #self.model*self.height,
-    scrollHeight             = #self.model*self.height,
-    verticalScrollDisabled   = false,
-    horizontalScrollDisabled = true,
-    friction                 = 2,
-  }
-  --UI.editor.rootGroup:insert(self.group)
-  --scrollView.isVisible = false
-  -- this creatTable in baseBox set self.name to the text field next the triangle icon
-  self:createTable(self.triangle, self.group, {scrollView = scrollView, isRect = true}) -- isRect
+  if #self.model > 2 then
+    -- print("selctbox #", #self.model )
+    -- local scrollView = widget.newScrollView
+    -- {
+    --   top                      = self.triangle.contentBounds.yMax,
+    --   left                     = self.triangle.contentBounds.xMin,
+    --   width                    = self.width,
+    --   height                   = #self.model*self.height,
+    --   scrollHeight             = #self.model*self.height,
+    --   verticalScrollDisabled   = false,
+    --   horizontalScrollDisabled = true,
+    --   friction                 = 2,
+    -- }
+    -- UI.editor.rootGroup:insert(self.group)
+    --scrollView.isVisible = false
+    -- this creatTable in baseBox set self.name to the text field next the triangle icon
 
+    self:createTable({scrollView = scrollView, isRect = true}) -- isRect
+  end
 end
 --
 function M:textListener(event )
@@ -106,7 +111,7 @@ function M:textListener(event )
       -- Output resulting text from "defaultField"
       self.selectedObj.text = self.selectedObj.field.text
       self.selectedObj.field.isVisible = false
-      print(self.model[self.selectedObj.index].name)
+      -- print(self.model[self.selectedObj.index].name)
       self.model[self.selectedObj.index].name = self.selectedObj.text
 
   elseif ( event.phase == "editing" ) then
@@ -118,15 +123,16 @@ function M:textListener(event )
 end
 
 function M:commandHandler(event)
-  print(event.target.name)
   if event.numTaps == 2 then
-    print("------double tap --------")
+    -- print("------double tap --------")
     event.target.field.isVisible = true
   else
-    print("-----single tap------")
+    -- print("-----single tap------")
     if self.selectedObj ~= obj then
       if self.selectedObj then
-        self.selectedObj.rect:setFillColor(0.8)
+        if self.selectedObj.rect then
+          self.selectedObj.rect:setFillColor(0.8)
+        end
         -- update modified props. save the values to the self.model(decoded)
         --
         local props = self.useClassEditorProps()
@@ -136,7 +142,9 @@ function M:commandHandler(event)
       self.selectedObj = event.target
       self.selectedText.text =event.target.text
       self.selectedIndex = event.target.index
-      self.selectedObj.rect:setFillColor(0, 1, 0)
+      if self.selectedObj.rect then
+        self.selectedObj.rect:setFillColor(0, 1, 0)
+      end
       --
       -- this is set by controller.lua
       --   this will redraw with the new index

@@ -305,6 +305,7 @@ function M.newRoundedRectButton(options)
     if muiData.widgetDict[options.name]["iconText"] ~= nil then
         if options.iconAlign == "left" then
             textXOffset = fontSize * 0.55
+        elseif options.iconAlign == "center" then
         else
             textXOffset = -(fontSize * 0.55)
         end
@@ -320,6 +321,8 @@ function M.newRoundedRectButton(options)
         local width = muiData.widgetDict[options.name]["text"].contentWidth * 0.55
         if options.iconAlign == "left" then
             muiData.widgetDict[options.name]["iconText"].x = -(width)
+        elseif options.iconAlign == "center" then
+
         else
             muiData.widgetDict[options.name]["iconText"].x = width
         end
@@ -656,6 +659,8 @@ function M.newRectButton(options)
         textToMeasure = nil
     end
 
+    local iconSize = options.iconSize or fontSize
+
     if options.state.off.svg ~= nil and type(options.state.off.svg) == "table" and options.state.image == nil then
        local params = {
             {
@@ -682,8 +687,8 @@ function M.newRectButton(options)
                 muiData.widgetDict[options.name][v.name] = M.newSvgImageWithStyle({
                         name = v.svgName,
                         path = options.state[v.state].svg.path,
-                        width = fontSize,
-                        height = fontSize,
+                        width = iconSize,
+                        height = iconSize,
                         fillColor = options.state[v.state].svg.fillColor,
                         strokeWidth = options.state[v.state].svg.strokeWidth or 1,
                         strokeColor = options.state[v.state].svg.textColor or options.state[v.state].textColor,
@@ -695,12 +700,12 @@ function M.newRectButton(options)
             end
         end
     elseif options.state.off.iconImage ~= nil and options.state.image == nil then
-        muiData.widgetDict[options.name]["iconText"] = display.newImageRect( options.state.off.iconImage, fontSize, fontSize )
+        muiData.widgetDict[options.name]["iconText"] = display.newImageRect( options.state.off.iconImage, iconSize, iconSize )
         if muiData.widgetDict[options.name]["iconText"] ~= nil then
             muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["iconText"], false )
         end
         if options.state.on.iconImage ~= nil then
-            muiData.widgetDict[options.name]["iconTextOn"] = display.newImageRect( options.state.on.iconImage, fontSize, fontSize )
+            muiData.widgetDict[options.name]["iconTextOn"] = display.newImageRect( options.state.on.iconImage, iconSize, iconSize )
             if muiData.widgetDict[options.name]["iconTextOn"] ~= nil then
                 muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["iconTextOn"], false )
                 muiData.widgetDict[options.name]["iconTextOn"].isVisible = false
@@ -720,7 +725,8 @@ function M.newRectButton(options)
     textXOffset = 0
     if muiData.widgetDict[options.name]["iconText"] ~= nil then
         if options.iconAlign == "left" then
-            textXOffset = fontSize * 0.55
+            textXOffset = fontSize * 0.55 + (iconSize - fontSize)/2
+        elseif options.iconAlign == "center" then
         else
             textXOffset = -(fontSize * 0.55)
         end
@@ -739,7 +745,9 @@ function M.newRectButton(options)
     if muiData.widgetDict[options.name]["iconText"] ~= nil and options.state.image == nil then
         local width = muiData.widgetDict[options.name]["text"].contentWidth * 0.55
         if options.iconAlign == "left" then
-            muiData.widgetDict[options.name]["iconText"].x = -(width)
+            muiData.widgetDict[options.name]["iconText"].x = -(width) + (iconSize - fontSize)/2
+        elseif options.iconAlign == "center" then
+
         else
             muiData.widgetDict[options.name]["iconText"].x = width
         end

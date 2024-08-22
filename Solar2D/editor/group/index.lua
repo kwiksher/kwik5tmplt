@@ -15,33 +15,33 @@ local layersTable      = require(parent.."layersTable")
 -- local propsTable       = require(parent.."propsTable")
 
 local selectbox      = require(parent .. "groupTable")
-local classProps    =  require(root.."baseProps").new()
+local classProps    =  require(root.."parts.baseProps").new()
 -- local actionbox = require(root..".parts.actionbox")
 -- this set editor.timer.save, cacnel
 local buttons       = require(parent.."buttons")
 
 local controller = require(parent.."controller")
-local M = require(root.."baseClassEditor").new(model, controller)
+local M = require(root.."parts.baseClassEditor").new(model, controller)
 
-M.x = 240 -- display.contentCenterX
-M.y = 40
+M.x = display.contentCenterX
+M.y = 55
 
 function M:init(UI)
   controller.view  = self
   self.UI               = UI
   self.group            = display.newGroup()
   --
-  selectbox:init()
-  classProps:init(UI, self.x-18 , self.y-32,  self.width, self.height)
+  selectbox:init(UI, 4, self.y)
+  classProps:init(UI, display.contentCenterX+480*0.6 , display.contentCenterY,  self.width, self.height)
   classProps.option.width = 54
   classProps.model = model.props
   classProps:setValue{name="group-1"}
   --
   -- actionbox:init(UI)
   -- group specific UI
-  layersbox:init(UI, self.x+50, self.y, nil, nil, "layer")
-  layersTable:init(self.x + layersbox.width/2 + 80, self.y)
-  buttons:init(self.x +50 + layersbox.width/2 , self.y)
+  layersbox:init(UI, self.x-480/2-20, self.y, nil, nil, "layer")
+  layersTable:init(UI, self.x + 480/2 + 20, self.y)
+  buttons:init(UI, self.x , self.y-20)
   --
   controller:init{
     selectbox      = selectbox,
@@ -57,7 +57,7 @@ function M:init(UI)
 
   selectbox.useClassEditorProps = function()  return controller:useClassEditorProps() end
   selectbox.classEditorHandler = function(decoded, index)
-    print("@@@@@@@@@@@")
+    -- print("@@@@@@@@@@@")
   end
 
 end

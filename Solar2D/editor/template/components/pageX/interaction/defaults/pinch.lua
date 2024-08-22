@@ -1,7 +1,7 @@
 local M = {
   name = "pinch",
   class="pinch",
-  settings = {
+  properties = {
     isActive = true
   }
 }

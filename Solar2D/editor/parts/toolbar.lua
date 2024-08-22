@@ -1,6 +1,9 @@
 local M = {}
 M.name = ...
 M.weight = 1
+M.x = 11
+M.y = 11*7/2 + 26 -- display.contentCenterY -100
+
 ---
 local muiIcon = require("components.mui.icon").new()
 local util = require("lib.util")
@@ -17,9 +20,10 @@ function M:create(UI)
 
   self.layerToolMap = {}
   self.toolMap = nil
+  self.vertical = false
 
   local toolListener = function(event)
-    print("@@", event.target.muiOptions.name)
+    -- print("@@", self.selection, event.target.muiOptions.name)
     --for k, v in pairs(event.target.muiOptions) do print(k, v) end
     if self.selection == event.target.muiOptions.name then
       self.selection = nil
@@ -59,18 +63,25 @@ function M:create(UI)
   -- for Animations, Interactions, Replacements ...
   local layerToolListener = function(event)
     if UI.editor.currentTool then
-      print(UI.editor.currentTool.model.id)
-      -- save or cancel to make it nil
+      print("save or cancel to make it nil", UI.editor.currentTool.model.id)
       return
     end
     local toolbarName, layerTool = findSelectedTool(event.target.muiOptions.name)
     mui.turnOnButtonByName(toolbarName)
     --
-    if self.toolMap == nil then
+    if self.toolMap == nil and #layerTool.tools > 0 then
       self.toolMap = {}
       -- Kwik Component such as linear, pulse, roation ..
       for i = 1, #layerTool.tools do
         local tool = layerTool.tools[i]
+        local posX, posY
+        if self.vertical then
+          posX = 33
+          posY =  self.y + event.target.y + 22*i -2
+        else
+          posX =  22*i + 11
+          posY = 20
+        end
         local obj =
           muiIcon:createToolImage {
           icon = tool.icon,
@@ -80,16 +91,26 @@ function M:create(UI)
           hoverText = tool.name,
           -- x = 66+ (i+2 ) * 22 - #obj.tools * 22 * 0.5,
           -- y = (display.actualContentHeight-1280/4 )/2,
-          x = event.target.x + layerTool.x,
-          y = event.target.y + 22*i -2,
+          x = posX,
+          y =  posY,
           width = 22,
           height = 22,
-          listener = toolListener
+          listener = toolListener,
+          iconSize = 18
+
         }
         obj.class    = string.lower(tool.name)
         obj.layerTool = layerTool.id
         self.toolMap[layerTool.id .. "-" .. tool.name] = obj
       end
+    elseif #layerTool.tools == 0 then -- Trash
+        UI.scene.app:dispatchEvent(
+          {
+            name = "editor.classEditor." ..layerTool.command,
+            UI = UI,
+          }
+        )
+
     else
       for k, v in pairs(self.toolMap) do
         v:removeSelf()
@@ -127,16 +148,20 @@ function M:create(UI)
         muiIcon:createImage {
         icon = v.icon,
         name = v.name,
-        x = 88 + (k) * 22 - (#self.models-#skipped) * 22 * 0.5,
-        y = - 2,
+        x = self.x,
+        y = self.y+ (k) * 22 - (#self.models-#skipped) * 22 * 0.5,
         -- y = (display.actualContentHeight-1280/4 )/2-22,
         width = 22,
         height = 22,
         listener = layerToolListener,
-        id = v.id
+        id = v.id,
+        fillColor = {1, 1, 1},
+        iconAlign = "center",
+        iconSize = 18
       }
       obj.id = v.id
       obj.tools = v.tools
+      obj.command = v.command -- for trash
       self.layerToolMap[v.name] = obj
       lastTool = obj
     --end

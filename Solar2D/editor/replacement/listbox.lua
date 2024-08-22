@@ -1,9 +1,12 @@
+local current = ...
+local parent,  root = newModule(current)
+
 local M = {
-  x = 10, -- display.contentCenterX/2,
-  y = display.contentHeight*0.75 -45,
-  width = 55,
-  height = 240,
-  rowWidth = 55,
+  x = display.contentCenterX - 480/2 + 10, --10, -- display.contentCenterX/2,
+  y = display.contentCenterY + 320/2+5,
+  width = 480 -20,
+  height = 240/2 -40,
+  rowWidth = 60,
   rowHeight = 20
 }
 -- attach drag-item scrollview to widget library
@@ -11,7 +14,9 @@ require("extlib.dragitemscrollview")
 -- load widget library
 local widget = require("widget")
 local json = require("json")
+local util = require("lib.util")
 
+local textProps = require(parent.."textProps")
 --I/F
 
 local headers = {}
@@ -22,10 +27,41 @@ headers.sequenceData = {"name", "start", "count", "frames", "loopCount", "loopDi
 
 M.headers = headers
 
+-- name   start   out   dur file action
+--  A   1.00   2.00         a.mp3
+--  B   2.00   4.00         b.mp3
+--
+function M:getValue()
+  local ret = {}
+  for i, obj in next, self.objs do
+    if obj.index > 0 then
+      local entry = ret[obj.index]
+      if entry == nil then
+        entry = {}
+        ret[#ret + 1] = entry
+      end
+      entry[obj.name] = obj.text
+      if ( obj.name == "start" or obj.name == "count" ) and obj.text =="" then
+        entry[obj.name] = NIL
+      end
+      if obj.name == "frames" then
+        local len =  obj.text:len()
+        entry[obj.name] = obj.text:sub(2, len-1)
+      end
+      if obj.name == "dur" and obj.text == "" then
+        entry.dur = 0
+      end
+    end
+  end
+  -- print(json.encode(ret))
+  return ret
+end
+
 function M:setValue(fooValue, type)
-   self.type = type or self.type
+  self.type = type or self.type
   self.value = fooValue or self.value
-  print("####", self.type, #self.value)
+  -- print("####", self.type, #self.value)
+  -- print(json.encode(self.value))
   self:createTable()
 end
 
@@ -35,6 +71,7 @@ function M:create(UI)
   self.rootGroup.listPropsTable = display.newGroup()
   --
   self.singleClickEvent = function(obj)
+    -- print("@@@", obj.index)
     UI.scene.app:dispatchEvent {
       name = "editor.replacement.list.select",
       UI = UI,
@@ -47,6 +84,8 @@ function M:create(UI)
     end
     self.selection = obj
     self.selection.rect:setFillColor(0,1,0)
+
+    textProps:hide()
   end
   --
   self.addEvent = function(obj)
@@ -121,22 +160,9 @@ function M:listener( item, touchevent )
   end
 end
 
-local function newText(option)
-  local obj = display.newText(option)
-  obj:setFillColor(0)
-  -- obj.anchorX = 0
-  return obj
-end
-
-local option = {
-  text = "",
-  x = 0,
-  y = 0,
+local option, newText = util.newTextFactory{
   width = nil,
   height = 20,
-  font = native.systemFont,
-  fontSize = 10,
-  align = "left"
 }
 
 function M:createTable ()
@@ -160,10 +186,11 @@ function M:createTable ()
       end
       option.text    = row[i]
       local obj      = newText(option)
-      obj.x, obj.y   = i*self.rowWidth -20, index*self.rowHeight + 2
+      obj.x, obj.y   = i*self.rowWidth -40, index*self.rowHeight + 4
       obj.value      = row
       obj.index      = index
       obj.type       = self.type
+      obj.name       = headers[self.type][i]
       --
       local rect = display.newRect(obj.x, obj.y, obj.width, obj.height)
       rect:setFillColor(1)
@@ -203,7 +230,7 @@ function M:createTable ()
     left = self.x,
     top = self.y,
     -- top=(display.actualContentHeight-1280/4 )/2,
-    width= display.contentWidth -20,
+    width= self.width, --display.contentWidth -20,
     -- width= self.width * #headers[self.type],
     height=self.height
   }
@@ -211,16 +238,18 @@ function M:createTable ()
   --index = 0
   createRow(headers[self.type])
   --  --
-  for i, entry in pairs(self.value) do
+  for i, entry in next, self.value do
+    -- print(i, entry)
     local row = {}
-    for i=1, #headers[self.type] do
+    for k, header in next ,headers[self.type] do
       -- if headers[i] == "_name" then
       --   row[i] = entry["name"]
       -- else
-      row[i] = entry[headers[self.type][i]] or ""
+      -- print("", header)
+      row[k] = entry[header] or ""
       -- end
     end
-    print(i, json.encode(row))
+    -- print(i, json.encode(row))
     createRow(row)
   end
 

@@ -449,7 +449,7 @@ function M.move(UI, obj, listener)
     },
     --
     isDrop = false,
-    dropLayer = "",
+    dropArea = "",
     dropMargin = 10,
     --
     dropBound = {xStart=0, xEnd=0, yStart = 0, yEnd=0},

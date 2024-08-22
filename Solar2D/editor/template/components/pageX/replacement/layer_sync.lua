@@ -1,29 +1,55 @@
+local name = ...
+local parent,root = newModule(name)
+
 local M = {
-  name = {{name}},
+  name = "{{name}}",
+  layer = "{{layer}}",
   class = "sync",
-  line     = {},
-  settings = {
-    autoPlay     = {{audotPlay}},
+  folder = "audios/sync",
+  properties = {
+    {{#properties}}
+    autoPlay     = {{autoPlay}},
     delay        = {{delay}},
     fadeDuration = {{fadeDuration}},
     speakerIcon = {{speakerIcon}},
-    wordTouch   = {{wordlTouch}},
+    wordTouch   = {{wordTouch}},
+    {{/properties}}
   },
   audioProps = {
+    {{#audioProps}}
+    filename    = "{{filename}}",
     channel      = {{channel}},
-    volume      = {{voume}},
+    volume      = {{volume}},
+    {{/audioProps}}
   },
   textProps = {
+    {{#textProps}}
     folder       = nil,
-    font         = {{font}},
+    font         = "{{font}}",
     fontColor   = { {{fontColor}} },
-    fontColorHi = { {fontColorHi}} },
-    fontSize    = {{fontSize}}/4,
-    language    = nil,
-    padding     = {{padding}}/4,
+    fontColorHi = { {{fontColorHi}} },
+    fontSize    = {{fontSize}},
+    language    = "{{language}}",
+    padding     = {{padding}4,
     readDir     = "{{readDir}}",
-    sentenceDir = {{sentenceDir}}, -- wordTouch
-  }
+    sentenceDir = "{{sentenceDir}}", -- wordTouch
+    {{/textProps}}
+  },
+  actions = {onComplete = "{{onComplete}}"},
+
+}
+
+M.line = {
+  {{#line}}
+  {
+    name = "{{name}}",
+    out = {{out}},
+    start = {{start}},
+    file = "{{file}}",
+    action = "{{action}}",
+    dur = {{dur}}
+  },
+  {{/line}}
 }
 --
 local layerProps = require(parent.."{{layer}}")

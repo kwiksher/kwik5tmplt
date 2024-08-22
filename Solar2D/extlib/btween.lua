@@ -16,22 +16,21 @@ local function copyTable(t)
   return copyTableTo(t, t2)
 end
 
-function new(target, duration, values, props, extraValues)
-
+function new(target, duration, values, extraValues,_option)
 	-- these three arguments are absolutely required
 	if not target or not duration or not values then
 		--error("btween.new() requires target, duration, and values arguments.")
 		return
 	end
 
-	local propsCopy
-	-- the props table may be nil
-	if props then
-		propsCopy = copyTable(props)
+	local option
+	-- the _option table may be nil
+	if _option then
+		option = copyTable(_option)
 	else
-		propsCopy = {}
+		option = {}
 	end
-	propsCopy.pathCurves = values
+	option.pathCurves = values
 
 	local overrideRotation = false
 	local newAngle = 180
@@ -55,19 +54,22 @@ function new(target, duration, values, props, extraValues)
 		extraValues = {}
 	end
 
-	local oldOnInit = propsCopy.onInit
-	local oldOnChange = propsCopy.onChange
+	local oldOnInit = option.onInit
+	local oldOnChange = option.onChange
 
-	propsCopy.onInit = function(tween)
+	option.onInit = function(tween)
 		local p1 = tween.pathCurves[1]
 		tween.prevX = p1.x
 		tween.prevY = p1.y
+    print("onInit", p1.x, p1.y)
 		if oldOnInit then
 			oldOnInit(tween)
 		end
 	end
 
-	propsCopy.onChange = function(tween)
+  -- for k, v in pairs(extraValues) do print(k, v) end
+
+	option.onChange = function(tween)
 		if not tween.prevX then
 			return
 		end
@@ -108,6 +110,8 @@ function new(target, duration, values, props, extraValues)
 		target.x = x
 		target.y = y
 
+    -- print(target.x, target.y)
+
 		if not overrideRotation then
 			local angle = math.atan2( target.y - tween.prevY, target.x - tween.prevX)
 			angle = angle * newAngle / math.pi --angle * 180 / math.pi
@@ -124,5 +128,5 @@ function new(target, duration, values, props, extraValues)
 		end
 	end
 
-	return gtween.new(target, duration, extraValues, propsCopy)
+	return gtween.new(target, duration, extraValues, option)
 end

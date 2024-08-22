@@ -19,11 +19,11 @@ local command = function (params)
   UI.editor.currentActionCommandIndex = params.index
 
   local type = ""
-  local entries = {}
+  local properties = {}
   local model = {}
   local index = params.index  or 1
 
-  print("selectActionCommand", commandClass)
+  -- print("selectActionCommand", commandClass)
 
   local Layer = table:mySet { "animation", "image", "button" }
 
@@ -44,6 +44,10 @@ local command = function (params)
   if params.isNew then
     type = commandClass
     --
+    if commandModel[commandClass] == nil then
+      return
+    end
+
     for k, v in pairs(commandModel[commandClass]) do
       model[#model+1] = {name=k, params=v}
     end
@@ -59,13 +63,13 @@ local command = function (params)
     for k, v in pairs(model[index].params) do
       -- print("", k, v)
       local prop = {name=k, value=v}
-      entries[#entries+1] = prop
+      properties[#properties+1] = prop
     end
-    -- commandbox.group.y = display.actualContentHeight- #entries * 20 -40
+    -- commandbox.group.y = display.actualContentHeight- #properties * 20 -40
     --
   else
-    print("",  UI.page.."/commands/"..UI.editor.currentAction.name..".json", UI.editor.currentActionCommandIndex)
-    for k, v in pairs(commandClass) do print("###",k, v) end
+    -- print("",  UI.page.."/commands/"..UI.editor.currentAction.name..".json", UI.editor.currentActionCommandIndex)
+    -- for k, v in pairs(commandClass) do print("###",k, v) end
     --
     local out = util.split(commandClass.command, '.')
     type = out[1]
@@ -75,26 +79,19 @@ local command = function (params)
     for k, v in pairs(commandClass.params) do
       -- print("", k, v)
       local prop = {name=k, value=v}
-      entries[#entries+1] = prop
+      properties[#properties+1] = prop
     end
   end
 
+  commandbox:setPosition(properties, model)
 
-  commandbox.triangle.x = commandbox.x
-  commandbox.triangle.y = display.actualContentHeight- math.max(#entries, #model) * 20 -50
-  commandbox.selectedText.x = commandbox.triangle.x
-  commandbox.selectedText.y = commandbox.triangle.y
-
-  if commandbox.scrollView then
-    commandbox.scrollView.y = commandbox.triangle.y + commandbox.scrollView.height/2
-  end
-
-
-  UI.editor.actionCommandPropsStore:set{type = type, entries=entries, isNew = params.isNew}
+  UI.editor.actionCommandPropsStore:set{type = type, properties=properties, isNew = params.isNew}
 
   buttons:hide()
   commandbox:show()
   actionCommandButtons:show()
+
+  UI.editor.viewStore.commandView:toFront()
 
 end
 --

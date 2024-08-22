@@ -5,11 +5,33 @@ local buttons    = require("editor.parts.buttons")
 
 local Props = {
   name = "page",
-  anchorName = "selectPage",
+  icons      = {"Properties", "newPage", "trash"},
+  marginX = 69,
+  setPosition = function(self)
+    -- self.x = self.x
+    -- self.y = self.y
+    self.x = 11
+    self.y = 52
+    self.width = 80
+    --
+    self.option = {
+      text = "",
+      x = self.x,
+      y = self.y,
+      width = nil,
+      height = 20,
+      font = native.systemFont,
+      fontSize = 10,
+      align = "left"
+    }
+
+  end ,
   id = "page"
 }
 
-local M, bt, tree = require(root.."baseTable").new(Props)
+local horizontal = false
+
+local M, bt, tree = require(parent .."baseTable").new(Props)
 
 local btNodeName = "select page"
 
@@ -46,9 +68,9 @@ end
 local function mouseHandler(event)
   if event.isSecondaryButtonDown then
     print(event.target.page, event.target.x, event.target.y, event.x, event.y)
-    buttons:showContextMenu(event.x -10, event.y+10,
+    buttons:showContextMenu(event.x + 30, event.y+10,
       {type=event.target.text, selections={event.target},
-      contextMenu = {"create", "rename", "delete"}, orientation = "horizontal"})
+      contextMenu = {"create", "rename", "delete"}, orientation = "vertical", isPageContent = true})
   else
     -- print("@@@@not selected")
   end
@@ -83,39 +105,66 @@ function M.commandHandler(target, event, isReload)
 end
 --]]
 
-function M:createTable(UI, columns, selection)
+function M:createTable(UI, entries, selection)
     -- print("-----pageStore", #models, self.selection)
     -- timer.performWithDelay( 500, function()
     local option = self.option
     -- local objs = {}
 
-    local max = math.min(10, #columns)
+    local max = math.min(10, #entries)
+    local width = self.width
+    local height = self.option.height
+    local scrollView
 
-    local scrollView = widget.newScrollView
-    {
-      top                      = option.y - option.height/2,
-      left                     = option.x  - option.width/2,
-      width                    =  max*option.width,
-      height                   = option.height,
-      scrollHeight             = option.height,
-      scrollWidth            = #columns*option.width,
-      verticalScrollDisabled   = true,
-      horizontalScrollDisabled = false,
-      -- width                    =  option.width,
-      -- height                   = max*option.height,
-      -- scrollHeight             = #columns*option.height,
-      -- -- scrollWidth            = #columns*option.width,
-      -- verticalScrollDisabled   = false,
-      -- horizontalScrollDisabled = true,
-      friction                 = 2,
-    }
+    if horizontal then
+      scrollView = widget.newScrollView
+      {
+        top                      = option.y - option.height/2,
+        left                     = self.x,
+        width                    =  max*width,
+        height                   = option.height,
+        scrollHeight             = option.height,
+        scrollWidth              = #entries*width,
+        verticalScrollDisabled   = true,
+        horizontalScrollDisabled = false,
+        backgroundColor          = {0.8},
+
+        -- width                    =  option.width,
+        -- height                   = max*option.height,
+        -- scrollHeight             = #entries*option.height,
+        -- -- scrollWidth            = #entries*option.width,
+        -- verticalScrollDisabled   = false,
+        -- horizontalScrollDisabled = true,
+        friction                 = 2,
+      }
+    else
+      scrollView = widget.newScrollView
+      {
+        top                      = option.y - option.height/2,
+        left                     = self.x+width,
+        width                    =  width,
+        height                   =  max*height,
+        scrollHeight             = #entries*height,
+        scrollWidth              = width,
+        verticalScrollDisabled   = false,
+        horizontalScrollDisabled = true,
+        backgroundColor          = {0.8},
+
+        -- width                    =  option.width,
+        -- height                   = max*option.height,
+        -- scrollHeight             = #entries*option.height,
+        -- -- scrollWidth            = #entries*option.width,
+        -- verticalScrollDisabled   = false,
+        -- horizontalScrollDisabled = true,
+        friction                 = 2,
+      }
+    end
 
 
     local function createColumn(index, entry)
       local group = display.newGroup()
       --
       option.text = entry.name
-      option.x =  option.width/2 + (index-1)*option.width
       option.y = option.height/2
 
       -- option.x = option.x
@@ -126,6 +175,7 @@ function M:createTable(UI, columns, selection)
       obj.page = entry.name
       obj.tap = self.commandHandler
 
+      obj.x = obj.width/2
       -- function(eventObj)
       --   self:commandHandler(eventObj)
       --   self.selection.rect:setFillColor(0,1,0)
@@ -133,21 +183,30 @@ function M:createTable(UI, columns, selection)
       obj:addEventListener("tap", obj)
       obj:addEventListener("mouse", mouseHandler)
 
-      index = index + 1
       obj.index = index
 
-      local rect = display.newRect(obj.x, obj.y, obj.width, option.height)
+      local rect = display.newRect(obj.x, obj.y, obj.width+4, option.height)
       rect:setFillColor(0.8)
+      obj.rect = rect
 
-      group:insert(rect)
+      if index > 1 then
+        if horizontal then
+          obj.x = self.objs[index-1].rect.contentBounds.xMax + obj.rect.width/2
+          obj.rect.x = obj.x
+        else
+          obj.y = self.objs[index-1].y + obj.rect.height
+          obj.rect.y = obj.y
+        end
+      end
+
+      group:insert(obj.rect)
       group:insert(obj)
       scrollView:insert(group)
-      obj.rect = rect
       return obj
     end
 
-    for index=1, #columns do
-      self.objs[index] = createColumn(index, columns[index])
+    for index=1, #entries do
+      self.objs[index] = createColumn(index, entries[index])
     end
 
 
@@ -187,19 +246,12 @@ function M:create(UI)
   UI.editor.pageStore:listen(
     function(foo, models)
       -- print(debug.traceback())
-      self.option = {
-        text = "",
-        x = self.rootGroup.selectBook.x + 40,
-        y = self.rootGroup.selectPage.y,
-        width = 40,
-        height = 20,
-        font = native.systemFont,
-        fontSize = 10,
-        align = "left"
-      }
+      self:setPosition()
       self:clean()
       self.objs = {}
+      self.iconObjs = {}
       self:createTable(UI, models, self.selection )
+      self:createIcons()
     end
   )
 
@@ -210,27 +262,27 @@ function M:create(UI)
   -- table.sort(models,compare)
 end
 --
-function M:didShow(UI)
-  self.UI = UI
-end
+-- function M:didShow(UI)
+--   self.UI = UI
+-- end
 --
-function M:didHide(UI)
-end
+-- function M:didHide(UI)
+-- end
 --
-function M:destroy()
-  -- self:clean()
-  -- print(debug.traceback())
-  if self.objs then
-    for k, obj in next, self.objs do
-      obj.rect:removeSelf()
-      obj:removeEventListener("touch", obj)
-      obj:removeEventListener("mouse", mouseHandler)
-      obj:removeSelf()
-    end
-  end
-  self.objs = nil
+-- function M:destroy()
+--   -- self:clean()
+--   -- print(debug.traceback())
+--   if self.objs then
+--     for k, obj in next, self.objs do
+--       obj.rect:removeSelf()
+--       obj:removeEventListener("touch", obj)
+--       obj:removeEventListener("mouse", mouseHandler)
+--       obj:removeSelf()
+--     end
+--   end
+--   self.objs = nil
 
-end
+-- end
 --
 --
 return M

@@ -1,9 +1,9 @@
-local M = {}
 local current = ...
-local parent,  root = newModule(current)
+local parent,  root, M = newModule(current)
 
 M.name = current
 M.weight = 1
+M.width = 60
 
 local App = require("Application")
 
@@ -14,9 +14,9 @@ local selectbox = require(parent.."selectbox")
 -- local button = require("extlib.com.gieson.Button")
 -- local tools = require("extlib.com.gieson.Tools")
 ---
-local _contextMenu = {"create", "rename", "modify","openEditor", "copy", "paste", "delete"}
-M.contextMenu = _contextMenu
--- M.contextMenu = table:mySet{"edit", "copy", "paste", "delete"}
+local _contextMenus = {"create", "_rename", "modify","openEditor", "copy", "paste", "delete"}
+M.contextButtons = _contextMenus
+-- M.contextButtons = table:mySet{"edit", "copy", "paste", "delete"}
 
 
 M.commands = {"create", "shape.new_rectangle", "shape.new_ellipse", "shape.new_text",
@@ -28,6 +28,7 @@ M.commands = {"create", "shape.new_rectangle", "shape.new_ellipse", "shape.new_t
   "save", "cancel"}
 
 M.objs = nil
+M.contextInit = false
 
 local isCancel = function(event)
   local ret = event.phase == "up" and event.keyName == 'escape'
@@ -36,16 +37,24 @@ end
 
 ---
 function M:init(UI, toggleHandler)
-  -- singleton ---
-  if self.objs then return end
+  -- singleton?? ---
+  -- if self.objs then return end
+  --
+  -- if self.id ~="physics" then
+  --   print (debug.traceback())
+  -- end
+
   self.objs = {}
   ---
-  local app = App.get()
-  for i = 1, #self.commands do
-    app.context:mapCommand(
-      "editor.classEditor." .. self.commands[i],
-      "editor.controller." .. self.commands[i]
-    )
+  if not self.contextInit then
+    local app = App.get()
+    for i = 1, #self.commands do
+      app.context:mapCommand(
+        "editor.classEditor." .. self.commands[i],
+        "editor.controller." .. self.commands[i]
+      )
+    end
+    self.contextInit = true
   end
   self.togglePanel = toggleHandler
 end
@@ -63,7 +72,7 @@ function M:create(UI)
   self.group = group
 
   local function tapHandler(event)
-    print("tap", event.eventName)
+    -- print("tap", event.eventName)
     if event.eventName == "toggle" then
       self.togglePanel(true)
       local obj = self.objs[event.eventName]
@@ -75,17 +84,24 @@ function M:create(UI)
     else
       local props = {}
       transition.from(obj, {time=500, xScale=2, yScale=2})
-      if event.eventName == "copy" then
-        props = {
-          layer=self.UI.editor.currentLayer,
-          class= self.UI.editor.currentClass,
-          selections = self.UI.editor.selections,
-        }
-      elseif event.eventName == "save" then
-        props = self.useClassEditorProps()
-      end
+
+      -- if event.eventName == "copy" then
+      -- elseif event.eventName == "save" then
+      --   props = UI.useClassEditorProps()
+      --   print("saving props") -- if nil, command from dispathEvent will skip the process by checking props null
+      --    for k, v in pairs(props) do print("",k, v) end
+      --    if props.properties then
+      --       for k, v in pairs(props.properties) do print("",k, v) end
+      --     end
+      -- end
+
+      -- if props then
+        -- props.layer=self.UI.editor.currentLayer
+        -- props.class= self.UI.editor.currentClass
+        -- props.selections = self.UI.editor.selections
+      -- end
       -- close context menu
-      -- for i, key in next, self.contextMenu do
+      -- for i, key in next, self.contextButtons do
       --   if key == event.eventName then
       --     self:hide()
       --     break
@@ -95,8 +111,15 @@ function M:create(UI)
       self:hide()
       --
       if self.contextMenuOptions then
-        props.options = self.contextMenuOptions
+        props.class = self.contextMenuOptions.class
+        --print(self.contextMenuOptions.class)
+        --
+        -- {class=event.target.text, selections={event.target},
+        -- contextMenu = {"create", "rename", "delete"}, orientation = "horizontal"})
+
       end
+
+      print("@@@@", "editor.classEditor." .. event.eventName, props.class)
 
       self.UI.scene.app:dispatchEvent {
         name = "editor.classEditor." .. event.eventName,
@@ -112,8 +135,8 @@ function M:create(UI)
     parent = group,
     text = "",
     font = native.systemFont,
-    fontSize = 10,
-    align = "left"
+    fontSize = 12,
+    align = "center"
   }
 
   local function createButton(params)
@@ -122,11 +145,13 @@ function M:create(UI)
     options.y = params.y
 
     local obj = display.newText(options)
-    --obj.anchorY=0.5
+    -- obj.anchorY=0.5
     -- obj.anchorX = 0
     obj.eventName = params.eventName
+    obj:translate(obj.width/2 + 10, 0)
+    obj.contextButton = params.contextButton
 
-    local rect = display.newRoundedRect(obj.x, obj.y, 40, obj.height + 2, 10)
+    local rect = display.newRoundedRect(obj.x, obj.y, obj.width+10, obj.height + 2, 10)
     group:insert(rect)
     group:insert(obj)
     rect:setFillColor(0, 0, 0.8)
@@ -137,7 +162,9 @@ function M:create(UI)
 
     obj.alignment = params.alignment
     -- rect.anchorX = 0
-    self.objs[params.eventName] = obj
+    if params.objs then
+      params.objs[params.eventName] = obj
+    end
     return obj
   end
 
@@ -149,16 +176,20 @@ function M:create(UI)
       local _obj = createButton(v)
       v.x = _obj.x + _obj.rect.width
       objs[#objs+1] =_obj
+      _obj.alpha= 0
+      _obj.rect.alpha = 0
     end
     return objs
   end
 
   local obj = createButton {
     text = "New",
-    x = display.contentCenterX - 210,
+    x = display.contentCenterX - 480/2,
     y = display.actualContentHeight-10,
     eventName = "create",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs,
+    contextButton = true
   }
 
   obj.rect.buttonsInRow = createButtonsInRow(
@@ -172,10 +203,12 @@ function M:create(UI)
 
   obj = createButton {
     text = "Edit",
-    x = display.contentCenterX - 210,
+    x = obj.rect.contentBounds.xMax,-- display.contentCenterX - 210,
     y = display.actualContentHeight-10,
     eventName = "modify",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs,
+    contextButton = true
   }
 
   obj.rect.buttonsInRow = createButtonsInRow(
@@ -187,66 +220,77 @@ function M:create(UI)
 
   obj = createButton {
     text = "Copy",
-    x = display.contentCenterX - 170,
+    x = obj.rect.contentBounds.xMax,-- x = display.contentCenterX - 170,
     y = display.actualContentHeight-10,
     eventName = "copy",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs
   }
 
   obj = createButton {
     text = "Paste",
-    x = display.contentCenterX -130,
+    x = obj.rect.contentBounds.xMax, --x = display.contentCenterX -130,
     y = obj.y,
     eventName = "paste",
-    alignment = "left"
-
+    alignment = "left",
+    objs = self.objs
   }
 
   obj = createButton {
     text = "Delete",
-    x = obj.x + obj.width,
+    x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "delete",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs,
+    contextButton = true
   }
 
   obj = createButton {
     text = "hide",
-    x = obj.x + obj.width+10,
+    x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "toggle",
-    alignment = "left"
+    alignment = "left",
+    objs = self.objs,
+    contextButton = true
   }
 
   obj = createButton {
     text = "Save",
-    x = display.contentCenterX + 45,
+    x = obj.rect.contentBounds.xMax, --x = display.contentCenterX + 45,
     y = display.actualContentHeight-10,
     eventName = "save",
-    alignment = "right"
+    alignment = "right",
+    objs = self.objs
   }
   obj = createButton {
     text = "Cancel",
-    x = obj.x + obj.width,
+    x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "cancel",
-    alignment = "right"
+    alignment = "right",
+    objs = self.objs
   }
 
   obj = createButton {
     text = "In vscode",
-    x = obj.x + obj.width,
+    x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "openEditor",
-    alignment = "right"
+    alignment = "right",
+    objs = self.objs,
+    contextButton = true
   }
 
   obj = createButton {
     text = "Rename",
-    x = obj.x + obj.width,
+    x = obj.rect.contentBounds.xMax,
     y = obj.y,
     eventName = "rename",
-    alignment = "right"
+    alignment = "right",
+    objs = self.objs,
+    contextButton = true
   }
 
   self.openEditorObj = obj
@@ -293,7 +337,7 @@ end
 --
 function M:destroy()
   -- print(debug.traceback())
-  print("buttons:destroy()")
+  -- print("buttons:destroy()")
   if self.objs then
     for k, obj in next, self.objs do
       obj.rect:removeEventListener("tap", obj)
@@ -314,7 +358,7 @@ function M:toggle()
   for k, obj in pairs(self.objs) do
     obj.isVisible = not obj.isVisible
     obj.rect.isVisible = obj.isVisible
-    end
+  end
 end
 
 function M.mouseOver(event)
@@ -341,7 +385,6 @@ function M.mouseOver(event)
     for k, o in next, target.buttonsInRow do
       o.isVisible = true
       o.rect.isVisible = true
-      o.alpha = 1
     end
   end
   M.lastButtonRect = target
@@ -360,10 +403,10 @@ end
 function M:showContextMenu(x,y, options)
   self.contextMenuOptions = options
   if options then
-    self.contextMenu = options.contextMenu or _contextMenu
+    self.contextButtons = options.contextButtons or _contextMenus
   end
   local indexX, indexY = 0,0
-  for k, key in next, self.contextMenu do
+  for k, key in next, self.contextButtons do
     for k, obj in next, self.objs do
       if key  == obj.rect.eventName then
         obj.isVisible = true
@@ -386,10 +429,10 @@ function M:showContextMenu(x,y, options)
         --
         -- for buttons in row
         --
-        if obj.rect.buttonsInRow then
+        if obj.rect.buttonsInRow and not (options or {}).isPageContent then
           local indexXX = 1
           for i, o in next, obj.rect.buttonsInRow do
-            print(i, o.text)
+            -- print(i, o.text)
             o.isVisible = false
             o.rect.isVisible = o.isVisible
             -- if options and options.orientation =="horizontal" then
@@ -418,18 +461,44 @@ end
 
 function M:hideContextMenu()
   self.contextMenuOptions = nil -- "actionTable"
-  self.contextMenu = _contextMenu
+  self.contextButtons = _contextMenus
   self.openEditorObj.text = self.openEditorObj.originalText
+
+  if self.objs then
+    for k, obj in pairs(self.objs) do
+      if obj.contextButton or obj.text == "Copy" or obj.text == "Paste" then
+        obj.isVisible = false
+        obj.rect.isVisible = false
+        if obj.rect.buttonsInRow then
+          for i, o in next, obj.rect.buttonsInRow do
+            o.isVisible = false
+            o.rect.isVisible = false
+          end
+        end
+      end
+    end
+  end
+
 end
 
 function M:show()
+  -- print("@ show", self.id)
+  -- print(debug.traceback())
+
   for k, obj in pairs(self.objs) do
-    obj.isVisible = true
-    obj.rect.isVisible = obj.isVisible
-    obj.rect:removeEventListener("mouse", self.mouseOver)
-    if obj.rect.buttonsInRow then
-      for i, o in next, obj.rect.buttonsInRow do
-        o:removeEventListener("mouse", self.mouseOverInRow)
+    -- print(obj.text, obj.x, obj.y)
+    if not obj.contextButton then
+      obj.isVisible = true
+      obj.rect.isVisible = true
+      obj.rect:removeEventListener("mouse", self.mouseOver)
+      if obj.rect.buttonsInRow then
+        for i, o in next, obj.rect.buttonsInRow do -- mouse over to show them
+          o.isVisible = false
+          o.rect.isVisible = false
+          -- o.alpha = 0
+          -- o.rect.alpha = 0
+          o:removeEventListener("mouse", self.mouseOverInRow)
+        end
       end
     end
   end
@@ -457,10 +526,12 @@ function M:show()
 end
 
 function M:hide()
+  -- print("@ hide", self.id)
+  -- print(debug.traceback())
   if self.objs then
     for k, obj in pairs(self.objs) do
       obj.isVisible = false
-      obj.rect.isVisible = obj.isVisible
+      obj.rect.isVisible = false
       if obj.rect.buttonsInRow then
         for i, o in next, obj.rect.buttonsInRow do
           o.isVisible = false
@@ -475,5 +546,10 @@ function M:hide()
 
 end
 
+M.new = function(id)
+  local instance = {id=id}
+  instance.contextInit = false
+  return setmetatable(instance, {__index=M})
+end
 --
 return M

@@ -14,6 +14,7 @@ mkdir components/{{page}}/layers
 mkdir components/{{page}}/page
 mkdir components/{{page}}/timers
 mkdir components/{{page}}/variables
+mkdir components/{{page}}/joints
 mkdir models/{{page}}
 cd components/{{page}}
 cp "{{newPageIndex}}" index.lua

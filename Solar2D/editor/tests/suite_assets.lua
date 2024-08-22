@@ -7,6 +7,7 @@ local pageTable
 local layerTable
 local buttons = require("editor.parts.buttons")
 local scriptsCommands = require("editor.scripts.commands")
+local assetTable = require("editor.asset.assetTable")
 
 local _TMP = "/Users/ymmtny/Documents/GitHub/kwik-visual-code/test/base-proj/tmp"
 
@@ -22,19 +23,22 @@ function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
   -- --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
-  appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
+  -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
 
-  -- bookTable.commandHandler({book="bookTest01"}, nil,  true)
+  -- bookTable.commandHandler({book="book"}, nil,  true)
   -- pageTable.commandHandler({page="page1"},nil,  true)
 
-  --selectors.componentSelector.iconHander()
-  --selectors.componentSelector:onClick(true,  "layerTable")
+  selectors.componentSelector.iconHander()
+  selectors.componentSelector:onClick(true,  "layerTable")
+
+  -- bookTable.commandHandler(bookTable.objs[1], nil, true)
+
 end
 
 function M.setup()
@@ -126,7 +130,7 @@ function M.xtest_create_video()
   assetTable:iconsHandler({target={muiOptions={name="repVideo-icon"}}}, "video", "selectTool")
 
   -- click a layer
-  local args = {"bookTest01", "page1", "imageTwo"}
+  local args = {"book", "page1", "imageTwo"}
   local layerObj = layerTable.findObj(layerTable.objs, args, 3)
   layerObj:touch({phase="ended"})
 
@@ -158,7 +162,7 @@ function M.xtest_save_video_renderAssets()
   local controller = require("editor.controller.index")
   controller.view = {UI = UI}
 
-  local book = "bookTest01"
+  local book = "book"
   local page = "page1"
   local classFolderName = "replacement" -- this is id in editor.model.lua to get a folder name of template for lustache
   local class = "video"
@@ -319,7 +323,7 @@ function M.xtest_save_audio()
     filename = "click.mp3",
   }
 
-  local fileInSandbox = controller:renderAssets("bookTest01", "page1", nil ,"audio", nil, model)
+  local fileInSandbox = controller:renderAssets("book", "page1", nil ,"audio", nil, model)
 
   local expected = {
     audios = {
@@ -344,7 +348,7 @@ function M.xtest_spreitesheet()
   -- TBI display spriteseet icon if Spirtesheet is selected in assetTable.lua
 end
 
-function M.test_assets_lfs()
+function M.xtest_assets_lfs()
   -- only lfs
   -- add media files into assets folder and run this test
   --
@@ -399,8 +403,8 @@ function M.test_assets_lfs()
   }
 
   local controller = require("editor.asset.index").controller
-  local updated, map = controller:read("bookTest01") -- read assets/model.lua
-  -- local updated, map = controller:read("bookTest01", model_assets)
+  local updated, map = controller:read("book") -- read assets/model.lua
+  -- local updated, map = controller:read("book", model_assets)
 
   local json = require("json")
   print(json.encode(updated))
@@ -418,7 +422,7 @@ function M.test_assets_lfs()
 
 end
 
-function M.test_assets_generator()
+function M.xtest_assets_generator()
   -- put media files int assets
   -- run editor to get assets/model.lua by lfs
   -- edit assets/model.lua (lua, yml)
@@ -429,12 +433,12 @@ function M.test_assets_generator()
   --
 end
 
-function M.test_change_replacement_class()
+function M.xtest_change_replacement_class()
   -- for instance, from video to spritsheet
   -- user should delete video and then add spreiteseet
 end
 
-function M.test_edit_index_manually()
+function M.xtest_edit_index_manually()
   -- setup: user edit pageX/index.lua manually to add a compoennent
   -- modify index.lua for a component, CRUD and then run this test
   --
@@ -446,14 +450,14 @@ function M.test_edit_index_manually()
 end
 
 
-function M.test_save_spritesheet_same_size()
+function M.xtest_save_spritesheet_same_size()
   -- user puts an imagesheet
   -- first time sheetInfo is empy
   -- user inputs sheetInfo
   -- assets/model.lua is updated with sheetInfo
 end
 
-function M.test_save_spritesheet_texturePacker()
+function M.xtest_save_spritesheet_texturePacker()
   -- sheetInfo.lua and imageSheet are exported from texture packer
   -- TBI gnerate each sprite automatically one by one from frames
 end
@@ -464,41 +468,6 @@ function M.xtest_linked_layer_CRUD()
   --      UI.editor.assets table has  links.layers = {"layerX" , ...}
   -- test update layer with a different video
   -- test delete video replacment from layer
-end
-
-function M.xtest_load()
-  UI.editor.assets = {
-    audios = {
-      {
-        name = "click.mp3",
-        path = "audios/short",
-        links = {{page = "page1"}, {page = "page2"}}
-      }
-    },
-    videos = {
-      {
-        name = "videoA.mp4",
-        path = "videos",
-        links = {
-          {page= "page01", layers = {"layerA1", "layerA10"}},
-          {page= "page02", layers = {"layerA2", "layerA20"}}
-        },
-      },
-      {
-        name = "videoB.mp4",
-        path = "videos",
-        links = {{page= "page01", layers = {"layerB"}}}
-        }
-    },
-    sprites = {}
-
-  }
-  ---
-  selectors.assetsSelector:show()
-  -- selectors.assetsSelector:onClick(true, nil)
-  -- selectors.assetsSelector:onClick(true, "audios")
-  selectors.assetsSelector:onClick(true, "videos")
-
 end
 
 function M.xtest_load()
@@ -569,7 +538,7 @@ function M.xtest_load()
 
 end
 
-function M.xtest_load()
+function M.test_load()
   UI.editor.assets = {
     audios = {
       {
@@ -590,14 +559,84 @@ function M.xtest_load()
         links = {}
       }
     },
-    sprites = {}
+    sprites = {
+        {
+          name = "butflysprite.png",
+          path = "sprites",
+          links = {}
+        },
+        {
+          name = "slotes.png",
+          path = "sprites",
+          links = {}
+        },
+        {
+          name = "SpriteTiles/sprites.png",
+          path = "sprites",
+          links = {}
+        }
+    }
 
   }
   ---
   selectors.assetsSelector:show()
   -- selectors.assetsSelector:onClick(true, nil)
-  selectors.assetsSelector:onClick(true, "videos")
+  -- selectors.assetsSelector:onClick(true, "videos")
+  selectors.assetsSelector:onClick(true, "sprites")
+  assetTable.objs[1]:touch({phase="ended"})
+
 end
 
+function M.xtest_load()
+  -- UI.editor.assets = {
+  --   audios = {
+  --     {
+  --       name = "click.mp3",
+  --       path = "audios/short",
+  --       links = {{page = "page1"}, {page = "page2"}}
+  --     }
+  --   },
+  --   videos = {
+  --     {
+  --       name = "videoA.mp4",
+  --       path = "videos",
+  --       links = {
+  --         {page= "page01", layers = {"layerA1", "layerA10"}},
+  --         {page= "page02", layers = {"layerA2", "layerA20"}}
+  --       },
+  --     },
+  --     {
+  --       name = "videoB.mp4",
+  --       path = "videos",
+  --       links = {{page= "page01", layers = {"layerB"}}}
+  --       }
+  --   },
+  --   sprites = {}
+
+  -- }
+  -- ---
+  selectors.assetsSelector:show()
+
+  -- selectors.assetsSelector:onClick(true, "audios")
+  -- assetTable.objs[2]:touch({phase="ended"})
+
+  -- selectors.assetsSelector:onClick(true, "videos")
+  -- assetTable.objs[2]:touch({phase="ended"})
+
+  selectors.assetsSelector:onClick(true, "sprites")
+  -- assetTable.objs[2]:touch({phase="ended"})
+
+end
+
+function M.xtest_click_new_icon()
+  selectors.assetsSelector:onClick(true, "audios")
+  assetTable.objs[2]:touch({phase="ended"})
+  assetTable:iconsHandler({target={muiOptions={name="addAudio"}}}, "audio", "selectAudio")
+
+  -- selectors.assetsSelector:onClick(true, "videos")
+  -- assetTable.objs[2]:touch({phase="ended"})
+  -- assetTable:iconsHandler({target={muiOptions={name="repVideo-icon"}}}, "video", "selectTool")
+
+end
 
 return M

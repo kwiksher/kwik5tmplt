@@ -16,8 +16,8 @@ local function printParams(params)
   end
   print("-----props---------")
   for k, v in pairs(params.props) do
-    if k =="settings" then
-      print("settings")
+    if k =="properties" then
+      print("properties")
       for kk, vv in pairs(v) do print("", kk, vv) end
     else
       print(k, v)
@@ -30,12 +30,28 @@ local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
-    print(name)
     local props = params.props
+    if props == nil then print("Error") return end
+
+    -- props = UI.useClassEditorProps()
+    -- print("saving props") -- if nil, command from dispathEvent will skip the process by checking props null
+      -- for k, v in pairs(props) do print("",k, v) end
+      -- if props.properties then
+      --   for k, v in pairs(props.properties) do print("",k, v) end
+      -- end
+
+    local controller = UI.editor:getClassModule(props.class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
+    for k, v in pairs(controller:useClassEditorProps()) do
+      print(k, v)
+      props[k] = v
+    end
+
     if not props.isNew then
-      -- publish
-      local controller = UI.editor:getClassModule(params.class).controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
-      scripts.publishForSelections(UI, params.props, controller, params.decoded or {})
+      scripts.publishForSelections(UI, {
+        book= props.book, page=props.page,
+        layer = props.layer,
+        class = props.class,
+        props = props}, controller, params.decoded or {})
     else
       print("new layer")
       local updatedModel = util.createIndexModel(UI.scene.model)
@@ -45,13 +61,15 @@ local instance =
         table.insert(updatedModel.components.layers, index, newLayer)
         print(json.prettify(updatedModel))
       end
+      -- local controller = require("editor.controller.index")
 
-      local controller = require("editor.controller.index")
+      -- print("$$$$$$$$$$$$$$", name)
+
       scripts.publish(UI, {
         book=UI.editor.currentBook, page=UI.editor.currentPage or UI.page,
         updatedModel = updatedModel,
         layer = props.name,
-        class = props.shapedWith, -- rectangle,text, image, ellipse
+        class = props.shapedWith or props.class, -- rectangle,text, image, ellipse
         props = props},
         controller)
 
@@ -72,7 +90,7 @@ return instance
 -- App/bookFree/canvas/commands/blueBTN.lua
 -- App/bookFree/canvas/models/commands/blueBTN.json
 -----props---------
---  settings
+--  properties
         --  duration        3000
         --  delay   0
         --  name
@@ -95,7 +113,7 @@ return instance
 --[[ do multiple interactions work at the same time?
   butBlue_bbutton.json
   [{
-    "settings": {
+    "properties": {
       "delay": 0,
     },
     "class": "button",
@@ -110,7 +128,7 @@ return instance
     }
   },
   {
-    "settings": {
+    "properties": {
       "delay": 0,
     },
     "class": "drag",

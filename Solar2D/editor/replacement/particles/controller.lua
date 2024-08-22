@@ -53,7 +53,7 @@ function M:useClassEditorProps()
     index = selectbox.selectedIndex,
     name = selectbox.selectedObj.text, -- UI.editor.currentLayer,
     class=selectbox.selectedText.text,
-    settings = {},
+    properties = {},
     easing="Linear",
     to = {},
     from={},
@@ -75,10 +75,10 @@ function M:useClassEditorProps()
     resetAtEnd = "nil",
   }
   --
-  local settings = classProps:getValue()
-  for i=1, #settings do
-    -- print("", settings[i].name, type(settings[i].value))
-    props.settings[settings[i].name] = settings[i].value
+  local properties = classProps:getValue()
+  for i=1, #properties do
+    -- print("", properties[i].name, type(properties[i].value))
+    props.properties[properties[i].name] = properties[i].value
   end
   --from
   --to
@@ -104,16 +104,16 @@ function M:setValue(decoded, index, template)
   if not template then
     print(json.encode(decoded[index]))
     selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
-    classProps:setValue(decoded[index].settings)
+    classProps:setValue(decoded[index].properties)
     -- -- breadcrumbs:setValue(decoded[index].breadcrumbs)
     pointABbox:setValue(decoded[index].from, decoded[index].to)
-    actionbox:setValue(decoded[index].actionName)
+    actionbox:setValue({name="onComplete", value=decoded[index].actionName})
   else
     selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
-    classProps:setValue(decoded.settings)
+    classProps:setValue(decoded.properties)
     -- -- breadcrumbs:setValue(decoded.breadcrumbs)
     pointABbox:setValue(decoded.from, decoded.to)
-    actionbox:setValue(decoded.actionName)
+    actionbox:setValue({name="onComplete", value=decoded.actionName})
   end
 end
 

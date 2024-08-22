@@ -17,7 +17,7 @@ local model= {
 --   {name="rotation",A="", B=""},
 -- }
 
-local M = require("editor.baseBox").new(model)
+local M = require("editor.parts.baseBox").new(model)
 local shapes = require("extlib.shapes")
 local widget = require( "widget" )
 local numberOfRows=#model
@@ -72,7 +72,7 @@ local function createTable(triangle, group)
 
   local obj = display.newText{
     parent = group,
-    text = "Point         A                 B",
+    text = "Point      From A     To B",
     x = triangle.x + 4,
     y = triangle.y,
     fontSize = 10,

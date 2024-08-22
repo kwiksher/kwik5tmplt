@@ -41,10 +41,10 @@ function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
   --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
 end
 
 function M.setup()
@@ -59,7 +59,7 @@ local commands = require("editor.scripts.commands")
 
 function M.xtest_new_book()
   UI.testCallback = function()
-    local obj = helper.getBook("bookFree")
+    local obj = helper.getBook("book")
     bookTable.commandHandler(obj, {phase="ended"},  true)
     -- local x, y = obj:localToContent(obj.x, obj.y)
     local x, y = obj.x, obj.y
@@ -70,9 +70,16 @@ function M.xtest_new_book()
   end
 end
 
+function M.test_select_page()
+  -- UI.testCallback = function()
+    local obj = helper.getBook("book")
+    bookTable.commandHandler(obj, {phase="ended"},  true)
+  -- end
+end
+
 function M.xtest_new_page()
   UI.testCallback = function()
-    local obj = helper.getBook("bookFree")
+    local obj = helper.getBook("book")
     bookTable.commandHandler(obj, {phase="ended"},  true)
     --
     obj = helper.getPage("page4")
@@ -114,7 +121,7 @@ end
 -- shapes {rect, circle, triangle, polygon}
 --
 function M.xtest_layer_contextmenu_new()
-  local obj = helper.getBook("bookFree")
+  local obj = helper.getBook("book")
    bookTable.commandHandler(obj, {phase="ended"},  true)
    UI.testCallback = function()
     -- obj = helper.getPage("page4")
@@ -130,8 +137,8 @@ function M.xtest_layer_contextmenu_new()
   end
 end
 
-function M.test_layer_contextmenu_new_shape()
-  local obj = helper.getBook("bookFree")
+function M.xtest_layer_contextmenu_new_shape()
+  local obj = helper.getBook("book")
    bookTable.commandHandler(obj, {phase="ended"},  true)
 
    UI.testCallback = function()

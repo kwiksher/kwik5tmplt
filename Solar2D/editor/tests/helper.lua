@@ -30,12 +30,117 @@ function exports.init(props)
   audioTable = props.audioTable
 end
 
+function exports.clickIcon(toolGroup, tool)
+  local toolbar = require("editor.parts.toolbar")
+  local obj = toolbar.layerToolMap[toolGroup]
+  obj.callBack{target=obj}
+  -- for k, v in pairs(toolbar.toolMap) do print(k, v) end
+  local tool = toolbar.toolMap[obj.id.."-"..tool]
+  tool.callBack{target=tool}
+end
+
+function exports.selectIcon(toolGroup, tool)
+  -- local toolbar = UI.editor.toolbar
+  if toolGroup == "action" then
+    local obj = UI.editor.actionIcon
+    obj.callBack{target=obj}
+  else
+    local toolbar = require("editor.parts.toolbar")
+    local obj = toolbar.layerToolMap[toolGroup]
+    obj.callBack{target=obj}
+    if tool then
+      local obj = toolbar.toolMap[obj.id.."-"..tool]
+      obj.callBack{target=obj}
+    end
+  end
+end
+
+function exports.selectActionGroup(name)
+  local muiName = "action.commandView-"
+  local controller = require("editor.action.controller.index")
+  controller.commandGroupHandler{target={muiOptions={name=muiName..name}}}
+end
+
+function exports.selectActionCommand(class, name)
+  local controller = require("editor.action.controller.index")
+  controller.commandHandler{model={commandClass=class}}
+  local commandbox = require("editor.action.commandbox")
+  for i, obj in next, commandbox.objs do
+    if obj.text == name then
+      obj:tap{numTaps=1}
+      break
+    end
+  end
+end
+
+function exports.hasObj(tbl, name)
+  if tbl.objs == nil then return false end
+  for i, obj in next, tbl.objs do
+    if obj.text == name then
+      return true
+    end
+  end
+  return false
+end
+
+function exports.clickProp(objs, name)
+  for i, obj in next, objs do
+    if obj.text == name then
+      obj:dispatchEvent{name="tap", target=obj, x=obj.x, y=obj.y}
+      return
+    end
+  end
+end
+
+exports.clickObj = exports.clickProp
+
+function exports.setProp(objs, name, value)
+  for i, obj in next, objs do
+    if obj.text == name then
+      obj.field.text = value
+      return
+    end
+  end
+end
+
+function exports.clickAsset(objs, name)
+  for i, obj in next, objs do
+    if obj.text == name then
+        obj:touch({phase="ended"})
+      return
+   end
+  end
+end
+
+function exports.singelClick(tbl, name)
+  for i, obj in next, tbl.objs do
+    -- print(obj.text:len(), name:len(), obj.text == name)
+    if obj.text:gsub("%s+", "") == name then
+      tbl:singleClickEvent(obj)
+      return
+    end
+  end
+end
+
+
+function exports.touchAction(name)
+  local actionTable = actionTable or exports.actionTable
+  --actionTable.altDown = true
+  for i, v in next, actionTable.objs do
+    if v.text == name then
+      -- v:dispatchEvent{name="touch", pahse="ended", target=v}
+      v:touch{phase = "ended"}
+      break
+    end
+  end
+  --actionTable.altDown = false
+end
 
 function exports.selectLayer(name, class, isRightClick)
   -- print(name, class)
   for i, obj in next,layerTable.objs do
-    -- print("", i, obj.text, obj.name)
     if obj.text == name then
+      -- print("", i, obj.text, obj.name)
       if class == nil then
         if isRightClick then
           obj:dispatchEvent{name="mouse", target=obj, isSecondaryButtonDown=true, x =obj.x, y=obj.y}
@@ -44,11 +149,13 @@ function exports.selectLayer(name, class, isRightClick)
         end
       else
         for i, classObj in next, obj.classEntries do
-          print(classObj.class)
+          print("", "", classObj.class)
           if classObj.class == class then
               if isRightClick then
+                  print("", "", "isRightClick")
                   classObj:dispatchEvent{name= "mouse", target=classObj, isSecondaryButtonDown=true, x = classObj.x, y = classObj.y}
               else
+                print("", "", "touch ended")
                 classObj:touch({phase="ended"})
               end
             break
@@ -144,11 +251,16 @@ function exports.getPage(name, isRightClick)
   end
 end
 
-function exports.clickButton(name)
-  for i, v in next, buttons.objs do
-    print(v.text)
+function exports.clickButton(name, buttonsContext)
+  local _buttons = buttonsContext or buttons
+  for i, v in next, _buttons.objs do
+    -- print(v.text)
     if v.eventName == name then -- {name="add", label="->"}
-        v.rect:tap()
+        if v.rect.tap then
+          v.rect:tap()
+        else
+          v:tap()
+        end
       break
     end
   end
@@ -173,7 +285,7 @@ function exports.selectEntries(box, names)
   for k, n in next, names do
     for i, v in next, box.objs do
       if v.layer == n then
-        print("n", n)
+        -- print("n", n)
         --v:dispatchEvent{name="touch", phase="began", target=v}
         -- v:dispatchEvent{name="touch", phase="ended", target=v}
         v:touch{phase="ended"}
@@ -209,6 +321,14 @@ function exports.getObjs(t, names)
     end
   end
   return ret
+end
+
+function exports.getObj(objs, n)
+    for i, obj in next, objs do
+      if obj.text == n then
+        return obj
+      end
+    end
 end
 
 

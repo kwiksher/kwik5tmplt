@@ -1,12 +1,14 @@
 local props = {
-  autoPlay = {{autoPlay}},
-  channel  = {{channel}},
-  delay    = {{delay}},
-  filename = "{{filename}}",
-  folder   = "{{folder}}",
-  loops    = {{loops}}, -- 1 + 3 = 4 times
   name     = "{{name}}",
   type     = "{{type}}",
+  properties = {
+    autoPlay = {{autoPlay}},
+    channel  = {{channel}},
+    delay    = {{delay}},
+    filename = "{{filename}}",
+    folder   = "{{folder}}",
+    loops    = {{loops}}, -- 1 + 3 = 4 times
+  }
 }
 
 local M = {

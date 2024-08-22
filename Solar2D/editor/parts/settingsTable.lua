@@ -5,10 +5,13 @@ local parent,  root = newModule(current)
 
 local Props = {
   name = "Settings",
-  anchorName = "Settings"
+  anchorName = "Settings",
+  x = display.contentCenterX+480/2,
+  y = 10
+
 }
 
-local M = require(root.."baseProps").new(Props)
+local M = require(parent.."baseProps").new(Props)
 --
 -- I/F
 --

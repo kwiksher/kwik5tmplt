@@ -12,7 +12,8 @@ local abTimer = {}
 
 local props = {
     x = display.contentCenterX,
-    y = display.actualContentHeight-10,
+    y = display.actualContentHeight-40,
+    -- y = display.actualContentHeight-10,
     width = 40,
     height = 20,
     textSize = 12,
@@ -26,17 +27,22 @@ local props = {
 
 ---
 function M:init(UI)
-  local app = App.get()
-  for i = 1, #self.commands do
-    app.context:mapCommand(
-      "editor.classEditor." .. self.commands[i],
-      "editor.controller." .. self.commands[i]
-    )
-  end
+  -- if not self.contextInit then
+  --   print(debug.traceback())
+  --   local app = App.get()
+  --   for i = 1, #self.commands do
+  --     app.context:mapCommand(
+  --       "editor.classEditor." .. self.commands[i],
+  --       "editor.controller." .. self.commands[i]
+  --     )
+  --   end
+  --   self.contextInit = true
+  -- end
 end
 --
 function M:create(UI)
-    -- print("create", self.name)
+  self.UI = UI
+    -- print("create", self.name, UI)
     self.group = display.newGroup()
 
     local function doAB(event)
@@ -54,19 +60,21 @@ function M:create(UI)
         -- --
         -- -- control
         -- local props = M.useClassEditorProps()
-        -- print(props.settings.duration)
+        -- print(props.properties.duration)
 
         -- transition.to(self.target, {
-        --     time =tonumber(props.settings.duration),
+        --     time =tonumber(props.properties.duration),
         --     x = self.group.ptB.x,
         --     y = self.group.ptB.y,
         --     onComplete = killAB
         -- })
         -- abTimer = timer.performWithDelay(1, doAB, 0)
-
+        print(UI)
         UI.scene.app:dispatchEvent {
-          name = "editor.anim.preview" ,
+          name = "editor.classEditor.preview" ,
           UI = UI,
+          tool = "animation",
+          class = UI.editor.currentClass,
           props = self.useClassEditorProps(UI)
         }
 

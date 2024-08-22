@@ -55,8 +55,8 @@
 |    |    |   |  |  (select variable)
 |    |    |   |  |  [load variable]
 |    |    |   |  ->
-|    |    |   |  |  (select video)
-|    |    |   |  |  [load video]
+|    |    |   |  |  (select joint)
+|    |    |   |  |  [load joint]
 |    |    ->
 |    |    |   (select asset)
 |    |    |   [load asset]

@@ -69,22 +69,21 @@ function M.create(scene, model)
                           local ret = iterator(handler, name, value, -- value is array of children
                                                 parentPath .. name .. ".")
 
-                          for j = 1, #ret do
-                              handler[funcName](handler, ret[j].class, ret[j].path,
-                                              false)
-                          end
+                          -- for j = 1, #ret do
+                          --     handler[funcName](handler, ret[j].class, ret[j].path, false)
+                          -- end
                         else
+                          handler[funcName](handler, nil, parentPath .. name, false)
                           if value.class then
                             for k, class in pairs(value.class) do
                                 --print("", class, parentPath .. name)
                                 table.insert(classEntries, {
                                     class = class,
-                                    path = parentPath .. name
+                                    path = parentPath .. name  -- see sceneHandler.lua, it splits to load layer_linear.lua by split('.')
                                 })
-                                -- handler[funcName](handler, class, parentPath .. name, false)
+                                handler[funcName](handler, class, parentPath .. name, false)
                             end
                           end
-                          handler[funcName](handler, nil, parentPath .. name, false)
                         end
                         -- print("", value, parent)
                     end
@@ -93,9 +92,9 @@ function M.create(scene, model)
             return classEntries
         end
         local ret = iterator(handler, nil, models, nil)
-        for j = 1, #ret do
-            handler[funcName](handler, ret[j].class, ret[j].path, false)
-        end
+        -- for j = 1, #ret do
+        --     handler[funcName](handler, ret[j].class, ret[j].path, false)
+        -- end
     end
 
     local function callComponentsHandler(models, handler, funcName)
@@ -110,6 +109,23 @@ function M.create(scene, model)
               if entries.short then
                 for k=1, #entries.short do
                   handler[funcName](handler, "audios.short", entries.short[k], false)
+                end
+              end
+            elseif class =="groups" then
+              for k=1, #entries do
+                local group = entries[k]
+                if type(group) == "table" then
+                  for name, value in pairs(group) do  --
+                    handler[funcName](handler, "groups", name, false)
+                    if value.class then
+                      for k, class in pairs(value.class) do
+                          --print("", class, parentPath .. name)
+                          handler[funcName](handler, "groups", name.."_"..class, false)
+                      end
+                    end
+                  end
+                else
+                  print("Warning", group)
                 end
               end
             elseif (class ~="layers") then

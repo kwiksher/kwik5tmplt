@@ -1,8 +1,12 @@
 local props = {
-  actionName    = "{{actionName}}",
-  delay     = {{delay}},
-  iterations = {{iterations}},
   name     = "{{name}}",
+  properties = {
+    delay     = {{delay}},
+    iterations = {{iterations}},
+  },
+  actions = {
+    actionName    = "{{actionName}}",
+  }
 }
 
 return require("components.kwik.page_timer").set(props)

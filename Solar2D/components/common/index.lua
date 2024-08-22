@@ -7,8 +7,11 @@ local parent = current:match("(.-)[^%.]+$")
 local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 
 -- print(current, parent ,root)
+local app = require("controller.Application").get()
 
 local editor = require("editor.index")
+-- editor.lastSelection = { book="book", page=app.props.goPage}
+
 
 -- local screen = require(parent.."screen")
 

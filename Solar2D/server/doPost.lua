@@ -10,9 +10,12 @@ local yaml = require(parent..'yaml')
 local util = require("editor.util")
 -- local nanostores = require("extlib.nanostores.index")
 
-function M:process(request)
+function M:process(request, parsers)
 	local data = request:post()
   local args = util.split(request._path, "/")
+  print(request._path)
+  if request._path == "/hprint" then
+  end
   -- command=preview or save
   for k, v in pairs(request.querystring) do print(k, v) end
 	--print(data)

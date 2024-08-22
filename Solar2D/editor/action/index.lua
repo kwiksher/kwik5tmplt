@@ -6,12 +6,15 @@ local M = {name = name, views = {
   "actionTable", -- lists actions in a page
   "actionCommandTable",
   "actionCommandPropsTable",
+  "commandView",
   "commandbox", -- animation.play, pause, ..
   "buttons",
   "actionCommandButtons"
 }}
 
 M.weight = 1
+M.x = 54
+M.y = -2
 ---
 local muiIcon = require("components.mui.icon").new()
 local util    = require("lib.util")
@@ -21,8 +24,15 @@ local muiData = require("materialui.mui-data")
 local models         = require(parent.."model").menu
 local controller     = require(parent.."controller.index")
 local commandView    = require(parent.."commandView")
+local actionCommandTable = require(parent.."actionCommandTable")
 local selectbox      = require(root.."parts.selectbox"):newInstance()
 local toolbar        = require(root .."parts.toolbar")
+local selectors      = require(root.."parts.selectors")
+local picker = require("editor.picker.name")
+--
+local bt = require('editor.controller.BTree.btree')
+local tree = require("editor.controller.BTree.selectorsTree")
+
 selectbox.name = "actionName"
 selectbox.create = function(UI) end -- see createSelectbox below
 
@@ -42,29 +52,77 @@ M.commandMap = {}
   --   "trigger" : "eventTwo"
   -- }}
 
-local function newText(option)
-  local obj = display.newText(option)
-  obj:setFillColor(0)
-  return obj
-end
 
 function M.iconHander()
   local self = M
   self.isVisible = not self.isVisible
+  local UI = self.UI
     if self.isVisible then
+
+      tree:setConditionStatus("select layer", bt.FAILED, false)
+      -- tree:setActionStatus("load layer", bt.RUNNING, true)
+      -- tree:setConditionStatus("select props", bt.FAILED)
+
+      selectors.componentSelector:onClick(self.isVisible, "actionTable")
+
+      --UI.editor.actionStore:set(UI.scene.model.commands)
+
+      -- self.UI.scene.app:dispatchEvent(
+      --   {
+      --     name = "editor.action.selectAction",
+      --     UI = self.UI,
+      --   }
+      -- )
+
+
       self:show()
     else
-        self:hide()
+      UI.editor.actionStore:set({})
+      self:hide()
     end
 end
 
-function M:createIcon(UI, posX, posY)
+local buttons  = require("editor.action.buttons")
+local partsButtons       = require("editor.parts.buttons")
+local classProps    = require("editor.parts.classProps")
+local actionTable = require("editor.action.actionTable")
+
+function M:showActionTable(actionbox, isNew)
+  actionTable.actionbox = actionbox
+  if isNew then
+    self.UI.scene.app:dispatchEvent {
+      name = "editor.action.selectAction",
+      action = {},
+      isNew = true,
+      UI = self.UI
+    }
+    partsButtons:hide()
+    classProps:hide()
+  else
+    ---
+    --- there were multiple instances of actionbox from selectAudio, actionTable and sync's word action
+    ---
+    actionTable:show()
+
+    local UI = self.UI
+    if not self.isVisible then
+      UI.editor.actionStore:set(UI.scene.model.commands)
+      self:show()
+      buttons:hide()
+    else
+      -- UI.editor.actionStore:set({})
+      -- self:hide()
+    end
+  end
+end
+
+function M:createIcon(UI)
   local actionIcon = muiIcon:create {
     icon     = {"actions_over", "actions_over","actions_over"},
     text     = "",
     name     = "action-icon",
-    x        = posX,
-    y        = posY,
+    x        = self.x,
+    y        = self.y,
 -- y        = (display.actualContentHeight - display.contentHeight)/2 -2,
     width    = 22,
     height   = 22,
@@ -73,13 +131,13 @@ function M:createIcon(UI, posX, posY)
     fillColor = {1.0}
   }
   UI.editor.actionIcon = actionIcon
-  actionIcon.isVisible = false
+  -- actionIcon.isVisible = false
   UI.editor.rootGroup:insert(actionIcon)
 end
 
-function M:createSelectbox(UI, posX, posY)
+function M:createSelectbox(UI)
   -- UI.editor.viewStore = self.group -- used in selecbox:create()
-  selectbox:init(UI, posX + 22, posY+24, 96, 22)
+  selectbox:init(UI, self.x + 22, self.y+24, 96, 22)
   selectbox:setValue(
     {
       {name="new-action", class="action"},
@@ -108,18 +166,16 @@ function M:create(UI)
   --
   controller:init(UI, self.commandMap, selectbox)
   -- print("create", self.name)
-  local posX, posY = toolbar:getWidth() + 36, -2 --display.contentCenterX/2 + 42, -2
   -----------------------------------------
-  self:createIcon(UI, posX, posY)
+  self:createIcon(UI)
   -----------------------------------------
-  self:createSelectbox(UI, posX, posY)
+  self:createSelectbox(UI)
   -----------------------------------------
-  local scrollView = commandView:createTable(models, self.commandMap, self.group, UI.editor.rootGroup.selectLayer)
-  self.group:insert(scrollView)
-  -----------------------------------------
+
+  -- self:createCommandview()
+  commandView:init(UI, actionCommandTable.left, 22, models, self.commandMap)
+
   UI.editor.actionEditor = self
-  self.group.commandView = scrollView
-  UI.editor.viewStore.commandView = scrollView
   --
   self:hide()
   -- self:show()
@@ -135,7 +191,18 @@ function M:create(UI)
     self.group:translate(delta_x/2, 0)
   end
 
+  buttons:hide()
+
 end
+
+-- function M:createCommandview()
+--   local scrollView = commandView:createTable(models, self.commandMap, self.group, self.UI)
+--   self.group:insert(scrollView)
+--   self.group.commandView = scrollView
+--   self.UI.editor.viewStore.commandView = scrollView
+--   -----------------------------------------
+-- end
+
 
 function M:commandViewHandler(name, selectLayer)
   if commandView.activeEntry == name then
@@ -143,20 +210,21 @@ function M:commandViewHandler(name, selectLayer)
   else
     commandView.activeEntry = name
   end
-  self.group.commandView:removeSelf()
-  local scrollView = commandView:createTable(scrollView, models, self.commandMap, self.group, selectLayer)
-  self.group:insert(scrollView)
-  self.group.commandView = scrollView
+  local group = self.UI.editor.rootGroup
+  group.commandView:removeSelf()
+  commandView:createCommandview()
 end
 -----------------------------------------
-function M:show()
-  controller:show()
+function M:show(editing)
+  controller:show(editing)
   self.isVisible = true
+  -- picker:show()
 end
 
 function M:hide(cancel)
-  controller:hide()
-  self.isVisible = false
+  controller:hide(cancel)
+  --self.isVisible = false
+  picker:hide()
 end
 
 function M:hideCommandPropsTable()

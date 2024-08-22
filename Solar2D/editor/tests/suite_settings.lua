@@ -18,14 +18,14 @@ function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
   --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
+  -- UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectApp",
+  --   UI = UI
+  -- }
   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
-  bookTable.commandHandler({book="bookFree"}, nil,  true)
+  bookTable.commandHandler({book="book"}, nil,  true)
   -- pageTable.commandHandler({page="page1"},nil,  true)
   -- selectors.componentSelector.iconHander()
   -- selectors.componentSelector:onClick(true,  "layerTable")

@@ -1,9 +1,13 @@
 local M = {
-  name = "collision",
+  name = "",
   class="collision",
-  -- actionName = "",
-  settings = {
-  }
+  properties = {
+    isRemoveOther = true,
+    isRemoveSelf = true,
+    othersGroup = NIL
+  },
+  actions = { onCollision= "" },
+  others = {}
 }
 
 return M

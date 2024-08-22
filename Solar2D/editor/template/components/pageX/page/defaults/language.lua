@@ -2,7 +2,8 @@ local M = {
   name = "language",
   class="language",
   -- actionName = "",
-  settings = {
+  properties = {
+    test="lang"
   }
 }
 

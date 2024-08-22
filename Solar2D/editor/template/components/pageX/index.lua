@@ -13,9 +13,17 @@ local scene = require('controller.scene').new(sceneName, {
           long={ {{#long}} "{{.}}", {{/long}} }, short={ {{#short}}"{{.}}", {{/short}}  }
         {{/audios}}
       },
-      groups = { {{#groups}} "{{.}}", {{/groups}} },
+      groups = {
+      {{#groups}}
+      {
+        {{name}} ={
+          class={ {{#class}}"{{.}}",{{/class}} }
+        }
+      },
+      {{/groups}} },
       timers = { {{#timers}} "{{.}}", {{/timers}} },
       variables = { {{#variables}} "{{.}}", {{/variables}} },
+      joints    = { {{#joints}} "{{.}}", {{/joints}} },
       page = { {{#page}}"{{.}}", {{/page}} }
     },
     commands = { {{#events}}  "{{.}}", {{/events}} },
