@@ -2,34 +2,31 @@ local name = ...
 local parent, root = newModule(name)
 local util = require("editor.util")
 
-
 local M = {} -- layerTable
 local bt = require(root .. "controller.BTree.btree")
 local tree = require(root .. "controller.BTree.selectorsTree")
 
-local propsTable              = require(parent .. "propsTable")
+local propsTable = require(parent .. "propsTable")
 local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
-local classProps              = require("editor.parts.classProps")
-local buttons                 = require("editor.parts.buttons")
+local classProps = require("editor.parts.classProps")
+local buttons = require("editor.parts.buttons")
 
-local posX = display.contentCenterX*0.4
+local posX = display.contentCenterX * 0.4
 
 local isLastSelection = "class"
 
 function M.mouseHandler(event)
   if event.isSecondaryButtonDown and event.target.isSelected then
+    -- {class=event.target.text, selections={event.target},
+    -- contextMenu = {"create", "rename", "delete"}, orientation = "horizontal"})
+    -- buttons:showContextMenu(posX, posY)
     --for k,v in pairs(event) do print(k, v) end
     -- print("@", event.target.text, event.isSecondaryButtonDown)
     -- local posX, posY = event.target:localToContent(event.target.x, event.target.y)
     -- local posX, posY = event.target:contentToLocal(event.x, event.y)
     -- local posX, posY = event.target:localToContent(event.x, event.y)
     -- print(posX, posY)
-    buttons:showContextMenu(posX, event.y, {class = event.target.class})
-
-      -- {class=event.target.text, selections={event.target},
-      -- contextMenu = {"create", "rename", "delete"}, orientation = "horizontal"})
-
-    -- buttons:showContextMenu(posX, posY)
+    buttons:showContextMenu(posX, event.y, {layer = event.target.layer, class = event.target.class})
   else
     -- print("@@@@not selected")
   end
