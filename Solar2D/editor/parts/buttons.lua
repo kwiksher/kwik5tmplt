@@ -111,6 +111,7 @@ function M:create(UI)
       self:hide()
       --
       if self.contextMenuOptions then
+        props.layer = self.contextMenuOptions.layer
         props.class = self.contextMenuOptions.class
         --print(self.contextMenuOptions.class)
         --

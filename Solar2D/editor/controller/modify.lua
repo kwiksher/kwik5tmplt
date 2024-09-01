@@ -6,7 +6,8 @@ local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
-    print(name)
+    local target = params.props
+    print(target.layer, target.class)
     for i, v in next, UI.editor.selections do
       print("", v.text)
     end
@@ -17,13 +18,31 @@ local instance =
        --
     else
       -- edit one layer
-    end
-    local props = UI.useClassEditorProps()
-    for k, v in pairs(props) do
-      print("", k, v)
+      -- local layer = UI.editor.selections[1]
+      if target.class then
+        UI.scene.app:dispatchEvent {
+          name = "editor.selector.selectTool",
+          UI = UI,
+          class = target.class,
+          isNew = false,
+          layer = target.layer,
+          -- toogle = true -- <========
+        }
+      else
+        UI:dispatchEvent {
+          name = "editor.selector.selectLayer",
+          UI = UI,
+          layer = target.layer,
+        }
+      end
     end
 
-    toolbar:toogleToolMap()
+    -- local props = UI.useClassEditorProps()
+    -- for k, v in pairs(props) do
+    --   print("", k, v)
+    -- end
+
+    -- toolbar:toogleToolMap()
 
     --
     -- TBI
