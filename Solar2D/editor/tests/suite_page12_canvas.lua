@@ -90,23 +90,6 @@ function M.xtest_modify_button_with_brush_color_new_action()
  helper.selectLayerProps("color8", "button") -- altDown
 end
 
-
-function M.xtest_new_brush_color()
-  layerTable.controlDown = true
-  helper.selectLayer("color8")
-  helper.selectLayer("color7")
-  helper.selectLayer("color6")
-  helper.selectLayer("color5")
-  helper.selectLayer("color4")
-  helper.selectLayer("color3")
-  helper.selectLayer("color2")
-  helper.selectLayer("color1")
-  helper.selectIcon("Interactions", "Button")
-  layerTable.controlDown = false
-  helper.setProp(actionbox.objs, "onTap", "colorHandler")
-  -- each onTap is attached with action brush{Black, Blue, Red, ...}
-end
-
 function M.xtest_new_buttons()
   helper.selectLayer("save1")
   helper.selectIcon("Interactions", "Button")
@@ -189,24 +172,12 @@ function M.xtest_copy_paste_actions()
   end
 end
 
-function M.xtest_copy_paste_button()
-  helper.selectLayer("color8", "button", false) -- isRightClick
-  helper.selectLayer("color8", "button", true) -- isRightClick
-  --
-  local buttonContext = require("editor.parts.buttonContext")
-  helper.clickButton("Copy", buttonContext)
-  --
-  helper.selectLayer("color7", "button", false) -- isRightClick
-  --
-  -- then paste
-end
-
-function M.test_delete_button()
+function M.xtest_delete_button()
   helper.selectLayer("color7", "button", false) -- isRightClick
   helper.selectLayer("color7", "button", true) -- isRightClick
   local buttonContext = require("editor.parts.buttonContext")
   --
-  -- then delete
+  -- then delete it manually
 
 end
 
@@ -225,6 +196,40 @@ function M.xtest_delete_action()
   helper.selectAction("brushBlack_copied", true)
   -- helper.clickButton("Delete", buttonContext)
 
+end
+
+function M.test_copy_paste_button()
+  helper.selectLayer("color8", "button", false) -- isRightClick
+  helper.selectLayer("color8", "button", true) -- isRightClick
+  --
+  -- local buttonContext = require("editor.parts.buttonContext")
+  -- helper.clickButton("Copy", buttonContext)
+  --
+  -- helper.selectLayer("color7", "button", false) -- isRightClick
+  -- helper.selectLayer("color6", "button", false) -- isRightClick
+  -- helper.selectLayer("color5", "button", false) -- isRightClick
+  -- helper.selectLayer("color4", "button", false) -- isRightClick
+  -- helper.selectLayer("color3", "button", false) -- isRightClick
+  -- helper.selectLayer("color2", "button", false) -- isRightClick
+  -- helper.selectLayer("color1", "button", false) -- isRightClick
+  --
+  -- then paste it manually
+end
+
+function M.xtest_new_brush_color_buttons_at_once()
+  layerTable.controlDown = true
+  helper.selectLayer("color8")
+  helper.selectLayer("color7")
+  helper.selectLayer("color6")
+  helper.selectLayer("color5")
+  helper.selectLayer("color4")
+  helper.selectLayer("color3")
+  helper.selectLayer("color2")
+  helper.selectLayer("color1")
+  helper.selectIcon("Interactions", "Button")
+  layerTable.controlDown = false
+  helper.setProp(actionbox.objs, "onTap", "colorHandler")
+  -- each onTap is attached with action brush{Black, Blue, Red, ...}
 end
 
 
