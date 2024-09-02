@@ -463,9 +463,12 @@ function M.publishForSelections(UI, args, controller, decoded)
 
   print("publishForSelections", book, page, layer, class, "classFolder="..classFolder)
   -- print(json.encode(args))
-  local model = getModelFrom(args)
+  local model = args.model or getModelFrom(args)
   print("---model----")
-  for k, v in pairs(model) do print("", k, v) end
+  -- for k, v in pairs(model) do print("", k, v) end
+  for k, v in pairs(model.properties) do print("properties", k, v) end
+  -- for k, v in pairs(model.actions) do print("actions", k, v) end
+
   ---------
   --- Update components/pageX/index.lua model/pageX/index.json
   local scene = require("App." .. book .. ".components." .. page .. ".index")
@@ -473,8 +476,11 @@ function M.publishForSelections(UI, args, controller, decoded)
   -- print(json.encode(updatedModel))
 
   for i, obj in next, UI.editor.selections do
-    layer = obj.text
-    model.layer = layer
+    if obj.class == "" then
+      layer = obj.text
+    else
+      model.layer = obj.layer
+    end
     updatedModel = util.updateIndexModel(updatedModel, layer, class)
 
     --- save json
