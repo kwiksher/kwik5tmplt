@@ -120,7 +120,7 @@ function M:create(UI)
 
       end
 
-      print("@@@@", "editor.classEditor." .. event.eventName, props.class)
+      -- print("buttons", "editor.classEditor." .. event.eventName, props.layer, props.class)
 
       self.UI.scene.app:dispatchEvent {
         name = "editor.classEditor." .. event.eventName,
@@ -382,9 +382,10 @@ function M.mouseOver(event)
     obj.alpha = 0.5
   end
   --
-  if target.buttonsInRow then
+  if target.buttonsInRow and M.contextMenuOptions.class == "" and M.contextMenuOptions.isMultiSelection==false then
     for k, o in next, target.buttonsInRow do
       o.isVisible = true
+      o.alpha = 1
       o.rect.isVisible = true
     end
   end
@@ -409,7 +410,16 @@ function M:showContextMenu(x,y, options)
   local indexX, indexY = 0,0
   for k, key in next, self.contextButtons do
     for k, obj in next, self.objs do
-      if key  == obj.rect.eventName then
+      local skipNew = false
+      if key == "create" then
+        if self.contextMenuOptions.isMultiSelection then
+          skipNew = true
+        end
+        if self.contextMenuOptions.class and self.contextMenuOptions.class:len() > 0 then
+          skipNew = true
+        end
+      end
+      if key  == obj.rect.eventName and not skipNew then
         obj.isVisible = true
         obj.rect.isVisible = obj.isVisible
         if options and options.orientation =="horizontal" then
