@@ -14,6 +14,7 @@ local buttons = require("editor.parts.buttons")
 local posX = display.contentCenterX * 0.4
 
 local isLastSelection = "class"
+local isMultiSelection = false
 
 function M.mouseHandler(event)
   if event.isSecondaryButtonDown and event.target.isSelected then
@@ -26,7 +27,7 @@ function M.mouseHandler(event)
     -- local posX, posY = event.target:contentToLocal(event.x, event.y)
     -- local posX, posY = event.target:localToContent(event.x, event.y)
     -- print(posX, posY)
-    buttons:showContextMenu(posX, event.y, {layer = event.target.layer, class = event.target.class})
+    buttons:showContextMenu(posX, event.y, {layer = event.target.layer, class = event.target.class, isMultiSelection = isMultiSelection})
   else
     -- print("@@@@not selected")
   end
@@ -209,7 +210,9 @@ function M.commandHandler(layerTable, target, event)
   elseif layerTable:isControlDown() then -- mutli selections
     -- print("multi selection")
     multiSelections(layerTable, target)
+    isMultiSelection = true
   else
+    isMultiSelection = false
     if singleSelection(layerTable, target) then
       -- should we enable one of them?
       -- print("", "singleSelection")
@@ -313,7 +316,9 @@ function M.commandHandlerClass(layerTable, target, event)
   elseif layerTable:isControlDown() then -- mutli selections
     print("", "isControlDown")
     multiSelections(layerTable, target)
+    isMultiSelection = true
   else
+    isMultiSelection = false
     if singleSelection(layerTable, target) then
       print("", "singleSelection")
       actionCommandPropsTable:setActiveProp(target.layer, target.class)
