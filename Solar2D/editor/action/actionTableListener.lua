@@ -3,7 +3,7 @@ local parent,root, M = newModule(name)
 -- local actionbox = require(root.."parts.actionbox")
 --
 
-local contextButtons = require("editor.parts.buttons")
+local buttons = require("editor.parts.buttons")
 local buttonContext = require(parent.."buttonContext")
 local layerTableCommands = require("editor.parts.layerTableCommands")
 
@@ -29,7 +29,7 @@ local posX = display.contentCenterX*0.75
 function M:mouseHandler(event)
   if event.isSecondaryButtonDown and event.target.isSelected then
     -- print("@@@@selected")
-    contextButtons:showContextMenu(posX, event.y,  {class="action", selections=self.selections})
+    buttons:showContextMenu(posX, event.y,  {class="action", selections=self.selections})
   else
     -- print("@@@@not selected")
   end
@@ -67,7 +67,7 @@ function M:selectHandler(target)
     end
   end
   buttonContext:hide()
-  contextButtons:hide()
+  -- buttons:hide()
 end
 -- edit button
 function M:editHandler(target)
