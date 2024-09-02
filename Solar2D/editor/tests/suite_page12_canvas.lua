@@ -18,7 +18,7 @@ local actionCommandButtons = require("editor.action.actionCommandButtons")
 ----
 local helper = require("editor.tests.helper")
 local picker = require("editor.picker.name")
-local buttonContext = require("editor.action.buttonContext")
+local actionButtonContext = require("editor.action.buttonContext")
 
 function M.init(props)
   selectors = props.selectors
@@ -68,9 +68,9 @@ function M.xtest_new_button_with_brush_color_new_action()
   --
   helper.clickProp(actionbox.objs, "onTap")
   --
-  local buttonContext = require("editor.parts.buttonContext")
-  -- buttonContext.objs.New.rect:tap()
-  helper.clickButton("New", buttonContext.objs)
+  -- local actionButtonContext = require("editor.parts.actionButtonContext")
+  -- actionButtonContext.objs.New.rect:tap()
+  helper.clickButton("New", actionButtonContext.objs)
   --
   -- picker:continue("tapHandler")
   --
@@ -175,7 +175,7 @@ end
 function M.xtest_delete_button()
   helper.selectLayer("color7", "button", false) -- isRightClick
   helper.selectLayer("color7", "button", true) -- isRightClick
-  local buttonContext = require("editor.parts.buttonContext")
+  -- local actionButtonContext = require("editor.parts.actionButtonContext")
   --
   -- then delete it manually
 
@@ -185,25 +185,25 @@ function M.xtest_copy_paste()
   helper.selectIcon("action")
   helper.touchAction("brushBlack")
   -- helper.selectAction("brushBlack", true)
-  --helper.clickButton("Copy", buttonContext)
-  --helper.clickButton("Paste", buttonContext)
-  -- helper.clickButton("Edit", buttonContext)
+  --helper.clickButton("Copy", actionButtonContext)
+  --helper.clickButton("Paste", actionButtonContext)
+  -- helper.clickButton("Edit", actionButtonContext)
 end
 
 function M.xtest_delete_action()
   helper.selectIcon("action")
   helper.touchAction("brushBlack_copied")
   helper.selectAction("brushBlack_copied", true)
-  -- helper.clickButton("Delete", buttonContext)
+  -- helper.clickButton("Delete", actionButtonContext)
 
 end
 
-function M.test_copy_paste_button()
+function M.xtest_copy_paste_button()
   helper.selectLayer("color8", "button", false) -- isRightClick
   helper.selectLayer("color8", "button", true) -- isRightClick
   --
-  -- local buttonContext = require("editor.parts.buttonContext")
-  -- helper.clickButton("Copy", buttonContext)
+  -- local actionButtonContext = require("editor.parts.actionButtonContext")
+  -- helper.clickButton("Copy", actionButtonContext)
   --
   -- helper.selectLayer("color7", "button", false) -- isRightClick
   -- helper.selectLayer("color6", "button", false) -- isRightClick
@@ -232,6 +232,20 @@ function M.xtest_new_brush_color_buttons_at_once()
   -- each onTap is attached with action brush{Black, Blue, Red, ...}
 end
 
+function M.test_edit_button()
+  helper.selectLayer("color8", "button", false) -- isRightClick
+  helper.selectLayer("color8", "button", true) -- isRightClick
+
+  local objs = require("editor.parts.buttons").objs
+  -- objs.modify.rect:tap()
+
+  -- helper.clickProp(actionbox.objs, "onTap")
+  -- objs = require("editor.parts.buttonContext").objs
+  -- objs.Select.rect:tap()
+
+  -- helper.touchAction("brushBlack")
+
+end
 
 function M.xtest_copy_paste_delete_actions()
 end

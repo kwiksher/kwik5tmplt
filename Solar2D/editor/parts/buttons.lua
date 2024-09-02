@@ -62,6 +62,7 @@ end
 function M:create(UI)
   self.UI = UI
   -- print("create", self.name)
+  --
   -- singleton ---
   if self.objs and next(self.objs) then return end
   self.objs = {}
@@ -166,6 +167,8 @@ function M:create(UI)
     if params.objs then
       params.objs[params.eventName] = obj
     end
+    obj.originalX = obj.x
+    obj.originalY = obj.y
     return obj
   end
 
@@ -338,21 +341,22 @@ end
 --
 function M:destroy()
   -- print(debug.traceback())
+  self:hide()
   -- print("buttons:destroy()")
-  if self.objs then
-    for k, obj in next, self.objs do
-      obj.rect:removeEventListener("tap", obj)
-      obj.rect:removeSelf()
-      obj:removeSelf()
-      if obj.rect.buttonsInRow then
-        for k, o in next, obj.rect.buttonsInRow do
-          o.rect:removeEventListener("mouse", self.mouseOverInRow)
-          o.rect:removeSelf()
-        end
-      end
-    end
-  end
-  self.objs = nil
+  -- if self.objs then
+  --   for k, obj in next, self.objs do
+  --     obj.rect:removeEventListener("tap", obj)
+  --     obj.rect:removeSelf()
+  --     obj:removeSelf()
+  --     if obj.rect.buttonsInRow then
+  --       for k, o in next, obj.rect.buttonsInRow do
+  --         o.rect:removeEventListener("mouse", self.mouseOverInRow)
+  --         o.rect:removeSelf()
+  --       end
+  --     end
+  --   end
+  -- end
+  -- self.objs = nil
 end
 
 function M:toggle()
@@ -422,6 +426,7 @@ function M:showContextMenu(x,y, options)
       if key  == obj.rect.eventName and not skipNew then
         obj.isVisible = true
         obj.rect.isVisible = obj.isVisible
+
         if options and options.orientation =="horizontal" then
           obj.x = x + indexX * obj.rect.width
           obj.y = y
@@ -498,6 +503,12 @@ function M:show()
 
   for k, obj in pairs(self.objs) do
     -- print(obj.text, obj.x, obj.y)
+    obj.x = obj.originalX
+    obj.y = obj.originalY
+    obj.rect.x = obj.x
+    obj.rect.y = obj.y
+    obj.rect.alpha = 1
+
     if not obj.contextButton then
       obj.isVisible = true
       obj.rect.isVisible = true
@@ -538,7 +549,6 @@ end
 
 function M:hide()
   -- print("@ hide", self.id)
-  -- print(debug.traceback())
   if self.objs then
     for k, obj in pairs(self.objs) do
       obj.isVisible = false
