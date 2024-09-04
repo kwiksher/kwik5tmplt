@@ -24,6 +24,21 @@ local new_words = {
   "0,1,0,1"
 }
 
+function M:init(_book, _page)
+  book = _book
+  page = _page
+end
+
+function M:setSource(_source_action, _old_word)
+  source_action = _source_action
+  old_word = _old_word
+end
+
+function M:setNewActions(action, words)
+  new_actions = actions
+  new_words = words
+end
+
 -- Function to read the entire content of a file
 local function read_file(filename)
   local file = io.open(filename, "r")
