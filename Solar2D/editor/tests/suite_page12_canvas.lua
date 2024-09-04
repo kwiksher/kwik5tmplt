@@ -232,19 +232,18 @@ function M.xtest_new_brush_color_buttons_at_once()
   -- each onTap is attached with action brush{Black, Blue, Red, ...}
 end
 
-function M.test_edit_button()
+function M.xtest_edit_button()
   helper.selectLayer("color8", "button", false) -- isRightClick
   helper.selectLayer("color8", "button", true) -- isRightClick
 
   local objs = require("editor.parts.buttons").objs
-  -- objs.modify.rect:tap()
+  objs.modify.rect:tap()
 
-  -- helper.clickProp(actionbox.objs, "onTap")
-  -- objs = require("editor.parts.buttonContext").objs
-  -- objs.Select.rect:tap()
+  helper.clickProp(actionbox.objs, "onTap")
+  objs = require("editor.parts.buttonContext").objs
+  objs.Select.rect:tap()
 
-  -- helper.touchAction("brushBlack")
-
+  helper.touchAction("brushBlack")
 end
 
 function M.xtest_copy_paste_delete_actions()
