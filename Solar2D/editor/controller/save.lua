@@ -46,11 +46,29 @@ local instance =
       props[k] = v
     end
 
+    -- local isNew = controller.classProps.isNew
+    -- if props.isNew ~=nil then
+    --   isNew = props.isNew
+    -- end
+    -- print("@@@ isNew", isNew, controller.isNew, props.isNew)
+
+    local class = props.class
+    if class == nill then
+      class = UI.editor.currentClass
+    end
+
+    -- print("@@@@", props.layer, UI.editor.currentLayer)
+    local layer = props.layer or UI.editor.currentLayer
+    if layer == nil then
+      layer = props.name
+    end
+
     if not props.isNew then
+      print("publishForSelections")
       scripts.publishForSelections(UI, {
         book= props.book, page=props.page,
-        layer = props.layer,
-        class = props.class,
+        layer = layer,
+        class = class,
         props = props}, controller, params.decoded or {})
     else
       print("new layer")
@@ -68,8 +86,8 @@ local instance =
       scripts.publish(UI, {
         book=UI.editor.currentBook, page=UI.editor.currentPage or UI.page,
         updatedModel = updatedModel,
-        layer = props.name,
-        class = props.shapedWith or props.class, -- rectangle,text, image, ellipse
+        layer = layer,
+        class = props.shapedWith or class, -- rectangle,text, image, ellipse
         props = props},
         controller)
 
