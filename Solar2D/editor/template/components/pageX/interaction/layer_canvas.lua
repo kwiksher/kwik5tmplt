@@ -26,7 +26,7 @@ local M = {
   autoSave   = true,
   brushSize  = 10,
   brushColor = {0, 0, 1},
-  color      = {255, 255, 255}
+  color      = {255, 255, 255},
   outline    = true,
   {{/properties}}
   --

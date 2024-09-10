@@ -370,12 +370,13 @@ function M:updateAsset(text, asset)
 end
 
 function M:load(book, page, layer, class, isNew, asset)
-  -- print("read", page, layer, class, isNew)
+  print("read", page, layer, class, isNew)
   -- the values are used in useClassEdtiorProps()
   self.page = page
   self.layer = layer
   self.isNew = isNew
   self.class = class
+  self.classProps.isNew = isNew
 
   if isNew then
     local decoded = self:read(book, page, layer, class, isNew)

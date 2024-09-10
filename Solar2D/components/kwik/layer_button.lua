@@ -113,18 +113,19 @@ function M:addEventListener(UI)
     local sceneGroup = UI.sceneGroup
     local layers = UI.layers
     local props = self.properties
+    local actions = self.actions
     -- Tap
     if props.type  == "tap" and props.btaps and sceneGroup[self.name] then
         --
         local obj = sceneGroup[self.name]
-        local eventName = props.onTap
+        local eventName = actions.onTap
 
         function obj:tap(event)
           event.UI = UI
           if props.enabled or props.enabled == nil then
             if props.btaps and event.numTaps then
               if event.numTaps == props.btaps then
-                print("tap")
+                print("tap", eventName)
                   UI.scene:dispatchEvent({name=eventName, event = event})
               end
             else
