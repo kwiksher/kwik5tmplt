@@ -294,6 +294,7 @@ local function isArray(t)
 end
 
 function exports.flattenKeys(_parentKey, v)
+  print(_parentKey)
   local ret = {}
   local parentKey = _parentKey or ""
   if type(v) == "table" then
@@ -303,11 +304,13 @@ function exports.flattenKeys(_parentKey, v)
           flatten_key = parentKey .."_"..key
           ret[flatten_key] = value
         end
-      elseif (key ~= "__index" and key~="_class" and key ~="_functionListeners" and key~="_tableListeners" and key~="_proxy") then
+      elseif (key~="target" and key~="UI" and key ~= "__index" and key~="_class" and key ~="_functionListeners" and key~="_tableListeners" and key~="_proxy" and kye ~="screenHandler") then
         local _ret = exports.flattenKeys(parentKey .."_"..key, value)
         for kk, vv in pairs(_ret) do
           ret[kk] = vv
         end
+      else
+        ret[parentKey .."_"..key] = value
       end
     end
   else
