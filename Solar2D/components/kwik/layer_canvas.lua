@@ -111,13 +111,13 @@ function M:didShow(UI)
   if self.autoSave then
     -- Auto load previous paint in the canvas
     app.reloadCanvas = 1
-    local path = system.pathForFile(app.appName.."canvas_p"..UI.curPage..".jpg", system.TemporaryDirectory )
+    local path = system.pathForFile(UI.book.."_canvas_"..UI.page..".jpg", system.TemporaryDirectory )
     local fhd = io.open(path)
     if fhd then --file exists
         fhd:close()
         --
         local x,y,w,h,a = obj.x, obj.y, obj.width, obj.height, obj.alpha
-        obj_asf = display.newImageRect (app.appName.."canvas_p"..UI.curPage..".jpg", system.TemporaryDirectory, w, h)
+        obj_asf = display.newImageRect (UI.book.."_canvas_"..UI.page..".jpg", system.TemporaryDirectory, w, h)
         obj_asf.x = x
         obj_asf.y = y
         obj_asf.alpha = a
@@ -165,12 +165,16 @@ function M:destroy(UI)
     local myCaptureImage = display.captureBounds(self.obj.contentBounds)
     myCaptureImage.x     = display.contentWidth * 0.5
     myCaptureImage.y     = display.contentHeight * 0.5
-    display.save(myCaptureImage, app.appName.."canvas_p"..UI.curPage..".jpg", system.TemporaryDirectory )
+    display.save(myCaptureImage, UI.book.."_canvas_"..UI.page..".jpg", system.TemporaryDirectory )
     myCaptureImage:removeSelf()
     myCaptureImage = nil
   else
-    os.remove(system.pathForFile( app.appName.."canvas_p"..UI.curPage..".jpg", system.TemporaryDirectory ))
+    os.remove(system.pathForFile( UI.book.."_canvas_"..UI.page..".jpg", system.TemporaryDirectory ))
   end
+end
+
+M.set = function(model)
+  return setmetatable( model, {__index=M})
 end
 --
 return M
