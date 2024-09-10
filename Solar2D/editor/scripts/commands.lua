@@ -305,6 +305,9 @@ local function getModelFrom(args)
   local append = args.append -- args.updatedModel.components.timers or {}
   local isNew = args.isNew
 
+  ret.class = args.class
+  ret.layer = args.layer
+
   -- local model = {
   --   index = selected.index
   -- }
@@ -461,7 +464,9 @@ function M.publishForSelections(UI, args, controller, decoded)
   local page = args.page or UI.page
   local layer = args.layer or UI.editor.currentLayer or args.props.properties.target
 
-  print("publishForSelections", book, page, layer, class, "classFolder="..classFolder)
+  print("publishForSelections", book, page, layer, class)
+  print("", "classFolder="..classFolder)
+
   -- print(json.encode(args))
   local model = args.model or getModelFrom(args)
   print("---model----")

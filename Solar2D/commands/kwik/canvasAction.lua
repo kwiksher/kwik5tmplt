@@ -7,15 +7,18 @@ local _M = {}
 local _K            = require "Application"
 --
 function _M:brushSize(canvas, psize, pal)
+  if canvas == nil then print ("no canvas") return end
   canvas.brushSize = psize
   canvas.brushAlpha = pal
 end
 --
 function _M:brushColor( canvas, r, g, b, a)
+  if canvas == nil then print ("no canvas") return end
   canvas.cR, canvas.cG, canvas.cB, canvas.alpha = r, g, b, a
 end
 --
 function _M:erase(canvas)
+  if canvas == nil then print ("no canvas") return end
   _K.reloadCanvas = 0
   local lineTable = canvas.lineTable
   for i=1, #lineTable do
@@ -26,6 +29,7 @@ function _M:erase(canvas)
 end
 --
 function _M:undo(canvas)
+  if canvas == nil then print ("no canvas") return end
   local lineTable = canvas.lineTable
   local undone    = canvas.undone
 
@@ -40,6 +44,7 @@ function _M:undo(canvas)
 end
 --
 function _M:redo(canvas)
+  if canvas == nil then print ("no canvas") return end
   local lineTable = canvas.lineTable
   local undone    = canvas.undone
 
