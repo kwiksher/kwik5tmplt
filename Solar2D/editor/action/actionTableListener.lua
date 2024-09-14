@@ -51,6 +51,7 @@ function M:selectHandler(target)
       action = target.action,
       UI = self.UI
     }
+    layerTableCommands.singleSelection(self, target)
 
   else
     self.lastTarget = target

@@ -43,6 +43,7 @@ local command = function (params)
   local files = {}
   --
   local actions = actionCommandTable.actions
+  local readonly = actionCommandTable.readonly
 
   --for i=1, #actions do print(i, actions[i].command) end
 
@@ -63,7 +64,7 @@ local command = function (params)
     actionEditor:hide()
     partsButtons:show()
     classProps:show()
-  else
+  elseif not readonly then
     -- save index lua
     files[#files+1] = util.renderIndex(UI.editor.currentBook, page,updatedModel)
     -- save index json

@@ -40,7 +40,12 @@ local instance =
       --   for k, v in pairs(props.properties) do print("",k, v) end
       -- end
 
-    local controller = UI.editor:getClassModule(props.class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
+    local class = class
+    if class == nill then
+      class = UI.editor.currentClass
+    end
+
+    local controller = UI.editor:getClassModule(class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
     for k, v in pairs(controller:useClassEditorProps()) do
       print(k, v)
       props[k] = v
@@ -52,10 +57,6 @@ local instance =
     -- end
     -- print("@@@ isNew", isNew, controller.isNew, props.isNew)
 
-    local class = props.class
-    if class == nill then
-      class = UI.editor.currentClass
-    end
 
     -- print("@@@@", props.layer, UI.editor.currentLayer)
     local layer = props.layer or UI.editor.currentLayer

@@ -307,6 +307,7 @@ local function getModelFrom(args)
 
   ret.class = args.class
   ret.layer = args.layer
+  ret.actions = args.actions
 
   -- local model = {
   --   index = selected.index
@@ -453,6 +454,10 @@ function M.publishForSelections(UI, args, controller, decoded)
   --
   print("---args.props----")
   for k, v in pairs(args.props) do print("", k, v) end
+  if args.actions then
+    print("---args.actions----")
+    for k, v in pairs(args.actions) do print("", k, v) end
+    end
   print("---decoded----")
   for k, v in pairs(decoded) do print("", k, v) end
 
@@ -469,10 +474,12 @@ function M.publishForSelections(UI, args, controller, decoded)
 
   -- print(json.encode(args))
   local model = args.model or getModelFrom(args)
-  print("---model----")
+  print("---model----", args.model)
   -- for k, v in pairs(model) do print("", k, v) end
   for k, v in pairs(model.properties) do print("properties", k, v) end
-  -- for k, v in pairs(model.actions) do print("actions", k, v) end
+  if model.actions then
+    for k, v in pairs(model.actions) do print("actions", k, v) end
+  end
 
   ---------
   --- Update components/pageX/index.lua model/pageX/index.json
