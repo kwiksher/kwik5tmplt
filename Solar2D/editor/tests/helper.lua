@@ -123,7 +123,7 @@ function exports.singelClick(tbl, name)
 end
 
 
-function exports.touchAction(name)
+function exports.clickAction(name)
   local actionTable = actionTable or exports.actionTable
   --actionTable.altDown = true
   for i, v in next, actionTable.objs do
