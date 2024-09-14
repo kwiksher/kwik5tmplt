@@ -68,7 +68,7 @@ function M.xtest_new_sync()
   local actionbox = require("editor.parts.actionbox")
   local obj = actionbox.objs[1] -- onComplete
   obj:dispatchEvent({name="tap", target=obj})
-  helper.touchAction("eventOne")
+  helper.clickAction("eventOne")
 
   local textProps = require("editor.replacement.textProps")
   helper.clickProp(textProps.objs, "_filename")
@@ -83,7 +83,7 @@ function M.xtest_new_sync()
   -- select an action
   helper.clickProp(listPropsTable.objs, "action")
   -- helper.clickProp(listPropsTable.objs, "action") -- why needs twice?
-  helper.touchAction("eventTwo")
+  helper.clickAction("eventTwo")
 
   helper.setProp(listPropsTable.objs, "dur", "1000")
 
