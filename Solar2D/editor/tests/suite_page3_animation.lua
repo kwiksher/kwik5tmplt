@@ -45,7 +45,7 @@ function M.test_new_animation()
 
   -- select an action
   --helper.clickProp(actionbox.objs, "onComplete")
-  --helper.touchAction("eventOne")
+  --helper.clickAction("eventOne")
 
 end
 

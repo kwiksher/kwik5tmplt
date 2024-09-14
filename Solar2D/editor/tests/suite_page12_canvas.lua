@@ -135,11 +135,22 @@ function M.xtest_new_action_for_buttons()
   -- helper.selectActionCommand("canvas", "redo")
   -- helper.selectActionCommand("canvas", "undo")
 end
+
+function M.xtest_modify_action_add_extcode()
+  helper.selectIcon("action")
+  if helper.hasObj(actionTable, "brushBlack") then
+    helper.clickAction("brushBlack")
+    actionTable.editButton:tap()
+    helper.selectActionGroup("Controls")
+    helper.selectActionCommand("externalcode", "code")
+  end
+end
+
 --
 function M.xtest_get_action()
   helper.selectIcon("action")
   if helper.hasObj(actionTable, "brushBlack") then
-    helper.clickAsset(actionTable.objs, "brushBlack")
+    helper.clickAction("brushBlack")
     actionTable.editButton:tap()
   end
 end
@@ -147,9 +158,19 @@ end
 function M.xtest_modify_action()
   helper.selectIcon("action")
   if helper.hasObj(actionTable, "brushBlack") then
-    helper.clickAsset(actionTable.objs, "brushBlack")
+    helper.clickAction("brushBlack")
     actionTable.editButton:tap()
     helper.singelClick(actionCommandTable, "canvas.brush")
+  end
+end
+
+function M.xtest_modify_action_undo()
+  helper.selectIcon("action")
+  if helper.hasObj(actionTable, "undo") then
+    helper.clickAction("undo")
+    actionTable.editButton:tap()
+    helper.selectActionGroup("Interactions")
+    helper.selectActionCommand("canvas", "redo")
   end
 end
 
@@ -157,7 +178,7 @@ function M.xtest_copy_paste_actions()
   helper.selectIcon("action")
     -- brushBlack, brushRed, brushBlue ...
   if not helper.hasObj(actionTable, "brushRed") then
-    helper.clickAsset(actionTable.objs, "brushBlack")
+    helper.clickAction("brushBlack")
     actionTable.editButton:tap()
     helper.clickButton("copy") -- editor.action.buttons
     helper.clickButton("cancel") -- editor.action.buttons
@@ -183,7 +204,7 @@ end
 
 function M.xtest_copy_paste()
   helper.selectIcon("action")
-  helper.touchAction("brushBlack")
+  helper.clickAction("brushBlack")
   -- helper.selectAction("brushBlack", true)
   --helper.clickButton("Copy", actionButtonContext)
   --helper.clickButton("Paste", actionButtonContext)
@@ -192,7 +213,7 @@ end
 
 function M.xtest_delete_action()
   helper.selectIcon("action")
-  helper.touchAction("brushBlack_copied")
+  helper.clickAction("brushBlack_copied")
   helper.selectAction("brushBlack_copied", true)
   -- helper.clickButton("Delete", actionButtonContext)
 
@@ -243,7 +264,7 @@ function M.xtest_edit_button()
   objs = require("editor.parts.buttonContext").objs
   objs.Select.rect:tap()
 
-  helper.touchAction("brushBlack")
+  helper.clickAction("brushBlack")
 end
 
 function M.xtest_copy_paste_delete_actions()
@@ -251,5 +272,6 @@ end
 
 function M.xtest_copy_paste_delete_actionCommands()
 end
+
 
 return M

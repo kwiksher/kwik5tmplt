@@ -60,13 +60,13 @@ function M.xtest_new_drag()
 
   -- select an action
   helper.clickProp(actionbox.objs, "onMoved")
-  helper.touchAction("eventOne")
+  helper.clickAction("eventOne")
 
   helper.clickProp(actionbox.objs, "onDropped")
-  helper.touchAction("eventTwo")
+  helper.clickAction("eventTwo")
 
   helper.clickProp(actionbox.objs, "onReleased")
-  helper.touchAction("eventThree")
+  helper.clickAction("eventThree")
 
   helper.setProp(classProps.objs, "constrainAngle", "90")
 

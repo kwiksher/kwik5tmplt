@@ -64,7 +64,7 @@ local function write_file(filename, content)
 end
 ---
 ---
-local source_file = lfs.currentdir() .. "/App/" .. book .. "/commands/" .. page .. "/" .. source_action .. ".lua"
+local source_file = lfs.currentdir() .."../Solar2D/App/" .. book .. "/commands/" .. page .. "/" .. source_action .. ".lua"
 ---
 
 local function find_lines_containing(filename, pattern)
