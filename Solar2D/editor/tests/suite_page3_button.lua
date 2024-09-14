@@ -48,7 +48,7 @@ function M.test_select_button()
 
   -- select an action
   helper.clickProp(actionbox.objs, "onTap")
-  helper.touchAction("eventOne")
+  helper.clickAction("eventOne")
 
   --
 end
