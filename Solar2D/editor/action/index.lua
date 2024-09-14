@@ -217,6 +217,7 @@ end
 -----------------------------------------
 function M:show(editing)
   controller:show(editing)
+  buttons:show()
   self.isVisible = true
   -- picker:show()
 end
