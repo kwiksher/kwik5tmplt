@@ -139,6 +139,7 @@ function M:create(UI)
 
   UI.editor.viewStore.actionCommandTable = self
   UI.editor.actionCommandStore:listen(function(foo, fooValue)
+    self.readonly = fooValue.readonly
     self:createTable(foo, fooValue)
     self:show()
   end)
