@@ -262,7 +262,7 @@ M.commands = {
   },
   screenshot = {
     take = {
-      ptit = "",
+      title = "",
       message = "",
       shutter = true,
       hideLayers = {}

@@ -25,6 +25,13 @@ ActionCommand.Var = require("commands.kwik.variableAction")
 -- ActionCommand.Web = require("commands.kwik.webAction")
 ActionCommand.Button = require("commands.kwik.buttonAction")
 
+ActionCommand.color = function(r, g, b, a)
+  if r then
+    return {r/255, g/255, b/255,a}
+  else
+    return {false}
+  end
+end
 --
 function ActionCommand:run(params, modName, cmdName)
     local mod = require("commands.page0." .. modName)
