@@ -122,6 +122,11 @@ settings = {
       preferenceStorage = "sqlite",
       singleInstance = false
     },
+    osx = {
+        entitlements = {
+            ["com.apple.security.assets.pictures.read-write"] = true,
+        },
+    },
     excludeFiles = {
         -- Exclude all files at all paths which end with "secret.txt"
         all = {  "Icon*.png", "Images.xcassets", "Icon*.ico", "Icon*.icns", "*.vbs", "*.bat", "*.command", "copy_projects" },
