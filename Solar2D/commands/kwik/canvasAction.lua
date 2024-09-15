@@ -8,14 +8,14 @@ local _K            = require "Application"
 --
 function _M:brushSize(canvas, psize, pal)
   if canvas == nil then print ("no canvas") return end
-  canvas.brushSize = psize
-  canvas.brushAlpha = pal
+  canvas.properties.brushSize = psize
+  canvas.brushAlpha = pal or 1
 end
 --
 function _M:brushColor( canvas, r, g, b, a)
-  if r  then
-    if canvas == nil then print ("no canvas ") return end
-    canvas.cR, canvas.cG, canvas.cB, canvas.alpha = r, g, b, a
+  if r then
+    if canvas == nil then print ("no canvas") return end
+    canvas.properties.brushColor = {r, g, b, a}
   end
 end
 --

@@ -41,14 +41,17 @@ M.new = function(sceneName, model)
       -- local sceneGroup = self.view -- this comes from composer
       --self.UI.sceneGroup = self.view
       --
+      if self.UI.props.editing  then
         self.UI.sceneGroup.x = display.contentCenterX
         self.UI.sceneGroup.y = display.contentCenterY
         self.UI.sceneGroup.anchorX = .5
         self.UI.sceneGroup.anchorY = .5
-        self.view:insert(self.UI.sceneGroup)
+      end
 
-        self.UI:create(event.params)
-        if self.model.onInit then self.model.onInit(self.UI) end
+      self.view:insert(self.UI.sceneGroup)
+
+      self.UI:create(event.params)
+      if self.model.onInit then self.model.onInit(self.UI) end
 
       self.app:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
     end
