@@ -176,9 +176,9 @@ local function insideRect(rectObject,point)
     point.y = point.y + yPos
 
     local bounds = {}
-    bounds.xMax = xPos + rectObject.width*(1-rectObject.anchorX)*rectObject.xScale
+    bounds.xMax = xPos + rectObject.strokeWidth*(1-rectObject.anchorX)*rectObject.xScale
     bounds.yMax = yPos + rectObject.height*(1-rectObject.anchorY)*rectObject.yScale
-    bounds.xMin = xPos - rectObject.width*rectObject.anchorX*rectObject.xScale
+    bounds.xMin = xPos - rectObject.strokeWidth*rectObject.anchorX*rectObject.xScale
     bounds.yMin = yPos - rectObject.height*rectObject.anchorY*rectObject.yScale
 
 	local thisWithinBounds = false
