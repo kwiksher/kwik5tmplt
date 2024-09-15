@@ -1,6 +1,6 @@
 local Library = require "CoronaLibrary"
 
-    
+
 -- Create library
 local mouseHover = Library:new{ name='mouseHover', publisherId='sg.btn' }
 
@@ -27,7 +27,7 @@ require = function(relativePath, mode) -- mode can be "plugin" to indicate that 
 	if mode == "relative" then
 		fullPath = pluginPath.."."..relativePath
 		table.insert(mouseHover.subModules, fullPath) -- only remove the relative paths
-	end 
+	end
 
 
 	local returnValue = oldRequire(fullPath)
@@ -53,8 +53,8 @@ oldRequire = nil
 local function dispatchHoverEvent(object,hoverPhase,xLoc,yLoc)
 
 	local event = { name="mouseHover", target=object ,phase=hoverPhase, x = xLoc, y = yLoc}
-	
-	local returnValue = object:dispatchEvent( event ) 
+
+	local returnValue = object:dispatchEvent( event )
 	--print(returnValue, object.name)
 
 	return returnValue
@@ -72,7 +72,7 @@ local function getPathCenter(points)
 	for i = 1,#points do
 		xMin = math.min(xMin,points[i].x)
 		xMax = math.max(xMax,points[i].x)
-		
+
 		yMin = math.min(yMin,points[i].y)
 		yMax = math.max(yMax,points[i].y)
 
@@ -146,7 +146,7 @@ local function insidePolygon(polyObject, point) -- vertices is an array of verti
 
    -- print(polyObject.x,polyObject.y)
     --print(point.x,point.y)
-    
+
     for i = 1, #polygon do
         if (polygon[i].y < point.y and polygon[j].y >= point.y or polygon[j].y < point.y and polygon[i].y >= point.y) then
             if (polygon[i].x + ( point.y - polygon[i].y ) / (polygon[j].y - polygon[i].y) * (polygon[j].x - polygon[i].x) < point.x) then
@@ -155,10 +155,10 @@ local function insidePolygon(polyObject, point) -- vertices is an array of verti
         end
         j = i;
     end
-    
 
 
-    return oddNodes 
+
+    return oddNodes
 
 
 end
@@ -176,14 +176,14 @@ local function insideRect(rectObject,point)
     point.y = point.y + yPos
 
     local bounds = {}
-    bounds.xMax = xPos + rectObject.width*(1-rectObject.anchorX)*rectObject.xScale
+    bounds.xMax = xPos + rectObject.strokeWidth*(1-rectObject.anchorX)*rectObject.xScale
     bounds.yMax = yPos + rectObject.height*(1-rectObject.anchorY)*rectObject.yScale
-    bounds.xMin = xPos - rectObject.width*rectObject.anchorX*rectObject.xScale
+    bounds.xMin = xPos - rectObject.strokeWidth*rectObject.anchorX*rectObject.xScale
     bounds.yMin = yPos - rectObject.height*rectObject.anchorY*rectObject.yScale
 
 	local thisWithinBounds = false
 
-	if point.x < bounds.xMax and point.x > bounds.xMin and point.y > bounds.yMin and point.y <bounds.yMax then 
+	if point.x < bounds.xMax and point.x > bounds.xMin and point.y > bounds.yMin and point.y <bounds.yMax then
 
 		thisWithinBounds = true
 	end
@@ -216,7 +216,7 @@ local function insideCircle(circObject,point)
 
 
 	local thisWithinBounds = false
- 	
+
  	local dist = math.sqrt((point.x)*(point.x) + (point.y)*(point.y))
 
 
@@ -235,7 +235,7 @@ local function insideRoundedRect(rRectObject,point)
 	local thisWithinBounds = false
 	local withinRect = false
 
-	
+
 	local xPos,yPos = rRectObject.parent:localToContent(rRectObject.x,rRectObject.y)
 
     point.x = point.x-xPos
@@ -254,7 +254,7 @@ local function insideRoundedRect(rRectObject,point)
     bounds.yMin = yPos - rRectObject.height*rRectObject.anchorY*rRectObject.yScale
 
 
-	if point.x < bounds.xMax and point.x > bounds.xMin and point.y > bounds.yMin and point.y <bounds.yMax then 
+	if point.x < bounds.xMax and point.x > bounds.xMin and point.y > bounds.yMin and point.y <bounds.yMax then
 
 		withinRect = true
 		thisWithinBounds = true
@@ -336,7 +336,7 @@ local isWithinObject = function(object,xLoc,yLoc)
 
 	local withinBounds = false
 
-	if xLoc < bounds.xMax and xLoc > bounds.xMin and yLoc > bounds.yMin and yLoc <bounds.yMax then 
+	if xLoc < bounds.xMax and xLoc > bounds.xMin and yLoc > bounds.yMin and yLoc <bounds.yMax then
 
 		withinBounds = true
 	end
@@ -357,7 +357,7 @@ local isWithinObject = function(object,xLoc,yLoc)
 
 				elseif object.path.type == "rect" then
 					withinBounds = insideRect(object,{x=xLoc,y=yLoc})
-				
+
 				elseif object.path.type == "roundedRect" then
 					withinBounds = insideRoundedRect(object,{x=xLoc,y=yLoc})
 				elseif object.path.type == "circle" then
@@ -396,105 +396,105 @@ checkHover = function(thisGroup, xLoc,yLoc)
 				if thisGroup[i].anchorChildren == true then -- putting this after the repeat checkHover means the group gets the hover only after the chidlren
 
 
-					local isWithin = isWithinObject(thisGroup[i],xLoc,yLoc) 
+					local isWithin = isWithinObject(thisGroup[i],xLoc,yLoc)
 
 					if isWithin == true and thisGroup[i].isHovering == nil then
 						if checkHoverBlocked ~= true then
 							hoverPhase = "began"
 							thisGroup[i].isHovering = true
-							local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc) 
+							local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc)
 							if block then
 								--break -- should cause it to jump out of the for loop
 								checkHoverBlocked = true
-							end 
+							end
 						end
 
 					elseif isWithin == true and thisGroup[i].isHovering == true then
 
-						
+
 
 						if checkHoverBlocked == true then -- you know this group is hovering
-							
-							hoverPhase = "ended"
-							thisGroup[i].isHovering = nil	
-							local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc) 
-							if block then
-								--break -- should cause it to jump out of the for loop
-								checkHoverBlocked = true
-							end 
 
-						else	
-							hoverPhase = "moved"
-							local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc) 
+							hoverPhase = "ended"
+							thisGroup[i].isHovering = nil
+							local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc)
 							if block then
 								--break -- should cause it to jump out of the for loop
 								checkHoverBlocked = true
-							end 
+							end
+
+						else
+							hoverPhase = "moved"
+							local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc)
+							if block then
+								--break -- should cause it to jump out of the for loop
+								checkHoverBlocked = true
+							end
 						end
 
 					elseif isWithin == false and thisGroup[i].isHovering == true then
 
 						hoverPhase = "ended"
-						thisGroup[i].isHovering = nil	
-						local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc) 
+						thisGroup[i].isHovering = nil
+						local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc)
 						if block then
 							--break -- should cause it to jump out of the for loop
 							checkHoverBlocked = true
-						end 
+						end
 					end
-		
+
 
 				end
 
 			else -- no children, it isn't a group
 
-				local isWithin = isWithinObject(thisGroup[i],xLoc,yLoc) 
+				local isWithin = isWithinObject(thisGroup[i],xLoc,yLoc)
 
 				if isWithin == true and thisGroup[i].isHovering == nil then
 					if checkHoverBlocked ~= true then
 						hoverPhase = "began"
 						thisGroup[i].isHovering = true
-						local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc) 
+						local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc)
 						if block then
 							--break -- should cause it to jump out of the for loop
 								checkHoverBlocked = true
-						end 
+						end
 					end
 
 				elseif isWithin == true and thisGroup[i].isHovering == true then
 
-						
-						if checkHoverBlocked == true then -- you know this group is hovering
-							
-							hoverPhase = "ended"
-							thisGroup[i].isHovering = nil	
-							local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc) 
-							if block then
-								--break -- should cause it to jump out of the for loop
-								checkHoverBlocked = true
-							end 
 
-						else	
-							hoverPhase = "moved"
-							local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc) 
+						if checkHoverBlocked == true then -- you know this group is hovering
+
+							hoverPhase = "ended"
+							thisGroup[i].isHovering = nil
+							local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc)
 							if block then
 								--break -- should cause it to jump out of the for loop
 								checkHoverBlocked = true
-							end 
+							end
+
+						else
+							hoverPhase = "moved"
+							local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc)
+							if block then
+								--break -- should cause it to jump out of the for loop
+								checkHoverBlocked = true
+							end
 						end
 
 				elseif isWithin == false and thisGroup[i].isHovering == true then
 
 					hoverPhase = "ended"
-					thisGroup[i].isHovering = nil	
-					local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc) 
+					thisGroup[i].isHovering = nil
+					local block = dispatchHoverEvent(thisGroup[i],hoverPhase,xLoc,yLoc)
 					if block then
 						--break -- should cause it to jump out of the for loop
 							checkHoverBlocked = true
-					end 
+					end
 				end
-					
-						
+
+
 
 
 			end
@@ -534,7 +534,7 @@ function mouseHover.activate()
 	local env = system.getInfo( "environment" )
 	local platform = system.getInfo( "platform" )
 	print(env,platform)
-	if env == "simulator" and platform ~= "android" then 
+	if env == "simulator" and platform ~= "android" then
 		print("Note: If you're using Corona Simulator on Windows then Corona's 'mouse' events will only work with an Android skin.")
 	end
 
@@ -546,7 +546,7 @@ function mouseHover.deactivate()
 	if activated == true then
 		Runtime:removeEventListener( "mouse", onMouseEvent )
 		activated = false
-		
+
 	end
 
 end
