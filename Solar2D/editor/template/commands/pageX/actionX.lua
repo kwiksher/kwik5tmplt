@@ -16,8 +16,8 @@ function ActionCommand:new()
 		local layers      = UI.layers
 		local obj        = params.obj
 
-    local conditions = require("App." .. UI.book..".common.conditions")
-    local expressions = require("App." .. UI.book.."common.expressions")
+    -- local conditions = require("App." .. UI.book..".common.conditions")
+    -- local expressions = require("App." .. UI.book.."common.expressions")
 
 {{#actions}}
   {{#condition}}
@@ -92,10 +92,11 @@ function ActionCommand:new()
     {{/onOff}}
   {{/button}}
   {{#canvas}}
-      local canvas = UI.sceneGroup[UI.canvas]
+      local canvas = UI.canvas
       {{#brush}}
       {{#color}}
-      AC.Canvas:brushColor(canvas, {{color}}  )
+      local r, g, b, a =  {{color}}
+      AC.Canvas:brushColor(canvas, r/255, g/255, b/255,a )
       {{/color}}
       {{#size}}
       AC.Canvas:brushSize(canvas, {{size}}  )
