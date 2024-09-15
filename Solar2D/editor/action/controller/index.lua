@@ -163,16 +163,16 @@ function M:render(book, page, command, actions)
   --   {animation = {pause = {target="layerTwo", sec=2}}},
   -- }})
   local model ={}
-  -- print(json.encode(actions))
+  print(json.encode(actions))
   for i=1, #actions do
     local entry = {}
     local out = util.split(actions[i].command, '.')
-    -- print(unpack(out))
+    print(unpack(out))
     entry[out[1]] = {}
     entry[out[1]][out[2]]  = actions[i].params
     model[i] = entry
   end
-  -- print("###", json.encode(model))
+  print("###", json.encode(model))
   util.saveLua(tmplt, dst, { actions = model, encoded = json.encode({name=command, actions=actions})})
   return dst
 end

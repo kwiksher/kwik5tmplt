@@ -1,7 +1,7 @@
 system.setTapDelay( 0.5 )
 
 local restore = false
--- restore = true
+--restore = true
 if restore then
   os.execute("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source undo_lua.command")
   return
@@ -34,5 +34,5 @@ local common = {
   }
 }
 
-require("controller.index").bootstrap({name="book", goPage = "page12", position = {x=0, y=0}, common = common}) -- scenes.index
+require("controller.index").bootstrap({name="book", editing = true, goPage = "page12", position = {x=0, y=0}, common = common}) -- scenes.index
 --require("controller.index").bootstrap({name="book", sceneIndex = 1, position = {x=0, y=0}}) -- scenes.index

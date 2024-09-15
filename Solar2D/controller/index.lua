@@ -13,6 +13,7 @@ local common = {commands = {"myEvent"}, components = {"keyboardNavigation", "boo
 function lib.bootstrap(Props)
     local app = App.new{
         appName     = Props.name,
+        editing     = Props.editing,
         systemDir   = system.ResourceDirectory,
         imgDir      = "App/"..Props.name.."/assets/images/",
         spriteDir   = "App/"..Props.name.."/assets/sprites/",
