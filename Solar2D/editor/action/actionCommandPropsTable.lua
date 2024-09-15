@@ -159,7 +159,9 @@ function M:create(UI)
           obj:addEventListener("tap", function(event) basePropsControl.handler.color(event) end)
         end
         option.x = posX + option.width
-        option.text = basePropsControl._yamlValue(entry.name, entry.value)
+        local value = entry.value
+        if type(value) == "boolean" then value = tostring(value) end
+        option.text = basePropsControl._yamlValue(entry.name, value)
         obj.field = newTextField(option)
 
         -- objs[#objs + 1] = obj
