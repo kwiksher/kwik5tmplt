@@ -11,10 +11,14 @@ local settingsTable = require("editor.parts.settingsTable")
 local command = function (params)
 	local UI    = params.UI
   local path = system.pathForFile( "App/"..UI.editor.currentBook.."/models/settings.json", system.ResourceDirectory)
-  print("selectPageProps", path)
+  print("selectPageProps", params.icon, params.isNew, params.isDelete, path)
 
   local rootGroup = UI.editor.rootGroup
-  if params.show~=nil and rootGroup.settingsTable then
+  if params.icon == "newPage-icon" then --params.isNew == true
+    print("new page")
+  elseif params.isDelete then
+    print("delete page")
+  elseif params.show~=nil and rootGroup.settingsTable then
     if settingsTable.isVisible then
       settingsTable:hide()
     else

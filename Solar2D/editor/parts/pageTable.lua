@@ -35,6 +35,8 @@ local M, bt, tree = require(parent .."baseTable").new(Props)
 
 local btNodeName = "select page"
 
+M.anchorName = "selectPageProps"
+
 function M.btHandler(target)
   local self = M
   if self.selection and self.selection.rect then
