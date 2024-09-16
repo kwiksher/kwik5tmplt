@@ -294,6 +294,7 @@ function M:gotoLastSelection(_props)
   local path = system.pathForFile( "kwik.json", system.ApplicationSupportDirectory )
   -- Open the file handle
   local file, errorString = io.open( path, "r" )
+  if file == nil then return end
   --
   --
   if _props then
@@ -307,8 +308,15 @@ function M:gotoLastSelection(_props)
       -- Close the file handle
       io.close( file )
       props = json.decode(contents)
+      ---
+      --- remove it
+      local result, reason = os.remove( path )
+      if result then
+        print( "File removed" )
+      else
+        print( "File does not exist", reason )  --> File does not exist    apple.txt: No such file or directory
+      end
   end
-  file = nil
 
   local helper = require("editor.tests.helper")
   local bookTable = require("editor.parts.bookTable")
@@ -396,7 +404,7 @@ function M:didShow(UI)
       if not self.isReloaded then
         self.isReloaded = true
         ----------------------------
-        self:gotoLastSelection(self.lastSelection)
+        self:gotoLastSelection() -- self.lastSelection
         --------- unit test --------
         if unitTestOn then
           self:runTest()
