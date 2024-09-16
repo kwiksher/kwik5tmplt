@@ -309,7 +309,8 @@ function M.commandHandlerClass(layerTable, target, event)
   --
   buttons:hideContextMenu()
   --
-
+  target.rect:toFront()
+  target:toFront()
   if layerTable:isAltDown() then
     print("", "isAltDown")
     showClassProps(layerTable, target)

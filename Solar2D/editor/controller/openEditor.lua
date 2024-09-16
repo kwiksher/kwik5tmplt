@@ -29,7 +29,7 @@ local instance =
         print(UI.book, options.folder )
         commands.openFinder(UI.book, options.folder )
       end
-    elseif UI.editor.selection == "index" then
+    elseif UI.editor.selections == nil  then
       commands.openEditorForLayer(UI.book, UI.page, "index")
     else
       for i, v in next, UI.editor.selections do

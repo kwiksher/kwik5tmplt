@@ -189,7 +189,7 @@ function M:createIcons (_marginX, _marginY)
     local posY = self.y -33 + marginY
     -- print(name, posX, posY)
 
-    local actionIcon = muiIcon:create {
+    local obj = muiIcon:create {
       icon = {name.."_over", name.."Color_over", name},
       text = "",
       name = name.."-icon",
@@ -207,7 +207,8 @@ function M:createIcons (_marginX, _marginY)
           name = "editor.selector."..self.anchorName,
           UI = self.UI,
           class = self.id,
-          isNew = (name ~= "trash-icon"),
+          icon = name,
+          isNew = (name ~= "trash-icon" and name ~="Properties-icon"),
           isDelete = (name == "trash-icon")
         }
         --
@@ -223,8 +224,8 @@ function M:createIcons (_marginX, _marginY)
         --
       end,
     }
-    self.iconObjs[#self.iconObjs + 1] = actionIcon
-    self.group:insert(actionIcon)
+    self.iconObjs[#self.iconObjs + 1] = obj
+    self.group:insert(obj)
   end
 end
 --
