@@ -26,6 +26,8 @@ function(params)
   local isLayerClass = false
   --
   if params.selections then
+  elseif class == "page" then
+    print("paste page")
   else
     local mod, entries, indexEntries
     if class == "audio" then

@@ -429,7 +429,7 @@ function new(target, duration, values, props)
       if self.nextTween then
         self.nextTween:play()
       else
-        print("no nextTween")
+        -- print("no nextTween")
       end
       if not self.suppressEvents then
         if self.onComplete ~= nil then
@@ -504,6 +504,7 @@ function new(target, duration, values, props)
           if (initVal ~= nil and rangeVal ~= nil and self.ratio ~= nil) then
             local val = initVal + rangeVal * self.ratio
             self.target[key] = val
+            -- print(self.target.name, key, val)
             --
             -- 2.3 breadcrumbs
             if self.breadcrumb and value > 0 and value < maxPosition - 1 then

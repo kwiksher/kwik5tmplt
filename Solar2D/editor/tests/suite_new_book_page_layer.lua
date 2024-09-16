@@ -70,39 +70,54 @@ function M.xtest_new_book()
   end
 end
 
-function M.test_select_page()
+function M.xtest_select_page()
   -- UI.testCallback = function()
-    local obj = helper.getBook("book")
-    bookTable.commandHandler(obj, {phase="ended"},  true)
+    local book = helper.getBook("book")
+    book:touch()
+    --bookTable.commandHandler(obj, {phase="ended"},  true)
+    local page2 = helper.getPage("page2")
+    local page1 = helper.getPage("page1")
+
+    timer.performWithDelay(2000, function()
+      page2:tap()
+    end)
+    timer.performWithDelay(5000, function()
+      page1:tap()
+    end)
   -- end
 end
 
-function M.xtest_new_page()
-  UI.testCallback = function()
-    local obj = helper.getBook("book")
-    bookTable.commandHandler(obj, {phase="ended"},  true)
-    --
-    obj = helper.getPage("page4")
-    pageTable.commandHandler(obj, {phase="ended"},  true)
-    local x, y = obj:localToContent(0, 0)
-    local dx, dy = pageTable.scrollView:localToContent(0, 0)
-    --
-    print(x, y, pageTable.scrollView.x, pageTable.scrollView.y)
-    print(pageTable.rootGroup.x, pageTable.rootGroup.y)
-    print(dx, dy)
-      -- local x, y = pageTable.scrollView:localToContent(obj.x, obj.y)
-      -- local x, y = pageTable.rootGroup:localToContent(obj.x, obj.y)
-      -- local x, y = pageTable.group:localToContent(pageTable.group.x, pageTable.group.y)
-      -- local x, y = pageTable.scrollView.x, pageTable.scrollView.y
-      -- print(pageTable.group.x, pageTable.group.y)
-      -- print(pageTable.group:localToContent(0,0))
-      -- print(pageTable.scrollView:localToContent(0,0))
-    --
-    x=  obj.x + x - dx
-    y = dy
-    obj:dispatchEvent{name="mouse", target=obj, isSecondaryButtonDown=true, x = x , y = y}
-    helper.clickButton("create")
-  end
+function M.test_new_page()
+  local book = helper.getBook("book")
+  book:touch()
+   for i, v in next, pageTable.iconObjs  do print(v.name  ) end
+  local obj = pageTable.iconObjs[2]
+  obj.callBack({target={muiOptions={name="newPage-icon"}}})
+  -- UI.testCallback = function()
+  --   local obj = helper.getBook("book")
+  --   bookTable.commandHandler(obj, {phase="ended"},  true)
+  --   --
+  --   obj = helper.getPage("page4")
+  --   pageTable.commandHandler(obj, {phase="ended"},  true)
+  --   local x, y = obj:localToContent(0, 0)
+  --   local dx, dy = pageTable.scrollView:localToContent(0, 0)
+  --   --
+  --   print(x, y, pageTable.scrollView.x, pageTable.scrollView.y)
+  --   print(pageTable.rootGroup.x, pageTable.rootGroup.y)
+  --   print(dx, dy)
+  --     -- local x, y = pageTable.scrollView:localToContent(obj.x, obj.y)
+  --     -- local x, y = pageTable.rootGroup:localToContent(obj.x, obj.y)
+  --     -- local x, y = pageTable.group:localToContent(pageTable.group.x, pageTable.group.y)
+  --     -- local x, y = pageTable.scrollView.x, pageTable.scrollView.y
+  --     -- print(pageTable.group.x, pageTable.group.y)
+  --     -- print(pageTable.group:localToContent(0,0))
+  --     -- print(pageTable.scrollView:localToContent(0,0))
+  --   --
+  --   x=  obj.x + x - dx
+  --   y = dy
+  --   obj:dispatchEvent{name="mouse", target=obj, isSecondaryButtonDown=true, x = x , y = y}
+  --   helper.clickButton("create")
+  -- end
 end
 
 function M.xtest_rename_page()
