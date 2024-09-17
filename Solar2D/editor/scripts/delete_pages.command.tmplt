@@ -1,0 +1,12 @@
+dst={{dst}}
+book={{book}}
+newIndex="{{newIndex}}"
+
+cd $dst/App/$book
+cp $newIndex index.lua
+
+{{#cmd}}
+{{.}}
+{{/cmd}}
+
+exit

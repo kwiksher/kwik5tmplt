@@ -6,18 +6,26 @@ local App = require("controller.Application")
 local useJson = false
 local propsButtons = require("editor.parts.propsButtons")
 local settingsTable = require("editor.parts.settingsTable")
+local scripts = require("editor.scripts.commands")
 
 --
 local command = function (params)
 	local UI    = params.UI
+  local book, page = UI.book, UI.page
+
   local path = system.pathForFile( "App/"..UI.editor.currentBook.."/models/settings.json", system.ResourceDirectory)
   print("selectPageProps", params.icon, params.isNew, params.isDelete, path)
+  local src = "App/" .. book .. "/index.lua"
 
   local rootGroup = UI.editor.rootGroup
   if params.icon == "newPage-icon" then --params.isNew == true
     print("new page")
+    scripts.backupFiles(src)
+    scripts.createPage(book, nil, page) -- _dst == Solar2D
   elseif params.isDelete then
     print("delete page")
+    scripts.backupFiles(src)
+    scripts.removePages(book, {page})
   elseif params.show~=nil and rootGroup.settingsTable then
     if settingsTable.isVisible then
       settingsTable:hide()
