@@ -7,13 +7,17 @@ local instance =
   function(params)
     local UI = params.UI
     print(name)
-    if UI.useClassEditorProps then
-      local props = UI.useClassEditorProps()
-      for k, v in pairs(props) do
-        print("", k, v)
+    if params.props and params.props.book then
+      print("create book")
+    else
+      if UI.useClassEditorProps then
+        local props = UI.useClassEditorProps()
+        for k, v in pairs(props) do
+          print("", k, v)
+        end
       end
+      toolbar:toogleToolMap()
     end
-    toolbar:toogleToolMap()
     --
   end
 )

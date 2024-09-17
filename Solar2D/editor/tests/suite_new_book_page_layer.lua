@@ -189,9 +189,23 @@ end
 --
 -- rename layer.lua and layer_class.lua and generate(update) index.lua
 --
-function M.xtest_layer_rename()
+function M.xtest_rename_book()
 end
 
+function M.xtest_rename_group()
+end
+
+function M.xtest_rename_timer()
+end
+
+function M.xtest_rename_joints()
+end
+
+function M.xtest_rename_var()
+end
+
+function M.xtest_rename_audio()
+end
 
 ------
 return M

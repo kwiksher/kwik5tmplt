@@ -213,14 +213,14 @@ function M:render(book, page, layer, classFolder, class, model)
     if class == "joint" then
       dst = "App/"..book.."/components/"..page.."/joints/"..model.name ..".lua"
     end
-  elseif (model.name and model.name:len()>0) and class then
-    if model.name ~= "nil" then
-      dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..(model.name) ..".lua"
-    end
   elseif Shapes[class] then
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
     --local dst = layer.."_"..class ..".lua"
     tmplt =  "editor/template/components/pageX/"..classFolder.."/"..class..".lua"
+  elseif (model.name and model.name:len()>0) and class then
+    if model.name ~= "nil" then
+      dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..(model.name) ..".lua"
+    end
   elseif class then
     --local dst = layer.."_"..class ..".lua"
     if Animations[class] then
