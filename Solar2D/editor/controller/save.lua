@@ -77,6 +77,7 @@ local instance =
       local index = params.index or #updatedModel.components.layers + 1
       if not props.isMove then
         local newLayer = {name=props.name}
+        layer = newLayer
         table.insert(updatedModel.components.layers, index, newLayer)
         print(json.prettify(updatedModel))
       end
