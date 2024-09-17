@@ -124,6 +124,12 @@ function M.xtest_rename_page()
   helper.clickButton("rename")
 end
 
+function M.xtest_copy_paste_page()
+end
+
+function M.xtest_delete_page()
+end
+
 --
 -- use tool generate index?
 --

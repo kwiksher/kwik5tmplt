@@ -74,12 +74,24 @@ function M.createBook(book, _dst, weight)
   return M.createPage(book, "page1", root, weight)
 end
 
-function M.createPage(book, index, page, _root, _weight)
+function M.createPage(book, _index, _page, _root, _weight)
   local root = _root or "Solar2D"
   local dst = root .. "/App/" .. book .. "/index.lua"
   local tmplt = "editor/template/index.lua"
   local pages = {}
   local weight = _weight or 1 -- for book.index
+  --
+  local scenes = require("App." .. book .. ".index")
+  local index = #scenes
+  if _page ~= nil and _index == nil then
+    for i, v in next, scenes do
+      if v == _page then
+        index = i
+        break
+      end
+    end
+  end
+  local page = _page or "page"..(index+1)
   --
   local path = system.pathForFile("/App/" .. book .. "/index.lua", system.ResourceDirectory)
   if path then -- lfs.attributes(path)
@@ -136,6 +148,94 @@ function M.renamePage(book, page, newName, _dst)
   end
 
   return executeScript("rename_page.", {dst = root, book = book, page = page, newName = newName, newIndex = newFile})
+end
+
+function M.copyPage(book, page, newName, _dst)
+  local root = _dst or "Solar2D"
+  -- assets/images/page1
+  -- commands/page1
+  -- components/page1
+
+  -- index.lua gsub
+  local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
+  local scenes = require("App." .. book .. ".index")
+  for i, v in next, scenes do
+    if v == page then
+      table.insert(scenes, i-1,newName)
+      break
+    end
+  end
+
+  local path = system.pathForFile("editor/templates/index.lua", system.ResourceDirectory)
+  local file, errorString = io.open(path, "r")
+    if not file then
+    print("ERROR: " .. errorString)
+  else
+    local contents = file:read("*a")
+    io.close(file)
+    output = lustache:render(contents, scenes)
+    output = output:gsub("&#39;", '"')
+    output = output:gsub("&#x2F;", "/")
+
+    local nfile = io.open(newFile, "w+")
+    if nfile then
+      contents = nfile:write(output)
+      io.close(nfile)
+      nfile = nil
+    end
+  end
+  return executeScript("copy_page.", {dst = root, book = book, page = page, newName = newName, newIndex = newFile})
+end
+
+function M.removePages(book, pages, _dst)
+  local root = _dst or "Solar2D"
+
+  local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
+  local scenes = require("App." .. book .. ".index")
+  local newScenes = {}
+  for i, v in next, scenes do
+    local isDelete = false
+    for ii, vv in next, pages do
+      if vv == v then
+        isDelete = true
+        break
+      end
+    end
+    if not isDelete then
+      table.insert(newScenes,v)
+    end
+  end
+
+  local path = system.pathForFile("editor/templates/index.lua", system.ResourceDirectory)
+  local file, errorString = io.open(path, "r")
+    if not file then
+    print("ERROR: " .. errorString)
+  else
+    local contents = file:read("*a")
+    io.close(file)
+    output = lustache:render(contents, newScenes)
+    output = output:gsub("&#39;", '"')
+    output = output:gsub("&#x2F;", "/")
+
+    local nfile = io.open(newFile, "w+")
+    if nfile then
+      contents = nfile:write(output)
+      io.close(nfile)
+      nfile = nil
+    end
+  end
+
+  local files = {}
+  for i, page in next, pages do
+    table.insert(files, "App/" .. book .. "/components/"..page)
+    table.insert(files, "App/" .. book .. "/commands/"..page)
+    table.insert(files, "App/" ..book.."/assets/"..page)
+    table.insert(files, "App/" ..book.."/models/"..page)
+  end
+
+  local  root, commands = M.deleteFiles(files)
+  return executeScript("delete_pages.", {dst = root, book = book, page = page, cmd = commands, newIndex = newFile})
+
 end
 
 local function backupFiles(files, _dst)
