@@ -14,7 +14,7 @@ local selectbox = require(parent.."selectbox")
 -- local button = require("extlib.com.gieson.Button")
 -- local tools = require("extlib.com.gieson.Tools")
 ---
-local _contextMenus = {"create", "_rename", "modify","openEditor", "copy", "paste", "delete"}
+local _contextMenus = {"create", "rename", "modify","openEditor", "copy", "paste", "delete"}
 M.contextButtons = _contextMenus
 -- M.contextButtons = table:mySet{"edit", "copy", "paste", "delete"}
 
@@ -73,7 +73,13 @@ function M:create(UI)
   self.group = group
 
   local function tapHandler(event)
-    -- print("tap", event.eventName)
+    print("@@@ tap", event.target.eventName)
+    return true
+  end
+
+  local function touchHandler(event)
+    print("@@@@touch", event.eventName)
+    if event.phase == "began" or event.phase == "moved" then return true end
     if event.eventName == "toggle" then
       self.togglePanel(true)
       local obj = self.objs[event.eventName]
@@ -114,6 +120,7 @@ function M:create(UI)
       if self.contextMenuOptions then
         props.layer = self.contextMenuOptions.layer
         props.class = self.contextMenuOptions.class
+        props.book  = self.contextMenuOptions.book
         --print(self.contextMenuOptions.class)
         --
         -- {class=event.target.text, selections={event.target},
@@ -159,7 +166,7 @@ function M:create(UI)
     rect:setFillColor(0, 0, 0.8)
     obj.rect = rect
     --
-    obj.rect.tap = tapHandler
+    obj.rect.touch = touchHandler
     obj.rect.eventName = params.eventName
 
     obj.alignment = params.alignment
@@ -301,7 +308,16 @@ function M:create(UI)
   self.openEditorObj.originalText = obj.text
 
   for k, obj in pairs(self.objs) do
-    obj.rect:addEventListener("tap", obj.rect)
+    print(obj.eventName)
+    obj.rect:addEventListener("touch", obj.rect)
+    obj.rect:addEventListener("tap", tapHandler)
+
+    if obj.rect.buttonsInRow then
+      for kk, button in pairs(obj.rect.buttonsInRow) do
+        button.rect:addEventListener("touch", button.rect)
+        button.rect:addEventListener("tap", tapHandler)
+      end
+    end
   end
 
   self.UI.editor.rootGroup:insert(group)
@@ -411,31 +427,33 @@ function M:showContextMenu(x,y, options)
   if options then
     self.contextButtons = options.contextButtons or _contextMenus
   end
-  local indexX, indexY = 0,0
-  for k, key in next, self.contextButtons do
+  local index = 0
+  local pos ={x=x, y=y}
+  for i, key in next, self.contextButtons do
     for k, obj in next, self.objs do
-      local skipNew = false
-      if key == "create" then
+      local skipNewRename = false
+      if key == "create" or key == "rename" then
         if self.contextMenuOptions.isMultiSelection then
-          skipNew = true
+          skipNewRename = true
         end
         if self.contextMenuOptions.class and self.contextMenuOptions.class:len() > 0 then
-          skipNew = true
+          skipNewRename = true
         end
       end
-      if key  == obj.rect.eventName and not skipNew then
+      -- print(key, obj.rect.eventName, skipNewRename)
+      if key  == obj.rect.eventName and not skipNewRename then
         obj.isVisible = true
         obj.rect.isVisible = obj.isVisible
 
         if options and options.orientation =="horizontal" then
-          obj.x = x + indexX * obj.rect.width
-          obj.y = y
-          indexX = indexX + 1
+          pos.x = pos.x + obj.rect.width
         else
-          obj.x = x --+ obj.width
-          obj.y = y + indexY * obj.rect.height
-          indexY = indexY + 1
+          pos.y = pos.y + obj.rect.height
         end
+        obj.x = pos.x
+        obj.y = pos.y
+
+        index = index + 1
         obj.rect.x = obj.x
         obj.rect.y = obj.y
         obj.rect.alpha = 0.5
@@ -446,15 +464,17 @@ function M:showContextMenu(x,y, options)
         -- for buttons in row
         --
         if obj.rect.buttonsInRow and not (options or {}).isPageContent then
-          local indexXX = 1
+          local index = 1
+          local pos_x=0
           for i, o in next, obj.rect.buttonsInRow do
             -- print(i, o.text)
             o.isVisible = false
             o.rect.isVisible = o.isVisible
             -- if options and options.orientation =="horizontal" then
-              o.x = obj.x + indexXX * o.rect.width
+              o.x = obj.x + obj.rect.width + 10 + pos_x
               o.y = obj.y
-              indexXX = indexXX + 1
+              pos_x = pos_x + o.rect.width
+              index = index + 1
             -- else
             --   o.x = x --+ o.width
             --   o.y = y + indexY * o.rect.height
