@@ -30,27 +30,7 @@ mkdir -p components/$page/variables
 mkdir -p components/$page/joints
 mkdir -p models/$page
 
-cat << EOF > components/$page/layers/bg.lua
-local M = {}
---
-function M:init(UI)
-end
---
-function M:create(UI)
-  local sceneGroup = UI.sceneGroup
-end
---
-function M:didShow(UI)
-end
---
-function M:didHide(UI)
-end
---
-function  M:destory(UI)
-end
---
-return M
-EOF
+cp ../../editor/template/components/pageX/layers/bg.lua components/$page/layers/bg.lua
 
 cd components/$page
 #cp $newPageIndex index.lua
@@ -59,7 +39,7 @@ local sceneName = ...
 --
 local scene = require('controller.scene').new(sceneName, {
     components = {
-      layers =  },
+      layers = { { bg={} } },
       audios = { },
       groups = { },
       timers = { },

@@ -3,8 +3,8 @@
 dst=Solar2D
 book=book
 newIndex="/Users/ymmtny/Library/Application Support/Corona Simulator/.-454202B18A2EC19B0E6BDAED40A4821C/tmp/App/book/index.lua"
-newPageIndex="/Users/ymmtny/Library/Application Support/Corona Simulator/.-454202B18A2EC19B0E6BDAED40A4821C/tmp/App/book/components/page1/index.lua"
-page=page1
+newPageIndex="/Users/ymmtny/Library/Application Support/Corona Simulator/.-454202B18A2EC19B0E6BDAED40A4821C/tmp/App/book/components/mybook/index.lua"
+page=mybook
 
 cd $dst/App/$book
 cp $newIndex index.lua

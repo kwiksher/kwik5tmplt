@@ -186,7 +186,7 @@ function M.commandHandler(layerTable, target, event)
   -- print("@@@@@@", layerTable.altDown, layerTable:isAltDown())
   -- print(debug.traceback())
 
-    if layerTable:isAltDown() then
+  if layerTable:isAltDown() then
     if showLayerProps(layerTable, target) then
       --
       tree.backboard = {
@@ -194,7 +194,7 @@ function M.commandHandler(layerTable, target, event)
         path = path
         -- class = target.class
       }
-      -- print("###", target.layer)
+      print("###", target.layer)
       tree:setConditionStatus("select layer", bt.SUCCESS, true)
       tree:setActionStatus("load layer", bt.RUNNING, true)
       tree:setConditionStatus("select props", bt.SUCCESS)
