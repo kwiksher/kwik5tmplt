@@ -73,12 +73,12 @@ function M:create(UI)
   self.group = group
 
   local function tapHandler(event)
-    print("@@@ tap", event.target.eventName)
+    print("tap", event.target.eventName)
     return true
   end
 
   local function touchHandler(event)
-    print("@@@@touch", event.eventName)
+    print("touch", event.eventName)
     if event.phase == "began" or event.phase == "moved" then return true end
     if event.eventName == "toggle" then
       self.togglePanel(true)
@@ -121,6 +121,9 @@ function M:create(UI)
         props.layer = self.contextMenuOptions.layer
         props.class = self.contextMenuOptions.class
         props.book  = self.contextMenuOptions.book
+        props.page  = self.contextMenuOptions.page
+        props.selections = self.contextMenuOptions.selections -- for audio, group, timer etc
+
         --print(self.contextMenuOptions.class)
         --
         -- {class=event.target.text, selections={event.target},
@@ -308,7 +311,7 @@ function M:create(UI)
   self.openEditorObj.originalText = obj.text
 
   for k, obj in pairs(self.objs) do
-    print(obj.eventName)
+    -- print(obj.eventName)
     obj.rect:addEventListener("touch", obj.rect)
     obj.rect:addEventListener("tap", tapHandler)
 
@@ -423,6 +426,12 @@ function M.mouseOverInRow(event)
 end
 
 function M:showContextMenu(x,y, options)
+  if self.isLoaded then
+    self:hide()
+    self.isLoaded = false
+    return
+  end
+  self.isLoaded = true
   self.contextMenuOptions = options
   if options then
     self.contextButtons = options.contextButtons or _contextMenus

@@ -74,38 +74,41 @@ local server = pegasus:new({
 
 function M.run (params)
   -- harness:init("../../../sample-projects", params)
-  harness:init("App", params)
-  --
-  server:start(function (request, response)
-    print "It's running..."
-    print(request._method, request._path)
-    local ret, error = nil
-    if request._method == "POST" then
-      if request._path == "/hprint" then
-      	local data = request:post()
-        if type(data) == "string" then
-          local _type = request._headers["content-type"]:sub(string.len("application/") + 1)
-          ret = parsers[_type](data)
-          print(ret)
+  if not M.isRunning then
+    harness:init("App", params)
+    --
+    server:start(function (request, response)
+      print "It's running..."
+      print(request._method, request._path)
+      local ret, error = nil
+      if request._method == "POST" then
+        if request._path == "/hprint" then
+          local data = request:post()
+          if type(data) == "string" then
+            local _type = request._headers["content-type"]:sub(string.len("application/") + 1)
+            ret = parsers[_type](data)
+            print(ret)
+          end
+        else
+          ret = doPost:process(request, parsers)
         end
-      else
-        ret = doPost:process(request, parsers)
-      end
 
-    elseif request._method == "GET" then
-      ret = doGet:process(request)
-    elseif request._method == "PUT" then
-      ret = doPut:process(request, parsers)
-    elseif request._method == "DELETE" then
-      ret = doDelete:process(request)
-    end
-    if ret == nil then
-      -- response:write("Done"..request._path)
-      response:write("null")
-    else
-      response:write(ret)
-    end
-  end)
+      elseif request._method == "GET" then
+        ret = doGet:process(request)
+      elseif request._method == "PUT" then
+        ret = doPut:process(request, parsers)
+      elseif request._method == "DELETE" then
+        ret = doDelete:process(request)
+      end
+      if ret == nil then
+        -- response:write("Done"..request._path)
+        response:write("null")
+      else
+        response:write(ret)
+      end
+    end)
+  end
+  M.isRunning = true
 end
 
 return M

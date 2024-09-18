@@ -154,10 +154,12 @@ end
 
 function M:hide()
   -- print("hide", self.id, self.class)
-  if self.viewGroup then
+  if self.viewGroup  then
     for k, v in pairs(self.viewGroup) do
       v:hide()
     end
+  end
+  if  self.view.group then
     self.view.group.isVisible = false
   end
 end

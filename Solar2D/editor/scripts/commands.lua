@@ -66,12 +66,12 @@ end
 
 function M.createBook(book, _dst, weight)
   local root = _dst or "Solar2D"
-  local script = executeScript("create_book.", {dst = root, book = book})
+  return executeScript("create_book_bg.", {dst = root, book = book})
   --
   -- prepare application sandbox folder
   --
-  util.mkdir("App", book)
-  return M.createPage(book, "page1", root, weight)
+  -- util.mkdir("App", book)
+  -- return M.createPage(book, "page1", root, weight)
 end
 
 function M.createPage(book, _index, _page, _root, _weight)
@@ -93,7 +93,7 @@ function M.createPage(book, _index, _page, _root, _weight)
   end
   local page = _page or "page"..(index+1)
   --
-  local path = system.pathForFile("/App/" .. book .. "/index.lua", system.ResourceDirectory)
+  local path = system.pathForFile("App/" .. book .. "/index.lua", system.ResourceDirectory)
   if path then -- lfs.attributes(path)
     print("File exists")
     local scenes = require("App." .. book .. ".index")
@@ -102,7 +102,7 @@ function M.createPage(book, _index, _page, _root, _weight)
     end
     table.insert(pages, index, {name = page})
     --
-    weight = libUtil.readWeight("/App/" .. book, "index.lua")
+    weight = libUtil.readWeight(path)
   else
     print("Could not get attributes")
     pages[1] = {name = page}
@@ -246,33 +246,37 @@ local function backupFiles(files, _dst)
   --
   local entries = {}
   for i = 1, #files do
-    print(files[i])
-    local src = system.pathForFile(files[i], system.TemporaryDirectory)
-    --local dst = system.pathForFile(nil, system.ResourceDirectory )
-    local dir = util.getPath(files[i])
-    local dst = files[i]
-    local tmp
-    if platform == "win32" then
-      dst = '"' .. dst:gsub("/", "\\") .. '"'
-      entries[#entries + 1] = {file = tmp}
-    else
-      src = src:gsub(" ", "\\ ")
-      dst = dst:gsub(" ", "\\ ")
-      dir = dir:gsub(" ", "\\ ")
-      -- print ("cp "..tmp.." "..pathDst)
-      entries[#entries + 1] = {file = dst}
+    -- print(files[i])
+    if files[i] then
+      local src = system.pathForFile(files[i], system.TemporaryDirectory)
+      --local dst = system.pathForFile(nil, system.ResourceDirectory )
+      local dir = util.getPath(files[i])
+      local dst = files[i]
+      local tmp
+      if platform == "win32" then
+        dst = '"' .. dst:gsub("/", "\\") .. '"'
+        entries[#entries + 1] = {file = tmp}
+      else
+        src = src:gsub(" ", "\\ ")
+        dst = dst:gsub(" ", "\\ ")
+        dir = dir:gsub(" ", "\\ ")
+        -- print ("cp "..tmp.." "..pathDst)
+        entries[#entries + 1] = {file = dst}
+      end
     end
   end
-  local cmd, cmdFile = saveScript("undo_lua.", {dst = root, files = entries})
-  if platform == "win32" then
-    -- print("copy " .. cmdFile .. " " .. system.pathForFile("", system.ResourceDirectory))
-    os.execute("copy " .. cmdFile .. " " .. system.pathForFile("..\\", system.ResourceDirectory))
-  else
-    -- print("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
-    os.execute("cp " .. cmdFile .. " " .. system.pathForFile("../", system.ResourceDirectory))
+  if #entries > 0 then
+    local cmd, cmdFile = saveScript("undo_lua.", {dst = root, files = entries})
+    if platform == "win32" then
+      -- print("copy " .. cmdFile .. " " .. system.pathForFile("", system.ResourceDirectory))
+      os.execute("copy " .. cmdFile .. " " .. system.pathForFile("..\\", system.ResourceDirectory))
+    else
+      -- print("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
+      os.execute("cp " .. cmdFile .. " " .. system.pathForFile("../", system.ResourceDirectory))
+    end
+    ---
+    executeScript("backup_lua.", {dst = root, files = entries})
   end
-  ---
-  executeScript("backup_lua.", {dst = root, files = entries})
 end
 
 local function copyFiles(files, _dst)

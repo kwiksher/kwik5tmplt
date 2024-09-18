@@ -111,7 +111,9 @@ function M:destroy()
   for k, v in pairs(self.controller.viewGroup) do
     v:destroy(UI)
   end
-  self.group:removeSelf()
+  if self.group then
+    self.group:removeSelf()
+  end
   self.group = nil
 end
 
