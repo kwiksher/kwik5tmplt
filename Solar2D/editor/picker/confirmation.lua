@@ -10,7 +10,7 @@ local option, newText = util.newTextFactory {
   fontSize = 12,
 }
 
-M.model = {message = "Please input name for an action", value=""}
+M.model = {message = "Please confirm", value=""}
 
 M.x = display.contentCenterX
 M.y = 22
@@ -35,26 +35,11 @@ function M:create(callback, message)
         obj.x = self.x
       end
       obj:addEventListener("tap", function(event)
-        -- print("@", self.obj.field.text)
-        if event.target.text == "CANCEL" then
+        local message = event.target.text
           if callback then
-            callback()
+            callback(message)
           end
-          self:destroy()
-        else
-          if callback then
-            if self.obj.field.text == nil or self.obj.field.text:len() == 0 then
-              self.obj.field.text = "name"..math.random(100)
-            end
-            callback(self.obj.field.text)
-            -- self:destroy()
-            for i, _obj in next, self.buttonObjs do
-              _obj.isVisible = false
-            end
-
-          end
-        end
-      end)
+        end)
       self.buttonObjs[#self.buttonObjs + 1 ] = obj
     end
   end
@@ -63,17 +48,10 @@ function M:create(callback, message)
   --
   option.x = self.x
   option.y = self.y
-  option.text = "Input Name"
+  option.text =  message or ""
   -- for k,v in pairs(option) do print(k ,v ) end
   local obj = newText(option)
   obj:setFillColor(1)
-
-  option.y = option.y + 20
-  option.text = nil
-  local field = util.newTextField(option)
-  field.align = "center"
-  field.placeholder = message or  self.model.message
-  obj.field =field
   self.obj = obj
 end
 
@@ -97,7 +75,6 @@ end
 
 function M:show()
   if self.obj then
-    self.obj.field.isVisible = true
     self.obj.isVisible = true
   end
   if self.buttonObjs then
@@ -108,13 +85,9 @@ function M:show()
 end
 
 function M:destroy()
-  if self.obj then
-    self.obj.field:removeSelf()
-    self.obj:removeSelf()
-    for i, obj in next, self.buttonObjs do
-      obj:removeSelf()
-    end
-    self.obj = nil
+  self.obj:removeSelf()
+  for i, obj in next, self.buttonObjs do
+    obj:removeSelf()
   end
 end
 

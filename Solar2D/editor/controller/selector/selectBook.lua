@@ -52,7 +52,8 @@ local command = function (params)
   end
 
   if UI.book ~= bookName then
-    Runtime:dispatchEvent{name="changeThisMug", appName=bookName, page=1 }
+    local scenes = require("App."..bookName..".index")
+    Runtime:dispatchEvent{name="changeThisMug", appName=bookName, goPage=scenes[1], editing = true }
     --- set pages ----
    local currScene = composer.getSceneName( "current" )
    print(currScene)

@@ -106,7 +106,7 @@ function M:show()
 end
 
 function M:hide()
-  if self.viewGroup then
+  if self.viewGroup and self.view.group then
     for k, v in pairs(self.viewGroup) do
       v:hide()
     end

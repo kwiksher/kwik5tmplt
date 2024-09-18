@@ -8,8 +8,20 @@ local instance =
   function(params)
     local UI = params.UI
     print(name)
-    if params.props and params.props.book then
-      print("rename book")
+    if params.props then
+      if params.props.book then
+        print("rename book", params.props.book)
+      elseif params.props.page then
+        print("rename page", params.props.page)
+      elseif params.props.audio then
+        print("rename page", params.props.audio, params.props.type)
+      elseif params.props.class then
+        if params.props.selections then
+          print ("rename", params.props.class, params.props.selections[1].text)
+        else
+          print ("rename", params.props.class, params.props.layer)
+        end
+      end
     else
       print("rename layer")
       for i, v in next, UI.editor.selections do
