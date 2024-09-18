@@ -2,7 +2,7 @@ local sceneName = ...
 --
 local scene = require('controller.scene').new(sceneName, {
     components = {
-      layers = { },
+      layers = { { bg={} } },
       audios = { },
       groups = { },
       timers = { },

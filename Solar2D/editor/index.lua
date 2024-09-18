@@ -78,7 +78,7 @@ M.BThandler = function(name, status)
         params[k] = v
       end
     end
-    print("@@@", M.UI.scene.app.props.appName)
+    -- print("@@@", M.UI.scene.app.props.appName)
     M.UI.scene.app:dispatchEvent(params)
   end
   return bt.SUCCESS
@@ -187,7 +187,7 @@ function M:init(UI)
     self.assets = {}
     --
     local app = App.get()
-    print("@@@ init", app.props.appName)
+    -- print("@@@ init", app.props.appName)
     for i=1, #self.commands do
       app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.controller.selector."..self.commands[i].name)
     end

@@ -30,27 +30,7 @@ mkdir -p components/$page/variables
 mkdir -p components/$page/joints
 mkdir -p models/$page
 
-cat << EOF > components/$page/layers/bg.lua
-local M = {}
---
-function M:init(UI)
-end
---
-function M:create(UI)
-  local sceneGroup = UI.sceneGroup
-end
---
-function M:didShow(UI)
-end
---
-function M:didHide(UI)
-end
---
-function  M:destory(UI)
-end
---
-return M
-EOF
+cp ../../editor/template/components/pageX/layer/bg.lua components/$page/layers/bg.lua
 
 cd components/$page
 #cp $newPageIndex index.lua
@@ -85,6 +65,14 @@ local scenes = {
 $tmp
 }
 return scenes
+EOF
+
+cd $dst/App/$book/assets
+cat << EOF > model.lua
+local M = {
+  audios = {}, sprites = {}, videos = {}
+}
+return M
 EOF
 
 #cd $dst

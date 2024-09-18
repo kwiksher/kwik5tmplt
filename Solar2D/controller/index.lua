@@ -75,6 +75,11 @@ local function resetPacakges()
      package.loaded["components.common.index"] = nil
      package.loaded["editor.index"] = nil
 
+     for k, v in pairs(package.loaded) do
+      if k:find("editor") then
+        package.loaded[k] = nil
+      end
+     end
 end
 
 Runtime:addEventListener("changeThisMug", function(event)
