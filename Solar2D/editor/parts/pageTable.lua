@@ -35,7 +35,7 @@ local M, bt, tree = require(parent .."baseTable").new(Props)
 
 local btNodeName = "select page"
 
-M.anchorName = "selectPageProps"
+M.anchorName = "selectPageIcons"
 
 function M.btHandler(target)
   local self = M
@@ -71,7 +71,7 @@ local function mouseHandler(event)
   if event.isSecondaryButtonDown then
     print(event.target.page, event.target.x, event.target.y, event.x, event.y)
     buttons:showContextMenu(event.x + 30, event.y+10,
-      {type=event.target.text, selections={event.target},
+      {page=event.target.text, selections={event.target},
       contextMenu = {"create", "rename", "delete"}, orientation = "vertical", isPageContent = true})
   else
     -- print("@@@@not selected")

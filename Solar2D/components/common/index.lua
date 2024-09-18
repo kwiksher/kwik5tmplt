@@ -17,6 +17,7 @@ local editor = require("editor.index")
 
 --
 function _M:init(UI)
+  print("@@@@@@@@@ common editor init @@@@@@")
   editor:init(UI)
 end
 --

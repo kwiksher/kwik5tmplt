@@ -139,7 +139,7 @@ function M:create(UI)
             if horizontal then
               obj.x = obj.width/2 + objs[index-1].rect.contentBounds.xMax + 5
             else
-              obj.y = obj.height/2 + objs[index-1].y
+              obj.y = option.y + option.height * (index-1)
             end
           end
           local rect = display.newRect(obj.x, obj.y, obj.width+10,option.height)
