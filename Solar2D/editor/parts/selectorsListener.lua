@@ -81,6 +81,9 @@ function M:addListener(UI, buttons, propsTable)
     end
 
     if isVisible then
+      --
+      tree:setConditionStatus("select page", bt.SUCCESS)
+
       projectPageSelector:hide()
       keyboardNavigation:removeEventListener(UI)
       --
