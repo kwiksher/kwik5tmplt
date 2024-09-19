@@ -30,7 +30,9 @@ end
 function M.mouseHandler(event)
   if event.isSecondaryButtonDown and event.target.isSelected then
     -- print("@@@@selected")
-    contextButtons:showContextMenu(posX, event.y,  {class="audio", selections=M.selections})
+        contextButtons:showContextMenu(posX, event.y,  {
+          audio =event.target.text, type = event.target.subclass, selections={event.target},
+          isMultiSelection = false})
   else
     -- print("@@@@not selected")
   end

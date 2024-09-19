@@ -60,7 +60,9 @@ function M:hide()
   for k, v in pairs(self.viewGroup) do
     v:hide()
   end
-  self.view.group.isVisible = false
+  if self.view.group then
+    self.view.group.isVisible = false
+  end
   --
   self.listbox:hide()
   self.listPropsTable:hide()

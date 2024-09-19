@@ -66,22 +66,34 @@ end
 
 function M.createBook(book, _dst, weight)
   local root = _dst or "Solar2D"
-  local script = executeScript("create_book.", {dst = root, book = book})
+  return executeScript("create_book_bg.", {dst = root, book = book})
   --
   -- prepare application sandbox folder
   --
-  util.mkdir("App", book)
-  return M.createPage(book, "page1", root, weight)
+  -- util.mkdir("App", book)
+  -- return M.createPage(book, "page1", root, weight)
 end
 
-function M.createPage(book, index, page, _root, _weight)
+function M.createPage(book, _index, _page, _root, _weight)
   local root = _root or "Solar2D"
   local dst = root .. "/App/" .. book .. "/index.lua"
   local tmplt = "editor/template/index.lua"
   local pages = {}
   local weight = _weight or 1 -- for book.index
   --
-  local path = system.pathForFile("/App/" .. book .. "/index.lua", system.ResourceDirectory)
+  local scenes = require("App." .. book .. ".index")
+  local index = #scenes
+  if _page ~= nil and _index == nil then
+    for i, v in next, scenes do
+      if v == _page then
+        index = i
+        break
+      end
+    end
+  end
+  local page = _page or "page"..(index+1)
+  --
+  local path = system.pathForFile("App/" .. book .. "/index.lua", system.ResourceDirectory)
   if path then -- lfs.attributes(path)
     print("File exists")
     local scenes = require("App." .. book .. ".index")
@@ -90,7 +102,7 @@ function M.createPage(book, index, page, _root, _weight)
     end
     table.insert(pages, index, {name = page})
     --
-    weight = libUtil.readWeight("/App/" .. book, "index.lua")
+    weight = libUtil.readWeight(path)
   else
     print("Could not get attributes")
     pages[1] = {name = page}
@@ -138,6 +150,94 @@ function M.renamePage(book, page, newName, _dst)
   return executeScript("rename_page.", {dst = root, book = book, page = page, newName = newName, newIndex = newFile})
 end
 
+function M.copyPage(book, page, newName, _dst)
+  local root = _dst or "Solar2D"
+  -- assets/images/page1
+  -- commands/page1
+  -- components/page1
+
+  -- index.lua gsub
+  local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
+  local scenes = require("App." .. book .. ".index")
+  for i, v in next, scenes do
+    if v == page then
+      table.insert(scenes, i-1,newName)
+      break
+    end
+  end
+
+  local path = system.pathForFile("editor/templates/index.lua", system.ResourceDirectory)
+  local file, errorString = io.open(path, "r")
+    if not file then
+    print("ERROR: " .. errorString)
+  else
+    local contents = file:read("*a")
+    io.close(file)
+    output = lustache:render(contents, scenes)
+    output = output:gsub("&#39;", '"')
+    output = output:gsub("&#x2F;", "/")
+
+    local nfile = io.open(newFile, "w+")
+    if nfile then
+      contents = nfile:write(output)
+      io.close(nfile)
+      nfile = nil
+    end
+  end
+  return executeScript("copy_page.", {dst = root, book = book, page = page, newName = newName, newIndex = newFile})
+end
+
+function M.removePages(book, pages, _dst)
+  local root = _dst or "Solar2D"
+
+  local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
+  local scenes = require("App." .. book .. ".index")
+  local newScenes = {}
+  for i, v in next, scenes do
+    local isDelete = false
+    for ii, vv in next, pages do
+      if vv == v then
+        isDelete = true
+        break
+      end
+    end
+    if not isDelete then
+      table.insert(newScenes,v)
+    end
+  end
+
+  local path = system.pathForFile("editor/templates/index.lua", system.ResourceDirectory)
+  local file, errorString = io.open(path, "r")
+    if not file then
+    print("ERROR: " .. errorString)
+  else
+    local contents = file:read("*a")
+    io.close(file)
+    output = lustache:render(contents, newScenes)
+    output = output:gsub("&#39;", '"')
+    output = output:gsub("&#x2F;", "/")
+
+    local nfile = io.open(newFile, "w+")
+    if nfile then
+      contents = nfile:write(output)
+      io.close(nfile)
+      nfile = nil
+    end
+  end
+
+  local files = {}
+  for i, page in next, pages do
+    table.insert(files, "App/" .. book .. "/components/"..page)
+    table.insert(files, "App/" .. book .. "/commands/"..page)
+    table.insert(files, "App/" ..book.."/assets/"..page)
+    table.insert(files, "App/" ..book.."/models/"..page)
+  end
+
+  local  root, commands = M.deleteFiles(files)
+  return executeScript("delete_pages.", {dst = root, book = book, page = page, cmd = commands, newIndex = newFile})
+
+end
+
 local function backupFiles(files, _dst)
   local root = _dst or "Solar2D"
   --
@@ -146,33 +246,37 @@ local function backupFiles(files, _dst)
   --
   local entries = {}
   for i = 1, #files do
-    print(files[i])
-    local src = system.pathForFile(files[i], system.TemporaryDirectory)
-    --local dst = system.pathForFile(nil, system.ResourceDirectory )
-    local dir = util.getPath(files[i])
-    local dst = files[i]
-    local tmp
-    if platform == "win32" then
-      dst = '"' .. dst:gsub("/", "\\") .. '"'
-      entries[#entries + 1] = {file = tmp}
-    else
-      src = src:gsub(" ", "\\ ")
-      dst = dst:gsub(" ", "\\ ")
-      dir = dir:gsub(" ", "\\ ")
-      -- print ("cp "..tmp.." "..pathDst)
-      entries[#entries + 1] = {file = dst}
+    -- print(files[i])
+    if files[i] then
+      local src = system.pathForFile(files[i], system.TemporaryDirectory)
+      --local dst = system.pathForFile(nil, system.ResourceDirectory )
+      local dir = util.getPath(files[i])
+      local dst = files[i]
+      local tmp
+      if platform == "win32" then
+        dst = '"' .. dst:gsub("/", "\\") .. '"'
+        entries[#entries + 1] = {file = tmp}
+      else
+        src = src:gsub(" ", "\\ ")
+        dst = dst:gsub(" ", "\\ ")
+        dir = dir:gsub(" ", "\\ ")
+        -- print ("cp "..tmp.." "..pathDst)
+        entries[#entries + 1] = {file = dst}
+      end
     end
   end
-  local cmd, cmdFile = saveScript("undo_lua.", {dst = root, files = entries})
-  if platform == "win32" then
-    -- print("copy " .. cmdFile .. " " .. system.pathForFile("", system.ResourceDirectory))
-    os.execute("copy " .. cmdFile .. " " .. system.pathForFile("..\\", system.ResourceDirectory))
-  else
-    -- print("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
-    os.execute("cp " .. cmdFile .. " " .. system.pathForFile("../", system.ResourceDirectory))
+  if #entries > 0 then
+    local cmd, cmdFile = saveScript("undo_lua.", {dst = root, files = entries})
+    if platform == "win32" then
+      -- print("copy " .. cmdFile .. " " .. system.pathForFile("", system.ResourceDirectory))
+      os.execute("copy " .. cmdFile .. " " .. system.pathForFile("..\\", system.ResourceDirectory))
+    else
+      -- print("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
+      os.execute("cp " .. cmdFile .. " " .. system.pathForFile("../", system.ResourceDirectory))
+    end
+    ---
+    executeScript("backup_lua.", {dst = root, files = entries})
   end
-  ---
-  executeScript("backup_lua.", {dst = root, files = entries})
 end
 
 local function copyFiles(files, _dst)

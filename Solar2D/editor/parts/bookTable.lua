@@ -49,9 +49,14 @@ end
 local function mouseHandler(event)
   if event.isSecondaryButtonDown then
     print(event.target.book)
-    buttons:showContextMenu(event.x+20, event.y-10,
-      {class=event.target.text, selections={event.target},
-      contextMenu = {"create", "rename", "delete"}, orientation = "horizontal"})
+    buttons:showContextMenu(120, 10,
+      {
+        isMultiSelection = false,
+        -- class=event.target.text,
+        book = event.target.text,
+        selections={event.target},
+        contextButtons= {"create", "rename", "delete"},
+        orientation = "horizontal"})
   else
     -- print("@@@@not selected")
   end
@@ -134,7 +139,7 @@ function M:create(UI)
             if horizontal then
               obj.x = obj.width/2 + objs[index-1].rect.contentBounds.xMax + 5
             else
-              obj.y = obj.height/2 + objs[index-1].y
+              obj.y = option.y + option.height * (index-1)
             end
           end
           local rect = display.newRect(obj.x, obj.y, obj.width+10,option.height)

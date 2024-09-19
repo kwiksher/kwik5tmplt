@@ -26,6 +26,11 @@ function(params)
   local isLayerClass = false
   --
   if params.selections then
+  elseif class == "page" then
+    print("paste page")
+    local src = "App/" .. book .. "/index.lua"
+    scripts.backupFiles(src)
+    scripts.copyPage(book, page, page.."_copied") -- _dst == Solar2D
   else
     local mod, entries, indexEntries
     if class == "audio" then

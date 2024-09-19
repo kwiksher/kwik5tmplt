@@ -133,13 +133,13 @@ function M:render(models, xIndex, yIndex, parentObj)
         classObj:addEventListener("touch", classObj)
         classObj:addEventListener("mouse", commands.mouseHandler)
 
-        last_x = classObj.width + 2
 
         local rect = display.newRect(classObj.x, classObj.y, classObj.width + 10, option.height)
         rect:setFillColor(0.8)
         self.group:insert(rect)
         self.group:insert(classObj)
 
+        last_x = classObj.width + 2 + last_x
         classObj.rect = rect
         objs[#objs + 1] = classObj
         obj.classEntries[k] = classObj

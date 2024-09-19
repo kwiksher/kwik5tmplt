@@ -6,15 +6,46 @@ local App = require("controller.Application")
 local useJson = false
 local propsButtons = require("editor.parts.propsButtons")
 local settingsTable = require("editor.parts.settingsTable")
+local scripts = require("editor.scripts.commands")
 
 --
 local command = function (params)
 	local UI    = params.UI
+  local book, page = UI.book, UI.page
+
   local path = system.pathForFile( "App/"..UI.editor.currentBook.."/models/settings.json", system.ResourceDirectory)
-  print("selectPageProps", path)
+  print("selectPageIcons", params.icon, params.isNew, params.isDelete, path)
+  local src = "App/" .. book .. "/index.lua"
+  local picker = require("editor.picker.name")
+  local confirmation = require("editor.picker.confirmation")
+
 
   local rootGroup = UI.editor.rootGroup
-  if params.show~=nil and rootGroup.settingsTable then
+  if params.icon == "newPage-icon" then --params.isNew == true
+    print("new page")
+    local listener = function(_page)
+      if _page and _page:len() > 0 then
+        scripts.backupFiles(src)
+        scripts.createPage(book, nil, _page) -- _dst == Solar2D
+      else
+        print("user cancel")
+      end
+      picker:destroy()
+    end
+    picker:create(listener, "Please input a page name")
+  elseif params.isDelete then
+    print("delete page")
+    local listener = function(message)
+      if message == "Continue" then
+        scripts.backupFiles(src)
+        scripts.removePages(book, {page})
+      else
+        print("user cancel")
+      end
+      picker:destroy()
+    end
+    confirmation:create(listener, "Press Continue to delete")
+  elseif params.show~=nil and rootGroup.settingsTable then
     if settingsTable.isVisible then
       settingsTable:hide()
     else
