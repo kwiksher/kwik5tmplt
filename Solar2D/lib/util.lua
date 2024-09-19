@@ -126,9 +126,9 @@ function exports.repositionAnchor(object, newAnchorX, newAnchorY)
     end
 end
 
-function exports.readWeight(_path, file)
+function exports.readWeight(path)
   local weight = 0
-  local path = _path.."/"..file
+  --local path = _path.."/"..file
          -- Open the file handle
   local file, errorString = io.open( path, "r" )
 

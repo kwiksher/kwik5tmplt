@@ -49,7 +49,7 @@ function M.suite_setup()
 end
 
 function M.setup()
-  -- local obj = helper.getBook("bookFree")
+  -- local obj = helper.selectBook("bookFree")
   --  bookTable.commandHandler(obj, {phase="ended"},  true)
 end
 
@@ -207,7 +207,7 @@ function M.xtest_scale()
 end
 
 function M.xtest_rotate()
-  local obj = helper.getBook("bookFree")
+  local obj = helper.selectBook("bookFree")
    bookTable.commandHandler(obj, {phase="ended"},  true)
    UI.testCallback = function()
     -- obj = helper.getPage("page4")
@@ -281,7 +281,7 @@ function M.xtest_RG_freeStuff_dragIntoOffsetGroup()
 end
 
 function M.test_fill_image()
-  -- local obj = helper.getBook("bookFree")
+  -- local obj = helper.selectBook("bookFree")
   --  bookTable.commandHandler(obj, {phase="ended"},  true)
   UI.testCallback = function()
     -- obj = helper.getPage("page4")

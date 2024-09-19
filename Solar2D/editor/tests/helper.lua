@@ -235,10 +235,13 @@ function exports.selectComponent(name)
   end
 end
 
-function exports.getBook(name, isRightClick)
+function exports.selectBook(name, isRightClick)
   for i, v in next, bookTable.objs do
     if v.text == name then
-       return v
+      if isRightClick then
+        v:dispatchEvent{name= "mouse", target=v, isSecondaryButtonDown=true, x = v.x, y = v.y}
+      end
+      return v
     end
   end
 end
@@ -256,10 +259,10 @@ function exports.clickButton(name, buttonsContext)
   for i, v in next, _buttons.objs do
     -- print(v.text)
     if v.eventName == name then -- {name="add", label="->"}
-        if v.rect.tap then
-          v.rect:tap()
+        if v.rect.touch then
+          v.rect:touch()
         else
-          v:tap()
+          v:touch()
         end
       break
     end

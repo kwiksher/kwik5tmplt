@@ -122,7 +122,9 @@ function M:didShow(UI)
 end
 --
 function M:didHide(UI)
-  self.obj:removeEventListener("tap", self.obj)
+  if self.obj then
+    self.obj:removeEventListener("tap", self.obj)
+  end
 end
 --
 function M:destroy()
