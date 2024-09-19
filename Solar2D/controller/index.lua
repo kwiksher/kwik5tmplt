@@ -72,22 +72,28 @@ local function resetPacakges()
      -- this has a reference to App.TOC or bookXX, so need to unload it?
      package.loaded["components.bookstore.controller.pageCommand"] = nil
      package.loaded["editor.bookstore.controller.pageCommand"] = nil
+     package.loaded["components.common.index"] = nil
+     package.loaded["editor.index"] = nil
 
+     for k, v in pairs(package.loaded) do
+      if k:find("editor") then
+        package.loaded[k] = nil
+      end
+     end
 end
-
 
 Runtime:addEventListener("changeThisMug", function(event)
   print("---------- changeThisMug -------------")
   local app = App.get()
-  print (event.appName, event.page, app.props.appName, app.currentViewName)
+  print (event.appName, event.goPage, app.props.appName, app.currentViewName)
   --local goPage = "components." .. app.props.scenes[self.props.goPage]..".index"
-  if event.appName == app.props.appName and event.page == app.props.goPage then
+  if event.appName == app.props.appName and event.goPage == app.props.goPage then
     print("not changeThisMug")
   else
     composer.gotoScene("components.bookstore.view.page_cutscene")
     composer.removeHidden(false)
     resetPacakges()
-    lib.bootstrap({name=event.appName, sceneIndex = event.page or 1, position = {x=0, y=0}, common=common}) -- scenes.index
+    lib.bootstrap({name=event.appName, goPage=event.goPage, editing = event.editing, position = {x=0, y=0}, common=common}) -- scenes.index
   end
 end)
 -- Return library instance
