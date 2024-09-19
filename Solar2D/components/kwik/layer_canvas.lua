@@ -30,7 +30,7 @@ function M:newLine(event)
   local group = self.group
   local cR, cG, cB = self.properties.brushColor[1], self.properties.brushColor[2], self.properties.brushColor[3]
   local brushSize = self.properties.brushSize
-  print("brushSize", brushSize)
+  -- print("brushSize", brushSize)
   --
   local function drawLine()
     local line =
