@@ -194,7 +194,7 @@ function M.commandHandler(layerTable, target, event)
         path = path
         -- class = target.class
       }
-      -- print("###", target.layer)
+      print("###", target.layer)
       tree:setConditionStatus("select layer", bt.SUCCESS, true)
       tree:setActionStatus("load layer", bt.RUNNING, true)
       tree:setConditionStatus("select props", bt.SUCCESS)

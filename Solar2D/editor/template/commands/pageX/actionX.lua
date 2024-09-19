@@ -91,17 +91,33 @@ function ActionCommand:new()
      AC.Button:onOff("{{target}}", {{enable}}, {{toggle}} ) -- enable, toggle
     {{/onOff}}
   {{/button}}
+  {{#screenshot}}
+  {{#take}}
+   AC.Screenshot:take("{{title}}", "{{message}}",  {{shutter}},
+    { {{#hideLayers}}
+      "{{name}}",
+    {{/hideLayers}} }
+    )
+    {{/take}}
+  {{/screenshot}}
   {{#canvas}}
-      local canvas = UI.canvas
       {{#brush}}
       {{#color}}
-      local r, g, b, a =  {{color}}
-      AC.Canvas:brushColor(canvas, r/255, g/255, b/255,a )
+       AC.Canvas:brushColor(UI.canvas, unpack(AC.color( {{color}} )) )
       {{/color}}
       {{#size}}
-      AC.Canvas:brushSize(canvas, {{size}}  )
+      AC.Canvas:brushSize(UI.canvas, {{size}}  )
       {{/size}}
       {{/brush}}
+      {{#redo}}
+			AC.Canvas:redo(UI.canvas)
+      {{/redo}}
+		  {{#undo}}
+			AC.Canvas:undo(UI.canvas)
+	  	{{/undo}}
+      {{#erase}}
+			AC.Canvas:erase(UI.canvas)
+		  {{/erase}}
   {{/canvas}}
 {{/actions}}
 	end

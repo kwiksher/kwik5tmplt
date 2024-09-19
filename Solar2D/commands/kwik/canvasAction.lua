@@ -13,8 +13,10 @@ function _M:brushSize(canvas, psize, pal)
 end
 --
 function _M:brushColor( canvas, r, g, b, a)
-  if canvas == nil then print ("no canvas") return end
-  canvas.properties.brushColor = {r, g, b, a}
+  if r then
+    if canvas == nil then print ("no canvas") return end
+    canvas.properties.brushColor = {r, g, b, a}
+  end
 end
 --
 function _M:erase(canvas)
