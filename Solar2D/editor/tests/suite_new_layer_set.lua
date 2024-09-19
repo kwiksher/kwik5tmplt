@@ -46,7 +46,7 @@ function M.suite_setup()
 end
 
 function M.setup()
-  local obj = helper.getBook("bookFree")
+  local obj = helper.selectBook("bookFree")
    bookTable.commandHandler(obj, {phase="ended"},  true)
 end
 

@@ -186,7 +186,7 @@ function M.commandHandler(layerTable, target, event)
   -- print("@@@@@@", layerTable.altDown, layerTable:isAltDown())
   -- print(debug.traceback())
 
-    if layerTable:isAltDown() then
+  if layerTable:isAltDown() then
     if showLayerProps(layerTable, target) then
       --
       tree.backboard = {
@@ -309,7 +309,8 @@ function M.commandHandlerClass(layerTable, target, event)
   --
   buttons:hideContextMenu()
   --
-
+  target.rect:toFront()
+  target:toFront()
   if layerTable:isAltDown() then
     print("", "isAltDown")
     showClassProps(layerTable, target)

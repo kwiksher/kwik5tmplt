@@ -41,6 +41,9 @@ function Class.new(app)
             local scene = require(appDir.."components."..scenes[i]..".index")
             -- print("context:init", appDir.."components."..scenes[i]..".index")
             scene:setProps(props)
+            ---
+            --- app is set to scene !
+            ---
             scene.app = app
 
             local model = scene.model

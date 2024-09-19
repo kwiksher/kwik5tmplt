@@ -24,7 +24,7 @@ function M:init(UI)
 end
 
 function M:create(UI)
-  print("create page audio", self.type)
+  print("create page audio", self.properties.filename)
   local props = self.properties
   local filename
     --
@@ -38,7 +38,7 @@ function M:create(UI)
     end
     --
 
-    if self.type == "stream" then
+    if props.type == "long" then
       self.loader = audio.loadStream
       filename = "long/"..props.filename
     else
@@ -63,11 +63,11 @@ end
 
 function M:play()
   local props = self.properties
-  audio.setVolume(props.volume or 8, { channel=porps.channel });
-  if porps.allowRepeat then
-      porps.repeatableChannel = audio.play(porps.audioObj, {  channel=porps.channel, loops=porps.loops, fadein = porps.fadein } )
+  audio.setVolume(props.volume or 8, { channel=props.channel });
+  if props.allowRepeat then
+      props.repeatableChannel = audio.play(props.audioObj, {  channel=props.channel, loops=props.loops, fadein = props.fadein } )
   else
-    audio.play(porps.audioObj, {channel=porps.channel, loops=porps.loops, fadein = porps.fadein } )
+    audio.play(props.audioObj, {channel=props.channel, loops=props.loops, fadein = props.fadein } )
   end
 end
 
@@ -205,6 +205,9 @@ function M:muteUnmute()
 end
 
 M.set = function(instance)
+  if type(instance.properties.channel) ~= "number" then
+    instance.properties.channel = 1
+  end
 	return setmetatable(instance, {__index=M})
 end
 

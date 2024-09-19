@@ -35,7 +35,7 @@ M.commands = {
   {name="selectBook", btree="load book"},
   {name="selectPage", btree="load page"},
   {name="selectLayer", btree="load layer"},
-  {name="selectPageProps", btree=nil},
+  {name="selectPageIcons", btree=nil},
   -- {name="selectAction", btree=""},
   {name="selectTool", btree="editor component"},
   -- {name="selectActionCommand", btree=""}
@@ -78,6 +78,7 @@ M.BThandler = function(name, status)
         params[k] = v
       end
     end
+    -- print("@@@", M.UI.scene.app.props.appName)
     M.UI.scene.app:dispatchEvent(params)
   end
   return bt.SUCCESS
@@ -178,6 +179,7 @@ function M:initStores()
 end
 ---
 function M:init(UI)
+  self.UI = UI
   if self.views == nil then
     self.rootGroup = display.newGroup()
     self.views = {}
@@ -185,6 +187,7 @@ function M:init(UI)
     self.assets = {}
     --
     local app = App.get()
+    -- print("@@@ init", app.props.appName)
     for i=1, #self.commands do
       app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.controller.selector."..self.commands[i].name)
     end
@@ -294,6 +297,7 @@ function M:gotoLastSelection(_props)
   local path = system.pathForFile( "kwik.json", system.ApplicationSupportDirectory )
   -- Open the file handle
   local file, errorString = io.open( path, "r" )
+  if file == nil then return end
   --
   --
   if _props then
@@ -307,8 +311,15 @@ function M:gotoLastSelection(_props)
       -- Close the file handle
       io.close( file )
       props = json.decode(contents)
+      ---
+      --- remove it
+      local result, reason = os.remove( path )
+      if result then
+        print( "File removed" )
+      else
+        print( "File does not exist", reason )  --> File does not exist    apple.txt: No such file or directory
+      end
   end
-  file = nil
 
   local helper = require("editor.tests.helper")
   local bookTable = require("editor.parts.bookTable")
@@ -325,7 +336,7 @@ function M:gotoLastSelection(_props)
   --   UI = UI
   -- }
 
-  local obj = helper.getBook(props.book)
+  local obj = helper.selectBook(props.book)
   bookTable.commandHandler(obj, {phase="ended"},  true)
 
   pageTable.commandHandler({page=props.page},{},  true)
@@ -396,7 +407,7 @@ function M:didShow(UI)
       if not self.isReloaded then
         self.isReloaded = true
         ----------------------------
-        self:gotoLastSelection(self.lastSelection)
+        self:gotoLastSelection() -- self.lastSelection
         --------- unit test --------
         if unitTestOn then
           self:runTest()

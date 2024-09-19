@@ -14,7 +14,7 @@ local command = function (params)
 
   UI.editor.currentLayer = ""
 
-  if params.page:len() > 0 and UI.page ~= params.page then
+  if params.page and params.page:len() > 0 and UI.page ~= params.page then
     local app = UI.scene.app -- App.get()
     app:showView("components." .. params.page .. ".index", {effect = "slideDown"})
   else
