@@ -38,8 +38,8 @@ function M.init(props)
 end
 
 function M.suite_setup()
-  selectors.projectPageSelector:show()
-  selectors.projectPageSelector:onClick(true)
+  -- selectors.projectPageSelector:show()
+   selectors.projectPageSelector:onClick(true)
   --
   -- UI.scene.app:dispatchEvent {
   --   name = "editor.selector.selectApp",
@@ -58,21 +58,19 @@ local commands = require("editor.scripts.commands")
 ---
 
 function M.xtest_new_book()
-  UI.testCallback = function()
-    local obj = helper.getBook("book")
-    bookTable.commandHandler(obj, {phase="ended"},  true)
-    -- local x, y = obj:localToContent(obj.x, obj.y)
-    local x, y = obj.x, obj.y
-    obj:dispatchEvent{name="mouse", target=obj, isSecondaryButtonDown=true, x = x, y = y}
-
-    -- selectors.projectPageSelector:onClick(true) -- isVisible
-    -- selectors.projectPageSelector:show()
-  end
+  local book =  helper.selectBook("book", true)
+  helper.clickButton("create")
+  -- UI.testCallback = function()
+  --   local obj = helper.selectBook("book")
+  --   bookTable.commandHandler(obj, {phase="ended"},  true)
+  --   local x, y = obj.x, obj.y
+  --   obj:dispatchEvent{name="mouse", target=obj, isSecondaryButtonDown=true, x = x, y = y}
+  -- end
 end
 
 function M.xtest_select_page()
   -- UI.testCallback = function()
-    local book = helper.getBook("book")
+    local book = helper.selectBook("book")
     book:touch()
     --bookTable.commandHandler(obj, {phase="ended"},  true)
     local page2 = helper.getPage("page2")
@@ -87,14 +85,14 @@ function M.xtest_select_page()
   -- end
 end
 
-function M.test_new_page()
-  local book = helper.getBook("book")
+function M.xtest_new_page()
+  local book = helper.selectBook("book")
   book:touch()
    for i, v in next, pageTable.iconObjs  do print(v.name  ) end
   local obj = pageTable.iconObjs[2]
   obj.callBack({target={muiOptions={name="newPage-icon"}}})
   -- UI.testCallback = function()
-  --   local obj = helper.getBook("book")
+  --   local obj = helper.selectBook("book")
   --   bookTable.commandHandler(obj, {phase="ended"},  true)
   --   --
   --   obj = helper.getPage("page4")
@@ -124,6 +122,12 @@ function M.xtest_rename_page()
   helper.clickButton("rename")
 end
 
+function M.xtest_copy_paste_page()
+end
+
+function M.xtest_delete_page()
+end
+
 --
 -- use tool generate index?
 --
@@ -136,7 +140,7 @@ end
 -- shapes {rect, circle, triangle, polygon}
 --
 function M.xtest_layer_contextmenu_new()
-  local obj = helper.getBook("book")
+  local obj = helper.selectBook("book")
    bookTable.commandHandler(obj, {phase="ended"},  true)
    UI.testCallback = function()
     -- obj = helper.getPage("page4")
@@ -153,7 +157,7 @@ function M.xtest_layer_contextmenu_new()
 end
 
 function M.xtest_layer_contextmenu_new_shape()
-  local obj = helper.getBook("book")
+  local obj = helper.selectBook("book")
    bookTable.commandHandler(obj, {phase="ended"},  true)
 
    UI.testCallback = function()
@@ -183,9 +187,23 @@ end
 --
 -- rename layer.lua and layer_class.lua and generate(update) index.lua
 --
-function M.xtest_layer_rename()
+function M.xtest_rename_book()
 end
 
+function M.xtest_rename_group()
+end
+
+function M.xtest_rename_timer()
+end
+
+function M.xtest_rename_joints()
+end
+
+function M.xtest_rename_var()
+end
+
+function M.xtest_rename_audio()
+end
 
 ------
 return M

@@ -86,7 +86,7 @@ function M:commandHandler(eventObj, event)
       self.UI.editor.currentLayer = target.layer
       -- target.isSelected = true
       self.UI.editor.currentClass = target.name
-      print("@@@@@@", target.layer, target.class)
+      -- print("@@@@@@", target.layer, target.class)
       classPropsPhysics:setActiveProp(target.layer, target.class)
 
     end
@@ -110,7 +110,7 @@ function M:commandHandlerClass(target, event)
   buttons:hide()
   --
   if self:isAltDown() then
-    print("", "isAltDown")
+    -- print("", "isAltDown")
     --showClassProps(self, target, "group")
     tree.backboard = {
       show = true,
@@ -126,14 +126,14 @@ function M:commandHandlerClass(target, event)
     tree:setConditionStatus("select "..self.id, bt.SUCCESS)
 
   elseif self:isControlDown() then -- mutli selections
-    print("", "isControlDown")
+    -- print("", "isControlDown")
     layerTableCommands.multiSelections(self, target)
   else
     if layerTableCommands.singleSelection(self, target) then
-      print("", "singleSelection")
+      -- print("", "singleSelection")
       actionCommandPropsTable:setActiveProp(target.layer, target.class)
       classProps:setActiveProp(target.layer, target.class)
-      print("@@@@@@", target.layer, target.class)
+      -- print("@@@@@@", target.layer, target.class)
       classPropsPhysics:setActiveProp(target.layer, target.class)
     end
   end
@@ -163,7 +163,7 @@ function M:create(UI)
       self.objs = {}
       self.iconObjs = {}
       if fooValue then
-        print("@@@@@", self.indentX, self.indentY)
+        -- print("@@@@@", self.indentX, self.indentY)
         self.objs = self:render(fooValue, self.indentX, self.indentY)
         if #fooValue == 0 then
            self:createIcons(120, 5)
