@@ -35,7 +35,7 @@ M.commands = {
   {name="selectBook", btree="load book"},
   {name="selectPage", btree="load page"},
   {name="selectLayer", btree="load layer"},
-  {name="selectPageProps", btree=nil},
+  {name="selectPageIcons", btree=nil},
   -- {name="selectAction", btree=""},
   {name="selectTool", btree="editor component"},
   -- {name="selectActionCommand", btree=""}
@@ -78,6 +78,7 @@ M.BThandler = function(name, status)
         params[k] = v
       end
     end
+    -- print("@@@", M.UI.scene.app.props.appName)
     M.UI.scene.app:dispatchEvent(params)
   end
   return bt.SUCCESS
@@ -178,6 +179,7 @@ function M:initStores()
 end
 ---
 function M:init(UI)
+  self.UI = UI
   if self.views == nil then
     self.rootGroup = display.newGroup()
     self.views = {}
@@ -185,6 +187,7 @@ function M:init(UI)
     self.assets = {}
     --
     local app = App.get()
+    -- print("@@@ init", app.props.appName)
     for i=1, #self.commands do
       app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.controller.selector."..self.commands[i].name)
     end
@@ -333,7 +336,7 @@ function M:gotoLastSelection(_props)
   --   UI = UI
   -- }
 
-  local obj = helper.getBook(props.book)
+  local obj = helper.selectBook(props.book)
   bookTable.commandHandler(obj, {phase="ended"},  true)
 
   pageTable.commandHandler({page=props.page},{},  true)

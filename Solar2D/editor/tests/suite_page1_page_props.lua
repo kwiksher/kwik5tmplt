@@ -58,7 +58,7 @@ function M.test_settings()
 
     -- UI.scene.app:dispatchEvent(
     --   {
-    --     name = "editor.selector.selectPageProps",
+    --     name = "editor.selector.selectPageIcons",
     --     UI = UI,
     --   }
     -- )
