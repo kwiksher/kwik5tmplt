@@ -181,11 +181,13 @@ local function insideRect(rectObject,point)
       bounds.yMax = yPos + rectObject.height*(1-rectObject.anchorY)*rectObject.yScale
       bounds.xMin = xPos - rectObject.strokeWidth*rectObject.anchorX*rectObject.xScale
       bounds.yMin = yPos - rectObject.height*rectObject.anchorY*rectObject.yScale
+    else
+      return false
     end
 
 	local thisWithinBounds = false
 
-	if point.x < bounds.xMax and point.x > bounds.xMin and point.y > bounds.yMin and point.y <bounds.yMax then
+	if point.x and point.y and point.x < bounds.xMax and point.x > bounds.xMin and point.y > bounds.yMin and point.y <bounds.yMax then
 
 		thisWithinBounds = true
 	end

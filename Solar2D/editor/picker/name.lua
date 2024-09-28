@@ -75,12 +75,14 @@ function M:create(callback, message)
   field.placeholder = message or  self.model.message
   obj.field =field
   self.obj = obj
-end
+  self.isOn = true
+ end
 
 function M:continue(value)
   self.obj.field.text = value
   self.callback(value)
   self:destroy()
+  self.isOn = false
 end
 
 function M:hide()
@@ -93,6 +95,7 @@ function M:hide()
       obj.isVisible = false
     end
   end
+  self.isOn = false
 end
 
 function M:show()
@@ -105,6 +108,7 @@ function M:show()
       obj.isVisible = true
     end
   end
+  self.isOn = true
 end
 
 function M:destroy()
@@ -116,6 +120,7 @@ function M:destroy()
     end
     self.obj = nil
   end
+  self.isOn = false
 end
 
 return M

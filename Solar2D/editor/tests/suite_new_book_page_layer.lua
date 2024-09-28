@@ -86,10 +86,13 @@ function M.xtest_select_page()
   -- end
 end
 
-function M.xtest_new_page()
-  local book = helper.selectBook("book")
+function M.test_new_page()
+  local book = helper.selectBook("mybook")
   book:touch()
-   for i, v in next, pageTable.iconObjs  do print(v.name  ) end
+  if UI.book ~="mybook" then
+    return
+  end
+  for i, v in next, pageTable.iconObjs  do print(v.name  ) end
   local obj = pageTable.iconObjs[2]
   obj.callBack({target={muiOptions={name="newPage-icon"}}})
   -- UI.testCallback = function()
