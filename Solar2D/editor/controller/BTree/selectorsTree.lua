@@ -89,10 +89,10 @@ end
 
 function M:setConditionStatus(cond, value, skip)
   -- (select book)
-  print("setConditionStatus", cond, bt.getFriendlyStatus(nil, value))
+  --print("setConditionStatus", cond, bt.getFriendlyStatus(nil, value))
   self.tree:setConditionStatus(cond, value) --bt.SUCCESS
   if not skip then
-    print("----------tick---------------")
+   -- print("----------tick---------------")
     --self.tree.root:deactivate()
     self.tree.root:tick()
     --

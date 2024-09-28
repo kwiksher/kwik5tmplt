@@ -1,12 +1,12 @@
-module(..., package.seeall)
+local M = {}
 
-function suite_setup()
+function _suite_setup()
 	controller = require "editor.controller.index"
   files = {}
   updatedScene = nil
 end
 
-function setup()
+function _setup()
   book = "book"
   page = "page1"
   tool = "interaction"
@@ -35,7 +35,21 @@ function setup()
   }
 end
 
-function teardown()
+function M.teardown()
+end
+
+function M.suite_setup()
+end
+
+function M.setup()
+end
+
+
+function M.test_sceneCollection()
+  local composer = require("composer")
+  local name = "sceneCollection"
+  local collection = require("controller.sceneCollection").new()
+  composer.gotoScene( "sceneCollection",  {effect = "flip", time = 1000})
 end
 
 function xtest_render()
@@ -124,3 +138,5 @@ function xtest_createLayer()
   local commands = require("editor.scripts.commands")
   commands.createLayer("book", "page1", 1, "layerOne")
 end
+
+return M

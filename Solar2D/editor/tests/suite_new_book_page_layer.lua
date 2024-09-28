@@ -57,12 +57,6 @@ end
 local commands = require("editor.scripts.commands")
 ---
 
-function M.test_sceneCollection()
-  local name = "sceneCollection"
-  local collection = require("contoller.sceneCollecton").new(name)
-  collection:init()
-  composer.gotoScene( "sceneCollection",  {effect = "fromLeft", time = 1000})
-end
 
 function M.xtest_new_book()
   local book =  helper.selectBook("book", true)

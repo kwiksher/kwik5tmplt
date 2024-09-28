@@ -1,24 +1,25 @@
 local M = {}
+local controller = require("controller.sceneCollectionController")
+--
 local composer = require("composer")
 composer.recycleOnSceneChange = false
 local sceneName = "sceneCollection"
 --
-M.new = function()
+M.new = function(_props)
+  local props = _props or {}
     -- sceneName is like App.book01.scenes.page01.index
-    local scene = composer.newScene(sceneName)
+    local scene = composer.newScene(props.name or sceneName)
     scene._composerFileName = nil
     scene.classType = sceneName
     --
-    function scene:init(_name)
-      self.col_num = 4
-      self.row_num = nil
-      self.width = 480 / self.col_num
-      self.height = 320/self.col_num
-      self.x = self.width/2
-      self.y = self.height/2
-      self.app = require("Controller.Application").get()
-      self.sceneName = _name or sceneName
-   end
+    scene.col_num = 4
+    scene.row_num = nil
+    scene.width = 480 / scene.col_num
+    scene.height = 320/scene.col_num
+    scene.x = display.contentCenterX - 480/2 + 480/8
+    scene.y = display.contentCenterY - 320/2
+    scene.app = require("controller.Application").get()
+    controller.book = scene.app.props.appName
     --
     function scene:setProps (Props)
       --self.col_num = Props.col_num
@@ -29,17 +30,23 @@ M.new = function()
     function scene:create(event)
       local app = self.app
       local count = 0
-      local row_max = math.ceil(#app.context.Router / self.col_num)
+      local row_max = math.ceil(#app.props.scenes / self.col_num)
+      --print("@@@@", row_max, self.col_num)
       for i=1, row_max do
         for k=1, self.col_num do
           count = count +1
-          if count < #app.context.Router then
-            local page = app.context.Router[count]
+          if count <= #app.props.scenes then
+            local sceneName = app.props.scenes[count]
+            --print("", sceneName)
+            local page = app.context.Router["components."..sceneName..".index"]
+            --print("@UI:create", page)
+            -- printKeys(page)
             page.UI:create(event.params)
             ---
-            local group = page.sceneGroup
+            local group = page.UI.sceneGroup
             group.x = self.x + (k-1)*self.width
             group.y = self.y + (i-1)*self.height
+            group.isVisible = false
             self.view:insert(group)
             ---
           end
@@ -49,32 +56,45 @@ M.new = function()
     --
     function scene:show(event)
         local sceneGroup = self.view
-        for i, page in next, app.context.Router do
+        for i, sceneName in next, self.app.props.scenes do
+          local page = self.app.context.Router["components."..sceneName..".index"]
           if event.phase == "will" then
               page.UI:willShow(event.params)
           elseif event.phase == "did" then
+              page.UI.sceneGroup:scale(0.25, 0.25)
+              page.UI.sceneGroup.isVisible = true
               page.UI:didShow(event.params)
+              page.UI.sceneGroup._sceneName = sceneName
+              page.UI.sceneGroup:addEventListener("tap", controller.onClick)
           end
         end
     end
     --
     function scene:hide(event)
-      for i, page in next, app.context.Router do
+      for i, sceneName in next, self.app.props.scenes do
+        local page = self.app.context.Router["components."..sceneName..".index"]
         if event.phase == "will" then
         elseif event.phase == "did" then
+          page.UI.sceneGroup:scale(4, 4)
           page.UI:didHide(event.params)
+          page.UI.sceneGroup._sceneName = nil
+          page.UI.sceneGroup:removeEventListener("tap", controller.onClick)
         end
       end
     end
     --
     function scene:destroy(event)
-      for i, page in next, app.context.Router do
+      for i, sceneName in next, self.app.props.scenes do
+        local page = self.app.context.Router["components."..sceneName..".index"]
         page.UI:destroy(event.params)
       end
     end
 
     function scene:init(event)
-      self.UI:init()
+      for i, sceneName in next, self.app.props.scenes do
+        local page = self.app.context.Router["components."..sceneName..".index"]
+        page.UI:init()
+      end
     end
 
     function scene:transition(event)
@@ -130,10 +150,8 @@ M.new = function()
         print("view",sceneGroup.x, sceneGroup.y)
       end
     end
-    Runtime:addEventListener ("orientation", onOrientationChange)
-
-    return scene
-
+    -- Runtime:addEventListener ("orientation", onOrientationChange)
+  return scene
 end
 
 return M
