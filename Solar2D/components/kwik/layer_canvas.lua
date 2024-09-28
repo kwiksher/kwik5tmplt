@@ -123,6 +123,7 @@ function M:didShow(UI)
   self.lineTable = {}
   local obj = self.obj
   --
+  if obj == nil or UI.book == nil then return end
   obj:addEventListener(
     "touch",
     function(event)

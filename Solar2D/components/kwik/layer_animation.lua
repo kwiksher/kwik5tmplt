@@ -136,7 +136,7 @@ local function createOptions(self, UI)
   local layer = self.obj
   self.properties = self.properties or {}
   --
-  print("--- options ---")
+  -- print("--- options ---")
   local options = {
     repeatCount = tonumber(self.properties.loop),
     reflect = self.properties.reverse == "true",
@@ -151,7 +151,7 @@ local function createOptions(self, UI)
     easingName = easingName:gsub("Quart", "Quartic")
     easingName = easingName:gsub("Quint", "Quintic")
     easingName = easingName:gsub("Circ", "Circular")
-    print("", "easing", self.properties.easing, gtween.easing[easingName])
+    -- print("", "easing", self.properties.easing, gtween.easing[easingName])
     options.ease = gtween.easing[easingName]
   end
 
@@ -184,7 +184,7 @@ end
 
 local function createPropsTo(self, layer, _mX, _mY)
   local mX, mY = _mX or self.to.x, _mY or self.to.y
-  print("createProps", self.class, mX, mY, self.to.x, self.to.y)
+  -- print("createProps", self.class, mX, mY, self.to.x, self.to.y)
   local props = {}
   if self.class == "pulse" then
     props.xScale = self.to.xScale
@@ -273,7 +273,7 @@ local function createPropsFrom(self, layer, _mX, _mY)
 end
 
 local function createAnimationFunc(self, UI, tool)
-  print("createAnimationFunc", tool)
+  -- print("createAnimationFunc", tool)
   local animObj, animObjTo, animObjFrom
   local layer = self.obj
   local sceneGroup = UI.sceneGroup
@@ -329,23 +329,23 @@ local function createAnimationFunc(self, UI, tool)
     if class == "blink" or class == "bounce" or class == "pulse" or class == "rotation" then
       options.onComplete = onEndHandler
 
-      print(class, "--- propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
-      for k, v in pairs(propsTo) do
-        print(k, v)
-      end
+      -- print(class, "--- propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
+      -- for k, v in pairs(propsTo) do
+      --   print(k, v)
+      -- end
       animObjTo = gtween.new(layer, self.properties.duration / 1000, propsTo, options)
       animObjTo:pause()
       return animObjTo
     else -- linear
-      print("--- Linear propsFrom ---", propsFrom.x, propsFrom.y, self.properties.duration)
-      for k, v in pairs(propsFrom) do
-        print(k, v)
-      end
-      print("-------")
-      print("--- Linear propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
-      for k, v in pairs(propsTo) do
-        print(k, v)
-      end
+      -- print("--- Linear propsFrom ---", propsFrom.x, propsFrom.y, self.properties.duration)
+      -- for k, v in pairs(propsFrom) do
+      --   print(k, v)
+      -- end
+      -- print("-------")
+      -- print("--- Linear propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
+      -- for k, v in pairs(propsTo) do
+      --   print(k, v)
+      -- end
 
       self.properties.duration = self.properties.duration or 1000
       --
@@ -448,9 +448,9 @@ function M:initAnimation(UI, layer, _onEndHandler)
   --
   if not (self.class == "switch" or self.class == "path") then
     self.buildAnim = animationFactory["gtween"]
-    print("self.buildAnim", self.buildAnim)
+    -- print("self.buildAnim", self.buildAnim)
   else
-    print(self.class)
+    -- print(self.class)
     if self.class == "path" then
       local json = require("json")
       local path =
@@ -465,7 +465,7 @@ function M:initAnimation(UI, layer, _onEndHandler)
           return
         end
         self.curve = self:setCurve(decoded, self.path.closed, self.path.pause)
-        print("@@@@", self.curve)
+        -- print("@@@@", self.curve)
       end
     end
     self.buildAnim = animationFactory[self.class]

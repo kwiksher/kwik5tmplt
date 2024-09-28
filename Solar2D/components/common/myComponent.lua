@@ -37,7 +37,7 @@ print = function(...)
 end
 
 printKeys = function(tbl)
-  for k, v in pairs(tbl) do print(k,v) end
+  for k, v in pairs(tbl) do _print("printKeys", k,v) end
 end
 
 printTable = function(tbl, printType)

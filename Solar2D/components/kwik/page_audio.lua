@@ -24,7 +24,7 @@ function M:init(UI)
 end
 
 function M:create(UI)
-  print("create page audio", self.properties.filename)
+  -- print("create page audio", self.properties.filename)
   local props = self.properties
   local filename
     --
