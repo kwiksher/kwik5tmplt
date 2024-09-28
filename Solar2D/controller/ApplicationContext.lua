@@ -62,7 +62,7 @@ function Class.new(app)
                 self:mapCommand(model.page.."."..eventName, appDir.."commands."..model.page.."."..eventName)
             end
             --
-            print("context:init", scenes[i], scene)
+            -- print("context:init", scenes[i], scene)
             self.Router["components."..scenes[i]..".index"] = scene
         end
         -- app init command
