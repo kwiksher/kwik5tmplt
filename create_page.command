@@ -1,13 +1,15 @@
 #!/bin/bash
 
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+
 dst=Solar2D
-book=book
-newIndex="/Users/ymmtny/Library/Application Support/Corona Simulator/.-454202B18A2EC19B0E6BDAED40A4821C/tmp/App/book/index.lua"
-newPageIndex="/Users/ymmtny/Library/Application Support/Corona Simulator/.-454202B18A2EC19B0E6BDAED40A4821C/tmp/App/book/components/mybook/index.lua"
-page=mybook
+book=mybook
+newIndex=/Users/ymmtny/Library/Application\ Support/Corona\ Simulator/.-454202B18A2EC19B0E6BDAED40A4821C/tmp/App/mybook/index.lua
+newPageIndex=/Users/ymmtny/Library/Application\ Support/Corona\ Simulator/.-454202B18A2EC19B0E6BDAED40A4821C/tmp/App/mybook/components/page6/index.lua
+page=page6
 
 cd $dst/App/$book
-cp $newIndex index.lua
+cp "$newIndex" .
 mkdir assets/images/$page
 mkdir commands/$page
 mkdir components/$page
@@ -22,7 +24,9 @@ mkdir components/$page/timers
 mkdir components/$page/variables
 mkdir components/$page/joints
 mkdir models/$page
-cd components/$page
-cp $newPageIndex index.lua
 
+cd components/$page
+cp "$newPageIndex" .
+cp $SCRIPT_DIR/$dst/editor/template/components/pageX/layer/bg.lua layers/bg.lua
+cd $SCRIPT_DIR/$dst
 exit
