@@ -11,7 +11,7 @@ local M = {
 }
 --
 function M:didShow(UI)
-  local sceneGroup  = UI.scene.view
+  local sceneGroup  = UI.sceneGroup
   local layer       = UI.layer
   local props       = self.properties
   ---
