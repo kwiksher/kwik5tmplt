@@ -29,7 +29,8 @@ local M = {
     -- lunatest.suite("editor.tests.suite_page1_new_audio_timer_group_variable", props)
 
     -- lunatest.suite("editor.tests.bookTest_importer", props)
-    -- lunatest.suite("editor.tests.suite_controller")
+
+    lunatest.suite("editor.tests.suite_controller")
     --  lunatest.suite("editor.tests.suite_open_vscode", props)
     -- lunatest.suite("editor.tests.suite_page3_audio", props)
     -- lunatest.suite("editor.tests.suite_selector", props)

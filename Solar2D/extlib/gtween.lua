@@ -358,7 +358,7 @@ function new(target, duration, values, props)
       self.ratioOld = 0
       self.position = -self.delay
     else
-      print("not reached", self.position, self.repeatCount, self.duration)
+      -- print("not reached", self.position, self.repeatCount, self.duration)
     end
     registerTween(self)
   end

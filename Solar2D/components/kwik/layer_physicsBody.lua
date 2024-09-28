@@ -39,10 +39,12 @@ function M:didShow(UI)
     end
   end
   --
-  obj.isSensor = props.isSensor
-  --
-  if props.gravityScale then
-      obj.gravityScale = props.gravityScale
+  if obj then
+    obj.isSensor = props.isSensor
+    --
+    if props.gravityScale then
+        obj.gravityScale = props.gravityScale
+    end
   end
 end
 --

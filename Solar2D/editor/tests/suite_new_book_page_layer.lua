@@ -57,6 +57,7 @@ end
 local commands = require("editor.scripts.commands")
 ---
 
+
 function M.xtest_new_book()
   local book =  helper.selectBook("book", true)
   helper.clickButton("create")
