@@ -15,6 +15,12 @@ local function onKeyEvent(event)
   --   pressedKeys[event.keyName] = false
   -- end
   -- Print which key was pressed down/up
+
+  local picker = require("editor.picker.name")
+  if picker.isOn then
+    return
+  end
+
   local message = "Key '" .. event.keyName .. "' was pressed " .. event.phase
   local app = App.get()
   local scenes = app.props.scenes
@@ -121,7 +127,7 @@ function _M:create(UI)
 end
 
 function _M:addEventListener()
-  Runtime:addEventListener("key", onKeyEvent)
+ Runtime:addEventListener("key", onKeyEvent)
 end
 
 function _M:removeEventListener(UI)

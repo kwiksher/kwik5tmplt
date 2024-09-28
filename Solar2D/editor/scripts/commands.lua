@@ -51,17 +51,19 @@ local function saveScript(filename, model)
 end
 
 local function executeScript(filename, model)
-  local cmd, cmdFile = saveScript(filename, model)
-  if platform == "win32" then
-    -- print("copy " .. cmdFile .. " " .. system.pathForFile("", system.ResourceDirectory))
-    os.execute("copy " .. cmdFile .. " " .. system.pathForFile("..\\", system.ResourceDirectory))
-    os.execute("cd " .. system.pathForFile("..\\", system.ResourceDirectory) .. " & start cmd /k call " .. cmd)
-  else
-    print("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
-    os.execute("cp " .. cmdFile .. " " .. system.pathForFile("../", system.ResourceDirectory))
-    os.execute("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
-  end
-  return cmd
+  timer.performWithDelay( 500, function ()
+    local cmd, cmdFile = saveScript(filename, model)
+    if platform == "win32" then
+      -- print("copy " .. cmdFile .. " " .. system.pathForFile("", system.ResourceDirectory))
+      os.execute("copy " .. cmdFile .. " " .. system.pathForFile("..\\", system.ResourceDirectory))
+      os.execute("cd " .. system.pathForFile("..\\", system.ResourceDirectory) .. " & start cmd /k call " .. cmd)
+    else
+      print("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
+      os.execute("cp " .. cmdFile .. " " .. system.pathForFile("../", system.ResourceDirectory))
+      os.execute("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
+    end
+    return cmd
+  end )
 end
 
 function M.createBook(book, _dst, weight)
@@ -98,22 +100,36 @@ function M.createPage(book, _index, _page, _root, _weight)
     print("File exists")
     local scenes = require("App." .. book .. ".index")
     for i = 1, #scenes do
-      pages[i] = {name = scenes[1]}
+      pages[i] = scenes[i]
     end
-    table.insert(pages, index, {name = page})
-    --
-    weight = libUtil.readWeight(path)
+
+    -- for i = 1, #scenes do
+    --   pages[i] = {name = scenes[1]}
+    -- end
+    table.insert(pages, index+1,  page)
+    -- weight = libUtil.readWeight(path)
   else
     print("Could not get attributes")
-    pages[1] = {name = page}
+    pages[1] =  page
   end
-  local newIndex = util.saveLua(tmplt, "App/" .. book .. "/index.lua", {pages = pages, weight = weight})
+  local newIndex = util.saveLua(tmplt, "App/" .. book .. "/index.lua", {pages = pages})
   -- page index
   util.mkdir("App", book, "components", page)
 
   local updatedModel = util.createIndexModel(nil, nil, nil)
+  updatedModel.components.layers[1] = {name = "bg"}
   local newPageIndex = util.renderIndex(book, page, updatedModel)
   newPageIndex = system.pathForFile(newPageIndex, system.TemporaryDirectory)
+
+
+  if platform == "win32" then
+    newPageIndex = '"' .. newPageIndex:gsub("/", "\\") .. '"'
+    newIndex = '"' .. newIndex:gsub("/", "\\") .. '"'
+  else
+    newIndex = newIndex:gsub(" ", "\\ ")
+    newPageIndex = newPageIndex:gsub(" ", "\\ ")
+  end
+
   return executeScript(
     "create_page.",
     {dst = root, book = book, page = page, newIndex = newIndex, newPageIndex = newPageIndex}
