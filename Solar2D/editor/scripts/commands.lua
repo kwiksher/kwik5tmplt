@@ -136,7 +136,7 @@ function M.createPage(book, _index, _page, _root, _weight)
   )
 end
 
-function M.renamePage(book, page, newName, _dst)
+function M.renamePage(book, page, oldName, newName, _dst)
   local root = _dst or "Solar2D"
   -- assets/images/page1
   -- commands/page1
@@ -379,9 +379,9 @@ end
 function M.createLayerWithClass(book, page, layer, class, _dst)
 end
 
-function M.renameLayer(book, page, layer, newName, _dst)
-  local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
-  local path = system.pathForFile("App/" .. book .. "/components/"..page.."/index.lua", system.ResourceDirectory)
+local function renameInIndex(book, page, oldName, newName, _dst)
+  local newFile = system.pathForFile("App/" ..book.. "/components/"..page.."/index.lua", system.TemporaryDirectory)
+  local path    = system.pathForFile("App/" ..book.. "/components/"..page.."/index.lua", system.ResourceDirectory)
   local contents
   local file = io.open(path, "r")
   if file then
@@ -390,11 +390,11 @@ function M.renameLayer(book, page, layer, newName, _dst)
     file = nil
   end
 
-  print('"' .. layer .. '"', '"' .. newName .. '"', contents)
+  print('"' .. oldName .. '"', '"' .. newName .. '"', contents)
   --
   -- name in index.lua, use gsub
   --
-  contents = contents:gsub('"' .. layer .. '"', '"' .. newName .. '"')
+  contents = contents:gsub('"' .. oldName .. '"', '"' .. newName .. '"')
   --
   util.mkdir("App", book, "components", page)
   --
@@ -405,6 +405,16 @@ function M.renameLayer(book, page, layer, newName, _dst)
     nfile = nil
   end
 
+  if platform == "win32" then
+    newFile = '"' .. newFile:gsub("/", "\\") .. '"'
+  else
+    newFile = newFile:gsub(" ", "\\ ")
+  end
+  return newFile
+end
+
+function M.renameLayer(book, page, layer, newName, _dst)
+  local newFile = renameInIndex(book, page, layer, newName, _dst)
   --
   -- layer.lua and layer_xxx.lua
   --
@@ -425,6 +435,80 @@ function M.renameLayer(book, page, layer, newName, _dst)
   return executeScript(
     "rename_layer.",
     {dst = root, book = book, page = page, layer = layer, newName = newName, newIndex = newFile, class = classEntries}
+  )
+end
+
+function M.renameAudio(book, page, type, oldName, newName, _dst)
+  local newFile = renameInIndex(book, page, oldName, newName, _dst)
+  local subclass = "short"
+  if type =="audio/long" then
+    subclass = "long"
+  end
+  return executeScript(
+    "rename_audio.",
+    {dst = root, book = book, page = page, audio =oldName, newName = newName, newIndex = newFile, subclass = subclass}
+  )
+end
+
+function M.renameGroup(book, page, oldName, newName, _dst)
+  local newFile = renameInIndex(book, page, oldName, newName, _dst)
+  return executeScript(
+    "rename_group.",
+    {dst = root, book = book, page = page, group =oldName, newName = newName, newIndex = newFile}
+  )
+end
+
+function M.renameTimer(book, page, oldName, newName, _dst)
+  local newFile = renameInIndex(book, page, oldName, newName, _dst)
+  return executeScript(
+    "rename_timer.",
+    {dst = root, book = book, page = page, timer =oldName, newName = newName, newIndex = newFile}
+  )
+end
+
+function M.renameJoint(book, page, oldName, newName, _dst)
+  local newFile = renameInIndex(book, page, oldName, newName, _dst)
+  return executeScript(
+    "rename_joint.",
+    {dst = root, book = book, page = page, joint =oldName, newName = newName, newIndex = newFile}
+  )
+end
+
+function M.renameVarialble(book, page, oldName, newName, _dst)
+  local newFile = renameInIndex(book, page, oldName, newName, _dst)
+  return executeScript(
+    "rename_variable.",
+    {dst = root, book = book, page = page, variable =oldName, newName = newName, newIndex = newFile}
+  )
+end
+
+function M.renameBook(book, page, oldName, newName, _dst)
+  local newFile = system.pathForFile("main.lua", system.TemporaryDirectory)
+  local path    = system.pathForFile("main.lua", system.ResourceDirectory)
+  local contents
+  local file = io.open(path, "r")
+  if file then
+    contents = file:read("*a")
+    io.close(file)
+    file = nil
+  end
+
+  print('"' .. oldName .. '"', '"' .. newName .. '"', contents)
+  --
+  -- name in index.lua, use gsub
+  --
+  contents = contents:gsub('"' .. oldName .. '"', '"' .. newName .. '"')
+  --
+  local nfile = io.open(newFile, "w+")
+  if nfile then
+    contents = nfile:write(contents)
+    io.close(nfile)
+    nfile = nil
+  end
+
+  return executeScript(
+    "rename_book.",
+    {dst = root, book = book, newName = newName, newMain = newFile}
   )
 end
 
