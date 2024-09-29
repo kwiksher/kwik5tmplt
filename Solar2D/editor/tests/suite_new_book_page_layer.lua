@@ -86,7 +86,7 @@ function M.xtest_select_page()
   -- end
 end
 
-function M.test_new_page()
+function M.xtest_new_page()
   local book = helper.selectBook("mybook")
   book:touch()
   if UI.book ~="mybook" then
@@ -129,7 +129,20 @@ end
 function M.xtest_copy_paste_page()
 end
 
-function M.xtest_delete_page()
+function M.test_delete_page()
+  local book = helper.selectBook("mybook")
+  book:touch()
+  if UI.book ~="mybook" then
+    return
+  end
+  for i, v in next, pageTable.objs  do print(v.page  ) end
+  local obj = pageTable.objs[#pageTable.objs]
+  printKeys(obj)
+  obj:tap{phase = "ended"}
+
+  local icon = pageTable.iconObjs[3]
+  icon.callBack({target={muiOptions={name="trash-icon"}}})
+
 end
 
 --

@@ -143,7 +143,7 @@ function M.renamePage(book, page, newName, _dst)
   -- components/page1
 
   -- index.lua gsub
-  local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
+  local newFile = system.pathForFile("App/"..book.."/index.lua", system.TemporaryDirectory)
   local path = system.pathForFile("App/" .. book .. "/index.lua", system.ResourceDirectory)
   local contents
   local file = io.open(path, "r")
@@ -173,7 +173,7 @@ function M.copyPage(book, page, newName, _dst)
   -- components/page1
 
   -- index.lua gsub
-  local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
+  local newIndex = system.pathForFile("App/"..book.."/index.lua", system.TemporaryDirectory)
   local scenes = require("App." .. book .. ".index")
   for i, v in next, scenes do
     if v == page then
@@ -182,58 +182,60 @@ function M.copyPage(book, page, newName, _dst)
     end
   end
 
-  local path = system.pathForFile("editor/templates/index.lua", system.ResourceDirectory)
+  local path = system.pathForFile("editor/template/index.lua", system.ResourceDirectory)
   local file, errorString = io.open(path, "r")
     if not file then
     print("ERROR: " .. errorString)
   else
     local contents = file:read("*a")
     io.close(file)
-    output = lustache:render(contents, scenes)
+    output = lustache:render(contents, {page=scenes})
     output = output:gsub("&#39;", '"')
     output = output:gsub("&#x2F;", "/")
 
-    local nfile = io.open(newFile, "w+")
+    local nfile = io.open(newIndex, "w+")
     if nfile then
       contents = nfile:write(output)
       io.close(nfile)
       nfile = nil
     end
   end
-  return executeScript("copy_page.", {dst = root, book = book, page = page, newName = newName, newIndex = newFile})
+  return executeScript("copy_page.", {dst = root, book = book, page = page, newName = newName, newIndex = newIndex})
 end
 
 function M.removePages(book, pages, _dst)
   local root = _dst or "Solar2D"
 
-  local newFile = system.pathForFile("index.lua", system.TemporaryDirectory)
+  local newIndex = system.pathForFile("App/"..book.."/index.lua", system.TemporaryDirectory)
   local scenes = require("App." .. book .. ".index")
   local newScenes = {}
   for i, v in next, scenes do
     local isDelete = false
     for ii, vv in next, pages do
       if vv == v then
+        print("let's delete",vv)
         isDelete = true
         break
       end
     end
     if not isDelete then
+      print(v)
       table.insert(newScenes,v)
     end
   end
 
-  local path = system.pathForFile("editor/templates/index.lua", system.ResourceDirectory)
+  local path = system.pathForFile("editor/template/index.lua", system.ResourceDirectory)
   local file, errorString = io.open(path, "r")
     if not file then
     print("ERROR: " .. errorString)
   else
     local contents = file:read("*a")
     io.close(file)
-    output = lustache:render(contents, newScenes)
+    local output = lustache:render(contents, {pages = newScenes})
     output = output:gsub("&#39;", '"')
     output = output:gsub("&#x2F;", "/")
 
-    local nfile = io.open(newFile, "w+")
+    local nfile = io.open(newIndex, "w+")
     if nfile then
       contents = nfile:write(output)
       io.close(nfile)
@@ -245,12 +247,34 @@ function M.removePages(book, pages, _dst)
   for i, page in next, pages do
     table.insert(files, "App/" .. book .. "/components/"..page)
     table.insert(files, "App/" .. book .. "/commands/"..page)
-    table.insert(files, "App/" ..book.."/assets/"..page)
+    table.insert(files, "App/" ..book.."/assets/images/"..page)
     table.insert(files, "App/" ..book.."/models/"..page)
   end
-
+  --
+  --
   local  root, commands = M.deleteFiles(files)
-  return executeScript("delete_pages.", {dst = root, book = book, page = page, cmd = commands, newIndex = newFile})
+  if platform == "win32" then
+    newIndex = '"' .. newIndex:gsub("/", "\\") .. '"'
+  else
+    newIndex = newIndex:gsub(" ", "\\ ")
+  end
+
+  --
+  -- for undo
+  --
+  local model = {}
+  for i, file in next, files do
+    model[#model+1] = {file=file}
+  end
+  table.insert(model, {file = "App/"..book.."/index.lua"})
+  local cmd, cmdFile = saveScript("undo_lua.", {dst = _dst or "Solar2D", files = model})
+  if platform == "win32" then
+    os.execute("copy " .. cmdFile .. " " .. system.pathForFile("..\\", system.ResourceDirectory))
+  else
+    os.execute("cp " .. cmdFile .. " " .. system.pathForFile("../", system.ResourceDirectory))
+  end
+
+  return executeScript("delete_pages.", {dst = root, book = book, page = page, cmd = commands, newIndex = newIndex})
 
 end
 
@@ -753,8 +777,8 @@ local function deleteFiles(files, _dst)
   local commands = {}
   for i = 1, #files do
     print(files[i])
-    local src = system.pathForFile(files[i], system.TemporaryDirectory)
-    --local dst = system.pathForFile(nil, system.ResourceDirectory )
+    --local src = system.pathForFile(files[i], system.TemporaryDirectory)
+    local src = system.pathForFile(files[i], system.ResourceDirectory )
     local dir = util.getPath(files[i])
     local dst = files[i]
     local tmp
@@ -762,7 +786,7 @@ local function deleteFiles(files, _dst)
       tmp = "del " .. src .. " " .. dst
       tmp = '"' .. tmp:gsub("/", "\\") .. '"'
       commands[#commands + 1] = tmp
-    else
+    elseif src then
       src = src:gsub(" ", "\\ ")
       dst = dst:gsub(" ", "\\ ")
       dir = dir:gsub(" ", "\\ ")
@@ -770,7 +794,7 @@ local function deleteFiles(files, _dst)
       -- tmp = "mkdir -p " .. dir .. ";cp " .. src .. " " .. dst
       -- tmp = tmp:gsub('/','')
 
-      -- print ("cp "..tmp.." "..pathDst)
+      print (tmp)
       commands[#commands + 1] = tmp
     end
   end

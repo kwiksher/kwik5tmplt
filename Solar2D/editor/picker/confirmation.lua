@@ -18,7 +18,7 @@ M.width = 80
 M.height = 40
 M.buttons = {"Continue",  "CANCEL"}
 --
-function M:create(callback, message)
+function M:create(callback, message, props)
   self.callback = callback
   -- buttons
   self.buttonObjs = {}
@@ -37,7 +37,7 @@ function M:create(callback, message)
       obj:addEventListener("tap", function(event)
         local message = event.target.text
           if callback then
-            callback(message)
+            callback(message, props)
           end
         end)
       self.buttonObjs[#self.buttonObjs + 1 ] = obj
