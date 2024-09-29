@@ -34,17 +34,18 @@ local command = function (params)
     end
     picker:create(listener, "Please input a page name")
   elseif params.isDelete then
-    print("delete page")
-    local listener = function(message)
+    print("delete page", page)
+    local listener = function(message, props)
       if message == "Continue" then
         scripts.backupFiles(src)
-        scripts.removePages(book, {page})
+        scripts.removePages(book, {props.page})
       else
         print("user cancel")
       end
       picker:destroy()
+      confirmation:destroy()
     end
-    confirmation:create(listener, "Press Continue to delete")
+    confirmation:create(listener, "Press Continue to delete "..page, {page=page})
   elseif params.show~=nil and rootGroup.settingsTable then
     if settingsTable.isVisible then
       settingsTable:hide()
