@@ -122,14 +122,19 @@ function M.xtest_new_page()
   -- end
 end
 
-function M.xtest_rename_page()
+function M.test_rename_page()
+  local book = helper.selectBook("mybook")
+  book:touch()
+  if UI.book ~="mybook" then return end
+  helper.selectPage("page3", false)
+  helper.selectPage("page3", true)
   helper.clickButton("rename")
 end
 
 function M.xtest_copy_paste_page()
 end
 
-function M.test_delete_page()
+function M.xtest_delete_page()
   local book = helper.selectBook("mybook")
   book:touch()
   if UI.book ~="mybook" then

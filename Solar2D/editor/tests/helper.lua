@@ -194,8 +194,10 @@ local function _selectComponent(name, isRightClick, targetTable)
       -- v:dispatchEvent{name="touch", pahse="ended", target=v}
       if isRightClick then
         v:dispatchEvent{name= "mouse", target=v, isSecondaryButtonDown=true, x = v.x, y = v.y}
-      else
+      elseif v.touch then
         v:touch{target=v}
+      else
+        v:tap{target=v}
       end
       return
     end
@@ -244,6 +246,10 @@ function exports.selectBook(name, isRightClick)
       return v
     end
   end
+end
+
+function exports.selectPage(name, isRightClick)
+  _selectComponent(name, isRightClick, pageTable)
 end
 
 function exports.getPage(name, isRightClick)
