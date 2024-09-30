@@ -233,7 +233,9 @@ function M:create(UI)
   if self.rootGroup then
     return
   end
-  -- print("create", self.id)
+  if self.name == debugName then
+      print("create", self.id)
+  end
   self.selections = {}
   self:initScene(UI)
   --
@@ -283,8 +285,12 @@ function M:create(UI)
       obj.rect = rect
       self.objs[#self.objs + 1] = obj
     end
+
     --]]
-    -- self.group.isVisible = true
+    if self.name == debugName then
+      print(#self.objs)
+    end
+  -- self.group.isVisible = true
   end
 
   UI.editor[self.id.."Store"]:listen(
@@ -332,7 +338,9 @@ function M:didHide(UI)
 end
 
 function M:show()
-  -- print(self.name, "show")
+  if self.name == debugName then
+    print(self.name, "show", #self.objs)
+  end
   --print(debug.traceback())
   if self.group then
     self.group.isVisible = true
@@ -343,19 +351,23 @@ function M:show()
       self.objs[i].rect.isVisible = true
     end
   end
-  for i, v in next, self.iconObjs do
-    v.isVisible = true
+  if self.iconObjs then
+    for i, v in next, self.iconObjs do
+      v.isVisible = true
+    end
   end
 end
 
 function M:hide()
-  -- print(self.name, "hide")
-
+  if self.name == debugName then
+    print(self.name, "hide")
+  end
   if self.group then
     self.group.isVisible = false
   end
   if self.objs then
     for i=1, #self.objs do
+      print(self.objs[i].text)
       self.objs[i].isVisible = false
       self.objs[i].rect.isVisible = false
     end
@@ -373,6 +385,10 @@ function M:hide()
 end
 --
 function M:destroy()
+  -- print(debug.traceback())
+  if self.name == debugName then
+    print(self.name, "destroy")
+  end
   if self.objs then
     for i = 1, #self.objs do
       if self.objs[i].rect then
@@ -398,6 +414,9 @@ function M:destroy()
 end
 
 function M:clean()
+  if self.name == debugName then
+    print("clean")
+  end
   if self.objs then
     for i = 1, #self.objs do
       self.objs[i].rect:removeSelf()
@@ -416,11 +435,24 @@ function M:clean()
 end
 
 M.new = function(instance)
-  if instance.objs == nil then
-    instance.objs = {}
-    instance.iconObjs = {}
+  if instance.name == debugName then
+    print("new")
   end
-	return setmetatable(instance, {__index=M}), bt, tree
+  if instance.objs  then
+    for i = 1, #instance.objs do
+      instance.objs[i].rect:removeSelf()
+      instance.objs[i]:removeSelf()
+    end
+  end
+  if instance.iconObjs then
+    for i, v in next, instance.iconObjs do
+      v:removeSelf()
+    end
+  end
+  instance.objs = {}
+  instance.iconObjs = {}
+
+  return setmetatable(instance, {__index=M}), bt, tree
 end
 --
 return M
