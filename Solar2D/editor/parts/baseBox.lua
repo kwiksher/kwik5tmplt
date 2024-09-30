@@ -261,8 +261,10 @@ function  M:destroy(UI)
       self.scrollView:removeSelf()
     end
   end
-  for i=1, #self.objs do
-    self.objs[i]:removeSelf()
+  if self.objs then
+    for i=1, #self.objs do
+      self.objs[i]:removeSelf()
+    end
   end
   self.objs = {}
   self.triangle = nil

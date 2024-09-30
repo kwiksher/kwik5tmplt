@@ -209,6 +209,10 @@ function M:create(UI)
     self.isVisible = false
   end
 
+  for i, obj in next, self.objs do
+    obj.isVisible = false
+  end
+
   -- self:hide()
 
 end
