@@ -24,7 +24,7 @@ function M:setValue(decoded, index, template)
     local props = {}
     if decoded.actions then
       for k, v in pairs (decoded.actions) do
-        print("actions", k)
+        -- print("actions", k)
         props[#props+1] = {name=k, value=""}
       end
       self.actionbox:setValue(props)
@@ -32,7 +32,7 @@ function M:setValue(decoded, index, template)
 
     else
       --self.actionbox:hide()
-      print("no actionbox")
+      -- print("no actionbox")
       self.actionbox:setValue()
     end
   else
@@ -57,14 +57,14 @@ function M:setValue(decoded, index, template)
 end
 
 function M:useClassEditorProps(UI)
-  print("physics.useClassEditorProps",  self.class)
+  -- print("physics.useClassEditorProps",  self.class)
   local props = { properties = {}}
   --
   if self.classProps == nil then
     print("#Error self.classProps is nil for ", self.tool)
   end
 
-  print ("@@", #self.classProps.objs)
+  -- print ("@@", #self.classProps.objs)
 
   for i, obj in next, self.classProps.objs do
     local name = obj.text
@@ -92,7 +92,7 @@ function M:useClassEditorProps(UI)
 end
 
 function M:show()
-  print(self.id, self.class)
+  -- print(self.id, self.class)
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
       v:show()
@@ -117,7 +117,7 @@ end
 
 function M.new(views)
   local module = require("editor.controller.index").new(model.id)
-  print(module.id, model.id)
+  -- print(module.id, model.id)
   -- print(debug.traceback())
   module:init(views)
   module.setValue = M.setValue

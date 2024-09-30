@@ -61,10 +61,10 @@ function M:init(UI)
   --
   self.controller.view = self
   selectbox.classEditorHandler = function(decoded, index)
-    print("classEditorHandler", index)
+    -- print("classEditorHandler", index)
     -- print(json.encode(decoded))
     local value = selectbox.model[index]
-    print(json.encode(value))
+    -- print(json.encode(value))
     self.controller:reset()
     classProps:setValue(value.entries)
     self.controller:redraw()
