@@ -60,12 +60,12 @@ end
 M.BThandler = function(name, status)
   -- print(debug.traceback())
 
-  print("#BTHandler: dispathEvent")
+  -- print("#BTHandler: dispathEvent")
   --  print("", name,  bt.getFriendlyStatus( nil,status ))
   local target = BTMap[name]
   -- print("", target)
   if  target and M.UI then
-    print("", target.eventName)
+    --print("", target.eventName)
     --local obj = M.UI.editor.rootGroup[target.name]
     local params = {
       name = target.eventName,
@@ -74,7 +74,7 @@ M.BThandler = function(name, status)
     }
     if tree.backboard then
       for k, v in pairs(tree.backboard) do
-        print("", k, v)
+      --  print("", k, v)
         params[k] = v
       end
     end
