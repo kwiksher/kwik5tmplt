@@ -24,6 +24,9 @@ local function componentHandler(UI, storeTable, isActiveProp)
   UI.editor.variableStore:set(nil)
   UI.editor.jointStore:set(nil)
 
+  bookTable:hide()
+
+
   tree:setConditionStatus("select audio", bt.FAILED)
   tree:setConditionStatus("select group", bt.FAILED)
   tree:setConditionStatus("select timer", bt.FAILED)
@@ -76,6 +79,8 @@ function M:addListener(UI, buttons, propsTable)
       -- for k, v in pairs(UI.scene.model.components.layers[i]) do print(k, v) end
     -- end
     --
+    bookTable:hide()
+
     if isAcvtiveProp  == nil then
       buttons:hide()
     end
@@ -146,6 +151,7 @@ function M:addListener(UI, buttons, propsTable)
     elseif storetable =="pageTable" then
       -- new page
     end
+    bookTable:show()
   end
 
   function self.assetsSelector:onClick(isVisible, assetName)
