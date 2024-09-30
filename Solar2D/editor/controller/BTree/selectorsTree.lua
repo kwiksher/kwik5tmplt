@@ -106,7 +106,7 @@ function M:setActionStatus(action, value, skip)
 
   self.tree:setActionStatus(action, value)
   if not skip then
-    print("----------tick---------------")
+    -- print("----------tick---------------")
     -- self.tree.root:deactivate()
     self.tree.root:tick()
   end
@@ -115,7 +115,7 @@ end
 
 function M:tick()
   -- [load book]
-  print("----------tick---------------")
+  -- print("----------tick---------------")
   -- self.tree.root:deactivate()
   self.tree.root:tick()
   status = self.tree.root:status()
