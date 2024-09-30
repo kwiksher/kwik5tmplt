@@ -20,16 +20,27 @@ local _print = print
 
 print = function(...)
   local t = debug.traceback()
+
   local stacks = t:mySplit("[^\r\n]+")
   local lines = stacks[3]:mySplit("[^/]+")
   local line = lines[#lines]
   local file = line:mySplit("[^:]+")
+
   if #file > 2 then
     local name = file[#file-2]
     if name == 'index.lua' then
-      _print(lines[#lines-2].."/"..lines[#lines-1].."/index.lua:".. file[#file-1], ...)
+      local parent1 = lines[#lines-2]
+      local parent2 = lines[#lines-1]
+      line = parent1.."/"..parent2.."/index.lua:".. file[#file-1]
+      -- _print(parent1.."/"..parent2.."/index.lua:".. file[#file-1], ...)
     else
-      _print(file[#file-2]..":".. file[#file-1], ...)
+      line = file[#file-2]..":".. file[#file-1]
+      -- _print(file[#file-2]..":".. file[#file-1], ...)
+    end
+    if line:find("editor/tests/index.lua") then
+      _print(...)
+    else
+      _print(line, ...)
     end
   else
     _print("", line, ...)
