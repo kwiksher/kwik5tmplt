@@ -9,7 +9,7 @@ local selectLayerFilter = require("editor.parts.selectLayerFilter")
 ---
 local keyboardNavigation = require("components.common.keyboardNavigation")
 ---
-
+local bookTable = require("editor.parts.bookTable")
 
 local function componentHandler(UI, storeTable, isActiveProp)
   -- each table will be reset

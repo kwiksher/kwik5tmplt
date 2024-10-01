@@ -122,6 +122,8 @@ function M:create(UI)
         props.class = self.contextMenuOptions.class
         props.book  = self.contextMenuOptions.book
         props.page  = self.contextMenuOptions.page
+        props.audio = self.contextMenuOptions.audio
+        props.type = self.contextMenuOptions.type
         props.selections = self.contextMenuOptions.selections -- for audio, group, timer etc
 
         --print(self.contextMenuOptions.class)
