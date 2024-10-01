@@ -3,7 +3,7 @@ local json = require("json")
 local lfs = require("lfs")
 local lustache = require "extlib.lustache"
 local formatter = require("extlib.formatter")
-local platform = system.getInfo( "platformName" )
+local platform = system.getInfo("platformName")
 
 function M.getPath(str)
   return str:match("(.*[/\\])")
@@ -14,8 +14,8 @@ function M.getFileName(str)
   return n:sub(0, #n - 4)
 end
 
-local isTarget = function(layer, layerName)
-  for key, v in pairs(layer) do
+local isTarget = function(layerEntry, layerName)
+  for key, v in pairs(layerEntry) do
     if key == "class" then
     elseif key == "event" then
     elseif key == layerName then
@@ -35,21 +35,27 @@ local isClass = function(v, class)
 end
 
 function M.isExist(book, page, layer, class)
-  local path =system.pathForFile( "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class..".lua", system.ResourceDirectory)
+  local path =
+    system.pathForFile(
+    "App/" .. book .. "/components/" .. page .. "/layers/" .. layer .. "_" .. class .. ".lua",
+    system.ResourceDirectory
+  )
   return path
 end
 
 function M.updateIndexModel(_scene, layerName, class)
-  local scene = _scene or {
-    components = {
-      layers = {  },
-      audios = {  },
-      groups = {  },
-      timers = {  },
-      variables = {  },
-      others = {  }
-     }
-  }
+  local scene =
+    _scene or
+    {
+      components = {
+        layers = {},
+        audios = {},
+        groups = {},
+        timers = {},
+        variables = {},
+        others = {}
+      }
+    }
   --
   local onInit = scene.onInit
   scene.onInit = nil
@@ -82,7 +88,7 @@ function M.updateIndexModel(_scene, layerName, class)
         if key == "class" then
         elseif key == "event" then
         else
-          if type(value)=="table" and next(value) then
+          if type(value) == "table" and next(value) then
             if value.class == nil then
               --
               -- {aName = {A={}, B={}}}
@@ -139,16 +145,18 @@ end
 -- nLevel is used for lustache render in createIndexModel
 --
 function M.createIndexModel(_scene, layerName, class)
-  local scene = _scene or {
-    components = {
-      layers = {  },
-      audios = {  },
-      groups = {  },
-      timers = {  },
-      variables = {  },
-      others = {  }
-     }
-  }
+  local scene =
+    _scene or
+    {
+      components = {
+        layers = {},
+        audios = {},
+        groups = {},
+        timers = {},
+        variables = {},
+        others = {}
+      }
+    }
   --
   local onInit = scene.onInit
   scene.onInit = nil
@@ -185,7 +193,7 @@ function M.createIndexModel(_scene, layerName, class)
         elseif key == "event" then
         else
           newEntry.name = key
-          if type(value)=="table" and next(value) then
+          if type(value) == "table" and next(value) then
             if value.class == nil then
               --
               -- {aName = {A={}, B={}}}
@@ -246,21 +254,21 @@ function M.createIndexModel(_scene, layerName, class)
   return copied
 end
 
-function M.selectFromIndexModel(scene, args)
-  local target = args[1]
+function M.selectFromIndexModel(model, args)
   --
   local function processLayers(layers, target, level)
-    local nextTarget = args[level + 1]
+    local nextTarget = target[level+1]
+    print("nextTarget", nextTarget, level)
     for i = 1, #layers do
       local layer = layers[i]
       local children = {}
       --
       for key, value in pairs(layer) do
-        -- print(key, value)
-        if isTarget(layer, target) then
+        print(key, value)
+        if isTarget(layer, target[level]) then
           if nextTarget == nil then
-            return {type = "layer", file = key, value=value}
-          elseif isClass(layer, nextTarget) then
+            return {type = "layer", file = key, value = value}
+          elseif layer.class and isClass(layer, nextTarget) then
             return {type = "class", file = key .. "_" .. nextTarget}
           else -- look into childen
             if key == "class" then
@@ -294,45 +302,48 @@ function M.selectFromIndexModel(scene, args)
               end
 
               if #children > 0 then
-                local ret = processLayers(children, nextTarget, level + 1)
+                local ret = processLayers(children, target, level + 1)
                 return {type = ret.type, file = target .. "/" .. ret.file}
               end
             end
           end
         end
       end
+      print("return nil")
       return nil
     end
-    --
-    local out = processLayers(scene.components.layers, target, 1)
-    print(json.encode(out))
-    return out
   end
+  --
+  local out = processLayers(model.components.layers, args, 1)
+  print(json.encode(out))
+  return out
 end
-
 
 -- https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value
 function M.copyTable(tbl)
-
   local new_tbl = {}
   if tbl then
-    for key,value in pairs(tbl) do
-        local valid =  key ~="__index"  and key ~="_class" and key ~="_tableListeners" and key ~="_proxy" and key ~="_functionListeners" and key ~="selections" and key ~="rect"
-        local value_type = type(value)
-        local new_value
-        if value_type == "function" then
-            -- new_value = loadstring(string.dump(value))
-            -- Problems may occur if the function has upvalues.
-        elseif value_type == "table" and valid then
-            -- print(key)
-            new_value = M.copyTable(value)
-        else
-            new_value = value
-        end
+    for key, value in pairs(tbl) do
+      local valid =
+        key ~= "__index" and key ~= "_class" and key ~= "_tableListeners" and key ~= "_proxy" and
+        key ~= "_functionListeners" and
+        key ~= "selections" and
+        key ~= "rect"
+      local value_type = type(value)
+      local new_value
+      if value_type == "function" then
+        -- new_value = loadstring(string.dump(value))
+        -- Problems may occur if the function has upvalues.
+      elseif value_type == "table" and valid then
+        -- print(key)
+        new_value = M.copyTable(value)
+      else
+        new_value = value
+      end
 
-        if value_type ~= "function" and valid  then
-          new_tbl[key] = new_value
-        end
+      if value_type ~= "function" and valid then
+        new_tbl[key] = new_value
+      end
     end
   else
     print("#Error tbl is nil")
@@ -369,8 +380,8 @@ function M.mkdir(...)
 end
 
 function M.saveLua(tmplt, dst, _model, partial)
-  print("local tmplt='".. tmplt.. "'")
-  print("local dst ='".. dst.. "'")
+  print("local tmplt='" .. tmplt .. "'")
+  print("local dst ='" .. dst .. "'")
   local model = M.copyTable(_model)
   -- print("local model = json.decode('".. json.encode(model).. "')" )
 
@@ -418,7 +429,9 @@ function M.writeLines(_path, lines)
     -- Error occurred; output the cause
     print("ERROR: " .. errorString)
   else
-    for i, l in ipairs(lines) do io.write(l, "\n") end
+    for i, l in ipairs(lines) do
+      io.write(l, "\n")
+    end
     io.close(file)
     return true
   end
@@ -443,7 +456,6 @@ function M.saveJson(_path, _model)
     return true
   end
 end
-
 
 function M.decode(book, page, class, _name, options)
   print("", class, _name, options.subclass)
@@ -761,11 +773,11 @@ function M.readAssets(book, type, filter)
         local function getFiles(fullpath, _folder, parent)
           local children = {}
           -- print(fullpath)
-          local full_path =fullpath
+          local full_path = fullpath
           local _parent = parent or ""
           if _folder then
             full_path = fullpath .. (_folder or "")
-            -- print(full_path)
+          -- print(full_path)
           end
           --
           for file in lfs.dir(full_path) do
@@ -776,13 +788,13 @@ function M.readAssets(book, type, filter)
                 print(file)
               end
               if isDir then
-                getFiles(full_path, "/" .. file, _parent.."/"..file)
+                getFiles(full_path, "/" .. file, _parent .. "/" .. file)
                 lfs.chdir(full_path)
               else
                 if _folder then
-                  table.insert(target, _parent:sub(2) .."/".. file)
+                  table.insert(target, _parent:sub(2) .. "/" .. file)
                 else
-                  table.insert(target, _parent:sub(2)..file)
+                  table.insert(target, _parent:sub(2) .. file)
                 end
               end
             end

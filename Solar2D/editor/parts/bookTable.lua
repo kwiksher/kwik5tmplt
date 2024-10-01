@@ -163,8 +163,8 @@ end
 function M:didHide(UI)
 end
 --
-function M:destroy()
-end
+-- function M:destroy()
+-- end
 
 --
 return M
