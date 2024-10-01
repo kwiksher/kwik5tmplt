@@ -394,10 +394,11 @@ local function renameInIndex(book, page, oldName, newName, _dst)
   --
   -- name in index.lua, use gsub
   --
-  contents = contents:gsub('"' .. oldName .. '"', '"' .. newName .. '"')
+  -- contents = contents:gsub('"' .. oldName .. '"', '"' .. newName .. '"')
+  contents = contents:gsub(oldName, newName)
   --
   util.mkdir("App", book, "components", page)
-  --
+--
   local nfile = io.open(newFile, "w+")
   if nfile then
     contents = nfile:write(contents)
@@ -421,14 +422,16 @@ function M.renameLayer(book, page, layer, newName, _dst)
   --
   local classEntries = {}
   local scene = require("App." .. book .. ".components." .. page .. ".index")
-  local model = util.selectFromIndexModel(scene, {layer})
+  local model = util.selectFromIndexModel(scene.model, {layer})
 
-  for k, v in pairs(model) do
-    print(k, v)
-    if k == "class" then
-      for class in v do
-        classEntries[#classEntries+1] = class
-        print(class)
+  if model and model.value then
+    for k, v in pairs(model.value) do
+      print(k, v)
+      if k == "class" then
+        for i, class in next, v do
+          classEntries[#classEntries+1] = class
+          print(class)
+        end
       end
     end
   end
