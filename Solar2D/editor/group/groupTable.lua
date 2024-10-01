@@ -141,6 +141,18 @@ function M:commandHandlerClass(target, event)
   return true
 end
 
+local posX = display.contentCenterX * 0.4
+local isMultiSelection = false
+local buttons = require("editor.parts.buttons")
+-- See group = true makes rename for handleing group
+function M.mouseHandler(event)
+  if event.isSecondaryButtonDown and event.target.isSelected then
+    buttons:showContextMenu(posX, event.y, {layer = event.target.layer, group = true, class = event.target.class, isMultiSelection = isMultiSelection})
+  else
+    -- print("@@@@not selected")
+  end
+  return true
+end
 
 
 function M:create(UI)

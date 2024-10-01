@@ -2,11 +2,11 @@ local Class, M = {}, {}
 
 local current = ...
 local parent = current:match("(.-)[^%.]+$")
-local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
+local root = parent:sub(1, parent:len() - 1):match("(.-)[^%.]+$")
 
-local editorUtil = require(root.."util")
+local editorUtil = require(root .. "util")
 local shapes = require("extlib.shapes")
-local widget = require( "widget" )
+local widget = require("widget")
 local App = require "Application"
 
 local util = require("lib.util")
@@ -19,11 +19,11 @@ M.name = ...
 --
 local typeMap = {
   animation = "layers",
-  audio     = "audios",
-  group     = "groups",
-  action    = "commands",
-  layer    = "layers",
-  button   = "layers",
+  audio = "audios",
+  group = "groups",
+  action = "commands",
+  layer = "layers",
+  button = "layers"
 }
 
 local nodeMap = {} -- for hiding children
@@ -54,9 +54,9 @@ function M:setValue(selectedValue)
   --   print(k, #v)
   -- end
   -- -- --
-  self.value             = selectedValue
-  self.selection       = nil
-  self.objs           = {}
+  self.value = selectedValue
+  self.selection = nil
+  self.objs = {}
   ---
   -- for k, v in pairs(self.model) do print(k, #v) end
 
@@ -75,33 +75,32 @@ local option, newText = util.newTextFactory()
 M.newText = newText
 
 function M:createTable(UI, rows, selectedIndex, selectedValue)
-
   -- print("createTable", #rows, selectedValue)
 
   local option = self.option
-    --
-  local scrollView = widget.newScrollView
-  {
-    top                      = self.triangle.contentBounds.yMin -self.triangle.height/2,
-    left                     = self.triangle.contentBounds.xMin - self.width,
-    width                    = self.width,
-    height                   = self.height,
-    scrollHeight             = #rows*self.height,
-    verticalScrollDisabled   = false,
+  --
+  local scrollView =
+    widget.newScrollView {
+    top = self.triangle.contentBounds.yMin - self.triangle.height / 2,
+    left = self.triangle.contentBounds.xMin - self.width,
+    width = self.width,
+    height = self.height,
+    scrollHeight = #rows * self.height,
+    verticalScrollDisabled = false,
     horizontalScrollDisabled = true,
-    friction                 = 2,
+    friction = 2
   }
 
   local index = 0
   local instance = self
   --
   local function createRow(entry, xIndex, parentObj)
-      -- print("createRow", entry.name)
+    -- print("createRow", entry.name)
     local group = display.newGroup()
     -- name
-    option.text   =  entry.name or ""
-    option.x = self.width/2 + xIndex*5 --labelText.contentBounds.xMin - 100
-    option.y = index * option.height + option.height/2
+    option.text = entry.name or ""
+    option.x = self.width / 2 + xIndex * 5 --labelText.contentBounds.xMin - 100
+    option.y = index * option.height + option.height / 2
     --
     local obj = newText(option)
     obj.name = entry.name
@@ -109,7 +108,7 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
     obj.params = entry.params
     obj.parentObj = parentObj
     --
-    local rect = display.newRect(obj.x, obj.y, obj.width+10,option.height)
+    local rect = display.newRect(obj.x, obj.y, obj.width + 10, option.height)
 
     rect:setFillColor(1)
     if entry.isFiltered then
@@ -145,20 +144,20 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
               instance.selection.rect:setFillColor(0.8)
             end
             instance.selection = self
-            instance.value =self.text
+            instance.value = self.text
             instance.selectedIndex = self.index
             instance.selection.rect:setFillColor(0, 1, 0)
-            -- scrollView:scrollToPosition{y=-self.height*(self.index-1)}
-            --
-            -- for k, v in pairs(self.params) do print("", k, v) end
-            -- UI.scene.app:dispatchEvent {
-            --   name = "editor.action.selectActionCommand",
-            --   UI = UI,
-            --   value = M.command,
-            --   index = self.index,
-            --   isNew = true
-            -- }
-            -- UI.editor.actionCommandPropsStore:set(self.params)
+          -- scrollView:scrollToPosition{y=-self.height*(self.index-1)}
+          --
+          -- for k, v in pairs(self.params) do print("", k, v) end
+          -- UI.scene.app:dispatchEvent {
+          --   name = "editor.action.selectActionCommand",
+          --   UI = UI,
+          --   value = M.command,
+          --   index = self.index,
+          --   isNew = true
+          -- }
+          -- UI.editor.actionCommandPropsStore:set(self.params)
           end
         end
         return true
@@ -170,14 +169,14 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
     self.objs[index] = obj
 
     -- children
-    if entry.children and  #entry.children > 0  then
+    if entry.children and #entry.children > 0 then
       --  print(#entry.children)
-      if  nodeMap[entry.name] == nil then
-        for i=1, #entry.children do
+      if nodeMap[entry.name] == nil then
+        for i = 1, #entry.children do
           local _obj = createRow(entry.children[i], xIndex + 1, obj)
         end
       end
-      obj.text = "- " ..entry.name
+      obj.text = "- " .. entry.name
       obj.isExpanded = true
       --
       obj.tap = function(_self, event)
@@ -190,23 +189,23 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
         print(UI, self.type, self.x, self.y, self.value)
         self:reload()
       end
-      obj:addEventListener("tap",obj)
+      obj:addEventListener("tap", obj)
     else
       -- only attach the handler if not a group index
       if obj.tap then
         -- print("###", obj.text)
-        obj:addEventListener("tap",obj)
+        obj:addEventListener("tap", obj)
       elseif self.commandHandler then
         obj:addEventListener("touch", obj)
       end
       -- check
 
-  local scene = require("App." .. book .. ".components." .. page .. ".index")
+      -- local scene = require("App." .. book .. ".components." .. page .. ".index")
 
       local path = editorUtil.getParent(obj)
-      if obj.layer and selectedValue == path..obj.layer then -- layer is used for audio, action too
+      if obj.layer and selectedValue == path .. obj.layer then -- layer is used for audio, action too
         self.selectedIndex = index
-        obj.rect:setFillColor(0,1,0)
+        obj.rect:setFillColor(0, 1, 0)
         self.selection = obj
         self.value = obj.text
       end
@@ -216,18 +215,18 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
   --
   --
   for k, entry in pairs(rows) do
-     createRow(entry, 0)
+    createRow(entry, 0)
   end
   --
   if #self.objs > 0 and selectedIndex and selectedIndex > 0 then
-    self.objs[selectedIndex].rect:setFillColor(0,1,0)
+    self.objs[selectedIndex].rect:setFillColor(0, 1, 0)
     self.selection = self.objs[selectedIndex]
     self.value = self.objs[selectedIndex].text
     self.selectedIndex = selectedIndex
   end
 
   if self.selectedIndex then
-    scrollView:scrollToPosition{y=-self.height*(self.selectedIndex-1)}
+    scrollView:scrollToPosition {y = -self.height * (self.selectedIndex - 1)}
   end
 
   self.scrollView = scrollView
@@ -235,18 +234,18 @@ end
 
 --
 --
-function M:init(UI, x, y,w, h, type)
+function M:init(UI, x, y, w, h, type)
   self:_init(UI, x, y, w, h, type)
 end
 
 function M:_init(UI, x, y, w, h, type)
-  self.x = x  or display.contentCenterX
+  self.x = x or display.contentCenterX
   self.y = y or display.contentCenterY
   self.UI = UI
   self.type = type
   -- print("@@@@@", type)
 
-  self.height =  w or 20
+  self.height = w or 20
   self.width = h or 72
   -- self.x = self.x + self.width/2
   -- print("linkbox", UI.layers,  UI.page, UI.audios, UI.numberOfPages, UI.appFolder)
@@ -255,21 +254,22 @@ function M:_init(UI, x, y, w, h, type)
   -- local path =system.pathForFile( "App/"..App.get().name.."/models/"..UI.page.."/commands/"..UI.editor.currentAction..".json", system.ResourceDirectory)
   --
 
-  option.width    = self.width
-  option.height   = self.height
+  option.width = self.width
+  option.height = self.height
   self.option = option
-
 end
 
 --
 function M:_create(UI)
-  if self.rootGroup then return end
+  if self.rootGroup then
+    return
+  end
   self.rootGroup = UI.editor.rootGroup
   if self.triangle == nil then
     -- print(debug.traceback())
-    self.triangle = shapes.triangle.equi( self.x + self.width + 5, self.y, 10 )
+    self.triangle = shapes.triangle.equi(self.x + self.width + 5, self.y, 10)
     self.triangle:rotate(180)
-    self.triangle:setFillColor(1,1,0)
+    self.triangle:setFillColor(1, 1, 0)
     self.triangle.tap = function(event)
       print("triangle tap")
       if self.callbackTriagnle then
@@ -278,26 +278,25 @@ function M:_create(UI)
       self.scrollView.alpha = 1
       self.triangle.on = not self.triangle.on
       if self.triangle.on then
-        self.scrollView:setSize(self.width, self.height*#self.objs)
-        self.scrollView:toFront()
-        self.scrollView:scrollToPosition{y=0}
         --self.scrollView:translate(100,0)
-
+        self.scrollView:setSize(self.width, self.height * #self.objs)
+        self.scrollView:toFront()
+        self.scrollView:scrollToPosition {y = 0}
       else
+        -- self.scrollView:translate(-100,0)
         self.scrollView:setSize(self.width, self.height)
-        if  self.selectedIndex and self.selectedIndex > 0 then
-          self.scrollView:scrollToPosition{y=-self.height*(self.selectedIndex-1)}
+        if self.selectedIndex and self.selectedIndex > 0 then
+          self.scrollView:scrollToPosition {y = -self.height * (self.selectedIndex - 1)}
         else
-          self.scrollView:scrollToPosition{y=-self.height}
+          self.scrollView:scrollToPosition {y = -self.height}
         end
-       -- self.scrollView:translate(-100,0)
       end
       return true
     end
 
     self.rootGroup:insert(self.triangle)
   else
-    self.triangle.x = self.x + self.width/2
+    self.triangle.x = self.x + self.width / 2
     self.triangle.y = self.y
   end
   --
@@ -315,14 +314,14 @@ function M:_didShow(UI)
   if self.scrollView then
     self.scrollView.isVisible = true
     -- print("objs", #self.objs)
-    for i=1, #self.objs do
+    for i = 1, #self.objs do
       local obj = self.objs[i]
       -- function obj:tap(e)
       --   print(e.target.name)
       --   M.value = e.target.name
       --   return true
       -- end
-      obj:addEventListener("tap",obj)
+      obj:addEventListener("tap", obj)
     end
     self.triangle:addEventListener("tap", self.triangle)
   end
@@ -334,7 +333,7 @@ end
 --
 function M:_didHide(UI)
   if self.objs then
-    for i=1, #self.objs do
+    for i = 1, #self.objs do
       local obj = self.objs[i]
       -- print("## removed ")
       obj:removeEventListener("tap", obj)
@@ -369,7 +368,7 @@ function M:hide()
   --self.group.isVisible = false
 end
 --
-function M:show ()
+function M:show()
   --self.group.isVisible = true
   -- print("show", self.name)
   if self.scrollView then
@@ -381,7 +380,7 @@ function M:show ()
   end
 end
 --
-function M:toggle ()
+function M:toggle()
   -- print("toggle")
   if self.scrollView then
     self.triangle.isVisible = not self.triangle.isVisible
@@ -390,9 +389,9 @@ function M:toggle ()
 end
 
 --
-function  M:destroy(UI)
+function M:destroy(UI)
   if self.objs then
-    for i=1, #self.objs do
+    for i = 1, #self.objs do
       -- print(i)
       self.objs[i].rect:removeSelf()
       self.objs[i]:removeSelf()
@@ -429,7 +428,7 @@ end
 function Class.new(t)
   local instance = t or {}
   --instance.model = {layers={{name="bg"}, {name="title"}, {name="buttonA"}}}
-  return setmetatable(instance, {__index=M})
+  return setmetatable(instance, {__index = M})
 end
 
 --

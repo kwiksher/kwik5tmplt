@@ -119,12 +119,14 @@ function M:create(UI)
       --
       if self.contextMenuOptions then
         props.layer = self.contextMenuOptions.layer
-        props.class = self.contextMenuOptions.class
+        props.class = self.contextMenuOptions.class -- type timerTable like "timers" "joints" "variables"
         props.book  = self.contextMenuOptions.book
         props.page  = self.contextMenuOptions.page
         props.audio = self.contextMenuOptions.audio
-        props.type = self.contextMenuOptions.type
+        props.group  = self.contextMenuOptions.group
+        props.type = self.contextMenuOptions.type -- for audio only
         props.selections = self.contextMenuOptions.selections -- for audio, group, timer etc
+        props.target     = self.contextMenuOptions.target
 
         --print(self.contextMenuOptions.class)
         --

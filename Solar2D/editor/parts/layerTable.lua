@@ -99,7 +99,7 @@ function M:render(models, xIndex, yIndex, parentObj)
       return true
     end
     obj:addEventListener("touch", obj)
-    obj:addEventListener("mouse", commands.mouseHandler)
+    obj:addEventListener("mouse", self.mouseHandler)
 
     local rect = display.newRect(obj.x, obj.y, self.rectWidth, option.height)
     rect:setFillColor(0.8 + xIndex*0.05)
@@ -131,7 +131,7 @@ function M:render(models, xIndex, yIndex, parentObj)
           return true
         end
         classObj:addEventListener("touch", classObj)
-        classObj:addEventListener("mouse", commands.mouseHandler)
+        classObj:addEventListener("mouse", self.mouseHandler)
 
 
         local rect = display.newRect(classObj.x, classObj.y, classObj.width + 10, option.height)
@@ -169,6 +169,7 @@ end
 function M:create(UI)
   self.commandHandlerClass = commands.commandHandlerClass
   self.commandHandler = commands.commandHandler
+  self.mouseHandler = commands.mouseHandler
 
   if self.rootGroup then return end
 
