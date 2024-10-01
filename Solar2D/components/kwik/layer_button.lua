@@ -5,7 +5,7 @@ local app = require "Application"
 --
 function M:createButton(UI)
   local sceneGroup = UI.sceneGroup
-  -- print(self.layerProps.name)
+  print(self.layerProps.name)
   local layerName = self.layerProps.name
   local obj = sceneGroup[layerName]
   local path = UI.props.imgDir .. layerName
@@ -162,6 +162,8 @@ function M:destroy(UI)
 end
 
 M.set = function(model)
+  print("####", model.layerProps.name)
+
   return setmetatable( model, {__index=M})
 end
 
