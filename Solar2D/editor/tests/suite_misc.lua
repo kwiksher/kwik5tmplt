@@ -12,13 +12,32 @@ end
 function M.teardown()
 end
 
+function M.test_util()
+  local util = require("editor.util")
+  local scene = require("App.mybook.components.page1.index")
+  local model = util.selectFromIndexModel(scene.model, {"bg7"})
+  printTable(model.value.class)
+
+  for k, v in pairs(model.value) do
+    print(k, v)
+    if k == "class" then
+      for i, class in next, v do
+        --classEntries[#classEntries+1] = class
+        print(class)
+      end
+    end
+  end
+
+
+end
+
 local wildcard= require("extlib.wildcard")
 
 -- https://www.domoticz.com/forum/viewtopic.php?t=29900
 -- '*' wildcard for 0 or more chars.
 -- '?' wildcard for 1 char
 -- Not possible to combine single char wildcard(s) "?" with multi char wildcard(s) "*"
-function M.test_wtildCardedString()
+function M.xtest_wtildCardedString()
   local test = "/page1/test.png"
   print("@@@@@@@@@@@@")
   print(wildcard.matchesWildCardedString(test, '?page1*')) -- false

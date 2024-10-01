@@ -26,13 +26,13 @@ local function getListener(props, selections)
       return props.joint, "joint", scripts.renameJoint
     elseif props.class == "variable" then
       return props.variable, "variable", scripts.renameVariable
+    elseif props.layer then
+      print("rename layer")
+      return props.layer, "layer", scripts.renameLayer
     else
       print(props.class, selections[1].text)
       -- print(props.class, selections[1].text, selections[1][props.class])
     end
-  else
-    print("rename layer")
-    return props.layer, "layer", scripts.renameLayer
   end
   return
 end
