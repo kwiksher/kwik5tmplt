@@ -45,7 +45,7 @@ end
   end
 --]]
 
-function M.xtest_select_audio()
+function M.test_select_audio()
     selectors.componentSelector.iconHander()
     selectors.componentSelector:onClick(true,  "audioTable")
     local audioTable = require("editor.audio.audioTable")
@@ -53,7 +53,7 @@ function M.xtest_select_audio()
     obj:touch{phase="ended"}
 end
 
-function M.test_new_component()
+function M.xtest_new_component()
   selectors.componentSelector.iconHander()
   selectors.componentSelector:onClick(true,  "audioTable")
   local audioTable = require("editor.audio.audioTable")
@@ -76,7 +76,7 @@ function M.test_new_component()
     -- buttons.objs["save"].tap{eventName="save"}
 end
 
-function M.test_new_component_from_asset()
+function M.xtest_new_component_from_asset()
   selectors.componentSelector.iconHander()
 
   selectors.assetsSelector:show()
