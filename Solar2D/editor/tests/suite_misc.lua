@@ -15,7 +15,7 @@ end
 function M.test_util()
   local util = require("editor.util")
   local scene = require("App.mybook.components.page1.index")
-  local model = util.selectFromIndexModel(scene.model, {"bg7"})
+  local model = util.selectFromIndexModel(scene.model, {"bg10"})
   printTable(model.value.class)
 
   for k, v in pairs(model.value) do

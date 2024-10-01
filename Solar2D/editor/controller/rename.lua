@@ -6,6 +6,7 @@ local confirmation = require("editor.picker.confirmation")
 local scripts = require("editor.scripts.commands")
 --
 local function getListener(props, selections)
+  print("@@", props.layer, props.class, props.target, props.selections[1])
   if selections and #selections > 1 then
     return nil, nil
   elseif props then
@@ -18,14 +19,14 @@ local function getListener(props, selections)
     elseif props.audio then
       print("rename audio", props.audio, props.type)
       return props.audio, "audio/" .. props.type, scripts.renameAudio
-    elseif props.class == "group" then
-      return props.group, "group", scripts.renameGroup
-    elseif props.class == "timer" then
-      return props.timer, "timer", scripts.renameTimer
-    elseif props.class == "joint" then
-      return props.joint, "joint", scripts.renameJoint
-    elseif props.class == "variable" then
-      return props.variable, "variable", scripts.renameVariable
+    elseif props.layer and props.group  == true  then
+      return props.layer, "group", scripts.renameGroup -- because groupTable is inherting layerTable
+    elseif props.class =="timers"  then
+      return props.target, "timer", scripts.renameTimer
+    elseif props.class == "joints" then
+      return props.target, "joint", scripts.renameJoint
+    elseif props.class == "variables"  then
+      return props.target, "variable", scripts.renameVariable
     elseif props.layer then
       print("rename layer")
       return props.layer, "layer", scripts.renameLayer
