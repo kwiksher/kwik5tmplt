@@ -29,7 +29,7 @@ local posX = display.contentCenterX*0.75
 
 function M.mouseHandler(event, class, selections)
   if event.isSecondaryButtonDown then -- event.target.isSelected
-    contextButtons:showContextMenu(posX, event.y,  {class=class, selections=selections})
+    contextButtons:showContextMenu(posX, event.y,  {target = event.target, class=class, selections=selections})
   else
     -- print("@@@@not selected")
   end
