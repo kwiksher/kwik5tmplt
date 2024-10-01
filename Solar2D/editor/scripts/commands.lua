@@ -414,6 +414,7 @@ local function renameInIndex(book, page, oldName, newName, _dst)
 end
 
 function M.renameLayer(book, page, layer, newName, _dst)
+  local root = _dst or "Solar2D"
   local newFile = renameInIndex(book, page, layer, newName, _dst)
   --
   -- layer.lua and layer_xxx.lua
@@ -439,6 +440,7 @@ function M.renameLayer(book, page, layer, newName, _dst)
 end
 
 function M.renameAudio(book, page, type, oldName, newName, _dst)
+  local root = _dst or "Solar2D"
   local newFile = renameInIndex(book, page, oldName, newName, _dst)
   local subclass = "short"
   if type =="audio/long" then
@@ -451,6 +453,7 @@ function M.renameAudio(book, page, type, oldName, newName, _dst)
 end
 
 function M.renameGroup(book, page, oldName, newName, _dst)
+  local root = _dst or "Solar2D"
   local newFile = renameInIndex(book, page, oldName, newName, _dst)
   return executeScript(
     "rename_group.",
@@ -459,6 +462,7 @@ function M.renameGroup(book, page, oldName, newName, _dst)
 end
 
 function M.renameTimer(book, page, oldName, newName, _dst)
+  local root = _dst or "Solar2D"
   local newFile = renameInIndex(book, page, oldName, newName, _dst)
   return executeScript(
     "rename_timer.",
@@ -467,6 +471,7 @@ function M.renameTimer(book, page, oldName, newName, _dst)
 end
 
 function M.renameJoint(book, page, oldName, newName, _dst)
+  local root = _dst or "Solar2D"
   local newFile = renameInIndex(book, page, oldName, newName, _dst)
   return executeScript(
     "rename_joint.",
@@ -475,6 +480,7 @@ function M.renameJoint(book, page, oldName, newName, _dst)
 end
 
 function M.renameVarialble(book, page, oldName, newName, _dst)
+  local root = _dst or "Solar2D"
   local newFile = renameInIndex(book, page, oldName, newName, _dst)
   return executeScript(
     "rename_variable.",
@@ -483,6 +489,7 @@ function M.renameVarialble(book, page, oldName, newName, _dst)
 end
 
 function M.renameBook(book, page, oldName, newName, _dst)
+  local root = _dst or "Solar2D"
   local newFile = system.pathForFile("main.lua", system.TemporaryDirectory)
   local path    = system.pathForFile("main.lua", system.ResourceDirectory)
   local contents
