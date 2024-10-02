@@ -29,7 +29,7 @@ local command = function (params)
   end
   --
   print("", UI.editor.currentToolbar, UI.editor.currentTool)
-  UI.editor.currentLayer = params.layer
+  UI.editor:setCurrnetSelection(params.layer)
   -- should we use name of UI.editor.editor.currentClass?
   tool.controller.read(UI.editor.currentBook, UI.page, UI.editor.currentLayer, isNew, UI.editor.currentTool)
 

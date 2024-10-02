@@ -99,6 +99,9 @@ local function singleSelection(layerTable, target)
     target.rect:setFillColor(0,1,0)
     --target.rect:setStrokeColor(0, 1, 0)
     ---
+
+    UI.editor:setCurrnetSelection()
+
     if target.layer and target.layer:len() then
       UI.editor.currentLayer = target.layer
     else
@@ -198,7 +201,8 @@ function M.commandHandler(layerTable, target, event)
       tree:setConditionStatus("select layer", bt.SUCCESS, true)
       tree:setActionStatus("load layer", bt.RUNNING, true)
       tree:setConditionStatus("select props", bt.SUCCESS)
-      UI.editor.currentLayer = target.layer
+
+      UI.editor:setCurrnetSelection(target.layer)
       -- UI:dispatchEvent {
       --   name = "editor.selector.selectLayer",
       --   UI = UI,
@@ -270,7 +274,8 @@ local function showClassProps(layerTable, target)
     layerTable.selections = {target}
     target.isSelected = true
     target.rect:setFillColor(0,1,0)
-    UI.editor.currentLayer = target.layer
+
+    UI.editor:setCurrnetSelection(target.layer)
     --
     -- target.isSelected = true
     if target.name then
