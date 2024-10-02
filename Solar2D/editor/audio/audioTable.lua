@@ -66,7 +66,7 @@ function M:commandHandler(target, event)
   else
     if layerTableCommands.singleSelection(self, target) then
       if target.audio then
-        UI.editor.currentLayer = target.audio
+        UI.editor:setCurrnetSelection(target.audio)
       end
       -- target.isSelected = true
       UI.editor.currentClass = target.name

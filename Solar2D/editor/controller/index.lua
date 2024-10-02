@@ -371,7 +371,7 @@ function M:updateAsset(text, asset)
   end
 end
 
-function M:load(book, page, layer, class, isNew, asset)
+function M:load(book, page, layer, class, isNew, asset, isGroup)
   print("read", page, layer, class, isNew)
   -- the values are used in useClassEdtiorProps()
   self.page = page
@@ -384,9 +384,16 @@ function M:load(book, page, layer, class, isNew, asset)
     local decoded = self:read(book, page, layer, class, isNew)
     self:reset()
     local model = decoded[1]
+    --
     if asset then
       model = self:mergeAsset(decoded[1], asset)
     end
+    --
+    -- this is for group animation
+    if isGroup then
+      model.properties.isGroup = true
+    end
+    --
     self:setValue(model, nil, true)
     -- print(json.encode(model))
     self:redraw()

@@ -12,38 +12,6 @@ local buttons = require("editor.group.buttons")
 local helper = require("editor.tests.helper")
 local json   = require("json")
 
-function helper.selectGroup(name, class, isRightClick)
-  -- print(name, class)
-  for i, obj in next, groupTable.objs do
-    if obj.text == name then
-      print("", i, obj.text, obj.name)
-      if class == nil then
-        if isRightClick then
-          obj:dispatchEvent{name="mouse", target=obj, isSecondaryButtonDown=true, x =obj.x, y=obj.y}
-        else
-          obj:touch({phase="ended"})
-        end
-      else
-        for i, classObj in next, obj.classEntries do
-          print("", "", classObj.class)
-          if classObj.class == class then
-              if isRightClick then
-                  print("", "", "isRightClick")
-                  classObj:dispatchEvent{name= "mouse", target=classObj, isSecondaryButtonDown=true, x = classObj.x, y = classObj.y}
-              else
-                print("", "", "touch ended")
-                classObj:touch({phase="ended"})
-              end
-            break
-          end
-        end
-      end
-      -- obj.classEntries[1]:touch({phase="ended"}) -- animation
-      return obj
-    end
-  end
-end
-
 
 function M.init(props)
   selectors = props.selectors

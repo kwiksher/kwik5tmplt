@@ -262,6 +262,13 @@ function M:init(UI)
   end
 end
 --
+function M:setCurrnetSelection(layer, class, isGroup)
+  self.currentLayer = layer or ""
+  self.currentClass = class or ""
+  self.currentIsGroup = isGroup
+  print("### setCurrentSelection", isGroup)
+end
+--
 function M:create(UI)
   UI.editor = self
   for i=1, #self.views do
