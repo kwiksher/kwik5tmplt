@@ -92,9 +92,6 @@ function M:useClassEditorProps(UI)
     from={},
     actionName = nil,
     layerOptions = {
-      isGroup = false,
-      isSceneGroup = false,
-      isSpritesheet = false,
       referencePoint = "Center",
       -- for text
       deltaX         = 0,
@@ -114,7 +111,7 @@ function M:useClassEditorProps(UI)
     props.class=selectbox.selectedText.text
   else
     props.layer = UI.editor.currentLayer -- will be overwritten by classProps._target
-    props.layerOptions.isGroup = UI.editor.currentIsGroup or false
+    props.type = UI.editor.currentType or NIL
   end
   --
   local properties = classProps:getValue()

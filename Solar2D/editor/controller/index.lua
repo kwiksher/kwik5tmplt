@@ -371,7 +371,7 @@ function M:updateAsset(text, asset)
   end
 end
 
-function M:load(book, page, layer, class, isNew, asset, isGroup)
+function M:load(book, page, layer, class, isNew, asset, _type)
   print("read", page, layer, class, isNew)
   -- the values are used in useClassEdtiorProps()
   self.page = page
@@ -390,8 +390,8 @@ function M:load(book, page, layer, class, isNew, asset, isGroup)
     end
     --
     -- this is for group animation
-    if isGroup then
-      model.properties.isGroup = true
+    if _type then
+      model.properties.type = _type
     end
     --
     self:setValue(model, nil, true)

@@ -3,6 +3,7 @@ local M = {
   class = "Filter",
   properties ={
     target     = NIL,
+    type    = NIL, -- group, page, sprite
     animation  = false,
     delay      = 0,
     duration   = 1000,

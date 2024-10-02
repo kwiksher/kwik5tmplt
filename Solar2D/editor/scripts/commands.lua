@@ -638,7 +638,12 @@ function M.publish(UI, args, controller, decoded)
   -- local name = args.name -- args.selected.timer
   --
   -- print(args.model)
-  local model = args.model or getModelFrom(args) -- getModelFrom uses args.props.properties
+  local model  -- getModelFrom uses args.props.properties
+    if #args.props.properties > 0 then
+    model = getModelFrom(args)
+  else
+    model = args.model  or args.props
+  end
   ---
   -- local _dump = util.copyTable(model)
   -- print(json.encode(_dump))
@@ -711,10 +716,17 @@ function M.publishForSelections(UI, args, controller, decoded)
   print("", "classFolder="..classFolder)
 
   -- print(json.encode(args))
-  local model = args.model or getModelFrom(args)
-  print("---model----", args.model)
+  local model  -- getModelFrom uses args.props.properties
+  if #args.props.properties > 0 then
+    model = getModelFrom(args)
+  else
+    model = args.model  or args.props
+  end
+  print("---model----", model)
   -- for k, v in pairs(model) do print("", k, v) end
-  for k, v in pairs(model.properties) do print("properties", k, v) end
+  if model.properties then
+    for k, v in pairs(model.properties) do print("properties", k, v) end
+  end
   if model.actions then
     for k, v in pairs(model.actions) do print("actions", k, v) end
   end
@@ -724,8 +736,8 @@ function M.publishForSelections(UI, args, controller, decoded)
   local scene = require("App." .. book .. ".components." .. page .. ".index")
   local updatedModel = scene.model
   -- print(json.encode(updatedModel))
-
-  for i, obj in next, UI.editor.selections do
+  local selections = UI.editor.selections or {text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }
+  for i, obj in next, selections do
     if obj.class == "" then
       layer = obj.text
     else
@@ -774,7 +786,7 @@ function M.publishForSelections(UI, args, controller, decoded)
   files[#files + 1] = controller:renderIndex(book, page, renderdModel)
   files[#files + 1] = controller:saveIndex(book, page, nil, nil, renderdModel)
   --
-  saveSelection(book, page, UI.editor.selections)
+  saveSelection(book, page, selections)
   ----------
   backupFiles(files)
   --

@@ -3,20 +3,15 @@ local M = {
   class="Switch",
   properties = {
     target = NIL,
+    type    = NIL, -- group, page, sprite
     autoPlay=true,
     delay=0,
     duration=100,
     to = NIL,
   },
   layerOptions = {
-    isGroup = false,
-    isSceneGroup = false,
-    isSpritesheet = false,
   },
   fillOptions = {
-    isGroup = false,
-    isSceneGroup = false,
-    isSpritesheet = false,
   },
 
   actions = {onComplete = nil}

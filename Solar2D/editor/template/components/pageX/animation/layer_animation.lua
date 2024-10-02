@@ -18,10 +18,6 @@ local M = {
 
 {{#layerOptions}}
 M.layerOptions = {
-  -- layerProps
-  isGroup = {{isGroup}},
-  isSceneGroup = {{isSceneGroup}},
-  isSpritesheet = {{isSpritesheet}},
   --
   referencePoint = "{{referencePoint}}",
     -- "Center"
@@ -41,6 +37,7 @@ M.layerOptions = {
 -- animationProps
 M.properties = {
 {{#properties}}
+  type    = "{{type}}", -- group, page, sprite
   autoPlay = {{autoPlay}},
   delay    = {{delay}},
   duration = {{duration}},
