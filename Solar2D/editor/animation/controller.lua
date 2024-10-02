@@ -114,6 +114,7 @@ function M:useClassEditorProps(UI)
     props.class=selectbox.selectedText.text
   else
     props.layer = UI.editor.currentLayer -- will be overwritten by classProps._target
+    props.layerOptions.isGroup = UI.editor.currentIsGroup or false
   end
   --
   local properties = classProps:getValue()

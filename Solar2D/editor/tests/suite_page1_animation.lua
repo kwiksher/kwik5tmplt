@@ -9,6 +9,9 @@ local layerTable
 local helper = require("editor.tests.helper")
 local json = require("json")
 
+local groupTable = require("editor.group.groupTable")
+local buttons = require("editor.group.buttons")
+
 function helper.selectLayer(name)
   for i, entry in next,layerTable.objs do
     -- print("", i, entry.text)
@@ -47,6 +50,11 @@ function M.init(props)
   bookTable = props.bookTable
   pageTable = props.pageTable
   layerTable = props.layerTable
+
+  props.groupTable = groupTable
+  props.buttons    = buttons
+  helper.init(props)
+
 end
 
 function M.suite_setup()
@@ -110,13 +118,25 @@ function M.xtest_select_animation()
 
 end
 
-function M.test_new_animation()
+function M.xtest_new_animation()
   local name = "cat"
   helper.selectLayer(name)
   helper.clickIcon("Animations", "Linear")
 
   local buttons = require("editor.parts.buttons")
   local obj = buttons.objs["save"]
+  -- obj.rect:tap()
+
+end
+
+function M.test_new_group_animation()
+  local name = "groupCat"
+  selectors.componentSelector:onClick(true,  "groupTable")
+
+  helper.selectGroup(name)
+  helper.clickIcon("Animations", "Linear")
+
+  -- local obj = buttons.objs["save"]
   -- obj.rect:tap()
 
 end

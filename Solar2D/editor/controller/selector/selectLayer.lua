@@ -39,8 +39,8 @@ local command = function (params)
   -- print(debug.traceback())
 
   UI.editor.currentTool = propsTable
-  UI.editor.currentLayer = params.layer
-  UI.editor.currentClass = params.class
+
+  UI.editor:setCurrnetSelection(params.layer, params.class)
   print(UI.editor.currentLayer)
 
   local rootGroup = UI.editor.rootGroup
