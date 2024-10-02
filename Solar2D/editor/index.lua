@@ -262,11 +262,10 @@ function M:init(UI)
   end
 end
 --
-function M:setCurrnetSelection(layer, class, isGroup)
+function M:setCurrnetSelection(layer, class, _type)
   self.currentLayer = layer or ""
   self.currentClass = class or ""
-  self.currentIsGroup = isGroup
-  print("### setCurrentSelection", isGroup)
+  self.currentType = _type
 end
 --
 function M:create(UI)
@@ -351,7 +350,7 @@ function M:gotoLastSelection(_props)
   selectors.componentSelector.iconHander()
   selectors.componentSelector:onClick(true,  "layerTable")
 
-  if props.selections then
+  if props.selections and props.selections[1] then
     if props.selections[1].name == "action pasted" then
       helper.selectIcon("action")
     elseif props.selections[1].name == "pasted" then

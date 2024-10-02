@@ -123,8 +123,8 @@ local function linearPos(self, layer, _endX, _endY, isSceneGroup)
 end
 
 local function getPos(self, layer, _endX, _endY, isSceneGroup)
-  if self.layerOptions.isGroup then
-    return goupPos(self, layer, _endX, _endY, isSceneGroup)
+  if self.properties.type == "group" then
+    return groupPos(self, layer, _endX, _endY, isSceneGroup)
   else
     return linearPos(self, layer, _endX, _endY, isSceneGroup)
   end

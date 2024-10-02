@@ -19,6 +19,7 @@ local M = {
   },
   properties = {
     target = NIL,
+    type    = NIL, -- group, page, sprite
     autoPlay=true,
     delay = 1000,
     duration=500,
@@ -48,10 +49,6 @@ local M = {
   },
   breadcrumbs = nil,
   layerOptions = {
-    -- layerProps
-    isGroup = false,
-    isSceneGroup = false,
-    isSpritesheet = false,
     --
     referencePoint = "Center",
       -- "Center"
