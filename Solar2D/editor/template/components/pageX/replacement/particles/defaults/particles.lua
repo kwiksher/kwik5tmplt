@@ -18,6 +18,7 @@ local M = {
     rotation = 90
   },
   properties = {
+    type = NIL,
     autoPlay=true,
     delay=1000,
     duration=3000,
@@ -47,9 +48,6 @@ local M = {
   },
   layerOptions = {
     -- layerProps
-    isGroup = false,
-    isSceneGroup = false,
-    isSpritesheet = false,
     --
     referencePoint = "Center",
       -- "Center"

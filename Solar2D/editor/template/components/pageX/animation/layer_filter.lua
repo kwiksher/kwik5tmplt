@@ -1,5 +1,6 @@
 local M = {
   target     = NIL,
+  type    = {{type}}, -- group, page, sprite
   animation  = false,
   delay      = 0,
   duration   = 1000,

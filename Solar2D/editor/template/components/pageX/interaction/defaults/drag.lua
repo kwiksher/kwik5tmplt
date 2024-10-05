@@ -7,10 +7,10 @@ local M = {
     onMoved= "" },
   properties = {
     target = NIL,
+    type  = NIL,
     constrainAngle = NIL,
     isActive = true,
     isFocus = true,
-    isGroup = false,
     --
     isFlip = true,
     flipInitialDirection = "right",  -- flipSet.right

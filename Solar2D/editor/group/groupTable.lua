@@ -84,11 +84,9 @@ function M:commandHandler(eventObj, event)
   else
     if layerTableCommands.singleSelection(self, target) then
       self.UI.editor.currentLayer = target.layer
-      -- target.isSelected = true
-      self.UI.editor.currentClass = target.name
+      self.UI.editor:setCurrnetSelection(target.layer, target.name, "group") -- _type == group, page, sprite
       -- print("@@@@@@", target.layer, target.class)
       classPropsPhysics:setActiveProp(target.layer, target.class)
-
     end
   end
   return true

@@ -40,13 +40,13 @@ local instance =
       else
         local sceneGroup = UI.sceneGroup
         player:initAnimation(UI, sceneGroup[props.layer], onEndHandler)
-        player.tweenTo, player.tweenFrom = player:buildAnim(UI)
+        player.tween = player:buildAnim(UI)
         -- player.tween:pause()
         player:init()
-        if player.tweenFrom then
-          player.tweenFrom:play()
+        if player.tween.from then
+          player.tween.from:play()
         else
-          player.tweenTo:play()
+          player.tween.to:play()
         end
       end
     end

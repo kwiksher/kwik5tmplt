@@ -164,7 +164,7 @@ function M:commandHandler(eventObj, event)
   else
     if layerTableCommands.singleSelection(self, target) then
       if target.layer then
-        self.UI.editor.currentLayer = target.layer
+        self.UI.editor:setCurrnetSelection(target.layer)
       end
       -- target.isSelected = true
       if target.name then
