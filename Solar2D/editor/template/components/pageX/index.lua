@@ -14,13 +14,10 @@ local scene = require('controller.scene').new(sceneName, {
         {{/audios}}
       },
       groups = {
-      {{#groups}}
-      {
-        {{name}} ={
-          class={ {{#class}}"{{.}}",{{/class}} }
-        }
+        {{#groups}}
+        {{>recursive}}
+        {{/groups}}
       },
-      {{/groups}} },
       timers = { {{#timers}} "{{.}}", {{/timers}} },
       variables = { {{#variables}} "{{.}}", {{/variables}} },
       joints    = { {{#joints}} "{{.}}", {{/joints}} },

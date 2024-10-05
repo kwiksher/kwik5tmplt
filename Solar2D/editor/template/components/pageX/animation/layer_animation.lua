@@ -13,15 +13,12 @@ local M = {
     -- "Bounce"
     -- "Blink"
   --
-  obj = require(parent.."{{layer}}").obj
 }
+
+M.obj = require(parent.."{{layer}}").obj
 
 {{#layerOptions}}
 M.layerOptions = {
-  -- layerProps
-  isGroup = {{isGroup}},
-  isSceneGroup = {{isSceneGroup}},
-  isSpritesheet = {{isSpritesheet}},
   --
   referencePoint = "{{referencePoint}}",
     -- "Center"
@@ -41,6 +38,8 @@ M.layerOptions = {
 -- animationProps
 M.properties = {
 {{#properties}}
+  type    = "{{type}}", -- group, page, sprite
+  target = "{{target}}",
   autoPlay = {{autoPlay}},
   delay    = {{delay}},
   duration = {{duration}},
@@ -121,7 +120,11 @@ local function onEndHandler (UI)
 end
 --
 function M:create(UI)
-  self.obj = UI.sceneGroup[self.name]
+  if self.properties.type == "group" then
+    self.obj = require(parent..self.properties.target).group
+  else
+    self.obj = UI.sceneGroup[self.name]
+  end
   self:initAnimation(UI, self.obj, onEndHandler)
   self.animation = self:buildAnim(UI)
 end

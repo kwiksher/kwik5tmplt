@@ -46,7 +46,7 @@ local instance =
     end
 
     local controller = UI.editor:getClassModule(class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
-    for k, v in pairs(controller:useClassEditorProps()) do
+    for k, v in pairs(controller:useClassEditorProps(UI)) do
       print(k, v)
       props[k] = v
     end
@@ -139,10 +139,7 @@ return instance
     "class": "button",
     "name": "butBlueB",
     "layerOptions": {
-      "isSceneGroup": false,
       "referencePoint": "Center",
-      "isGroup": false,
-      "isSpritesheet": false,
       "deltaX": 0,
       "deltaY": 0
     }
@@ -154,10 +151,7 @@ return instance
     "class": "drag",
     "name": "butBlueD",
     "layerOptions": {
-      "isSceneGroup": false,
       "referencePoint": "Center",
-      "isGroup": false,
-      "isSpritesheet": false,
       "deltaX": 0,
       "deltaY": 0
     }

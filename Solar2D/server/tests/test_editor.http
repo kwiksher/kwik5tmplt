@@ -106,6 +106,7 @@ to:
   yScale: 1.5
   rotation: 90
 controls:
+  type: null
   autoPlay: true
   delay: 0
   duration: 1000
@@ -134,9 +135,6 @@ breadcrumbs:
   width: 30
   height: 30
 layerOptions:
-  isGroup: false
-  isSceneGroup: false
-  isSpritesheet: false
   referencePoint: Center
   deltaX: 0
   deltaY: 0

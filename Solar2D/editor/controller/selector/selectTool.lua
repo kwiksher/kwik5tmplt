@@ -69,8 +69,7 @@ local command = function (params)
       -- read json
       tool:show()
       UI.editor.currentTool = tool
-      UI.editor.currentClass = params.class
-
+      UI.editor:setCurrnetSelection(UI.editor.currentLayer, params.class, UI.editor.currentType) -- inherits currentLayer and currentType here
       if params.layer then -- this measn user clicks one of class, anim, button, drag ...
         UI.editor.currentLayer = params.layer
       end
@@ -81,7 +80,7 @@ local command = function (params)
         tool.controller:updateAsset(params.classField, params.asset)
       else
         -- params.asset is merged in this load()
-        tool.controller:load(UI.editor.currentBook, UI.page, UI.editor.currentLayer, params.class, params.isNew, params.asset)
+        tool.controller:load(UI.editor.currentBook, UI.page, UI.editor.currentLayer, params.class, params.isNew, params.asset, UI.editor.currentType)
         -- print("******", UI.editor.currentClass)
         UI.editor.rootGroup:dispatchEvent{name="labelStore",
         currentBook= UI.editor.currentBook,

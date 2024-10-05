@@ -59,9 +59,6 @@ function M:useClassEditorProps()
     from={},
     actionName = nil,
     layerOptions = {
-      isGroup = tostring(false),
-      isSceneGroup = tostring(false),
-      isSpritesheet = tostring(false),
       referencePoint = "Center",
       -- for text
       deltaX         = 0,

@@ -228,6 +228,9 @@ function M:render(book, page, layer, classFolder, class, model)
     if Animations[class] then
       tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_animation.lua"
     end
+   if model.type =="group" then
+    dst =  "App/"..book.."/components/"..page.."/groups/"..layer.."_"..class ..".lua"
+   end
   else
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
     --local dst = layer.."_"..class ..".lua"
@@ -323,7 +326,7 @@ function M:read(book, page, layer,class, isNew)
   return decoded
 end
 
-function M:loadLua(book, page, layer,class, isNew)
+function M:loadLua(book, page, layer,class, isNew, _type)
   self.page = page
   self.layer = layer
   self.isNew = isNew
@@ -339,6 +342,9 @@ function M:loadLua(book, page, layer,class, isNew)
     local layerName = layer or "index"
     --local path      = page .."/"..layerName.."_"..self.tool..".json"
     local path      =  "App."..book..".components."..page ..".layers."..layerName.."_"..class
+    if _type == "group" then
+      path =  "App."..book..".components."..page ..".groups."..layerName.."_"..class
+    end
     local mod = require(path)
     return {mod}
   else
@@ -371,7 +377,7 @@ function M:updateAsset(text, asset)
   end
 end
 
-function M:load(book, page, layer, class, isNew, asset)
+function M:load(book, page, layer, class, isNew, asset, _type)
   print("read", page, layer, class, isNew)
   -- the values are used in useClassEdtiorProps()
   self.page = page
@@ -384,9 +390,16 @@ function M:load(book, page, layer, class, isNew, asset)
     local decoded = self:read(book, page, layer, class, isNew)
     self:reset()
     local model = decoded[1]
+    --
     if asset then
       model = self:mergeAsset(decoded[1], asset)
     end
+    --
+    -- this is for group animation
+    if _type then
+      model.properties.type = _type
+    end
+    --
     self:setValue(model, nil, true)
     -- print(json.encode(model))
     self:redraw()
@@ -399,7 +412,7 @@ function M:load(book, page, layer, class, isNew, asset)
     -- print("", path)
     if self.lastSelection ~= path then
       self.lastSelection   = path
-      local decoded = self:loadLua(book, page, layer, class, isNew)
+      local decoded = self:loadLua(book, page, layer, class, isNew, _type)
       self:reset()
       self:setValue(decoded, 1)
       self:redraw()
