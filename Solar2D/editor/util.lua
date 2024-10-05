@@ -43,7 +43,7 @@ function M.isExist(book, page, layer, class)
   return path
 end
 
-function M.updateIndexModel(_scene, layerName, class)
+function M.updateIndexModel(_scene, layerName, class, _type)
   local scene =
     _scene or
     {
@@ -122,22 +122,11 @@ function M.updateIndexModel(_scene, layerName, class)
     end
   end
   --
-  --if layerName then
-  processLayers(copied.components.layers, 1)
-  --end
-  --
-
-  local groups = {}
-  for i, v in next, copied.components.groups do
-    local entry = {}
-    for key, value in pairs(v) do
-      entry.name = key
-      entry.class = value
-    end
-    groups[i] = entry
+  if _type == "group" then
+    processLayers(copied.components.groups, 1)
+  else
+    processLayers(copied.components.layers, 1)
   end
-  copied.components.groups = groups
-
   return copied
 end
 
@@ -238,6 +227,7 @@ function M.createIndexModel(_scene, layerName, class)
   --
   --if layerName then
   processLayers(copied.components.layers, 1)
+  processLayers(copied.components.groups, 1)
   -- print(json.encode(copied.components.groups))
   -- local groups = {}
   -- for i, v in next, copied.components.groups do

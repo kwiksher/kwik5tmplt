@@ -566,6 +566,8 @@ local function getModelFrom(args)
           ret.name = v.value
         elseif v.name == "_type" then
           ret.properties.type = v.value
+        elseif v.name == "_target" then
+          ret.properties.target = v.value
         elseif v.name == "_file" then
           ret.properties.file = v.value
         else
@@ -736,15 +738,15 @@ function M.publishForSelections(UI, args, controller, decoded)
   local scene = require("App." .. book .. ".components." .. page .. ".index")
   local updatedModel = scene.model
   -- print(json.encode(updatedModel))
-  local selections = UI.editor.selections or {text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }
+  local selections = UI.editor.selections or {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
   for i, obj in next, selections do
     if obj.class == "" then
       layer = obj.text
     else
       model.layer = obj.layer
     end
-    updatedModel = util.updateIndexModel(updatedModel, layer, class)
-
+    updatedModel = util.updateIndexModel(updatedModel, layer, class, model.properties._type)
+    -- print(json.encode(updatedModel))
     --- save json
     -----------
     -- print(book, page, layer, classFolder, args.index)
