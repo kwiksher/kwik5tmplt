@@ -117,7 +117,11 @@ function M:useClassEditorProps(UI)
   local properties = classProps:getValue()
   for i=1, #properties do
     -- print("", properties[i].name, type(properties[i].value))
-    props.properties[properties[i].name] = properties[i].value
+    if properties[i].name == "_target" then
+      props.properties.target = properties[i].value
+    else
+      props.properties[properties[i].name] = properties[i].value
+    end
   end
 
   if props.properties._target then
