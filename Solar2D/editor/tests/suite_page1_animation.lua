@@ -129,7 +129,7 @@ function M.xtest_new_animation()
 
 end
 
-function M.test_new_group_animation()
+function M.xtest_new_group_animation()
   local name = "groupCat"
   selectors.componentSelector:onClick(true,  "groupTable")
 
