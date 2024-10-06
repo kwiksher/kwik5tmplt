@@ -3,17 +3,12 @@ local parent,root = newModule(name)
 
 local layerProps = require(parent.."{{layer}}").properties
 
--- layerProps
--- local layerProps = {
---   blendMode = "{{blendMode}}",
---   height    =  {{bounds.bottom}} - {{bounds.top}},
---   width     = {{bounds.right}} - {{bounds.left}} ,
---   kind      = {{kind}},
---   name      = "{{parent}}{{name}}",
---   type      = "png",
---   x         = {{bounds.right}} + ({{bounds.left}} -{{bounds.right}})/2,
---   y         = {{bounds.top}} + ({{bounds.bottom}} - {{bounds.top}})/2,
---   alpha     = {{opacity}}/100,
+-- if (String(ghasl) == "true" &&  String(ghasu) == "false") {
+--   model.dbounds = ' { minAngle = '+glow+' }'
+-- } else if (String(ghasu) == "true"  && String(ghasl) == "false") {
+--   model.dbounds = '{ maxAngle = '+gupper+' }'
+-- }  else if (String(ghasl) == "true"  && String(ghasu) == "true") {
+--   model.dbounds = '{ minAngle = '+glow+', maxAngle =  '+gupper+' }'
 -- }
 
 local M = {
@@ -23,16 +18,17 @@ local M = {
     {{#properties}}
     target = "{{layer}}",
     type  = "{{type}}",
-    constrainAngle = nil,
-    bounds = {xStart=nil, xEnd=nil, yStart=nil, yEnd=nil},
+    constrainAngle = {{constrainAngle}},
+    xStart={{xStart}}, xEnd={{xEnd}}, yStart={{yStart}}, yEnd={{yEnd}},
     isActive = "{{isActive}}",
     {{/properties}}
   },
   --
   actions={
-    onClokwise = "{{}}",
-    onCounterClockwise ="{{}}",
-    onReleased ="{{}}",
+    onClokwise = "{{onClokwise}}",
+    onCounterClockwise ="{{onCounterClockwise}}",
+    onReleased ="{{onReleased}}",
+    onShapeHandler = "{{onShapeHandler}}"
     -- onMoved="{{}}"
   },
   --
@@ -40,24 +36,15 @@ local M = {
 }
 
 function M:create(UI)
-  self.UI = UI
-  local sceneGroup = UI.sceneGroup
-  local layerName  = self.layerProps.name
-  self.obj        = sceneGroup[layerName]
-  if self.isPage then
-    self.obj = sceneGroup
-  end
-  --
-  self:setSpin(self.obj)
+  self:setSpin(UI)
 end
 
 function M:didShow(UI)
-  self.UI = UI
-  self:addEventListener(self.obj)
+  self:activate(UI)
 end
 
 function M:didHide(UI)
-  self:removeEventListener(self.obj)
+  self:deactivate(UI)
 end
 
 return require("components.kwik.layer_pinch").set(M)
