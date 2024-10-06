@@ -745,7 +745,7 @@ function M.publishForSelections(UI, args, controller, decoded)
     else
       model.layer = obj.layer
     end
-    updatedModel = util.updateIndexModel(updatedModel, layer, class, model.properties._type)
+    updatedModel = util.updateIndexModel(updatedModel, layer, class, model.properties._type or model.properties.type)
     -- print(json.encode(updatedModel))
     --- save json
     -----------
