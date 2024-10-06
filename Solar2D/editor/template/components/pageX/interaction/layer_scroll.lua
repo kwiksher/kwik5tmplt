@@ -20,33 +20,32 @@ local M = {
 }
 
 if M.properties.area == "paragraph" then
-  M.properties.widthGroupMember  = {{ggwid}}/4
+  M.properties.width  = {{width}}/4
 end
 
 if M.properties.area == "object" then
-  M.properties.widthGroupMember = {{ggwid}}/4
+  M.properties.width = {{width}}/4
 end
 
 if M.properties.area == "page" then
-  M.properties.gww, M.properties.gwh   = {{gww}}/4, {{gwh}}/4
-  M.properties.gwsw, M.properties.gwsh = {{gwsw}}/4, {{gwsh}}/4
+  M.properties.width, M.properties.height   = {{width}}/4, {{height}}/4
+  M.properties.scrollWidth, M.properties.scrollHeight = {{scrollWidth}}/4, {{scrollHeight}}/4
 end
 
 if M.properties.area == "manual" then
   -- if M.properties.is1x then
-  --   local gmt, gml   = {{gmt}}, {{gml}}
-  --   local gww, gwh   = {{gww}}, {{gwh}}
-  --   local gwsw, gwsh = {{gwsw}}, {{gwsh}}
+  --   local top, left   = {{top}}, {{left}}
+  --   local width, height   = {{width}}, {{height}}
+  --   local scrollWidth, scrollHeight = {{scrollWidth}}, {{scrollHeight}}
   -- else
-    M.properties.gmt, M.properties.gml   = {{gmt}}, {{gml}}
-    M.properties.gww, M.properties.gwh   = {{gww}}/4, {{gwh}}/4
-    M.properties.gwsw,M.properties.gwsh = {{gwsw}}/4, {{gwsh}}/4
+    M.properties.top, M.properties.left   = {{top}}, {{left}}
+    M.properties.width, M.properties.height   = {{width}}/4, {{height}}/4
+    M.properties.scrollWidth,M.properties.scrollHeight = {{scrollWidth}}/4, {{scrollHeight}}/4
   -- end
 end
 
 function M:create(UI)
-  --
-  self:setScroll(self.obj)
+  self:setScroll(UI)
 end
 
 function M:didShow(UI)

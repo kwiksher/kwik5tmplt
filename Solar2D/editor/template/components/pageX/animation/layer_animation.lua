@@ -137,7 +137,9 @@ function M:didShow(UI)
 end
 --
 function M:didHide(UI)
-  self.animation:pause()
+  if self.animation.pause then
+    self.animation:pause()
+  end
 end
 --
 return require("components.kwik.layer_animation").set(M)
