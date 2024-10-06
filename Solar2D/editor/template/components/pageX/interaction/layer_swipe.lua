@@ -11,14 +11,15 @@ local M = {
     target = "{{layer}}",
     type  = "{{type}}",
     isActive = "{{isActive}}",
+    dbounds = { swipeLength = {{swipeLength}}, limitAngle = {{limitAngle}}, useStrictBounds = {{useStrictBounds}}}
     {{/properties}}
   },
   --
   actions={
-    onClokwise = "{{}}",
-    onCounterClockwise ="{{}}",
-    onReleased ="{{}}",
-    -- onMoved="{{}}"
+    onUp = "{{onUp}}",
+    onDown ="{{onDown}}",
+    onRight ="{{onRight}}",
+    onLeft  = "{{onLeft}}"
   },
   --
   layerProps = layerProps

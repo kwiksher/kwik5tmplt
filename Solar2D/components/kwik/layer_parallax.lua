@@ -1,48 +1,48 @@
 
-local _M = {}
+local M = {}
 ---------------------
-function M:setParallax(UI)
-    local sceneGroup  = UI.scene.view
-    local layer       = UI.layer
-    --
-    {{#parallaxArr}}
-    layer.{{nm2}}X = {{nm}}.x
-    layer.{{nm2}}Y = {{nm}}.y
-    {{/parallaxArr}}
-    --
-    _K.accelerometerHandler = function(event)
-    	{{#parallaxArr}}
-      {{#dampX}}
-           {{nm}}.x = layer.{{nm2}}X + (layer.{{nm2}}X * event.yGravity * {{dpx}});
-      {{/dampX}}
-      {{#dampY}}
-           {{nm}}.y = layer.{{nm2}}Y + (layer.{{nm2}}Y * event.yGravity * {{dpy}});
-      {{/dampY}}
-        if event.zGravity > 0 then
-          {{#triggerBack}}
-           UI.scene:dispatchEvent({name="{{triggerBack}}", accel=event })
-          {{/triggerBack}}
-        else
-          {{#triggerForward}}
-           UI.scene:dispatchEvent({name="{{triggerForward}}", accel=event })
-          {{/triggerForward}}
-        end
-      {{/parallaxArr}}
+M.accelerometerHandler = function(event)
+    local obj = event.target
+    local props = obj.parallax
+    local UI = props.UI
+    if props.properties.dampX then
+        obj.x = props.X + (props.X * event.yGravity * props.properties.dpx);
     end
-    Runtime:addEventListener("accelerometer", _K.accelerometerHandler)
-    _K.tAccell = _K.accelerometerHandler
+    if props..properties.dampY then
+        obj.y = props.Y + (props.Y * event.yGravity * props.properties.dpy);
+    end
+    if event.zGravity > 0 then
+       if props.actions.onBack then
+          UI.scene:dispatchEvent({name=props.actions.onBack, event=event })
+       end
+    else
+      if props.actions.onForward then
+          UI.scene:dispatchEvent({name=props.actions.onForward, event=event })
+      end
+    end
+end
+
+function M:setParallax(UI)
+  local sceneGroup = UI.sceneGroup
+  local layerName  = self.properties.target
+  local obj        = sceneGroup[layerName]
+  if self.properties.target == "page" then
+    obj = sceneGroup
+  end
+  obj.parallax = self
+  obj.parallax.X = obj.x
+  obj.parallax.Y = obj.y
+  self.obj = obj
 end
 
 --
-function M:activate(obj)
-  if obj == nil then
-    return
-  end
-  local props = self.properties
+function M:activate(UI)
+  self.obj:addEventListener("accelerometer", self.accelerometerHandler)
   ---
 end
 
-function M:deactivate(obj)
+function M:deactivate(UI)
+  self.obj:removedEventListener("accelerometer", self.accelerometerHandler)
 end
 
 M.set = function(model)

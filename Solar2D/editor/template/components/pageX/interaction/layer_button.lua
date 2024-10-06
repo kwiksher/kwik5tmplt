@@ -30,8 +30,8 @@ local M = {
 function M:create(UI)
   local sceneGroup = UI.sceneGroup
   local obj =  self:createButton(UI)
-  UI.layers[self.name] = obj
-  sceneGroup[self.name] = obj
+  UI.layers[self.properties.target] = obj
+  sceneGroup[self.properties.target] = obj
   sceneGroup:insert(obj)
 end
 
