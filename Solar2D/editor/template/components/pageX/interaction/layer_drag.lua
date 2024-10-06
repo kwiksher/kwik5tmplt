@@ -1,7 +1,7 @@
 local name = ...
 local parent,root = newModule(name)
 
-local layerProps = require(parent.."{{layer}}")
+local layerProps = require(parent.."{{layer}}").properties
 local MultiTouch = require("extlib.dmc_multitouch")
 
 
@@ -11,28 +11,32 @@ local M = {
   -- class = "{{class}}", -- button, drag, canvas ...
   --
   -- dragProps
-  {{#properties}}
-  constrainAngle = {{constrainAngle}},
-  bounds = {xMin={{xMin}}, xMax={{xMax}}, yMin={{yMin}}, yMax={{yMax}}},
-  isActive = "{{isActive}}",
-  isFocus = true,
-  isPage = false,
-  --
-  isFlip = true,
-  flipInitialDirection  = "right", -- "left", "bottom", "top"
-  -- flipAxis = "x", -- "y",
-  -- flipValue      = 0,
-  -- flipScale = 1, -- -1
-  -- --
-  isDrop = true,
-  dropArea = "{{dropArea}}",
-  dropMargin = 10,
-  --
-  -- dropBound = {xMin=0, xMax=0, yMin = 0, yMax=0},
-  --
-  rock = 1, -- 0,
-  backToOrigin = true,
-  {{/properties}}
+  properties = {
+    {{#properties}}
+    target = "{{layer}}",
+    type  = "{{type}}",
+    constrainAngle = {{constrainAngle}},
+    bounds = {xMin={{xMin}}, xMax={{xMax}}, yMin={{yMin}}, yMax={{yMax}}},
+    isActive = "{{isActive}}",
+    isFocus = true,
+    isPage = false,
+    --
+    isFlip = true,
+    flipInitialDirection  = "right", -- "left", "bottom", "top"
+    -- flipAxis = "x", -- "y",
+    -- flipValue      = 0,
+    -- flipScale = 1, -- -1
+    -- --
+    isDrop = true,
+    dropArea = "{{dropArea}}",
+    dropMargin = 10,
+    --
+    -- dropBound = {xMin=0, xMax=0, yMin = 0, yMax=0},
+    --
+    rock = 1, -- 0,
+    backToOrigin = true,
+   {{/properties}}
+  }
   --
 }
 
