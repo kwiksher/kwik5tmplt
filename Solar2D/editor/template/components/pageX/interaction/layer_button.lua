@@ -9,6 +9,7 @@ local M = {
     {{#properties}}
     target = "{{layer}}",
     type  = "{{type}}", -- tap, touch
+    eventType = "{{eventType}}",
     over = "{{over}}",
     btaps = {{btaps}},
     mask = "{{mask}}",
