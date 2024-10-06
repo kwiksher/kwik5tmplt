@@ -1,65 +1,51 @@
--- Code created by Kwik - Copyright: kwiksher.com {{year}}
--- Version: {{vers}}
--- Project: {{ProjName}}
+local M = {}
+local Gesture = require("extlib.dmc_gesture")
 --
-local _M = {}
---
-local _K = require "Application"
---
-function _M:didShow(UI)
-  local sceneGroup  = UI.scene.view
-  local layer       = UI.layer
-  {{^sceneGroup}}
-  local target = layer.{{myLName}}
-  {{/sceneGroup}}
-  {{#sceneGroup}}
-  local target = sceneGroup
-  {{/sceneGroup}}
-
-  if target == nil then return end
-  _K.Gesture.activate( target, {{dbounds}} )
-  _K.{{myLName}}Swipe = function (event )
-   if event.phase == "ended" and event.direction ~= nil then
-       if event.direction == "up" then
-      {{#gcompleteUp}}
-         UI.scene:dispatchEvent({name="{{gcompleteUp}}", swip=event })
-      {{/gcompleteUp}}
-      elseif event.direction =="down" then
-      {{#gcompleteDown}}
-         UI.scene:dispatchEvent({name="{{gcompleteDown}}", swip=event })
-      {{/gcompleteDown}}
-      elseif event.direction =="left" then
-      {{#gcompleteLeft}}
-         UI.scene:dispatchEvent({name="{{gcompleteLeft}}", swip=event })
-      {{/gcompleteLeft}}
-      elseif event.direction=="right" then
-      {{#gcompleteRight}}
-         UI.scene:dispatchEvent({name="{{gcompleteRight}}", swip=event })
-      {{/gcompleteRight}}
+M.swipeHandler = function(event)
+  local target = event.target
+  local props = target.swipe
+  local UI = props.UI
+  if event.phase == "ended" and event.direction ~= nil then
+    if event.direction == "up" then
+      if props.actions.onUp then
+        UI.scene:dispatchEvent({name = props.actions.onUp, event = event})
+      end
+    elseif event.direction == "down" then
+      if props.actions.onDown then
+        UI.scene:dispatchEvent({name = props.actions.onDown, event = event})
+      end
+    elseif event.direction == "left" then
+      if props.actions.onLeft then
+        UI.scene:dispatchEvent({name = props.actions.onLeft, event = event})
+      end
+    elseif event.direction == "right" then
+      if props.actions.onRight then
+        UI.scene:dispatchEvent({name = props.actions.onRight, event = event})
       end
     end
-    return true
   end
-  target:addEventListener( _K.Gesture.SWIPE_EVENT, _K.{{myLName}}Swipe )
+  return true
+end
+
+function M:setSwipe(UI)
+  local sceneGroup = UI.sceneGroup
+  local layerName = self.layerProps.name
+  self.obj = sceneGroup[layerName]
+  if self.isPage then
+    self.obj = sceneGroup
+  end
+  self.obj.swipe = self
+end
+
+function M:activate(UI)
+  local obj = self.obj
+  Gesture.activate(obj, self.properties.dbounds)
+  obj:addEventListener(Gesture.SWIPE_EVENT, self.swipeHandler)
 end
 --
-function _M:toDispose(UI)
-  local sceneGroup  = UI.scene.view
-  local layer       = UI.layer
-  {{^sceneGroup}}
-  local target = layer.{{myLName}}
-  {{/sceneGroup}}
-  {{#sceneGroup}}
-  local target = sceneGroup
-  {{/sceneGroup}}
-  if target == nil or  _K.{{myLName}}Swipe == nil then return end
-  target:removeEventListener ( _K.Gesture.SWIPE_EVENT, _K.{{myLName}}Swipe )
-  _K.{{myLName}}Swipe = nil
-    --_K.Gesture.deactivate(layer.{{myLName+') ;
+function M:deactivate(UI)
+  local obj = self.obj
+  obj:removeEventListener(Gesture.SWIPE_EVENT, self.swipeHandler)
 end
 --
-function _M:toDestroy(UI)
-  _K.{{myLName}}Swipe = nil
-end
---
-return _M
+return M

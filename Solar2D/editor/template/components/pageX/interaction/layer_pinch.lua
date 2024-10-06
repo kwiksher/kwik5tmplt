@@ -11,38 +11,31 @@ local M = {
     target = "{{layer}}",
     type  = "{{type}}",
     isActive = "{{isActive}}",
+    constrainAngle = {{constrainAngle}},
+    xStart={{xStart}}, yStart={{eEnd}}, yStart={{yStart}}, yEnd = {{yEnd}},
+    min = {{min}},
+    max = {{max}}
     {{/properties}}
   },
   --
   actions={
-    onClokwise = "{{}}",
-    onCounterClockwise ="{{}}",
-    onReleased ="{{}}",
-    -- onMoved="{{}}"
+    onEnded ="{{onEnded}}",
+    onMoved="{{onMoved}}"
   },
   --
   layerProps = layerProps
 }
 
 function M:create(UI)
-  self.UI = UI
-  local sceneGroup = UI.sceneGroup
-  local layerName  = self.properties.target
-  self.obj        = sceneGroup[layerName]
-  if self.isPage then
-    self.obj = sceneGroup
-  end
-  --
-  self:setPinch(self.obj)
+  self:setPinch(UI)
 end
 
 function M:didShow(UI)
-  self.UI = UI
-  self:addEventListener(self.obj)
+  self:activate(UI)
 end
 
 function M:didHide(UI)
-  self:removeEventListener(self.obj)
+  self:deactivate(UI)
 end
 
 return require("components.kwik.layer_pinch").set(M)
