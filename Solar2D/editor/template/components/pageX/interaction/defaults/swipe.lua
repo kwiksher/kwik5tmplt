@@ -4,8 +4,17 @@ local M = {
   properties = {
     target = NIL,
     type   = NIL,
-    isActive = true
-  }
+    isActive = true,
+    swipeLength = 120,
+    limitAngle = NIL,
+    useStrictBounds = false
+  },
+  actions={
+    onUp = NIL,
+    onDown = NIL,
+    onRight = NIL,
+    onLeft  = NIL,
+  },
 }
 
 return M
