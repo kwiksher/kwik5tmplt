@@ -4,7 +4,14 @@ local M = {
   properties = {
     target = NIL,
     type   = NIL,
-    isActive = true
+    isActive = true,
+    area = "object", -- page, paragraph, manual
+    width = NIL,
+    height = NIL,
+    top = NIL,
+    left = NIL,
+    scrollWith = NIL,
+    scrollHeight = NIL
   }
 }
 

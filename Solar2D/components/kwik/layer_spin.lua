@@ -41,14 +41,12 @@ function M:activate(UI)
   if props.constrainAngle then
     options.constrainAngle=props.constrainAngle
   end
-  if props.xStart then
-    options.xBounds ={ props.xStart, props.xEnd }
-  end
-  if props.yStart then
-    options.yBounds ={ props.yStart, props.yEnd }
-  end
   --
-  MultiTouch.activate( obj, "rotate", "single", options)
+  if props.minAngle or props.maxAngle then
+    _K.MultiTouch.activate( obj, "rotate", "single",   { minAngle = properties.minAgnle, maxAngle =  properties.maxAngle } )
+  else
+    _K.MultiTouch.activate( obj, "rotate", "single" )
+  end
   obj:addEventListener( MultiTouch.MULTITOUCH_EVENT,self.spinHandler)
 end
 --
