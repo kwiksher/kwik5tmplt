@@ -14,35 +14,45 @@ local M = {
     {{/properties}}
   },
   --
-  actions={
-    onClokwise = "{{}}",
-    onCounterClockwise ="{{}}",
-    onReleased ="{{}}",
-    -- onMoved="{{}}"
-  },
+  actions={},
   --
   layerProps = layerProps
 }
 
+if M.properties.area == "paragraph" then
+  M.properties.widthGroupMember  = {{ggwid}}/4
+end
+
+if M.properties.area == "object" then
+  M.properties.widthGroupMember = {{ggwid}}/4
+end
+
+if M.properties.area == "page" then
+  M.properties.gww, M.properties.gwh   = {{gww}}/4, {{gwh}}/4
+  M.properties.gwsw, M.properties.gwsh = {{gwsw}}/4, {{gwsh}}/4
+end
+
+if M.properties.area == "manual" then
+  -- if M.properties.is1x then
+  --   local gmt, gml   = {{gmt}}, {{gml}}
+  --   local gww, gwh   = {{gww}}, {{gwh}}
+  --   local gwsw, gwsh = {{gwsw}}, {{gwsh}}
+  -- else
+    M.properties.gmt, M.properties.gml   = {{gmt}}, {{gml}}
+    M.properties.gww, M.properties.gwh   = {{gww}}/4, {{gwh}}/4
+    M.properties.gwsw,M.properties.gwsh = {{gwsw}}/4, {{gwsh}}/4
+  -- end
+end
+
 function M:create(UI)
-  self.UI = UI
-  local sceneGroup = UI.sceneGroup
-  local layerName  = self.properties.target
-  self.obj        = sceneGroup[layerName]
-  if self.isPage then
-    self.obj = sceneGroup
-  end
   --
   self:setScroll(self.obj)
 end
 
 function M:didShow(UI)
-  self.UI = UI
-  self:addEventListener(self.obj)
 end
 
 function M:didHide(UI)
-  self:removeEventListener(self.obj)
 end
 
 return require("components.kwik.layer_scroll").set(M)

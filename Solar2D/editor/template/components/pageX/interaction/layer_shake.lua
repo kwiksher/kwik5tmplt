@@ -15,10 +15,7 @@ local M = {
   },
   --
   actions={
-    onClokwise = "{{}}",
-    onCounterClockwise ="{{}}",
-    onReleased ="{{}}",
-    -- onMoved="{{}}"
+    onComplete = "{{onComplete}}",
   },
   --
   layerProps = layerProps
@@ -37,12 +34,11 @@ function M:create(UI)
 end
 
 function M:didShow(UI)
-  self.UI = UI
-  self:addEventListener(self.obj)
+  self:activate(UI)
 end
 
 function M:didHide(UI)
-  self:removeEventListener(self.obj)
+  self:deactivate(UI)
 end
 
 return require("components.kwik.layer_shake").set(M)
