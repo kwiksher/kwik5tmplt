@@ -4,7 +4,13 @@ local M = {
   properties = {
     target = NIL,
     type   = NIL,
-    isActive = true
+    isActive = true,
+    dpx = 0.5,
+    dpy = 0.5,
+  },
+  actions = {
+    onBack = NIL,
+    onForward = NIL,
   }
 }
 

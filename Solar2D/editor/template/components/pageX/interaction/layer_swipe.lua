@@ -11,7 +11,9 @@ local M = {
     target = "{{layer}}",
     type  = "{{type}}",
     isActive = "{{isActive}}",
-    dbounds = { swipeLength = {{swipeLength}}, limitAngle = {{limitAngle}}, useStrictBounds = {{useStrictBounds}}}
+    swipeLength = {{swipeLength}},
+    limitAngle = {{limitAngle}},
+    useStrictBounds = {{useStrictBounds}}}
     {{/properties}}
   },
   --
@@ -26,24 +28,15 @@ local M = {
 }
 
 function M:create(UI)
-  self.UI = UI
-  local sceneGroup = UI.sceneGroup
-  local layerName  = self.properties.target
-  self.obj        = sceneGroup[layerName]
-  if self.isPage then
-    self.obj = sceneGroup
-  end
-  --
-  self:setSwipe(self.obj)
+  self:setSwipe(UI)
 end
 
 function M:didShow(UI)
-  self.UI = UI
-  self:addEventListener(self.obj)
+  self:activate(UI)
 end
 
 function M:didHide(UI)
-  self:removeEventListener(self.obj)
+  self:deactivate(UI)
 end
 
 return require("components.kwik.layer_swipe").set(M)

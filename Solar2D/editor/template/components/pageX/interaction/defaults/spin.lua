@@ -4,14 +4,14 @@ local M = {
   properties = {
     target = NIL,
     type   = NIL,
-    constrainAngle = 360,
-    bounds = {xStart=nil, xEnd=nil, yStart=nil, yEnd=nil},
+    minAngle  = NIL,
+    maxAngle  = NIL,
     isActive = true
   },
   actions={
-    onClokwise = nil,
-    onCounterClockwise = nil,
-    onReleased =nil,
+    onClokwise = NIL,
+    onCounterClockwise = NIL,
+    onEnded = NIL,
   }
 }
 

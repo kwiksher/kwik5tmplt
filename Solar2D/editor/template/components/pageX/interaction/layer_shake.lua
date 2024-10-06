@@ -22,15 +22,7 @@ local M = {
 }
 
 function M:create(UI)
-  self.UI = UI
-  local sceneGroup = UI.sceneGroup
-  local layerName  = self.properties.target
-  self.obj        = sceneGroup[layerName]
-  if self.isPage then
-    self.obj = sceneGroup
-  end
-  --
-  self:setShake(self.obj)
+  self:setShake(UI)
 end
 
 function M:didShow(UI)

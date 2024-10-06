@@ -30,7 +30,7 @@ function M:setScroll(UI)
     if props.area == "paragraph" then
       _top = obj.contentBounds.yMin
       _left = obj.contentBounds.xMin
-      _width = obj.width + 10 - widthGroupMember
+      _width = obj.width + 10 - props.width
       _height = obj.height
       _scrollWidth = obj.width
       _scrollHeight = obj.height
@@ -48,7 +48,7 @@ function M:setScroll(UI)
     if props.area == "object" then
       _top = obj.contentBounds.yMin
       _left = obj.contentBounds.xMin
-      _width = obj.width + 10 - widthGroupMember
+      _width = obj.width + 10 - props.width
       _height = obj.height
       _scrollWidth = obj.width
       _scrollHeight = obj.height

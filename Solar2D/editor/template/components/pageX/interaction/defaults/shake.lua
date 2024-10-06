@@ -5,7 +5,11 @@ local M = {
     target = NIL,
     type   = NIL,
     isActive = true
+  },
+  actions = {
+    onComplete = NIL
   }
+
 }
 
 return M
