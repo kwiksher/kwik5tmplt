@@ -1,30 +1,33 @@
 local M = {}
 --
-local app = require "controller.Application"
-local MultiTouch = require("extlib.dmc_multitouch")
---
-
-M.shakeHandler = function(self, event)
+M.shakeHandler = function(event)
   local UI = self.UI
   local target = event.target
+  local props = event.target.shake
 
     if(e.isShake == true) then
-          UI.scene:dispatchEvent({name="action_{{gcomplete}}", shake=e })
+          UI.scene:dispatchEvent({name=props.actions.onComplete, event=event })
     end
     return true
 end
 ---
-function M:activate(obj)
-  if obj == nil then return end
-  --- as same as drag except activate with rotate
-  local options = {}
+function M:setShake(UI)
+  local sceneGroup = UI.sceneGroup
+  local layerName  = self.properties.target
+  self.obj        = sceneGroup[layerName]
+  if self.isPage then
+    self.obj = sceneGroup
+  end
+  self.obj.shake = self
+end
 
-  Runtime:addEventListener("accelerometer", self.listener)
+function M:activate(UI)
+  self.obj:addEventListener("accelerometer", self.shakeHandler)
 
 end
 --
-function M:deactivate(obj)
-  Runtime:removeEventListener( "accelerometer",self.listener)
+function M:deactivate(UI)
+  self.obj:removeEventListener( "accelerometer",self.shakeHandler)
 end
 --
 M.set = function(model)

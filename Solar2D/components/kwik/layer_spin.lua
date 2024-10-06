@@ -4,48 +4,57 @@ local app = require "controller.Application"
 local MultiTouch = require("extlib.dmc_multitouch")
 --
 
-M.spinHandler = function(self, event)
-  local UI = self.UI
+M.spinHandler = function(event)
   local target = event.target
+  local props = target.spin
+  local UI = props.UI
   if event.direction == "clockwise" then
-    if self.actions.onClokwise then
-          UI.scene:dispatchEvent({name=self.actions.onClokwise, event={UI=UI, event=event}  })
+    if props.actions.onClokwise then
+          UI.scene:dispatchEvent({name=props.actions.onClokwise, event={UI=UI, event=event}  })
     end
   elseif event.direction == "counter_clockwise" then
-    if self.actions.onCounterClockwise then
-          UI.scene:dispatchEvent({name=self.actions.onCounterClockwise , event={UI=UI, event=event}  })
+    if props.actions.onCounterClockwise then
+          UI.scene:dispatchEvent({name=props.actions.onCounterClockwise , event={UI=UI, event=event}  })
     end
-  elseif self.actions.onShapeHandler then
-      self.actions.onShapeHandler(event)
+  elseif props.actions.onShapeHandler then
+      props.actions.onShapeHandler(event)
   end
   return true
 end
+
+function M:setSpin(UI)
+  local sceneGroup = UI.sceneGroup
+  local layerName  = self.layerProps.name
+  self.obj        = sceneGroup[layerName]
+  if self.isPage then
+    self.obj = sceneGroup
+  end
+  self.obj.spin = self
+end
 ---
-function M:activate(obj)
+function M:activate(UI)
+  local obj = self.obj
   if obj == nil then return end
   --- as same as drag except activate with rotate
   local options = {}
-  if self.constrainAngle then
-    options.constrainAngle=self.constrainAngle
+  local props = self.properties
+  if props.constrainAngle then
+    options.constrainAngle=props.constrainAngle
   end
-  if self.bounds.xStart then
-    options.xBounds ={ self.bounds.xStart, self.bounds.xEnd }
+  if props.xStart then
+    options.xBounds ={ props.xStart, props.xEnd }
   end
-  if self.bounds.yStart then
-    options.yBounds ={ self.bounds.yStart, sefl.bounds.yEnd }
+  if props.yStart then
+    options.yBounds ={ props.yStart, props.yEnd }
   end
   --
   MultiTouch.activate( obj, "rotate", "single", options)
-  self.listener = function(event)
-    -- self has the all the props of layer_drag, obj does not have them
-    --   see setmetatable is used for the model not to object
-    self:spinHandler(event)
-  end
-  obj:addEventListener( MultiTouch.MULTITOUCH_EVENT,self.listener)
+  obj:addEventListener( MultiTouch.MULTITOUCH_EVENT,self.spinHandler)
 end
 --
-function M:deactivate(obj)
-  obj:removeEventListener( MultiTouch.MULTITOUCH_EVENT,self.listener)
+function M:deactivate(UI)
+  local obj = self.obj
+  obj:removeEventListener( MultiTouch.MULTITOUCH_EVENT,self.spinHandler)
   MultiTouch.deactivate( obj, "rotate", "single", options)
 end
 --

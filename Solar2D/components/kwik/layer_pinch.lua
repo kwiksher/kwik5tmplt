@@ -1,54 +1,63 @@
 local M = {}
 --
-local app = require "controller.Application"
 local MultiTouch = require("extlib.dmc_multitouch")
 --
 
-M.pinchHandler = function(self, event)
-  local UI = self.UI
-  local target = event.target
+M.pinchHandler = function(event)
+  local obj = event.target
+  local props = obj.pinch
+  local UI = props.UI
     if event.phase == "moved" then
-      {{#gtclock}}
-    UI.scene:dispatchEvent({name="{{gtclock}}", pinch=event })
-      {{/gtclock}}
+      if props.actions.onMoved then
+          UI.scene:dispatchEvent({name=props.actions.onMoved, event=event })
+      end
   elseif event.phase == "ended" then
-      {{#gtcounter}}
-    UI.scene:dispatchEvent({name="{{gtcounter}}", pinch=event })
-      {{/gtcounter}}
+    if props.actions.onEnded then
+        UI.scene:dispatchEvent({name=props.actions.onEnded, event=event })
+    end
   end
   return true
 end
 ---
-function M:activate(obj)
+function M:setPinch(UI)
+  local sceneGroup = UI.sceneGroup
+  local layerName  = self.properties.target
+  self.obj        = sceneGroup[layerName]
+  if self.isPage then
+    self.obj = sceneGroup
+  end
+  self.obj.pinch = self
+end
+
+function M:activate(UI)
+  local obj = self.obj
   if obj == nil then return end
   --- as same as drag except activate with rotate
   local options = {}
-  if self.constrainAngle then
-    options.constrainAngle=self.constrainAngle
+  if self.properties.constrainAngle then
+    options.constrainAngle=self.properties.constrainAngle
   end
-  if self.bounds.xStart then
-    options.xBounds ={ self.bounds.xStart, self.bounds.xEnd }
+  if self.properties.xStart then
+    options.xBounds ={ self.properties.xStart, self.properties.xEnd }
   end
-  if self.bounds.yStart then
-    options.yBounds ={ self.bounds.yStart, sefl.bounds.yEnd }
+  if self.properties.yStart then
+    options.yBounds ={ self.properties.yStart, self.properties.yEnd }
   end
   --
-  if move then
+  if self.properties.move then
     MultiTouch.activate( obj,  "move", {"single"})
   end
-  _K.MultiTouch.activate( layer.{{glayer}}, "scale", "multi", {minScale = {{gmin}}, maxScale = {{gmax}} })
-
-  self.listener = function(event)
-    -- self has the all the props of layer_drag, obj does not have them
-    --   see setmetatable is used for the model not to object
-    self:pinchHandler(event)
-  end
-  obj:addEventListener( MultiTouch.MULTITOUCH_EVENT,self.listener)
+  MultiTouch.activate( obj, "scale", "multi", {minScale = props.properties.min, maxScale = props,properties.max })
+  obj:addEventListener( MultiTouch.MULTITOUCH_EVENT,self.pinchHandler)
 end
 --
-function M:deactivate(obj)
-  obj:removeEventListener( MultiTouch.MULTITOUCH_EVENT,self.listener)
-  MultiTouch.deactivate( obj, "rotate", "single", options)
+function M:deactivate(UI)
+  local obj = self.obj
+  obj:removeEventListener( MultiTouch.MULTITOUCH_EVENT,self.pinchHandler)
+  if self.properties.move then
+    MultiTouch.dactivate( obj,  "move", {"single"})
+  end
+  MultiTouch.deactivate( obj, "rotate", "single")
 end
 --
 M.set = function(model)
