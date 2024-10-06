@@ -4,6 +4,26 @@ local parent,root = newModule(name)
 local layerProps = require(parent.."{{layer}}").properties
 local MultiTouch = require("extlib.dmc_multitouch")
 
+function M:dbounds()
+  local dbounds = {}
+  if {{gconstrain) and {{gboundsX) and {{gboundsY)  then
+      dbounds = { constrainAngle = {{gangle}} }
+  else if {{gconstrain) and {{gboundsX}}  and {{gboundsY}} then
+      dbounds = { constrainAngle = {{gangle}}, xBounds = { {{gboundsXS}}, {{gboundsXE}}} }
+  else if {{gconstrain)  and{{gboundsX) and {{gboundsY}} then
+      dbounds = { constrainAngle = {{gangle}}, yBounds = { {{gboundsYS}}, {{gboundsYE}}} }
+  else if {{gconstrain}}  and {{gboundsX}} and {{gboundsY}} then
+      dbounds = { constrainAngle = {{gangle}}, xBounds = { {{gboundsXS}}, {{gboundsXE}}}, yBounds = { {{gboundsYS}}, {{gboundsYE}}} }
+  else if {{gconstrain}} and {{gboundsX}} and {{gboundsY}} then
+      dbounds = { xBounds = { {{gboundsXS}}, {{gboundsXE}}} }
+  else if {{gconstrain}}  and {{gboundsX) and {{gboundsY) then
+      dbounds = { yBounds = { {{gboundsYS}}, {{gboundsYE}}} }
+  else if {{gconstrain}}  and {{gboundsX}}  and {{gboundsY}} then
+      dbounds = { xBounds = { {{gboundsXS}}, {{gboundsXE}}}, yBounds = { {{gboundsYS}}, {{gboundsYE}}} }
+  end
+  return dbounds
+end
+
 
 local M = {
   name ="{{layer}}",
@@ -52,7 +72,7 @@ M.actions={
 function M:create(UI)
   self.UI = UI
   local sceneGroup = UI.sceneGroup
-  local layerName  = self.layerProps.name
+  local layerName  = self.properties.target
   self.obj        = sceneGroup[layerName]
   if self.isPage then
     self.obj = sceneGroup

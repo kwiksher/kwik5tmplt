@@ -11,38 +11,29 @@ local M = {
     target = "{{layer}}",
     type  = "{{type}}",
     isActive = "{{isActive}}",
+    dpx = {{dpx}},
+    dpy = {{dpy}},
     {{/properties}}
   },
   --
   actions={
-    onClokwise = "{{}}",
-    onCounterClockwise ="{{}}",
-    onReleased ="{{}}",
-    -- onMoved="{{}}"
+    onBack = "{{onBack}}",
+    onForward ="{{onForward}}",
   },
   --
   layerProps = layerProps
 }
 
 function M:create(UI)
-  self.UI = UI
-  local sceneGroup = UI.sceneGroup
-  local layerName  = self.properties.target
-  self.obj        = sceneGroup[layerName]
-  if self.isPage then
-    self.obj = sceneGroup
-  end
-  --
-  self:setParallax(self.obj)
+  self:setParallax(UI)
 end
 
 function M:didShow(UI)
-  self.UI = UI
-  self:addEventListener(self.obj)
+  self:activate(UI)
 end
 
 function M:didHide(UI)
-  self:removeEventListener(self.obj)
+  self:deactivate(UI)
 end
 
 return require("components.kwik.layer_parallax").set(M)
