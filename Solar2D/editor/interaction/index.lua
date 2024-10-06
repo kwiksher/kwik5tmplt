@@ -47,7 +47,7 @@ function M:init(UI)
   self.controller.view = self
 end
 
-function controller:useClassEditorProps()
+function controller:useClassEditorProps(UI)
   -- print(debug.traceback())
   print("editor.controller.useClassEditorProps", self.id)
   local props = { properties = {}}
@@ -64,6 +64,9 @@ function controller:useClassEditorProps()
       index = self.selectbox.selectedIndex,
       properties = {}
     }
+  else
+    props.layer = UI.editor.currentLayer -- will be overwritten by classProps._target
+    props.type = UI.editor.currentType or NIL
   end
   --
   local properties = self.classProps:getValue()

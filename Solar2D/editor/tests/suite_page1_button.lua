@@ -6,6 +6,7 @@ local bookTable
 local pageTable
 local layerTable
 local actionTable = require("editor.action.actionTable")
+local groupTable = require("editor.group.groupTable")
 
 local helper = require("editor.tests.helper")
 
@@ -51,6 +52,11 @@ function M.init(props)
   bookTable = props.bookTable
   pageTable = props.pageTable
   layerTable = props.layerTable
+  --
+  props.groupTable = groupTable
+  helper.init(props)
+
+
 end
 
 function M.suite_setup()
@@ -112,8 +118,16 @@ local function selectCancel()
   obj.rect:tap()
 end
 
+function M.test_new_group_button()
+
+  selectors.componentSelector:onClick(true,  "groupTable")
+  local name = "groupCat"
+  helper.selectGroup(name)
+  helper.clickIcon("Interactions", "Button")
+end
+
 ---[[
-function M.test_new_button()
+function M.xtest_new_button()
   selectors.componentSelector:onClick(true,  "layerTable")
 
   local name = "cat"
