@@ -5,13 +5,11 @@ local app = require "Application"
 --
 function M:createButton(UI)
   local sceneGroup = UI.sceneGroup
-  print(self.layerProps.name)
-  local layerName = self.layerProps.name
+  print(self.properties.target)
+  local layerName = self.properties.target
   local obj = sceneGroup[layerName]
-  local path = UI.props.imgDir .. layerName
-  -- Tap
   local props = self.properties
-  if props.type == "touch"   then
+  if props.type ~= "group" and props.eventType == "touch"   then
       local function onReleaseHandler(event)
         print("onReleaseHandler")
           if event.target.enabled == nil or event.target.enabled then
@@ -27,8 +25,8 @@ function M:createButton(UI)
           end
       end
 
-      local path1 = system.pathForFile( UI.props.imgDir ..self.layerProps.imagePath, system.ResourceDirectory)
-      local path2 = system.pathForFile( UI.props.imgDir ..UI.page.."/"..props.over..".png", system.ResourceDirectory)
+      -- local path1 = system.pathForFile( UI.props.imgDir ..self.layerProps.imagePath, system.ResourceDirectory)
+      -- local path2 = system.pathForFile( UI.props.imgDir ..UI.page.."/"..props.over..".png", system.ResourceDirectory)
 
       local path1 =  UI.props.imgDir ..self.layerProps.imagePath
       local path2 =  UI.props.imgDir ..UI.page.."/"..props.over..".png"
@@ -63,14 +61,12 @@ function M:createButton(UI)
           print ("@@@@ Error@@@@", path1, path2)
       end
   end
-
     --
     -- kwik5/templates/Solar2D/scenes/pageXXX/images/image_renderer.lua
     --   for instance  obj.enterFrame = infinityBack
     --
     --   setImage(obj, model) then
     --
-
 
   if props.mask:len() > 0 and UI.imagePage then
       local path = system.pathForFile(  UI.props.imgDir ..UI.imagePage.. props.mask, system.ResourceDirectory)
@@ -114,10 +110,12 @@ function M:addEventListener(UI)
     local layers = UI.layers
     local props = self.properties
     local actions = self.actions
+    local layerName = props.target
+
     -- Tap
-    if props.type  == "tap" and props.btaps and sceneGroup[self.name] then
+    if props.type  == "tap" and props.btaps and sceneGroup[layerName] then
         --
-        local obj = sceneGroup[self.name]
+        local obj = sceneGroup[layerName]
         local eventName = actions.onTap
 
         function obj:tap(event)
@@ -142,7 +140,7 @@ function M:addEventListener(UI)
         --Hide button if purchase was already made
         if IAP.getInventoryValue("unlock_" .. props.product) then
             --This page was purchased, do not show the BUY button
-            sceneGroup[self.name].alpha = 0
+            sceneGroup[layerName].alpha = 0
         end
     end
 end
@@ -151,9 +149,10 @@ function M:removeEventListener(UI)
     local layers = UI.layers
     local sceneGroup = UI.sceneGroup
     local props = self.properties
+    local layerName = props.target
     -- Tap
-    if props.btaps and sceneGroup[self.name] then
-      local obj = sceneGroup[self.name]
+    if props.btaps and sceneGroup[layerName] then
+      local obj = sceneGroup[layerName]
       obj:removeEventListener("tap", obj)
     end
 end
@@ -162,8 +161,6 @@ function M:destroy(UI)
 end
 
 M.set = function(model)
-  print("####", model.layerProps.name)
-
   return setmetatable( model, {__index=M})
 end
 
