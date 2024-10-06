@@ -3,14 +3,6 @@ local parent,root = newModule(name)
 
 local layerProps = require(parent.."{{layer}}").properties
 
--- if (String(ghasl) == "true" &&  String(ghasu) == "false") {
---   model.dbounds = ' { minAngle = '+glow+' }'
--- } else if (String(ghasu) == "true"  && String(ghasl) == "false") {
---   model.dbounds = '{ maxAngle = '+gupper+' }'
--- }  else if (String(ghasl) == "true"  && String(ghasu) == "true") {
---   model.dbounds = '{ minAngle = '+glow+', maxAngle =  '+gupper+' }'
--- }
-
 local M = {
   name="{{name}}",
   --
@@ -18,18 +10,16 @@ local M = {
     {{#properties}}
     target = "{{layer}}",
     type  = "{{type}}",
-    constrainAngle = {{constrainAngle}},
-    xStart={{xStart}}, xEnd={{xEnd}}, yStart={{yStart}}, yEnd={{yEnd}},
     isActive = "{{isActive}}",
+    minAngle  = {{minAgnle}},
+    maxAngle  = {{maxAngle}}
     {{/properties}}
   },
   --
   actions={
     onClokwise = "{{onClokwise}}",
     onCounterClockwise ="{{onCounterClockwise}}",
-    onReleased ="{{onReleased}}",
-    onShapeHandler = "{{onShapeHandler}}"
-    -- onMoved="{{}}"
+    onEnded ="{{onEnded}}",
   },
   --
   layerProps = layerProps

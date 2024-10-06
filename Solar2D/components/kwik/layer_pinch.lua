@@ -47,7 +47,7 @@ function M:activate(UI)
   if self.properties.move then
     MultiTouch.activate( obj,  "move", {"single"})
   end
-  MultiTouch.activate( obj, "scale", "multi", {minScale = props.properties.min, maxScale = props,properties.max })
+  MultiTouch.activate( obj, "scale", "multi", {minScale = props.properties.scaleMin, maxScale = props,properties.scaleMax })
   obj:addEventListener( MultiTouch.MULTITOUCH_EVENT,self.pinchHandler)
 end
 --
