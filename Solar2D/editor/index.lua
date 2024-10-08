@@ -11,12 +11,13 @@ local json = require("json")
 local bt = require(parent..'controller.BTree.btree')
 local tree = require(parent.."controller.BTree.selectorsTree")
 --
+local guides = require(parent.."parts.guides")
+--
 M.lastSelection = { book="book", page="page12"}
 
 local unitTestOn = true
 local httpServerOn = true
 
-M.rootGroup = display.newGroup()
 M.viewStore = {}
 M.clipboard = require("editor.clipboard")
 --
@@ -106,8 +107,8 @@ M.views = nil
 M.rootGroup = nil
 
 local nanostores         = require("extlib.nanostores.index")
--- local books              = nanostores.createStore()
--- local pages              = nanostores.createStore()
+local books              = nanostores.createStore()
+local pages              = nanostores.createStore()
 local layers             = nanostores.createStore()
 local layerJson         = nanostores.createStore()
 local groupLayers        = nanostores.createStore()
@@ -155,8 +156,8 @@ function M:initStores()
       --
     -- selectors.lua will set values of each stores
     --
-    self.bookStore = nanostores.createStore()
-    self.pageStore =  nanostores.createStore()
+    self.bookStore = books -- nanostores.createStore()
+    self.pageStore =  pages -- nanostores.createStore()
     self.layerStore = layers
     self.layerJsonStore = layerJson
     self.propsStore = props
@@ -179,8 +180,14 @@ function M:initStores()
 end
 ---
 function M:init(UI)
+  print("#### init")
   self.UI = UI
-  if self.views == nil then
+  if self.rootGroup then
+    self:destroy(UI)
+    self.rootGroup:removeSelf()
+  end
+
+  -- if self.views == nil then
     self.rootGroup = display.newGroup()
     self.views = {}
     self.classMap = {}
@@ -259,7 +266,7 @@ function M:init(UI)
     tree:setConditionStatus("select book", bt.SUCCESS, true)
     tree:tick()
 
-  end
+  -- end
 end
 --
 function M:setCurrnetSelection(layer, class, _type)
@@ -269,10 +276,12 @@ function M:setCurrnetSelection(layer, class, _type)
 end
 --
 function M:create(UI)
+  print("####### editor create")
   UI.editor = self
   for i=1, #self.views do
     self.views[i]:create(UI)
   end
+  guides:create(UI)
 end
 --
 
@@ -441,6 +450,7 @@ function M:didShow(UI)
     -- for k, v in pairs(UI.editor.viewStore) do print("", k) end
   end
 --
+-- didHide is called back from showView gotoScene
 function M:didHide(UI)
   UI.editor = self
   for i=1, #self.views do
@@ -448,6 +458,7 @@ function M:didHide(UI)
   end
 end
 --
+-- destroy is not called from gotoScene because of recycle?
 function M:destroy(UI)
   UI.editor = self
   for i=1, #self.views do

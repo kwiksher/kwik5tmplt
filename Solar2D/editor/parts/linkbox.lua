@@ -261,9 +261,9 @@ end
 
 --
 function M:_create(UI)
-  if self.rootGroup then
-    return
-  end
+  -- if self.rootGroup then
+  --   return
+  -- end
   self.rootGroup = UI.editor.rootGroup
   if self.triangle == nil then
     -- print(debug.traceback())
