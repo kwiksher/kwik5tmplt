@@ -29,6 +29,7 @@ function M.create(scene, model)
     UI.taben            = {}
     UI.tabjp            = {}
     UI.tSearch          = nil
+    UI.lang             = "en"
 
     ---
     function UI:dispatchEvent(params)
@@ -48,7 +49,7 @@ function M.create(scene, model)
 
     local function callComponentsLayersHandler(models, handler, funcName)
         -- print("callComponentsLayersHandler")
-        local function iterator(handler, parent, layers, path)
+        local function iterator(handler, parent, layers, path, delegatedClassEntries, isLang)
             --print("callComponentsLayersHandler", #layers)
             local classEntries = {}
             if type(layers) == "table" then
@@ -56,7 +57,7 @@ function M.create(scene, model)
                 for i = 1, #layers do  -- { {childOne = {}}, {childTwo={class={"linear"}}, {childThree = {{childFour={}}}} }
                     local layer = layers[i]
                     for name, value in pairs(layer) do  --
-                        -- print("", name, value)
+                        -- print("", name, #value)
                         -- print("", "string")
                         if type(value)=="table" and #value > 0 then
                           if funcName == "_init" then
@@ -66,17 +67,45 @@ function M.create(scene, model)
                             handler[funcName](handler, nil,
                                             parentPath .. name .. ".index", false)
                           end
+
+                          --
+                          -- {index = { class = "lang"}, {ch1={}}, {ch2={}}, {ch3={}}}
+                          local isLang = nil
+                          if value.class then -- let's delegate
+                            for k, class in pairs(value.class) do
+                              print("", class, parentPath .. name)
+                              table.insert(classEntries, {
+                                class = class,
+                                path = parentPath .. name  -- see sceneHandler.lua, it splits to load layer_linear.lua by split('.')
+                               })
+                               if class == "lang" then
+                                isLang = true
+                               end
+                              -- handler[funcName](handler, class, parentPath .. name..".index", false)
+                            end
+                          end
+
                           local ret = iterator(handler, name, value, -- value is array of children
-                                                parentPath .. name .. ".")
+                                                  parentPath .. name .. ".",  classEntries, isLang)
 
                           -- for j = 1, #ret do
                           --     handler[funcName](handler, ret[j].class, ret[j].path, false)
                           -- end
+                        elseif delegatedClassEntries and  #delegatedClassEntries > 0 then
+                          -- print("@@", parentPath .. name)
+                          -- print("@@", name, UI.lang)
+                          if isLang==false or UI.lang ==name then
+                            handler[funcName](handler, nil, parentPath .. name, false)
+                            for i, entry in next, delegatedClassEntries do
+                              print("", entry.class, entry.path..".index")
+                              handler[funcName](handler, entry.class, entry.path .. ".index", false)
+                            end
+                          end
                         else
                           handler[funcName](handler, nil, parentPath .. name, false)
                           if value.class then
                             for k, class in pairs(value.class) do
-                                --print("", class, parentPath .. name)
+                                -- print("", class, parentPath .. name)
                                 table.insert(classEntries, {
                                     class = class,
                                     path = parentPath .. name  -- see sceneHandler.lua, it splits to load layer_linear.lua by split('.')

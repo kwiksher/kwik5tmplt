@@ -134,7 +134,7 @@ function M:init(UI)
 end
 --
 function M:create(UI, x, y)
-  if self.rootGroup then return end
+  -- if self.rootGroup then return end
   self.rootGroup = UI.editor.rootGroup
   self.triangle = shapes.triangle.equi( x, y, 10 )
   self.triangle:rotate(180)
