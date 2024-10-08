@@ -1,53 +1,50 @@
 local parent,root = newModule(...)
 
 local M = {
-  name = "{{layer}}",
+  name = "witch/en",
   --
-  class = "{{class}}",
-    -- "Dissolve"
-    -- "Path"
-    -- "Linear"
-    -- "Pulse"
-    -- "Rotation"
-    -- "Tremble"
-    -- "Bounce"
-    -- "Blink"
-  --
+  class = "",
+-- "Dissolve"
+-- "Path"
+-- "Linear"
+-- "Pulse"
+-- "Rotation"
+-- "Tremble"
+-- "Bounce"
+-- "Blink"
+--
 }
 
-M.obj = require(parent.."{{layer}}").obj
+M.obj = require(parent.."en").obj
 
-{{#layerOptions}}
 M.layerOptions = {
   --
-  referencePoint = "{{referencePoint}}",
-    -- "Center"
-    -- "TopLeft"
-    -- "TopCenter"
-    -- "TopRight"
-    -- "CenterLeft"
-    -- "CenterRight"
-    -- "BottomLeft"
-    -- "BottomLeft"
-    -- "BottomRight"
+  referencePoint = "Center",
+  -- "Center"
+  -- "TopLeft"
+  -- "TopCenter"
+  -- "TopRight"
+  -- "CenterLeft"
+  -- "CenterRight"
+  -- "BottomLeft"
+  -- "BottomLeft"
+  -- "BottomRight"
   -- for text
-  deltaX         = {{deltaX}},
-  deltaY         = {{deltaY}},
+  deltaX         = 0,
+  deltaY         = 0,
 }
-{{/layerOptions}}
 -- animationProps
 M.properties = {
-{{#properties}}
-  type    = "{{type}}", -- group, page, sprite
-  target = "{{target}}",
-  autoPlay = {{autoPlay}},
-  delay    = {{delay}},
-  duration = {{duration}},
-  loop     = {{loop}},
-  reverse  = {{reverse}},
-  resetAtEnd  = {{resetAtEnd}},
+  type    = "", -- group, page, sprite
+  target = "witch/en",
+  autoPlay = true,
+  delay    = 0,
+  duration = 2000,
+  loop     = 10,
+  reverse  = false,
+  resetAtEnd  = false,
   --
-  easing   = "{{easing}}",
+  easing   = "outCirc",
   -- 'Linear'
   -- 'inOutExpo'
   -- 'inOutQuad'
@@ -66,51 +63,28 @@ M.properties = {
   -- 'inOutBack'
   ------------
   -- flip
-  xSwipe   = {{xSwipe}},
-  ySwipe   = {{ySwipe}},
-{{/properties}}
+  xSwipe   = nil,
+  ySwipe   = nil,
 }
-  --
+--
 
-{{#to}}
 M.to = {
-  x     = {{x}},
-  y     = {{y}},
+  x     = 200,
+  y     = 0,
   --
-  alpha = {{alpha}},
+  alpha = 1,
 
-  yScale   = {{yScale}},
-  xScale   = {{xScale}},
-  rotation = {{rotation}},
+  yScale   = 1.5,
+  xScale   = 1.5,
+  rotation = 90,
 }
-{{/to}}
-  -- more option
+-- more option
 
-  -- action at the end of animation
-M.actions = { onComplete = "{{actionName}}" }
+-- action at the end of animation
+M.actions = { onComplete = "" }
 
 
-{{#breadcrumb}}
-M.breadcrumbs = {
-    dispose  = {{dispose}},
-    shape    = {{shape}},
-    Color    = {{color}},
-    interval = {{bInterval}},
-    time     = {{time}},
-    width  = {{width}},
-    height = {{height}},
-}
-{{/breadcrumb}}
 
-{{#path}}
-if M.animation.Class == "path" then
-	M.pathProps = {
-    curve = 	{{pathCurve}},
-    angle = {{angle}},
-    newAngle = {{newAngle}},
-  }
-end
-{{/path}}
 ---------------------------------------
 --
 local function onEndHandler (UI)
@@ -141,7 +115,6 @@ function M:didShow(UI)
       --self.animation.from:toBeginning()
       -- transition.to(obj, {x = obj.x + 100})
       -- local obj = sceneGroup["cat_face1"]
-
       self.animation.from:play()
       -- self.animation.from:pause()
 
@@ -162,6 +135,5 @@ function M:didHide(UI)
     -- self.animation.to:toBeginning()
   end
 end
-
 --
 return require("components.kwik.layer_animation").set(M)
