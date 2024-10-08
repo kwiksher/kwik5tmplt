@@ -58,7 +58,7 @@ local instance =
     -- print("@@@ isNew", isNew, controller.isNew, props.isNew)
 
 
-    -- print("@@@@", props.layer, UI.editor.currentLayer)
+    print("@@@@", props.layer, UI.editor.currentLayer)
     local layer = props.layer or UI.editor.currentLayer
     if layer == nil then
       layer = props.name

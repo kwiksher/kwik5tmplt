@@ -127,7 +127,7 @@ function M:render(models, xIndex, yIndex, parentObj)
         -- option.x = self.x + self.rootGroup.selectLayer.width/2 + last_x
         -- option.y = self.rootGroup.selectLayer.contentBounds.yMax + 10 + option.height * (count-1)
         option.x = self.x + last_x
-        option.y = self.y + option.height * (count - 1)
+        option.y = self.y + option.height * (count - 1 + yIndex)
         option.width = nil
         local classObj = self.newText(option)
         --classObj.width = 50
