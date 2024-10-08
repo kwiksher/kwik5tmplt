@@ -230,9 +230,9 @@ function M:createIcons (_marginX, _marginY)
 end
 --
 function M:create(UI)
-  if self.rootGroup then
-    return
-  end
+  -- if self.rootGroup then
+  --   return
+  -- end
   if self.name == debugName then
       print("create", self.id)
   end
@@ -367,7 +367,7 @@ function M:hide()
   end
   if self.objs then
     for i=1, #self.objs do
-      print(self.objs[i].text)
+      -- print(self.objs[i].text)
       self.objs[i].isVisible = false
       self.objs[i].rect.isVisible = false
     end
@@ -418,15 +418,21 @@ function M:clean()
     print("clean")
   end
   if self.objs then
-    for i = 1, #self.objs do
-      self.objs[i].rect:removeSelf()
-      self.objs[i]:removeSelf()
+    for i, obj in next, self.objs do
+      if obj.rect and obj.removeSelf then
+        obj.rect:removeSelf()
+      end
+      if obj.removeSelf then
+        obj:removeSelf()
+      end
     end
     self.objs = nil
   end
   if self.iconObjs then
     for i, v in next, self.iconObjs do
-      v:removeSelf()
+      if v.removeSelf then
+        v:removeSelf()
+      end
     end
   end
   self.iconObjs = nil
