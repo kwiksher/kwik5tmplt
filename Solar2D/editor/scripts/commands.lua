@@ -741,10 +741,12 @@ function M.publishForSelections(UI, args, controller, decoded)
   local selections = UI.editor.selections or {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
   for i, obj in next, selections do
     if obj.class == "" then
-      layer = obj.text
-    else
-      model.layer = obj.layer
+      layer = obj.layer
     end
+    if obj.parentObj then
+      layer = obj.parentObj.layer.."/"..layer
+    end
+    model.layer = layer
     updatedModel = util.updateIndexModel(updatedModel, layer, class, model.properties._type or model.properties.type)
     -- print(json.encode(updatedModel))
     --- save json

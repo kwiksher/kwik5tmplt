@@ -101,9 +101,13 @@ local function singleSelection(layerTable, target)
     ---
 
     UI.editor:setCurrnetSelection()
-
     if target.layer and target.layer:len() then
-      UI.editor.currentLayer = target.layer
+      local name = target.layer
+      if target.parentObj then
+        name = target.parentObj.layer.."/"..target.layer
+        print("", name)
+      end
+      UI.editor.currentLayer = name
     else
       print("Warning target.layer is not found")
       --print(debug.traceback())
@@ -280,7 +284,12 @@ local function showClassProps(layerTable, target)
     target.isSelected = true
     target.rect:setFillColor(0,1,0)
 
-    UI.editor:setCurrnetSelection(target.layer)
+    local name = target.layer
+    if target.parentObj then
+      name = target.parentObj.layer.."/"..target.layer
+      print("", name)
+    end
+    UI.editor:setCurrnetSelection(name)
     --
     -- target.isSelected = true
     if target.name then

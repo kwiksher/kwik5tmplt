@@ -239,7 +239,13 @@ function M:render(book, page, layer, classFolder, class, model)
     --   tmplt =  "editor/template/components/pageX/animations/layer_animation.lua"
     -- end
   end
-  util.mkdir("App", book, "components", page, "layers")
+  --
+  local  layerDirs = {"App", book, "components", page, "layers"}
+  local layerFolders = layer:split("/")
+  for i=1, #layerFolders-1 do
+    layerDirs[#layerDirs+1] = layerFolders[i]
+  end
+  util.mkdir(unpack(layerDirs))
   util.mkdir("App", book, "components", page, "joints")
   util.saveLua(tmplt, dst, model)
   return dst

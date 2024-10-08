@@ -276,7 +276,7 @@ function M:didHide(UI)
 end
 --
 function M:destroy(UI)
-  print("destroy", UI.page)
+  print("destroy")
   if self.objs then
     for i=1, #self.objs do
       self.objs[i]:removeSelf()
