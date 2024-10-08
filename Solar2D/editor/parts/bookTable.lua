@@ -97,7 +97,7 @@ end
 
 --
 function M:create(UI)
-  if self.rootGroup then return end
+--  if self.rootGroup then return end
   self:initScene(UI)
     -- print("create", self.name)
   self:setPosition()

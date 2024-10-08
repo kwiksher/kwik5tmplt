@@ -34,4 +34,4 @@ local common = {
   }
 }
 
-require("controller.index").bootstrap({name="book", editing = true, goPage = "page1", position = {x=0, y=0}, common = common}) -- scenes.index
+require("controller.index").bootstrap({name="lingualSample", editing = true, goPage = "page1", position = {x=0, y=0}, common = common}) -- scenes.index

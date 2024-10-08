@@ -77,7 +77,14 @@ function M:render(models, xIndex, yIndex, parentObj)
     count = count + 1
     entry.name, entry.class, entry.children = parse(model)
 
-    option.text = entry.name
+    if xIndex > 0 then
+      option.text = "├ "..entry.name
+      if i == #models then
+        option.text = "└ "..entry.name
+      end
+    else
+      option.text = entry.name
+    end
     -- option.x = self.x + self.rootGroup.selectLayer.width/2 + xIndex *5
     --option.y = self.rootGroup.selectLayer.contentBounds.yMax + 10 + option.height * count
     option.x = self.x --  + xIndex * 5
@@ -151,7 +158,7 @@ function M:render(models, xIndex, yIndex, parentObj)
       -- print(#entry.children)
       local childEntries, c = self:render(entry.children, xIndex + 1, count + yIndex, obj )
       count = count  + c
-      obj.text = "(" ..obj.layer..")"
+      obj.text =obj.layer
       --
       for k, v in pairs(childEntries) do
         objs[#objs + 1] = v
@@ -171,7 +178,7 @@ function M:create(UI)
   self.commandHandler = commands.commandHandler
   self.mouseHandler = commands.mouseHandler
 
-  if self.rootGroup then return end
+  -- if self.rootGroup then return end
 
   self:initScene(UI)
   self.selections = {}
@@ -181,7 +188,6 @@ function M:create(UI)
 
   UI.editor.layerStore:listen(
     function(foo, fooValue)
-      -- for k, v in pairs(foo) do print(k, v) end
       self:destroy()
       -- print("layerStore", #fooValue)
       self.selection = nil
