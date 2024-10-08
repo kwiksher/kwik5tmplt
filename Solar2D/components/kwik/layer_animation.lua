@@ -365,6 +365,7 @@ local function createAnimationFunc(self, UI, tool)
         options.delay = 0 -- notice
         animObjTo = gtween.new(layer, self.properties.duration / 1000, propsTo, options)
         animObjTo:pause()
+        print("@@@@@ To", animObjTo, layer.name)
       end
       -- for k, v in pairs(animObj) do print(k, v) end
       return {to = animObjTo, from = animObjFrom}
@@ -375,7 +376,6 @@ local function createAnimationFunc(self, UI, tool)
     animObj = btween.new(layer, self.properties.duration / 1000, self.curve, extraValues, options)
 
     animObj.pathAnim = true
-    print("@@@@@ btween", animObj)
     animObj:pause()
     return animObj
   else

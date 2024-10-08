@@ -43,7 +43,16 @@ function M.isExist(book, page, layer, class)
   return path
 end
 
-function M.updateIndexModel(_scene, layerName, class, _type)
+function M.updateIndexModel(_scene, _layerName, class, _type)
+  local layerName = _layerName
+  local child    = _layerName:split("/")
+  if #child > 1 then
+    layerName = child[1]
+    child = child[2]
+  else
+    child = nil
+  end
+  --
   local scene =
     _scene or
     {
@@ -70,14 +79,20 @@ function M.updateIndexModel(_scene, layerName, class, _type)
       local children = {}
       --
       if isTarget(layer, layerName) then
-        -- print("%%%", layerName)
-        local target = layer[layerName]
-        if target.class == nil then
-          target.class = {}
-        end
-        --
-        if not isClass(target, class) then
-          table.insert(target.class, class)
+        print("%%%", layerName)
+        if child then -- continue to find the target child
+          layerName = child
+          child = nil
+        else
+          local target = layer[layerName]
+          if target.class == nil then
+            target.class = {}
+          end
+          --
+          if not isClass(target, class) then
+            table.insert(target.class, class)
+          end
+          layerName = nil
         end
       end
 

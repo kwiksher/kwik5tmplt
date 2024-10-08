@@ -29,7 +29,8 @@ function M.create(scene, model)
     UI.taben            = {}
     UI.tabjp            = {}
     UI.tSearch          = nil
-    UI.lang             = "en"
+    UI.lang             = "ja"
+    UI.langClassDelegate = true
 
     ---
     function UI:dispatchEvent(params)
@@ -49,11 +50,12 @@ function M.create(scene, model)
 
     local function callComponentsLayersHandler(models, handler, funcName)
         -- print("callComponentsLayersHandler")
-        local function iterator(handler, parent, layers, path, delegatedClassEntries, isLang)
+        local function iterator(handler, parent, layers, path, isLang)
             --print("callComponentsLayersHandler", #layers)
             local classEntries = {}
             if type(layers) == "table" then
                 local parentPath = path or ""
+                local firstEntry = {}
                 for i = 1, #layers do  -- { {childOne = {}}, {childTwo={class={"linear"}}, {childThree = {{childFour={}}}} }
                     local layer = layers[i]
                     for name, value in pairs(layer) do  --
@@ -73,11 +75,11 @@ function M.create(scene, model)
                           local isLang = nil
                           if value.class then -- let's delegate
                             for k, class in pairs(value.class) do
-                              print("", class, parentPath .. name)
-                              table.insert(classEntries, {
-                                class = class,
-                                path = parentPath .. name  -- see sceneHandler.lua, it splits to load layer_linear.lua by split('.')
-                               })
+                              -- print("", class, parentPath .. name)
+                              -- table.insert(classEntries, {
+                              --   class = class,
+                              --   path = parentPath .. name  -- see sceneHandler.lua, it splits to load layer_linear.lua by split('.')
+                              --  })
                                if class == "lang" then
                                 isLang = true
                                end
@@ -86,19 +88,30 @@ function M.create(scene, model)
                           end
 
                           local ret = iterator(handler, name, value, -- value is array of children
-                                                  parentPath .. name .. ".",  classEntries, isLang)
+                                                  parentPath .. name .. ".",  isLang)
 
                           -- for j = 1, #ret do
                           --     handler[funcName](handler, ret[j].class, ret[j].path, false)
                           -- end
-                        elseif delegatedClassEntries and  #delegatedClassEntries > 0 then
+                        elseif isLang then
                           -- print("@@", parentPath .. name)
                           -- print("@@", name, UI.lang)
-                          if isLang==false or UI.lang ==name then
+                          if i==1 then
+                            firstEntry.name = name
+                            firstEntry.class = value.class
+                          end
+                          --
+                          if UI.lang ==name then
                             handler[funcName](handler, nil, parentPath .. name, false)
-                            for i, entry in next, delegatedClassEntries do
-                              print("", entry.class, entry.path..".index")
-                              handler[funcName](handler, entry.class, entry.path .. ".index", false)
+                            if UI.langClassDelegate then
+                              for i, class in next, firstEntry.class do
+                                print("",class, parentPath..firstEntry.name)
+                                handler[funcName](handler, class, parentPath .. firstEntry.name, false)
+                              end
+                            else
+                              for i, class in next, value.class do
+                                handler[funcName](handler, class, parentPath .. name, false)
+                              end
                             end
                           end
                         else
