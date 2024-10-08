@@ -3,9 +3,11 @@ local M = {
   run = function (props)
     print("============ lunatest =============")
 
+    lunatest.suite("editor.tests.suite_lingual_page2", props)
+
     -- lunatest.suite("editor.tests.suite_assets", props)
     -- lunatest.suite("editor.tests.suite_page1_page_props", props)
-    lunatest.suite("editor.tests.suite_page1_interactions", props)
+    -- lunatest.suite("editor.tests.suite_page1_interactions", props)
     -- lunatest.suite("editor.tests.suite_page1_replacements", props)
     -- lunatest.suite("editor.tests.suite_page1_animation", props)
     -- lunatest.suite("editor.tests.suite_page1_button", props)
