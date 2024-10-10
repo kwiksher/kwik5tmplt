@@ -152,6 +152,7 @@ function exports.selectLayer(name, class, isRightClick)
         else
           obj:touch({phase="ended"})
         end
+        return obj
       else
         for i, classObj in next, obj.classEntries do
           print("", "", classObj.class)
@@ -163,12 +164,11 @@ function exports.selectLayer(name, class, isRightClick)
                 print("", "", "touch ended")
                 classObj:touch({phase="ended"})
               end
-            break
+            return classObj
           end
         end
       end
       -- obj.classEntries[1]:touch({phase="ended"}) -- animation
-      return obj
     end
   end
 end
