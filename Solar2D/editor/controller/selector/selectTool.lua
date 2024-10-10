@@ -70,8 +70,11 @@ local command = function (params)
       tool:show()
       UI.editor.currentTool = tool
       UI.editor:setCurrnetSelection(UI.editor.currentLayer, params.class, UI.editor.currentType) -- inherits currentLayer and currentType here
-      if params.layer then -- this measn user clicks one of class, anim, button, drag ...
-        UI.editor.currentLayer = params.layer
+
+      if params.class then -- this measn user clicks one of class, anim, button, drag ...
+        if UI.editor.currentLayer == params.layer then
+          print("something wrong about params.layer", UI.editor.currentLayer, params.layer)
+        end
       end
       -- should we use name of UI.editor.editor.currentClass?
       -- timer.performWithDelay( 1000, function()
@@ -81,7 +84,6 @@ local command = function (params)
       else
         -- params.asset is merged in this load()
         tool.controller:load(UI.editor.currentBook, UI.page, UI.editor.currentLayer, params.class, params.isNew, params.asset, UI.editor.currentType)
-        -- print("******", UI.editor.currentClass)
         UI.editor.rootGroup:dispatchEvent{name="labelStore",
         currentBook= UI.editor.currentBook,
         currentPage= UI.page,

@@ -183,53 +183,55 @@ end
 --
 
 local function createPropsTo(self, layer, _mX, _mY)
-  local mX, mY = _mX or self.to.x, _mY or self.to.y
-  -- print("createProps", self.class, mX, mY, self.to.x, self.to.y)
+  local value  = self.to
+  local mX, mY = _mX or value.x, _mY or value.y
+  -- print("createProps", self.class, mX, mY, value.x, value.y)
   local props = {}
   if self.class == "pulse" then
-    props.xScale = self.to.xScale
-    props.yScale = self.to.yScale
-    props.rotation = self.to.rotation
+    props.xScale = value.xScale
+    props.yScale = value.yScale
+    props.rotation = value.rotation
   elseif self.class == "rotation" then
-    props.rotation = self.to.rotation
+    props.rotation = value.rotation
   elseif self.class == "tremble" then
-    props.rotation = self.to.rotation
+    props.rotation = value.rotation
   elseif self.class == "bounce" then
     props.y = mY
-    props.rotation = self.to.rotation
+    props.rotation = value.rotation
   elseif self.class == "blink" then
-    props.xScale = self.to.xScale
-    props.yScale = self.to.yScale
+    props.xScale = value.xScale
+    props.yScale = value.yScale
   elseif (self.class == "linear" or self.class == "dissolve" or self.class == "path") then
-    if self.to.x then
+    if value.x then
       props.x = mX
     end
-    if self.to.y then
+    if value.y then
       props.y = mY
     end
-    if self.to.rotation then
-      props.rotation = self.to.rotation
+    if value.rotation then
+      props.rotation = value.rotation
     end
-    if self.to.xScale then
-      props.xScale = self.to.xScale * layer.xScale
+    if value.xScale then
+      props.xScale = value.xScale * layer.xScale
     end
-    if self.to.yScale then
-      props.yScale = self.to.yScale * layer.yScale
+    if value.yScale then
+      props.yScale = value.yScale * layer.yScale
     end
     if self.path and self.path.newAngle then -- path
       props.newAngle = tonumber(self.path.newAngle)
     end
   end
-  if self.to.alpha then
-    props.alpha = self.to.alpha
+  if value.alpha then
+    props.alpha = value.alpha
   end
   return props
 end
 
 local function createPropsFrom(self, layer, _mX, _mY)
+  local value = self.from
   local mX, mY = _mX or layer.x, _mY or layer.y
-  if self.from then
-    print("createProps", self.class, mX, mY, self.from.x, self.from.y)
+  if value then
+    print("createProps", self.class, mX, mY, value.x, value.y)
   end
   local props = {}
   if self.class == "pulse" then
@@ -245,23 +247,23 @@ local function createPropsFrom(self, layer, _mX, _mY)
     props.xScale = layer.xScale
     props.yScale = layer.yScale
   elseif (self.class == "linear" or self.class == "Dissolve" or self.class == "Path") then
-    if self.from then
-      if self.from.x then
+    if value then
+      if value.x then
         props.x = mX
       end
-      if self.from.y then
+      if value.y then
         props.y = mY
       end
-      if self.from.rotation then
+      if value.rotation then
         props.rotation = layer.rotation
       end
-      if self.from.xScale then
+      if value.xScale then
         props.xScale = layer.xScale
       end
-      if self.from.yScale then
+      if value.yScale then
         props.yScale = layer.yScale
       end
-      if self.from.alpha then
+      if value.alpha then
         props.alpha = layer.alpha
       end
     end
@@ -337,21 +339,16 @@ local function createAnimationFunc(self, UI, tool)
       animObjTo:pause()
       return animObjTo
     else -- linear
+      self.properties.duration = self.properties.duration or 1000
+      --
+      --
+      if isFrom then
       -- print("--- Linear propsFrom ---", propsFrom.x, propsFrom.y, self.properties.duration)
       -- for k, v in pairs(propsFrom) do
       --   print(k, v)
       -- end
       -- print("-------")
-      -- print("--- Linear propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
-      -- for k, v in pairs(propsTo) do
-      --   print(k, v)
-      -- end
-
-      self.properties.duration = self.properties.duration or 1000
-      --
-      --
-      if isFrom then
-        options.onComplete = function()
+      options.onComplete = function()
           print("Done From")
           animObjTo:play()
         end
@@ -361,11 +358,14 @@ local function createAnimationFunc(self, UI, tool)
       --
       --
       if isTo then
+        print("--- Linear propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
+        for k, v in pairs(propsTo) do
+          print(k, v)
+        end
         options.onComplete = onEndHandler
         options.delay = 0 -- notice
         animObjTo = gtween.new(layer, self.properties.duration / 1000, propsTo, options)
         animObjTo:pause()
-        print("@@@@@ To", animObjTo, layer.name)
       end
       -- for k, v in pairs(animObj) do print(k, v) end
       return {to = animObjTo, from = animObjFrom}

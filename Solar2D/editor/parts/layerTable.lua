@@ -131,6 +131,7 @@ function M:render(models, xIndex, yIndex, parentObj)
         option.width = nil
         local classObj = self.newText(option)
         --classObj.width = 50
+        classObj.parentObj = parentObj
         classObj.layer = entry.name
         classObj.class = entry.class[k]
         classObj.touch = function(eventObj, event)

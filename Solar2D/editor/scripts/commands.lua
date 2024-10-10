@@ -58,7 +58,7 @@ local function executeScript(filename, model)
       os.execute("copy " .. cmdFile .. " " .. system.pathForFile("..\\", system.ResourceDirectory))
       os.execute("cd " .. system.pathForFile("..\\", system.ResourceDirectory) .. " & start cmd /k call " .. cmd)
     else
-      print("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
+      -- print("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
       os.execute("cp " .. cmdFile .. " " .. system.pathForFile("../", system.ResourceDirectory))
       os.execute("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
     end
@@ -97,7 +97,7 @@ function M.createPage(book, _index, _page, _root, _weight)
   --
   local path = system.pathForFile("App/" .. book .. "/index.lua", system.ResourceDirectory)
   if path then -- lfs.attributes(path)
-    print("File exists")
+    -- print("File exists")
     local scenes = require("App." .. book .. ".index")
     for i = 1, #scenes do
       pages[i] = scenes[i]
@@ -153,7 +153,7 @@ function M.renamePage(book, page, oldName, newName, _dst)
     file = nil
   end
 
-  print('"' .. page .. '"', '"' .. newName .. '"', contents)
+  -- print('"' .. page .. '"', '"' .. newName .. '"', contents)
   contents = contents:gsub('"' .. page .. '"', '"' .. newName .. '"')
 
   local nfile = io.open(newFile, "w+")
@@ -213,13 +213,13 @@ function M.removePages(book, pages, _dst)
     local isDelete = false
     for ii, vv in next, pages do
       if vv == v then
-        print("let's delete",vv)
+        -- print("let's delete",vv)
         isDelete = true
         break
       end
     end
     if not isDelete then
-      print(v)
+      -- print(v)
       table.insert(newScenes,v)
     end
   end
@@ -327,7 +327,7 @@ local function copyFiles(files, _dst)
   --
   local commands = {}
   for i = 1, #files do
-    print(files[i])
+    -- print(files[i])
     local src = system.pathForFile(files[i], system.TemporaryDirectory)
     --local dst = system.pathForFile(nil, system.ResourceDirectory )
     local dir = util.getPath(files[i])
@@ -390,7 +390,7 @@ local function renameInIndex(book, page, oldName, newName, _dst)
     file = nil
   end
 
-  print('"' .. oldName .. '"', '"' .. newName .. '"', contents)
+  -- print('"' .. oldName .. '"', '"' .. newName .. '"', contents)
   --
   -- name in index.lua, use gsub
   --
@@ -426,11 +426,11 @@ function M.renameLayer(book, page, layer, newName, _dst)
 
   if model and model.value then
     for k, v in pairs(model.value) do
-      print(k, v)
+      -- print(k, v)
       if k == "class" then
         for i, class in next, v do
           classEntries[#classEntries+1] = class
-          print(class)
+          -- print(class)
         end
       end
     end
@@ -503,7 +503,7 @@ function M.renameBook(book, page, oldName, newName, _dst)
     file = nil
   end
 
-  print('"' .. oldName .. '"', '"' .. newName .. '"', contents)
+  -- print('"' .. oldName .. '"', '"' .. newName .. '"', contents)
   --
   -- name in index.lua, use gsub
   --
@@ -556,7 +556,7 @@ local function getModelFrom(args)
 
   ---[[
   for k, entries in pairs(args.props ) do
-    print("", k, type(entries))
+    -- print("", k, type(entries))
     if k =="properties" then
       for i, v in next, entries do
         if type(v) ~= "table" then
@@ -697,6 +697,7 @@ end
 
 function M.publishForSelections(UI, args, controller, decoded)
   --
+  --[[
   print("---args.props----")
   for k, v in pairs(args.props) do print("", k, v) end
   if args.actions then
@@ -705,6 +706,7 @@ function M.publishForSelections(UI, args, controller, decoded)
     end
   print("---decoded----")
   for k, v in pairs(decoded) do print("", k, v) end
+  --]]
 
   local files = {}
   local class = (args.class or "layer"):lower()
@@ -714,8 +716,8 @@ function M.publishForSelections(UI, args, controller, decoded)
   local page = args.page or UI.page
   local layer = args.layer or UI.editor.currentLayer or args.props.properties.target
 
-  print("publishForSelections", book, page, layer, class)
-  print("", "classFolder="..classFolder)
+  -- print("publishForSelections", book, page, layer, class)
+  -- print("", "classFolder="..classFolder)
 
   -- print(json.encode(args))
   local model  -- getModelFrom uses args.props.properties
@@ -724,7 +726,9 @@ function M.publishForSelections(UI, args, controller, decoded)
   else
     model = args.model  or args.props
   end
-  print("---model----", model)
+  --
+  model.class = class
+  -- print("---model----", model)
   -- for k, v in pairs(model) do print("", k, v) end
   if model.properties then
     for k, v in pairs(model.properties) do print("properties", k, v) end
@@ -805,7 +809,7 @@ function M.delete_(UI)
       name = obj[k]
       if name ~= nil then
         class = k
-        print("", k, name)
+        -- print("", k, name)
         break
       end
     end
@@ -815,7 +819,7 @@ function M.delete_(UI)
       class = obj.class
     else
       -- as audio imer, variable,
-      print("", class, name)
+      -- print("", class, name)
     end
     ---
     -- removeFromIndex, deleteFile
@@ -851,7 +855,7 @@ function M.openEditor(book, page, type, name)
 end
 
 function M.openEditorForLayer(book, page, layer, class)
-  print("App/" .. book .. "/components/" .. page .. "/" .. layer, class)
+  -- print("App/" .. book .. "/components/" .. page .. "/" .. layer, class)
   local path = system.pathForFile("App/" .. book, system.ResourceDirectory)
   if class and class:len() > 3 and class ~= layer then
     path = path .. "/components/" .. page .. "/layers/" .. layer .. "_" .. class .. ".lua"
@@ -886,7 +890,7 @@ local function deleteFiles(files, _dst)
   --
   local commands = {}
   for i = 1, #files do
-    print(files[i])
+    -- print(files[i])
     --local src = system.pathForFile(files[i], system.TemporaryDirectory)
     local src = system.pathForFile(files[i], system.ResourceDirectory )
     local dir = util.getPath(files[i])
@@ -904,7 +908,7 @@ local function deleteFiles(files, _dst)
       -- tmp = "mkdir -p " .. dir .. ";cp " .. src .. " " .. dst
       -- tmp = tmp:gsub('/','')
 
-      print (tmp)
+      -- print (tmp)
       commands[#commands + 1] = tmp
     end
   end

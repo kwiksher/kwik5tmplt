@@ -384,6 +384,33 @@ function M.mkdir(...)
   -- print(parent)
 end
 
+function M.getLayerDirs(book, page, layer)
+  local  ret = {"App", book, "components", page, "layers"}
+  local layerFolders = layer:split("/")
+  for i=1, #layerFolders-1 do
+    ret[#ret+1] = layerFolders[i]
+  end
+  return ret
+end
+
+function M.getModelDirs(book, page, layer)
+  local  ret = {"App", book, "models", page}
+  local layerFolders = layer:split("/")
+  for i=1, #layerFolders-1 do
+    ret[#ret+1] = layerFolders[i]
+  end
+  return ret
+end
+
+function M.getLayerNameWithParent(obj)
+  local ret = obj.layer
+  if obj.parentObj then
+    ret = obj.parentObj.layer.."/"..obj.layer
+    print("", ret)
+  end
+  return ret
+end
+
 function M.saveLua(tmplt, dst, _model, partial)
   print("local tmplt='" .. tmplt .. "'")
   print("local dst ='" .. dst .. "'")
