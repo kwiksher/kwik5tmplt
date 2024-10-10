@@ -138,8 +138,13 @@ end
 
 function exports.selectLayer(name, class, isRightClick)
   -- print(name, class)
+  local t = name:split("/")
   for i, obj in next,layerTable.objs do
-    if obj.text == name then
+    local test = obj.text
+    if #t > 1 and obj.parentObj then
+      test = obj.parentObj.layer
+    end
+    if test == t[1] and (t[2] == nil or obj.layer == t[2]) then
       -- print("", i, obj.text, obj.name)
       if class == nil then
         if isRightClick then

@@ -26,12 +26,12 @@ local command = function (params)
   if params.class then
     className = UI.editor:getClassFolderName(params.class)
   end
-  print(params.path)
   local pathMod = "App."..UI.editor.currentBook..".components."..UI.page ..".layers."..params.path..getFileName(layerName, params.class)
   local pathJson = "App/"..UI.editor.currentBook.."/models/"..UI.page .."/"..params.path..getFileName(layerName, className)..".json"
   local path = system.pathForFile( pathJson, system.ResourceDirectory)
+  -- print("pathMod", pathMod)
   if path == nil then
-    print("Error to find", pathMod)
+    print("Error to find", pathJson)
     -- return
   else
     print("selectLayer", path, params.show)
@@ -53,7 +53,7 @@ local command = function (params)
   else
     UI.editor.editPropsLabel = getFileName(layerName, params.class)
     -- local decoded, pos, msg = json.decodeFile( path )
-    local decoded = require(pathMod)
+    local decoded = require(pathMod:gsub("/", "."))
     if not decoded then
       print( "Decode failed at "..tostring(pos)..": "..tostring(msg), path )
     elseif (params.class =="animation") then
