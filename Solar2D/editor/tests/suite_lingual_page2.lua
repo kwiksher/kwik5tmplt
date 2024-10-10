@@ -15,7 +15,9 @@ local helper = require("editor.tests.helper")
 local classProps = require("editor.parts.classProps")
 local assetTable = require("editor.asset.assetTable")
 local listButtons = require("editor.replacement.listButtons")
-local util = require("lib.util")
+local libUtil = require("lib.util")
+local util = require("editor.util")
+local json = require("json")
 --local actionTable = require("editor.action.actionTable")
 
 
@@ -44,7 +46,25 @@ end
 function M.teardown()
 end
 
-function M.test_select_en_anim()
+function M.test_updateIndexModel()
+  local book = "lingualSample"
+  local page = "page2"
+  local layer = "witch/en"
+  local obj = helper.selectLayer("witch/en", "linear")
+  local scene = require("App." .. book .. ".components." .. page .. ".index")
+  local updatedModel = scene.model
+  assert(layer, obj.parentObj.layer.."/"..layer)
+
+  updatedModel = util.updateIndexModel(updatedModel, layer, class)
+  -- print(json.prettify(updatedModel))
+
+  local renderdModel = util.createIndexModel(updatedModel)
+
+  print(json.prettify(renderdModel))
+
+end
+
+function M.xtest_select_en_anim()
   layerTable.altDown = true
   helper.selectLayer("witch/en", "linear")
   layerTable.altDown = false
@@ -157,7 +177,7 @@ function M.xtest_decode64_words()
   local json = require("json")
   local mime = require("mime")
   local path = "server/tests/outputRedirection.json"
-  local data = json.decode(util.jsonFile(path))
+  local data = json.decode(libUtil.jsonFile(path))
   local alignment = data.alignment
   local normalized_alignment = data.normalized_alignment
 
