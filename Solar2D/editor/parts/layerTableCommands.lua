@@ -102,11 +102,8 @@ local function singleSelection(layerTable, target)
 
     UI.editor:setCurrnetSelection()
     if target.layer and target.layer:len() then
-      local name = target.layer
-      if target.parentObj then
-        name = target.parentObj.layer.."/"..target.layer
-        print("", name)
-      end
+      local name = util.getLayerNameWithParent(target)
+      ptin("@@@@@", name)
       UI.editor.currentLayer = name
     else
       print("Warning target.layer is not found")
@@ -160,10 +157,10 @@ local function showFocus(layerTable)
   --
   for i, v in next, layerTable.selections do
     local name = v.layer
-    print(i, v.layer)
+    -- print(i, v.layer)
     if v.parentObj then
       name = v.parentObj.layer.."/"..v.layer
-      print("", name)
+      -- print("", name)
     end
     local obj = UI.sceneGroup[name]
     if obj then
@@ -206,7 +203,7 @@ function M.commandHandler(layerTable, target, event)
         path = path
         -- class = target.class
       }
-      print("###", target.layer)
+      -- print("###", target.layer)
       tree:setConditionStatus("select layer", bt.SUCCESS, true)
       tree:setActionStatus("load layer", bt.RUNNING, true)
       tree:setConditionStatus("select props", bt.SUCCESS)
@@ -261,8 +258,13 @@ local function showClassProps(layerTable, target)
   local UI = layerTable.UI
   local type = "layer"
   local path = util.getParent(target)
+  -- print("@@@@ path", path)
+
+  local layerName = target.layer
+  UI.editor:setCurrnetSelection()
+
   if layerTable.selection == target then
-    print("let's toogle")
+    -- print("dispatch selectTool", layerName, target.class)
     -- target.isSelected = false
 
     target.rect:setFillColor(0.8)
@@ -271,7 +273,7 @@ local function showClassProps(layerTable, target)
       UI = UI,
       class = target.class,
       isNew = false,
-      layer = target.layer,
+      layer = layerName,
       toogle = true -- <========
     }
   else
@@ -284,20 +286,32 @@ local function showClassProps(layerTable, target)
     target.isSelected = true
     target.rect:setFillColor(0,1,0)
 
-    local name = target.layer
-    if target.parentObj then
-      name = target.parentObj.layer.."/"..target.layer
-      print("", name)
-    end
-    UI.editor:setCurrnetSelection(name)
     --
     -- target.isSelected = true
+    if target.layer and target.layer:len() then
+      local name = util.getLayerNameWithParent(target)
+      -- print("####", name)
+      UI.editor.currentLayer = name
+    else
+      print("Warning target.layer is not found")
+      --print(debug.traceback())
+    end
     if target.name then
       UI.editor.currentClass = target.name
     end
+
+    UI.scene.app:dispatchEvent {
+      name = "editor.selector.selectTool",
+      UI = UI,
+      class = target.class,
+      isNew = false,
+      layer = layerName,
+    }
+
+    --[[
     -- for load layer
     tree.backboard = {
-      layer = target.layer,
+      layer = layerName,
       class = target.class,
       path = path
     }
@@ -306,19 +320,16 @@ local function showClassProps(layerTable, target)
       tree:setConditionStatus("select props", bt.FAILED, true)
 
       -- For editor compoent. this fires selectTool event with backboard params
-      tree.backboard = {
-        class = target.class,
-        isNew = false,
-        layer = target.layer,
-        path = path
-      }
+      tree.backboard.isNew = false
+
       tree:setConditionStatus("modify component", bt.SUCCESS)
       tree:setActionStatus("editor component", bt.RUNNING, true)
+    --]]
   end
 end
 
 function M.commandHandlerClass(layerTable, target, event)
-  print("commandHandlerClass", target.layer, target.text)
+  -- print("commandHandlerClass", target.layer, target.text)
   local UI = layerTable.UI
   if event.phase == "began" or event.phase == "moved" then
     return
@@ -331,16 +342,16 @@ function M.commandHandlerClass(layerTable, target, event)
   target.rect:toFront()
   target:toFront()
   if layerTable:isAltDown() then
-    print("", "isAltDown")
+    -- print("", "isAltDown")
     showClassProps(layerTable, target)
   elseif layerTable:isControlDown() then -- mutli selections
-    print("", "isControlDown")
+    -- print("", "isControlDown")
     multiSelections(layerTable, target)
     isMultiSelection = true
   else
     isMultiSelection = false
     if singleSelection(layerTable, target) then
-      print("", "singleSelection")
+      -- print("", "singleSelection")
       actionCommandPropsTable:setActiveProp(target.layer, target.class)
       classProps:setActiveProp(target.layer, target.class)
 
@@ -348,7 +359,7 @@ function M.commandHandlerClass(layerTable, target, event)
       if UI.editor.selections_backup and #UI.editor.selections_backup > 0 then
         UI.editor.selections = {}
         for i, v in next, UI.editor.selections_backup do
-          print("recover", i, v.text)
+          -- print("recover", i, v.text)
           -- layerTable.selections[i] = v
           UI.editor.selections[i] = v
         end

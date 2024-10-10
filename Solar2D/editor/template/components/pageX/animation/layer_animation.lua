@@ -58,6 +58,8 @@ M.properties = {
   -- 'inBounce'
   -- 'outBounce'
   -- 'inOutBounce'
+  -- 'inCircular'
+  -- 'outCircular'
   -- 'inElastic'
   -- 'outElastic'
   -- 'inOutElastic'
