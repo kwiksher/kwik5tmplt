@@ -56,11 +56,16 @@ function M.test_updateIndexModel()
   assert(layer, obj.parentObj.layer.."/"..layer)
 
   updatedModel = util.updateIndexModel(updatedModel, layer, class)
-  -- print(json.prettify(updatedModel))
+  --print(json.prettify(updatedModel))
 
   local renderdModel = util.createIndexModel(updatedModel)
 
-  print(json.prettify(renderdModel))
+  -- controler.renderIndex is wrapping util.renderIndex
+  -- local controller = require("editor.controller.index")
+
+  local file = util.renderIndex(book, page, renderdModel)
+  --print(file)
+   print(json.prettify(renderdModel))
 
 end
 
