@@ -103,7 +103,7 @@ local function singleSelection(layerTable, target)
     UI.editor:setCurrnetSelection()
     if target.layer and target.layer:len() then
       local name = util.getLayerNameWithParent(target)
-      ptin("@@@@@", name)
+      -- print("@@@@@", name)
       UI.editor.currentLayer = name
     else
       print("Warning target.layer is not found")
