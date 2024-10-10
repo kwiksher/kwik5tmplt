@@ -79,7 +79,7 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
       local children = {}
       --
       if isTarget(layer, layerName) then
-        print("%%%", layerName)
+        -- print("%%%", layerName)
         if child then -- continue to find the target child
           layerName = child
           child = nil
@@ -145,6 +145,17 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
   return copied
 end
 
+-- https://stackoverflow.com/questions/7526223/how-do-i-know-if-a-table-is-an-array
+local function is_array(t)
+  local prev = 0
+  for k in pairs(t) do
+    if k ~= prev + 1 then
+      return false
+    end
+    prev = prev + 1
+  end
+  return true
+end
 --
 -- nLevel is used for lustache render in createIndexModel
 --
@@ -169,6 +180,7 @@ function M.createIndexModel(_scene, layerName, class)
 
   local function processLayers(layers, nLevel)
     for i = 1, #layers do
+      -- print("------------------", nLevel)
       local layer = layers[i]
       local newEntry = {}
       local children = {}
@@ -176,20 +188,21 @@ function M.createIndexModel(_scene, layerName, class)
       if isTarget(layer, layerName) then
         local target = layer[layerName]
         if target.class == nil then
-          newEntry.class = {}
+          newEntry["class".. nLevel] = {}
         else
-          newEntry.class = target.class
+          newEntry["class".. nLevel] = target.class
         end
         --
         if not isClass(newEntry, class) then
-          newEntry.class[#newEntry.class + 1] = class
+          local numOfchildren = #newEntry["class".. nLevel]
+          newEntry["class".. nLevel][numOfchildren + 1] = class
         end
       end
 
       --
       local children = {}
-      for key, value in pairs(layer) do
-        -- print(key, value)
+      for key, value in next, layer do
+        -- print("", key, #value, tostring(is_array(value)))
         if key == "class" then
           -- if newEntry.class == nil then -- this means not isTarget(layer, layerName)
           --   newEntry.class = value
@@ -204,7 +217,11 @@ function M.createIndexModel(_scene, layerName, class)
               --
               -- {aName = {A={}, B={}}}
               --
-              children[#children + 1] = value
+              if is_array(value) then
+                children = value
+              else
+                children[#children + 1] = value
+              end
             else
               -- print("@@@@", json.encode(children ))
               --
@@ -219,8 +236,8 @@ function M.createIndexModel(_scene, layerName, class)
                 if field ~= "class" then
                   -- child.layers = false
                   children[#children + 1] = child
-                elseif newEntry.class == nil then
-                  newEntry.class = child
+                elseif newEntry["class".. nLevel] == nil then
+                  newEntry["class".. nLevel] = child
                 end
                 field, child = next(value, field)
               end
@@ -233,13 +250,14 @@ function M.createIndexModel(_scene, layerName, class)
         --   -- just empty layer without class nor event
         --   v.class = {class}
         -- end
-        newEntry["layers" .. nLevel] = children
-        processLayers(newEntry["layers" .. nLevel], nLevel + 1)
+        -- print(json.prettify(children))
+        newEntry["layers" .. nLevel] = processLayers(children, nLevel+1)
       else
         -- newEntry.layers = false
       end
       layers[i] = newEntry
     end
+    return layers
   end
   --
   --if layerName then
@@ -265,13 +283,13 @@ function M.selectFromIndexModel(model, args)
   --
   local function processLayers(layers, target, level)
     local nextTarget = target[level+1]
-    print("nextTarget", nextTarget, level)
+    -- print("nextTarget", nextTarget, level)
     for i = 1, #layers do
       local layer = layers[i]
       local children = {}
       --
       for key, value in pairs(layer) do
-        print(key, value)
+        -- print(key, value)
         if isTarget(layer, target[level]) then
           if nextTarget == nil then
             return {type = "layer", file = key, value = value}
@@ -316,13 +334,13 @@ function M.selectFromIndexModel(model, args)
           end
         end
       end
-      print("return nil")
+      -- print("return nil")
       return nil
     end
   end
   --
   local out = processLayers(model.components.layers, args, 1)
-  print(json.encode(out))
+  -- print(json.encode(out))
   return out
 end
 
@@ -408,14 +426,14 @@ function M.getLayerNameWithParent(obj)
   local ret = obj.layer
   if obj.parentObj then
     ret = obj.parentObj.layer.."/"..obj.layer
-    print("", ret)
+    -- print("", ret)
   end
   return ret
 end
 
 function M.saveLua(tmplt, dst, _model, partial)
-  print("local tmplt='" .. tmplt .. "'")
-  print("local dst ='" .. dst .. "'")
+  -- print("local tmplt='" .. tmplt .. "'")
+  -- print("local dst ='" .. dst .. "'")
   local model = M.copyTable(_model)
   -- print("local model = json.decode('".. json.encode(model).. "')" )
 
@@ -427,7 +445,7 @@ function M.saveLua(tmplt, dst, _model, partial)
   else
     local contents = file:read("*a")
     io.close(file)
-    print(json.encode(model.events))
+    -- print(json.encode(model.events))
     -- print(contents)
     local output = lustache:render(contents, model, partial)
     local path = system.pathForFile(dst, system.TemporaryDirectory) --system.TemporaryDirectory)
@@ -492,7 +510,7 @@ function M.saveJson(_path, _model)
 end
 
 function M.decode(book, page, class, _name, options)
-  print("", class, _name, options.subclass)
+  -- print("", class, _name, options.subclass)
   local name = _name
   if options.isNew then
     local path = "editor.template.components.pageX." .. class .. ".defaults." .. class
@@ -505,7 +523,7 @@ function M.decode(book, page, class, _name, options)
       name = options.subclass .. "." .. name
     end
     local path = "App." .. book .. ".components." .. page .. "." .. class .. "s." .. name
-    print(path)
+    -- print(path)
     return require(path)
   end
 end
@@ -516,7 +534,7 @@ function M.decodeJson(book, page, class, name, options)
     local path = "editor.template.components.pageX." .. class .. ".defaults." .. class
     return require(path)
   elseif options.isDelete then
-    print(class, "delete")
+    -- print(class, "delete")
     return {}
   else
     local name = name or ""
@@ -529,11 +547,11 @@ function M.decodeJson(book, page, class, name, options)
       system.ResourceDirectory
     )
     if path then
-      print("App/" .. book .. "/models/" .. page .. "/" .. class .. "s/" .. name .. ".json")
+      -- print("App/" .. book .. "/models/" .. page .. "/" .. class .. "s/" .. name .. ".json")
       decoded, pos, msg = json.decodeFile(path)
     end
     if not decoded then
-      print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg), path)
+      -- print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg), path)
       decoded = {}
     end
     return decoded or {}
@@ -600,7 +618,7 @@ function M.read(book, page, filter)
             ret[className] = t
           end
           local f = name .. "_" .. className .. ".json"
-          print(f)
+          -- print(f)
           local path = system.pathForFile("App/" .. book .. "/models/" .. page .. "/" .. f, system.ResourceDirectory)
           if path then
             local decoded, pos, msg = json.decodeFile(path)
@@ -711,7 +729,7 @@ function M.renderIndex(book, page, model)
       n ..
         [[ }}{{>recursive]] ..
           n .. [[}} {{/layers]] .. n .. [[}}
-      class={ {{#class}}"{{.}}",{{/class}} }  }
+      class={ {{#class]]..n..[[}}"{{.}}",{{/class]]..n..[[}} }  }
     },
    ]]
   end
@@ -759,9 +777,9 @@ function M.saveIndex(book, page, layer, class, model)
           entry.class = {}
         end
         table.insert(entry.class, class)
-        for j = 1, #entry.class do
-          print(entry.class[j])
-        end
+        -- for j = 1, #entry.class do
+        --   print(entry.class[j])
+        -- end
         break
       end
     end
