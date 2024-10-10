@@ -25,6 +25,9 @@ function M.init(props)
   bookTable = props.bookTable
   pageTable = props.pageTable
   layerTable = props.layerTable
+
+  helper.init(props)
+
 end
 
 function M.suite_setup()
@@ -41,6 +44,11 @@ end
 function M.teardown()
 end
 
+function M.test_select_en_anim()
+  layerTable.altDown = true
+  helper.selectLayer("witch/en", "linear")
+  layerTable.altDown = false
+end
 
 function M.xtest_read_timecode()
   local textProps  = require("editor.replacement.textProps")

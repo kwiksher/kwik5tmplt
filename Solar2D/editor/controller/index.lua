@@ -240,11 +240,7 @@ function M:render(book, page, layer, classFolder, class, model)
     -- end
   end
   --
-  local  layerDirs = {"App", book, "components", page, "layers"}
-  local layerFolders = layer:split("/")
-  for i=1, #layerFolders-1 do
-    layerDirs[#layerDirs+1] = layerFolders[i]
-  end
+  local  layerDirs = util.getLayerDirs(book,page, layer)
   util.mkdir(unpack(layerDirs))
   util.mkdir("App", book, "components", page, "joints")
   util.saveLua(tmplt, dst, model)
@@ -281,7 +277,9 @@ function M:save(book, page, layer, class, model, entry)
     dst = "App/"..book.."/models/"..page .."/"..layer.."_"..class..".json"
   end
   --local dst = layer.."_"..tool..".json"
-  util.mkdir("App", book, "models", page)
+  local modelDirs = util.getModelDirs(book, page, layer)
+  util.mkdir(unpack(modelDirs))
+  --
   local decoded = util.copyTable(model)
   if entry then
     table.insert(decoded, entry)
@@ -351,7 +349,7 @@ function M:loadLua(book, page, layer,class, isNew, _type)
     if _type == "group" then
       path =  "App."..book..".components."..page ..".groups."..layerName.."_"..class
     end
-    local mod = require(path)
+    local mod = require(path:gsub("/", "."))
     return {mod}
   else
     -- for audios, groups, timers, variables
@@ -414,6 +412,7 @@ function M:load(book, page, layer, class, isNew, asset, _type)
     -- this comes from clicking layerTable.class
     local layerName = layer or "index"
     --local path      = page .."/"..layerName.."_"..self.tool..".json"
+    -- print( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua")
     local path      = system.pathForFile( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
     -- print("", path)
     if self.lastSelection ~= path then

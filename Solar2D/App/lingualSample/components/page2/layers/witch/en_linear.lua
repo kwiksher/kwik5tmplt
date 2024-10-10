@@ -3,7 +3,7 @@ local parent,root = newModule(...)
 local M = {
   name = "witch/en",
   --
-  class = "",
+  class = "linear",
 -- "Dissolve"
 -- "Path"
 -- "Linear"
@@ -40,11 +40,11 @@ M.properties = {
   autoPlay = true,
   delay    = 0,
   duration = 2000,
-  loop     = 10,
+  loop     = 1,
   reverse  = false,
   resetAtEnd  = false,
   --
-  easing   = "outCirc",
+  easing   = "inCircular",
   -- 'Linear'
   -- 'inOutExpo'
   -- 'inOutQuad'
@@ -69,14 +69,14 @@ M.properties = {
 --
 
 M.to = {
-  x     = 200,
-  y     = 0,
+  x     = -180,
+  y     = -100,
   --
   alpha = 1,
 
   yScale   = 1.5,
   xScale   = 1.5,
-  rotation = 90,
+  rotation = 30,
 }
 -- more option
 
