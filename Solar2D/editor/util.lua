@@ -196,7 +196,9 @@ function M.createIndexModel(_scene, layerName, class)
           -- end
         elseif key == "event" then
         else
-          newEntry.name = key
+          if type(key) == "string" then
+            newEntry.name = key
+          end
           if type(value) == "table" and next(value) then
             if value.class == nil then
               --
