@@ -165,6 +165,7 @@ function M:render(models, xIndex, yIndex, parentObj)
         objs[#objs + 1] = v
       end
       obj.childEntries = childEntries
+      obj.isIndex = true
     end
     --
   end

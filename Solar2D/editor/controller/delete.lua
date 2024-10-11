@@ -2,6 +2,7 @@ local name = ...
 local parent, root = newModule(name)
 local util = require("editor.util")
 local scripts = require("editor.scripts.commands")
+local json = require("json")
 
 local types = {"page", "timer", "group", "variables", "layer"}
 
@@ -29,14 +30,17 @@ local instance =
       local selections = UI.editor.selections or {UI.editor.currentLayer}
       --
       local files, targets = {}, {}
-      local indexModel = util.createIndexModel(UI.scene.model)
+      local indexModel = util.createIndexModel(UI.scene.model) -- noRecursive
+      -- local indexModel = util.createIndexModel(UI.scene.model, nil, nil, true) -- noRecursive
+      print(json.prettify(indexModel))
+
       local updatedModel = UI.scene.model
       -- UI.scene.model
       local namesMap = {}
 
       --local classFolder = UI.editor:getClassFolderName(data.class)
       local book, page = UI.book, UI.page
-
+      local entries
       if class == "audio" then
         entries = indexModel.components.audios
       elseif class == "group" then
@@ -53,36 +57,52 @@ local instance =
         entries = indexModel.components.layers
       end
 
-      for i, v in next, entries do
-        namesMap[v.name] = i
+      local function createNamesMap(layers, parent)
+        for i, v in next, layers do
+          if parent then
+            namesMap[parent.."/"..v.name] = i
+          else
+            namesMap[v.name] = i
+          end
+          for k, vv in pairs(v) do
+            -- layers1, layer2, layers3
+            if k:find("layers") then
+                createNamesMap(vv ,v.name)
+            end
+          end
+        end
       end
+      --
+      createNamesMap(entries)
 
-      for i, v in next, selections do
-        local class = params.class or v.class
+      print(json.prettify(namesMap))
+
+      for i, obj in next, selections do
+        local class = params.class or obj.class
         local name
-        local path, entries
+        local path
         if class == "audio" then
-          path = "App/" .. book .. "/components/" .. page .. "/audios/" .. v.subclass .. "." .. v.audio
-          name = v.subclass .. "." .. v.audio
+          path = "App/" .. book .. "/components/" .. page .. "/audios/" .. obj.subclass .. "." .. obj.audio
+          name = obj.subclass .. "." .. obj.audio
         elseif class == "group" then
-          path = "App/" .. book .. "/components/" .. page .. "/groups/" .. v.group
-          name = v.group
+          path = "App/" .. book .. "/components/" .. page .. "/groups/" .. obj.group
+          name = obj.group
         elseif class == "timer" then
-          path = "App/" .. book .. "/components/" .. page .. "/timers/" .. v.timer
-          name = v.timer
+          path = "App/" .. book .. "/components/" .. page .. "/timers/" .. obj.timer
+          name = obj.timer
         elseif class == "variable" then
-          path = "App/" .. book .. "/components/" .. page .. "/variables/" .. v.variable
-          name = v.variable
+          path = "App/" .. book .. "/components/" .. page .. "/variables/" .. obj.variable
+          name = obj.variable
         elseif class == "joint" then
-          path = "App/" .. book .. "/components/" .. page .. "/joints/" .. v.joint
-          name = v.joint
+          path = "App/" .. book .. "/components/" .. page .. "/joints/" .. obj.joint
+          name = obj.joint
         elseif class == "page" then
         elseif class then
-          path = "App/" .. book .. "/components/" .. page .. "/layers/" .. v.layer .. "_" .. v.class
-          name = v.layer
+          path = "App/" .. book .. "/components/" .. page .. "/layers/" .. obj.layer .. "_" .. obj.class
+          name = obj.layer
         else --class==nil
-          path = "App/" .. book .. "/components/" .. page .. "/layers/" .. v.layer
-          name = v.layer
+          path = "App/" .. book .. "/components/" .. page .. "/layers/" .. obj.layer
+          name = obj.layer
         end
 
         local index = namesMap[name]
@@ -103,6 +123,8 @@ local instance =
 
       local targetsDelete = {}
       for i, v in next, targets do
+        print(v.index, v.path, v.class)
+        print(entries[v.index].name, entries[v.index].class1)
         if v.class == nil then
           -- table.remove(indexModel,v.index) -- delete from index
         elseif v.class == "audio" then
@@ -112,12 +134,12 @@ local instance =
         elseif v.class == "joint" then
         else
           local updated = {}
-          for ii, vv in next, entries[v.index].class do
+          for ii, vv in next, entries[v.index].class1 do -- Notice
             if vv ~= v.class then
               updated[#updated + 1] = vv
             end
           end
-          entries[v.index].class = updated
+          entries[v.index].class1 = updated
         end
         files[#files + 1] = v.path
         targetsDelete[#targetsDelete + 1] = v.path

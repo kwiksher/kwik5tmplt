@@ -159,7 +159,7 @@ end
 --
 -- nLevel is used for lustache render in createIndexModel
 --
-function M.createIndexModel(_scene, layerName, class)
+function M.createIndexModel(_scene, layerName, class, noRecursive)
   local scene =
     _scene or
     {
@@ -194,8 +194,13 @@ function M.createIndexModel(_scene, layerName, class)
         end
         --
         if not isClass(newEntry, class) then
-          local numOfchildren = #newEntry["class".. nLevel]
-          newEntry["class".. nLevel][numOfchildren + 1] = class
+          if noRecursive then
+            local numOfchildren = #newEntry["class"]
+            newEntry["class"][numOfchildren + 1] = class
+          else
+            local numOfchildren = #newEntry["class".. nLevel]
+            newEntry["class".. nLevel][numOfchildren + 1] = class
+          end
         end
       end
 
@@ -229,17 +234,30 @@ function M.createIndexModel(_scene, layerName, class)
               --  => {"class"]["button"], "1":{ "A":[]}, "2":{"B":[]}} see the A's and B's object is array
 
               -- print("###", json.encode(value ))
-
-              local field, child = next(value, nil)
-              while field do
-                -- print(field, "=", child, #children +1)
-                if field ~= "class" then
-                  -- child.layers = false
-                  children[#children + 1] = child
-                elseif newEntry["class".. nLevel] == nil then
-                  newEntry["class".. nLevel] = child
+              if noRecursive then
+                local field, child = next(value, nil)
+                while field do
+                  -- print(field, "=", child, #children +1)
+                  if field ~= "class" then
+                    -- child.layers = false
+                    children[#children + 1] = child
+                  elseif newEntry["class"] == nil then
+                    newEntry["class"] = child
+                  end
+                  field, child = next(value, field)
                 end
-                field, child = next(value, field)
+              else
+                local field, child = next(value, nil)
+                while field do
+                  -- print(field, "=", child, #children +1)
+                  if field ~= "class" then
+                    -- child.layers = false
+                    children[#children + 1] = child
+                  elseif newEntry["class".. nLevel] == nil then
+                    newEntry["class".. nLevel] = child
+                  end
+                  field, child = next(value, field)
+                end
               end
             end
           end
