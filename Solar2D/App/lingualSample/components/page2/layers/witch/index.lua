@@ -1,13 +1,11 @@
--- $weight=1
---
 local M = {}
-M.name = ...
+M.name = string.match(..., "%.([^%.]+)%.index$")
 
 function M:init(UI)
 end
 --
 function M:create(UI)
-	print("create", self.name)
+	-- print("create", self.name)
 	local sceneGroup = UI.sceneGroup
 
 end

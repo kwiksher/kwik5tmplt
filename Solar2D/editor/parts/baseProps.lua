@@ -181,7 +181,7 @@ function M:setValue(fooValue)
     for k, v in pairs(params) do
       --
       if not basePropsControl.filter(k) then
-        -- print("", k)
+        -- print("", k, v)
         local prop = {name=k, value=basePropsControl._yamlValue(k, v, params)}
         if Prefix_Layers[k] then
           prop.name = "_"..prop.name
