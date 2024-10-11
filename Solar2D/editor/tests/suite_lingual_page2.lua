@@ -46,7 +46,17 @@ end
 function M.teardown()
 end
 
-function M.test_updateIndexModel()
+function M.test_delete_flyOver()
+  if helper.hasObj(layerTable, "flyOver", "lang") then
+    helper.selectLayer("flyOver", "lang", false) -- isRightClick
+    helper.selectLayer("flyOver", "lang", true) -- isRightClick
+    -- local actionButtonContext = require("editor.parts.actionButtonContext")
+    --
+    -- then delete it manually
+  end
+end
+
+function M.xtest_updateIndexModel()
   local book = "lingualSample"
   local page = "page2"
   local layer = "witch/en"

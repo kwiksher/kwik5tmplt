@@ -230,9 +230,9 @@ end
 local function createPropsFrom(self, layer, _mX, _mY)
   local value = self.from
   local mX, mY = _mX or layer.x, _mY or layer.y
-  if value then
-    print("createProps", self.class, mX, mY, value.x, value.y)
-  end
+  -- if value then
+  --   print("createProps", self.class, mX, mY, value.x, value.y)
+  -- end
   local props = {}
   if self.class == "pulse" then
     props.xScale = layer.xScale
@@ -349,7 +349,7 @@ local function createAnimationFunc(self, UI, tool)
       -- end
       -- print("-------")
       options.onComplete = function()
-          print("Done From")
+          -- print("Done From")
           animObjTo:play()
         end
         animObjFrom = gtween.new(layer, self.properties.duration / 1000, propsFrom, options)
@@ -358,10 +358,10 @@ local function createAnimationFunc(self, UI, tool)
       --
       --
       if isTo then
-        print("--- Linear propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
-        for k, v in pairs(propsTo) do
-          print(k, v)
-        end
+        -- print("--- Linear propsTo ---", propsTo.x, propsTo.y, self.properties.duration)
+        -- for k, v in pairs(propsTo) do
+        --   print(k, v)
+        -- end
         options.onComplete = onEndHandler
         options.delay = 0 -- notice
         animObjTo = gtween.new(layer, self.properties.duration / 1000, propsTo, options)

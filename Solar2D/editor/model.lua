@@ -7,7 +7,7 @@ local model = {
         -- {name = "addPage", icon = "newPage"},
         {name = "Properties", icon = "layerProp"},
         -- {name = "Language", icon = "Lang"},
-        {name = "setLanguage", icon = "setLang"}
+        {name = "Lang", icon = "setLang"}
       },
       id = "layer"
     },

@@ -827,7 +827,7 @@ function M.delete_(UI)
 end
 
 function M.delete(files)
-  local  root, commands = deleteFiles(files)
+  local  root, commands = M.deleteFiles(files)
   return executeScript("delete_lua.", {dst = root, cmd = commands})
 end
 

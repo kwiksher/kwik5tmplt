@@ -73,11 +73,23 @@ function exports.selectActionCommand(class, name)
   end
 end
 
-function exports.hasObj(tbl, name)
+function exports.hasObj(tbl, name, class)
   if tbl.objs == nil then return false end
   for i, obj in next, tbl.objs do
     if obj.text == name then
-      return true
+      if class then
+        if obj.classEntries == nil then
+          return false
+        else
+          for ii, cc in next, obj.classEntries do
+            if cc.class == class then
+              return true
+            end
+          end
+        end
+      else
+        return true
+      end
     end
   end
   return false
@@ -155,13 +167,13 @@ function exports.selectLayer(name, class, isRightClick)
         return obj
       else
         for i, classObj in next, obj.classEntries do
-          print("", "", classObj.class)
+          -- print("", "", classObj.class)
           if classObj.class == class then
               if isRightClick then
-                  print("", "", "isRightClick")
+                  -- print("", "", "isRightClick")
                   classObj:dispatchEvent{name= "mouse", target=classObj, isSecondaryButtonDown=true, x = classObj.x, y = classObj.y}
               else
-                print("", "", "touch ended")
+                -- print("", "", "touch ended")
                 classObj:touch({phase="ended"})
               end
             return classObj

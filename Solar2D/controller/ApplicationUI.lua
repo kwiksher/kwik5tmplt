@@ -105,7 +105,7 @@ function M.create(scene, model)
                             handler[funcName](handler, nil, parentPath .. name, false)
                             if UI.langClassDelegate then
                               for i, class in next, firstEntry.class do
-                                print("",class, parentPath..firstEntry.name)
+                                -- print("",class, parentPath..firstEntry.name)
                                 handler[funcName](handler, class, parentPath .. firstEntry.name, false)
                               end
                             else
