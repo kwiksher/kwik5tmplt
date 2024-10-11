@@ -76,7 +76,8 @@ local keySets =
   "align",
   "dummy",
   "new",
-  "newInstance"
+  "newInstance",
+  "children"
 }
 
 function M.filter(k)
