@@ -1,15 +1,13 @@
--- $weight=1
---
-local M = {}
-M.name = ...
+local parent,root, M = newModule(...)
 
+M.properties = {
+  langClassDelegate = true
+}
+--
 function M:init(UI)
 end
 --
 function M:create(UI)
-	-- print("create", self.name)
-	local sceneGroup = UI.sceneGroup
-
 end
 --
 function M:didShow(UI)
@@ -18,7 +16,7 @@ end
 function M:didHide(UI)
 end
 --
-function  M:destroy()
+function  M:destroy(UI)
 end
 --
 return M

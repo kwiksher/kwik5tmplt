@@ -1,7 +1,5 @@
--- $weight={{weight}}
---
 local M = {}
-M.name = ...
+M.name = string.match(..., "%.([^%.]+)%.index$")
 
 function M:init(UI)
 end
