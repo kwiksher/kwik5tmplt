@@ -11,8 +11,7 @@ local scene = require('controller.scene').new(sceneName, {
       {
         witch = {     {
           en = {
-            class = {"linear"}
-          }
+            class={ "linear", }  }
         },
         {
           ja = {
@@ -27,7 +26,7 @@ local scene = require('controller.scene').new(sceneName, {
           }
         },
 
-        class ={"lang"}  }
+        class={ "lang", }  }
       },
       {
         flyOver = {     {
