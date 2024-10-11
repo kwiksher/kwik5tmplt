@@ -113,12 +113,12 @@ end
 
 
 function M:init(UI)
-  print("init", UI.page)
+  -- print("init", UI.page)
 end
 
 --
 function M:create(UI)
-  print("create", self.name, UI.page)
+  -- print("create", self.name, UI.page)
   -- if self.rootGroup then return end
   self.rootGroup = UI.editor.rootGroup
   ---
@@ -260,7 +260,7 @@ function M:create(UI)
 end
 --
 function M:didShow(UI)
-  print("didShow", UI.page)
+  -- print("didShow", UI.page)
   self.projectPageSelector:didShow(UI)
   self.componentSelector:didShow(UI)
   self.assetsSelector:didShow(UI)
@@ -268,7 +268,7 @@ function M:didShow(UI)
 end
 --
 function M:didHide(UI)
-  print("didHide", UI.page)
+  -- print("didHide", UI.page)
   self.projectPageSelector:didHide(UI)
   self.componentSelector:didHide(UI)
   self.assetsSelector:didHide(UI)
@@ -276,7 +276,7 @@ function M:didHide(UI)
 end
 --
 function M:destroy(UI)
-  print("destroy")
+  -- print("destroy")
   if self.objs then
     for i=1, #self.objs do
       self.objs[i]:removeSelf()

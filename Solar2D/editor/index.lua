@@ -75,7 +75,7 @@ M.BThandler = function(name, status)
     }
     if tree.backboard then
       for k, v in pairs(tree.backboard) do
-      --  print("", k, v)
+        -- print("", k, v)
         params[k] = v
       end
     end
@@ -180,7 +180,7 @@ function M:initStores()
 end
 ---
 function M:init(UI)
-  print("#### init")
+  -- print("#### init")
   self.UI = UI
   if self.rootGroup then
     self:destroy(UI)
@@ -276,7 +276,7 @@ function M:setCurrnetSelection(layer, class, _type)
 end
 --
 function M:create(UI)
-  print("####### editor create")
+  -- print("####### editor create")
   UI.editor = self
   for i=1, #self.views do
     self.views[i]:create(UI)
