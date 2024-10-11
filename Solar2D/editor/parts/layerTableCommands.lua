@@ -200,7 +200,8 @@ function M.commandHandler(layerTable, target, event)
       --
       tree.backboard = {
         layer = target.layer,
-        path = path
+        path = path,
+        isIndex = target.isIndex,
         -- class = target.class
       }
       -- print("###", target.layer)
