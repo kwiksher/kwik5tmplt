@@ -20,6 +20,10 @@ end
 local command = function (params)
 	local UI    = params.UI
   local layerName =  params.layer or "index"
+  -- print(layerName, params.isIndex)
+  if params.isIndex then
+    layerName = layerName ..".index"
+  end
 	-- local path = UI.page .."/"..getFileName(layerName, params.class)..".json"
 
   local className = nil
@@ -34,7 +38,7 @@ local command = function (params)
     print("Error to find", pathJson)
     -- return
   else
-    print("selectLayer", path, params.show)
+    print("selectLayer", path, params.isIndex )
   end
   -- print(debug.traceback())
 
@@ -55,12 +59,13 @@ local command = function (params)
     -- local decoded, pos, msg = json.decodeFile( path )
     local decoded = require(pathMod:gsub("/", "."))
     if not decoded then
-      print( "Decode failed at "..tostring(pos)..": "..tostring(msg), path )
+      print( "Decode failed at "..tostring(pos)..": "..tostring(msg), path, params.isIndex  )
     elseif (params.class =="animation") then
       print( "animation is decoded!" )
       --UI.editor.propsStore:set(decoded)
     else
       print( "props is decoded!" )
+      -- print(json.prettify(decoded))
       propsTable:didHide(UI)
       propsTable:destroy(UI)
       propsTable:init(UI)
