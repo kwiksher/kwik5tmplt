@@ -135,7 +135,7 @@ function M:toggle()
     if v.toogle then
       v:toggle()
     else
-      print("missing toogle in", k)
+      -- print("missing toogle in", k)
     end
   end
   self.view.group.isVisible = not self.view.group.isVisible
@@ -219,18 +219,21 @@ function M:render(book, page, layer, classFolder, class, model)
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
     --local dst = layer.."_"..class ..".lua"
     tmplt =  "editor/template/components/pageX/"..classFolder.."/"..class..".lua"
-  elseif (model.name and model.name:len()>0) and class then
-    if model.name ~= "nil" then
-      dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..(model.name) ..".lua"
-    end
   elseif class then
     --local dst = layer.."_"..class ..".lua"
     if Animations[class] then
       tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_animation.lua"
     end
-   if model.type =="group" then
-    dst =  "App/"..book.."/components/"..page.."/groups/"..layer.."_"..class ..".lua"
-   end
+    if model.type =="group" then
+      dst =  "App/"..book.."/components/"..page.."/groups/"..layer.."_"..class ..".lua"
+    else
+      dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
+    end
+  elseif (model.name and model.name:len()>0) and class then
+    print("## Warning: model.name is used in render")
+    if model.name ~= "nil" then
+      dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..(model.name) ..".lua"
+    end
   else
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
     --local dst = layer.."_"..class ..".lua"

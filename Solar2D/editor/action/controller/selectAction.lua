@@ -24,8 +24,9 @@ local command = function (params)
     -- end
   end
   ---
-  if params.isNew then
+  if params.isNew then -- comes form newHandler
     decoded = {isNew = true, name="", actions={}}
+
     local listener = function(name)
       if name and name:len() > 0 then
         decoded.name = name

@@ -743,14 +743,18 @@ function M.publishForSelections(UI, args, controller, decoded)
   local updatedModel = scene.model
   -- print(json.encode(updatedModel))
   local selections = UI.editor.selections or {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
+  --print(json.prettify(selections))
   for i, obj in next, selections do
-    if obj.class == "" then
+    if obj.parentObj then
+        if obj.parentObj  then -- class has been set, so the layer == "witch/en/button"
+          layer = obj.parentObj.layer.."/"..obj.layer
+        end
+    else
       layer = obj.layer
     end
-    if obj.parentObj then
-      layer = obj.parentObj.layer.."/"..layer
-    end
     model.layer = layer
+    model.name = obj.layer
+
     updatedModel = util.updateIndexModel(updatedModel, layer, class, model.properties._type or model.properties.type)
     -- print(json.encode(updatedModel))
     --- save json
@@ -779,7 +783,7 @@ function M.publishForSelections(UI, args, controller, decoded)
 
   local renderdModel = util.createIndexModel(updatedModel)
   -- print("------------------------------")
-  -- print(json.encode(renderdModel))
+  -- print(json.prettify(renderdModel))
 
   --
   if UI.editor.currentActionForSave  then
