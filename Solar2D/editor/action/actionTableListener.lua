@@ -56,7 +56,7 @@ function M:selectHandler(target)
   else
     self.lastTarget = target
     -- print("setActiveProp", target.action)
-    if layerTableCommands.singleSelection(self, target) then
+    if layerTableCommands.singleSelection(self, target, true) then -- isNotLayer == true
       if self.actionbox then
         self.actionbox:setActiveProp(target.action) -- nil == activeProp
         self.actionbox = nil
