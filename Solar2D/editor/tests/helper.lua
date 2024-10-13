@@ -73,22 +73,24 @@ function exports.selectActionCommand(class, name)
   end
 end
 
-function exports.hasObj(tbl, name, class)
-  if tbl.objs == nil then return false end
-  for i, obj in next, tbl.objs do
-    if obj.text == name then
-      if class then
-        if obj.classEntries == nil then
-          return false
-        else
-          for ii, cc in next, obj.classEntries do
-            if cc.class == class then
-              return true
-            end
+function exports.hasObj(layerTable, name, class)
+  -- print(name, class)
+  if name == nil then return end
+  local t = name:split("/")
+  for i, obj in next,layerTable.objs do
+    local test = obj.text
+    if #t > 1 and obj.parentObj then
+      test = obj.parentObj.layer
+    end
+    if test == t[1] and (t[2] == nil or obj.layer == t[2]) then
+      if class == nil then
+        return true
+      elseif obj.classEntries then
+        for i, classObj in next, obj.classEntries do
+          if classObj.class == class then
+            return true
           end
         end
-      else
-        return true
       end
     end
   end
@@ -150,6 +152,7 @@ end
 
 function exports.selectLayer(name, class, isRightClick)
   -- print(name, class)
+  if name == nil then return end
   local t = name:split("/")
   for i, obj in next,layerTable.objs do
     local test = obj.text
