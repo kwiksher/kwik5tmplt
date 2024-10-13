@@ -46,7 +46,7 @@ local scene = require('controller.scene').new(sceneName, {
           }
         },
 
-        }
+        class={ "lang", }  }
       },
       {
         fly = {     {
@@ -66,7 +66,7 @@ local scene = require('controller.scene').new(sceneName, {
           }
         },
 
-        }
+        class={ "lang", }  }
       },
       {
         father = {     {
@@ -98,7 +98,7 @@ local scene = require('controller.scene').new(sceneName, {
     joints    = {  },
     page = {  }
   },
-  commands = {  },
+  commands = {   "flyAnim",  },
   onInit = function(scene) print("onInit") end
 })
 --
