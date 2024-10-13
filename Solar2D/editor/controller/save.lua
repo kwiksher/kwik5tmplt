@@ -33,17 +33,11 @@ local instance =
     local props = params.props
     if props == nil then print("Error") return end
 
-    -- props = UI.useClassEditorProps()
-    -- print("saving props") -- if nil, command from dispathEvent will skip the process by checking props null
-      -- for k, v in pairs(props) do print("",k, v) end
-      -- if props.properties then
-      --   for k, v in pairs(props.properties) do print("",k, v) end
-      -- end
-
-    local class = class
+    local class = params.class
     if class == nill then
       class = UI.editor.currentClass
     end
+    -- print(class)
 
     local controller = UI.editor:getClassModule(class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
     for k, v in pairs(controller:useClassEditorProps(UI)) do
@@ -51,21 +45,12 @@ local instance =
       props[k] = v
     end
 
-    -- local isNew = controller.classProps.isNew
-    -- if props.isNew ~=nil then
-    --   isNew = props.isNew
-    -- end
-    -- print("@@@ isNew", isNew, controller.isNew, props.isNew)
-
-
-    print("@@@@", props.layer, UI.editor.currentLayer)
     local layer = props.layer or UI.editor.currentLayer
     if layer == nil then
       layer = props.name
     end
 
     if not props.isNew then
-      print("publishForSelections")
       scripts.publishForSelections(UI, {
         book= props.book, page=props.page,
         layer = layer,
@@ -79,12 +64,9 @@ local instance =
         local newLayer = {name=props.name}
         layer = newLayer
         table.insert(updatedModel.components.layers, index, newLayer)
-        print(json.prettify(updatedModel))
+        -- print(json.prettify(updatedModel))
       end
       -- local controller = require("editor.controller.index")
-
-      -- print("$$$$$$$$$$$$$$", name)
-
       scripts.publish(UI, {
         book=UI.editor.currentBook, page=UI.editor.currentPage or UI.page,
         updatedModel = updatedModel,

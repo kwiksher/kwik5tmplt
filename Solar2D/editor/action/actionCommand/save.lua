@@ -40,11 +40,12 @@ local command = function (params)
   local files = {}
 
   --
-  if props.isNew then
+  if props.isNew or UI.currentAction.isNew then
     actions[#actions + 1] = action
     local newAction = {
       name= nameText,
-      actions = actions
+      actions = actions,
+      isNew = true
     }
     UI.editor.currentAction = newAction
     UI.editor.actionCommandStore:set(newAction)
