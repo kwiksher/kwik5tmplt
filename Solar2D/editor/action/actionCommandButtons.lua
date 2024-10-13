@@ -4,6 +4,7 @@ local parent = current:match("(.-)[^%.]+$")
 
 M.name = current
 M.weight = 1
+M.contextInit = false
 
 local App = require("Application")
 
@@ -25,14 +26,17 @@ end
 
 ---
 function M:init(UI, toggleHandler)
-  local app = App.get()
-  for i = 1, #self.commands do
-    app.context:mapCommand(
-      "editor.actionCommand." .. self.commands[i],
-      "editor.action.actionCommand." .. self.commands[i]
-    )
+  if not self.contextInit then
+    local app = App.get()
+    for i = 1, #self.commands do
+      app.context:mapCommand(
+        "editor.actionCommand." .. self.commands[i],
+        "editor.action.actionCommand." .. self.commands[i]
+      )
+    end
+    self.togglePanel = toggleHandler
+    self.contextInit  = true
   end
-  self.togglePanel = toggleHandler
 end
 --
 function M:create(UI)

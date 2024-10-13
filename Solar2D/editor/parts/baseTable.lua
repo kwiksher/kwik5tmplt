@@ -47,7 +47,7 @@ local function onKeyEvent(self, event)
   self.altDown = false
   self.controlDown = false
   if (event.keyName == "leftAlt" or event.keyName == "rightAlt") and event.phase == "down" then
-    print("baseTable", self.name, message)
+    -- print("baseTable", self.name, message)
     self.altDown = true
   elseif (event.keyName == "leftControl" or event.keyName == "rightControl") and event.phase == "down" then
     self.controlDown = true
