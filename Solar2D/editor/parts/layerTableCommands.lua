@@ -67,7 +67,7 @@ local function multiSelections(layerTable, target)
   end
 end
 
-local function singleSelection(layerTable, target)
+local function singleSelection(layerTable, target, isNotLayer)
   local UI = layerTable.UI
   if layerTable.selection == target and target.isSelected then
     -- print("let's toogle")
@@ -99,19 +99,20 @@ local function singleSelection(layerTable, target)
     target.rect:setFillColor(0,1,0)
     --target.rect:setStrokeColor(0, 1, 0)
     ---
-
-    UI.editor:setCurrnetSelection()
-    if target.layer and target.layer:len() then
-      local name = util.getLayerNameWithParent(target)
-      -- print("@@@@@", name)
-      UI.editor.currentLayer = name
-    else
-      print("Warning target.layer is not found")
-      --print(debug.traceback())
-    end
-    -- target.isSelected = true
-    if target.name then
-      UI.editor.currentClass = target.name
+    if not isNotLayer then
+      UI.editor:setCurrnetSelection()
+      if target.layer and target.layer:len() then
+        local name = util.getLayerNameWithParent(target)
+        -- print("@@@@@", name)
+        UI.editor.currentLayer = name
+      else
+        print("Warning target.layer is not found")
+        --print(debug.traceback())
+      end
+      -- target.isSelected = true
+      if target.name then
+        UI.editor.currentClass = target.name
+      end
     end
     return true
     --

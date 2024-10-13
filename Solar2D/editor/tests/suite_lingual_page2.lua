@@ -5,7 +5,6 @@ local UI
 local bookTable
 local pageTable
 local layerTable
-local actionTable
 local bookName = "lingualSample" -- "bookTest01"
 local pageName = "page2"
 local listbox = require("editor.replacement.listbox")
@@ -19,6 +18,8 @@ local libUtil = require("lib.util")
 local util = require("editor.util")
 local json = require("json")
 --local actionTable = require("editor.action.actionTable")
+local actionbox = require("editor.parts.actionbox")
+local actionTable = require("editor.action.actionTable")
 
 
 function M.init(props)
@@ -27,7 +28,8 @@ function M.init(props)
   bookTable = props.bookTable
   pageTable = props.pageTable
   layerTable = props.layerTable
-
+  --
+  props.actionTable = actionTable
   helper.init(props)
 
 end
@@ -46,7 +48,27 @@ end
 function M.teardown()
 end
 
-function M.test_delete_flyOver()
+function M.xtest_edit_button()
+  layerTable.altDown = true
+  local obj = helper.selectLayer("fly/en", "button")
+  layerTable.altDown = false
+
+  helper.clickProp(actionbox.objs, "onTap")
+  objs = require("editor.parts.buttonContext").objs
+  objs.Select.rect:tap()
+  helper.clickAction("flyAnim")
+end
+
+function M.test_xdelete_button()
+  if helper.hasObj(layerTable, "fly/en", "button") then
+    helper.selectLayer("fly/en", "button", false) -- isRightClick
+    helper.selectLayer("fly/en", "button", true) -- isRightClick
+    -- then
+    -- manially delete it
+  end
+end
+
+function M.xtest_delete_flyOver()
   if helper.hasObj(layerTable, "flyOver", "lang") then
     helper.selectLayer("flyOver", "lang", false) -- isRightClick
     helper.selectLayer("flyOver", "lang", true) -- isRightClick

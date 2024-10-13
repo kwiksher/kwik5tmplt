@@ -10,7 +10,7 @@ local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
-    print(name)
+    -- print(name)
     if params.props and params.props.book then
       print("delete book")
     else
@@ -32,7 +32,7 @@ local instance =
       local files, targets = {}, {}
       local indexModel = util.createIndexModel(UI.scene.model) -- noRecursive
       -- local indexModel = util.createIndexModel(UI.scene.model, nil, nil, true) -- noRecursive
-      print(json.prettify(indexModel))
+      -- print(json.prettify(indexModel))
 
       local updatedModel = UI.scene.model
       -- UI.scene.model
@@ -60,9 +60,9 @@ local instance =
       local function createNamesMap(layers, parent)
         for i, v in next, layers do
           if parent then
-            namesMap[parent.."/"..v.name] = i
+            namesMap[parent.."/"..v.name] = {i, v}
           else
-            namesMap[v.name] = i
+            namesMap[v.name] = {i, v}
           end
           for k, vv in pairs(v) do
             -- layers1, layer2, layers3
@@ -75,7 +75,7 @@ local instance =
       --
       createNamesMap(entries)
 
-      print(json.prettify(namesMap))
+      -- print(json.prettify(namesMap))
 
       for i, obj in next, selections do
         local class = params.class or obj.class
@@ -100,17 +100,20 @@ local instance =
         elseif class then
           path = "App/" .. book .. "/components/" .. page .. "/layers/" .. obj.layer .. "_" .. obj.class
           name = obj.layer
+          if obj.parentObj then
+            name = obj.parentObj.layer .."/"..name
+          end
         else --class==nil
           path = "App/" .. book .. "/components/" .. page .. "/layers/" .. obj.layer
           name = obj.layer
         end
 
-        local index = namesMap[name]
         -- print(name)
+        local entry = namesMap[name]
         -- printTable(namesMap)
         --
-        if index then
-          targets[#targets + 1] = {index = index, path = path, class = class}
+        if entry then
+          targets[#targets + 1] = {index = entry[1], obj=entry[2], path = path, class = class}
         end
       end
       --
@@ -121,10 +124,22 @@ local instance =
         end
       )
 
+      local function getClass(tbl)
+        for k, v in pairs(tbl) do
+          -- print(k)
+          if type(k) == "string" and k:find("class") then
+            return k
+          end
+        end
+      end
+
       local targetsDelete = {}
       for i, v in next, targets do
-        print(v.index, v.path, v.class)
-        print(entries[v.index].name, entries[v.index].class1)
+        -- print(v.index, v.path, v.class)
+        local obj = v.obj
+        -- printTable(obj)
+        local classKey = getClass(obj)
+        -- print(obj.name, classKey)
         if v.class == nil then
           -- table.remove(indexModel,v.index) -- delete from index
         elseif v.class == "audio" then
@@ -134,12 +149,12 @@ local instance =
         elseif v.class == "joint" then
         else
           local updated = {}
-          for ii, vv in next, entries[v.index].class1 do -- Notice
+          for ii, vv in next, obj[classKey] do -- Notice
             if vv ~= v.class then
               updated[#updated + 1] = vv
             end
           end
-          entries[v.index].class1 = updated
+          obj[classKey] = updated
         end
         files[#files + 1] = v.path
         targetsDelete[#targetsDelete + 1] = v.path

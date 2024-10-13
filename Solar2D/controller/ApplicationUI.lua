@@ -29,7 +29,7 @@ function M.create(scene, model)
     UI.taben            = {}
     UI.tabjp            = {}
     UI.tSearch          = nil
-    UI.lang             = "ja"
+    UI.lang             = "en"
     UI.langClassDelegate = true
 
     ---
@@ -94,7 +94,6 @@ function M.create(scene, model)
                           --     handler[funcName](handler, ret[j].class, ret[j].path, false)
                           -- end
                         elseif isLang then
-                          -- print("@@", parentPath .. name)
                           -- print("@@", name, UI.lang)
                           if i==1 then
                             firstEntry.name = name
@@ -102,19 +101,21 @@ function M.create(scene, model)
                           end
                           --
                           if UI.lang ==name then
+                            --print("@@", UI.lang, parentPath .. name)
                             handler[funcName](handler, nil, parentPath .. name, false)
-                            if UI.langClassDelegate then
+                            if UI.langClassDelegate and firstEntry.class then
                               for i, class in next, firstEntry.class do
                                 -- print("",class, parentPath..firstEntry.name)
                                 handler[funcName](handler, class, parentPath .. firstEntry.name, false)
                               end
-                            else
+                            elseif value.class then
                               for i, class in next, value.class do
                                 handler[funcName](handler, class, parentPath .. name, false)
                               end
                             end
                           end
                         else
+                          -- print("@@", isLang, parentPath .. name)
                           handler[funcName](handler, nil, parentPath .. name, false)
                           if value.class then
                             for k, class in pairs(value.class) do
