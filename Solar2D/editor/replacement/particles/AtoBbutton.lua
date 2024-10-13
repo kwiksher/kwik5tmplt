@@ -7,6 +7,7 @@ M.weight = 1
 ---
 local App = require("Application")
 M.commands = {"preview"}
+M.contextInit = false
 
 local abTimer = {}
 
@@ -26,12 +27,16 @@ local props = {
 
 ---
 function M:init(UI)
-  local app = App.get()
-  for i = 1, #self.commands do
-    app.context:mapCommand(
-      "editor.classEditor." .. self.commands[i],
-      "editor.controller." .. self.commands[i]
-    )
+
+  if not self.contextInit then
+    local app = App.get()
+    for i = 1, #self.commands do
+      app.context:mapCommand(
+        "editor.classEditor." .. self.commands[i],
+        "editor.controller." .. self.commands[i]
+      )
+    end
+    self.contextInit  = true
   end
 end
 --
