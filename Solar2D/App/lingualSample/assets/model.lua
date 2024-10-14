@@ -1,4 +1,4 @@
 local M = {
-  audios = {}, sprites = {}, videos = {}
+  audios = {}, sprites = {}, videos = {}, syncs = {}
 }
 return M
