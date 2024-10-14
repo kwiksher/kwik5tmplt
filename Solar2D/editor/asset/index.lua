@@ -82,20 +82,19 @@ local function readAsset(path, folder, map, parent)
   local success = lfs.chdir( path.."/"..folder )
   if success then
     for file in lfs.dir( path.."/"..folder ) do
-      if util.isDir(file) and file:len() > 3 then
+      if util.isDir(file) and file~="." and file~=".."  then
         -- print("", "@Found dir " .. file )
         local children = readAsset(path.."/"..folder, file, map, folder)
         for i=1, #children do
           entries[#entries + 1] = children[i]
         end
-      elseif file:len() > 3 and file:find(".lua")  ==  nil and file:find("@") == nil and file:find(".json")  ==  nil then
+      elseif file~="." and file~=".."  and file:find(".lua")  ==  nil and file:find("@") == nil and file:find(".json")  ==  nil then
         local mapEntry = map[file]
         if mapEntry == nil then
           if parent==nil then
             entries[#entries + 1] = {name=file, path=folder, links={}}
           else
             local v = parent.."/"..folder
-
             entries[#entries + 1] = {name=file, path=v:gsub("audios/",""), links={}}
           end
         else
@@ -126,12 +125,23 @@ function controller:read(book, _model)
 	local success = lfs.chdir( path ) -- isDir works with current dir
 	if success then
 		for folder in lfs.dir( path ) do
-			if util.isDir(folder) and folder:len() > 3 then
+			if util.isDir(folder) and folder~="." and folder~=".."  then
 				-- print( "Found dir " .. folder )
         assets[folder] = readAsset(path, folder, map)
 			end
 		end
 	end
+  local audios = {}
+  local syncs = {}
+  for i, entry in next, assets.audios do
+    if entry.path:find("sync/") then
+      syncs[#syncs+1] = entry
+    else
+      audios[#audios + 1] = entry
+    end
+  end
+  assets.audios = audios
+  assets.syncs = syncs
   print(json.prettify(assets))
   return assets, map
 end

@@ -133,7 +133,7 @@ function M:touchHandler(target, event)
 end
 --
 function M:storeListener(foo, fooValue, render)
-  print("-------------------- storeListener ---------")
+  print("-------------------- storeListener ---------", fooValue.class)
   -- print(debug.traceback())
   self:destroy()
   --print("assetStore", #fooValue)
