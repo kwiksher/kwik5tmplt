@@ -40,6 +40,9 @@ function M:iconsHandler(event, class, tool)
     -- should we use BT with "add component"?
     -- for k, v in pairs(event.target.muiOptions) do print(k, v) end
     local name = event.target.muiOptions.name
+    --
+    printTable(self.selection)
+    --
     if self.selection then
       if lastTool then
         -- print("#########", lastTool)
@@ -130,7 +133,8 @@ function M:touchHandler(target, event)
 end
 --
 function M:storeListener(foo, fooValue, render)
-  -- print("-------------------- storeListener ---------")
+  print("-------------------- storeListener ---------")
+  -- print(debug.traceback())
   self:destroy()
   --print("assetStore", #fooValue)
   self.selection = nil
