@@ -14,6 +14,8 @@ local tree = require(parent.."controller.BTree.selectorsTree")
 local guides = require(parent.."parts.guides")
 --
 M.lastSelection = { book="book", page="page12"}
+M.contextInit = false
+M.storeInit   = false
 
 local unitTestOn = true
 local httpServerOn = true
@@ -153,6 +155,7 @@ function M:getClassFolderName (class)
 end
 
 function M:initStores()
+  print("### initStores")
       --
     -- selectors.lua will set values of each stores
     --
@@ -193,11 +196,15 @@ function M:init(UI)
     self.classMap = {}
     self.assets = {}
     --
-    local app = App.get()
-    -- print("@@@ init", app.props.appName)
-    for i=1, #self.commands do
-      app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.controller.selector."..self.commands[i].name)
+    if self.contextInit == false then
+      local app = App.get()
+      -- print("@@@ init", app.props.appName)
+      for i=1, #self.commands do
+        app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.controller.selector."..self.commands[i].name)
+      end
+      self.contextInit = true
     end
+    --
     for i=1, #self.models do
       self.views[i] = require(parent.."parts."..self.models[i])
     end
@@ -251,7 +258,10 @@ function M:init(UI)
     self.views[#self.views + 1] = mod
     self.editorTools['editor.parts.baseTable-'..assetTool.id] = mod
 
-    self:initStores()
+    if self.storeInit == false then
+      self:initStores()
+      self.storeInit = true
+    end
     --
    UI.editor = self
    for i=1, #self.views do
@@ -460,7 +470,7 @@ end
 --
 -- destroy is not called from gotoScene because of recycle?
 function M:destroy(UI)
-  UI.editor = self
+  --UI.editor = self
   for i=1, #self.views do
     self.views[i]:destroy(UI)
   end

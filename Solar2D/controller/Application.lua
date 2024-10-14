@@ -163,6 +163,10 @@ function M.new(Props)
     function app:showView(viewName, _options)
         -- print(debug.traceback())
         print("-------------- showView ------------------", self.props.appName.."."..viewName, ", currentViewName:", self.currentViewName)
+        if self.scene and self.scene.UI.editor then
+            self.scene.UI.editor:destroy()
+        end
+
         self.currentViewName = viewName
         local scene = self.context.Router[viewName]
         if scene == ni then
@@ -170,6 +174,7 @@ function M.new(Props)
           for k, v in pairs(self.context.Router) do print("", k) end
           return
         end
+        self.scene = scene
         -- scene.app.currentViewName = viewName
         local options = _options or {}
         options.params = options.params or {time=0}

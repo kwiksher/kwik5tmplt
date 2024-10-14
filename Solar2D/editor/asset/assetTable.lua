@@ -38,7 +38,7 @@ function M:setClassProps(classProps)
 end
 
 function M:createIcons (icons, class, tool)
-  -- print("createIcons", class, self.anchorName,_marginX, _marginY)
+  print("createIcons", class, self.anchorName,_marginX, _marginY)
   local marginX = _marginX or self.marginX
   local marginY = _marginY or 0
   ---
@@ -49,6 +49,7 @@ function M:createIcons (icons, class, tool)
   ---
   for i=1, #icons do
     local name = icons[i]
+    print("asset icon", name)
     local actionIcon = muiIcon:create {
       icon = {name.."_over", name.."Color_over", name},
       text = "",
@@ -60,8 +61,7 @@ function M:createIcons (icons, class, tool)
       fontSize =16,
       fillColor = {1.0},
       listener = function(event)
-        print("@@@@@@@@@@@@@")
-
+        print("@@@@@@ assetIcons Handler @@@@@@@")
         self:iconsHandler(event, class, tool)
       end
     }
@@ -150,10 +150,13 @@ function M:create(UI)
     -- self.group.isVisible = true
   end
 
-  UI.editor.assetStore:listen(function(foo, fooValue)
-    self:storeListener(foo, fooValue, render)
+  if self.initStore == nil then
+    local function listener (foo, fooValue)
+      self:storeListener(foo, fooValue, render)
+    end
+    UI.editor.assetStore:listen(listener)
+    self.initStore = true
   end
-  )
 end
 --
 
@@ -250,7 +253,7 @@ end
 function M:destroy()
   for k, icon in next, self.icons do
     if type(icon) == "table" then
-      for name, value in pairs(icon) do print(name, value) end
+      -- for name, value in pairs(icon) do print(name, value) end
       mui.removeWidgetByName(icon.name)
     else
       -- print(icon)
