@@ -33,8 +33,9 @@ function M:init(UI)
 end
 --
 function M:create(UI)
-  -- print("@@@create", self.name, self.iconName)
-  if self.rootGroup then return end
+  -- print("------ create -----", self.iconName)
+  self.UI = UI
+  -- if self.rootGroup then return end
   self.rootGroup = UI.editor.rootGroup
 
   self.iconHander = function()
@@ -95,6 +96,7 @@ function M:create(UI)
       local obj = newText(option)
       -- obj.anchorY = 0.2
       obj.command = row.command
+      obj.store = row.store
 
       if vertical then
         option.y = (self.marginY or 0) + self.heightRect * (index)  - self.heightRect/2 + 22
@@ -111,30 +113,6 @@ function M:create(UI)
       -- if row.command and row.btree == nil then
       --   obj.tap = commandHandler
       --   obj:addEventListener("tap", obj)
-      if row.store  then
-        obj:addEventListener("tap", function(event)
-          if self.lastSelection then
-            self.lastSelection:setFillColor(0.8)
-          end
-          event.target.rect:setFillColor(0,1,0)
-          -- print(obj.text)
-          self:onClick(true, row.store)
-          self.lastSelection = event.target.rect
-          end)
-      else
-        obj:addEventListener("tap", function(event)
-          print("tap", row.command, UI.scene.app)
-          UI.scene.app:dispatchEvent{
-            name = "editor.selector." .. row.command,
-            UI = UI, -- beaware UI is belonged to a page
-            show = true
-          }
-        end)
-      end
-
-      if self.mouseHandler then
-        obj:addEventListener("mouse", self.mouseHandler )
-      end
 
       obj.rect = rect
       obj.btree = row.btree
@@ -151,73 +129,124 @@ function M:create(UI)
   end
   createSelection(self.vertical) -- create but do not show panel demo
   --
-  function self:show ()
-    -- print("@@@ show @@@", self.iconName)
-    for k, row in pairs(self.rows) do
-      self.rootGroup[row.command].isVisible = true
-      self.rootGroup[row.command].rect.isVisible = true
-      if row.filterSelector then
-        self.rootGroup[row.command].filterSelector.isVisible = true
-      end
-      -- print("", row.store)
-      if row.store and self.rootGroup[row.store] then
-        self.rootGroup[row.store].isVisible = true
-        -- for j, obj in pairs(self.rootGroup[row.store]) do
-        --   obj.isVisible = true
-        --   if obj.rect then
-        --     obj.rect.isVisible = true
-        --   end
-        -- end
-      end
-    end
-    if self.filter then
-      self.filter:show()
-    end
-    if self.propsTable then
-      self.propsTable:show()
-     -- self.propsButtons:show()
-    end
-    self.isVisible = true
-  end
-  --
-  function self:hide()
-    for k, row in pairs(self.rows) do
-      self.rootGroup[row.command].isVisible = false
-      self.rootGroup[row.command].rect.isVisible = false
-      if row.filterSelector then
-        self.rootGroup[row.command].filterSelector.isVisible = false
-      end
-      -- print("row.store", row.store)
-      if row.store and self.rootGroup[row.store] then
-        -- print("", "isVisible false")
-        self.rootGroup[row.store].isVisible = false
-        -- for j, obj in pairs(self.rootGroup[row.store]) do
-        --   obj.isVisible = false
-        --   if obj.rect then
-        --     obj.rect.isVisible = false
-        --   end
-        -- end
-      end
-    end
-    if self.filter then
-      self.filter:hide()
-    end
-    if self.propsTable then
-      self.propsTable:hide()
-      self.propsButtons:hide()
-    end
-    self.isVisible = false
-  end
 
   for i, obj in next, self.objs do
     obj.isVisible = false
+    obj.rect.isVisible = false
   end
 
   -- self:hide()
 
 end
 --
+
+function M:show ()
+  local UI = self.UI
+  -- print("@@@ show @@@", self.iconName)
+  for k, row in pairs(self.rows) do
+    self.rootGroup[row.command].isVisible = true
+    self.rootGroup[row.command].rect.isVisible = true
+    if row.filterSelector then
+      self.rootGroup[row.command].filterSelector.isVisible = true
+    end
+    -- print("", row.store)
+    if row.store and self.rootGroup[row.store] then
+      self.rootGroup[row.store].isVisible = true
+      -- for j, obj in pairs(self.rootGroup[row.store]) do
+      --   obj.isVisible = true
+      --   if obj.rect then
+      --     obj.rect.isVisible = true
+      --   end
+      -- end
+    end
+  end
+  if self.filter then
+    self.filter:show()
+  end
+  if self.propsTable then
+    self.propsTable:show()
+   -- self.propsButtons:show()
+  end
+  ---
+  for i, obj in next, self.objs do
+    obj.isVisible = true
+    obj.rect.isVisible = true
+
+    if obj.store  then
+      obj.tap = function(target, event)
+        if self.lastSelection then
+          self.lastSelection:setFillColor(0.8)
+        end
+        target.rect:setFillColor(0,1,0)
+        -- print(target.text)
+        if target.isVisible then
+          self:onClick(true, target.store)
+        end
+        self.lastSelection = target.rect
+      end
+      obj:addEventListener("tap", obj)
+    else
+      obj.tap = function(target, event)
+        -- print("tap", target.command, UI.scene.app, target.text, target.isVisible, self.iconName)
+        if target.isVisible then
+          UI.scene.app:dispatchEvent{
+            name = "editor.selector." .. target.command,
+            UI = UI, -- beaware UI is belonged to a page
+            show = true
+          }
+        end
+      end
+      -- print("show", obj.text, obj.command)
+      obj:addEventListener("tap", obj)
+    end
+
+    if self.mouseHandler then
+      obj:addEventListener("mouse", self.mouseHandler )
+    end
+
+  end
+  self.isVisible = true
+end
+--
+function M:hide()
+  local UI = self.UI
+  -- print("@@@ hide @@@", self.iconName)
+  for k, row in pairs(self.rows) do
+    self.rootGroup[row.command].isVisible = false
+    self.rootGroup[row.command].rect.isVisible = false
+    if row.filterSelector then
+      self.rootGroup[row.command].filterSelector.isVisible = false
+    end
+    -- print("row.store", row.store)
+    if row.store and self.rootGroup[row.store] then
+      -- print("", "isVisible false")
+      self.rootGroup[row.store].isVisible = false
+      -- for j, obj in pairs(self.rootGroup[row.store]) do
+      --   obj.isVisible = false
+      --   if obj.rect then
+      --     obj.rect.isVisible = false
+      --   end
+      -- end
+    end
+  end
+  if self.filter then
+    self.filter:hide()
+  end
+  if self.propsTable then
+    self.propsTable:hide()
+    self.propsButtons:hide()
+  end
+  for i, obj in next, self.objs do
+    -- print("hide", obj.text)
+    obj.isVisible = false
+    obj.rect.isVisible = false
+    obj:removeEventListener("tap", obj)
+  end
+  self.isVisible = false
+end
+
 function M:didShow(UI)
+  -- print("---- didShow ----")
   self.UI = UI
   if self.filter then
     self.filter:didShow(UI)
@@ -225,21 +254,25 @@ function M:didShow(UI)
 end
 --
 function M:didHide(UI)
+  -- print("---- didHide ----")
   if self.filter then
     self.filter:didHide(UI)
   end
 end
 --
 function M:destroy()
+  -- print("---- destroy ----")
   if self.objs then
     for i=1, #self.objs do
-      self.objs[i].rect:removeSelf()
+      self.objs[i]:removeEventListener("tap", self.objs[i])
       self.objs[i]:removeSelf()
       if self.objs[i].filter then
         self.objs[i].filter:removeSelf()
       end
     end
   self.objs = nil
+
+  muiIcon:destroy(self.iconName.."-icon")
   end
 end
 --
