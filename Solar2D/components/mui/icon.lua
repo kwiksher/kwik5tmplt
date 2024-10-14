@@ -80,7 +80,7 @@ function M:create(Props)
   return obj
 end
 
-function M:destory(name)
+function M:destroy(name)
   mui.removeRectButton(name)
 end
 
