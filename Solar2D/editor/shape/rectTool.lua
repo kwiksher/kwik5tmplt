@@ -287,7 +287,7 @@ end
 
 function M:save()
   print("save")
-  popup:destory()
+  popup:destroy()
   if self.obj then
     self.obj:removeSelf()
     self.obj = nil
@@ -299,7 +299,7 @@ end
 
 function M:cancel()
   print("cancel")
-  popup:destory()
+  popup:destroy()
   if self.obj then
     self.obj:removeSelf()
     self.obj = nil

@@ -110,7 +110,7 @@ local function readAsset(path, folder, map, parent)
 end
 
 function controller:read(book, _model)
-  -- print(debug.traceback())
+  print("read assets.model in ", book)
   local assets = {}
   local model = _model or require("App." ..book..".assets.model")
   local map = {}
@@ -132,11 +132,12 @@ function controller:read(book, _model)
 			end
 		end
 	end
-  -- print(json.encode(assets))
+  print(json.prettify(assets))
   return assets, map
 end
 
 function controller:updateAsset(book, page, layer, classFolder, class, model, assets)
+  print("update assets", book, page, layer, calssFolder, class, model.filename)
   local ret   = assets
   local name  = model.filename
   local path = class.."s"

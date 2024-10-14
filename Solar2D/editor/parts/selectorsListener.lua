@@ -155,7 +155,7 @@ function M:addListener(UI, buttons, propsTable)
   end
 
   function self.assetsSelector:onClick(isVisible, assetName)
-    -- print("", UI.editor.currentBook, assetName)
+    print("###### onClick", UI.editor.currentBook, assetName)
     -- UI.editor.assetStore:set{{}}
     if isVisible then
       componentSelector:hide()

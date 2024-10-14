@@ -80,7 +80,7 @@ function M:create(rectTool)
   }
 end
 
-function M:destory()
+function M:destroy()
   self.group:removeSelf()
 end
 

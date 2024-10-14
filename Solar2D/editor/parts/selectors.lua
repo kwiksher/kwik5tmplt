@@ -277,6 +277,11 @@ end
 --
 function M:destroy(UI)
   -- print("destroy")
+
+  self.projectPageSelector:destroy(UI)
+  self.componentSelector:destroy(UI)
+  self.assetsSelector:destroy(UI)
+
   if self.objs then
     for i=1, #self.objs do
       self.objs[i]:removeSelf()
