@@ -50,7 +50,7 @@ end
 function M:didHide(UI)
 end
 --
-function  M:destory(UI)
+function  M:destroy(UI)
 end
 --
 return M
