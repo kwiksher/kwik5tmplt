@@ -51,8 +51,6 @@ function M:init(UI)
 end
 
 function controller:toggle()
-  print("@@@@@@@@@@@@@")
-
   self.isVisible = not self.isVisible
   if self.isVisible then
     self:show()
@@ -135,6 +133,7 @@ function controller:read(book, _model)
   local syncs = {}
   for i, entry in next, assets.audios do
     if entry.path:find("sync/") then
+      entry.path = entry.path:gsub("sync/","")
       syncs[#syncs+1] = entry
     else
       audios[#audios + 1] = entry
@@ -142,7 +141,7 @@ function controller:read(book, _model)
   end
   assets.audios = audios
   assets.syncs = syncs
-  print(json.prettify(assets))
+  -- print(json.prettify(assets))
   return assets, map
 end
 

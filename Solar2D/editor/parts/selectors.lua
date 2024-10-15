@@ -232,7 +232,7 @@ function M:create(UI)
   -- header/footer
   --
   UI.editor.rootGroup:addEventListener("labelStore", function(event)
-    self:destroy()
+    self:didHide()
     self.objs = showLabels(event, self.rootGroup)
 
     -- timer.performWithDelay( 10,

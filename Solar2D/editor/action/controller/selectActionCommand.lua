@@ -28,17 +28,17 @@ local command = function (params)
   local Layer = table:mySet { "animation", "image", "button" }
 
   if Layer[commandClass] then
-      selectors:selectComponent("Layer")
+      selectors:selectComponentIcon("Layer")
   elseif commandClass == "audio" then
-    selectors:selectComponent("Audio")
+    selectors:selectComponentIcon("Audio")
   elseif commandClass == "group" then
-    selectors:selectComponent("Group")
+    selectors:selectComponentIcon("Group")
   elseif commandClass == "timer" then
-    selectors:selectComponent("Timer")
+    selectors:selectComponentIcon("Timer")
   elseif commandClass == "variables" or commandClass == "conditions" then
-    selectors:selectComponent("Var")
+    selectors:selectComponentIcon("Var")
   elseif commandClass == "action" then
-    selectors:selectComponent("Action")
+    selectors:selectComponentIcon("Action")
   end
 
   if params.isNew then
