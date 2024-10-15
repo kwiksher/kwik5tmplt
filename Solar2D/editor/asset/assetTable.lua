@@ -61,7 +61,6 @@ function M:createIcons (icons, class, tool)
       fontSize =16,
       fillColor = {1.0},
       listener = function(event)
-        print("@@@@@@ assetIcons Handler @@@@@@@")
         self:iconsHandler(event, class, tool)
       end
     }

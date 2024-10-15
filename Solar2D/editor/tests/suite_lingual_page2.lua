@@ -48,6 +48,52 @@ end
 function M.teardown()
 end
 
+function M.test_new_sync()
+  local obj = helper.selectLayer("father/en")
+
+  helper.selectLayer("text1")
+  helper.selectIcon("Replacements", "Sync")
+
+  local textProps = require("editor.replacement.textProps")
+  helper.clickProp(textProps.objs, "_filename")
+  helper.selectAssetIcon("SyncText")
+  helper.clickAsset(assetTable.objs, "en/my_father_is_nice.txt")
+
+  local audioProps = require("editor.replacement.audioProps")
+  helper.clickProp(audioProps.objs, "_filename")
+  helper.selectAssetIcon("SyncText")
+  helper.clickAsset(assetTable.objs, "en/my_father_is_nice.mp3")
+
+  -- helper.setProp(classProps.objs, "autoPlay", false)
+  --[[
+  -- select text & audio
+  ---- helper.clickProp(classProps.objs, "text")
+
+  local actionbox = require("editor.parts.actionbox")
+  local obj = actionbox.objs[1] -- onComplete
+  obj:dispatchEvent({name="tap", target=obj})
+  helper.clickAction("eventOne")
+
+
+
+  local obj = helper.getObj(listbox.objs, "A")
+  listbox.singleClickEvent(obj)
+
+  helper.setProp(listPropsTable.objs, "dur", "1000")
+
+  -- select an action
+  helper.clickProp(listPropsTable.objs, "action")
+  -- helper.clickProp(listPropsTable.objs, "action") -- why needs twice?
+  helper.clickAction("eventTwo")
+
+  helper.setProp(listPropsTable.objs, "dur", "1000")
+
+  obj = helper.getObj(listButtons.objs, "Save")
+  obj:tap()
+--]]
+
+end
+
 function M.xtest_edit_button()
   layerTable.altDown = true
   local obj = helper.selectLayer("fly/en", "button")
@@ -59,7 +105,7 @@ function M.xtest_edit_button()
   helper.clickAction("flyAnim")
 end
 
-function M.test_xdelete_button()
+function M.xtest_delete_button()
   if helper.hasObj(layerTable, "fly/en", "button") then
     helper.selectLayer("fly/en", "button", false) -- isRightClick
     helper.selectLayer("fly/en", "button", true) -- isRightClick
@@ -118,45 +164,6 @@ function M.xtest_select_sync()
   layerTable.altDown = false
 end
 
-function M.xtest_new_sync()
-
-  helper.selectLayer("text1")
-  helper.selectIcon("Replacements", "Sync")
-
-  -- helper.setProp(classProps.objs, "autoPlay", false)
-
-  -- select text & audio
-  local audioProps = require("editor.replacement.audioProps")
-  helper.clickProp(audioProps.objs, "_filename")
-  helper.clickAsset(assetTable.objs, "sync/alphabet.mp3")
-  ---- helper.clickProp(classProps.objs, "text")
-
-  local actionbox = require("editor.parts.actionbox")
-  local obj = actionbox.objs[1] -- onComplete
-  obj:dispatchEvent({name="tap", target=obj})
-  helper.clickAction("eventOne")
-
-  local textProps = require("editor.replacement.textProps")
-  helper.clickProp(textProps.objs, "_filename")
-  helper.clickAsset(assetTable.objs, "sync/alphabet.txt")
-
-
-  local obj = helper.getObj(listbox.objs, "A")
-  listbox.singleClickEvent(obj)
-
-  helper.setProp(listPropsTable.objs, "dur", "1000")
-
-  -- select an action
-  helper.clickProp(listPropsTable.objs, "action")
-  -- helper.clickProp(listPropsTable.objs, "action") -- why needs twice?
-  helper.clickAction("eventTwo")
-
-  helper.setProp(listPropsTable.objs, "dur", "1000")
-
-  obj = helper.getObj(listButtons.objs, "Save")
-  obj:tap()
-
-end
 
 function M.xtest_new_sync_select_listbox()
 
