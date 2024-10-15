@@ -145,7 +145,7 @@ function M:storeListener(foo, fooValue, render)
     --render({}, 0, 0)
   else
 
-     if self.lastClass then
+     if self.lastClass and self.classProps==nil then
       local tool = self.UI.editor:getClassModule(self.lastClass)
        if tool then
           print("### lastTool", tool.id)

@@ -168,47 +168,49 @@ function M:show ()
    -- self.propsButtons:show()
   end
   ---
-  for i, obj in next, self.objs do
-    obj.isVisible = true
-    obj.rect.isVisible = true
+  if self.objs then
+    for i, obj in next, self.objs do
+      obj.isVisible = true
+      obj.rect.isVisible = true
 
-    if obj.store  then
-      obj.tap = function(target, event)
-        if self.lastSelection then
-          self.lastSelection:setFillColor(0.8)
+      if obj.store  then
+        obj.tap = function(target, event)
+          if self.lastSelection then
+            self.lastSelection:setFillColor(0.8)
+          end
+          target.rect:setFillColor(0,1,0)
+          -- print(target.text)
+          if target.isVisible then
+            self:onClick(true, target.store)
+          end
+          self.lastSelection = target.rect
         end
-        target.rect:setFillColor(0,1,0)
-        -- print(target.text)
-        if target.isVisible then
-          self:onClick(true, target.store)
+        obj:addEventListener("tap", obj)
+      else
+        obj.tap = function(target, event)
+          -- print("tap", target.command, UI.scene.app, target.text, target.isVisible, self.iconName)
+          if target.isVisible then
+            UI.scene.app:dispatchEvent{
+              name = "editor.selector." .. target.command,
+              UI = UI, -- beaware UI is belonged to a page
+              show = true
+            }
+          end
         end
-        self.lastSelection = target.rect
+        -- print("show", obj.text, obj.command)
+        obj:addEventListener("tap", obj)
       end
-      obj:addEventListener("tap", obj)
-    else
-      obj.tap = function(target, event)
-        -- print("tap", target.command, UI.scene.app, target.text, target.isVisible, self.iconName)
-        if target.isVisible then
-          UI.scene.app:dispatchEvent{
-            name = "editor.selector." .. target.command,
-            UI = UI, -- beaware UI is belonged to a page
-            show = true
-          }
-        end
+
+      if self.mouseHandler then
+        obj:addEventListener("mouse", self.mouseHandler )
       end
-      -- print("show", obj.text, obj.command)
-      obj:addEventListener("tap", obj)
     end
-
-    if self.mouseHandler then
-      obj:addEventListener("mouse", self.mouseHandler )
-    end
-
   end
   self.isVisible = true
 end
 --
 function M:hide()
+  ---[[
   local UI = self.UI
   -- print("@@@ hide @@@", self.iconName)
   for k, row in pairs(self.rows) do
@@ -236,13 +238,17 @@ function M:hide()
     self.propsTable:hide()
     self.propsButtons:hide()
   end
-  for i, obj in next, self.objs do
-    -- print("hide", obj.text)
-    obj.isVisible = false
-    obj.rect.isVisible = false
-    obj:removeEventListener("tap", obj)
+
+  if self.objs then
+    for i, obj in next, self.objs do
+      -- print("hide", obj.text)
+      obj.isVisible = false
+      obj.rect.isVisible = false
+      obj:removeEventListener("tap", obj)
+    end
   end
   self.isVisible = false
+    --]]
 end
 
 function M:didShow(UI)
@@ -261,7 +267,10 @@ function M:didHide(UI)
 end
 --
 function M:destroy()
+  --print(debug.traceback())
   -- print("---- destroy ----")
+  ---[[
+
   if self.objs then
     for i=1, #self.objs do
       self.objs[i]:removeEventListener("tap", self.objs[i])
@@ -274,6 +283,7 @@ function M:destroy()
 
   muiIcon:destroy(self.iconName.."-icon")
   end
+  --]]
 end
 --
 --
