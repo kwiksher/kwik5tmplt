@@ -29,15 +29,15 @@ function M:setActiveProp(value)
   --    check word.mp3 in sentenceDir
   local listbox = require(parent.."listbox")
 
-  local path = "App/" .. UI.book.."/assets/audios/"..value
-  local sentenceDirPath = "App/"..UI.book.."/assets/audios/"..sentenceDir
+  local path = "App/" .. UI.book.."/assets/audios/sync/"..value
+  local sentenceDirPath = "App/"..UI.book.."/assets/audios/sync/"..sentenceDir
 
 
   local entries = self:read(path)
   for i, v in next, entries do
-    print(sentenceDir.."/"..v.file)
     if system.pathForFile(sentenceDirPath.."/"..v.file,  system.ResourceDirectory ) == nil then
       v.file =""
+      print("checking each mp3 for each word. You may ignore Warning above for", sentenceDir.."/"..v.file)
     end
     listbox:setValue(entries, self.type)
   end
