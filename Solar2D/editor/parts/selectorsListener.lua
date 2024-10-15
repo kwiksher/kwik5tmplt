@@ -180,7 +180,7 @@ function M:addListener(UI, buttons, propsTable)
   end
 end
 
-function M:selectComponent(name)
+function M:selectComponentIcon(name)
   for i, v in next, self.componentSelector.objs do
     print("##", v.text)
     if v.text == name then

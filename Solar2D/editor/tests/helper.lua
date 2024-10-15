@@ -168,7 +168,7 @@ function exports.selectLayer(name, class, isRightClick)
           obj:touch({phase="ended"})
         end
         return obj
-      else
+      elseif obj.classEntries then
         for i, classObj in next, obj.classEntries do
           -- print("", "", classObj.class)
           if classObj.class == class then
@@ -280,7 +280,16 @@ function exports.selectVariable(name, isRightClick)
   _selectComponent(name, isRightClick, variableTable)
 end
 
-function exports.selectComponent(name)
+function exports.selectAssetIcon(name)
+  for i, v in next, selectors.assetsSelector.objs do
+    if v.text == name then
+      v:dispatchEvent{name="tap", target=v}
+      return
+    end
+  end
+end
+
+function exports.selectComponentIcon(name)
   for i, v in next, selectors.componentSelector.objs do
     if v.text == name then
       v:dispatchEvent{name="tap", target=v}
