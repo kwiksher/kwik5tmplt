@@ -34,7 +34,12 @@ local instance =
     else
       for i, v in next, UI.editor.selections do
         print("", v.layer, v.text, v.class )
-        commands.openEditorForLayer(UI.book, UI.page, v.layer, v.class)
+        if v.parentObj then
+          local layer = v.parentObj.layer .."/"..v.layer
+          commands.openEditorForLayer(UI.book, UI.page, layer, v.class)
+        else
+          commands.openEditorForLayer(UI.book, UI.page, v.layer, v.class)
+        end
       end
     end
     --

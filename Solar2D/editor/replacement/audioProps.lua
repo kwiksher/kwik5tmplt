@@ -4,6 +4,7 @@ M.name = "audioProps"
 M.class ="audio"
 
 local assetTable = require("editor.asset.assetTable")
+local layerTable = require("editor.parts.layerTable")
 
 function M:showThumnail()
 end
@@ -11,6 +12,7 @@ end
 function M:setActiveProp(value)
 
   assetTable:hide()
+  layerTable:show()
   print("setActiveProp", self.name)
 
   local name =self.activeProp or ""

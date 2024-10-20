@@ -3,6 +3,8 @@ local parent, root = newModule(current)
 local M = require("editor.parts.baseProps").new()
 ---------------------------
 local assetTable = require("editor.asset.assetTable")
+local layerTable = require("editor.parts.layerTable")
+local libUtil    = require("lib.util")
 
 M.name = "textProps"
 M.class = "audio"
@@ -12,7 +14,10 @@ local obj, sentenceDir
 function M:setActiveProp(value)
   print("setActiveProp", self.name)
   local UI = self.UI
+  --
   assetTable:hide()
+  layerTable:show()
+  --
   local name =self.activeProp or ""
   for i,v in next, self.objs or {} do
     if v.text == name then -- should be _filename
@@ -28,55 +33,10 @@ function M:setActiveProp(value)
   --  update listbox by reading timecodes txt
   --    check word.mp3 in sentenceDir
   local listbox = require(parent.."listbox")
-
   local path = "App/" .. UI.book.."/assets/audios/sync/"..value
   local sentenceDirPath = "App/"..UI.book.."/assets/audios/sync/"..sentenceDir
-
-
-  local entries = self:read(path)
-  for i, v in next, entries do
-    if system.pathForFile(sentenceDirPath.."/"..v.file,  system.ResourceDirectory ) == nil then
-      v.file =""
-      print("checking each mp3 for each word. You may ignore Warning above for", sentenceDir.."/"..v.file)
-    end
-    listbox:setValue(entries, self.type)
-  end
-
-end
-
-
-function M:read(path)
-  -- Read the file
-  local path = system.pathForFile( path, system.ResourceDirectory)
-
-  local file = io.open(path, "r")
-
-  if not file then
-      print("Error opening file: " .. path)
-      return
-  end
-
-  -- Initialize an empty table to store the data
-  local data = {}
-
-  -- Read each line and split by spaces
-  for line in file:lines() do
-      local startTime, endTime, name = line:match("(%S+)%s+(%S+)%s+(%S+)")
-      if startTime and endTime and name then
-          table.insert(data, {start = string.format("%.3f",tonumber(startTime)), out = string.format("%.3f",tonumber(endTime)), name = name, file=name:lower()..".mp3", action=""})
-      else
-          print("Invalid line format: " .. line)
-      end
-  end
-
-  -- Close the file
-  file:close()
-
-  -- Print the parsed data (you can modify this part as needed)
-  for _, entry in ipairs(data) do
-      print(string.format("start: %.3f, end: %.3f, name: %s", entry.start, entry.out, entry.name))
-  end
-  return data
+  local entries = libUtil.readSyncText(path,sentenceDirPath )
+  listbox:setValue(entries, self.type)
 end
 
 function M:getValue()
