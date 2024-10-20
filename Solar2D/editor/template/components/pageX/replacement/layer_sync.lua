@@ -2,12 +2,13 @@ local name = ...
 local parent,root = newModule(name)
 
 local M = {
-  name = "{{name}}",
+  name = "{{layer}}", -- {{name}}
   layer = "{{layer}}",
   class = "sync",
   folder = "audios/sync",
   properties = {
     {{#properties}}
+    target       = {{target}},
     autoPlay     = {{autoPlay}},
     delay        = {{delay}},
     fadeDuration = {{fadeDuration}},
