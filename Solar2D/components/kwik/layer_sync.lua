@@ -28,15 +28,17 @@ local M = {
 
 local App = require "Application"
 local syncSound = require("extlib.syncSound")
-
+local libUtil = require("lib.util")
 
 -- linefeed (RL)
 -- elContent     = elContent.replace(/\r/g,'\-r ') //adds the newline
 -- var txt       = elContent.replace(/\r/g,' ');
 
 function M:setHandler()
+  local lines = {}
   if self.line == nil then return end
   for i=1, #self.line do
+    local line = self.line[i]
     -- local _value = {
     --   start = rows[i].start, -- {{start}},
     --   out = rows[i].out,  -- {{out}},
@@ -46,22 +48,29 @@ function M:setHandler()
     --   newline = rows[i].newline, -- false/true,
     -- }
 
-    if self.line[i].action then
-      self.line[i].trigger = function(event)
+    if line.action and line.action:len() > 0 then
+      lines[#lines+1] = {name=line.name,start = line.start*1000, out=line.out*1000,
+      file = line.file, dur = line.dur, trigger =
+        function(event)
         -- for k,v in pairs(event) do print(k, v) end
         -- print("", event.name, event.action)
         self.UI:dispatchEvent({name=event.action, params=event})
       end
+      }
+    else
+      lines[#lines+1] = {name=line.name,start = line.start*1000, out=line.out*1000,
+        file = line.file, dur = line.dur}
     end
     ---
   end
+  return lines
 end
 
 function M:newIcon (UI)
   local sceneGroup  = UI.sceneGroup
 
   -- local x, y = App.getPosition(self.x + 15, self.y-30)
-  local x, y = self.mX + 15, self.mY-30
+  local x, y = self.x + 15, self.y-30
 
   -- x = display.contentCenterX
   -- y = display.contentCenterY
@@ -81,14 +90,30 @@ function M:newIcon (UI)
   self.speakerObj = obj
 end
 
+local function readLineTxt(folder, filename)
+end
+
 --
 function M:init(UI)
   -- print(self.name)
-  if self.language then
-    self.line =self.language and  self.language[App.getProps().lang]
+  if UI.langClassDelegate then
+    --
+    self.properties.target = libUtil.swapLangSuffix(self.properties.target,UI.lang)
+    self.audioProps.filename = libUtil.swapLangPrefix(self.audioProps.filename, UI.lang) -- en/my_father_is_nice.mp3
+    self.textProps.sentenceDir = libUtil.swapLangPrefix(self.textProps.sentenceDir,UI.lang)  --  en/my_father_is_nice
+    ---
+    local filename = self.audioProps.filename:gsub("mp3", "txt")
+    filename = libUtil.swapLangPrefix(filename, UI.lang)
+    local path = "App/" .. UI.book.."/assets/audios/sync/"..filename
+    local sentenceDirPath = "App/"..UI.book.."/assets/audios/sync/"..self.textProps.sentenceDir
+    self.line = libUtil.readSyncText(path,sentenceDirPath )
   end
+
+  -- if self.language then
+  --   self.line =self.language and  self.language[App.getProps().lang]
+  -- end
   --
-  self:setHandler(self.line)
+  self.value = self:setHandler(self.line)
   --
 end
 
@@ -113,9 +138,14 @@ function M:create(UI)
   --
   -- print(path)
   self.audioObj =  audio.loadStream(path , App.getProps().systemDir)
+  if self.audioObj == nil then
+    print("Error autio not found", path)
+    return
+  end
 
   -- local x,y = App.getPosition(self.x, self.y)
-  local x,y = self.mX, self.mY
+  local target = sceneGroup[self.properties.target]
+  local x,y = target.x, target.y
 
   -- need this?
   -- if self.speakerIcon then
@@ -126,11 +156,15 @@ function M:create(UI)
     self:newIcon(UI)
   end
 
-  local button =  UI.sceneGroup[self.layer]
+  local button =  UI.sceneGroup[self.properties.target]
+  if button == nil then
+    print("Error no object", self.properties.target)
+    return
+  end
   button.x = x
   button.y = y
   button.isVisible = false
-  -- print("#", self.layer, button)
+
 
   local lang = ""
   if self.language then
@@ -143,7 +177,7 @@ function M:create(UI)
       padding      = self.textProps.padding,
       sentence     = self.audioObj,
       volume       = self.audioProps.volume,
-      line         = self.line,
+      line         = self.value,
       button       = self.speakerObj or button,
       font         = self.textProps.font,
       fontColor    = self.textProps.fontColor,
@@ -169,18 +203,19 @@ end
 function M:play()
   syncSound.saySentence{
     sentence= self.audioObj,
-    line=self.line,
+    line=self.value,
     button=self.talkButton }
 end
 --
 function M:didShow(UI)
   local sceneGroup  = UI.sceneGroup
-  if self.autoPlay and self.talkButton then
-      self.timerStash = timer.performWithDelay( self.delay or 0,
+  print("@@@@@@@@ saySentence", self.properties.autoPlay, self.talkButton)
+  if self.properties.autoPlay and self.talkButton then
+      self.timerStash = timer.performWithDelay( self.properties.delay or 0,
         function()
           syncSound.saySentence{
           sentence= self.audioObj,
-          line=self.line,
+          line=self.value,
           button=self.talkButton }
       end)
     end

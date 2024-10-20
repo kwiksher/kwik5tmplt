@@ -71,7 +71,7 @@ local scene = require('controller.scene').new(sceneName, {
       {
         father = {     {
           en = {
-          }
+            class={ "sync", }  }
         },
         {
           ja = {
@@ -86,7 +86,7 @@ local scene = require('controller.scene').new(sceneName, {
           }
         },
 
-        }
+        class={ "lang", }  }
       },
     },
     audios = {
