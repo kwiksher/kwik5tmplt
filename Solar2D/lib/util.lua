@@ -194,6 +194,61 @@ function exports.split(str, sep)
   end
   return out
 end
+
+
+function exports.swapLangSuffix(name, lang)
+  local t =name:split("/")
+  return  t[1].."/".. lang
+end
+
+function exports.swapLangPrefix(name, lang)
+  local t = name:split("/")
+  return lang.."/".. t[2]
+end
+
+function exports.readSyncText(path,sentenceDirPath)
+  -- Read the file
+  local path = system.pathForFile( path, system.ResourceDirectory)
+
+  local file = io.open(path, "r")
+
+  if not file then
+      print("Error opening file: " .. path)
+      return
+  end
+
+  -- Initialize an empty table to store the data
+  local data = {}
+
+  -- Read each line and split by spaces
+  for line in file:lines() do
+      print(line)
+      local startTime, endTime, name = line:match("(%S+)%s+(%S+)%s+(%S+)")
+      if startTime and endTime and name then
+          table.insert(data, {start = string.format("%.3f",tonumber(startTime)), out = string.format("%.3f",tonumber(endTime)), name = name, file=name:lower()..".mp3", action=""})
+      else
+          print("Invalid line format: " .. line)
+      end
+  end
+
+  -- Close the file
+  file:close()
+
+  -- Print the parsed data (you can modify this part as needed)
+  for _, entry in ipairs(data) do
+      print(string.format("start: %.3f, end: %.3f, name: %s", entry.start, entry.out, entry.name))
+  end
+
+  for i, v in next, data do
+    if system.pathForFile(sentenceDirPath.."/"..v.file,  system.ResourceDirectory ) == nil then
+      print("checking each mp3 for each word. You may ignore Warning above for", sentenceDirPath.."/"..v.file)
+      v.file =""
+    end
+  end
+
+  return data
+end
+
 ----------------------------------
 --
 local function newText(option)

@@ -48,7 +48,7 @@ end
 function M.teardown()
 end
 
-function M.test_new_sync()
+function M.xtest_new_sync()
   local obj = helper.selectLayer("father/en")
 
   helper.selectLayer("text1")

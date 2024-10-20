@@ -61,7 +61,7 @@ function M:setValue(fooValue, type)
   self.type = type or self.type
   self.value = fooValue or self.value
   -- print("####", self.type, #self.value)
-  -- print(json.encode(self.value))
+  print(json.prettify(self.value))
   self:createTable()
 end
 
