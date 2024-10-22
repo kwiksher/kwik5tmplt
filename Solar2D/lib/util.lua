@@ -222,7 +222,7 @@ function exports.readSyncText(path,sentenceDirPath)
 
   -- Read each line and split by spaces
   for line in file:lines() do
-      print(line)
+      -- print(line)
       local startTime, endTime, name = line:match("(%S+)%s+(%S+)%s+(%S+)")
       if startTime and endTime and name then
           table.insert(data, {start = string.format("%.3f",tonumber(startTime)), out = string.format("%.3f",tonumber(endTime)), name = name, file=name:lower()..".mp3", action=""})
