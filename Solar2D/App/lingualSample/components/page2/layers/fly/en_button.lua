@@ -9,7 +9,7 @@ local M = {
     target = "fly/en",
     type  = "", -- tap, touch
     eventType = "tap",
-    over = "NIL",
+    over = "flyOver",
     btaps = 1,
     mask = "NIL",
   },

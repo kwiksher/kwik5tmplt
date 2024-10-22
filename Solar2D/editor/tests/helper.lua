@@ -215,7 +215,7 @@ local function _selectComponent(name, isRightClick, targetTable)
       if isRightClick then
         v:dispatchEvent{name= "mouse", target=v, isSecondaryButtonDown=true, x = v.x, y = v.y}
       elseif v.touch then
-        v:touch{target=v}
+        v:touch{phase = "ended"}
       else
         v:tap{target=v}
       end

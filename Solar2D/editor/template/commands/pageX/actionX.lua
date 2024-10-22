@@ -83,7 +83,7 @@ function ActionCommand:new()
       AC.Animation:resume("{{target}}")
     {{/resume}}
     {{#play}}
-      AC.Animation:play("{{target}}", {{index}})
+      AC.Animation:play("{{target}}") --  {{index}}
     {{/play}}
   {{/animation}}
   {{#button}}

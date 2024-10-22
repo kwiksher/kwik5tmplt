@@ -48,6 +48,29 @@ end
 function M.teardown()
 end
 
+
+function M.test_edit_action()
+  UI.editor.actionEditor.iconHander()
+
+  actionTable.altDown = true
+  helper.selectAction("flyAnim")
+  actionTable.altDown = false
+
+  -- select a command
+  local commandsTable = require("editor.action.actionCommandTable")
+  local obj = commandsTable.objs[1]
+  commandsTable:singleClickEvent(obj)
+
+  local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
+  helper.clickProp(actionCommandPropsTable.objs, "_target")
+
+  helper.selectLayer("witch/en", "linear")
+
+  -- save manually
+
+end
+
+
 function M.xtest_new_sync()
   local obj = helper.selectLayer("father/en")
 

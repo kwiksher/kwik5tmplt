@@ -219,8 +219,6 @@ local Layer     = table:mySet{"image", "layer", "audio"}
 local Layer_Class = table:mySet{ "button", "countdown", "filter", "multiplier", "particles", "sprite", "readme", "video", "web"}
 --
 function M:setActiveProp(layer, class)
-  -- print("####", self.activeProp, layer, class)
-  local name =self.activeProp
   local value = layer
   if class then
     value = layer.."_"..class
@@ -229,6 +227,15 @@ function M:setActiveProp(layer, class)
   -- check
   --
   local activeCommandName = commandbox.selectedText.text
+  --
+  -- commandbox.model is nil for modification, see setValue in commandbox
+  --
+  if commandbox.model == nil then
+    print(json.prettify(self.model))
+    activeCommandName = commandbox.selectedText.text:split(".")[1]
+  end
+
+  -- print("@@@@", activeCommandName)
   -- animation.play, animation.pause, animation.resume
   local isValid = function(class)
     if activeCommandName == "animation"  then
@@ -239,11 +246,12 @@ function M:setActiveProp(layer, class)
       return class == nil
     end
   end
+  ---
   if isValid(class) then
     ---
     for i,v in next, self.objs do
-      if v.text == name then
-        -- print("@@@@@@", value)
+      print(v.text)
+      if v.text == self.activeProp then
         v.field.text = value
         return
       end

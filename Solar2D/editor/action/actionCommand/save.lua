@@ -18,7 +18,7 @@ local command = function (params)
   actionButtons:show()
   --
   local props, selected = actionCommandPropsTable:getValue()
-  print("",selected, json.encode(props))
+  print("", selected, json.encode(props))
   ---
   local actions = actionCommandTable.actions
 
@@ -40,7 +40,7 @@ local command = function (params)
   local files = {}
 
   --
-  if props.isNew or UI.currentAction.isNew then
+  if props.isNew or (UI.currentAction and UI.currentAction.isNew) then
     actions[#actions + 1] = action
     local newAction = {
       name= nameText,
