@@ -3,12 +3,12 @@ local parent,root = newModule(name)
 
 local M = {
   name = "{{layer}}", -- {{name}}
-  layer = "{{layer}}",
+  layer = "{{name}}",
   class = "sync",
-  folder = "audios/sync",
+  folder = "sync",
   properties = {
     {{#properties}}
-    target       = {{target}},
+    target       = "{{target}}",
     autoPlay     = {{autoPlay}},
     delay        = {{delay}},
     fadeDuration = {{fadeDuration}},
@@ -31,7 +31,7 @@ local M = {
     fontColorHi = { {{fontColorHi}} },
     fontSize    = {{fontSize}},
     language    = "{{language}}",
-    padding     = {{padding}4,
+    padding     = {{padding}},
     readDir     = "{{readDir}}",
     sentenceDir = "{{sentenceDir}}", -- wordTouch
     {{/textProps}}
@@ -53,12 +53,7 @@ M.line = {
   {{/line}}
 }
 --
-local layerProps = require(parent.."{{layer}}")
---
-M.x = layerProps.x
-M.y = layerProps.y
---
-return require("components.kwik.layer_sync").new(M)
+return require("components.kwik.layer_sync").set(M)
 
 --[[
 local M = {
