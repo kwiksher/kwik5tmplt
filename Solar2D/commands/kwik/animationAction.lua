@@ -1,36 +1,32 @@
--- Code created by Kwik - Copyright: kwiksher.com {{year}}
--- Version: {{vers}}
--- Project: {{ProjName}}
+local M = {}
 --
-local _M = {}
+local App            = require "controller.Application"
 --
-local _K            = require "controller.Application"
---
-function _M:pauseAnimation(anim)
-  if _K.gt[anim] then
-     _K.gt[anim]:pause()
-  elseif _K.trans[anim] then
-  	_K.trans[anim]:pause()
+function M:pause(anim)
+  if App.gt[anim] then
+     App.gt[anim]:pause()
+  elseif App.trans[anim] then
+  	App.trans[anim]:pause()
   end
 end
 --
-function _M:resumeAnimation(anim)
-  if _K.gt[anim] then
-    _K.gt[anim]:play()
-  elseif _K.trans[anim] then
-    _K.trans[anim]:resume()
+function M:resume(anim)
+  if App.gt[anim] then
+    App.gt[anim]:play()
+  elseif App.trans[anim] then
+    App.trans[anim]:resume()
   end
 end
 --
-function _M:playAnimation(anim)
---	print(anim)
---	for k, v in pairs(_K.trans) do print(k, v) end
-  if _K.gt[anim] then
-    _K.gt[anim]:toBeginning()
-    _K.gt[anim]:play()
-  elseif _K.trans[anim] then
-		_K.trans[anim]:resume()
+function M:play(anim)
+	print(anim)
+--	for k, v in pairs(App.trans) do print(k, v) end
+  if App.gt[anim] then
+    App.gt[anim]:toBeginning()
+    App.gt[anim]:play()
+  elseif App.trans[anim] then
+		App.trans[anim]:resume()
   end
 end
 --
-return _M
+return M

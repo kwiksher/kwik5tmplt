@@ -23,13 +23,13 @@ function ActionCommand:new()
     -- target layer :sceneGroup[layerName]
     -- target animation : layer.animations[index]
     --
-      AC.Animation:play("en_linear", nil)
+      AC.Animation:play("witch/en_linear")
 	end
 	return setmetatable( command, {__index=AC})
 end
 --
 ActionCommand.model = [[
-{"name":"flyAnim","actions":[{"command":"animation.play","params":{"target":"en_linear"}}]}
+{"name":"flyAnim","actions":[{"command":".animation.play","params":{"target":"witch/en_linear"}}]}
 ]]
 --
 return ActionCommand

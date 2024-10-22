@@ -228,12 +228,16 @@ function M.commandHandler(layerTable, target, event)
     if singleSelection(layerTable, target) then
       -- should we enable one of them?
       -- print("", "singleSelection")
-      actionCommandPropsTable:setActiveProp(target.layer)
+      local layer = target.layer
+      if target.parentObj then
+        layer = target.parentObj.layer .."/" .. layer
+      end
+      actionCommandPropsTable:setActiveProp(layer, target.class)
       --
       -- setClassProps is used in physics to set the value to physics.classProps
       --
       local classProps = layerTable.classProps or classProps
-      classProps:setActiveProp(target.layer)
+      classProps:setActiveProp(layer)
     end
   end
   --
@@ -354,8 +358,13 @@ function M.commandHandlerClass(layerTable, target, event)
     isMultiSelection = false
     if singleSelection(layerTable, target) then
       -- print("", "singleSelection")
-      actionCommandPropsTable:setActiveProp(target.layer, target.class)
-      classProps:setActiveProp(target.layer, target.class)
+
+      local layer = target.layer
+      if target.parentObj then
+        layer = target.parentObj.layer .."/" .. layer
+      end
+      actionCommandPropsTable:setActiveProp(layer, target.class)
+      classProps:setActiveProp(layer, target.class)
 
       -- recover selections
       if UI.editor.selections_backup and #UI.editor.selections_backup > 0 then
