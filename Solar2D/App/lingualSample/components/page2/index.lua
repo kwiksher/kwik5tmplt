@@ -51,7 +51,7 @@ local scene = require('controller.scene').new(sceneName, {
       {
         fly = {     {
           en = {
-          }
+            class={ "button", }  }
         },
         {
           ja = {

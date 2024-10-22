@@ -70,10 +70,12 @@ local command = function (params)
   else
     -- print("",  UI.page.."/commands/"..UI.editor.currentAction.name..".json", UI.editor.currentActionCommandIndex)
     -- for k, v in pairs(commandClass) do print("###",k, v) end
+
+   commandbox:setValue(UI, commandClass.command ) --animation.play, model== nil
     --
-    local out = util.split(commandClass.command, '.')
-    type = out[1]
-    commandbox:setValue(UI, out[2])
+    -- local out = util.split(commandClass.command, '.')
+    -- type = out[2]
+    -- commandbox:setValue(UI, type ) --animation.play
     --commandbox.selectedObj.text  = out[2]
 
     for k, v in pairs(commandClass.params) do

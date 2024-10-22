@@ -170,6 +170,11 @@ function M:create(UI)
   if self.language then
     lang = App.getProps().lang or ""
   end
+
+  local font = self.textProps.font
+  if font== nil or font:len() == 0 then
+    font =  native.systemFont
+  end
   --
   self.talkButton, self.syncObj = syncSound.addSentence{
       x            = x,
@@ -179,7 +184,7 @@ function M:create(UI)
       volume       = self.audioProps.volume,
       line         = self.value,
       button       = self.speakerObj or button,
-      font         = self.textProps.font,
+      font         = font,
       fontColor    = self.textProps.fontColor,
       fontSize     = self.textProps.fontSize,
       fontColorHi  = self.textProps.fontColorHi,
@@ -209,7 +214,7 @@ end
 --
 function M:didShow(UI)
   local sceneGroup  = UI.sceneGroup
-  print("@@@@@@@@ saySentence", self.properties.autoPlay, self.talkButton)
+  -- print("saySentence", self.properties.autoPlay, self.talkButton)
   if self.properties.autoPlay and self.talkButton then
       self.timerStash = timer.performWithDelay( self.properties.delay or 0,
         function()

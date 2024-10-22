@@ -8,8 +8,8 @@ local M = {
   properties = {
     {{#properties}}
     target = "{{layer}}",
-    type  = "{{type}}", -- tap, touch
-    eventType = "{{eventType}}",
+    type  = "{{type}}",
+    eventType = "{{eventType}}",  -- tap, touch
     over = "{{over}}",
     btaps = {{btaps}},
     mask = "{{mask}}",

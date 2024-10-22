@@ -2,7 +2,7 @@ local name = ...
 local parent,root = newModule(name)
 
 local M = {
-  name = "father/en",
+  name = "father/en", -- en
   layer = "en",
   class = "sync",
   folder = "sync",
@@ -27,6 +27,7 @@ local M = {
     fontSize    = 36,
     language    = "",
     padding     = 0,
+    readDir     = "leftToRight",
     sentenceDir = "en/my_father_is_nice", -- wordTouch
   },
   actions = {onComplete = ""},
