@@ -48,8 +48,76 @@ end
 function M.teardown()
 end
 
+-- https://stackoverflow.com/questions/66379488/pyttsx3-does-not-read-text-in-other-languages
 
-function M.test_edit_action()
+function M.test_timecodes()
+  local timecodes = require("lib.timecodes")
+    -- Example usage
+    local script1 = [[
+    JOHN
+    Hello, how are you?
+
+    JANE
+    I'm doing well, thank you for asking.
+
+    JOHN
+    That's great to hear!
+    ]]
+
+    -- https://ia.net/topics/ia-writer-fountain-template
+  local script = [[
+  NEO
+  Wait. Who was it?
+  Who was the man?
+
+  She leans close, her lips almost touching his ear as she
+  whispers.
+
+  TRINITY
+  You know who.
+
+  She turns and he watches her melt into the shifting wall
+  of bodies.
+
+  A SOUND RISES steadily, growing out of the music,
+  pressing in on Neo until it is all he can hear as we --
+
+  CUT TO:
+
+  INT. NEO'S APARTMENT
+
+  The sound is an ALARM CLOCK, slowly dragging Neo to
+  consciousness. He strains to read the clock face:
+  9:15 A.M.
+
+  NEO
+  Shitshitshit.
+  ]]
+
+
+    local dialogue = timecodes.parse_fountain(script)
+    local timecoded_dialogue = timecodes.generate(dialogue)
+
+    local chars = {}
+    for _, v in ipairs(timecoded_dialogue) do
+      local character, line, _start, _end = unpack(v)
+      if chars[character] == nil then
+        chars[character] = {}
+      end
+      table.insert(chars[character], {_start, _end, line})
+      -- print(string.format("%s (%s - %s): %s", character, _start, _end, line))
+    end
+
+    for k, v in pairs(chars) do
+      print(k)
+      for i, timecode in next, v do
+        print("", timecode[1], timecode[2], timecode[3])
+      end
+    end
+end
+
+
+function M.xtest_edit_action()
   UI.editor.actionEditor.iconHander()
 
   actionTable.altDown = true
