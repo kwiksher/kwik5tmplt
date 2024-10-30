@@ -106,6 +106,7 @@ function M:create(UI)
   end
   self:initAnimation(UI, self.obj, onEndHandler)
   self.animation = self:buildAnim(UI)
+  UI.animations[self.name.."_"..self.class] = self.animation
 end
 --
 function M:didShow(UI)
