@@ -6,47 +6,47 @@ local scene = require('controller.scene').new(sceneName, {
       layers = {
 
              {
-               kwkcover = { 
+               kwkcover = {
                  class={  }  }
              },
-             
+
              {
-               roof = { 
+               roof = {
                  class={  }  }
              },
-             
+
              {
-               namekwik = { 
+               namekwik = {
   {
-    en = { 
+    en = {
       class={  }  }
   },
-   
+
   {
-    jp = { 
+    ja = {
       class={  }  }
   },
-   
+
                  class={  }  }
              },
-             
+
              {
-               iamcat = { 
+               iamcat = {
   {
-    en = { 
+    en = {
       class={  }  }
   },
-   
+
   {
-    jp = { 
+    ja = {
       class={  }  }
   },
-   
+
                  class={  }  }
              },
-             
+
              {
-               cat = { 
+               cat = {
                  class={  }  }
              },
                        },

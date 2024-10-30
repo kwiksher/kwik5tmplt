@@ -59,7 +59,7 @@ function M:setHandler()
       }
     else
       lines[#lines+1] = {name=line.name,start = line.start*1000, out=line.out*1000,
-        file = line.file, dur = line.dur}
+        file = line.file, dur = line.dur, newline=line.newline}
     end
     ---
   end
@@ -95,12 +95,15 @@ end
 
 --
 function M:init(UI)
-  -- print(self.name)
+  -- print(UI.lang)
   if UI.langClassDelegate then
     --
-    self.properties.target = libUtil.swapLangSuffix(self.properties.target,UI.lang)
+    self.properties.target = UI:getNameByLang(self.properties.target)
+    -- print(self.properties.target)
     self.audioProps.filename = libUtil.swapLangPrefix(self.audioProps.filename, UI.lang) -- en/my_father_is_nice.mp3
+    -- print(self.audioProps.filename)
     self.textProps.sentenceDir = libUtil.swapLangPrefix(self.textProps.sentenceDir,UI.lang)  --  en/my_father_is_nice
+    -- print(self.textProps.sentenceDir)
     ---
     local filename = self.audioProps.filename:gsub("mp3", "txt")
     filename = libUtil.swapLangPrefix(filename, UI.lang)
@@ -110,7 +113,7 @@ function M:init(UI)
   end
 
   -- if self.language then
-  --   self.line =self.language and  self.language[App.getProps().lang]
+  --   self.line =self.language and  self.language[UI.lang]
   -- end
   --
   self.value = self:setHandler(self.line)
@@ -125,9 +128,9 @@ function M:create(UI)
   local path =  App.getProps().audioDir..self.audioProps.filename
   if self.language then
     if self.folder then
-      path = App.getProps().audioDir..App.getProps().lang.."/"..self.folder.."/"..self.audioProps.filename
+      path = App.getProps().audioDir..UI.lang.."/"..self.folder.."/"..self.audioProps.filename
     else
-      path = App.getProps().audioDir..App.getProps().lang.."/"..self.audioProps.filename
+      path = App.getProps().audioDir..UI.lang.."/"..self.audioProps.filename
     end
   else
     if self.folder then
@@ -145,6 +148,10 @@ function M:create(UI)
 
   -- local x,y = App.getPosition(self.x, self.y)
   local target = sceneGroup[self.properties.target]
+  if target==nil then
+    print("Error", self.properties.target)
+    return
+  end
   local x,y = target.x, target.y
 
   -- need this?
@@ -168,7 +175,7 @@ function M:create(UI)
 
   local lang = ""
   if self.language then
-    lang = App.getProps().lang or ""
+    lang = UI.lang or ""
   end
 
   local font = self.textProps.font
