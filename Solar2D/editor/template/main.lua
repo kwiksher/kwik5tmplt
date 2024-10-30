@@ -34,7 +34,13 @@ local common = {
   }
 }
 
-require("controller.index").bootstrap({name="{{book}}", edting = true, goPage = "{{page}}", position = {x=0, y=0}, common = common}) -- scenes.index
+require("controller.index").bootstrap{
+  name="{{book}}",
+  edting = true,
+  goPage = "{{page}}",
+  language = "{{lang}}",
+  position = {x=0, y=0},
+  common = common} -- scenes.index
 
 -- for product release
 -- require("controller.index").bootstrap({name="{{book}}", edting = false, goPage = "{{page}}", position = {x=0, y=0}, common = common}) -- scenes.index

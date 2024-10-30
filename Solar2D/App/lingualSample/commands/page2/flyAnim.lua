@@ -23,7 +23,8 @@ function ActionCommand:new()
     -- target layer :sceneGroup[layerName]
     -- target animation : layer.animations[index]
     --
-      AC.Animation:play("witch/en_linear")
+    obj = UI:getAnimation("witch/en_linear")
+    AC.Animation:play(obj)
 	end
 	return setmetatable( command, {__index=AC})
 end
