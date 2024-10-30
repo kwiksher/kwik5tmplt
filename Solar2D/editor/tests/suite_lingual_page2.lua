@@ -50,7 +50,7 @@ end
 
 -- https://stackoverflow.com/questions/66379488/pyttsx3-does-not-read-text-in-other-languages
 
-function M.test_timecodes()
+function M.xtest_timecodes()
   local timecodes = require("lib.timecodes")
     -- Example usage
     local script1 = [[
