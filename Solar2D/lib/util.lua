@@ -222,13 +222,17 @@ function exports.readSyncText(path,sentenceDirPath)
 
   -- Read each line and split by spaces
   for line in file:lines() do
-      -- print(line)
-      local startTime, endTime, name = line:match("(%S+)%s+(%S+)%s+(%S+)")
-      if startTime and endTime and name then
-          table.insert(data, {start = string.format("%.3f",tonumber(startTime)), out = string.format("%.3f",tonumber(endTime)), name = name, file=name:lower()..".mp3", action=""})
-      else
-          print("Invalid line format: " .. line)
-      end
+    local startTime, endTime, name = line:match("(%S+)%s+(%S+)%s+(%S+)")
+    if startTime and endTime and name then
+       local newline = nil
+        if name:find("/n") then
+          newline = true
+          name = name:gsub("/n", "")
+        end
+      table.insert(data, {start = string.format("%.3f",tonumber(startTime)), out = string.format("%.3f",tonumber(endTime)), name = name, file=name:lower()..".mp3", action="", newline =newline})
+    else
+      print("Invalid line format: " .. line)
+    end
   end
 
   -- Close the file
@@ -236,7 +240,7 @@ function exports.readSyncText(path,sentenceDirPath)
 
   -- Print the parsed data (you can modify this part as needed)
   for _, entry in ipairs(data) do
-      print(string.format("start: %.3f, end: %.3f, name: %s", entry.start, entry.out, entry.name))
+      print(string.format("start: %.3f, end: %.3f, name: %s, newLine:%s ", entry.start, entry.out, entry.name, tostring(entry.newline)))
   end
 
   for i, v in next, data do

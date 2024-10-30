@@ -29,7 +29,7 @@ function lib.bootstrap(Props)
         goPage      = Props.goPage, -- sceneIndex,
         scenes       = require("App."..Props.name..".index"),
         kAutoPlay   = 0,
-        lang        = "en",
+        lang        = Props.lang or "en",
         position    = Props.position,
         --stage       = display.getCurrentStage(),
         randomAction = {},

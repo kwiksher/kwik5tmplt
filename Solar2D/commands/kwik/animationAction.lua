@@ -1,31 +1,28 @@
 local M = {}
 --
-local App            = require "controller.Application"
---
 function M:pause(anim)
-  if App.gt[anim] then
-     App.gt[anim]:pause()
-  elseif App.trans[anim] then
-  	App.trans[anim]:pause()
-  end
+  anim:pause()
 end
 --
 function M:resume(anim)
-  if App.gt[anim] then
-    App.gt[anim]:play()
-  elseif App.trans[anim] then
-    App.trans[anim]:resume()
+  if anim.type == "transition" then
+    anim:resume()
+  else
+    anim:play()
   end
 end
 --
 function M:play(anim)
-	print(anim)
---	for k, v in pairs(App.trans) do print(k, v) end
-  if App.gt[anim] then
-    App.gt[anim]:toBeginning()
-    App.gt[anim]:play()
-  elseif App.trans[anim] then
-		App.trans[anim]:resume()
+  if anim.type == "transition" then
+    anim:resume()
+  else
+    if anim.from then
+      anim.from:toBeginning()
+      anim.from:play()
+    else
+      anim.to:toBeginning()
+      anim.to:play()
+    end
   end
 end
 --
