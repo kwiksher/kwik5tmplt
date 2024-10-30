@@ -1,3 +1,4 @@
+
 -- $weight=0
 --
 local app = require "controller.Application"
@@ -8,7 +9,7 @@ local layerProps = {
   height    =  955 - 888,
   width     = 754 - 515 ,
   kind      = group,
-  name      = "flyOver/jp",
+  name      = "flyOver/ja",
   type      = "png",
   x         = 754 + (515 -754)/2,
   y         = 888 + (955 - 888)/2,
