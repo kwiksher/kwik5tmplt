@@ -34,7 +34,7 @@ local scene = require('controller.scene').new(sceneName, {
           }
         },
         {
-          jp = {
+          ja = {
           }
         },
         {
