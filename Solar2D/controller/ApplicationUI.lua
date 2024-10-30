@@ -25,6 +25,7 @@ function M.create(scene, model)
     -- All audio files on a table
     UI.audios           = {}
     UI.audios.kAutoPlay = 0
+    UI.animations       = {}
     UI.tSearch          = nil
     UI.taben            = {}
     UI.tabjp            = {}
@@ -41,11 +42,34 @@ function M.create(scene, model)
     --UI.numberOfPages         = #Application.scenes -- number of pages in the project
     --
     function UI:setLanguge()
-        if self.props.lang == "" then self.props.lang = "en" end
-        -- Language switch
-        if (self.props.lang == "en") then self.tSearch = self.taben end
-        -- Language switch
-        if (self.props.lang == "jp") then self.tSearch = self.tabjp end
+      if self.props.lang == "" then self.props.lang = "en" end
+      -- Language switch
+      --if (self.props.lang == "en") then self.tSearch = self.taben end
+      -- Language switch
+      --if (self.props.lang == "jp") then self.tSearch = self.tabjp end
+      self.lang = self.props.lang
+      -- print("setLanguage", self.lang, self)
+    end
+
+    function UI:getNameByLang(name)
+      if self.langClassDelegate then
+        local t = name:split("/")
+        return t[1].."/".. self.lang
+      end
+      return name
+    end
+
+    function UI:getNameClassByLang(name)
+      if self.langClassDelegate then
+        local t = name:split("/")
+        return t[1].."/".. self.lang..t[2]:sub(3)
+      end
+      return name
+    end
+
+    function UI:getAnimation(name)
+      -- print(self:getNameClassByLang(name))
+      return self.animations[self:getNameClassByLang(name)]
     end
 
     local function callComponentsLayersHandler(models, handler, funcName)
@@ -199,7 +223,7 @@ function M.create(scene, model)
 
 
     function UI:init()
-        --print("ApplicationUI:init")
+        -- print("ApplicationUI:init", self.lang, self)
         --for k, v in pairs( model.components) do print(k, v) end
         --print ("---------------")
         callComponentsLayersHandler(model.components.layers, self.sceneHandler, "_init")
@@ -211,8 +235,8 @@ function M.create(scene, model)
     --
     function UI:create(params)
         -- self:_create("common", const.page_common, false)
-        self:init()
         self:setLanguge()
+        self:init()
         self.sceneEventParams = params
         callComponentsLayersHandler(model.components.layers, self.sceneHandler, "_create")
         callComponentsHandler(model.components, self.componentLocalHandler, "_create")

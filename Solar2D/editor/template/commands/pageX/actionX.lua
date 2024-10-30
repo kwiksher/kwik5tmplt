@@ -76,19 +76,21 @@ function ActionCommand:new()
     -- target layer :sceneGroup[layerName]
     -- target animation : layer.animations[index]
     --
+    obj = UI.sceneGroup["{{target}}"]
     {{#pause}}
-      AC.Animation:pause("{{target}}")
+      AC.Animation:pause(obj)
     {{/pause}}
     {{#resume}}
-      AC.Animation:resume("{{target}}")
+      AC.Animation:resume(obj)
     {{/resume}}
     {{#play}}
-      AC.Animation:play("{{target}}") --  {{index}}
+      AC.Animation:play(obj) --  {{index}}
     {{/play}}
   {{/animation}}
   {{#button}}
+    obj = UI.sceneGroup["{{target}}"]
     {{#onOff}}
-     AC.Button:onOff("{{target}}", {{enable}}, {{toggle}} ) -- enable, toggle
+     AC.Button:onOff(obj, {{enable}}, {{toggle}} ) -- enable, toggle
     {{/onOff}}
   {{/button}}
   {{#screenshot}}
@@ -102,21 +104,22 @@ function ActionCommand:new()
   {{/screenshot}}
   {{#canvas}}
       {{#brush}}
+      obj = UI.sceneGroup[UI.canvas]
       {{#color}}
-       AC.Canvas:brushColor(UI.canvas, unpack(AC.color( {{color}} )) )
+       AC.Canvas:brushColor(obj, unpack(AC.color( {{color}} )) )
       {{/color}}
       {{#size}}
-      AC.Canvas:brushSize(UI.canvas, {{size}}  )
+      AC.Canvas:brushSize(obj, {{size}}  )
       {{/size}}
       {{/brush}}
       {{#redo}}
-			AC.Canvas:redo(UI.canvas)
+			AC.Canvas:redo(obj)
       {{/redo}}
 		  {{#undo}}
-			AC.Canvas:undo(UI.canvas)
+			AC.Canvas:undo(obj)
 	  	{{/undo}}
       {{#erase}}
-			AC.Canvas:erase(UI.canvas)
+			AC.Canvas:erase(obj)
 		  {{/erase}}
   {{/canvas}}
 {{/actions}}
