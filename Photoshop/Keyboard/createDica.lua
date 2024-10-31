@@ -1,0 +1,1 @@
+UI.numDica = math.random(1,3)..math.random(1,3)..math.random(1,3)..math.random(1,3)..math.random(1,3)..math.random(1,3)..math.random(1,3)..math.random(1,3)
