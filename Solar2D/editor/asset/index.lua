@@ -108,7 +108,7 @@ end
 
 function controller:read(book, _model)
   print("read assets.model in ", book)
-  local assets = {}
+  local assets = {audios={}}
   local model = _model or require("App." ..book..".assets.model")
   local map = {}
   for k, v in pairs(model) do

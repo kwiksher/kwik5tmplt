@@ -111,6 +111,14 @@ function M:show()
   self.isOn = true
 end
 
+function M:didShow()
+  self:show()
+end
+
+function M:didHide()
+  self:hide()
+end
+
 function M:destroy()
   if self.obj then
     self.obj.field:removeSelf()
