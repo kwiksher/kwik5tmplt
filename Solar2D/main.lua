@@ -1,20 +1,4 @@
-system.setTapDelay( 0.5 )
-
-local restore = false
---restore = true
-if restore then
-  os.execute("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source undo_lua.command")
-  return
-end
-
-NIL = setmetatable({},{__tostring=function() return "nil" end})
-NilCheck = function(v)
-  if v == NIL then
-    return nil
-  else
-    return v
-  end
-end
+--require("controller.index").bootstrap({name="keyboard", sceneIndex = 1, position = {x=0, y=0}}) -- scenes.index
 
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   local lldebugger = loadfile(os.getenv("LOCAL_LUA_DEBUGGER_FILEPATH"))()
@@ -29,16 +13,10 @@ local common = {
     -- "align",
     "myComponent",
     "thumbnailNavigation",
-    "keyboardNavigation",
     "index" -- this loads editor!
   }
 }
 
-require("controller.index").bootstrap{
-  name="lingualSample",
-  editing = true,
-  goPage = "page1",
-  lang   = "ja",
-  position = {x=0, y=0},
-  common = common
-} -- scenes.index
+require("controller.index").bootstrap
+{name="keyboard", editing = true, goPage = "page1", position = {x=0, y=0}, common = common} -- scenes.index
+
