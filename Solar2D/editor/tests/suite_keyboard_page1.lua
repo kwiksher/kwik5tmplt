@@ -57,7 +57,7 @@ function M.xtest_creteVariable()
   obj.callBack({target={muiOptions={name="varaibles-icon"}}})
 end
 
-function M.test_modifyVariable()
+function M.xtest_modifyVariable()
   selectors.componentSelector:onClick(true,  "variableTable")
   variableTable.altDown = true
   helper.selectVariable("LED")
@@ -65,6 +65,11 @@ function M.test_modifyVariable()
   -- for k, v in pairs(varaibleTable.iconObjs[1]) do print(k, v) end
   --local obj = variableTable.iconObjs[1]
   --obj.callBack({target={muiOptions={name="varaibles-icon"}}})
+end
+
+function M.xtest_createDynmicText()
+  helper.selectLayer("textodica")
+  helper.selectIcon("Replacements", "DynamicText")
 end
 
 return M

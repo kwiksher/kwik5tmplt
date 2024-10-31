@@ -69,6 +69,7 @@ function M:commandHandler(target, event)
         UI.editor:setCurrnetSelection(target.audio)
       end
       -- target.isSelected = true
+      print("### currentClass ####")
       UI.editor.currentClass = target.name
       --
       -- should we enable one of them?
