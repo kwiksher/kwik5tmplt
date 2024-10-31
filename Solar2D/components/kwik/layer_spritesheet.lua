@@ -53,7 +53,8 @@ function M:create(UI)
     obj:play()
   end
   if obj.name ~="_preview" then
-    sceneGroup[obj.name]:removeSelf()
+    local targetObj=sceneGroup[obj.name]
+    sceneGroup:remove(targetObj)
   end
   sceneGroup[obj.name] = obj
   sceneGroup:insert( obj)

@@ -280,6 +280,8 @@ function M:init(UI)
 end
 --
 function M:setCurrnetSelection(layer, class, _type)
+  print("##### setCurrentSelection", class)
+  print(debug.traceback())
   self.currentLayer = layer or ""
   self.currentClass = class or ""
   self.currentType = _type

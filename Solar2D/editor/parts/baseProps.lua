@@ -62,6 +62,7 @@ M.onTapPosXYSet   = {}
 function M:tapListener(event, type)
   -- print("@@tapListener", type, event.target.text)
   local UI = self.UI
+  print("@@@@", UI.editor.currentClass)
   if type == "layer" then
     UI.editor.selections_backup = {}
     for i, v in next, UI.editor.selections do
@@ -72,6 +73,7 @@ function M:tapListener(event, type)
     UI.editor.selections_backup = nil
   end
   self.activeProp = event.target.text
+  print("self.activeProp", self.activeProp)
   event.actionbox = self
   basePropsControl.handler[type](event, self)
 end
@@ -257,6 +259,8 @@ function M:createTable(props)
        obj:addEventListener("tap", function(event) self:tapListener(event, 'url')end)
     elseif self.onTapActionSet[prop.name] then
       obj:addEventListener("tap", function(event) self:tapListener(event, 'action')end)
+    elseif prop.name == "variable" then
+      obj:addEventListener("tap", function(event) self:tapListener(event, 'variable')end)
     elseif prop.name == "othersGroup" then
         obj:addEventListener("tap", function(event) self:tapListener(event, 'group')end)
     elseif self.onTapLayerSet[prop.name] then
