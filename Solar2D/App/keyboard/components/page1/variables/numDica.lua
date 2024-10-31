@@ -1,5 +1,5 @@
 local props = {
-  name     = "LED",
+  name     = "numDica",
   properties = {
     isAfter  = false,
     isLocal  = true, -- or local

@@ -26,6 +26,7 @@ function M.create(scene, model)
     UI.audios           = {}
     UI.audios.kAutoPlay = 0
     UI.animations       = {}
+    UI.variables        = {}
     UI.tSearch          = nil
     UI.taben            = {}
     UI.tabjp            = {}
@@ -70,6 +71,10 @@ function M.create(scene, model)
     function UI:getAnimation(name)
       -- print(self:getNameClassByLang(name))
       return self.animations[self:getNameClassByLang(name)]
+    end
+
+    function UI:getVariable(name)
+      return self.variables[name]
     end
 
     local function callComponentsLayersHandler(models, handler, funcName)

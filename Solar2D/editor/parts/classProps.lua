@@ -2,20 +2,21 @@ local M = require("editor.parts.baseProps").new()
 ---------------------------
 M.name = "classProps"
 
-local Layer_Class = table:mySet{}
+local Layer_Class = table:mySet{"variable"}
 M.onTapLayerSet = table:mySet{"target", "over", "mask", "dropArea", "_filename", "sheetInfo", "to"}
 M.onTapActionSet = table:mySet{"onComplete"}
 M.onTapPosXYSet = table:mySet{"x", "y"}
 --
 function M:setActiveProp(layer, class)
-  -- print("activeProp", self.name)
+  print("activeProp", layer)
   local name =self.activeProp
   local value = layer
   local UI = self.UI
 
-  if class then
+  if class and class ~= "variable" then
     value = layer.."_"..class
   end
+  --
   if self.activeProp == "sheetInfo" then
      for i, obj in next, self.objs do
       if obj.text == "sheetInfo" then
@@ -64,6 +65,8 @@ function M:setActiveProp(layer, class)
         --   sheetContentHeight = 200
         -- }
       end
+      print("@@@@", UI.editor.currentClass)
+      return true -- this makes the table hide
     else
       -- TBI show popup
     end
@@ -73,7 +76,7 @@ end
 
 function M:getObj (name)
   for i,v in next, self.objs do
-    -- print("######isValid", name, v.text)
+    print("", name, v.text)
     if v.text == name then
       return v
     end
