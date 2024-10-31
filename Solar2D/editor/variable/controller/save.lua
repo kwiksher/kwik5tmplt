@@ -6,12 +6,13 @@ local scripts = require("editor.scripts.commands")
 --
 local instance = require("commands.kwik.baseCommand").new(
   function (params)
+    local UI = params.UI
     local args = {
-      UI            = params.UI,
-      book          = params.book or  UI.editor.currentBook,
-      page          = params.page or params.UI.page,
-      updatedModel  = util.createIndexModel(params.UI.scene.model),
-      properties      = params.properties or controller.classProps:getValue(),
+      UI            = UI,
+      book          = params.book or  UI.book,
+      page          = params.page or UI.page,
+      updatedModel  = util.createIndexModel(UI.scene.model),
+      props         = {properties = params.properties or controller.classProps:getValue()},
       completebox   = params.actionbox or controller.actionbox,
       isNew         = params.isNew
     }
@@ -19,9 +20,16 @@ local instance = require("commands.kwik.baseCommand").new(
     args.selected      =  selectbox.selection or {}
     --
     args.class         = "variable"
-    args.name          = args.selected.variable
+    --
+    args.name          = args.selected.variable -- this comes from variableTable == selectbox
+    args.newName       = params.newName
+    if controller.picker then
+      args.newName = controller.picker.obj.field.text
+      args.name = args.newName
+    end
+    ---
     args.append        = function(value, index)
-      local dst = args.updatedModel.components.timers or {}
+      local dst = args.updatedModel.components.variables or {}
       if index then
         dst[index] = value
       else
