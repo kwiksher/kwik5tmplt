@@ -18,7 +18,7 @@ function M:init(viewGroup)
   if viewGroup then
     -- self.selectbox      = viewGroup.selectbox
     -- self.classProps    = viewGroup.classProps
-    -- self.actionbox = viewGroup.actionbox
+    self.actionbox = nil -- actionbox can be a nil
     -- self.buttons       = viewGroup.buttons
     for k, v in pairs(viewGroup) do
       -- if self.id == "physics" then
@@ -81,7 +81,14 @@ function M:useClassEditorProps()
     end
   end
   --
-  props.actionName =self.actionbox.value
+  if self.actionbox then
+    props.actionName =self.actionbox.value
+  end
+  --
+  if self.picker then
+    props.name = picker.obj.field.text
+  end
+
   return props
 end
 
@@ -119,7 +126,9 @@ function M:setValue(decoded, index, template)
     else
       print("no actionbox")
       --self.actionbox:hide()
-      self.actionbox:setValue()
+      if self.actionbox then
+        self.actionbox:setValue()
+      end
       -- print(#self.actionbox.objs)
     end
   end
@@ -142,10 +151,11 @@ function M:toggle()
 end
 
 function M:show()
-  -- print("show",self.id, self.class)
+  print("show",self.id, self.class)
   -- print(debug.traceback())
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
+      print("", k)
       v:show()
     end
     self.view.group.isVisible = true
@@ -153,7 +163,7 @@ function M:show()
 end
 
 function M:hide()
-  -- print("hide", self.id, self.class)
+  print("hide", self.id, self.class)
   if self.viewGroup  then
     for k, v in pairs(self.viewGroup) do
       v:hide()
@@ -479,15 +489,38 @@ function M:command()
       else
         print(json.encode(model.properties))
       end
+      -- properties
       self.classProps:setValue(model)
       self.classProps.isNew = params.isNew
-      --
       self.classProps:create(UI)
       self.classProps:didShow(UI)
-      --
-      -- self:show()
       self.classProps:show()
-      self.actionbox:show()
+      --
+      -- action
+      if self.actionbox then
+        self.actionbox:show()
+      end
+      --
+      -- picker
+      if params.isNew and self.picker then
+        self.classProps:hide()
+        --
+        local listener = function(name)
+          if name and name:len() > 0 then
+            print( name )
+            self.classProps:show()
+          else
+            print("TODO popup error message")
+            self.picker:destroy()
+          end
+        end
+        self.picker:create(listener, "Please input a name")
+      else
+        self.picker:create()
+        self.picker.obj.field.text = decoded.name
+      end
+      --
+      -- button
       self.buttons:show()
       --
       UI.editor.editPropsLabel = name
