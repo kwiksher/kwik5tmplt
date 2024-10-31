@@ -30,7 +30,6 @@ local selectMap = {
   timers = {name="editor.selector.selectTimer"},
   groups = {name="editor.selector.selectGroup"},
   variables = {name="editor.selector.selectVariable"},
-  timers = {name="editor.selector.selectTimer"},
 }
 
 local function findObj(name, editor)

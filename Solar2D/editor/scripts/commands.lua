@@ -554,6 +554,8 @@ local function getModelFrom(args)
   -- TODO
   --
 
+  ret.name = args.name or args.newName
+
   ---[[
   for k, entries in pairs(args.props ) do
     -- print("", k, type(entries))
