@@ -130,6 +130,12 @@ local function tapListenerLayer(event)
   selectors.componentSelector:onClick(true, "layerTable", true)
 end
 
+-- variable
+local function tapListenerVariable(event)
+  local selectors = require(parent .. "selectors")
+  selectors.componentSelector:onClick(true, "variableTable", true)
+end
+
 -- group
 local function tapListenerGroup(event)
   local selectors = require(parent .. "selectors")
@@ -346,6 +352,7 @@ M.handler = {
   action = tapListenerAction,
   posXY = tapListenerPosXY,
   group = tapListenerGroup,
+  variable = tapListenerVariable,
   boundaries = tapListenerShape,
   easing = tapListenerEasing,
   filters = tapListenerFilters

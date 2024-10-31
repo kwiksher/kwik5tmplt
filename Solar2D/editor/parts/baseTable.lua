@@ -13,8 +13,11 @@ local layerTableCommands = require("editor.parts.layerTableCommands")
 local contextButtons = require("editor.parts.buttons")
 local util = require("lib.util")
 
+local classProps = require("editor.parts.classProps")
+
+
 M.x       = 100
-M.y       = 44
+M.y       = 66 -- 44
 M.marginX = 74
 M.marginY = 20
 
@@ -162,14 +165,27 @@ function M:commandHandler(eventObj, event)
   elseif self.controlDown then -- mutli selections
     layerTableCommands.multiSelections(self, target)
   else
+    local fromActive = self.UI.editor.currentClass
     if layerTableCommands.singleSelection(self, target) then
       if target.layer then
         self.UI.editor:setCurrnetSelection(target.layer)
       end
       -- target.isSelected = true
-      if target.name then
-        self.UI.editor.currentClass = target.name
+      if target.variable then
+        print(target.variable)
+
+        if classProps:setActiveProp(target.variable, "variable") then
+          self:hide()
+          self.UI.editor.currentClass = fromActive
+          print("@@@@", self.UI.editor.currentClass)
+        end
+      else
+        if target.name then
+          print("### currentClass ##")
+          self.UI.editor.currentClass = target.name
+        end
       end
+      -- printKeys(target)
     end
   end
   return true
@@ -292,6 +308,8 @@ function M:create(UI)
     end
   -- self.group.isVisible = true
   end
+
+  print("@@@@", UI.editor.currentClass)
 
   UI.editor[self.id.."Store"]:listen(
     function(foo, fooValue)

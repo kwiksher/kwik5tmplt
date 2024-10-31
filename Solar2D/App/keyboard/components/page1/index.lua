@@ -10,7 +10,7 @@ local scene = require('controller.scene').new(sceneName, {
       },
       {
         textodica = {
-        }
+          class={ "dynamictext", }  }
       },
       {
         Tip = {
@@ -58,7 +58,7 @@ local scene = require('controller.scene').new(sceneName, {
     groups = {
     },
     timers = {  },
-    variables = {  "LED",  },
+    variables = {  "LED",  "numDica",  },
     joints    = {  },
     page = {  }
   },

@@ -110,7 +110,8 @@ local function singleSelection(layerTable, target, isNotLayer)
         --print(debug.traceback())
       end
       -- target.isSelected = true
-      if target.name then
+      if target.name and target.variable == nil then
+        print("### currentClass ##")
         UI.editor.currentClass = target.name
       end
     end
@@ -302,7 +303,8 @@ local function showClassProps(layerTable, target)
       print("Warning target.layer is not found")
       --print(debug.traceback())
     end
-    if target.name then
+    if target.name and target.variable == nil then
+      print("### currentClass ##")
       UI.editor.currentClass = target.name
     end
 
