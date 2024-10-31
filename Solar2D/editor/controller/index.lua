@@ -151,7 +151,7 @@ function M:toggle()
 end
 
 function M:show()
-  print("show",self.id, self.class)
+  -- print("show",self.id, self.class)
   -- print(debug.traceback())
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
@@ -163,7 +163,7 @@ function M:show()
 end
 
 function M:hide()
-  print("hide", self.id, self.class)
+  -- print("hide", self.id, self.class)
   if self.viewGroup  then
     for k, v in pairs(self.viewGroup) do
       v:hide()

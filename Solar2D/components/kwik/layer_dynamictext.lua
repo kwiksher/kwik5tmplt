@@ -1,0 +1,90 @@
+local M = {}
+
+local App = require("controller.Application")
+local util = require("lib.util")
+
+function M:create(UI)
+  local sceneGroup  = UI.sceneGroup
+  local layerProps = self.layerProps
+
+  local mVar = UI:getVariable(self.properties.variable) or ""
+  if self.properties.type == "global" then
+    local app = App.get()
+    mvar = app:getVariable(self.properties.variable) or ""
+  end
+
+  local options = {
+    text = mVar,
+    x = self.x + layerProps.imageWidth/2,
+    y = self.y,
+    fontSize = self.properties.fontSize,
+    font = self.properties.font,
+    align = self.properties.align }
+
+  local obj = display.newText(options)
+  if obj == nil then return end
+  obj:setFillColor( unpack(self.properties.color) )
+  obj.anchorX = 0.5
+  obj.anchorY = 0.25
+  util.repositionAnchor(obj,0.5,0)
+
+  obj.alpha     = layerProps.oriAlpha
+  obj.oldAlpha  = layerProps.oriAlpha
+  obj.blendMode = layerProps.blendMode
+  --
+  obj.layerAsBg = layerProps.layerAsBg
+  obj.isSharedAsset = layerProps.isSharedAsset
+  ---
+  obj.shapedWith  = layerProps.shapedWith
+  obj.randXStart  = layerProps.randXStart
+  obj.randXEnd    = layerProps.randXEnd
+  obj.randYStart  = layerProps.randYStart
+  obj.randYEnd    = layerProps.randYEnd
+  obj.type        = layerProps.type
+  obj.kind        = layerProps.kind
+
+ if layerProps.randXStart and layerProps.randXStart > 0 then
+  obj.x = math.random( layerProps.randXStart, layerProps.randXEnd)
+ end
+ if layerProps.randYStart and layerProps.randYStart > 0  then
+    obj.y = math.random( layerProps.randYStart, layerProps.randYEnd)
+ end
+ if layerProps.xScale then
+   obj.xScale = layerProps.xScale
+ end
+ if layerProps.yScale then
+   obj.yScale = layerProps.yScale
+ end
+ if layerProps.rotation then
+   obj:rotate( layerProps.rotation )
+ end
+
+  obj.oriX     = obj.x
+  obj.oriY     = obj.y
+  obj.oriXs    = obj.xScale
+  obj.oriYs    = obj.yScale
+  obj.alpha    = layerProps.oriAlpha
+  obj.oldAlpha = layerProps.oriAlpha
+
+  local targetObj = sceneGroup[self.name]
+  sceneGroup:remove(targetObj)
+  ---
+  sceneGroup:insert( obj)
+  sceneGroup[self.name] = obj
+end
+
+function M:didShow(UI)
+end
+--
+function M:didHide(UI)
+end
+
+function  M:destroy(UI)
+end
+
+---------------------------
+M.new = function(instance)
+	return setmetatable(instance, {__index=M})
+end
+
+return M

@@ -37,7 +37,8 @@ local instance =
     if class == nill then
       class = UI.editor.currentClass
     end
-    -- print(class)
+
+    print(class)
 
     local controller = UI.editor:getClassModule(class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
     for k, v in pairs(controller:useClassEditorProps(UI)) do

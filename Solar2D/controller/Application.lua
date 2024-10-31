@@ -117,6 +117,33 @@ function M.getPosition(x, y)
     return mX, mY
 end
 
+
+--[[
+  if align == "left" then
+    mX = mX - (display.safeActualContentWidth - w)/2
+  elseif align == "right" then
+    mX = mX + (display.safeActualContentWidth - w)/2
+  elseif align == "top" then
+    mY = mY - (display.safeActualContentHeight - h)/2
+  elseif align == "bottom" then
+    mY = mY + (display.safeActualContentHeight - h)/2
+  elseif align == "topLeft" then
+    mX = mX - (display.safeActualContentWidth - w)/2
+    mY = mY - (display.safeActualContentHeight - h)/2
+  elseif align == "topRight" then
+    mX = mX + (display.safeActualContentWidth - w)/2
+    mY = mY - (display.safeActualContentHeight - h)/2
+  elseif align == "bottomLeft" then
+    mX = mX - (display.safeActualContentWidth - w)/2
+    mY = mY + (display.safeActualContentHeight - h)/2
+  elseif align == "bottomRight" then
+    mX = mX + (display.safeActualContentWidth - w)/2
+    mY = mY + (display.safeActualContentHeight - h)/2
+  end
+  return mX, mY
+--]]
+
+
 function M.parseValue (value, newValue)
 	if newValue then
 		if value then
@@ -157,6 +184,9 @@ function M.new(Props)
     app.currentViewName = nil
     app.props = Props
     app.name = Props.appName
+    --
+    app.variables = {}
+    --
     M.apps[#M.apps+1] = app
 
 --
@@ -232,6 +262,14 @@ function M.new(Props)
           self.useTrigger = false -- true app:trigger, false:app:showView (composer.gotoScene)
           self:dispatchEvent({name = "onRobotlegsViewCreated", target = self}) -- self == app, this sets mediator's viewInstance as app
         end
+    end
+
+    function app:getVariable(name)
+      return self.variables[name]
+    end
+
+    function app:setVariable(name, value)
+      self.variables[name] = value
     end
 
     return app
