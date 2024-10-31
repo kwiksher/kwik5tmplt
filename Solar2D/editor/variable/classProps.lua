@@ -82,7 +82,6 @@ function M:createTable(props)
   -- backRect.height = #props * option.height
   -- backRect.isVisible = true
   -- objs[#objs + 1] = backRect
-  self.rootGroup.propsTable = self.group
   self.objs = objs
 end
 

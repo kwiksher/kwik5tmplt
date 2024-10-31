@@ -461,7 +461,10 @@ end
 
 
 function M:show()
-  -- print("@@@show", self.name)
+  -- if self.name == "onComplete" then
+  --   print("@@@show", self.name)
+  --   print(debug.traceback())
+  -- end
   if self.objs == nil then return end
   for i=1, #self.objs do
     self.objs[i].isVisible = true
