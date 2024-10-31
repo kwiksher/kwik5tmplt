@@ -3,30 +3,31 @@ local Var = require("components.kwik.vars")
 local App   = require("Application")
 
 function M:init(UI)
-  if not self.isAfter then
-    if not self.isLocal then
-      if self.type == "table" then
-        App[self.name] = { self.value }
+  local props = self.properties
+  if not props.isAfter then
+    if not props.isLocal then
+      if props.type == "table" then
+        App.variables[self.name] = { props.value }
       else
-        App[self.name] = self.value
+        App.variables[self.name] = props.value
       end
       --
-      if self.isSave then
+      if props.isSave then
         -- Check if variable has a pre-saved content
         if Var:kwkVarCheck(self.name) ~= nil then
-          App[self.name] = Var:kwkVarCheck(self.name)
+          App.variables[self.name] = Var:kwkVarCheck(self.name)
         end
       end
     else
       if self.type == "table" then
-        UI[self.name] = { self.value }
+        UI.variables[self.name] = { props.value }
       else
-        UI[self.name] = self.value
+        UI.variables[self.name] = props.value
       end
-      if self.isSave then
+      if props.isSave then
         -- Check if variable has a pre-saved content
         if Var:kwkVarCheck(self.name) ~= nil then
-          UI[self.name] = Var:kwkVarCheck(self.name)
+          UI.variables[self.name] = Var:kwkVarCheck(self.name)
         end
       end
     end
@@ -41,15 +42,15 @@ function M:didShow(UI)
   if self.isAfter then
     if not self.isLocal then
       if self.type == "table" then
-        App[self.name] = { self.value }
+        App.variables[self.name] = { props.value }
       else
-        App[self.name] = self.value
+        App.variables[self.name] = props.value
       end
     else
       if self.type == "table" then
-        UI[self.name] = { self.value }
+        UI.variables[self.name] = { props.value }
       else
-        UI[self.name] = self.value
+        UI.variables[self.name] = props.value
       end
     end
   end
