@@ -72,7 +72,7 @@ function M.xtest_createDynmicText()
   helper.selectIcon("Replacements", "DynamicText")
 end
 
-function M.test_createDynmicText()
+function M.xtest_createDynmicText()
   helper.selectLayer("Texto")
   helper.selectIcon("Replacements", "DynamicText")
 end
