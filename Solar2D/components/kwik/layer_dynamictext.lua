@@ -10,7 +10,7 @@ function M:create(UI)
   local mVar = UI:getVariable(self.properties.variable) or ""
   if self.properties.type == "global" then
     local app = App.get()
-    mvar = app:getVariable(self.properties.variable) or ""
+    myVar = app:getVariable(self.properties.variable) or ""
   end
 
   local _font = native.systemFont
@@ -76,6 +76,7 @@ function M:create(UI)
   ---
   sceneGroup:insert( obj)
   sceneGroup[self.name] = obj
+  self.obj = obj
 end
 
 function M:didShow(UI)
@@ -87,6 +88,21 @@ end
 function  M:destroy(UI)
 end
 
+function M:update(value)
+  local mVar = UI:getVariable(self.properties.variable) or ""
+  if self.properties.type == "global" then
+    local app = App.get()
+    myVar = app:getVariable(self.properties.variable) or ""
+    if value then
+      app:setVariable(value)
+    end
+  else
+    if value then
+      UI:setVariable(value)
+    end
+  end
+  self.obj.text = value or myVar
+end
 ---------------------------
 M.new = function(instance)
 	return setmetatable(instance, {__index=M})
