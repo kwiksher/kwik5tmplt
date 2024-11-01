@@ -77,7 +77,7 @@ local model = {
     },
     {
       name = "Shapes",
-      icon = "",
+      icon = "toolBook",
       tools = {
         {name = "new_rectangle", icon = ""},
         {name = "new_text", icon = ""},
