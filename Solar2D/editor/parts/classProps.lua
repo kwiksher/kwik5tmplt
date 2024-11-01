@@ -8,7 +8,7 @@ M.onTapActionSet = table:mySet{"onComplete"}
 M.onTapPosXYSet = table:mySet{"x", "y"}
 --
 function M:setActiveProp(layer, class)
-  print("activeProp", layer)
+  -- print("activeProp", layer)
   local name =self.activeProp
   local value = layer
   local UI = self.UI
@@ -65,7 +65,7 @@ function M:setActiveProp(layer, class)
         --   sheetContentHeight = 200
         -- }
       end
-      print("@@@@", UI.editor.currentClass)
+      -- print("@@@@", UI.editor.currentClass)
       return true -- this makes the table hide
     else
       -- TBI show popup
@@ -76,7 +76,7 @@ end
 
 function M:getObj (name)
   for i,v in next, self.objs do
-    print("", name, v.text)
+    -- print("", name, v.text)
     if v.text == name then
       return v
     end
