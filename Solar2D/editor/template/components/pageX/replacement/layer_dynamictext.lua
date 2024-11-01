@@ -10,7 +10,8 @@ local M = {
     {{#properties}}
     variable = "{{variable}}",
     type     = "{{type}}",
-    offset = {{offset}},
+    offsetX = {{offsetX}},
+    offsetY = {{offsetY}},
     {{#color}}
     color    = { {{r}}, {{g}}, {{b}}, {{a}} },
     {{/color}}

@@ -4,10 +4,11 @@ local M = {
   properties = {
     variable = "",
     type     = "local",
-    offset = 0,
+    offsetX = 0,
+    offsetY = 4,
     color    = { 0, 0, 0, 1},
     fontSize = 24,
-    font = native.systemFont,
+    font = "",
     align = "left",
   }
 }
