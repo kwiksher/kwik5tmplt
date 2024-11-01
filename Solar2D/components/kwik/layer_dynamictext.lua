@@ -13,12 +13,17 @@ function M:create(UI)
     mvar = app:getVariable(self.properties.variable) or ""
   end
 
+  local _font = native.systemFont
+  if self.properties.font:len() > 0 then
+    _font = self.properties.font
+  end
+  --
   local options = {
     text = mVar,
-    x = self.x + layerProps.imageWidth/2,
-    y = self.y,
+    x = self.x + self.properties.offsetX, -- + layerProps.imageWidth/2,
+    y = self.y + self.properties.offsetY,
     fontSize = self.properties.fontSize,
-    font = self.properties.font,
+    font = _font,
     align = self.properties.align }
 
   local obj = display.newText(options)

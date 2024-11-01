@@ -50,7 +50,7 @@ local scene = require('controller.scene').new(sceneName, {
       },
       {
         Texto = {
-        }
+          class={ "dynamictext", }  }
       },
     },
     audios = {
