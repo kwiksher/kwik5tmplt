@@ -139,6 +139,11 @@ function M:useClassEditorProps(UI)
     if name == "sheetType" and (value == NIL or value == "") then
       value = sheetType
     end
+
+    if name  == "color" then
+      local nums = util.split(entry.value, ',')
+      value = {r= tonumber(nums[1])/255, g=tonumber(nums[2])/255, b=tonumber(nums[3])/255, a=(tonumber(nums[4]) or 1)}
+    end
     props.properties[#props.properties+ 1] = {name = name, value = value}
   end
 
