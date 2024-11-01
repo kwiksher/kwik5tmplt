@@ -73,9 +73,12 @@ function M:useClassEditorProps()
   end
   local properties = self.classProps:getValue()
   for i, entry in next, properties do
-    -- print("", properties[i].name, type(properties[i].value))
+    print("", properties[i].name, type(properties[i].value))
     if entry.name == "_target" then
       props.properties[#props.properties+1] = {name = "target", value = entry.value}
+    elseif entry.name  == "color" then
+        local nums = util.split(entry.value, ',')
+        props.properties[#props.properties+1] = { name = "color", value = {r= tonumber(nums[1])/255, g=tonumber(nums[2])/255, b=tonumber(nums[3])/255, a=(tonumber(nums[4]) or 1)} }
     else
       props.properties[#props.properties+1] = {name = entry.name, value = entry.value}
     end

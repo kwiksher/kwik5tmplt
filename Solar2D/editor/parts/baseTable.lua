@@ -133,6 +133,15 @@ function M:commandHandler(eventObj, event)
   if event.phase == "began" or event.phase == "moved" then
     return
   end
+  local fromActive = { selections = {}, layer = self.UI.editor.currentLayer, class = self.UI.editor.currentClass}
+
+  if self.UI.editor.selections then
+    for i, v in next, self.UI.editor.selections do
+      -- print("#", v.layer)
+      table.insert(fromActive.selections, v)
+    end
+  end
+
   layerTableCommands.clearSelections(self, "audio")
 
   local target = eventObj -- or event.target
@@ -165,23 +174,31 @@ function M:commandHandler(eventObj, event)
   elseif self.controlDown then -- mutli selections
     layerTableCommands.multiSelections(self, target)
   else
-    local fromActive = self.UI.editor.currentClass
+    if self.UI.editor.selections then
+      for i, v in next, self.UI.editor.selections do
+        -- print("#", v.layer)
+        table.insert(fromActive.selections, v)
+      end
+    end
+    --
     if layerTableCommands.singleSelection(self, target) then
       if target.layer then
         self.UI.editor:setCurrnetSelection(target.layer)
       end
       -- target.isSelected = true
       if target.variable then
-        print(target.variable)
+        -- print(target.variable)
 
         if classProps:setActiveProp(target.variable, "variable") then
           self:hide()
-          self.UI.editor.currentClass = fromActive
-          print("@@@@", self.UI.editor.currentClass)
+          self.UI.editor.currentClass = fromActive.class
+          self.UI.editor.currentLayer = fromActive.layer
+          self.UI.editor.selections = fromActive.selections
+          -- print("@@@@", self.UI.editor.currentLayer, self.UI.editor.currentClass)
         end
       else
         if target.name then
-          print("### currentClass ##")
+          -- print("### currentClass ##")
           self.UI.editor.currentClass = target.name
         end
       end
@@ -278,7 +295,7 @@ function M:create(UI)
       --
       obj.touch = function(eventObj, event)
         self:commandHandler(eventObj, event)
-        UI.editor.selections = self.selections
+        self.selections = UI.editor.selections
         if self.selection then
           -- self.selection.rect:setFillColor(0,1,0)
           self.selection.rect:setStrokeColor(0,1,0)
@@ -309,7 +326,7 @@ function M:create(UI)
   -- self.group.isVisible = true
   end
 
-  print("@@@@", UI.editor.currentClass)
+  -- print("@@@@", UI.editor.currentClass)
 
   UI.editor[self.id.."Store"]:listen(
     function(foo, fooValue)

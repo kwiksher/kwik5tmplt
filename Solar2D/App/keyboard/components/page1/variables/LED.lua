@@ -5,7 +5,7 @@ local props = {
     isLocal  = true, -- or local
     type     = "string", -- table
     isSave   = true,
-    value    = "112233"
+    value    = "332211"
   }
 }
 
