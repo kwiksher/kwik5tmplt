@@ -55,7 +55,7 @@ function M:createIcons (icons, class, tool)
       text = "",
       name = name.."-icon",
       x = self.x + i*22 - self.width/2-11,
-      y = self.y-2,
+      y = self.y-2 ,
       width = 22,
       height = 22,
       fontSize =16,
