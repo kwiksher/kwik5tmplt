@@ -22,10 +22,10 @@ function M:create(UI)
   self.group = group
 
   local function tapHandler(target, event)
-      local props = {}
-      transition.from(target, {time=500, xScale=2, yScale=2})
-      self.listener(target.eventName, self.target, self.class)
-      self:hide()
+    local props = {}
+    transition.from(target, {time=500, xScale=2, yScale=2})
+    self.listener(target.eventName, self.target, self.class)
+    self:hide()
       --
     return true
   end
@@ -155,6 +155,7 @@ function M:hideContextMenu()
 end
 
 function M:show()
+  print("---show ---")
   self.onKeyEvent = function(event)
     if isCancel(event)  then
       self:hide()
@@ -168,11 +169,13 @@ end
 
 function M:hide()
   if self.objs then
+    print(" --- hide ----")
     for k, obj in pairs(self.objs) do
       obj.isVisible = false
       obj.rect.isVisible = false
     end
   end
+  self.group.isVisible = false
   Runtime:removeEventListener("key", self.onKeyEvent)
 end
 
