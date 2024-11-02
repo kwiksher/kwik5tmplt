@@ -296,7 +296,7 @@ M.commands = {
   },
   variables = {
     restartTrackVars = {},
-    editVars = {_target="", value=""}
+    editVar = {_target="", value="", type=""} -- string is "{{value}}" otherwise {{value}} is rendered
   },
   video = {
     play = {_target = ""},

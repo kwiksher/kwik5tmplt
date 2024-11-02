@@ -303,7 +303,7 @@ local pageTable = require(parent.."parts.pageTable")
 local layerTable = require("editor.parts.layerTable")
 
 function M:runTest()
-  require("editor.tests.index").run{
+  require("test.index").run{
     selectors = selectors,
     UI = self.UI,
     bookTable = bookTable,
