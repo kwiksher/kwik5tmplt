@@ -842,6 +842,13 @@ function M.getScript()
 end
 
 ----
+function M.openEditorByPath(_path)
+  local path =
+    system.pathForFile(_path, system.ResourceDirectory)
+  local cmd = "code " .. path
+  os.execute(cmd)
+end
+
 function M.openEditorForCommand(book, page, name)
   local path =
     system.pathForFile("App/" .. book .. "/commands/" .. page .. "/" .. name .. ".lua", system.ResourceDirectory)

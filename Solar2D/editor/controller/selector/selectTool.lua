@@ -46,7 +46,10 @@ local command = function (params)
   -- print(debug.traceback())
 
   local tool = (params.class) and UI.editor:getClassModule(params.class) or nil
-  if tool then
+   if params.class == "addcode" then
+    local command = require("editor.scripts.commands")
+    command.openEditorByPath("App/uiHandler.lua")
+   elseif tool then
     -- print("### tool", params.class, tool.id)
     if lastTool then
       -- print("### lastTool", lastTool.name)

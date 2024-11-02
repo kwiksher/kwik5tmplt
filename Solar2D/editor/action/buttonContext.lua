@@ -17,9 +17,11 @@ M.handler = {}
 ---
 function M:init(UI)
   self.UI = UI
-  self:_init(UI, function(eventName, target, class)
+  self:_init(UI, function(eventName, target, class) -- this is listner to parts.buttonContext
     print(eventName, target.text, class, target.action)
+    self:hide()
     self.handler[eventName](self.UI, target, UI.editor.selections, class)
+
   end)
 end
 
