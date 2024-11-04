@@ -184,7 +184,7 @@ end
 
 M.set = function(props)
   -- for k, v in pairs(props) do print(k, v) end
-  local layer_filterTable = require("editor.template.components.pageX.animation.layer_filterTable")
+  local layer_filterTable = require("template.components.pageX.animation.layer_filterTable")
   local instance = setmetatable( {to=props.to, from=props.from}, {__index=layer_filterTable} )
   props.filterTable = instance
   return setmetatable(props, {__index = M})

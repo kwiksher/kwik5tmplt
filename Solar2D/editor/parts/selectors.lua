@@ -32,7 +32,7 @@ local util = require("lib.util")
 local option, newText = util.newTextFactory()
 
 local function showLabels(fooValue, rootGroup)
-  print (fooValue.currentBook, fooValue.currentPage, fooValue.currentLayer, fooValue.currentClass)
+  -- print (fooValue.currentBook, fooValue.currentPage, fooValue.currentLayer, fooValue.currentClass)
   -- print(debug.traceback())
   local labelBook = newText {
     parent = rootGroup,

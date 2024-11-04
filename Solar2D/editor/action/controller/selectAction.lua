@@ -30,6 +30,7 @@ local command = function (params)
     local listener = function(name)
       if name and name:len() > 0 then
         decoded.name = name
+        -- print(name)
         showEditor(decoded)
       else
         print("TODO popup error message")

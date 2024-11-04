@@ -13,12 +13,12 @@ local picker             = require("editor.picker.name")
 local command = function (params)
 	local UI    = params.UI
   local page = params.page or UI.page
-  print("actionCommand.save")
+  -- print("actionCommand.save")
   UI.editor.actionEditor:hideCommandPropsTable(true)
   actionButtons:show()
   --
   local props, selected = actionCommandPropsTable:getValue()
-  print("", selected, json.encode(props))
+  -- print("", selected, json.encode(props))
   ---
   local actions = actionCommandTable.actions
 
@@ -35,7 +35,8 @@ local command = function (params)
   --
   --local updatedModel = util.createIndexModel(UI.scene.model, "", "")
   local updatedModel = util.createIndexModel(UI.scene.model)
-  local nameText     = picker.obj.field.text
+  local nameText     = UI.editor.currentAction.name
+  -- print(nameText)
   local currentIndex = UI.editor.currentActionCommandIndex
   local files = {}
 

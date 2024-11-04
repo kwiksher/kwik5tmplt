@@ -13,9 +13,6 @@ function M:create(UI)
     myVar = app:getVariable(self.properties.variable) or ""
   end
   ---
-  --- we need the link information for setVar to update dynamictext
-  local tbl = UI.dynmictexts[self.properties.variable] or {}
-  tbl[#tbl+1] = self.name
 
   local _font = native.systemFont
   if self.properties.font:len() > 0 then
@@ -82,6 +79,15 @@ function M:create(UI)
   sceneGroup[self.name] = obj
   self.obj = obj
   self.UI = UI
+
+  --- we need the link information for setVar to update dynamictext
+  local tbl = UI.dynamictexts[self.properties.variable] or {}
+  tbl[#tbl+1] = self.obj
+  UI.dynamictexts[self.properties.variable]  = tbl
+  for k, entry in next, UI.dynamictexts do
+    print(k, #entry)
+  end
+
 end
 
 function M:didShow(UI)
@@ -105,7 +111,7 @@ function M:update(value)
     end
   else
     if value then
-      print("@@@", self.name, name, value)
+      -- print("@@@", self.name, name, value)
       UI:setVariable(name, value)
     end
   end

@@ -23,7 +23,7 @@ local basePropsControl   = require("editor.parts.basePropsControl")
 local layerTable         = require("editor.parts.layerTable")
 local layerTableCommands = require("editor.parts.layerTableCommands")
 local selectbox          = require("editor.physics.selectbox")
-local model              = require("editor.template.components.pageX.physics.defaults.joint")
+local model              = require("template.components.pageX.physics.defaults.joint")
 local pointA        = require("editor.animation.pointA")
 local pointB        = require("editor.animation.pointB")
 --

@@ -16,10 +16,10 @@ local instance =
     --
     --for sync, append a entry of a line in defaults.sync
     if params.type =="line" then
-      default = require("editor.template.components.pageX.replacement.defaults.sync")
+      default = require("template.components.pageX.replacement.defaults.sync")
       entry = default.line[1]
     elseif (params.type == "sequenceData") then
-      default = require("editor.template.components.pageX.replacement.defaults.spritesheet")
+      default = require("template.components.pageX.replacement.defaults.spritesheet")
       entry = default.sequenceData[1]
     end
     -- append is to re-create the list box
