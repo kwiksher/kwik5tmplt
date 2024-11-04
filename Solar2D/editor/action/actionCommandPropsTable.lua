@@ -215,10 +215,11 @@ end
 --
 --
 local Animation = table:mySet{"linear", "blink", "bounce", "pulse", "rotaion", "tremble"}
-local Layer     = table:mySet{"image", "layer", "audio"}
+local Layer     = table:mySet{"image", "layer", "audio", "variable"}
 local Layer_Class = table:mySet{ "button", "countdown", "filter", "multiplier", "particles", "sprite", "readme", "video", "web"}
 --
 function M:setActiveProp(layer, class)
+  -- print("setActiveProp", self.activeProp)
   local value = layer
   if class then
     value = layer.."_"..class
@@ -253,7 +254,7 @@ function M:setActiveProp(layer, class)
       -- print(v.text)
       if v.text == self.activeProp then
         v.field.text = value
-        return
+        return true
       end
     end
   else

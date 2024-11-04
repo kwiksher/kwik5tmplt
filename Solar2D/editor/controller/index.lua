@@ -158,7 +158,7 @@ function M:show()
   -- print(debug.traceback())
   if self.viewGroup then
     for k, v in pairs(self.viewGroup) do
-      print("", k)
+      -- print("", k)
       v:show()
     end
     self.view.group.isVisible = true
@@ -320,7 +320,7 @@ function M:read(book, page, layer,class, isNew)
   self.class = class
   local decoded,  pos, msg
   if isNew then
-    local path = "editor.template.components.pageX."..self.tool..".defaults."..class
+    local path = "template.components.pageX."..self.tool..".defaults."..class
     -- print(path)
     local data = require(path)
     -- for k, v in pairs(data) do
@@ -353,7 +353,7 @@ function M:loadLua(book, page, layer,class, isNew, _type)
   self.class = class
   local decoded,  pos, msg
   if isNew then
-    local path = "editor.template.components.pageX."..self.tool..".defaults."..class
+    local path = "template.components.pageX."..self.tool..".defaults."..class
     print(path)
     local data = require(path)
     decoded = {data}
@@ -398,7 +398,7 @@ function M:updateAsset(text, asset)
 end
 
 function M:load(book, page, layer, class, isNew, asset, _type)
-  print("read", page, layer, class, isNew)
+  -- print("read", page, layer, class, isNew)
   -- the values are used in useClassEdtiorProps()
   self.page = page
   self.layer = layer

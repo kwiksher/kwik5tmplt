@@ -16,6 +16,9 @@ function M:init(UI, listener)
 end
 --
 function M:create(UI)
+  -- if self.name == "editor.action.buttonContext" then
+  --   print(debug.traceback())
+  -- end
   local group = display.newGroup()
   self.UI = UI
   self.objs = {}
@@ -23,6 +26,7 @@ function M:create(UI)
 
   local function tapHandler(target, event)
     local props = {}
+    -- print(self.name)
     transition.from(target, {time=500, xScale=2, yScale=2})
     self.listener(target.eventName, self.target, self.class)
     self:hide()
@@ -63,6 +67,9 @@ function M:create(UI)
     -- rect.anchorX = 0
     if params.objs then
       params.objs[params.eventName] = obj
+      -- if self.name == "editor.action.buttonContext" then
+      --   print(params.eventName)
+      -- end
     end
     return obj
   end
@@ -173,11 +180,14 @@ function M:show()
 end
 
 function M:hide()
-  -- print(" --- hide ----")
   if self.objs then
+    -- print(" --- hide ----")
     for k, obj in pairs(self.objs) do
+      -- print(obj.text)
       obj.isVisible = false
       obj.rect.isVisible = false
+      obj.alpha = 0
+      obj.rect.alpha = 0
     end
   end
   self.group.isVisible = false

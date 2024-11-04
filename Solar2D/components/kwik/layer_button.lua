@@ -133,6 +133,7 @@ function M:addEventListener(UI)
             end
           end
         end
+        -- print("@@@addEventListener")
         obj:addEventListener("tap",obj)
     end
     --
