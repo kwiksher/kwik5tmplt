@@ -38,17 +38,22 @@ local instance =
       class = UI.editor.currentClass
     end
 
-    print(class)
-
     local controller = UI.editor:getClassModule(class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
     for k, v in pairs(controller:useClassEditorProps(UI)) do
-      print(k, v)
+      -- if type (v) == "table" then
+      --   print(k, json.prettify(v))
+      -- else
+      --   print(k, v)
+      -- end
       props[k] = v
     end
 
     local layer = props.layer or UI.editor.currentLayer
     if layer == nil then
       layer = props.name
+      print("layer", layer, class)
+    else
+      print("layer", layer, class)
     end
 
     if not props.isNew then

@@ -62,7 +62,7 @@ M.onTapPosXYSet   = {}
 function M:tapListener(event, type)
   -- print("@@tapListener", type, event.target.text)
   local UI = self.UI
-  print("@@@@", UI.editor.currentClass)
+  -- print("@@@@", UI.editor.currentClass)
   if type == "layer" then
     UI.editor.selections_backup = {}
     for i, v in next, UI.editor.selections do
@@ -73,7 +73,7 @@ function M:tapListener(event, type)
     UI.editor.selections_backup = nil
   end
   self.activeProp = event.target.text
-  print("self.activeProp", self.activeProp)
+  -- print("self.activeProp", self.activeProp)
   event.actionbox = self
   basePropsControl.handler[type](event, self)
 end
