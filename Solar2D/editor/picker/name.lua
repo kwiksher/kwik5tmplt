@@ -120,6 +120,7 @@ function M:didHide()
 end
 
 function M:destroy()
+  -- print(debug.traceback())
   if self.obj then
     self.obj.field:removeSelf()
     self.obj:removeSelf()

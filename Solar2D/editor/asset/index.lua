@@ -107,7 +107,7 @@ local function readAsset(path, folder, map, parent)
 end
 
 function controller:read(book, _model)
-  print("read assets.model in ", book)
+  -- print("read assets.model in ", book)
   local assets = {audios={}}
   local model = _model or require("App." ..book..".assets.model")
   local map = {}

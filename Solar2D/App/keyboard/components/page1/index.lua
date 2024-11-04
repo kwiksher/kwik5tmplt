@@ -38,7 +38,7 @@ local scene = require('controller.scene').new(sceneName, {
       },
       {
         N01 = {
-        }
+          class={ "button", }  }
       },
       {
         N02 = {
@@ -50,8 +50,7 @@ local scene = require('controller.scene').new(sceneName, {
       },
       {
         Texto = {
-          class={ "dynamictext", }
-        }
+          class={ "dynamictext", }  }
       },
     },
     audios = {
@@ -63,7 +62,7 @@ local scene = require('controller.scene').new(sceneName, {
     joints    = {  },
     page = {  }
   },
-  commands = {  },
+  commands = {   "onN01",  },
   onInit = function(scene) print("onInit") end
 })
 --

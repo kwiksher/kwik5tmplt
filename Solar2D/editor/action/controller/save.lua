@@ -11,21 +11,21 @@ local command = function (params)
   local page = params.page or UI.page
   --local updatedModel = util.createIndexModel(UI.scene.model, "", "")
   local updatedModel = util.createIndexModel(UI.scene.model)
-  local nameText     = picker.obj.field.text
+  local nameText     = UI.editor.currentAction.name -- picker.obj.field.text
 
-  print("action.save", nameText)
+  -- print("action.save", nameText)
 
   -- if UI.editor.actionEditor.selectbox.selectedObj then
   --   nameText = UI.editor.actionEditor.selectbox.selectedObj.text
   -- end
   -- printTable(UI.editor,currentAction)
   if UI.editor.currentAction.isNew then
-    for i, v in next, updatedModel.commands do
-      if v == nameText then
-        nameText = nameText..math.random()
-        break
-      end
-    end
+    -- for i, v in next, updatedModel.commands do
+    --   if v == nameText then
+    --     nameText = nameText..math.random()
+    --     break
+    --   end
+    -- end
     table.insert(updatedModel.commands, nameText)
   elseif nameText ~= UI.editor.currentAction.name then
     local updated = {}
@@ -46,6 +46,8 @@ local command = function (params)
   local readonly = actionCommandTable.readonly
 
   --for i=1, #actions do print(i, actions[i].command) end
+
+  -- print(nameText)
 
   local newAction = {
     name= nameText,

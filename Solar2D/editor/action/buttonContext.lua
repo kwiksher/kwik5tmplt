@@ -9,7 +9,7 @@ local buttonContext = require("editor.parts.buttonContext")
 
 local model = {"New", "Edit", "In vscode", "Copy", "Paste", "Delete"}
 
-local M = buttonContext.new{model=model}
+local M = buttonContext.new{name=name, model=model}
 M.class ="action"
 
 M._init = M.init
