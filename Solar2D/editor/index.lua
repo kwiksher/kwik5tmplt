@@ -150,12 +150,12 @@ function M:getClassModule (class)
 end
 
 function M:getClassFolderName (class)
-  print(class)
+  -- print(class)
   return self.classMap[class:lower()]
 end
 
 function M:initStores()
-  print("### initStores")
+  -- print("### initStores")
       --
     -- selectors.lua will set values of each stores
     --

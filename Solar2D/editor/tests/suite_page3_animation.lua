@@ -211,7 +211,7 @@ function M.xtest_download()
   local util  = require("lib.util")
   -- util.download("https://docs.coronalabs.com/images/simulator/fx-base-church-comp.png","fx-base-church-comp.png")
 
-  local data = require("editor.template.components.pageX.animation.defaults.filters_ref")
+  local data = require("template.components.pageX.animation.defaults.filters_ref")
   for k,v in pairs (data) do
     print(v.image1, v.image2)
     util.download("https://docs.coronalabs.com/images/simulator/"..v.image1, v.image1)
