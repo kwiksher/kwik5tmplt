@@ -122,6 +122,19 @@ function ActionCommand:new()
 			AC.Canvas:erase(obj)
 		  {{/erase}}
   {{/canvas}}
+  {{#variable.restartTrackVar}}
+   AC.Var:restartTrackVars()
+  {{/variable.restartTrackVar}}
+  {{#variable.editVar}}
+     if "{{type}}" == "function" then
+      AC.Var:editVar(UI, "{{target}}", function(value) return {{value}} end)
+     elseif "{{type}}" == "string" then
+      AC.Var:editVar(UI, "{{target}}", '{{value}}')
+     else
+      AC.Var:editVar(UI, "{{target}}", {{value}})
+     end
+   {{/variable.editVar}}
+
 {{/actions}}
 	end
 	return setmetatable( command, {__index=AC})

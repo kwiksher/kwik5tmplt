@@ -8,7 +8,7 @@ M.onTapActionSet = table:mySet{"onComplete"}
 M.onTapPosXYSet = table:mySet{"x", "y"}
 --
 function M:setActiveProp(layer, class)
-  -- print("activeProp", layer)
+  -- print("activeProp", self.activeProp, layer)
   local name =self.activeProp
   local value = layer
   local UI = self.UI

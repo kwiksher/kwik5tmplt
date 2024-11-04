@@ -10,7 +10,7 @@ local option, newText = util.newTextFactory {
   fontSize = 12,
 }
 
-M.model = require("editor.template.components.pageX.animation.defaults.filters_ref")
+M.model = require("template.components.pageX.animation.defaults.filters_ref")
 
 M.x = display.contentCenterX
 M.y = display.contentCenterY-200

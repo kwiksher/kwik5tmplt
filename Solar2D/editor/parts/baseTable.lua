@@ -76,8 +76,8 @@ function M:init(UI, marginX, marginY)
   self.selection = nil
   self.lastSelection = nil
   if type(marginX) == "table" then
-    print("####", self.name)
-    print(debug.traceback())
+    -- print("####", self.name)
+    -- print(debug.traceback())
   end
   self.marginX = marginX or self.marginX
   self.marginY = marginY or self.marginY
@@ -110,7 +110,7 @@ end
 
 function M:setPosition()
   -- print(debug.traceback())
-  print("setPosition is not implemented")
+  -- print("setPosition is not implemented")
 end
 --
 function M:initScene(UI)
@@ -139,6 +139,7 @@ function M:commandHandler(eventObj, event)
     return
   end
   local fromActive = { selections = {}, layer = self.UI.editor.currentLayer, class = self.UI.editor.currentClass}
+  -- print("fromActive", fromActive.layer, fromActive.class)
 
   if self.UI.editor.selections then
     for i, v in next, self.UI.editor.selections do
@@ -162,7 +163,7 @@ function M:commandHandler(eventObj, event)
   --
   if self.altDown then
     if layerTableCommands.showLayerProps(self, target) then
-      print("TODO show  props", self.id, target.class)
+      -- print("TODO show  props", self.id, target.class)
       -- print(target[self.id])
       tree.backboard = {
         show = true,
@@ -194,12 +195,24 @@ function M:commandHandler(eventObj, event)
       if target.variable then
         -- print(target.variable)
 
-        if classProps:setActiveProp(target.variable, "variable") then
-          self:hide()
-          self.UI.editor.currentClass = fromActive.class
-          self.UI.editor.currentLayer = fromActive.layer
-          self.UI.editor.selections = fromActive.selections
-          -- print("@@@@", self.UI.editor.currentLayer, self.UI.editor.currentClass)
+        if fromActive.class == "button" then -- this means button > onTap > acton > editVar or if, elseif
+          local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
+           if actionCommandPropsTable:setActiveProp(target.variable) then  -- setActiveProps(layer, class) class is set nil here
+            self:hide()
+            self.UI.editor.currentClass = fromActive.class
+            self.UI.editor.currentLayer = fromActive.layer
+            self.UI.editor.selections = fromActive.selections
+            -- print("@@@@", self.UI.editor.currentLayer, self.UI.editor.currentClass)
+          end
+        else
+          -- fromActive == dynamictext
+          if classProps:setActiveProp(target.variable, "variable") then
+            self:hide()
+            self.UI.editor.currentClass = fromActive.class
+            self.UI.editor.currentLayer = fromActive.layer
+            self.UI.editor.selections = fromActive.selections
+            -- print("@@@@", self.UI.editor.currentLayer, self.UI.editor.currentClass)
+          end
         end
       else
         if target.name then

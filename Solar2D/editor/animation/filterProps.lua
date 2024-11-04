@@ -25,7 +25,7 @@ header:addEventListener(
 
 local json = require("json")
 local path =
-  system.pathForFile("editor/template/components/pageX/animation/defaults/filters.json", system.ResourceDirectory)
+  system.pathForFile("template/components/pageX/animation/defaults/filters.json", system.ResourceDirectory)
 local file, errorString = io.open(path, "r")
 local contents = file:read("*a")
 io.close(file)

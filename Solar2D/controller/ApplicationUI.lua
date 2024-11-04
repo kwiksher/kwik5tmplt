@@ -27,7 +27,7 @@ function M.create(scene, model)
     UI.audios           = {}
     UI.audios.kAutoPlay = 0
     UI.animations       = {}
-    UI.dynmictexts      = {}
+    UI.dynamictexts      = {}
     UI.variables        = {}
     UI.tSearch          = nil
     UI.lang             = "en"
