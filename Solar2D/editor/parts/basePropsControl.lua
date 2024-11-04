@@ -41,7 +41,7 @@ function M._yamlValue(k, v, params)
       -- print(k, v, type(v))
       -- end
       if key == "color" or key == "canvasColor" then
-        print(v[1], v[2], v[3], v[4])
+        -- print(v[1], v[2], v[3], v[4])
         value, yamltype =
           yaml.getYaml(
           {math.floor(v[1] * 255), math.floor(v[2] * 255), math.floor(v[3] * 255), math.ceil(v[4] * 1000) / 1000}
@@ -87,7 +87,7 @@ end
 -- url or _filename or sheetInfo
 local function tapListenerURL(event, classProps)
   if event.target.class == "path" then
-    print(event.target.class)
+    -- print(event.target.class)
     local UI = classProps.UI
     local path = system.pathForFile("App/" .. UI.book .. "/assets/images/" .. UI.page)
     local tfd = require("plugin.tinyfiledialogs")
@@ -101,7 +101,7 @@ local function tapListenerURL(event, classProps)
       }
     )
     if pathFile then
-      print("", pathFile)
+      -- print("", pathFile)
       local filename = pathFile:sub(path:len())
       event.target.field.text = filename
     end
@@ -143,7 +143,7 @@ local function tapListenerGroup(event)
 end
 
 local function tapListenerShape(event)
-  print("action tap listener")
+  -- print("action tap listener")
   local actionEditor = require("editor.action.index")
   actionEditor:showActionTable(event.actionbox)
 end
@@ -153,7 +153,7 @@ local pointA = require("editor.animation.pointA")
 local pointB = require("editor.animation.pointB")
 --
 local function tapListenerPosXY(event, classProps)
-  print("show pointA pointB with popup", event.target.text)
+  -- print("show pointA pointB with popup", event.target.text)
   local objX, objY = event.target, nil
   local name = event.target.text:gsub("_x", "_y")
   for i, v in next, classProps.objs do
@@ -169,7 +169,7 @@ local function tapListenerPosXY(event, classProps)
   if objX.text:find("B") ~= nil or (type and type.field.text == "wheel") then
     if objX.field.text:len() > 0 then
       -- pointA:setValue(objX.field.text)
-      print("", objX.field.text)
+      -- print("", objX.field.text)
       local obj = UI.sceneGroup[bodyB.field.text]
       -- for k, v in pairs(UI.sceneGroup) do print("", k) end
       local x = objX.field.text:gsub(bodyB.field.text .. ".x", tostring(obj.x))
@@ -181,7 +181,7 @@ local function tapListenerPosXY(event, classProps)
   else -- use bodyA
     if objX.field.text:len() > 0 then
       -- pointA:setValue(objX.field.text)
-      print("", objX.field.text)
+      -- print("", objX.field.text)
       local obj = UI.sceneGroup[bodyA.field.text]
       -- for k, v in pairs(UI.sceneGroup) do print("", k) end
       local x = objX.field.text:gsub(bodyA.field.text .. ".x", tostring(obj.x))
@@ -199,7 +199,7 @@ local converter = require("extlib.convertcolor")
 local eyedropper = require("editor.picker.eyedropper")
 ---
 local function tapListenerColor(event)
-  print("tap", event.numTaps)
+  -- print("tap", event.numTaps)
   local obj = event.target
   --
   local function pickerListener(r, g, b, a)
@@ -234,7 +234,7 @@ local function tapListenerColor(event)
     local json = require("json")
     --print(obj.text, json.encode(value))
     if obj.fieldAlpha then
-      print(obj.fieldAlpha.text)
+      -- print(obj.fieldAlpha.text)
       colorPicker.show(
         pickerListener,
         tonumber(value[1]) / 255,
@@ -267,7 +267,7 @@ end
 local imagePicker = require("editor.parts.imagePicker")
 ---
 local function tapListenerImage(event)
-  print("tap")
+  -- print("tap")
   local obj = event.target
   --
   local function pickerListener(path)
@@ -300,7 +300,7 @@ local function tapListenerEasing(event)
   local obj = event.target
   easing:create(UI)
   easing.listener = function(name)
-    print(name)
+    -- print(name)
     obj.field.text = name
     easing:destroy()
   end
@@ -312,7 +312,7 @@ local function tapListenerFilters(event)
   local obj = event.target
   filters:create(UI)
   filters.listener = function(name)
-    print(name)
+    -- print(name)
     obj:setValue(name)
     filters:destroy()
   end
@@ -359,7 +359,7 @@ M.handler = {
 }
 
 function M.buttonContextListener(name, actionbox)
-  print("buttonContext", name)
+  -- print("buttonContext", name)
   local actionEditor = require("editor.action.index")
   actionEditor:showActionTable(actionbox, name == "New")
 end

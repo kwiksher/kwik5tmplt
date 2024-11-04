@@ -20,7 +20,7 @@ local command = function (params)
     --local boxData = util.read( UI.editor.currentBook, UI.page)
     --print(json.encode(boxData))
     --
-    tableData = require("editor.template.components.pageX.group.defaults.group")
+    tableData = require("template.components.pageX.group.defaults.group")
 
     UI.editor.groupLayersStore:set(tableData) -- layersTable
     local model = util.createIndexModel(UI.scene.model)

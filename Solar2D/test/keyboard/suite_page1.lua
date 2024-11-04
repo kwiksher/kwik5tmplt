@@ -22,8 +22,11 @@ local json = require("json")
 --local actionTable = require("editor.action.actionTable")
 local actionbox = require("editor.parts.actionbox")
 local actionTable = require("editor.action.actionTable")
-local actionButtonContext = require("editor.action.buttonContext")
+local actionboxButtonContext = require("editor.parts.buttonContext")
 local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
+local actionCommandButtons = require("editor.action.actionCommandButtons")
+local actionButtons = require("editor.action.buttons")
+--
 local picker = require("editor.picker.name")
 
 
@@ -99,23 +102,30 @@ function M.xtest_extCode()
   --   action option to execute at init, create, didShow, didHide, destroy
 end
 
-function M.test_button123_action()
-  helper.selectLayer("No1")
+function M.xtest_button123_action()
+  helper.selectLayer("N01")
   helper.selectIcon("Interactions", "Button")
 
-  -- helper.clickProp(actionbox.objs, "onTap")
-  -- helper.clickButton("New", actionButtonContext)
-  -- -- new action: onButton1
-  -- --   action setVar
-  -- --   controls > variables
+  helper.clickProp(actionbox.objs, "onTap")
+  helper.clickButton("New", actionboxButtonContext)
 
-  -- picker:continue("button1")
-  -- helper.selectActionGroup("Controls")
-  -- helper.selectActionCommand("variable", "editVar")
-  -- helper.clickProp(actionCommandPropsTable.objs, "_target")
+  --[[
+    new action: onButton1
+       action setVar
+       controls > variables
+  --]]
 
-  --helper.setProp(actionCommandPropsTable.objs, "color", "0,0,0,1")
-  -- helper.clickButton("save", actionCommandButtons)
+  picker:continue("onN01")
+  helper.selectActionGroup("Controls")
+  helper.selectActionCommand("variable", "editVar")
+  helper.clickProp(actionCommandPropsTable.objs, "_target")
+  helper.selectVariable("LED")
+
+  helper.setProp(actionCommandPropsTable.objs, "type", "function")
+  helper.setProp(actionCommandPropsTable.objs, "value", "UI.mycode.checkLCD(value..'1')")
+
+  helper.clickButton("save", actionCommandButtons)
+  -- helper.clickButton("save", actionButtons)
 
 
 -- editVar("LCD", function (value) return UI.mycode.checkLCD(value..'1')end)

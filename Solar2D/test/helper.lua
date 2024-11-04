@@ -323,8 +323,9 @@ end
 
 function exports.clickButton(name, buttonsContext)
   local _buttons = buttonsContext or buttons
+  -- print(buttonsContext.name)
   for i, v in next, _buttons.objs do
-    print(v.text)
+    -- print("", v.text)
     if v.eventName == name then -- {name="add", label="->"}
         if v.rect.touch then
           v.rect:touch{phase="ended"}
