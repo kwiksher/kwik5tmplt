@@ -181,7 +181,7 @@ function M:show ()
           target.rect:setFillColor(0,1,0)
           -- print(target.text)
           if target.isVisible then
-            self:onClick(true, target.store)
+            self:onClick(true, target.store, event.isActiveProp) -- isActiveProp is returne from action > selectComponentIcon
           end
           self.lastSelection = target.rect
         end

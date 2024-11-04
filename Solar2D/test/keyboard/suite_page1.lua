@@ -23,6 +23,7 @@ local json = require("json")
 local actionbox = require("editor.parts.actionbox")
 local actionTable = require("editor.action.actionTable")
 local actionButtonContext = require("editor.action.buttonContext")
+local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 local picker = require("editor.picker.name")
 
 
@@ -98,21 +99,23 @@ function M.xtest_extCode()
   --   action option to execute at init, create, didShow, didHide, destroy
 end
 
-function M.xtest_button123_action()
+function M.test_button123_action()
   helper.selectLayer("No1")
   helper.selectIcon("Interactions", "Button")
-  helper.clickProp(actionbox.objs, "onTap")
-  helper.clickButton("New", actionButtonContext)
-  -- new action: onButton1
-  --   action setVar
-  --   controls > variables
+
+  -- helper.clickProp(actionbox.objs, "onTap")
+  -- helper.clickButton("New", actionButtonContext)
+  -- -- new action: onButton1
+  -- --   action setVar
+  -- --   controls > variables
 
   -- picker:continue("button1")
-  --helper.selectActionGroup("Controls")
-  --helper.selectActionCommand("variables", "editVar")
+  -- helper.selectActionGroup("Controls")
+  -- helper.selectActionCommand("variable", "editVar")
+  -- helper.clickProp(actionCommandPropsTable.objs, "_target")
+
   --helper.setProp(actionCommandPropsTable.objs, "color", "0,0,0,1")
   -- helper.clickButton("save", actionCommandButtons)
-
 
 
 -- editVar("LCD", function (value) return UI.mycode.checkLCD(value..'1')end)
