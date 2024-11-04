@@ -102,7 +102,12 @@ function M:tick(e)
     rect:setFillColor(1, 0, 0)
   end
 end
---
+
+function M:setIndent( x, y)
+  self.marginX = x or 74
+  self.marginY = y or 20
+end
+
 function M:setPosition()
   -- print(debug.traceback())
   print("setPosition is not implemented")
@@ -279,7 +284,6 @@ function M:create(UI)
     self:setPosition()
     for i = 1, #models do
       local name = models[i]
-
       option.text = name
       option.x = self.x + self.marginX + xIndex * 5
       option.y = self.y + self.marginY + option.height * (count-1)
@@ -376,14 +380,16 @@ function M:show()
   if self.name == debugName then
     print(self.name, "show", #self.objs)
   end
-  --print(debug.traceback())
   if self.group then
     self.group.isVisible = true
+    self.group:toFront()
   end
   if self.objs then
     for i=1, #self.objs do
       self.objs[i].isVisible = true
       self.objs[i].rect.isVisible = true
+      self.objs[i].rect:toFront()
+      self.objs[i]:toFront()
     end
   end
   if self.iconObjs then
