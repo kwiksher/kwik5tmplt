@@ -8,4 +8,5 @@ props.icons      = {"variables", "trash"}
 local M = require(root.."parts.baseTable").new(props)
 M.type       = "variables"
 M.id         = "variable"
+
 return M

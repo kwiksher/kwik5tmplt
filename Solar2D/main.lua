@@ -1,5 +1,7 @@
 --require("controller.index").bootstrap({name="keyboard", sceneIndex = 1, position = {x=0, y=0}}) -- scenes.index
 
+-- print("test")
+
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   local lldebugger = loadfile(os.getenv("LOCAL_LUA_DEBUGGER_FILEPATH"))()
   lldebugger.start()
@@ -17,6 +19,10 @@ local common = {
   }
 }
 
-require("controller.index").bootstrap
-{name="keyboard", editing = true, goPage = "page1", position = {x=0, y=0}, common = common} -- scenes.index
+require("controller.index").bootstrap{
+  name="keyboard",
+  editing = true,
+  goPage = "page1",
+  position = {x=0, y=0},
+  common = common} -- scenes.index
 

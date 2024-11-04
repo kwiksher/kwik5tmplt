@@ -341,7 +341,7 @@ local function tapListenerAction(event)
 end
 
 -- used in actionCommandPropsStore:listener
-M.CommandForTapSet = table:mySet {"audio", "group", "timer", "variables", "action"}
+M.CommandForTapSet = table:mySet {"audio", "group", "timer", "variable", "action"}
 --
 M.handler = {
   url = tapListenerURL,

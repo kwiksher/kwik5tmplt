@@ -22,9 +22,9 @@ M.menu = {
       -- {name = "Random", icon = "", commandClass = "random"},
       {name = "Timer", icon = "Timers", commandClass = "timer"},
       {
-        name = "Variables",
+        name = "Variable",
         icon = "addVar",
-        commandClass = "variables"
+        commandClass = "variable"
       }
     }
   },
@@ -294,7 +294,7 @@ M.commands = {
       _target = ""
     }
   },
-  variables = {
+  variable = {
     restartTrackVars = {},
     editVar = {_target="", value="", type=""} -- string is "{{value}}" otherwise {{value}} is rendered
   },
