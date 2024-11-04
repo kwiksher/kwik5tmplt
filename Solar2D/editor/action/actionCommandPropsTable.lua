@@ -89,113 +89,115 @@ function M:create(UI)
 
   local newTextField = util.newTextField
 
-  --
-  UI.editor.actionCommandPropsStore:listen(
-    function(foo, props)
-      M:didHide(UI)
-      M:destroy()
-      -- print("------- actionCommandPropsStore --------")
-      local alphaObj = nil
+  local function render(foo, props)
+    M:didHide(UI)
+    M:destroy()
+    -- print("------- actionCommandPropsStore --------")
+    local alphaObj = nil
 
 
-      local posX = self.x
-      -- print("#### commandbox.x", commandbox.x)
-      -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
-      local posY  = self.y
-      -- print("actionCommandPropsStore:listen", posX, posY)
-      -- print("", debug.traceback())
-      local function compare(a,b)
-        return a.name < b.name
-      end
-      --
-      for i=1, #props.properties do
-        if props.properties[i].name == "target" then
-          props.properties[i].name = "_target"
-        end
-      end
-      table.sort(props.properties,compare)
-      ---
-      local objs = {}
-      for i=1, #props.properties do
-        local entry = props.properties[i]
-        option.text = entry.name
-        option.x = posX
-        option.y = i*option.height + posY
-        option.text = entry.name
-        local rect = display.newRect(option.parent, option.x, option.y, option.width*1.2, option.height)
-        rect:setFillColor(1)
-        --
-        local obj
-        obj = newText(option)
-        obj.rect = rect
-        obj.anchorY = 0.25
-        objs[#objs + 1] = obj
-
-        -- Edit
-        --[[
-          if entry.name == "_target" then
-            linkbox:load(UI, props.type, obj.x + obj.width, obj.y - obj.height/4, entry.value)
-            obj.linkbox = linkbox
-          else
-            option.x = posX + option.width
-            option.text = entry.value
-            --
-            obj.field = newTextField(option)
-          end
-        --]]
-        if entry.name == "_target" then
-          M.activeProp = entry.name
-          if basePropsControl.CommandForTapSet[commandbox.command] then
-            obj:addEventListener("tap", function(event) basePropsControl.handler[commandbox.command](event) end)
-          else -- layer
-            obj:addEventListener("tap", function(event) basePropsControl.handler.layer(event) end)
-          end
-        elseif entry.name == "alpha" then
-          alphaObj = obj
-        elseif entry.name == "color" then
-          if alphaObj then
-            obj.fieldAlpha = alphaObj.field
-          end
-          obj:addEventListener("tap", function(event) basePropsControl.handler.color(event) end)
-        end
-        option.x = posX + option.width
-        local value = entry.value
-        if type(value) == "boolean" then value = tostring(value) end
-        option.text = basePropsControl._yamlValue(entry.name, value)
-        obj.field = newTextField(option)
-
-        -- objs[#objs + 1] = obj
-        -- obj.page = props.name
-        -- obj.tap = commandHandler
-        -- obj:addEventListener("tap", obj)
-        --
-        -- TBI set value to obj.field for some special cases
-        --   animation.playAll
-        --     read all animations, xxx_linear, yyy_bounce ...
-
-      end
-      M.objs = objs
-      M.model = props
-
-      --
-      --
-      --------
-      -- save
-      --[[
-
-      local map = {}
-      local objs = tableHelper:getTextFields()
-      for i=1, #objs do
-        print(" "..i..":", objs[i].text)
-        models[i].value = objs[i].text
-        map[models[i].name] = objs[i].text -- TODO tonumber?
-      end
-      local tmplt = UI.appFolder.."/../../templates/components/layer_props"
-      local path = UI.currentPage.path .."/"..UI.currentLayer.name.."_props"
-      util.renderer(tmplt, path, map)
-    --]]
+    local posX = self.x
+    -- print("#### commandbox.x", commandbox.x)
+    -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
+    local posY  = self.y
+    -- print("actionCommandPropsStore:listen", posX, posY)
+    -- print("", debug.traceback())
+    local function compare(a,b)
+      return a.name < b.name
     end
-  )
+    --
+    for i=1, #props.properties do
+      if props.properties[i].name == "target" then
+        props.properties[i].name = "_target"
+      end
+    end
+    table.sort(props.properties,compare)
+    ---
+    local objs = {}
+    for i=1, #props.properties do
+      local entry = props.properties[i]
+      option.text = entry.name
+      option.x = posX
+      option.y = i*option.height + posY
+      option.text = entry.name
+      local rect = display.newRect(option.parent, option.x, option.y, option.width*1.2, option.height)
+      rect:setFillColor(1)
+      --
+      local obj
+      obj = newText(option)
+      obj.rect = rect
+      obj.anchorY = 0.25
+      objs[#objs + 1] = obj
+
+      -- Edit
+      --[[
+        if entry.name == "_target" then
+          linkbox:load(UI, props.type, obj.x + obj.width, obj.y - obj.height/4, entry.value)
+          obj.linkbox = linkbox
+        else
+          option.x = posX + option.width
+          option.text = entry.value
+          --
+          obj.field = newTextField(option)
+        end
+      --]]
+      if entry.name == "_target" then
+        M.activeProp = entry.name
+        -- print("commandbox.command", commandbox.command)
+        if basePropsControl.CommandForTapSet[commandbox.command] then
+          obj:addEventListener("tap", function(event) basePropsControl.handler[commandbox.command](event) end)
+        else -- layer
+          obj:addEventListener("tap", function(event) basePropsControl.handler.layer(event) end)
+        end
+      elseif entry.name == "alpha" then
+        alphaObj = obj
+      elseif entry.name == "color" then
+        if alphaObj then
+          obj.fieldAlpha = alphaObj.field
+        end
+        obj:addEventListener("tap", function(event) basePropsControl.handler.color(event) end)
+      end
+      option.x = posX + option.width
+      local value = entry.value
+      if type(value) == "boolean" then value = tostring(value) end
+      option.text = basePropsControl._yamlValue(entry.name, value)
+      obj.field = newTextField(option)
+      ---
+
+      -- objs[#objs + 1] = obj
+      -- obj.page = props.name
+      -- obj.tap = commandHandler
+      -- obj:addEventListener("tap", obj)
+      --
+      -- TBI set value to obj.field for some special cases
+      --   animation.playAll
+      --     read all animations, xxx_linear, yyy_bounce ...
+
+    end
+    self.objs = objs
+    self.model = props
+
+    self.group:toFront()
+  end
+    --
+    --
+    --------
+    -- save
+    --[[
+
+    local map = {}
+    local objs = tableHelper:getTextFields()
+    for i=1, #objs do
+      print(" "..i..":", objs[i].text)
+      models[i].value = objs[i].text
+      map[models[i].name] = objs[i].text -- TODO tonumber?
+    end
+    local tmplt = UI.appFolder.."/../../templates/components/layer_props"
+    local path = UI.currentPage.path .."/"..UI.currentLayer.name.."_props"
+    util.renderer(tmplt, path, map)
+  --]]
+  --
+  UI.editor.actionCommandPropsStore:listen(render)
   -- viewStore.actionCommandPropsTable.group:translate(-100, 0)
 
   if system.orientation == "portrait" then
@@ -207,8 +209,6 @@ function M:create(UI)
   else
     self.group:translate(-130, 0)
   end
-
-
 
 end
 --
@@ -231,7 +231,7 @@ function M:setActiveProp(layer, class)
   -- commandbox.model is nil for modification, see setValue in commandbox
   --
   if commandbox.model == nil then
-    print(json.prettify(self.model))
+    -- print(json.prettify(self.model))
     activeCommandName = commandbox.selectedText.text:split(".")[1]
   end
 
@@ -250,7 +250,7 @@ function M:setActiveProp(layer, class)
   if isValid(class) then
     ---
     for i,v in next, self.objs do
-      print(v.text)
+      -- print(v.text)
       if v.text == self.activeProp then
         v.field.text = value
         return
@@ -305,6 +305,7 @@ function M:hide()
 end
 
 function M:show()
+  -- print("show")
   -- linkbox:show()
   self.isVisible = true
   if self.objs == nil then return end
@@ -319,6 +320,7 @@ function M:show()
     -- if self.objs[i].linkbox then
     --   self.objs[i].linkbox.isVisible = true
     -- end
+    self.group:toFront()
   end
 end
 --

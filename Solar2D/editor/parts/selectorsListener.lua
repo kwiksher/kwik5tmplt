@@ -46,12 +46,12 @@ local function componentHandler(UI, storeTable, isActiveProp)
     elseif storeTable == "groupTable" then
       UI.editor.groupStore:set(UI.scene.model.components.groups or {})
     elseif storeTable == "timerTable" then
-      print(storeTable, #UI.scene.model.components.timers)
+      -- print(storeTable, #UI.scene.model.components.timers)
       UI.editor.timerStore:set(UI.scene.model.components.timers)
     elseif storeTable == "variableTable" then
       UI.editor.variableStore:set(UI.scene.model.components.variables)
     elseif storeTable == "jointTable" then
-      print("jointTable", #UI.scene.model.components.joints)
+      -- print("jointTable", #UI.scene.model.components.joints)
       UI.editor.jointStore:set(UI.scene.model.components.joints)
     elseif storeTable == "actionTable" then
       UI.editor.actionStore:set(UI.scene.model.commands)
@@ -106,6 +106,14 @@ function M:addListener(UI, buttons, propsTable)
         else
           groupTable:setIndent(0,0)
         end
+      elseif storeTable == "variableTable" then
+        -- print("storeTable = variableTable", isActiveProp)
+        local variableTable = require("editor.variable.variableTable")
+        if isAcvtiveProp then
+          variableTable:setIndent(200, nil)
+        else
+          variableTable:setIndent(nil,nil)
+        end
       end
 
       componentHandler(UI, storeTable, isAcvtiveProp)
@@ -155,7 +163,7 @@ function M:addListener(UI, buttons, propsTable)
   end
 
   function self.assetsSelector:onClick(isVisible, assetName)
-    print("###### onClick", UI.editor.currentBook, assetName)
+    -- print("onClick", UI.editor.currentBook, assetName)
     -- UI.editor.assetStore:set{{}}
     if isVisible then
       componentSelector:hide()
@@ -168,7 +176,7 @@ function M:addListener(UI, buttons, propsTable)
       --
       if assetName then
         local json = require("json")
-        print(assetName, print(json.encode(UI.editor.assets[assetName])))
+        -- print(assetName, print(json.encode(UI.editor.assets[assetName])))
         UI.editor.assetStore:set({class = assetName, decoded = UI.editor.assets[assetName]})
       else
         UI.editor.assetStore:set({decoded = UI.editor.assets})
@@ -180,11 +188,10 @@ function M:addListener(UI, buttons, propsTable)
   end
 end
 
-function M:selectComponentIcon(name)
+function M:selectComponentIcon(name) -- this is from action
   for i, v in next, self.componentSelector.objs do
-    print("##", v.text)
     if v.text == name then
-      v:dispatchEvent{name="tap", target=v}
+      v:dispatchEvent{name="tap", target=v, isActiveProp = true}
       return
     end
   end
@@ -194,7 +201,7 @@ end
 local menuSet = table:mySet{"selectBook", "selectPage", "selectLayer", "selectAudio", "selectGroup", "selectTimer", "selectVariable", "selectAction"}
 function M.mouseHandler(event)
   if event.isSecondaryButtonDown then
-    print(event.target.command)
+    -- print(event.target.command)
     if menuSet[event.target.command] then
        buttons:showContextMenu(event.x+20, event.y-10,
         {type=event.target.text, selections=selections or {},
