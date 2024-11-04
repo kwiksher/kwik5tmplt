@@ -531,7 +531,7 @@ function M.decode(book, page, class, _name, options)
   -- print("", class, _name, options.subclass)
   local name = _name
   if options.isNew then
-    local path = "editor.template.components.pageX." .. class .. ".defaults." .. class
+    local path = "template.components.pageX." .. class .. ".defaults." .. class
     return require(path)
   elseif options.isDelete then
     print(class, "delete")
@@ -549,7 +549,7 @@ end
 function M.decodeJson(book, page, class, name, options)
   -- print("$$$$", options.isNew)
   if options.isNew then
-    local path = "editor.template.components.pageX." .. class .. ".defaults." .. class
+    local path = "template.components.pageX." .. class .. ".defaults." .. class
     return require(path)
   elseif options.isDelete then
     -- print(class, "delete")
