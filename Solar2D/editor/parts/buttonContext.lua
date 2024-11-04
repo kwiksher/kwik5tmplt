@@ -95,6 +95,7 @@ function M:didHide(UI)
 end
 --
 function M:destroy()
+  -- print("destroy")
   if self.objs then
     for k, obj in next, self.objs do
       obj.rect:removeEventListener("tap", obj)
@@ -119,7 +120,7 @@ end
 
 function M:showContextMenu(x,y, target, class)
   self.class = class
-  print("showContextMenu target", target.text, class)
+  -- print("showContextMenu target", target.text, class)
   self.target = target
   local indexX, indexY = 0,0
   for k, key in next, self.model do
@@ -133,6 +134,7 @@ function M:showContextMenu(x,y, target, class)
         obj.rect.x = obj.x
         obj.rect.y = obj.y
         obj.rect.alpha = 0.5
+        -- print("key", key,obj.x, obj.y)
         -- obj.rect:toFront()
         -- obj:toFront()
         obj.rect:addEventListener("mouse", self.mouseOver)
@@ -141,9 +143,11 @@ function M:showContextMenu(x,y, target, class)
     end
   end
   self.group:toFront()
+  self:show()
 end
 
 function M:hideContextMenu()
+  -- print(" --- hideContextMenu ----")
   if self.objs then
     for k, obj in pairs(self.objs) do
         obj.isVisible = false
@@ -155,7 +159,7 @@ function M:hideContextMenu()
 end
 
 function M:show()
-  print("---show ---")
+  -- print("---show ---")
   self.onKeyEvent = function(event)
     if isCancel(event)  then
       self:hide()
@@ -164,12 +168,13 @@ function M:show()
     end
     return false
   end
+  self.group.isVisible = true
   Runtime:addEventListener("key", self.onKeyEvent)
 end
 
 function M:hide()
+  -- print(" --- hide ----")
   if self.objs then
-    print(" --- hide ----")
     for k, obj in pairs(self.objs) do
       obj.isVisible = false
       obj.rect.isVisible = false

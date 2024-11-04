@@ -36,11 +36,13 @@ end
 
 local function clearSelections(layerTable, current)
   if isLastSelection ~= current then
-    for i, v in next, layerTable.selections do
-      v.isSelected = false
-      if v.rect.setStrokeColor then
-        v.rect:setStrokeColor(0.8)
-        v.rect:setFillColor(0.8)
+    if layerTable.selections then
+      for i, v in next, layerTable.selections do
+        v.isSelected = false
+        if v.rect.setStrokeColor then
+          v.rect:setStrokeColor(0.8)
+          v.rect:setFillColor(0.8)
+        end
       end
     end
   end
