@@ -473,6 +473,7 @@ function M.saveLua(tmplt, dst, _model, partial)
       print("ERROR:" .. errorString)
     else
       output = string.gsub(output, "\r\n", "\n")
+      output = output:gsub("\n\n+", "\n")
       output = output:gsub("&#x2F;", "/")
       output = output:gsub("&#39;", '"')
       output = output:gsub("class={  }", "")
@@ -735,7 +736,7 @@ end
 function M.renderIndex(book, page, model)
   local dst = "App/" .. book .. "/components/" .. page .. "/index.lua"
   --local dst = "index.lua"
-  local tmplt = "editor/template/components/pageX/index.lua"
+  local tmplt = "template/components/pageX/index.lua"
 
   M.mkdir("App", book, "components", page)
 

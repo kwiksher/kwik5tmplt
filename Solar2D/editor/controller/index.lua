@@ -199,7 +199,7 @@ end
 function M:renderAssets(book, page, layer, classFolder, class, model)
   local UI = self.view.UI
   local dst = "App/"..book .."/assets/model.lua"
-  local tmplt =  "editor/template/assets/model.lua"
+  local tmplt =  "template/assets/model.lua"
 
   util.mkdir("App", book, "assets")
   --
@@ -220,22 +220,22 @@ M.Shapes = Shapes
 function M:render(book, page, layer, classFolder, class, model)
   print("render()", book, page, layer, classFolder, class, model.name)
 
-  local tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
+  local tmplt =  "template/components/pageX/"..classFolder.."/layer_"..class ..".lua"
   local dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
 
   if classFolder == "physics" then
-    tmplt =  "editor/template/components/pageX/"..classFolder.."/"..class ..".lua"
+    tmplt =  "template/components/pageX/"..classFolder.."/"..class ..".lua"
     if class == "joint" then
       dst = "App/"..book.."/components/"..page.."/joints/"..model.name ..".lua"
     end
   elseif Shapes[class] then
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
     --local dst = layer.."_"..class ..".lua"
-    tmplt =  "editor/template/components/pageX/"..classFolder.."/"..class..".lua"
+    tmplt =  "template/components/pageX/"..classFolder.."/"..class..".lua"
   elseif class then
     --local dst = layer.."_"..class ..".lua"
     if Animations[class] then
-      tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_animation.lua"
+      tmplt =  "template/components/pageX/"..classFolder.."/layer_animation.lua"
     end
     if model.type =="group" then
       dst =  "App/"..book.."/components/"..page.."/groups/"..layer.."_"..class ..".lua"
@@ -250,9 +250,9 @@ function M:render(book, page, layer, classFolder, class, model)
   else
     dst = "App/"..book .."/components/"..page.."/layers/"..layer..".lua"
     --local dst = layer.."_"..class ..".lua"
-    tmplt =  "editor/template/components/pageX/"..classFolder.."/layer_text.lua"
+    tmplt =  "template/components/pageX/"..classFolder.."/layer_text.lua"
     -- if tool == "animation" then
-    --   tmplt =  "editor/template/components/pageX/animations/layer_animation.lua"
+    --   tmplt =  "template/components/pageX/animations/layer_animation.lua"
     -- end
   end
   --
@@ -269,15 +269,15 @@ function M:renderPage(book, page, class, name, model)
   if class=="page" then
     if name == "physics" then
       dst = "App/"..book.."/components/"..page.."/"..class.."/"..name ..".lua"
-      tmplt =  "editor/template/components/pageX/"..class.."/"..name ..".lua"
+      tmplt =  "template/components/pageX/"..class.."/"..name ..".lua"
     else
       dst = "App/"..book.."/components/"..page.."/"..class.."/"..name ..".lua"
-      tmplt =  "editor/template/components/pageX/"..class.."/"..class ..".lua"
+      tmplt =  "template/components/pageX/"..class.."/"..class ..".lua"
     end
     util.mkdir("App", book, "components", page, class)
   else
     dst = "App/"..book.."/components/"..page.."/"..class.."s/"..name ..".lua"
-    tmplt =  "editor/template/components/pageX/"..class.."/"..class ..".lua"
+    tmplt =  "template/components/pageX/"..class.."/"..class ..".lua"
     util.mkdir("App", book, "components", page, class.."s")
   end
   util.saveLua(tmplt, dst, model)

@@ -20,13 +20,23 @@ function ActionCommand:new()
     -- local expressions = require("App." .. UI.book.."common.expressions")
 
 {{#actions}}
+  {{#layer.showHide}}
+  obj = UI.sceneGroup["{{target}}"]
+   AC.Layer:showHide(obj,  {{hide}}, {{toggle}}, {{time}}, {{delay}})
+  {{/layer.showHide}}
+
+  {{#layer.frontBack}}
+  obj = UI.sceneGroup["{{target}}"]
+  AC.Layer:frontBack(obj, {{front}} )
+  {{/layer.frontBack}}
+
   {{#condition}}
     {{#__if}}
-    if {{exp1}}  {{exp1Op}} {{exp1Comp}} {{exp2Cond}}  {{exp2}}  {{exp2Op}} {{exp2Comp}} then
+    if {{A1_}}  {{A2_Operand}} {{A3_}} {{AB_Condition}}  {{B1_}}  {{B2_Operand}} {{B3_}} then
     {{/__if}}
 
     {{#__if_}}
-    if {{condition}} then
+    if {{expression}} then
     {{/__if_}}
 
     {{#_else}}
@@ -34,11 +44,11 @@ function ActionCommand:new()
     {{/_else}}
 
     {{#_elseif}}
-    elseif {{exp1}}  {{exp1Op}} {{exp1Comp}} {{exp2Cond}}  {{exp2}}  {{exp2Op}} {{exp2Comp}} then
-    {{/_elseif}}
+    elseif {{A1_}}  {{A2_Operand}} {{A3_}} {{AB_Condition}}  {{B1_}}  {{B2_Operand}} {{B3_}} then
+      {{/_elseif}}
 
     {{#_elseif_}}
-    elseif {{condition}} then
+    elseif {{expression}} then
     {{/_elseif_}}
 
     {{#_end}}
@@ -131,7 +141,7 @@ function ActionCommand:new()
      elseif "{{type}}" == "string" then
       AC.Var:editVar(UI, "{{target}}", '{{value}}')
      else
-      AC.Var:editVar(UI, "{{target}}", {{value}})
+      AC.Var:editVar(UI, "{{target}}", tonumber({{value}}))
      end
    {{/variable.editVar}}
 
