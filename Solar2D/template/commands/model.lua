@@ -148,25 +148,25 @@ M.commands = {
   },
   condition = {
       __if = {
-        exp1 = "",
-        exp1Op = "",
-        exp1Comp = "",
-        exp2Cond = "",
-        exp2 = "",
-        exp2Op = "",
-        exp2Comp = ""
+        A1_ = "",
+        A2_Operand = "==",
+        A3_ = "",
+        AB_Condition = "",
+        B1_ = "",
+        B2_Operand = "",
+        B3_ = ""
       },
       _elseif = {
-        exp1 = "",
-        exp1Op = "",
-        exp1Comp = "",
-        exp2Cond = "",
-        exp2 = "",
-        exp2Op = "",
-        exp2Comp = ""
+        A1_ = "",
+        A2_Operand = "==",
+        A3_ = "",
+        AB_Condition = "",
+        B1_ = "",
+        B2_Operand = "",
+        B3_ = ""
       },
-    __if_ = {condition=""},
-    _elseif_={condition=""},
+    __if_ = {expression=""},
+    _elseif_={expression=""},
     _else = {},
     _end = {}
   },
@@ -217,7 +217,7 @@ M.commands = {
   layer = {
 			showHide = {
         _target = "",
-        hides = true,
+        hide = true,
       toggle = true,
       time = 0,
       delay = 0

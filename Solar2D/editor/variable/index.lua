@@ -55,7 +55,7 @@ end
 
 function controller:render(book, page, class, name, model)
   local dst = "App/"..book.."/"..page .."/components/variables"..name ..".lua"
-  local tmplt =  "editor/template/components/pageX/variable/variable.lua"
+  local tmplt =  "template/components/pageX/variable/variable.lua"
   util.mkdir("App", book, page, "components", "variables", class)
   --
   model.properties.isAfter = tostring( model.properties.isAfter)

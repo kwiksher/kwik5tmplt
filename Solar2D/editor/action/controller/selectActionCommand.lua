@@ -9,7 +9,7 @@ local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 local actionCommandButtons = require(root.."actionCommandButtons")
 local buttons = require(root.."buttons")
 local commandbox = require(root.."commandbox")
-local commandModel = require(root.."model").commands
+local commandModel = require("template.commands.model").commands
 local selectors = require("editor.parts.selectors")
 --
 local command = function (params)

@@ -219,9 +219,9 @@ local Layer     = table:mySet{"image", "layer", "audio", "variable"}
 local Layer_Class = table:mySet{ "button", "countdown", "filter", "multiplier", "particles", "sprite", "readme", "video", "web"}
 --
 function M:setActiveProp(layer, class)
-  -- print("setActiveProp", self.activeProp)
+  -- print("setActiveProp", self.activeProp, layer, class)
   local value = layer
-  if class then
+  if class and class:len() > 0  then
     value = layer.."_"..class
   end
   --
@@ -244,7 +244,7 @@ function M:setActiveProp(layer, class)
     elseif Layer_Class[activeCommandName] then
       return activeCommandName == class
     elseif Layer[activeCommandName] then
-      return class == nil
+      return class == nil or class:len() == 0
     end
   end
   ---

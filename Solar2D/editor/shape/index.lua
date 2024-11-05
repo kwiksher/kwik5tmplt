@@ -387,7 +387,7 @@ function M.drawText(UI, listener)
 end
 
 --
--- kwik/layer_drag and editor/template/components/pageX/interaction/layer_drag.lua
+-- kwik/layer_drag and template/components/pageX/interaction/layer_drag.lua
 --
 function M.move(UI, obj, listener)
   local onMove = listener
