@@ -79,7 +79,7 @@ end
 function M.createPage(book, _index, _page, _root, _weight)
   local root = _root or "Solar2D"
   local dst = root .. "/App/" .. book .. "/index.lua"
-  local tmplt = "editor/template/index.lua"
+  local tmplt = "template/index.lua"
   local pages = {}
   local weight = _weight or 1 -- for book.index
   --
@@ -182,7 +182,7 @@ function M.copyPage(book, page, newName, _dst)
     end
   end
 
-  local path = system.pathForFile("editor/template/index.lua", system.ResourceDirectory)
+  local path = system.pathForFile("template/index.lua", system.ResourceDirectory)
   local file, errorString = io.open(path, "r")
     if not file then
     print("ERROR: " .. errorString)
@@ -224,7 +224,7 @@ function M.removePages(book, pages, _dst)
     end
   end
 
-  local path = system.pathForFile("editor/template/index.lua", system.ResourceDirectory)
+  local path = system.pathForFile("template/index.lua", system.ResourceDirectory)
   local file, errorString = io.open(path, "r")
     if not file then
     print("ERROR: " .. errorString)
@@ -718,7 +718,7 @@ function M.publishForSelections(UI, args, controller, decoded)
   local page = args.page or UI.page
   local layer = args.layer or UI.editor.currentLayer or args.props.properties.target
 
-  -- print("publishForSelections", book, page, layer, class)
+  print("publishForSelections", book, page, layer, class)
   -- print("", "classFolder="..classFolder)
 
   -- print(json.encode(args))
@@ -745,7 +745,7 @@ function M.publishForSelections(UI, args, controller, decoded)
   local updatedModel = scene.model
   -- print(json.encode(updatedModel))
   local selections = UI.editor.selections or {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
-  --print(json.prettify(selections))
+  print(json.prettify(selections))
   for i, obj in next, selections do
     if obj.parentObj then
         if obj.parentObj  then -- class has been set, so the layer == "witch/en/button"

@@ -12,7 +12,7 @@ function M:editVar(UI, name, _value)
     if type(_value) == "function" then
       value = _value(value)
     else
-      value = value
+      value = _value
     end
     local objs = UI.dynamictexts[name] or {}
     for i, obj in next, objs do
@@ -27,7 +27,7 @@ function M:editVar(UI, name, _value)
       if type(_value) == "function" then
         value = _value(value)
       else
-        value = value
+        value = _value
       end
     end
     local objs = UI.dynamictexts[name] or {}

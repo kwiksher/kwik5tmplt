@@ -38,7 +38,7 @@ function M:setPropsFromDisplayObject(layerProps)
   self.name = layerProps.name
   self.oriAlpha  = layerProps.alpha
   --
-  self.imagePath = layerProps.name.."." .. layerProps.type
+  self.imagePath = name.."." .. layerProps.type
   self.imageName = "/"..layerProps.name.."." ..layerProps.type
   --
   self.blendMode = layerProps.blendMode

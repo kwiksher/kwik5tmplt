@@ -158,7 +158,7 @@ function M.xtest_new_animation_template()
 
   local util = require("editor.util")
 
-  local tmplt='editor/template/components/pageX/animation/layer_animation.lua'
+  local tmplt='template/components/pageX/animation/layer_animation.lua'
   local dst ='tmp.lua'
   local model = json.decode(_model)
   util.saveLua(tmplt, dst, model)

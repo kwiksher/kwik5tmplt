@@ -28,7 +28,7 @@ function M:setActiveProp(value)
       print("setActiveProp", self.activeProp, value)
       v.field.text = value
       -- print("###", self.activeProp, value, #self.objs, self)
-      return
+      return true
     end
   end
   print("Warning activeProp name is not found for", self.activeProp)
