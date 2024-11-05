@@ -28,6 +28,8 @@ local command = function (params)
     -- print(entry.name, entry.value)
     if entry.name == '_target' then
       action.params.target = entry.value
+    elseif type(entry.value) == "number" then
+      action.params[entry.name] = entry.value
     elseif entry.value:len() > 0 then
       action.params[entry.name] = entry.value
     end

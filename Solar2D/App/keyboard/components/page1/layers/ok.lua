@@ -33,7 +33,7 @@ M:setProps(layerProps)
 function M:init(UI)
   --local sceneGroup = UI.scene.view
 	if not self.isSharedAsset then
-    self.imagePath = UI.page ..self.imageName
+    self.layerProps.imagePath = UI.page ..self.imageName
   end
 end
 --
@@ -41,6 +41,7 @@ function M:create(UI)
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
+  print("@@@@@", self.imagePath)
   UI.layers[#UI.layers] = self:createImage(UI)
 end
 --

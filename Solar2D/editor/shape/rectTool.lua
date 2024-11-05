@@ -125,7 +125,7 @@ function M:drawRect()
 end
 
 --
--- kwik/layer_drag and editor/template/components/pageX/interaction/layer_drag.lua
+-- kwik/layer_drag and template/components/pageX/interaction/layer_drag.lua
 --
 function M:move()
   if self.moveOn then return end

@@ -125,21 +125,66 @@ function M.xtest_button123_action()
   helper.setProp(actionCommandPropsTable.objs, "value", "UI.mycode.checkLCD(value..'1')")
 
   helper.clickButton("save", actionCommandButtons)
-  -- helper.clickButton("save", actionButtons)
-
-
--- editVar("LCD", function (value) return UI.mycode.checkLCD(value..'1')end)
--- editVar("LCD", function (value) return UI.mycode.checkLCD(value..'2')end)
--- editVar("LCD", function (value) return UI.mycode.checkLCD(value..'3')end)
 end
 
 function M.xtest_buttonOK_action()
   -- if isEqual("LCD", "numDica") then
   --    show("Win")
+  helper.selectLayer("ok")
+  helper.selectIcon("Interactions", "Button")
+
+  helper.clickProp(classProps.objs, "over") -- classProps
+  helper.selectLayer("OkDown")
+
+  helper.clickProp(actionbox.objs, "onTap") -- actionbox
+  helper.clickButton("New", actionboxButtonContext)
+
+  picker:continue("onOK")
+  helper.selectActionGroup("Controls")
+  helper.selectActionCommand("condition", "__if")
+  helper.setProp(actionCommandPropsTable.objs, "A1_", "UI:getVariable('LCD')")
+  helper.setProp(actionCommandPropsTable.objs, "A2_Operand", "==")
+  helper.setProp(actionCommandPropsTable.objs, "A3_", "UI:getVariable('numDica')")
+  helper.setProp(actionCommandPropsTable.objs, "AB_Condition", "")
+  helper.clickButton("save", actionCommandButtons)
+  --
+  helper.selectActionGroup("Layer")
+  helper.selectActionCommand("Layer", "showHide")
+  helper.clickProp(actionCommandPropsTable.objs, "_target")
+  helper.selectLayer("Win")
+  helper.setProp(actionCommandPropsTable.objs, "hide", "false")
+  helper.setProp(actionCommandPropsTable.objs, "toggle", "false")
+  helper.clickButton("save", actionCommandButtons)
+
+  helper.selectActionGroup("Controls")
+  helper.selectActionCommand("condition", "_end")
+  helper.clickButton("save", actionCommandButtons)
 end
 
+
 function M.xtest_buttonClear_action()
--- editVar("LCD", "")
+  -- editVar("LCD", "")
+  helper.selectLayer("Clear")
+  helper.selectIcon("Interactions", "Button")
+
+  -- helper.clickProp(classProps.objs, "over") -- classProps
+  -- helper.selectLayer("OkDown")
+
+  helper.clickProp(actionbox.objs, "onTap") -- actionbox
+  helper.clickButton("New", actionboxButtonContext)
+
+  picker:continue("onClear")
+
+  helper.selectActionGroup("Controls")
+  helper.selectActionCommand("variable", "editVar")
+  helper.clickProp(actionCommandPropsTable.objs, "_target")
+  helper.selectVariable("LED")
+
+  helper.setProp(actionCommandPropsTable.objs, "type", "string")
+  helper.setProp(actionCommandPropsTable.objs, "value", "")
+
+  helper.clickButton("save", actionCommandButtons)
+
 end
 
 return M

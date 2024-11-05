@@ -113,7 +113,7 @@ local function singleSelection(layerTable, target, isNotLayer)
       end
       -- target.isSelected = true
       if target.name and target.variable == nil then
-        print("### currentClass ##")
+        -- print("### currentClass ##")
         UI.editor.currentClass = target.name
       end
     end
@@ -191,6 +191,17 @@ function M.commandHandler(layerTable, target, event)
   local  UI = layerTable.UI
   local path = util.getParent(target)
   --
+
+  local fromActive = { selections = {}, layer = UI.editor.currentLayer, class = UI.editor.currentClass}
+  -- print("fromActive", fromActive.layer, fromActive.class)
+
+  if UI.editor.selections then
+    for i, v in next, UI.editor.selections do
+      -- print("#", v.layer)
+      table.insert(fromActive.selections, v)
+    end
+  end
+
   clearSelections(layerTable, "layer")
   --
   --
@@ -235,13 +246,33 @@ function M.commandHandler(layerTable, target, event)
       if target.parentObj then
         layer = target.parentObj.layer .."/" .. layer
       end
-      actionCommandPropsTable:setActiveProp(layer, target.class)
+
+      if actionCommandPropsTable:setActiveProp(layer, target.class) then
+        layerTable:hide()
+        UI.editor.currentClass = fromActive.class
+        UI.editor.currentLayer = fromActive.layer
+        UI.editor.selections = fromActive.selections
+        return -- notice!
+      end
       --
       -- setClassProps is used in physics to set the value to physics.classProps
       --
       local classProps = layerTable.classProps or classProps
-      classProps:setActiveProp(layer)
+      if classProps:setActiveProp(layer) then
+        layerTable:hide()
+        UI.editor.currentClass = fromActive.class
+        UI.editor.currentLayer = fromActive.layer
+        UI.editor.selections = fromActive.selections
+        return -- notice!
+      end
     end
+    -- print("UI.editor.currentLayer", UI.editor.currentLayer, UI.editor.currentClass)
+    -- if UI.editor.selections then
+    --   for i, v in next, UI.editor.selections do
+    --     -- print("@", v.layer)
+    --   end
+    -- end
+
   end
   --
   -- focus
@@ -306,7 +337,7 @@ local function showClassProps(layerTable, target)
       --print(debug.traceback())
     end
     if target.name and target.variable == nil then
-      print("### currentClass ##")
+      -- print("### currentClass ##")
       UI.editor.currentClass = target.name
     end
 

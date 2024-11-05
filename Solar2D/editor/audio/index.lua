@@ -67,7 +67,7 @@ end
 
 function controller:render(book, page, class, name, model)
   local dst = "App/"..book.."/components/"..page .."/audios/"..class.."/"..name ..".lua"
-  local tmplt =  "editor/template/components/pageX/audio/audio.lua"
+  local tmplt =  "template/components/pageX/audio/audio.lua"
   util.mkdir("App", book, "components",page, "audios", class)
   util.saveLua(tmplt, dst, model)
   return dst

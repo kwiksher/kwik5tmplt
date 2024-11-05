@@ -21,7 +21,7 @@ local util    = require("lib.util")
 local mui     = require("materialui.mui")
 local muiData = require("materialui.mui-data")
 ---
-local models         = require(parent.."model").menu
+local models         = require("template.commands.model").menu
 local controller     = require(parent.."controller.index")
 local commandView    = require(parent.."commandView")
 local actionCommandTable = require(parent.."actionCommandTable")

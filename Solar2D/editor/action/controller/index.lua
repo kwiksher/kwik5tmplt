@@ -156,7 +156,7 @@ end
 function M:render(book, page, command, actions)
   local dst = "App/"..book.."/commands/"..page .."/"..command..".lua"
   --local dst = layer.."_"..class ..".lua"
-  local tmplt =  "editor/template/commands/pageX/actionX.lua"
+  local tmplt =  "template/commands/pageX/actionX.lua"
   util.mkdir("App", book, "commands", page)
   -- util.saveLua(tmplt, dst, {actions = {
   --   {animation = {play = {target="layerOne", sec=1}}},
@@ -169,7 +169,12 @@ function M:render(book, page, command, actions)
     local out = util.split(actions[i].command, '.')
     print(unpack(out))
     entry[out[1]] = {}
-    entry[out[1]][out[2]]  = actions[i].params
+    local name = out[2]
+    if name == "_end" or name == "_else" then
+      entry[out[1]][name] = true
+    else
+      entry[out[1]][name]  = actions[i].params
+    end
     model[i] = entry
   end
   print("###", json.encode(model))
