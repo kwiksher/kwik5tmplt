@@ -136,7 +136,7 @@ function M:showContextMenu(x,y, target, class)
         obj.isVisible = true
         obj.rect.isVisible = obj.isVisible
         obj.x = x --+ obj.width
-        obj.y = y + indexY * obj.rect.height
+        obj.y = y + indexY * obj.rect.height + 10
         indexY = indexY + 1
         obj.rect.x = obj.x
         obj.rect.y = obj.y
@@ -186,8 +186,8 @@ function M:hide()
       -- print(obj.text)
       obj.isVisible = false
       obj.rect.isVisible = false
-      obj.alpha = 0
-      obj.rect.alpha = 0
+      -- obj.alpha = 0
+      -- obj.rect.alpha = 0
     end
   end
   self.group.isVisible = false

@@ -26,15 +26,15 @@ local scene = require('controller.scene').new(sceneName, {
       },
       {
         Clear = {
-        }
-      },
-      {
-        ok = {
-        }
+          class={ "button", }  }
       },
       {
         OkDown = {
         }
+      },
+      {
+        ok = {
+          class={ "button", }  }
       },
       {
         N01 = {
@@ -62,7 +62,7 @@ local scene = require('controller.scene').new(sceneName, {
     joints    = {  },
     page = {  }
   },
-  commands = {   "onN01",  },
+  commands = {   "onN01",   "onOK",   "onClear",  },
   onInit = function(scene) print("onInit") end
 })
 --
