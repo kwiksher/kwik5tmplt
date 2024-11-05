@@ -53,7 +53,7 @@ local instance =
       layer = props.name
       print("layer", layer, class)
     else
-      print("layer", layer, class)
+      print("layer", props.name, layer, class)
     end
 
     if not props.isNew then

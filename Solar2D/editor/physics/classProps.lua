@@ -142,6 +142,7 @@ function M:setActiveProp(layer, class)
   else
     -- TBI show popup
   end
+  return true
 end
 
 --
