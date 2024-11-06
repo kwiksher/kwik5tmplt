@@ -475,7 +475,7 @@ function M.saveLua(tmplt, dst, _model, partial)
       output = string.gsub(output, "\r\n", "\n")
       output = output:gsub("\n\n+", "\n")
       output = output:gsub("&#x2F;", "/")
-      output = output:gsub("&#39;", '"')
+      output = output:gsub("&#39;", "'")
       output = output:gsub("class={  }", "")
       output = output:gsub("&quot;", '"')
 

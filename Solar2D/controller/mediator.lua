@@ -52,11 +52,12 @@ M.new = function(appDir, name)
                 --
                 -- addEventListener is set by context:mapCommand
                 --
-                self.viewInstance.app:dispatchEvent({
+                local _event = event.event or event
+                self.viewInstance.app:dispatchEvent{
                     name = myself.name .. "." .. eventName,
-                    event = event,
+                    event =_event,
                     UI = myself.viewInstance.UI
-                })
+                }
             end
         end
         --

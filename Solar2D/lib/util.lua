@@ -309,7 +309,9 @@ function exports.newTextField(option)
       --textField:resizeFontToFitHeight()
       --textField:setReturnKey( "done" )
       --textField.placeholder = "Enter text"
-      textField:addEventListener( "userInput", function() print("userInput") end )
+      textField:addEventListener( "userInput", function()
+        -- print("userInput")
+      end )
       --native.setKeyboardFocus( textField )
       textField.text = option.text
       if option.parent then
