@@ -16,11 +16,11 @@ function M:createButton(UI)
               event.target.type = "touch"
               if self.TV then
                   if event.target.isKey then
-                      UI.scene:dispatchEvent({name = self.actions.onTap, layers = event.target})
+                      UI.scene:dispatchEven{name = self.actions.onTap, event = event}
                   end
               else
                   -- print("###", self.actions.onTap)
-                  UI.scene:dispatchEvent({name = self.actions.onTap, layers = event.target})
+                  UI.scene:dispatchEvent{name = self.actions.onTap, event = event}
               end
           end
       end

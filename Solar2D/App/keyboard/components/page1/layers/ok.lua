@@ -41,7 +41,7 @@ function M:create(UI)
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
-  print("@@@@@", self.imagePath)
+  -- print("@@@@@", self.imagePath)
   UI.layers[#UI.layers] = self:createImage(UI)
 end
 --

@@ -14,11 +14,14 @@ function ActionCommand:new()
 		local UI         = params.UI
 		local sceneGroup = UI.sceneGroup
 		local layers      = UI.layers
-		local obj        = params.obj
+    local event      = params.event
 
     -- local conditions = require("App." .. UI.book..".common.conditions")
     -- local expressions = require("App." .. UI.book.."common.expressions")
-    print("tap")
+
+    print("onN01.target")
+    printKeys(event.target)
+
      if "function" == "function" then
       AC.Var:editVar(UI, "LED", function(value) return UI.mycode.checkLCD(value.."1") end)
      elseif "function" == "string" then
@@ -32,7 +35,7 @@ function ActionCommand:new()
 end
 --
 ActionCommand.model = [[
-{"name":"onN01","actions":[{"command":"variable.editVar","params":{"target":"LED","type":"function","value":"UI.mycode.checkLCD(value.."1")"}}]}
+{"name":"onN01","actions":[{"command":"variable.editVar","params":{"target":"LED","type":"function","value":"UI.mycode.checkLCD(value..'1')"}}]}
 ]]
 --
 return ActionCommand
