@@ -31,7 +31,7 @@ local command = function (params)
     elseif type(entry.value) == "number" then
       action.params[entry.name] = entry.value
     elseif entry.value:len() > 0 then
-      action.params[entry.name] = entry.value
+      action.params[entry.name] = entry.value:gsub('"',  "'")
     end
   end
   --

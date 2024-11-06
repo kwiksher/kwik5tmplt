@@ -14,7 +14,9 @@ function ActionCommand:new()
 		local UI         = params.UI
 		local sceneGroup = UI.sceneGroup
 		local layers      = UI.layers
-		local obj        = params.obj
+    local event      = params.event
+    local obj        = event.target
+    --printKeys(event.target)
 
     -- local conditions = require("App." .. UI.book..".common.conditions")
     -- local expressions = require("App." .. UI.book.."common.expressions")
@@ -139,7 +141,7 @@ function ActionCommand:new()
      if "{{type}}" == "function" then
       AC.Var:editVar(UI, "{{target}}", function(value) return {{value}} end)
      elseif "{{type}}" == "string" then
-      AC.Var:editVar(UI, "{{target}}", '{{value}}')
+      AC.Var:editVar(UI, "{{target}}", "{{value}}")
      else
       AC.Var:editVar(UI, "{{target}}", tonumber({{value}}))
      end
