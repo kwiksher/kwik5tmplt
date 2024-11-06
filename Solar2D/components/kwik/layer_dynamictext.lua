@@ -84,9 +84,9 @@ function M:create(UI)
   local tbl = UI.dynamictexts[self.properties.variable] or {}
   tbl[#tbl+1] = self.obj
   UI.dynamictexts[self.properties.variable]  = tbl
-  for k, entry in next, UI.dynamictexts do
-    print(k, #entry)
-  end
+  -- for k, entry in next, UI.dynamictexts do
+  --   print(k, #entry)
+  -- end
 
 end
 

@@ -27,7 +27,8 @@ local command = function (params)
     --   end
     -- end
     table.insert(updatedModel.commands, nameText)
-  elseif nameText ~= UI.editor.currentAction.name then
+  elseif nameText ~= UI.editor.currentAction.name_updated then
+    nameText = UI.editor.currentAction.name_updated
     local updated = {}
     for i, v in next, updatedModel.commands do
       if UI.editor.currentAction.name ~= v then

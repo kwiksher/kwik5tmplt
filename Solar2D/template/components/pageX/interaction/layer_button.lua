@@ -1,10 +1,10 @@
 local name = ...
 local parent,root = newModule(name)
 
-local layerProps = require(parent.."{{name}}").layerProps
+local layerProps = require(parent.."{{layer}}").layerProps
 
 local M = {
-  name ="{{name}}_button",
+  name ="{{layer}}_button",
   properties = {
     {{#properties}}
     target = "{{layer}}",
