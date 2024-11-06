@@ -47,10 +47,28 @@ local command = function (params)
       print( "Decode failed at "..tostring(pos)..": "..tostring(msg) )
       return
     end
+
+    local textListener = function(event)
+      if ( event.phase == "began" ) then
+        -- User begins editing "defaultField"
+      elseif ( event.phase == "ended" or event.phase == "submitted" ) then
+          -- Output resulting text from "defaultField"
+          print( event.target.text )
+          UI.editor.currentAction.name_updated = event.target.text
+      elseif ( event.phase == "editing" ) then
+          -- print( event.newCharacters )
+          -- print( event.oldText )
+          -- print( event.startPosition )
+          -- print( event.text )
+      end
+    end
+
     --UI.editor.actionEditor.selectbox:updateValue(decoded.name)
     showEditor(decoded)
     picker:create()
     picker.obj.field.text = decoded.name or params.action
+    picker.obj.field:addEventListener( "userInput", textListener )
+    UI.editor.currentAction.name_updated = decoded.name or params.action
   end
   --
 end
