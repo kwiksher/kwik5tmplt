@@ -1,0 +1,72 @@
+name: Create Archive
+# https://qiita.com/0kq/items/f32e70899c0e9c33cfdd
+on:
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+
+    - name: checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set Time
+      env:
+        TZ: 'Asia/Tokyo'
+      run: |
+          echo "CURRENT_DATETIME=$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
+          echo "modification_time_framework=$(stat -c '%Y%m%d-%H%M' Solar2D) >>$GITHUB_ENV
+          echo "modification_time_template=$(stat -c '%Y%m%d-%H%M'' 'template) >>$GITHUB_ENV
+          echo "modification_time_editor=$(stat -c '%Y%m%d-%H%M'' 'editor) >>$GITHUB_ENV
+
+    - name: Set Filename
+      run: |
+        echo "RELEASE_FILENAME=release_${{ env.CURRENT_DATETIME }}.zip" >> $GITHUB_ENV
+        echo "RELEASE_FILENAME_framework=framework_${{ env.modification_time }}.zip" >> $GITHUB_ENV
+        echo "RELEASE_FILENAME_template=template_${{ env.modification_time_template }}.zip" >> $GITHUB_ENV
+        echo "RELEASE_FILENAME_editor=editor_${{ env.modification_time_edtior }}.zip" >> $GITHUB_ENV
+
+    - name: Archive Release framework
+      uses: TheDoctor0/zip-release@0.7.6
+      with:
+        type: 'zip'
+        directory: Solar2D
+        filename: ${{ env.RELEASE_FILENAME_framework }}
+        exclusions: '*.git* template editor App AndroidResources en.lproj Images.xcassets lib manager models plugin server template test .DS_Store build.settings config.lua create_dummy_images.command Icon-osx.icns Icon-win32.ico LaunchScreen.storyboardc License.md main.lua main.lua.debug mySplashScreen.png README.md tmp.log'
+
+    - name: Archive Release template
+      uses: TheDoctor0/zip-release@0.7.6
+      with:
+        type: 'zip'
+        directory: Solar2D/template
+        filename: ${{ env.RELEASE_FILENAME_framework }}
+        exclusions: '*.git*'
+
+    - name: Archive Release editor
+      uses: TheDoctor0/zip-release@0.7.6
+      with:
+        type: 'zip'
+        directory: Solar2D/editor
+        filename: ${{ env.RELEASE_FILENAME_editor }}
+        exclusions: '*.git*'
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ env.CURRENT_DATETIME }}
+        name: ${{ env.CURRENT_DATETIME }}
+        draft: false
+        prerelease: false
+        files: |
+          ${{ env.RELEASE_FILENAME_framework }}
+          ${{ env.RELEASE_FILENAME_template }}
+          ${{ env.RELEASE_FILENAME_kwik }}
