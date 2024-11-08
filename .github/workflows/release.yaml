@@ -1,5 +1,4 @@
-name: Create Archive
-# https://qiita.com/0kq/items/f32e70899c0e9c33cfdd
+name: Create Release
 on:
   push:
     branches:
@@ -24,8 +23,8 @@ jobs:
       run: |
           echo "CURRENT_DATETIME=$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
           echo "modification_time_framework=$(stat -c '%Y%m%d-%H%M' Solar2D) >>$GITHUB_ENV
-          echo "modification_time_template=$(stat -c '%Y%m%d-%H%M'' 'template) >>$GITHUB_ENV
-          echo "modification_time_editor=$(stat -c '%Y%m%d-%H%M'' 'editor) >>$GITHUB_ENV
+          echo "modification_time_template=$(stat -c '%Y%m%d-%H%M' template) >>$GITHUB_ENV
+          echo "modification_time_editor=$(stat -c '%Y%m%d-%H%M' editor) >>$GITHUB_ENV
 
     - name: Set Filename
       run: |
