@@ -29,9 +29,9 @@ jobs:
     - name: Set Filename
       run: |
         echo "RELEASE_FILENAME=release_${{ env.CURRENT_DATETIME }}.zip" >> $GITHUB_ENV
-        echo "RELEASE_FILENAME_framework=framework_${{ env.modification_time }}.zip" >> $GITHUB_ENV
+        echo "RELEASE_FILENAME_framework=framework_${{ env.modification_time_framework }}.zip" >> $GITHUB_ENV
         echo "RELEASE_FILENAME_template=template_${{ env.modification_time_template }}.zip" >> $GITHUB_ENV
-        echo "RELEASE_FILENAME_editor=editor_${{ env.modification_time_edtior }}.zip" >> $GITHUB_ENV
+        echo "RELEASE_FILENAME_editor=editor_${{ env.modification_time_editor }}.zip" >> $GITHUB_ENV
 
     - name: Archive Release framework
       uses: TheDoctor0/zip-release@0.7.6
@@ -68,4 +68,4 @@ jobs:
         files: |
           ${{ env.RELEASE_FILENAME_framework }}
           ${{ env.RELEASE_FILENAME_template }}
-          ${{ env.RELEASE_FILENAME_kwik }}
+          ${{ env.RELEASE_FILENAME_editor }}
