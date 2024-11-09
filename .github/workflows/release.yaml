@@ -51,7 +51,7 @@ jobs:
       with:
         type: 'zip'
         directory: Solar2D/template
-        filename: ${{ env.RELEASE_FILENAME_framework }}
+        filename: ${{ env.RELEASE_FILENAME_template }}
         exclusions: '*.git*'
 
     - name: Archive Release editor
@@ -70,7 +70,4 @@ jobs:
         name: ${{ env.CURRENT_DATETIME }}
         draft: false
         prerelease: false
-        files: |
-          Solar2D/${{ env.RELEASE_FILENAME_framework }}
-          Solar2D/${{ env.RELEASE_FILENAME_template }}
-          Solar2D/${{ env.RELEASE_FILENAME_editor }}
+        files: Solar2D/*.zip
