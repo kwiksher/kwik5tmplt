@@ -43,6 +43,7 @@ jobs:
       with:
         type: 'zip'
         directory: Solar2D
+        path: .
         filename: ${{ env.RELEASE_FILENAME_framework }}
         exclusions: '*.git* template editor App AndroidResources en.lproj Images.xcassets lib manager models plugin server template test .DS_Store build.settings config.lua create_dummy_images.command Icon-osx.icns Icon-win32.ico LaunchScreen.storyboardc License.md main.lua main.lua.debug mySplashScreen.png README.md tmp.log'
 
@@ -50,7 +51,8 @@ jobs:
       uses: TheDoctor0/zip-release@0.7.6
       with:
         type: 'zip'
-        directory: Solar2D/template
+        directory: Solar2D
+        path: template
         filename: ${{ env.RELEASE_FILENAME_template }}
         exclusions: '*.git*'
 
@@ -58,7 +60,8 @@ jobs:
       uses: TheDoctor0/zip-release@0.7.6
       with:
         type: 'zip'
-        directory: Solar2D/editor
+        directory: Solar2D
+        path: editor
         filename: ${{ env.RELEASE_FILENAME_editor }}
         exclusions: '*.git*'
 
