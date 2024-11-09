@@ -45,7 +45,7 @@ jobs:
         directory: Solar2D
         path: .
         filename: ${{ env.RELEASE_FILENAME_framework }}
-        exclusions: '*.git* template editor App AndroidResources en.lproj Images.xcassets lib manager models plugin server template test .DS_Store build.settings config.lua create_dummy_images.command Icon-osx.icns Icon-win32.ico LaunchScreen.storyboardc License.md main.lua main.lua.debug mySplashScreen.png README.md tmp.log'
+        exclusions: '*.git* /*template/* /*editor/* /*App/* /*AndroidResources/* /*en.lproj/* /*Images.xcassets/* /*models/* /*plugin/* /*server/* /*template/* /*test/* .DS_Store build.settings config.lua create_dummy_images.command Icon-osx.icns Icon-win32.ico /*LaunchScreen.storyboardc/* License.md main.lua main.lua.debug mySplashScreen.png README.md tmp.log'
 
     - name: Archive Release template
       uses: TheDoctor0/zip-release@0.7.6
