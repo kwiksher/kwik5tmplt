@@ -24,19 +24,19 @@ local M = {}
 M.ask = function()
     local deferred = Deferred()
     local choices = {}
-    for k, v in pairs (STATE) do
+    for k, v in pairs (STATE.updateAvailable) do
         if v.text then
             table.insert(choices, v.text)
         end
     end
 
     view.onClick = function(event)
-        --for k, v in pairs (choices) do print(k, v) end
+        for k, v in pairs (choices) do print(k, v) end
         if ( event.action == "clicked" ) then
             deferred:resolve(choices[event.index])
         end
     end
-    view:init(choices, STATE.message)
+    view:message(choices, STATE.message)
     return deferred:promise()
 end
 
@@ -44,7 +44,8 @@ local showUpdater = function()
     download:processUpdate(function (event)
         if event.name == "error" then
             view:showError()
-            print(json.pretttify(event.errror))
+            print(json.prettify(event))
+            view:hideSpinner()
         elseif event.name == "started" then
           view:showSpinner()
         elseif event.name == "endeded" then
@@ -61,6 +62,7 @@ M.init = function()
         view:showVersions(assets)
         M.ask()
         :done(function(answer)
+          print(answer)
           if answer == 'update' then
                 showUpdater()
           end
