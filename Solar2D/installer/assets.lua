@@ -1,4 +1,8 @@
+local name = ...
+local parent = name:match("(.-)[^%.]+$")
+
 local json = require( "json" )
+local lustache = require (parent.."lustache")
 
 local M = {
   template={
@@ -24,7 +28,7 @@ local M = {
       "components",
       "controller",
       "extlib",
-      "lib      ",
+      "lib",
     },
     latestName = "",
     url = "",
@@ -50,19 +54,84 @@ function M:init()
       local decoded, pos, msg = json.decodeFile( filename )
       if decoded then
         self.template = decoded.template
-        self.editors = decoded.editor
+        self.editor = decoded.editor
         self.framework = decoded.framework
         self.version = decoded.version
       end
     end
  end
 
-function M:save()
+local function saveScript(filename, model)
+  local ext = "command"
+  if platform == "win32" then
+    ext = "bat"
+  end
+  --
+  local path = system.pathForFile("installer/" .. filename .. ext .. ".tmplt", system.ResourceDirectory)
+  local file, errorString = io.open(path, "r")
+  local cmd = filename .. ext -- create_book.command
+  local cmdFile
+
+  if not file then
+    print("ERROR: " .. errorString)
+  else
+    local contents = file:read("*a")
+    io.close(file)
+    output = lustache:render(contents, model)
+    output = output:gsub("&#39;", '"')
+    output = output:gsub("&#x2F;", "/")
+
+    local path = system.pathForFile(cmd, system.TemporaryDirectory)
+    --print(path)
+    local file, errorString = io.open(path, "w+")
+    if not file then
+      print("ERROR: " .. errorString)
+    else
+      output = string.gsub(output, "\r\n", "\n")
+      file:write(output)
+      io.close(file)
+    end
+    if platform == "win32" then
+      cmdFile = '"' .. path:gsub("/", "\\") .. '"'
+    else
+      cmdFile = path:gsub(" ", "\\ ")
+    end
+  end
+
+  return cmd, cmdFile
+end
+
+local function executeScript(filename, model)
+  timer.performWithDelay( 500, function ()
+    local cmd, cmdFile = saveScript(filename, model)
+    if platform == "win32" then
+      -- print("copy " .. cmdFile .. " " .. system.pathForFile("", system.ResourceDirectory))
+      os.execute("copy " .. cmdFile .. " " .. system.pathForFile("installer", system.ResourceDirectory))
+      os.execute("cd " .. system.pathForFile("installer", system.ResourceDirectory) .. " & start cmd /k call " .. cmd)
+    else
+      -- print("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source " .. cmd)
+      os.execute("cp " .. cmdFile .. " " .. system.pathForFile("installer", system.ResourceDirectory))
+      os.execute("cd " .. system.pathForFile("installer", system.ResourceDirectory) .. "; source " .. cmd)
+    end
+    return cmd
+  end )
+end
+
+function M:save(commands)
+  self.template.name = self.template.latestName
+  self.editor.name   = self.editor.latestName
+  self.framework.name = self.framework.latestName
+  self.version = self.latestVersion
+
    local output = json.encode{template = self.template, editor = self.editor, framework=self.framework, version = self.version}
     local path = system.pathForFile("kwkversion.json", system.ApplicationSupportDirectory )
     local file, errorString = io.open( path, "w" )
     file:write(output)
     io.close( file )
+
+  if #commands > 0 then
+    executeScript("copy_lua.", {dst="..", cmd=commands})
+  end
 end
 
 return M
