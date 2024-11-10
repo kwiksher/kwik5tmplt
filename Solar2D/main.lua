@@ -2,6 +2,8 @@
 
 -- print("test")
 
+require("installer.index").init()
+
 system.setTapDelay( 0.5 )
 
 local restore = false

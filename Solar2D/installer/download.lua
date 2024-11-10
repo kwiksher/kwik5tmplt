@@ -8,7 +8,7 @@ local zip = require( "plugin.zip" )
 local util = require(parent.."util")
 local assets = require(parent.."assets")
 
-local view       = null
+local view       = require(parent.."view")
 
 local rootFolder = system.pathForFile("", system.ResrouceDirectory)
 
@@ -69,10 +69,13 @@ local access = function (url, params, method)
         function(event)
             view:networkEvent(event)
             if event.isError then
+                print("isError")
                 deferred:reject(event.status)
             elseif ( event.phase == "ended" and event.status == 200 ) then
+                print("ended")
                 deferred:resolve(event.response)
             else
+                print("somthing wrong")
                 deferred:reject(event.status)
             end
         end, params )
@@ -87,6 +90,7 @@ local function fetch(asset)
     local deferred = Deferred()
     accessFile(asset.url, assets.params, "GET", asset.latestName )
     :done(function(response)
+        print(json.prettify(response))
         view.spinnerText.text = "uncompressing ".. asset.latestName.. "..."
         unzip(response.filename, response.baseDirectory, asset.latestName)
         :done(function(dir)
@@ -102,7 +106,7 @@ local function fetch(asset)
     end)
     :fail(function(error)
         print("download error")
-        deferred:reject()
+        deferred:reject("download error")
     end)
     :always(function()
     end)
@@ -156,27 +160,27 @@ exports.isNewVersion = function ()
    access(assets.API, assets.params, "GET")
    :done(function(assetsJson)
         local latestAssets = json.decode(assetsJson)
-
+        -- print(json.prettify(latestAssets))
         if latestAssets.tag_name == assets.version then
                 deferred:resolve(false)
         else
             assets.latestVersion = latestAssets.tag_name
-            for i, asset in next, latestAssets.asssets do
-              if asset.name:find("tempalte") > 0 then
+            for i, asset in next, latestAssets.assets do
+              if asset.name:find("tempalte")  then
                 assets.template.latestName = asset.name
-                asssets.template.url = asset.url
-              elseif asset.name:find("editor") > 0 then
+                assets.template.url = asset.url
+              elseif asset.name:find("editor")  then
                 assets.editor.latestName = asset.name
-                asssets.template.editor = asset.url
-              elseif asset.name:find("framework") > 0 then
+                assets.template.editor = asset.url
+              elseif asset.name:find("framework")  then
                 assets.framework.latestName = asset.name
-                asssets.framework.url = asset.url
+                assets.framework.url = asset.url
               end
             end
 
-            if assets.template.latestName == template.name and
-              assets.editor.latestName   == editor.name and
-              assets.framework.latestName == framework.name then
+            if assets.template.latestName == assets.template.name and
+              assets.editor.latestName   == assets.editor.name and
+              assets.framework.latestName == assets.framework.name then
               deferred:resolve(false)
             else
               deferred:resolve(true)
