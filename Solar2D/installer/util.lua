@@ -58,8 +58,9 @@ elseif system.getInfo("platform") == "macos" then
     os.execute('mv '.._src..' '.._dst)
   end
    MKDIR = function(path)
-  local _path= path:gsub(' ','\\ ')
-   os.execute('mkdir -p '.._path)
+    local _path= path:gsub(' ','\\ ')
+     os.execute('mkdir -p '.._path)
+   end
 end
 
 M.install = function(asset, src, dst)

@@ -1,0 +1,5 @@
+
+@token=
+
+GET https://api.github.com/repos/kwiksher/kwik5tmplt/releases/latest
+Authorization: token {{token}}
