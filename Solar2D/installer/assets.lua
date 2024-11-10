@@ -46,11 +46,15 @@ M.params.headers = headers
 --
 function M:init()
     local filename = system.pathForFile( "kwkversion.json", system.ApplicationSupportDirectory )
-    local decoded, pos, msg = json.decodeFile( filename )
-    self.template = decoded.template
-    self.editors = decoded.editor
-    self.framework = decoded.framework
-    self.version = decoded.version
+    if filename then
+      local decoded, pos, msg = json.decodeFile( filename )
+      if decoded then
+        self.template = decoded.template
+        self.editors = decoded.editor
+        self.framework = decoded.framework
+        self.version = decoded.version
+      end
+    end
  end
 
 function M:save()
