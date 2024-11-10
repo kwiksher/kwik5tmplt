@@ -2,6 +2,11 @@ local exports = {}
 exports.group = {}
 
 
+function exports:message(choices, message)
+  local text = message or "Press a button"
+  native.showAlert( "Kwik", text, {unpack(choices)}, self.onClick)
+end
+
 function exports:networkEvent(event)
     --print("view:networkEvent")
     --for k,v in pairs(event) do print("", k, v) end
@@ -41,12 +46,15 @@ function exports:showOK(next)
     native.showAlert( "Kwik", "Success", { "Close" }, next)
 end
 
+local posX = display.contentWidth-200
+local posY = 10
+
 function exports:showVersions(assets)
-    local editorVersion = display.newText(assets.editor.label..":"..assets.editor.name, display.contentCenterX/2, display.contentCenterY + 80, native.systemFont, 16)
+    local editorVersion = display.newText(assets.editor.label..":"..assets.editor.name,posX, posY+ 40, native.systemFont, 16)
     editorVersion.align = "left"
-    local templateVersion = display.newText(assets.template.label..":"..assets.template.name, display.contentCenterX/2, display.contentCenterY + 100, native.systemFont, 16)
+    local templateVersion = display.newText(assets.template.label..":"..assets.template.name,posX, posY+ 70, native.systemFont, 16)
     templateVersion.aligh = "left"
-    local frameworkVersion = display.newText(assets.framework.label..": "..assets.framework.name, display.contentWidth-100, 10 , native.systemFont, 12)
+    local frameworkVersion = display.newText(assets.framework.label..": "..assets.framework.name, posX, posY + 10 , native.systemFont, 16)
     frameworkVersion.align = "right"
 
     self.group.editorVersion   = editorVersion
@@ -54,7 +62,7 @@ function exports:showVersions(assets)
     self.group.frameworkVersion  = frameworkVersion
 
     if assets.template.name ~= assets.template.latestName then
-      templatekVersion:setFillColor( 1, 1, 0 )
+      templateVersion:setFillColor( 1, 1, 0 )
     end
     if assets.editor.name ~= assets.editor.latestName then
       editorVersion:setFillColor( 1, 1, 0 )
