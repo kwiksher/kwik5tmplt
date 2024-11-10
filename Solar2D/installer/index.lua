@@ -48,9 +48,9 @@ local showUpdater = function()
             view:hideSpinner()
         elseif event.name == "started" then
           view:showSpinner()
-        elseif event.name == "endeded" then
+        elseif event.name == "ended" then
           view:hideSpinner()
-          assets:save()
+          assets:save(event.commands)
         end
     end)
 end

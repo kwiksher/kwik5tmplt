@@ -86,9 +86,9 @@ end
 -- download & install
 --
 local function fetch(asset)
-    print("fetch")
+    print("fetch", asset.browser_download_url)
     local deferred = Deferred()
-    accessFile(asset.url, assets.params, "GET", asset.latestName )
+    accessFile(asset.browser_download_url, assets.params, "GET", asset.latestName )
     :done(function(response)
         print(json.prettify(response))
         view.spinnerText.text = "uncompressing ".. asset.latestName.. "..."
@@ -151,7 +151,7 @@ function exports:processUpdate(onEvent)
     end)
     :fail(function(error) onEvent{name="error", error = error} end)
     :always(function()
-      onEvent{name="ended"}
+      onEvent{name="ended", commands = util.commands}
     end)
 end
 
@@ -166,15 +166,18 @@ exports.isNewVersion = function ()
         else
             assets.latestVersion = latestAssets.tag_name
             for i, asset in next, latestAssets.assets do
-              if asset.name:find("tempalte")  then
+              if asset.name:find("template")  then
                 assets.template.latestName = asset.name
                 assets.template.url = asset.url
+                assets.template.browser_download_url = asset.browser_download_url
               elseif asset.name:find("editor")  then
                 assets.editor.latestName = asset.name
-                assets.template.editor = asset.url
+                assets.editor.url = asset.url
+                assets.editor.browser_download_url = asset.browser_download_url
               elseif asset.name:find("framework")  then
                 assets.framework.latestName = asset.name
                 assets.framework.url = asset.url
+                assets.framework.browser_download_url = asset.browser_download_url
               end
             end
 
