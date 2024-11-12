@@ -39,7 +39,7 @@ jobs:
         echo "RELEASE_FILENAME_framework=framework_${{ env.modification_time_framework }}.zip" >> $GITHUB_ENV
         echo "RELEASE_FILENAME_template=template_${{ env.modification_time_template }}.zip" >> $GITHUB_ENV
         echo "RELEASE_FILENAME_editor=editor_${{ env.modification_time_editor }}.zip" >> $GITHUB_ENV
-        echo "RELEASE_FILENAME_exporter=editor_${{ env.modification_time_exporter }}.zip" >> $GITHUB_ENV
+        echo "RELEASE_FILENAME_exporter=exporter_${{ env.modification_time_exporter }}.zip" >> $GITHUB_ENV
 
     - name: Archive Release exporter
       uses: TheDoctor0/zip-release@0.7.6
