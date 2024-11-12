@@ -45,8 +45,8 @@ jobs:
       uses: TheDoctor0/zip-release@0.7.6
       with:
         type: 'zip'
-        directory: UXP/kwik-exporter
-        path: .
+        directory: UXP
+        path: kwik-exporter
         filename: ${{ env.RELEASE_FILENAME_exporter }}
         exclusions: '*.git*'
 
@@ -87,4 +87,4 @@ jobs:
         prerelease: false
         files: |
           Solar2D/*.zip
-          UXP/kwik-exporter/*.zip
+          UXP/*.zip
