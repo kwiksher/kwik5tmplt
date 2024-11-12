@@ -56,6 +56,9 @@ local showUpdater = function()
 end
 
 M.init = function()
+  -- timer.performWithDelay(3000, function()
+  --   view:showSpinner()
+  -- end)
   assets:init()
   download.isNewVersion():done(function(isNew)
       if isNew then
@@ -69,7 +72,6 @@ M.init = function()
         end)
       end
   end)
-
 end
 --
 return M
