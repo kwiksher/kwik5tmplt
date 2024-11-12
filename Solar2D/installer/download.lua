@@ -114,31 +114,39 @@ local function fetch(asset)
 end
 
 function exports:processUpdate(onEvent)
-    onEvent{name="started"}
-    local d1, d2, d3
-    if assets.editor.name ~= assets.editor.latestName then
-        util.backup(assets.editor, rootFolder.."/backup")
-        d1 = fetch(assets.editor)
-    else
-        d1 = Deferred()
-        d1:resolve("")
-    end
-    if assets.template.name ~= assets.template.latestName then
-        util.backup(assets.template, rootFolder.."/backup")
-        d2 = fetch(assets.template)
-    else
-        d2 = Deferred()
-        d2:resolve("")
-    end
-    if assets.framework.name ~= assets.framework.latestName then
-      util.backup(assets.framework, rootFolder.."/backup")
-      d3 = fetch(assets.framework)
+  onEvent{name="started"}
+  local d1, d2, d3, d4
+  if assets.editor.name ~= assets.editor.latestName then
+      util.backup(assets.editor, rootFolder.."/backup")
+      d1 = fetch(assets.editor)
+  else
+      d1 = Deferred()
+      d1:resolve("")
+  end
+  if assets.template.name ~= assets.template.latestName then
+      util.backup(assets.template, rootFolder.."/backup")
+      d2 = fetch(assets.template)
+  else
+      d2 = Deferred()
+      d2:resolve("")
+  end
+  if assets.framework.name ~= assets.framework.latestName then
+    util.backup(assets.framework, rootFolder.."/backup")
+    d3 = fetch(assets.framework)
   else
       d3 = Deferred()
       d3:resolve("")
   end
-  when(d1, d2, d3)
-    :done(function(dir1, dir2, dir3)
+  if assets.exporter.name ~= assets.exporter.latestName then
+    util.backup(assets.exporter, rootFolder.."/backup")
+    d4 = fetch(assets.exporter)
+  else
+      d4 = Deferred()
+      d4:resolve("")
+  end
+  --
+  when(d1, d2, d3, d4)
+    :done(function(dir1, dir2, dir3, dir4)
         if dir1 ~="" then
             util.install(assets.editor, dir1, rootFolder)
         end
@@ -147,7 +155,10 @@ function exports:processUpdate(onEvent)
         end
         if dir3 ~="" then
           util.install(assets.framework, dir3, rootFolder)
-      end
+        end
+        if dir4 ~="" then
+          util.install(assets.exporter, dir4, rootFolder..assets.exporter.rootFolder)
+        end
     end)
     :fail(function(error) onEvent{name="error", error = error} end)
     :always(function()
