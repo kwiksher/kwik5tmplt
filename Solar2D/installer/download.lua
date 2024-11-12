@@ -178,12 +178,17 @@ exports.isNewVersion = function ()
                 assets.framework.latestName = asset.name
                 assets.framework.url = asset.url
                 assets.framework.browser_download_url = asset.browser_download_url
+              elseif asset.name:find("exporter")  then
+                assets.exporter.latestName = asset.name
+                assets.exporter.url = asset.url
+                assets.exporter.browser_download_url = asset.browser_download_url
               end
             end
 
             if assets.template.latestName == assets.template.name and
               assets.editor.latestName   == assets.editor.name and
-              assets.framework.latestName == assets.framework.name then
+              assets.framework.latestName == assets.framework.name and
+              assets.exporter.latestName == assets.exporter.name  then
               deferred:resolve(false)
             else
               deferred:resolve(true)

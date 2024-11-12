@@ -19,6 +19,14 @@ local M = {
     url = "",
     label = "editor"
   },
+  exporter={
+    name="exporter_",
+    path="kwik-exporter",
+    latestName = "",
+    url = "",
+    label = "exporter",
+    rootFolder = "/../UXP"
+  },
   framework = {
     name="framework_",
     path=".",
@@ -41,6 +49,17 @@ local M = {
   latestVersion = "",
   params = {}
 }
+
+local path = system.pathForFile("installer/.env", system.ResourceDirectory)
+local file, errorString = io.open(path, "r")
+if not file then
+  print("ERROR: github token is missing in .env")
+  return nil
+else
+  local contents = file:read("*a")
+  M.token = contents:match('token="([^"]+)"')
+  io.close(file)
+end
 
 local headers = {}
 headers["Content-Type"] = "application/json"
@@ -121,9 +140,10 @@ function M:save(commands)
   self.template.name = self.template.latestName
   self.editor.name   = self.editor.latestName
   self.framework.name = self.framework.latestName
+  self.exporter.name = self.exporter.latestName
   self.version = self.latestVersion
 
-   local output = json.encode{template = self.template, editor = self.editor, framework=self.framework, version = self.version}
+   local output = json.encode{template = self.template, editor = self.editor, framework=self.framework, version = self.version, exporter = self.exporter}
     local path = system.pathForFile("kwkversion.json", system.ApplicationSupportDirectory )
     local file, errorString = io.open( path, "w" )
     file:write(output)
