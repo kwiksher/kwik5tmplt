@@ -284,9 +284,9 @@ function M:create(UI)
   -- if self.rootGroup then
   --   return
   -- end
-  if self.name == debugName then
-      print("create", self.id)
-  end
+  --if self.name == debugName then
+      -- print("create", self.id)
+  --end
   self.selections = {}
   self:initScene(UI)
   --
@@ -440,12 +440,12 @@ end
 --
 function M:destroy()
   -- print(debug.traceback())
-  if self.name == debugName then
-    print(self.name, "destroy")
-  end
+  -- if self.name == debugName then
+    -- print(self.name, "destroy")
+  -- end
   if self.objs then
     for i = 1, #self.objs do
-      if self.objs[i].rect then
+      if self.objs[i].rect  and self.objs[i].rect.removeSelf then
         self.objs[i].rect:removeSelf()
       end
       if self.objs[i] and self.objs[i].removeSelf then
@@ -455,7 +455,9 @@ function M:destroy()
   end
   if self.iconObjs then
     for i, v in next, self.iconObjs do
-      v:removeSelf()
+      if v.removeSelf then
+        v:removeSelf()
+      end
     end
   end
   self.iconObjs = nil
@@ -468,9 +470,9 @@ function M:destroy()
 end
 
 function M:clean()
-  if self.name == debugName then
-    print("clean")
-  end
+  -- if self.name == debugName then
+    -- print("clean", self.name)
+  -- end
   if self.objs then
     for i, obj in next, self.objs do
       if obj.rect and obj.removeSelf then

@@ -13,7 +13,7 @@ local function onKeyEvent(event)
   local message = "Key '" .. event.keyName .. "' was pressed " .. event.phase
   --for k, v in pairs(event) do print(k, v) end
   if (event.keyName == "leftAlt" or event.keyName == "rightAlt") and event.phase == "down" then
-    print("linkboxMulti", message)
+    -- print("linkboxMulti", message)
     M.altDown = true
   elseif (event.keyName == "leftControl" or event.keyName == "rightControl") and event.phase == "down" then
     M.controlDown = true

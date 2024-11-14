@@ -1,3 +1,4 @@
+Hello/
 Solar2D/backup/
 Solar2D_kwk/
 *.bak
@@ -5,6 +6,7 @@ Solar2D_kwk/
 *.library
 Solar2D/App/mybook
 Solar2D/App/book
+Solar2D/App/book1
 Solar2D/App/bookFree
 BookServer/compress_assets_bookFree.command
 BookServer/compress_assets_bookOne.command

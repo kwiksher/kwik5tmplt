@@ -52,8 +52,8 @@ M.new = function(sceneName, model)
 
       self.UI:create(event.params)
       if self.model.onInit then self.model.onInit(self.UI) end
+      self.app:dispatchEvent({name = "onRobotlegsViewCreated", target = self, UI=self.UI})
 
-      self.app:dispatchEvent({name = "onRobotlegsViewCreated", target = self})
     end
     --
     function scene:show(event)
@@ -63,6 +63,7 @@ M.new = function(sceneName, model)
         elseif event.phase == "did" then
             self.UI:didShow(event.params)
         end
+        self.app:dispatchEvent({name = "onRobotlegsViewDidShow", target = self, UI=self.UI})
     end
     --
     function scene:hide(event)
@@ -71,11 +72,12 @@ M.new = function(sceneName, model)
             self.UI:didHide(event.params)
         elseif event.phase == "did" then
         end
+        self.app:dispatchEvent({name = "onRobotlegsViewDidHide", target = self, UI=self.UI})
     end
     --
     function scene:destroy(event)
         self.UI:destroy(event.params)
-        self.app:dispatchEvent({name = "onRobotlegsViewDestroyed", target = self})
+        self.app:dispatchEvent({name = "onRobotlegsViewDestroyed", target = self,UI=self.UI})
     end
 
     function scene:init(event)
