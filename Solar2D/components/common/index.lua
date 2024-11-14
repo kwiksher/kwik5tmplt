@@ -1,6 +1,4 @@
--- $weight=-1
---
-local _M = {}
+local M = {}
 
 local current = ...
 local parent = current:match("(.-)[^%.]+$")
@@ -9,31 +7,36 @@ local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 -- print(current, parent ,root)
 local app = require("controller.Application").get()
 
-local editor = require("editor.index")
--- editor.lastSelection = { book="book", page=app.props.goPage}
+-- local editor = require("editor.index")
+-- --editor.lastSelection = { book="book", page=app.props.goPage}
 
 
 -- local screen = require(parent.."screen")
-
---
-function _M:init(UI)
-  editor:init(UI)
+function M:showSceneCollection()
+  local composer = require("composer")
+  local name = "sceneCollection"
+  local collection = require("controller.sceneCollection").new()
+  composer.gotoScene( "sceneCollection",  {effect = "flip", time = 1000})
 end
 --
-function _M:create(UI)
-  editor:create(UI)
+function M:init(UI)
+  -- editor:init(UI)
 end
 --
-function _M:didShow(UI)
-  editor:didShow(UI)
+function M:create(UI)
+  -- editor:create(UI)
 end
 --
-function _M:didHide(UI)
-  editor:didHide(UI)
+function M:didShow(UI)
+  -- editor:didShow(UI)
 end
 --
-function _M:destroy(UI)
-  editor:destroy(UI)
+function M:didHide(UI)
+  -- editor:didHide(UI)
 end
 --
-return _M
+function M:destroy(UI)
+  -- editor:destroy(UI)
+end
+--
+return M

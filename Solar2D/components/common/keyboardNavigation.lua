@@ -26,7 +26,7 @@ local function onKeyEvent(event)
   local scenes = app.props.scenes
   -- for k, v in pairs(scenes) do print(k, v) end
   if event.phase == "up" then
-    print("onKeyEvent", message, app.currentViewName )
+    -- print("onKeyEvent", message, app.currentViewName )
     if event.keyName == "a" or event.keyName == "left" then
       -- print("onKeyEvent", app.currentViewName, #scenes)
       local getPrevious = function()

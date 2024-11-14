@@ -3,7 +3,7 @@ local M = {
   run = function (props)
     print("============ lunatest =============")
 
-    lunatest.suite("test.keyboard.suite_page1", props)
+    -- lunatest.suite("test.keyboard.suite_page1", props)
     -- lunatest.suite("test.lingualSample.suite_lingual_page2", props)
 
     -- lunatest.suite("test.book.suite_assets", props)
