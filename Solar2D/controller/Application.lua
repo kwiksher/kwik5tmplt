@@ -272,6 +272,34 @@ function M.new(Props)
       self.variables[name] = value
     end
 
+    local editor = require("editor.index")
+-- editor.lastSelection = { book="book", page=app.props.goPage}
+
+    app:addEventListener("onRobotlegsViewDidShow", function(event)
+      -- print("-----@@@@@@@@@------")
+      -- printKeys(event.target)
+
+      local UI = event.UI
+      if UI and UI.props.editing then
+        editor:didHide(UI)
+        editor:destroy(UI)
+        --
+        editor:init(UI)
+        editor:create(UI)
+        editor:didShow(UI)
+        if app.fromEditor then
+          editor:showPageView()
+          app.fromEditor = false
+        end
+      end
+
+    end)
+
+    app:addEventListener("onRobotlegsViewDestroyed", function(event)
+      print("----- destroyed------")
+      -- this comes from scene:destroy, so maybe not called because the caller is solar2d composer.
+    end)
+
     return app
 end
 --
