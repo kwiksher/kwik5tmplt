@@ -1,12 +1,17 @@
--- $weight=-1
---
-local _M = {}
+local M = {}
 
-local current = ...
-local parent = current:match("(.-)[^%.]+$")
-local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
-local util = require("lib.util")
--- print(current, parent ,root)
+system.setTapDelay( 0.5 )
+
+inspect = require("extlib.inspect")
+
+NIL = setmetatable({},{__tostring=function() return "nil" end})
+NilCheck = function(v)
+  if v == NIL then
+    return nil
+  else
+    return v
+  end
+end
 
 function string:mySplit(delimiter)
   local t = {}
@@ -99,19 +104,19 @@ function table:mySet (list)
   return set
 end
 --
-function _M:init(UI)
+function M:init(UI)
 end
 --
-function _M:create(UI)
+function M:create(UI)
 end
 --
-function _M:didShow(UI)
+function M:didShow(UI)
 end
 --
-function _M:didHide(UI)
+function M:didHide(UI)
 end
 --
-function _M:destroy()
+function M:destroy()
 end
 --
-return _M
+return M

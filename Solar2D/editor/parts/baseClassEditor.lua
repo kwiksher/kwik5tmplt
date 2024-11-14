@@ -96,6 +96,7 @@ function M:create(UI)
 end
 --
 function M:didShow(UI)
+  -- print(self.model.id, self.controller.viewGroup)
   for k, v in pairs(self.controller.viewGroup) do
     v:didShow(UI)
   end

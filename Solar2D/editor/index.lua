@@ -188,6 +188,7 @@ function M:init(UI)
   if self.rootGroup then
     self:destroy(UI)
     self.rootGroup:removeSelf()
+    self.rootGroup = nil
   end
 
   -- if self.views == nil then
@@ -316,6 +317,12 @@ function M:runTest()
   end
 end
 
+function M:showPageView()
+  -- print("@@@@ showPageView")
+  selectors.projectPageSelector:show()
+  selectors.projectPageSelector:onClick(true)
+
+end
 
 function M:gotoLastSelection(_props)
   local UI = self.UI
@@ -412,9 +419,10 @@ function M:didShow(UI)
     UI.editor.currentBook = UI.book
     -- UI.editor.currentPage = "page2"
     local showComponentSelector = true
-    local showProjectSelector = false
+    local showProjectSelector = true
     if showProjectSelector then
           selectors.projectPageSelector:show()
+          selectors.projectPageSelector:onClick(true)
 
           -- UI.scene.app:dispatchEvent {
           --   name = "editor.selector.selectApp",
@@ -465,17 +473,29 @@ function M:didShow(UI)
 -- didHide is called back from showView gotoScene
 function M:didHide(UI)
   UI.editor = self
-  for i=1, #self.views do
-    self.views[i]:didHide(UI)
+  if self.views then
+    for i=1, #self.views do
+      self.views[i]:didHide(UI)
+    end
   end
 end
 --
 -- destroy is not called from gotoScene because of recycle?
 function M:destroy(UI)
   --UI.editor = self
-  for i=1, #self.views do
-    self.views[i]:destroy(UI)
+  -- print("$$$$$ destroy")
+  if self.views then
+    for i=1, #self.views do
+      self.views[i]:destroy(UI)
+    end
   end
+  self.views = nil
+  ---
+  if self.rootGroup then
+    self.rootGroup:removeSelf()
+    self.rootGroup = nil
+  end
+
 end
 --
 return M
