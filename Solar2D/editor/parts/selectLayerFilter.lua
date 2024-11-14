@@ -54,7 +54,7 @@ local option, newText = util.newTextFactory{
 }
 --
 local function createTable(triangle, rootGroup)
-  -- print("createTable")
+  -- print("@@@@ createTable")
   local labelText = display.newText{
       parent = rootGroup,
       text = M.name,
@@ -139,7 +139,7 @@ function M:create(UI, x, y)
   self.triangle = shapes.triangle.equi( x, y, 10 )
   self.triangle:rotate(180)
   self.triangle.tap = function(event)
-    print("triangle tap")
+    -- print("triangle tap")
     self.scrollView.isVisible = not self.scrollView.isVisible
     for i=1, #self.objs do
       local obj = self.objs[i]
@@ -207,6 +207,7 @@ function M:didShow(UI)
 end
 --
 function M:didHide(UI)
+  -- print("didHide")
   for i=1, #self.objs do
     local obj = self.objs[i]
     obj:removeEventListener("tap", obj)
@@ -217,18 +218,25 @@ function M:didHide(UI)
 end
 --
 function M:hide()
+  -- print("hide")
   self.triangle.isVisible = false
   self.scrollView.isVisible = false
   self.selectedText.isVisible = false
 end
 --
 function M:show ()
+  -- print("show")
   self.triangle.isVisible = true
   self.scrollView.isVisible = false
   self.selectedText.isVisible = true
 end
 --
 function  M:destroy(UI)
+  -- print("destroy")
+  for i=1, #self.objs do
+    self.objs[i]:removeSelf()
+  end
+  self.objs = {}
 end
 --
 return M
