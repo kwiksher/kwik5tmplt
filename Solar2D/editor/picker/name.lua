@@ -19,6 +19,7 @@ M.height = 40
 M.buttons = {"Continue",  "CANCEL"}
 --
 function M:create(callback, message)
+  -- print(debug.traceback())
   self.callback = callback
   -- buttons
   self.buttonObjs = {}
@@ -112,7 +113,8 @@ function M:show()
 end
 
 function M:didShow()
-  self:show()
+  -- print("#didShow")
+  -- self:show()
 end
 
 function M:didHide()

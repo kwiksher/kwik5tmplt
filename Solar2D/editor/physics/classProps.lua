@@ -9,7 +9,7 @@ local function onKeyEvent(self, event)
   self.altDown = false
   self.controlDown = false
   if (event.keyName == "leftAlt" or event.keyName == "rightAlt") and event.phase == "down" then
-    print("baseTable", self.name, message)
+    -- print("baseTable", self.name, message)
     self.altDown = true
   elseif (event.keyName == "leftControl" or event.keyName == "rightControl") and event.phase == "down" then
     self.controlDown = true
@@ -28,7 +28,7 @@ local pointA        = require("editor.animation.pointA")
 local pointB        = require("editor.animation.pointB")
 --
 function M:tapListener(event, type)
-  print("tapListener", type)
+  -- print("tapListener", type)
   -- event.actionbox = self
   if self:isAltDown() then -- show Focus
     -- print("altDown")
@@ -54,13 +54,13 @@ M.onTapActionSet =  table:mySet{"onComplete"}
 M.onTapPosXYSet = table:mySet{"anchor_x", "anchorA_x", "anchorB_x", "statA_x", "stateB_x", "bodyA_x", "bodyB_x", "offsetA_x", "offsetB_x"}
 --
 function M:setActiveProp(layer, class)
-  print("setActiveProp", self.name)
+  -- print("setActiveProp", self.name)
   local name =self.activeProp
   local value = layer
   local UI = self.UI
   --
   if self.activeProp =="othersGroup" then
-    print("@@@@", layer, class)
+    -- print("@@@@", layer, class)
     for i,v in next, self.objs do
       if v.text == "othersGroup" then
         v.field.text = layer

@@ -7,14 +7,14 @@ M.libs = {
 }
 
 function M:init(UI)
-  print("book name is", UI.props.name)
   for i, v in next, self.libs do
     UI[v.name] = require(parent..v.value)
   end
 end
 
 function M:create(UI)
-  UI.mycode:createDica(UI)
+  print(UI.props.appName, UI.props.goPage)
+  -- UI.mycode:createDica(UI)
 end
 
 function M:willShow(UI)

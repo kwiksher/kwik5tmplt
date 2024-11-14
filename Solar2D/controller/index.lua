@@ -96,5 +96,9 @@ Runtime:addEventListener("changeThisMug", function(event)
     lib.bootstrap({name=event.appName, goPage=event.goPage, editing = event.editing, position = {x=0, y=0}, common=common}) -- scenes.index
   end
 end)
+
+
+
+
 -- Return library instance
 return lib
