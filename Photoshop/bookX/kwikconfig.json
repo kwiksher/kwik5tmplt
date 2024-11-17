@@ -1,7 +1,0 @@
-{
-  "name":"book one",
-  "output":"../../Solar2D/src/App/book01",
-  "pages":[
-    {"psd":"page01.psd", "name":"page one"}
-  ]
-}
