@@ -1,6 +1,6 @@
-Hello/
+_Hello/
 Solar2D/backup/
-Solar2D_kwk/
+_Solar2D_kwk/
 *.bak
 *.json
 *.library
@@ -27,3 +27,5 @@ io-checkpoint.ipynb
 release.http
 Solar2D/installer copy 1
 UXP/kwik-exporter/kwik/base-proj
+UXP/kwik-exporter/kwik/Photoshop
+
