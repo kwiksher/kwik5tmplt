@@ -56,6 +56,8 @@ printKeys = function(tbl)
   for k, v in pairs(tbl) do _print("printKeys", k,v) end
 end
 
+local util = require("lib.util")
+
 printTable = function(tbl, printType)
   local flatten_tbl = util.flattenKeys(nil, tbl)
   local t = debug.traceback()
