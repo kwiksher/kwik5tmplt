@@ -521,8 +521,12 @@ function M:command()
         end
         self.picker:create(listener, "Please input a name")
       else
-        self.picker:create()
-        self.picker.obj.field.text = decoded.name
+        if self.picker then
+          self.picker:create()
+          self.picker.obj.field.text = decoded.name
+        else
+            print("Error picker not found")
+        end
       end
       --
       -- button
