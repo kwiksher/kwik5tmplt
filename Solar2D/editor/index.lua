@@ -109,28 +109,6 @@ M.views = nil
 M.rootGroup = nil
 
 local nanostores         = require("extlib.nanostores.index")
-local books              = nanostores.createStore()
-local pages              = nanostores.createStore()
-local layers             = nanostores.createStore()
-local layerJson         = nanostores.createStore()
-local groupLayers        = nanostores.createStore()
---
-local props              = nanostores.createStore()
-local actions            = nanostores.createStore()
-local actionProps        = nanostores.createStore()
-local actionCommandProps = nanostores.createStore()
---
-local assets             = nanostores.createStore()
-local labels             = nanostores.createStore()
---
-local audios            = nanostores.createStore()
-local groups            = nanostores.createStore()
-local timers            = nanostores.createStore()
-local variables         = nanostores.createStore()
-
-local joints            = nanostores.createStore()
-
-
 --
 local App = require("Application")
 
@@ -159,27 +137,25 @@ function M:initStores()
       --
     -- selectors.lua will set values of each stores
     --
-    self.bookStore = books -- nanostores.createStore()
-    self.pageStore =  pages -- nanostores.createStore()
-    self.layerStore = layers
-    self.layerJsonStore = layerJson
-    self.propsStore = props
-    self.actionStore = actions
-    self.actionCommandStore = actionProps
+    self.bookStore =nanostores.createStore()
+    self.pageStore =nanostores.createStore()
+    self.layerStore =nanostores.createStore()
+    self.layerJsonStore =nanostores.createStore()
+    self.propsStore =nanostores.createStore()
+    self.actionStore =nanostores.createStore()
+    self.actionCommandStore =nanostores.createStore()
 
-    self.assetStore = assets
-    self.labelStore = labels
-    self.actionCommandPropsStore = actionCommandProps
-    self.groupLayersStore = groupLayers    -- layer linkboxMulti(layersbox) is listening or set it for memberTable
-    -- linkboxMulti to show not selected, memberTable shows them with true
-    -- {name="layerA", selected = true}
-    -- {name="layerB", selected = false}
+    self.assetStore =nanostores.createStore()
+    self.labelStore =nanostores.createStore()
+    self.actionCommandPropsStore =nanostores.createStore()
+    self.groupLayersStore =nanostores.createStore()
     --
-    self.audioStore = audios
-    self.groupStore = groups -- TBI
-    self.timerStore = timers -- TBI
-    self.variableStore = variables -- TBI
-    self.jointStore   = joints
+    self.audioStore =nanostores.createStore()
+    self.groupStore =nanostores.createStore()
+    self.timerStore =nanostores.createStore()
+    self.variableStore =nanostores.createStore()
+    self.jointStore   =nanostores.createStore()
+
 end
 ---
 function M:init(UI)
@@ -197,13 +173,13 @@ function M:init(UI)
     self.classMap = {}
     self.assets = {}
     --
-    if self.contextInit == false then
-      local app = App.get()
-      -- print("@@@ init", app.props.appName)
+    local app = App.get()
+    if app.editorContextInit == nil then
+      print("@@@ init", app.props.appName, app)
       for i=1, #self.commands do
         app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.controller.selector."..self.commands[i].name)
       end
-      self.contextInit = true
+      app.editorContextInit = true
     end
     --
     for i=1, #self.models do
@@ -221,6 +197,7 @@ function M:init(UI)
       if layerTools[i].id then
         local module = require(parent..layerTools[i].id..".index")
         module.id = layerTools[i].id
+        module.name = module.name or layerTools[i].id
         self.views[#self.views + 1] = module
         self.editorTools[layerTools[i].id] = module
         for j=1, #layerTools[i].tools do
@@ -230,6 +207,7 @@ function M:init(UI)
             -- print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id.."."..layerTools[i].tools[j].id)
             --
             local module = require(parent..layerTools[i].id.."."..layerTools[i].tools[j].id..".index")
+            module.name = module.name or layerTools[i].id.."."..layerTools[i].tools[j].id
             self.views[#self.views + 1] = module
             self.editorTools[layerTools[i].id.."."..layerTools[i].tools[j].id] = module
 
@@ -248,6 +226,7 @@ function M:init(UI)
       if v.id then
         -- print("@@@", parent..v.id..".index")
         local module = require(parent..v.id..".index")
+        module.name = module.name or v.id
         self.views[#self.views + 1] = module
         self.editorTools['editor.parts.baseTable-'..v.id] = module
       end
@@ -256,6 +235,7 @@ function M:init(UI)
     ------
     -- asset tool
     local mod  = require(parent..assetTool.id..".index")
+    mod.name = mod.name or assetTool.id
     self.views[#self.views + 1] = mod
     self.editorTools['editor.parts.baseTable-'..assetTool.id] = mod
 
@@ -266,6 +246,7 @@ function M:init(UI)
     --
    UI.editor = self
    for i=1, #self.views do
+    -- print("init", self.views[i].name)
     self.views[i]:init(UI)
    end
    --
@@ -483,9 +464,10 @@ end
 -- destroy is not called from gotoScene because of recycle?
 function M:destroy(UI)
   --UI.editor = self
-  -- print("$$$$$ destroy")
+   print("$$$$$ destroy")
   if self.views then
     for i=1, #self.views do
+      -- print(self.views[i].name)
       self.views[i]:destroy(UI)
     end
   end

@@ -4,7 +4,7 @@ local nanostores = require("extlib.nanostores.index")
 local buttons    = require("editor.parts.buttons")
 
 local Props = {
-  name = "book",
+  name = "bookTable",
   setPosition = function(self)
     -- self.x = self.x
     -- self.y = self.y
