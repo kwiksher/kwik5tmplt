@@ -14,7 +14,7 @@ local contextButtons = require("editor.parts.buttons")
 local util = require("lib.util")
 
 local classProps = require("editor.parts.classProps")
-
+local debugName = "bookTable"
 
 M.x       = 100
 M.y       = 66 -- 44
@@ -284,9 +284,9 @@ function M:create(UI)
   -- if self.rootGroup then
   --   return
   -- end
-  --if self.name == debugName then
-      -- print("create", self.id)
-  --end
+  if self.name == debugName then
+    print("create", self.id)
+  end
   self.selections = {}
   self:initScene(UI)
   --
@@ -392,6 +392,7 @@ end
 function M:show()
   if self.name == debugName then
     print(self.name, "show", #self.objs)
+    print(debug.traceback())
   end
   if self.group then
     self.group.isVisible = true
@@ -440,9 +441,9 @@ end
 --
 function M:destroy()
   -- print(debug.traceback())
-  -- if self.name == debugName then
-    -- print(self.name, "destroy")
-  -- end
+   if self.name == debugName then
+    print("`@@@", self.name, "destroy")
+  end
   if self.objs then
     for i = 1, #self.objs do
       if self.objs[i].rect  and self.objs[i].rect.removeSelf then

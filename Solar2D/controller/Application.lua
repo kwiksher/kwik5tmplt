@@ -17,6 +17,8 @@ string.split = function(str, sep)
   return out
 end
 
+local util = require("lib.util")
+
 local function newInstance(M, props, _layerProps)
   -- print(props.name)
   local instance = {}
@@ -177,6 +179,49 @@ function M.getProps()
   return M.getByName(M.currentName).props
 end
 
+local useModelJSON = false
+
+function M.loadPage(UI)
+  --
+  local bookName = UI.book
+  local path =system.pathForFile( "App/"..bookName.."/models", system.ResourceDirectory)
+  if useModelJSON then
+    local success = lfs.chdir( path ) -- isDir works with current dir
+    if success then
+      local pages = {}
+      for file in lfs.dir( path ) do
+        if util.isDir(file) then
+          -- print( "Found file: " .. file )
+          -- set them to nanostores
+          if file:len() > 3 and file ~='assets' then
+            table.insert(pages, {name = file, path= util.PATH(path.."/"..file)})
+          end
+        end
+      end
+      if #pages > 0 then
+        UI.editor.pageStore:set(pages)
+      end
+    end
+  else
+    local sceneIndex = require( "App."..bookName..".index")
+    local success = lfs.chdir( path ) -- isDir works with current dir
+    if success then
+      local pages = {}
+      for i, scene in next, sceneIndex do
+          table.insert(pages, {name = scene, path= util.PATH(path.."/"..scene)})
+      end
+      if #pages > 0 then
+        UI.editor.pageStore:set(pages)
+      end
+    end
+  end
+
+  -- assets
+  UI.editor.assets = require("editor.asset.index").controller:read(bookName)
+  UI.editor.assetStore:set({decoded=UI.editor.assets})
+end
+
+
 function M.new(Props)
     local app = display.newGroup()
     app.classType = "App."..Props.appName..".index"
@@ -276,7 +321,6 @@ function M.new(Props)
 -- editor.lastSelection = { book="book", page=app.props.goPage}
 
     app:addEventListener("onRobotlegsViewDidShow", function(event)
-      -- print("-----@@@@@@@@@------")
       -- printKeys(event.target)
 
       local UI = event.UI
@@ -291,6 +335,8 @@ function M.new(Props)
           editor:showPageView()
           app.fromEditor = false
         end
+      print("-----loadPage------")
+        M.loadPage(UI)
       end
 
     end)

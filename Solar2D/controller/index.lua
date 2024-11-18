@@ -90,8 +90,8 @@ Runtime:addEventListener("changeThisMug", function(event)
   if event.appName == app.props.appName and event.goPage == app.props.goPage then
     print("not changeThisMug")
   else
-    composer.gotoScene("components.bookstore.view.page_cutscene")
-    composer.removeHidden(false)
+    -- composer.gotoScene("components.bookstore.view.page_cutscene")
+    -- composer.removeHidden(false)
     resetPacakges()
     lib.bootstrap({name=event.appName, goPage=event.goPage, editing = event.editing, position = {x=0, y=0}, common=common}) -- scenes.index
   end

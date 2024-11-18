@@ -98,7 +98,7 @@ function M:init(UI)
   -- print(UI.lang)
   if UI.langClassDelegate then
     --
-    self.properties.target = UI:getNameByLang(self.properties.target)
+    self.properties.target = UI:getNameByLang(self.properties.target or "")
     -- print(self.properties.target)
     self.audioProps.filename = libUtil.swapLangPrefix(self.audioProps.filename, UI.lang) -- en/my_father_is_nice.mp3
     -- print(self.audioProps.filename)
