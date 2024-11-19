@@ -11,7 +11,10 @@ package.loaded["Application"] = App
 local common = {commands = {"myEvent"}, components = {"keyboardNavigation", "bookstoreNavigation"}}
 
 function lib.bootstrap(Props)
-    local app = App.new{
+
+    local app = App.getByName(Props.name)
+    if app == nil then
+      app = App.new{
         appName     = Props.name,
         editing     = Props.editing,
         systemDir   = system.ResourceDirectory,
@@ -36,7 +39,8 @@ function lib.bootstrap(Props)
         randomAnim   = {},
         DocumentsDir = system.DocumentsDirectory,
         common       = Props.common
-    }
+      }
+    end
     App.gtween      = require("extlib.gtween")
     App.btween      = require("extlib.btween")
     App.Gesture     = require("extlib.dmc_gesture")
@@ -71,15 +75,15 @@ local function resetPacakges()
      -- bookstore UI
      -- this has a reference to App.TOC or bookXX, so need to unload it?
      package.loaded["components.bookstore.controller.pageCommand"] = nil
-     package.loaded["editor.bookstore.controller.pageCommand"] = nil
      package.loaded["components.common.index"] = nil
-     package.loaded["editor.index"] = nil
+     --  package.loaded["editor.index"] = nil
 
-     for k, v in pairs(package.loaded) do
-      if k:find("editor") then
-        package.loaded[k] = nil
-      end
-     end
+    -- package.loaded["editor.bookstore.controller.pageCommand"] = nil
+    --  for k, v in pairs(package.loaded) do
+    --   if k:find("editor") then
+    --     package.loaded[k] = nil
+    --   end
+    --  end
 end
 
 Runtime:addEventListener("changeThisMug", function(event)
@@ -90,8 +94,8 @@ Runtime:addEventListener("changeThisMug", function(event)
   if event.appName == app.props.appName and event.goPage == app.props.goPage then
     print("not changeThisMug")
   else
-    composer.gotoScene("components.bookstore.view.page_cutscene")
-    composer.removeHidden(false)
+    -- composer.gotoScene("components.bookstore.view.page_cutscene")
+    -- composer.removeHidden(false)
     resetPacakges()
     lib.bootstrap({name=event.appName, goPage=event.goPage, editing = event.editing, position = {x=0, y=0}, common=common}) -- scenes.index
   end
