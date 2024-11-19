@@ -5,6 +5,16 @@ local isWindows = system.getInfo("platform") == "win32"
 local userHomeDocumentsPath = isWindows and "%HOMEPATH%\\Documents\\" or os.getenv("HOME")
 local lfs = require( "lfs" )
 local util = require("lib.util")
+local bookstore = require("App.bookstore")
+
+local function isIgnored(file)
+  for i, v in next, bookstore.bookignored do
+    if file == v then
+      return true
+    end
+  end
+  return false
+end
 
 --
 local command = function (params)
@@ -41,7 +51,7 @@ local command = function (params)
 				if util.isDir(file) then
 					-- print("",  "Found file: " .. file )
 					-- set them to nanostores
-					if util.isFile(file.."/index.lua")  and file:len() > 3 and file ~="kwikEditor" then
+					if util.isFile(file.."/index.lua")  and file:len() > 3 and not isIgnored(file) then
             local w = util.readWeight(file.."/index.lua")
             -- print(w)
 						table.insert(books, {name = file, path= util.PATH(appFolder.."/"..file), weight = w})

@@ -111,7 +111,9 @@ function M:didHide(UI) end
 function M:destroy()
   if self.objs then
     for i, obj in next, self.objs do
-      obj:removeSelf()
+      if obj.removeSelf then
+        obj:removeSelf()
+      end
     end
   end
   self.objs = nil
