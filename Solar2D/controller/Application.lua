@@ -289,6 +289,7 @@ function M.new(Props)
 
     function app:init()
         -- app:addEventListener("onRobotlegsViewCreated", function(e) print("test") end)
+      if self.context == nil then
         self.context = AppContext.new(self)
         self.context:init(app.props.scenes, app.props)
 
@@ -307,6 +308,11 @@ function M.new(Props)
           self.useTrigger = false -- true app:trigger, false:app:showView (composer.gotoScene)
           self:dispatchEvent({name = "onRobotlegsViewCreated", target = self}) -- self == app, this sets mediator's viewInstance as app
         end
+      elseif self.useTrigger then
+        self:trigger(self.startSceneName, {})
+      else
+        self:showView(self.startSceneName, {})
+      end
     end
 
     function app:getVariable(name)
