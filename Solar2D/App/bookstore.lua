@@ -1,5 +1,5 @@
 local M = {
-  bookignored = {"book1", "mybook"}
+  bookignored = {"book1", "mybook", "kwikTheCat"}
 }
 --
 local pageCommand = require("components.bookstore.controller.pageCommand")
