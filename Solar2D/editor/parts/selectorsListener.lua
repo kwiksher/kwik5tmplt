@@ -5,6 +5,7 @@ local bt = require(root .. "controller.BTree.btree")
 local tree = require(root .. "controller.BTree.selectorsTree")
 local buttons  = require("editor.parts.buttons")
 local selectLayerFilter = require("editor.parts.selectLayerFilter")
+local json = require("json")
 
 ---
 local keyboardNavigation = require("components.common.keyboardNavigation")
@@ -175,7 +176,6 @@ function M:addListener(UI, buttons, propsTable)
       tree:setConditionStatus("delete asset", bt.FAILED)
       --
       if assetName then
-        local json = require("json")
         -- print(assetName, print(json.encode(UI.editor.assets[assetName])))
         UI.editor.assetStore:set({class = assetName, decoded = UI.editor.assets[assetName]})
       else

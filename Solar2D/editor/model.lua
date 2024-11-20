@@ -77,12 +77,12 @@ local model = {
     },
     {
       name = "Shapes",
-      icon = "toolBook",
+      icon = "toolShape",
       tools = {
-        {name = "new_rectangle", icon = ""},
-        {name = "new_text", icon = ""},
-        {name = "new_ellipse", icon = ""},
-        {name = "new_image", icon = ""},
+        {name = "new_rectangle", icon = "shapeRect"},
+        {name = "new_text", icon = "shapeText"},
+        {name = "new_ellipse", icon = "shapeEcllipse"},
+        {name = "new_image", icon = "shapeImage"},
       },
       id = "shape"
     },
