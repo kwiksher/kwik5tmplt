@@ -159,7 +159,7 @@ function M:initStores()
 end
 ---
 function M:init(UI)
-  -- print("#### init")
+  -- print("init")
   self.UI = UI
   if self.rootGroup then
     self:destroy(UI)
@@ -175,7 +175,7 @@ function M:init(UI)
     --
     local app = App.get()
     if app.editorContextInit == nil then
-      print("@@@ init", app.props.appName, app)
+      -- print("init", app.props.appName, app)
       for i=1, #self.commands do
         app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.controller.selector."..self.commands[i].name)
       end
@@ -464,7 +464,7 @@ end
 -- destroy is not called from gotoScene because of recycle?
 function M:destroy(UI)
   --UI.editor = self
-   print("$$$$$ destroy")
+  --  print("destroy")
   if self.views then
     for i=1, #self.views do
       -- print(self.views[i].name)
