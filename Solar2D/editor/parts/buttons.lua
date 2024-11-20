@@ -332,12 +332,13 @@ function M:create(UI)
 
   group.split = function()
     local leftPosX, rightPosX = screen.safe.minX + 30 , screen.centerX + 480*0.5
-    print(leftPosX, rightPosX)
+    -- print(leftPosX, rightPosX)
     for i, eventName in next, self.commands do
       if self.objs then
         local obj = self.objs[eventName]
-        if obj == nil then print(eventName) end
-        if obj.alignment == "left" then
+        if obj == nil then
+          -- print(eventName)
+        elseif obj.alignment == "left" then
         obj.x = leftPosX
         obj.rect.x = leftPosX
         leftPosX = leftPosX + obj.rect.width

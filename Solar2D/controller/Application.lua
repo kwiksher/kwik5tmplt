@@ -237,7 +237,7 @@ function M.new(Props)
 --
     function app:showView(viewName, _options)
         -- print(debug.traceback())
-        print("-------------- showView ------------------", self.props.appName.."."..viewName, ", currentViewName:", self.currentViewName)
+        -- print("-------------- showView ------------------", self.props.appName.."."..viewName, ", currentViewName:", self.currentViewName)
         if self.scene and self.scene.UI.editor then
             self.scene.UI.editor:destroy()
         end
@@ -341,7 +341,7 @@ function M.new(Props)
           editor:showPageView()
           app.fromEditor = false
         end
-      print("-----loadPage------")
+        -- print("-----loadPage------")
         M.loadPage(UI)
       end
 

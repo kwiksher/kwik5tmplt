@@ -7,6 +7,7 @@ local selectors = require(root.."parts.selectors")
 local layerTableCommands = require("editor.parts.layerTableCommands")
 local contextButtons = require("editor.parts.buttons")
 local handlerMap  = require("editor.asset.model")
+local json = require("json")
 
 local posX = display.contentCenterX*0.75
 
@@ -135,8 +136,10 @@ end
 function M:storeListener(foo, fooValue, render)
   -- print("-------------------- storeListener ---------", fooValue.class)
   -- print(debug.traceback())
-  self:destroy()
+  print(json.prettify(fooValue))
   --print("assetStore", #fooValue)
+  --
+  self:destroy()
   self.selection = nil
   self.selections = {}
   self.objs = {}
@@ -164,7 +167,12 @@ function M:storeListener(foo, fooValue, render)
         self:createIcons(asset.icons, asset.class, asset.tool)
       end
     else
-      print("Error asset map", fooValue.class)
+      -- fooValue.class is missing.
+      -- assets/model.lua
+      --   audios = {class = "audio",
+      --   videos = {class = "video",
+      --   sprites = {class = "sprite"
+      --   syncs = {class = "sync",
     end
   end
   self:show()
