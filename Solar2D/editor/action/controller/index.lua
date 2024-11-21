@@ -135,9 +135,12 @@ function M:hide(cancel)
     UI.editor.viewStore.actionCommandButtons:hide()
   end
   if actionTable.newButton and not cancel then
+    -- print(debug.traceback())
     actionTable.newButton.alpha = 0
     actionTable.editButton.alpha = 0
-    -- actionTable.attachButton.alpha = 0
+    -- actionTable.attachButton.alpha = 0]
+  else
+    actionTable:hide()
   end
 
   picker:hide()
@@ -163,11 +166,11 @@ function M:render(book, page, command, actions)
   --   {animation = {pause = {target="layerTwo", sec=2}}},
   -- }})
   local model ={}
-  print(json.encode(actions))
+  -- print(json.encode(actions))
   for i=1, #actions do
     local entry = {}
     local out = util.split(actions[i].command, '.')
-    print(unpack(out))
+    -- print(unpack(out))
     entry[out[1]] = {}
     local name = out[2]
     if name == "_end" or name == "_else" then
@@ -177,7 +180,7 @@ function M:render(book, page, command, actions)
     end
     model[i] = entry
   end
-  print("###", json.encode(model))
+  -- print("###", json.encode(model))
   util.saveLua(tmplt, dst, { actions = model, encoded = json.encode({name=command, actions=actions})})
   return dst
 end
