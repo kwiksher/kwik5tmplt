@@ -6,7 +6,7 @@ local M = {
     -- lunatest.suite("test.keyboard.suite_page1", props)
     -- lunatest.suite("test.lingualSample.suite_lingual_page2", props)
 
-    -- lunatest.suite("test.book.suite_assets", props)
+    lunatest.suite("test.book.suite_assets", props)
     -- lunatest.suite("test.book.suite_page1_page_props", props)
     -- lunatest.suite("test.book.suite_page1_interactions", props)
     -- lunatest.suite("test.book.suite_page1_replacements", props)

@@ -136,7 +136,7 @@ end
 function M:storeListener(foo, fooValue, render)
   -- print("-------------------- storeListener ---------", fooValue.class)
   -- print(debug.traceback())
-  print(json.prettify(fooValue))
+  --print(json.prettify(fooValue))
   --print("assetStore", #fooValue)
   --
   self:destroy()
