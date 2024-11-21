@@ -38,7 +38,7 @@ function M:setClassProps(classProps)
 end
 
 function M:createIcons (icons, class, tool)
-  print("createIcons", class, self.anchorName,_marginX, _marginY)
+  -- print("createIcons", class, self.anchorName, self.x, self.y, _marginX, _marginY)
   local marginX = _marginX or self.marginX
   local marginY = _marginY or 0
   ---
@@ -49,12 +49,12 @@ function M:createIcons (icons, class, tool)
   ---
   for i=1, #icons do
     local name = icons[i]
-    print("asset icon", name)
+    -- print("asset icon", name, self.x + i*22 - self.width/2-11)
     local actionIcon = muiIcon:create {
       icon = {name.."_over", name.."Color_over", name},
       text = "",
       name = name.."-icon",
-      x = self.x + i*22 - self.width/2-11,
+      x = self.x + i*22 - self.width/2,
       y = self.y-2 ,
       width = 22,
       height = 22,
@@ -67,6 +67,7 @@ function M:createIcons (icons, class, tool)
     -- print("", class, actionIcon)
     self.icons[i] = actionIcon
     self.group:insert(actionIcon)
+    -- print("group.x", self.group.x)
   end
 end
 
@@ -83,6 +84,7 @@ function M:create(UI)
 
   self:initScene(UI)
   self.selections = {}
+  -- print("group.x", self.group.x)
   self.group:translate(self.width*0.5, 0)
   self.option = {
     text = "",
@@ -97,6 +99,7 @@ function M:create(UI)
   --
   local function render(models, class)
     self:setPosition()
+    -- print("group.x", self.group.x)
     self.linkGroup = display.newGroup()
 
     local count = 0
@@ -144,6 +147,7 @@ function M:create(UI)
     --
     --
     self.rootGroup:insert(self.group)
+    -- print("group.x", self.group.x)
     self.rootGroup.assetTable = self.group
     self.group:insert(self.linkGroup)
     -- self.group.isVisible = true
@@ -156,6 +160,7 @@ function M:create(UI)
     UI.editor.assetStore:listen(listener)
     self.initStore = true
   end
+  -- print("group.x", self.group.x)
 end
 --
 
@@ -219,6 +224,7 @@ end
 
 function M:show()
   -- print(debug.traceback())
+  -- print("group.x", self.group.x)
   self.group.isVisible = true
   if self.objs then
     for i=1, #self.objs do

@@ -9,6 +9,10 @@ function M:create(UI)
   local areaWidth = 480
   local areaHeight = 320
 
+  if system.orientation == "portrait" then
+    areaWidth = 320
+    areaHeight = 480
+  end
   -- Create horizontal guide lines
   local topGuideLine = display.newLine(centerX- areaWidth / 2, centerY - areaHeight / 2, centerX + areaWidth / 2, centerY - areaHeight / 2)
   topGuideLine.strokeWidth = 2

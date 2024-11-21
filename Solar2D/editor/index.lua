@@ -284,18 +284,30 @@ local bookTable = require(parent.."parts.bookTable")
 local pageTable = require(parent.."parts.pageTable")
 local layerTable = require("editor.parts.layerTable")
 
-function M:runTest()
-  require("test.index").run{
+function M:runTest(UI)
+  timer.performWithDelay(500, function()
+    require("test.index").run{
+      selectors = selectors,
+      UI = UI,
+      bookTable = bookTable,
+      pageTable = pageTable,
+      layerTable = layerTable,
+      actionTable = actionTable,
+    }
+    if UI.testCallback then
+      UI.testCallback()
+    end
+  end)
+end
+
+function M:runServer(UI)
+  require("server.index").run{
     selectors = selectors,
-    UI = self.UI,
+    UI = UI,
     bookTable = bookTable,
     pageTable = pageTable,
-    layerTable = layerTable,
-    actionTable = actionTable,
+    layerTable = layerTable
   }
-  if self.UI.testCallback then
-    self.UI.testCallback()
-  end
 end
 
 function M:showPageView()
@@ -394,53 +406,45 @@ function M:didShow(UI)
     self.views[i]:didShow(UI)
   end
 
-    --
-    -- default or reload
-    --
-    UI.editor.currentBook = UI.book
-    -- UI.editor.currentPage = "page2"
-    local showComponentSelector = true
-    local showProjectSelector = true
-    if showProjectSelector then
-          selectors.projectPageSelector:show()
-          selectors.projectPageSelector:onClick(true)
+  --
+  -- default or reload
+  --
+  UI.editor.currentBook = UI.book
+  -- UI.editor.currentPage = "page2"
+  local showComponentSelector = true
+  local showProjectSelector = true
+  if showProjectSelector then
+        selectors.projectPageSelector:show()
+        selectors.projectPageSelector:onClick(true)
 
-          -- UI.scene.app:dispatchEvent {
-          --   name = "editor.selector.selectApp",
-          --   UI = UI
-          --   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
-          --   -- useTinyfiledialogs = false -- default
-          -- }
+        -- UI.scene.app:dispatchEvent {
+        --   name = "editor.selector.selectApp",
+        --   UI = UI
+        --   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
+        --   -- useTinyfiledialogs = false -- default
+        -- }
 
-          -- bookTable.commandHandler({book="bookFree"},nil,  true)
+        -- bookTable.commandHandler({book="bookFree"},nil,  true)
 
-          -- UI.scene.app:dispatchEvent {
-          --   name = "editor.selector.selectBook",
-          --   UI = UI,
-          --   book = "bookFree"
-          -- }
-    elseif showComponentSelector then
-      if not self.isReloaded then
-        self.isReloaded = true
-        ----------------------------
-        self:gotoLastSelection() -- self.lastSelection
-        --------- unit test --------
-        if unitTestOn then
-          self:runTest()
-        end
-        if httpServerOn then
-        --------- pegasus init with  --------
-          require("server.index").run{
-            selectors = selectors,
-            UI = UI,
-            bookTable = bookTable,
-            pageTable = pageTable,
-            layerTable = layerTable
-          }
-        end
-      end
+        -- UI.scene.app:dispatchEvent {
+        --   name = "editor.selector.selectBook",
+        --   UI = UI,
+        --   book = "bookFree"
+        -- }
+  elseif showComponentSelector then
+    if not self.isReloaded then
+      self.isReloaded = true
+      ----------------------------
+      self:gotoLastSelection() -- self.lastSelection
     end
+  end
 
+  if unitTestOn then
+    self:runTest(UI)
+  end
+  if httpServerOn then
+    self:runServer(UI)
+  end
     -- UI.editor.rootGroup:dispatchEvent{name="labelStore",
     --   currentBook= UI.editor.currentBook,
     --   currentPage= UI.page,
