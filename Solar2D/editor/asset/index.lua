@@ -86,7 +86,8 @@ local function readAsset(path, folder, map, parent)
         for i=1, #children do
           entries[#entries + 1] = children[i]
         end
-      elseif file~="." and file~=".."  and file:find(".lua")  ==  nil and file:find("@") == nil and file:find(".json")  ==  nil then
+      elseif file~="." and file~=".."  and file:find(".lua")  ==  nil and file:find("@") == nil and file:find(".json")  ==  nil
+        and file:sub(1, 1) ~="." then
         local mapEntry = map[file]
         if mapEntry == nil then
           if parent==nil then
@@ -132,8 +133,9 @@ function controller:read(book, _model)
   local audios = {}
   local syncs = {}
   for i, entry in next, assets.audios do
-    if entry.path:find("sync/") then
-      entry.path = entry.path:gsub("sync/","")
+    -- print(entry.path)
+    if entry.path:find("sync") then
+      entry.path = entry.path:gsub("sync","")
       syncs[#syncs+1] = entry
     else
       audios[#audios + 1] = entry
