@@ -108,7 +108,11 @@ function M:create(UI)
     option.y = self.y
     for i = 1, #models do
       local asset = models[i]
-      option.text =  asset.path .."/"..asset.name
+      if asset.path:len() > 0 then
+        option.text =  asset.path .."/"..asset.name
+      else
+        option.text =  asset.name
+      end
       option.x = self.x + marginX
       option.y = self.y + option.height * (count-1) +marginY
       option.width = self.width + 80
