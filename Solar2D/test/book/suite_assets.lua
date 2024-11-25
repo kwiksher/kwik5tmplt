@@ -44,13 +44,19 @@ function M.xtest_click_assetIcon()
     --selectors.assetsSelector:onClick(true, "particles")
 end
 
-function M.test_create_praticles()
+function M.xtest_create_praticles()
   selectors.componentSelector.iconHander()
   selectors.assetsSelector:iconHander()
   selectors.assetsSelector:onClick(true, "particles")
   --select firstone
   helper.clickAsset(assetTable.objs, "particles/particle.png")
+end
 
+function M.test_create_sprite()
+  selectors.componentSelector.iconHander()
+  selectors.assetsSelector:iconHander()
+  selectors.assetsSelector:onClick(true, "sprites")
+  helper.clickAsset(assetTable.objs, "sprites/sprites.png")
 end
 
 function M.xtest_lfs()
