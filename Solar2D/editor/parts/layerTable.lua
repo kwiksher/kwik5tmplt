@@ -2,7 +2,7 @@ local name = ...
 local parent,  root = newModule(name)
 
 local Props = {
-  name = "layer",
+  name = "layerTable",
   anchorName = "selectLayer",
   id = "layer"
 }
@@ -202,6 +202,7 @@ function M:create(UI)
         self.classProps = nil
       end
       self.objs = self:render(fooValue, 0, 0)
+      self:show() -- this needs from asset > activeProp
     end
   )
 end

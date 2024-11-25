@@ -8,6 +8,7 @@ local layerTable
 local buttons = require("editor.parts.buttons")
 local scriptsCommands = require("editor.scripts.commands")
 local assetTable = require("editor.asset.assetTable")
+local helper = require("test.helper")
 
 local _TMP = "/Users/ymmtny/Documents/GitHub/kwik-visual-code/develop/Solar2D/kwik-editor-proj/tmp"
 
@@ -17,6 +18,8 @@ function M.init(props)
   bookTable = props.bookTable
   pageTable = props.pageTable
   layerTable = props.layerTable
+  ---
+  helper.init(props)
 end
 
 function M.suite_setup()
@@ -34,10 +37,19 @@ end
 function M.teardown()
 end
 
-function M.test_click_assetIcon()
+function M.xtest_click_assetIcon()
     selectors.componentSelector.iconHander()
     selectors.assetsSelector:iconHander()
     selectors.assetsSelector:onClick(true, "audios")
+    --selectors.assetsSelector:onClick(true, "particles")
+end
+
+function M.test_create_praticles()
+  selectors.componentSelector.iconHander()
+  selectors.assetsSelector:iconHander()
+  selectors.assetsSelector:onClick(true, "particles")
+  --select firstone
+  helper.clickAsset(assetTable.objs, "particles/particle.png")
 
 end
 

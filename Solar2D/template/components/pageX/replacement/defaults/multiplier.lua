@@ -3,6 +3,7 @@ local M = {
   class="multiplier",
   -- actionName = "",
   properties = {
+    target = NIL,
   }
 }
 

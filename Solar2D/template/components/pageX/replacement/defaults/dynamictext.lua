@@ -2,6 +2,7 @@ local M = {
   name = "",
   class="dynamictext",
   properties = {
+    target = NIL,
     variable = "",
     type     = "local",
     offsetX = 0,
