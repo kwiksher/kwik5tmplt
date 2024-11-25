@@ -28,6 +28,8 @@ function M:setActiveProp(layer, class)
         end
         if path then
           obj.field.text = filename
+        else
+          obj.field.text = ""
         end
       elseif obj.text == "_filename" then
         obj.field.text = layer
@@ -84,7 +86,7 @@ function M:getObj (name)
 end
 
 function M:updateSheetInfo(sheetContentWidth, sheetContentHeight)
-
+  -- print("@@@@@ updateSheetInfo", sheetContentWidth, sheetContentHeight)
   if sheetContentWidth then
     self:getObj("sheetContentWidth").field.text = sheetContentWidth
     self:getObj("sheetContentHeight").field.text = sheetContentHeight

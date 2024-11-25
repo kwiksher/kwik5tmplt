@@ -19,7 +19,8 @@ local M = {
     sheetType  = "{{sheetType}}", -- uniform-sized TexturePacker, Animate
     {{/properties}}
   },
-  book = "{{book}}"
+  book = "{{book}}",
+  layerProps = layerProps
 
 }
 
@@ -44,11 +45,12 @@ M.sequenceData = {
 local options = nil
 if M.properties.sheetType == "TexturePacker" then
   --
-  local path = "App."..M.book..".assets."..props.properties.sheetInfo
+  local path = "App."..M.book..".assets."..M.properties.sheetInfo
   path = path:gsub("/", ".")
   path = path:gsub(".lua", "")
-  M.newSheetInfo = require(path)
-  options = M.newSheetInfo.sheet
+  --
+  local sheetInfo = require(path)
+  options = {frames = sheetInfo.frames}
   --
 elseif M.properties.sheetType == "Animate" then
   --
