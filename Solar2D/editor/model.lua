@@ -21,7 +21,8 @@ local model = {
         {name = "Map", icon = "repMap"},
         {name = "Mask", icon = "repMask"},
         {name = "Multiplier", icon = "repMultiplier"},
-        {name = "Particles", icon = "repParticles", id = "particles"}, -- relacement.particles.index is selected
+        -- {name = "Particles", icon = "repParticles", id = "particles"}, -- relacement.particles.index is selected
+        {name = "Particles", icon = "repParticles"}, -- relacement.particles.index is selected
         {name = "Sprite", icon = "repSprite"},
         {name = "Sync", icon = "repSync"},
         {name = "Text", icon = "repText"},

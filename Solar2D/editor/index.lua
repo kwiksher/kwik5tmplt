@@ -120,6 +120,7 @@ function M:getClassModule (class)
   local v = self.classMap[class:lower()] or class
   -- for k, v in pairs(self.editorTools) do print(k) end
   local mod = self.editorTools[v]
+  -- print("@@@@", v, mod)
   if mod == nil then
     -- print("@@@@ Error to find", v)
     return self.editorTools['editor.parts.baseTable-'..v]
@@ -205,6 +206,7 @@ function M:init(UI)
             -- Aditional editor for particles
             self.classMap[layerTools[i].tools[j].name:lower()] = layerTools[i].id.."."..layerTools[i].tools[j].id
             -- print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id.."."..layerTools[i].tools[j].id)
+            -- print(parent..layerTools[i].id.."."..layerTools[i].tools[j].id..".index")
             --
             local module = require(parent..layerTools[i].id.."."..layerTools[i].tools[j].id..".index")
             module.name = module.name or layerTools[i].id.."."..layerTools[i].tools[j].id
