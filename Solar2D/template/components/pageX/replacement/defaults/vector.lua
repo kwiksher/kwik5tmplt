@@ -3,6 +3,7 @@ local M = {
   class="vector",
   -- actionName = "",
   properties = {
+    target = NIL,
   }
 }
 

@@ -3,6 +3,7 @@ local M = {
   class = "sync",
   folder = "audios/sync",
   properties = {
+    target = NIL,
     autoPlay     = true,
     delay        = NIL,
     fadeDuration = 1000,

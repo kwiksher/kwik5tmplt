@@ -152,6 +152,10 @@ function controller:updateAsset(book, page, layer, classFolder, class, model, as
   local ret   = assets
   local name  = model.filename
   local path = class.."s"
+  if class == "particles" then
+    path = "particles"
+  end
+  ---
   if class == nil then
     -- audio
     entry.path = path .."/".. model.type -- short/long

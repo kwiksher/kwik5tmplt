@@ -3,6 +3,7 @@ local M = {
   class="web",
   -- actionName = "",
   properties = {
+    target = NIL,
   }
 }
 

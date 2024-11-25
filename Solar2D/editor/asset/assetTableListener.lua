@@ -96,7 +96,11 @@ local function getClass(assetName)
 end
 
 local function getClassModule(class)
-  return handlerMap[class.."s"].tool
+  if class == "particles" then
+    return handlerMap[class].tool
+  else
+    return handlerMap[class.."s"].tool
+  end
 end
 
 function M:touchHandler(target, event)
@@ -117,6 +121,7 @@ function M:touchHandler(target, event)
       -- TBI
       -- dispatchEvent to the class editor
       if target.class then
+        -- print("target.class", target.class)
         -- print(getClassModule(target.class))
         self.UI.scene.app:dispatchEvent {
           name = "editor.selector."..getClassModule(target.class),

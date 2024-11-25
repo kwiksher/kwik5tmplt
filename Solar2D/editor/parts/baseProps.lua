@@ -63,7 +63,7 @@ function M:tapListener(event, type)
   -- print("@@tapListener", type, event.target.text)
   local UI = self.UI
   -- print("@@@@", UI.editor.currentClass)
-  if type == "layer" then
+  if type == "layer" and UI.editor.selections then
     UI.editor.selections_backup = {}
     for i, v in next, UI.editor.selections do
       -- print(i, v.text)
@@ -264,6 +264,7 @@ function M:createTable(props)
     elseif prop.name == "othersGroup" then
         obj:addEventListener("tap", function(event) self:tapListener(event, 'group')end)
     elseif self.onTapLayerSet[prop.name] then
+      -- print(self.onTapLayerSet[prop.name])
       obj:addEventListener("tap", function(event) self:tapListener(event, 'layer')end)
     elseif self.onTapPosXYSet[prop.name] then
       obj:addEventListener("tap", function(event) self:tapListener(event, 'posXY')end)
