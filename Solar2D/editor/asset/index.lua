@@ -94,7 +94,72 @@ local function readAsset(path, folder, map, parent)
             entries[#entries + 1] = {name=file, path=folder, links={}}
           else
             local v = parent.."/"..folder
+            entries[#entries + 1] = {name=file, path=v, links={}}
+          end
+        else
+          mapEntry.isExist = true
+          entries[#entries + 1] = {name=mapEntry.name, path=mapEntry.path, links=mapEntry.links}
+        end
+      end
+    end
+    lfs.chdir( path )
+  end
+  return entries
+end
+
+local function readAssetAudio(path, folder, map, parent)
+  -- print(path.."/"..folder)
+  local entries = {}
+  local success = lfs.chdir( path.."/"..folder )
+  if success then
+    for file in lfs.dir( path.."/"..folder ) do
+      if util.isDir(file) and file~="." and file~=".."  then
+        -- print("", "@Found dir " .. file )
+        local children = readAssetAudio(path.."/"..folder, file, map, folder)
+        for i=1, #children do
+          entries[#entries + 1] = children[i]
+        end
+      elseif file~="." and file~=".."  and file:find(".lua")  ==  nil and file:find("@") == nil and file:find(".json")  ==  nil
+        and file:sub(1, 1) ~="." then
+        local mapEntry = map[file]
+        if mapEntry == nil then
+          if parent==nil then
+            entries[#entries + 1] = {name=file, path=folder, links={}}
+          else
+            local v = parent.."/"..folder
             entries[#entries + 1] = {name=file, path=v:gsub("audios/",""), links={}}
+          end
+        else
+          mapEntry.isExist = true
+          entries[#entries + 1] = {name=mapEntry.name, path=mapEntry.path, links=mapEntry.links}
+        end
+      end
+    end
+    lfs.chdir( path )
+  end
+  return entries
+end
+
+local function readAssetParticles(path, folder, map, parent)
+  -- print(path.."/"..folder)
+  local entries = {}
+  local success = lfs.chdir( path.."/"..folder )
+  if success then
+    for file in lfs.dir( path.."/"..folder ) do
+      if util.isDir(file) and file~="." and file~=".."  then
+        -- print("", "@Found dir " .. file )
+        local children = readAssetParticles(path.."/"..folder, file, map, folder)
+        for i=1, #children do
+          entries[#entries + 1] = children[i]
+        end
+      elseif file~="." and file~=".."  and file:find(".lua") or file:find(".json") and file:sub(1, 1) ~="." then
+        local mapEntry = map[file]
+        if mapEntry == nil then
+          if parent==nil then
+            entries[#entries + 1] = {name=file, path=folder, links={}}
+          else
+            local v = parent.."/"..folder
+            entries[#entries + 1] = {name=file, path=v:gsub("particles/",""), links={}}
           end
         else
           mapEntry.isExist = true
@@ -126,7 +191,13 @@ function controller:read(book, _model)
 		for folder in lfs.dir( path ) do
 			if util.isDir(folder) and folder~="." and folder~=".."  then
 				-- print( "Found dir " .. folder )
-        assets[folder] = readAsset(path, folder, map)
+        if folder == "particles" then
+          assets[folder] = readAssetParticles(path, folder, map)
+        elseif folder == "audios" then
+          assets[folder] = readAssetAudio(path, folder, map)
+        else
+          assets[folder] = readAsset(path, folder, map)
+        end
 			end
 		end
 	end
@@ -135,7 +206,7 @@ function controller:read(book, _model)
   for i, entry in next, assets.audios do
     -- print(entry.path)
     if entry.path:find("sync") then
-      entry.path = entry.path:gsub("sync","")
+      --entry.path = entry.path:gsub("sync","")
       syncs[#syncs+1] = entry
     else
       audios[#audios + 1] = entry

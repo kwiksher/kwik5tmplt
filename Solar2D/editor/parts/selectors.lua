@@ -177,7 +177,7 @@ function M:create(UI)
     {
       {label = "Audio", command = "selectAudioAsset", store = "audios", btree = "select asset"},
       {label = "Particles", command = "selectPaticlesAsset", store = "particles", btree = "select asset"},
-      {label = "Sprites", command = "selectSpriteAsset", store = "sprites", btree = "select asset"},
+      {label = "Sprite", command = "selectSpriteAsset", store = "sprites", btree = "select asset"},
       {label = "SyncText", command = "selectSyncTextAsset", store = "syncs", btree = "select asset"},
       {label = "Video", command = "selectVideoAsset", store = "videos", btree = "select asset"},
     },
