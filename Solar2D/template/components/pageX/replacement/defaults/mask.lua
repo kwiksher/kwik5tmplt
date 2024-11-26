@@ -3,6 +3,7 @@ local M = {
   class="mask",
   -- actionName = "",
   properties = {
+    target = NIL,
   }
 }
 

@@ -21,7 +21,8 @@ local model = {
         {name = "Map", icon = "repMap"},
         {name = "Mask", icon = "repMask"},
         {name = "Multiplier", icon = "repMultiplier"},
-        {name = "Particles", icon = "repParticles", id = "particles"}, -- relacement.particles.index is selected
+        -- {name = "Particles", icon = "repParticles", id = "particles"}, -- relacement.particles.index is selected
+        {name = "Particles", icon = "repParticles"}, -- relacement.particles.index is selected
         {name = "Sprite", icon = "repSprite"},
         {name = "Sync", icon = "repSync"},
         {name = "Text", icon = "repText"},
@@ -77,12 +78,12 @@ local model = {
     },
     {
       name = "Shapes",
-      icon = "toolBook",
+      icon = "toolShape",
       tools = {
-        {name = "new_rectangle", icon = ""},
-        {name = "new_text", icon = ""},
-        {name = "new_ellipse", icon = ""},
-        {name = "new_image", icon = ""},
+        {name = "new_rectangle", icon = "shapeRect"},
+        {name = "new_text", icon = "shapeText"},
+        {name = "new_ellipse", icon = "shapeEcllipse"},
+        {name = "new_image", icon = "shapeImage"},
       },
       id = "shape"
     },

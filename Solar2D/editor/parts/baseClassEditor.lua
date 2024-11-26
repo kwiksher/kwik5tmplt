@@ -84,11 +84,11 @@ function M:create(UI)
     v:create(UI)
 
     if system.orientation == "portrait" then
-      local delta_x = 400
-      if v.group then
-        v.group:translate(delta_x, 0)
-      end
-      UI.editor.rootGroup.buttons:split() -- this is baseButtons.lua
+      -- local delta_x = 400
+      -- if v.group then
+      --   v.group:translate(delta_x, 0)
+      -- end
+      -- UI.editor.rootGroup.buttons:split() -- this is baseButtons.lua
     end
 
   end

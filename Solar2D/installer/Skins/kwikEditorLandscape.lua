@@ -42,11 +42,11 @@ simulator =
 	device = "desktop-1920x1080",
 	screenOriginX = 0,
 	screenOriginY = 0,
-	screenWidth = 1920,
-	screenHeight = 1080,
+	screenWidth = 590,
+	screenHeight = 960,
 	deviceImage = nil,
 	displayManufacturer = "",
-	displayName = "Kwik Desktop",
+	displayName = "Kwik Landscape",
 	supportsScreenRotation = false,
-	windowTitleBarName = "Desktop Kwik Editor"
+	windowTitleBarName = "Kwik Landscape Editor"
 }
