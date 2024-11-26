@@ -744,7 +744,19 @@ function M.publishForSelections(UI, args, controller, decoded)
   local scene = require("App." .. book .. ".components." .. page .. ".index")
   local updatedModel = scene.model
   -- print(json.encode(updatedModel))
-  local selections = UI.editor.selections or {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
+  local selections = UI.editor.selections or {}
+  if #selections == 0 and UI.editor.currentLayer:len() == 0 then
+    -- cueentLayer is not set when user selecting an asset like particle, and use activeProp to set the target
+    -- print(UI.editor.selections, UI.editor.currentLayer:len(), UI.editor.currentClass)
+    local target =  model.properties.target or model.properties._target
+    if target == nil or target:len() == 0 then
+       native.showAlert( "alert", "Please select a layer or _target for creating a component")
+      return false
+    end
+    selections =  {{text=target, class =UI.editor.currentClass, layer=target }}
+  else
+    selections = {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
+  end
   print(json.prettify(selections))
   for i, obj in next, selections do
     if obj.parentObj then

@@ -3,6 +3,9 @@ local M = {
   class="particles",
   -- actionName = "",
   properties = {
+    target = NIL,
+    url = NIL,
+    autoPlay = true
   }
 }
 

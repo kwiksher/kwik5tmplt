@@ -14,7 +14,7 @@ local contextButtons = require("editor.parts.buttons")
 local util = require("lib.util")
 
 local classProps = require("editor.parts.classProps")
-local debugName = "bookTable"
+local debugName = "_layerTable"
 
 M.x       = 100
 M.y       = 66 -- 44
@@ -99,7 +99,8 @@ function M:tick(e)
       rect:setFillColor(1, 0.5, 0)
     end
   else
-    rect:setFillColor(1, 0, 0)
+    print("not active")
+    rect:setFillColor(0.8)
   end
 end
 
@@ -443,6 +444,7 @@ function M:destroy()
   -- print(debug.traceback())
    if self.name == debugName then
     print("`@@@", self.name, "destroy")
+    -- print(debug.traceback())
   end
   if self.objs then
     for i = 1, #self.objs do

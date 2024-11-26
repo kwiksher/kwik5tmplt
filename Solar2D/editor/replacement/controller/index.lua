@@ -173,7 +173,7 @@ function M:setValue(decoded, index, template)
     end
     -- for sprite.sequenceData, sync.line
     if decoded[index].sequenceData or decoded[index].line then
-      local type = (decoded.sequenceData) and "sequenceData" or  "line"
+      local type = (decoded[index].sequenceData) and "sequenceData" or  "line"
       self.listbox:setValue(decoded[index].sequenceData or  decoded[index].line, type)
       self.listbox.isActive = true
     end
@@ -183,6 +183,11 @@ function M:setValue(decoded, index, template)
     end
     if decoded[index].textProps then
       self.textProps:setValue(decoded[index].textProps)
+    end
+
+    if decoded[index].class == "sprite" then
+      local value = decoded[index].properties.filename
+      self.classProps:showThumnail("sprites", value, "sprites")
     end
 
   else
@@ -205,14 +210,22 @@ function M:setValue(decoded, index, template)
     if decoded.textProps then
       self.textProps:setValue(decoded.textProps)
     end
+
+    if decoded.class == "sprite" then
+      local value = decoded.properties.filename
+      self.classProps:showThumnail("sprites", value, "sprites")
+    end
+
   end
 end
 
-function M:mergeAsset(value, asset)
+function M:mergeAsset(model, asset)
   print("mergreAsset", asset.path, asset.name, #asset.links)
-  value.properties.url = asset.name
-  for k, v in pairs(value.properties) do print("", k,v) end
-  return value
+  if model.class == "sprite" then
+    model.properties.filename = "sprites/"..asset.name
+  end
+  for k, v in pairs(model.properties) do print("", k,v) end
+  return model
 end
 
 return M
