@@ -173,7 +173,7 @@ function M:setValue(decoded, index, template)
     end
     -- for sprite.sequenceData, sync.line
     if decoded[index].sequenceData or decoded[index].line then
-      local type = (decoded.sequenceData) and "sequenceData" or  "line"
+      local type = (decoded[index].sequenceData) and "sequenceData" or  "line"
       self.listbox:setValue(decoded[index].sequenceData or  decoded[index].line, type)
       self.listbox.isActive = true
     end

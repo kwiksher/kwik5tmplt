@@ -21,9 +21,9 @@ function M:show(UI, props)
 
   if props.properties.sheetInfo and props.properties.sheetInfo:len() > 0 then
     if props.properties.sheetInfo:find(".lua") then
-      props.type = "TexturePacker"
+      props.sheetType = "TexturePacker"
     else
-      props.type = "Animate"
+      props.sheetType = "Animate"
     end
   end
 
@@ -62,15 +62,15 @@ function M:show(UI, props)
   -- }
 
   local options = nil
-  if props.type == "TexturePacker" then
+  if props.sheetType == "TexturePacker" then
     --
     local path = "App."..UI.book..".assets."..props.properties.sheetInfo
     path = path:gsub("/", ".")
     path = path:gsub(".lua", "")
-    props.newSheetInfo = require(path)
-    options = props.newSheetInfo.sheet
+    local sheetInfo = require(path)
+    options = {frames = sheetInfo.frames}
     --
-  elseif props.type == "Animate" then
+  elseif props.sheetType == "Animate" then
     --
     local function newSheetInfo()
       local sheetInfo = {}
