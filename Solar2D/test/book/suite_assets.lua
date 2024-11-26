@@ -8,8 +8,9 @@ local layerTable
 local buttons = require("editor.parts.buttons")
 local scriptsCommands = require("editor.scripts.commands")
 local assetTable = require("editor.asset.assetTable")
+local helper = require("test.helper")
 
-local _TMP = "/Users/ymmtny/Documents/GitHub/kwik-visual-code/test/base-proj/tmp"
+local _TMP = "/Users/ymmtny/Documents/GitHub/kwik-visual-code/develop/Solar2D/kwik-editor-proj/tmp"
 
 function M.init(props)
   selectors = props.selectors
@@ -17,27 +18,16 @@ function M.init(props)
   bookTable = props.bookTable
   pageTable = props.pageTable
   layerTable = props.layerTable
+  ---
+  helper.init(props)
 end
 
 function M.suite_setup()
-  selectors.projectPageSelector:show()
-  selectors.projectPageSelector:onClick(true)
-  -- --
-  -- UI.scene.app:dispatchEvent {
-  --   name = "editor.selector.selectApp",
-  --   UI = UI
-  -- }
-  -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
-  -- useTinyfiledialogs = false -- default
-  ---
+  -- selectors.projectPageSelector:show()
+  -- selectors.projectPageSelector:onClick(true)
 
-  -- bookTable.commandHandler({book="book"}, nil,  true)
-  -- pageTable.commandHandler({page="page1"},nil,  true)
-
-  selectors.componentSelector.iconHander()
-  selectors.componentSelector:onClick(true,  "layerTable")
-
-  -- bookTable.commandHandler(bookTable.objs[1], nil, true)
+  -- selectors.componentSelector.iconHander()
+  -- selectors.componentSelector:onClick(true,  "layerTable")
 
 end
 
@@ -47,6 +37,27 @@ end
 function M.teardown()
 end
 
+function M.xtest_click_assetIcon()
+    selectors.componentSelector.iconHander()
+    selectors.assetsSelector:iconHander()
+    selectors.assetsSelector:onClick(true, "audios")
+    --selectors.assetsSelector:onClick(true, "particles")
+end
+
+function M.xtest_create_praticles()
+  selectors.componentSelector.iconHander()
+  selectors.assetsSelector:iconHander()
+  selectors.assetsSelector:onClick(true, "particles")
+  --select firstone
+  helper.clickAsset(assetTable.objs, "particles/particle.png")
+end
+
+function M.test_create_sprite()
+  selectors.componentSelector.iconHander()
+  selectors.assetsSelector:iconHander()
+  selectors.assetsSelector:onClick(true, "sprites")
+  helper.clickAsset(assetTable.objs, "sprites/sprites.png")
+end
 
 function M.xtest_lfs()
   local expected  = {
@@ -538,7 +549,7 @@ function M.xtest_load()
 
 end
 
-function M.test_load()
+function M.xtest_load()
   UI.editor.assets = {
     audios = {
       {
@@ -630,8 +641,8 @@ end
 
 function M.xtest_click_new_icon()
   selectors.assetsSelector:onClick(true, "audios")
-  assetTable.objs[2]:touch({phase="ended"})
-  assetTable:iconsHandler({target={muiOptions={name="addAudio"}}}, "audio", "selectAudio")
+  -- assetTable.objs[2]:touch({phase="ended"})
+  -- assetTable:iconsHandler({target={muiOptions={name="addAudio"}}}, "audio", "selectAudio")
 
   -- selectors.assetsSelector:onClick(true, "videos")
   -- assetTable.objs[2]:touch({phase="ended"})

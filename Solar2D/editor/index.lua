@@ -120,6 +120,7 @@ function M:getClassModule (class)
   local v = self.classMap[class:lower()] or class
   -- for k, v in pairs(self.editorTools) do print(k) end
   local mod = self.editorTools[v]
+  -- print("@@@@", v, mod)
   if mod == nil then
     -- print("@@@@ Error to find", v)
     return self.editorTools['editor.parts.baseTable-'..v]
@@ -159,7 +160,7 @@ function M:initStores()
 end
 ---
 function M:init(UI)
-  -- print("#### init")
+  -- print("init")
   self.UI = UI
   if self.rootGroup then
     self:destroy(UI)
@@ -175,7 +176,7 @@ function M:init(UI)
     --
     local app = App.get()
     if app.editorContextInit == nil then
-      print("@@@ init", app.props.appName, app)
+      -- print("init", app.props.appName, app)
       for i=1, #self.commands do
         app.context:mapCommand("editor.selector."..self.commands[i].name, "editor.controller.selector."..self.commands[i].name)
       end
@@ -205,6 +206,7 @@ function M:init(UI)
             -- Aditional editor for particles
             self.classMap[layerTools[i].tools[j].name:lower()] = layerTools[i].id.."."..layerTools[i].tools[j].id
             -- print("@", layerTools[i].tools[j].name:lower(), layerTools[i].id.."."..layerTools[i].tools[j].id)
+            -- print(parent..layerTools[i].id.."."..layerTools[i].tools[j].id..".index")
             --
             local module = require(parent..layerTools[i].id.."."..layerTools[i].tools[j].id..".index")
             module.name = module.name or layerTools[i].id.."."..layerTools[i].tools[j].id
@@ -284,18 +286,30 @@ local bookTable = require(parent.."parts.bookTable")
 local pageTable = require(parent.."parts.pageTable")
 local layerTable = require("editor.parts.layerTable")
 
-function M:runTest()
-  require("test.index").run{
+function M:runTest(UI)
+  timer.performWithDelay(500, function()
+    require("test.index").run{
+      selectors = selectors,
+      UI = UI,
+      bookTable = bookTable,
+      pageTable = pageTable,
+      layerTable = layerTable,
+      actionTable = actionTable,
+    }
+    if UI.testCallback then
+      UI.testCallback()
+    end
+  end)
+end
+
+function M:runServer(UI)
+  require("server.index").run{
     selectors = selectors,
-    UI = self.UI,
+    UI = UI,
     bookTable = bookTable,
     pageTable = pageTable,
-    layerTable = layerTable,
-    actionTable = actionTable,
+    layerTable = layerTable
   }
-  if self.UI.testCallback then
-    self.UI.testCallback()
-  end
 end
 
 function M:showPageView()
@@ -394,53 +408,45 @@ function M:didShow(UI)
     self.views[i]:didShow(UI)
   end
 
-    --
-    -- default or reload
-    --
-    UI.editor.currentBook = UI.book
-    -- UI.editor.currentPage = "page2"
-    local showComponentSelector = true
-    local showProjectSelector = true
-    if showProjectSelector then
-          selectors.projectPageSelector:show()
-          selectors.projectPageSelector:onClick(true)
+  --
+  -- default or reload
+  --
+  UI.editor.currentBook = UI.book
+  -- UI.editor.currentPage = "page2"
+  local showComponentSelector = true
+  local showProjectSelector = true
+  if showProjectSelector then
+        selectors.projectPageSelector:show()
+        selectors.projectPageSelector:onClick(true)
 
-          -- UI.scene.app:dispatchEvent {
-          --   name = "editor.selector.selectApp",
-          --   UI = UI
-          --   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
-          --   -- useTinyfiledialogs = false -- default
-          -- }
+        -- UI.scene.app:dispatchEvent {
+        --   name = "editor.selector.selectApp",
+        --   UI = UI
+        --   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
+        --   -- useTinyfiledialogs = false -- default
+        -- }
 
-          -- bookTable.commandHandler({book="bookFree"},nil,  true)
+        -- bookTable.commandHandler({book="bookFree"},nil,  true)
 
-          -- UI.scene.app:dispatchEvent {
-          --   name = "editor.selector.selectBook",
-          --   UI = UI,
-          --   book = "bookFree"
-          -- }
-    elseif showComponentSelector then
-      if not self.isReloaded then
-        self.isReloaded = true
-        ----------------------------
-        self:gotoLastSelection() -- self.lastSelection
-        --------- unit test --------
-        if unitTestOn then
-          self:runTest()
-        end
-        if httpServerOn then
-        --------- pegasus init with  --------
-          require("server.index").run{
-            selectors = selectors,
-            UI = UI,
-            bookTable = bookTable,
-            pageTable = pageTable,
-            layerTable = layerTable
-          }
-        end
-      end
+        -- UI.scene.app:dispatchEvent {
+        --   name = "editor.selector.selectBook",
+        --   UI = UI,
+        --   book = "bookFree"
+        -- }
+  elseif showComponentSelector then
+    if not self.isReloaded then
+      self.isReloaded = true
+      ----------------------------
+      self:gotoLastSelection() -- self.lastSelection
     end
+  end
 
+  if unitTestOn then
+    self:runTest(UI)
+  end
+  if httpServerOn then
+    self:runServer(UI)
+  end
     -- UI.editor.rootGroup:dispatchEvent{name="labelStore",
     --   currentBook= UI.editor.currentBook,
     --   currentPage= UI.page,
@@ -464,7 +470,7 @@ end
 -- destroy is not called from gotoScene because of recycle?
 function M:destroy(UI)
   --UI.editor = self
-   print("$$$$$ destroy")
+  --  print("destroy")
   if self.views then
     for i=1, #self.views do
       -- print(self.views[i].name)
