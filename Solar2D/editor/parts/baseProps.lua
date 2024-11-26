@@ -444,6 +444,11 @@ function M:hide()
   end
   self.group.isVisible = false
   self.isVisible = false
+  --
+  -- this  thumnail is made in classProps
+  if self.showThumnailObj then
+    self.showThumnailObj.isVisible = false
+  end
 end
 
 function M:hideFields()
@@ -485,6 +490,10 @@ function M:show()
   end
   self.group.isVisible = true
   self.isVisible = true
+  if self.showThumnailObj then
+    self.showThumnailObj.isVisible = true
+  end
+
 end
 
 function M:getObj(name)
