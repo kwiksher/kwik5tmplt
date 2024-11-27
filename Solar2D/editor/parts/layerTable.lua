@@ -190,18 +190,19 @@ function M:create(UI)
 
   UI.editor.layerStore:listen(
     function(foo, fooValue)
+      -- local json = require("json")
       self:destroy()
-      -- print("layerStore", #fooValue)
+      -- print("layerStore", #fooValue.value)
       self.selection = nil
       self.selections = {}
       -- local json = require("json")
-      -- print(json.encode(fooValue))
+      -- print(json.encode(fooValue.value))
       --
       -- reset classProps to be used for setActiveProp
-      if #fooValue == 0 then
+      if #fooValue.value == 0 then
         self.classProps = nil
       end
-      self.objs = self:render(fooValue, 0, 0)
+      self.objs = self:render(fooValue.value, 0, 0)
       self:show() -- this needs from asset > activeProp
     end
   )

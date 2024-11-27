@@ -194,10 +194,10 @@ function M:create(UI)
         local last_x, last_y = 2, 0 -- scrollView.x , scrollView.y
 
 
-        for i=1, #fooValue.members do
+        for i=1, #fooValue.value.members do
           local _group = display.newGroup()
 
-          local name = fooValue.members[i]
+          local name = fooValue.value.members[i]
           option.text = name
           local obj = newText(option)
 
@@ -220,7 +220,7 @@ function M:create(UI)
           objs[#objs+1] = obj
 
         end
-        self.members = fooValue.members
+        self.members = fooValue.value.members
         self.objs = objs
       end
     )
