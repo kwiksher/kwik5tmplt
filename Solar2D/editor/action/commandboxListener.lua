@@ -84,7 +84,6 @@ function M:tap(obj, e)
         index = obj.index,
         isNew = true
       }
-      -- UI.editor.actionCommandPropsStore:set(self.params)
     end
   end
   return true

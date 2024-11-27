@@ -246,13 +246,13 @@ function M:create(UI)
 
 
   UI.editor.pageStore:listen(
-    function(foo, models)
+    function(foo, fooValue)
       -- print(debug.traceback())
       self:setPosition()
       self:clean()
       self.objs = {}
       self.iconObjs = {}
-      self:createTable(UI, models, self.selection )
+      self:createTable(UI, fooValue.value, self.selection )
       self:createIcons()
     end
   )
@@ -261,7 +261,7 @@ function M:create(UI)
   -- 	return a.name < b.name
   -- end
   -- --
-  -- table.sort(models,compare)
+  -- table.sort(fooValue.value,compare)
 end
 --
 -- function M:didShow(UI)

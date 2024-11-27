@@ -53,7 +53,6 @@ local option, newText =
 local newTextField = util.newTextField
 
 function M:render(props)
-  -- print("actionCommandPropsStore:listen", self.x, self.y)
   -- print("", debug.traceback())
   local function compare(a, b)
     return a.name < b.name

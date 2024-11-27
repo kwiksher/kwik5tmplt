@@ -148,8 +148,8 @@ function M:storeListener(foo, fooValue, render)
   self.selection = nil
   self.selections = {}
   self.objs = {}
-  self.commandHandler = getHandler(fooValue.class)
-  if fooValue == nil then
+  self.commandHandler = getHandler(fooValue.value.class)
+  if fooValue.value == nil then
     --render({}, 0, 0)
   else
 
@@ -161,18 +161,18 @@ function M:storeListener(foo, fooValue, render)
        end
      end
 
-    local asset = handlerMap[fooValue.class]
+    local asset = handlerMap[fooValue.value.class]
     if asset then
        self.class = asset.class
        self.lastClass= asset.class
       --
       -- local anchor = self.rootGroup[self.anchorName].rect
-      render(fooValue.decoded or {}, asset.class )
+      render(fooValue.value.decoded or {}, asset.class )
       if asset then
         self:createIcons(asset.icons, asset.class, asset.tool)
       end
     else
-      -- fooValue.class is missing.
+      -- fooValue.value.class is missing.
       -- assets/model.lua
       --   audios = {class = "audio",
       --   videos = {class = "video",
