@@ -260,6 +260,9 @@ end
 --
 local function tapListenerAudio(event)
   print("audio tap listener")
+  local selectors = require(parent .. "selectors")
+  selectors.componentSelector:onClick(true, "audioTable", true)
+
 end
 
 -- asset images
