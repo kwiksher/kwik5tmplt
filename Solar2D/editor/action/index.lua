@@ -77,7 +77,7 @@ function M.iconHander()
 
       self:show()
     else
-      UI.editor.actionStore:set({})
+      UI.editor.actionStore:set{value = {}}
       self:hide()
     end
 end
