@@ -100,7 +100,6 @@ function M:create(UI)
     -- print("#### commandbox.x", commandbox.x)
     -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
     local posY  = self.y
-    -- print("actionCommandPropsStore:listen", posX, posY)
     -- print("", debug.traceback())
     local function compare(a,b)
       return a.name < b.name

@@ -8,6 +8,8 @@ M.weight = 1
 M.x = display.actualContentWidth - 200
 M.y = 10
 
+local json = require("json")
+
 ---
 local util = require("lib.util")
 local yaml = require("server.yaml")
@@ -161,7 +163,6 @@ function M:getValue()
     local value = _getValue(props[i].name, fieldText, v.value, asset.value  )
     v.value = value or v.value
   end
-  local json = require("json")
   -- print (json.encode(props))
   return props
 end
@@ -424,6 +425,10 @@ function M:destroy()
     end
     self.objs = nil
   end
+  if self.showThumnailObj then
+    self.showThumnailObj:removeSelf()
+    self.showThumnailObj = nil
+  end
 end
 --
 function M:hide()
@@ -490,7 +495,7 @@ function M:show()
   end
   self.group.isVisible = true
   self.isVisible = true
-  if self.showThumnailObj then
+  if self.showThumnailObj and self.class == "sprite" then
     self.showThumnailObj.isVisible = true
   end
 

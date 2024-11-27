@@ -167,18 +167,19 @@ function M:create(UI)
       self.selections = {}
       self.objs = {}
       self.iconObjs = {}
-      if fooValue == nil then
+      if fooValue.value == nil then
         render({}, 0, 0)
       else
-        -- print("@@@@",#fooValue.short, #fooValue.long)
-        render(fooValue, 0, 0)
-        if fooValue.short == nil then
+        -- print("@@@@",#fooValue.value.short, #fooValue.value.long)
+        render(fooValue.value, 0, 0)
+        if fooValue.value.short == nil then
           self:createIcons(0, -21)
         else
           self:createIcons(0, -21)
         end
       end
       self:show()
+      self.group:toFront()
     end
   )
 end

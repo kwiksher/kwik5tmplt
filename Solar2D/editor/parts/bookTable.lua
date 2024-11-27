@@ -114,15 +114,15 @@ function M:create(UI)
   }
 
   UI.editor.bookStore:listen(
-    function(foo, models)
+    function(foo, fooValue)
       local option = self.option
       self:clean()
-      -- print("bookStore", #models)
+      -- print("bookStore", #fooValue.value)
       -- timer.performWithDelay( 100, function()
         local last_x = 60
         local objs = {}
-        for index = 1, #models do
-          local model = models[index]
+        for index = 1, #fooValue.value do
+          local model = fooValue.value[index]
           option.text = model.name
 
 

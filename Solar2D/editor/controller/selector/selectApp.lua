@@ -65,7 +65,7 @@ local command = function (params)
         --
         table.sort(books,compare)
 
-				UI.editor.bookStore:set(books)
+				UI.editor.bookStore:set{value=books}
 			end
 			UI.appFolder = appFolder
 		end

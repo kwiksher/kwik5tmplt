@@ -172,10 +172,10 @@ function M:create(UI)
       self.selections = {}
       self.objs = {}
       self.iconObjs = {}
-      if fooValue then
+      if fooValue.value then
         -- print("@@@@@", self.indentX, self.indentY)
-        self.objs = self:render(fooValue, self.indentX, self.indentY)
-        if #fooValue == 0 then
+        self.objs = self:render(fooValue.value, self.indentX, self.indentY)
+        if #fooValue.value == 0 then
            self:createIcons(120, 5)
         else
            self:createIcons()
@@ -186,7 +186,7 @@ function M:create(UI)
       self.rootGroup["groupTable"] = self.group
 
       -- print(self.id,  #self.objs)
-      if fooValue  then
+      if fooValue.value  then
         -- print(debug.traceback())
         self:show()
       else
