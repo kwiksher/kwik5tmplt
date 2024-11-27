@@ -40,7 +40,7 @@ function M:create(UI)
       --self:init()
       self:hide()
       -- print("### setValue")
-      self:setValue(fooValue ) --  selectedValue, selectedIndex
+      self:setValue(fooValue.value ) --  selectedValue, selectedIndex
       --
       if self.scrollView then
         self.scrollView:setSize(self.width*1.5, self.height*#self.objs)

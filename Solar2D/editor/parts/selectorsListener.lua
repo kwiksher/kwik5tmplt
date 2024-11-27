@@ -16,14 +16,14 @@ local function componentHandler(UI, storeTable, isActiveProp)
   -- each table will be reset
   --
   if isActiveProp == nil then
-    UI.editor.layerStore:set({})
+    UI.editor.layerStore:set{isActiveProp = isActiveProp, value={}}
   end
-  UI.editor.audioStore:set(nil)
-  UI.editor.actionStore:set(nil)
-  UI.editor.groupStore:set(nil)
-  UI.editor.timerStore:set(nil)
-  UI.editor.variableStore:set(nil)
-  UI.editor.jointStore:set(nil)
+  UI.editor.audioStore:set{isActiveProp = isActiveProp, value=nil}
+  UI.editor.actionStore:set{isActiveProp = isActiveProp, value=nil}
+  UI.editor.groupStore:set{isActiveProp = isActiveProp, value=nil}
+  UI.editor.timerStore:set{isActiveProp = isActiveProp, value=nil}
+  UI.editor.variableStore:set{isActiveProp = isActiveProp, value=nil}
+  UI.editor.jointStore:set{isActiveProp = isActiveProp, value=nil}
 
   bookTable:hide()
 
@@ -41,27 +41,27 @@ local function componentHandler(UI, storeTable, isActiveProp)
     -- should we show the last secection?
     if storeTable == "layerTable" then
       selectLayerFilter:show()
-      UI.editor.layerStore:set(UI.scene.model.components.layers)
+      UI.editor.layerStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.layers}
     elseif storeTable == "audioTable" then
-      UI.editor.audioStore:set(UI.scene.model.components.audios)
+      UI.editor.audioStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.audios}
     elseif storeTable == "groupTable" then
-      UI.editor.groupStore:set(UI.scene.model.components.groups or {})
+      UI.editor.groupStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.groups or {}}
     elseif storeTable == "timerTable" then
       -- print(storeTable, #UI.scene.model.components.timers)
-      UI.editor.timerStore:set(UI.scene.model.components.timers)
+      UI.editor.timerStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.timers}
     elseif storeTable == "variableTable" then
-      UI.editor.variableStore:set(UI.scene.model.components.variables)
+      UI.editor.variableStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.variables}
     elseif storeTable == "jointTable" then
       -- print("jointTable", #UI.scene.model.components.joints)
-      UI.editor.jointStore:set(UI.scene.model.components.joints)
+      UI.editor.jointStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.joints}
     elseif storeTable == "actionTable" then
-      UI.editor.actionStore:set(UI.scene.model.commands)
+      UI.editor.actionStore:set{isActiveProp = isActiveProp, value=UI.scene.model.commands}
     end
-    -- UI.editor.groupStore:set(UI.scene.model.components.groups)
-    -- UI.editor.timerStore:set(UI.scene.model.components.timers)
-    -- UI.editor.variableStore:set(UI.scene.model.components.variables)
+    -- UI.editor.groupStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.groups}
+    -- UI.editor.timerStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.timers}
+    -- UI.editor.variableStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.variables}
   else
-    UI.editor.layerStore:set(UI.scene.model.components.layers)
+    UI.editor.layerStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.layers}
   end
   --
 end

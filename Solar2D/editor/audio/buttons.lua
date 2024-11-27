@@ -22,10 +22,13 @@ function M:init(UI, x, y)
   local app = App.get()
   for i = 1, #self.model do
     local entry = self.model[i]
-    app.context:mapCommand(
-      "editor."..self.commandClass.."." .. entry.name,
-      "editor.audio.controller." .. entry.name
-    )
+    local eventName = "editor."..self.commandClass.."." .. entry.name
+    if app.context.commands[eventName] == nil then
+      app.context:mapCommand(
+         eventName,
+        "editor.audio.controller." .. entry.name
+       )
+    end
   end
 end
 
