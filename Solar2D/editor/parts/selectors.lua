@@ -245,13 +245,13 @@ function M:create(UI)
   -- UI.editor.labelStore:listen(
   --   function(foo, fooValue)
   --     print("UI.labelStore")
-  --     for k, v in pairs(fooValue) do
+  --     for k, v in pairs(fooValue.value) do
   --       print("", k, v)
   --     end
   --     timer.performWithDelay( 1000,
   --     function()
   --       self:destroy()
-  --       self.objs = showLabels(fooValue, rootGroup)
+  --       self.objs = showLabels(fooValue.value, rootGroup)
   --     end )
   --   end
   -- )

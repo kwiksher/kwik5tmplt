@@ -354,9 +354,9 @@ function M:create(UI)
       self.selections = {}
       self.objs = {}
       self.iconObjs = {}
-      if fooValue then
-        render(fooValue, 0, 0)
-        if #fooValue == 0 then
+      if fooValue.value then
+        render(fooValue.value, 0, 0)
+        if #fooValue.value == 0 then
            self:createIcons(120, 5)
         else
            self:createIcons()
@@ -367,7 +367,7 @@ function M:create(UI)
       self.rootGroup[self.id.."Table"] = self.group
 
       -- print(self.id,  #self.objs)
-      if fooValue  then
+      if fooValue.value  then
         -- print(debug.traceback())
         self:show()
       else

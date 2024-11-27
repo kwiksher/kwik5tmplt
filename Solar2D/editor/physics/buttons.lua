@@ -5,17 +5,18 @@ function M:init(UI, toggleHandler)
   -- singleton ---
   self.objs = {}
   ---
-  if not self.contextInit then
     local app = App.get()
     for i, command in next, self.commands do
       if command == "save" then
 
       -- print("@@@@@@@@@@@ ppppp", self.id, #self.commands, self.contextInit)
-
-        app.context:mapCommand(
-          "editor.classEditor.physics." .. self.commands[i],
-          "editor.physics.controller." .. self.commands[i]
-        )
+        local eventName = "editor.classEditor.physics." .. self.commands[i]
+        if app.context.commands[eventName] == nil then
+          app.context:mapCommand(
+            eventName,
+            "editor.physics.controller." .. self.commands[i]
+          )
+        end
       else
         -- app.context:mapCommand(
         --   "editor.classEditor." .. self.commands[i],
@@ -23,8 +24,6 @@ function M:init(UI, toggleHandler)
         -- )
       end
     end
-    self.contextInit = true
-  end
   self.togglePanel = toggleHandler
 end
 

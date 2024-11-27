@@ -28,7 +28,6 @@ M.commands = {"create", "shape.new_rectangle", "shape.new_ellipse", "shape.new_t
   "save", "cancel"}
 
 M.objs = nil
-M.contextInit = false
 
 local isCancel = function(event)
   local ret = event.phase == "up" and event.keyName == 'escape'
@@ -46,16 +45,16 @@ function M:init(UI, toggleHandler)
 
   self.objs = {}
   ---
-  if not self.contextInit then
     local app = App.get()
     for i = 1, #self.commands do
-      app.context:mapCommand(
-        "editor.classEditor." .. self.commands[i],
-        "editor.controller." .. self.commands[i]
-      )
+      local eventName =  "editor.classEditor." .. self.commands[i]
+      if app.context.commands[eventName] == nil then
+        app.context:mapCommand(
+          eventName,
+          "editor.controller." .. self.commands[i]
+        )
+      end
     end
-    self.contextInit = true
-  end
   self.togglePanel = toggleHandler
 end
 --
@@ -603,7 +602,6 @@ end
 
 M.new = function(id)
   local instance = {id=id}
-  instance.contextInit = false
   return setmetatable(instance, {__index=M})
 end
 --

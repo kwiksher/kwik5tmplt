@@ -199,7 +199,7 @@ function M.loadPage(UI)
         end
       end
       if #pages > 0 then
-        UI.editor.pageStore:set(pages)
+        UI.editor.pageStore:set{value = pages}
       end
     end
   else
@@ -211,14 +211,14 @@ function M.loadPage(UI)
           table.insert(pages, {name = scene, path= util.PATH(path.."/"..scene)})
       end
       if #pages > 0 then
-        UI.editor.pageStore:set(pages)
+        UI.editor.pageStore:set{value = pages}
       end
     end
   end
 
   -- assets
   UI.editor.assets = require("editor.asset.index").controller:read(bookName)
-  UI.editor.assetStore:set({decoded=UI.editor.assets})
+  UI.editor.assetStore:set{value = {decoded=UI.editor.assets}}
 end
 
 
