@@ -177,12 +177,12 @@ function M:addListener(UI, buttons, propsTable)
       --
       if assetName then
         -- print(assetName, print(json.encode(UI.editor.assets[assetName])))
-        UI.editor.assetStore:set({class = assetName, decoded = UI.editor.assets[assetName]})
+        UI.editor.assetStore:set{value={class = assetName, decoded = UI.editor.assets[assetName]}}
       else
-        UI.editor.assetStore:set({decoded = UI.editor.assets})
+        UI.editor.assetStore:set{value={decoded = UI.editor.assets}}
       end
     else
-      UI.editor.assetStore:set({})
+      UI.editor.assetStore:set{value={}}
     end
 
   end
