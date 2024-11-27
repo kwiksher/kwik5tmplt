@@ -106,7 +106,7 @@ function M:showActionTable(actionbox, isNew)
 
     local UI = self.UI
     if not self.isVisible then
-      UI.editor.actionStore:set(UI.scene.model.commands)
+      UI.editor.actionStore:set{value=UI.scene.model.commands, isActiveProp=true}
       self:show()
       buttons:hide()
     else

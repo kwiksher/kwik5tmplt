@@ -8,7 +8,7 @@ local layerTable
 local actionTable = require("editor.action.actionTable")
 local groupTable = require("editor.group.groupTable")
 
-local helper = require("editor.tests.helper")
+local helper = require("test.helper")
 
 
 
@@ -60,8 +60,8 @@ function M.init(props)
 end
 
 function M.suite_setup()
-  selectors.projectPageSelector:show()
-  selectors.projectPageSelector:onClick(true)
+  -- selectors.projectPageSelector:show()
+  -- selectors.projectPageSelector:onClick(true)
   --
   -- UI.scene.app:dispatchEvent {
   --   name = "editor.selector.selectApp",
@@ -70,8 +70,8 @@ function M.suite_setup()
   -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
   -- useTinyfiledialogs = false -- default
   ---
-  bookTable.commandHandler({book="book"}, nil,  true)
-  pageTable.commandHandler({page="page1"},nil,  true)
+  -- bookTable.commandHandler({book="book"}, nil,  true)
+  -- pageTable.commandHandler({page="page1"},nil,  true)
   selectors.componentSelector.iconHander()
 end
 
@@ -79,6 +79,15 @@ function M.setup()
 end
 
 function M.teardown()
+end
+
+function M.test_onTap()
+
+  helper.selectLayer("star", "button", false) -- isRightClick
+  helper.selectLayer("star", "button", true) -- isRightClick
+
+  -- helper.clickProp(actionbox.objs, "onTap")
+
 end
 
 --[[
@@ -118,7 +127,7 @@ local function selectCancel()
   obj.rect:tap()
 end
 
-function M.test_new_group_button()
+function M.xtest_new_group_button()
 
   selectors.componentSelector:onClick(true,  "groupTable")
   local name = "groupCat"

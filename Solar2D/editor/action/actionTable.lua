@@ -63,7 +63,8 @@ function M:create(UI)
 
    local function render (models, xIndex, yIndex)
     -- print("actionStore", #models)
-    M:destroy()
+    self:destroy()
+    self.group = display.newGroup()
     -- buttons:show()
 
     local objs = {}
@@ -154,15 +155,17 @@ function M:create(UI)
 
   UI.editor.actionStore:listen(
     function(foo, fooValue)
-      -- print(debug.traceback())
       self:destroy()
       if fooValue.value then
         -- self.objs, self.newButton, self.editButton, self.attachButton = render(fooValue,0,0)
         self.objs, self.newButton, self.editButton = render(fooValue.value,0,0)
-
+        self:show()
         -- if #fooValue == 0 then
         --   self:hide()
         -- end
+      end
+      if fooValue.isActiveProp then
+        self.group.x = display.contentCenterX+140
       end
     end
   )

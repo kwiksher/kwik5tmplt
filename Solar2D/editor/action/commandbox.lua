@@ -101,6 +101,7 @@ function M:createTable(UI, selected)
   --scrollView.anchorY = 0
 --]]
   self.scrollView = scrollView
+  self.group:toFront()
 
 end
 --

@@ -76,7 +76,8 @@ local command = function (params)
 
       if params.class then -- this measn user clicks one of class, anim, button, drag ...
         if UI.editor.currentLayer == params.layer then
-          print("something wrong about params.layer", UI.editor.currentLayer, params.layer)
+          print("not changed", UI.editor.currentLayer, params.layer)
+          --print(debug.traceback())
         end
       end
       -- should we use name of UI.editor.editor.currentClass?
