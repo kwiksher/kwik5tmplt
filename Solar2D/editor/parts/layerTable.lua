@@ -204,6 +204,10 @@ function M:create(UI)
       end
       self.objs = self:render(fooValue.value, 0, 0)
       self:show() -- this needs from asset > activeProp
+      if fooValue.isActiveProp then
+        self.group.oriX = self.group.x
+        self.group.x = display.contentCenterX+140
+      end
     end
   )
 end

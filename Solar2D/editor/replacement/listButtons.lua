@@ -13,7 +13,6 @@ local App = require("Application")
 ---
 M.commands = {"delete", "save", "cancel", "select", "add", "preview"}
 M.objs = {}
-M.contextInit = false
 
 local isCancel = function(event)
   local ret = event.phase == "up" and event.keyName == "escape"
@@ -22,15 +21,15 @@ end
 
 ---
 function M:init(UI)
-  if self.contextInit == false then
-    local app = App.get()
-    for i = 1, #self.commands do
+  local app = App.get()
+  for i = 1, #self.commands do
+    local eventName = "editor.replacement.list." .. self.commands[i]
+    if app.context.commands[eventName] == nil then
       app.context:mapCommand(
-        "editor.replacement.list." .. self.commands[i],
+        eventName,
         "editor.replacement.controller." .. self.commands[i]
       )
     end
-    self.contextInit = true
   end
 end
 --

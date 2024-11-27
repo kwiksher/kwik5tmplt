@@ -179,7 +179,9 @@ function M:create(UI)
         end
       end
       self:show()
-      self.group:toFront()
+      if fooValue.isActiveProp then
+        self.group.x = display.contentCenterX+140
+      end
     end
   )
 end
