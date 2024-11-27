@@ -10,7 +10,7 @@ M.weight = 1
 M.groupName = "rootGroup"
 -- M.x =  display.contentCenterX + 28 -- UI.editor.viewStore.actionCommandTable.left + UI.editor.viewStore.actionCommandTable.width -- commandbox.x + option.width/2
 -- M.x = display.contentCenterX + 480/2
-M.x = display.actualContentWidth -50
+M.x = display.actualContentWidth -180
 M.y =  22
 M.width = 100
       -- commandbox.y  -- (display.actualContentHeight - display.contentHeight + option.height)/2
@@ -206,7 +206,7 @@ function M:create(UI)
     --   self.group.propsTable:translate(delta_x, 0)
     -- end
   else
-    self.group:translate(-130, 0)
+   -- self.group:translate(-130, 0)
   end
 
 end

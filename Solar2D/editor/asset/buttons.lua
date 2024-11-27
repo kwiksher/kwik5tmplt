@@ -1,7 +1,6 @@
 local M = {}
 local current = ...
 local parent,  root = newModule(current)
-M.contextInit = false
 
 --
 local App = require("Application")
@@ -21,16 +20,16 @@ function M:init(UI, x, y)
   self.objs = {}
   self.x = x
   self.y = y
-  if self.contextInit == false then
-    local app = App.get()
-    for i = 1, #self.model do
-      local entry = self.model[i]
+  local app = App.get()
+  for i = 1, #self.model do
+    local entry = self.model[i]
+    local eventName =  "editor."..self.commandClass.."." .. entry.name
+    if app.context.commands[eventName] == nil then
       app.context:mapCommand(
-        "editor."..self.commandClass.."." .. entry.name,
+        eventName,
         "editor.asset.controller." .. entry.name
       )
     end
-    self.contextInit = true
   end
 end
 

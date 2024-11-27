@@ -192,6 +192,9 @@ function M:create(UI)
       else
         self:hide()
       end
+      if fooValue.isActiveProp then
+        self.group.x = display.contentCenterX+140
+      end
 
     end
   )
