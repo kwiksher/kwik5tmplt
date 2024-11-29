@@ -79,15 +79,16 @@ local instance = require("commands.kwik.baseCommand").new(
     for k,v in pairs(props.properties) do print("", k, v) end
     --
     local updatedModel = util.createIndexModel(UI.scene.model)
-    -- print(json.encode(updatedModel))
     local files = {}
     if params.isNew or selected.index == nil then
       local dst = updatedModel.components.audios[props.subclass] or {}
       dst[#dst + 1] = props.name
+      updatedModel.components.audios[props.subclass] = dst
     else
       local dst = updatedModel.components.audios[props.subclass]
       dst[props.index] = props.name -- TBI for audio's name
     end
+    print(json.prettify(updatedModel))
     --
     -- TODO check if name is not duplicated or not
     --
@@ -101,7 +102,7 @@ local instance = require("commands.kwik.baseCommand").new(
     -- publish
     scripts.backupFiles(files)
     scripts.executeCopyFiles(files)
-    scripts.delete(files)
+    --scripts.delete(files)
   end
 )
 --[[

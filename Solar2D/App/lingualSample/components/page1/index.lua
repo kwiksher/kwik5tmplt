@@ -1,66 +1,58 @@
 local sceneName = ...
 --
 local scene = require('controller.scene').new(sceneName, {
-    --name = "page1",
-    components = {
-      layers = {
+  --name = "",
+  components = {
+    layers = {
+      {
+        kwkcover = {
+        }
+      },
+      {
+        kwkwitch = {
+        }
+      },
+      {
+        readMe = {     {
+          en = {
+          }
+        },
+        {
+          ja = {
+          }
+        },
+        {
+          pt = {
+          }
+        },
+        {
+          sp = {
+          }
+        },
 
-             {
-               kwkcover = { 
-                 class={  }  }
-             },
-             
-             {
-               kwkwitch = { 
-                 class={  }  }
-             },
-             
-             {
-               readMe = { 
-  {
-    en = { 
-      class={  }  }
-  },
-   
-  {
-    ja = { 
-      class={  }  }
-  },
-   
-  {
-    pt = { 
-      class={  }  }
-  },
-   
-  {
-    sp = { 
-      class={  }  }
-  },
-   
-                 class={  }  }
-             },
-             
-             {
-               Candice = { 
-                 class={  }  }
-             },
-             
-             {
-               langTxt = { 
-                 class={  }  }
-             },
-                       },
-      audios = {
+        }
       },
-      groups = {
+      {
+        Candice = {
+        }
       },
-      timers = {  },
-      variables = {  },
-      joints    = {  },
-      page = {  }
+      {
+        langTxt = {
+        }
+      },
     },
-    commands = {  },
-    onInit = function(scene) print("onInit") end
+    audios = {
+      long={  "Tranquility",  }, short={   }
+    },
+    groups = {
+    },
+    timers = {  },
+    variables = {  },
+    joints    = {  },
+    page = {  }
+  },
+  commands = {  },
+  onInit = function(scene) print("onInit") end
 })
 --
 return scene
