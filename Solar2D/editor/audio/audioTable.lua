@@ -179,8 +179,9 @@ function M:create(UI)
         end
       end
       self:show()
-      if fooValue.isActiveProp then
-        self.group.x = display.contentCenterX+140
+      if fooValue and fooValue.isActiveProp then
+        self.group.x = display.contentCenterX+120
+        self.group.y = display.contentCenterY-120
       end
     end
   )

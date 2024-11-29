@@ -206,7 +206,9 @@ function M:create(UI)
       self:show() -- this needs from asset > activeProp
       if fooValue.isActiveProp then
         self.group.oriX = self.group.x
-        self.group.x = display.contentCenterX+140
+        self.group.oriY = self.group.y
+        self.group.x = display.contentCenterX+120
+        self.group.y = display.contentCenterY-200
       end
     end
   )
