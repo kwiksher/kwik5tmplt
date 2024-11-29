@@ -786,6 +786,8 @@ end
 function M.saveIndex(book, page, layer, class, model)
   local dst = "App/" .. book .. "/models/" .. page .. "/index.json"
   --local dst = "index.json"
+  M.mkdir("App", book, "models", page)
+  --
   local decoded = M.copyTable(model)
   if layer then
     for i = 1, #decoded.components.layers do
