@@ -17,6 +17,7 @@ M.lastSelection = { book="book", page="page12"}
 M.contextInit = false
 M.storeInit   = false
 
+local gotoLastOn = true
 local unitTestOn = true
 local httpServerOn = true
 
@@ -39,6 +40,7 @@ M.commands = {
   {name="selectPage", btree="load page"},
   {name="selectLayer", btree="load layer"},
   {name="selectPageIcons", btree=nil},
+  {name="lockPage", btree=nil},
   -- {name="selectAction", btree=""},
   {name="selectTool", btree="editor component"},
   -- {name="selectActionCommand", btree=""}
@@ -342,15 +344,15 @@ function M:gotoLastSelection(_props)
       props = json.decode(contents)
       ---
       --- remove it
-      local result, reason = os.remove( path )
-      if result then
-        print( "File removed" )
-      else
-        print( "File does not exist", reason )  --> File does not exist    apple.txt: No such file or directory
-      end
+      -- local result, reason = os.remove( path )
+      -- if result then
+      --   print( "File removed" )
+      -- else
+      --   print( "File does not exist", reason )  --> File does not exist    apple.txt: No such file or directory
+      -- end
   end
 
-  local helper = require("editor.tests.helper")
+  local helper = require("test.helper")
   local bookTable = require("editor.parts.bookTable")
   local pageTable = require("editor.parts.pageTable")
   local layerTable = require("editor.parts.layerTable")
@@ -365,15 +367,19 @@ function M:gotoLastSelection(_props)
   --   UI = UI
   -- }
 
+  UI.editor.lastSelection = {book = props.book, page= props.page}
+
   local obj = helper.selectBook(props.book)
   bookTable.commandHandler(obj, {phase="ended"},  true)
 
-  pageTable.commandHandler({page=props.page},{},  true)
-
-  selectors.componentSelector.iconHander()
-  selectors.componentSelector:onClick(true,  "layerTable")
+  timer.performWithDelay(1000, function()
+    pageTable.commandHandler({page=props.page},{},  true)
+  end)
 
   if props.selections and props.selections[1] then
+    selectors.componentSelector.iconHander()
+    selectors.componentSelector:onClick(true,  "layerTable")
+
     if props.selections[1].name == "action pasted" then
       helper.selectIcon("action")
     elseif props.selections[1].name == "pasted" then
@@ -439,6 +445,11 @@ function M:didShow(UI)
       ----------------------------
       self:gotoLastSelection() -- self.lastSelection
     end
+  end
+
+  if gotoLastOn then
+    self:gotoLastSelection() -- self.lastSelection
+    gotoLastOn = false
   end
 
   if unitTestOn then
