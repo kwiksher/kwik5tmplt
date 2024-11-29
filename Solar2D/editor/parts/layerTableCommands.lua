@@ -253,6 +253,7 @@ function M.commandHandler(layerTable, target, event)
         UI.editor.currentLayer = fromActive.layer
         UI.editor.selections = fromActive.selections
         layerTable.group.x = layerTable.group.oriX
+        layerTable.group.y = layerTable.group.oriY
         return -- notice!
       end
       --
@@ -265,6 +266,7 @@ function M.commandHandler(layerTable, target, event)
         UI.editor.currentLayer = fromActive.layer
         UI.editor.selections = fromActive.selections
         layerTable.group.x = layerTable.group.oriX
+        layerTable.group.y = layerTable.group.oriY
         return -- notice!
       end
     end
