@@ -156,16 +156,18 @@ function M:create(UI)
   UI.editor.actionStore:listen(
     function(foo, fooValue)
       self:destroy()
-      if fooValue.value then
+      if fooValue and fooValue.value then
         -- self.objs, self.newButton, self.editButton, self.attachButton = render(fooValue,0,0)
         self.objs, self.newButton, self.editButton = render(fooValue.value,0,0)
         self:show()
         -- if #fooValue == 0 then
         --   self:hide()
         -- end
-      end
-      if fooValue.isActiveProp then
-        self.group.x = display.contentCenterX+140
+        if fooValue.isActiveProp then
+          self.group.x = display.contentCenterX+120
+          self.group.y = display.contentCenterY-120
+
+        end
       end
     end
   )
