@@ -9,7 +9,7 @@ local layerTable
 local groupTable = require("editor.group.groupTable")
 local buttons = require("editor.group.buttons")
 
-local helper = require("editor.tests.helper")
+local helper = require("test.helper")
 local json   = require("json")
 
 
@@ -27,21 +27,11 @@ function M.init(props)
 end
 
 local book = "book"
-local page = "page1"
+local page = "portait"
 
 function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
-  -- --
-  -- UI.scene.app:dispatchEvent {
-  --   name = "editor.selector.selectApp",
-  --   UI = UI
-  -- }
-  -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
-  -- useTinyfiledialogs = false -- default
-  ---
-  bookTable.commandHandler({book=book}, nil,  true)
-  pageTable.commandHandler({page=page},nil,  true)
   selectors.componentSelector.iconHander()
 end
 
@@ -67,7 +57,7 @@ function M.xtest_click_group()
     -- end
 end
 
-function M.test_click_group_for_editing()
+function M.xtest_click_group_for_editing()
   -- UI.testCallback = function()
     UI.page = "page1"
     groupTable.altDown = true

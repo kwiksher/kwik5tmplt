@@ -133,8 +133,8 @@ function M:create(UI)
       {label = "", command = "selectBook", store = "bookTable", btree = "select book"},
       {label = "", command = "selectPage", store = "pageTable", btree = "select page"},
       {label = "      ", command = "empty"},
-      {label = "Prop", command = "selectPageIcons"},
-      {label = "Browse", command = "selectApp"},
+      {label = "Properties", command = "selectPageIcons"},
+      -- {label = "Browse", command = "selectApp"},
     },
     "openProject", --iconName
     nil,
