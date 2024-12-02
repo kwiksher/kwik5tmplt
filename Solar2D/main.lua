@@ -1,9 +1,3 @@
---require("controller.index").bootstrap({name="keyboard", sceneIndex = 1, position = {x=0, y=0}}) -- scenes.index
-
--- print("test")
-
--- require("installer.index").init()
-
 require("components.common.myComponent")
 
 local restore = false
@@ -30,20 +24,10 @@ local common = {
 require("controller.index").bootstrap{
   name="book",
   editing = true,
-  -- goPage = "landscape",
   goPage = "portrait",
+  language = "en",
   position = {x=0, y=0},
   common = common} -- scenes.index
 
---[[
-  require("controller.bookCollection").new{ books = {
-    {name="book", image="landscape.png"},
-    {name="keyboard", image="page1.png"},
-    {name="kwikTheCat", image="page1.png"},
-    {name="lingualSample", image="page1.png"},
-  }
-
-}
-local composer = require("composer")
-composer.gotoScene("bookCollection")
---]]
+-- for product release
+-- require("controller.index").bootstrap({name="book", edting = false, goPage = "portrait", position = {x=0, y=0}, common = common}) -- scenes.index

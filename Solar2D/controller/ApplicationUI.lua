@@ -83,6 +83,8 @@ function M.create(scene, model)
 
     local function callComponentsLayersHandler(models, handler, funcName)
         -- print("callComponentsLayersHandler")
+        local json = require("json")
+        -- print(json.prettify(models))
         local function iterator(handler, parent, layers, path, isLang)
             --print("callComponentsLayersHandler", #layers)
             local classEntries = {}
@@ -92,8 +94,8 @@ function M.create(scene, model)
                 for i = 1, #layers do  -- { {childOne = {}}, {childTwo={class={"linear"}}, {childThree = {{childFour={}}}} }
                     local layer = layers[i]
                     for name, value in pairs(layer) do  --
-                        -- print("", name, #value)
-                        -- print("", "string")
+                        --  print("", name)
+                        --  print("", "type", type(value), #value)
                         if type(value)=="table" and #value > 0 then
                           if funcName == "_init" then
                             handler[funcName](handler, nil,
@@ -148,8 +150,21 @@ function M.create(scene, model)
                             end
                           end
                         else
+
+                          local isIndex = function (value)
+                            for k, v in pairs(value) do
+                              if k ~= "class" then
+                                return true
+                              end
+                            end
+                            return false
+                          end
                           -- print("@@", isLang, parentPath .. name)
-                          handler[funcName](handler, nil, parentPath .. name, false)
+                          if isIndex(value) then
+                            handler[funcName](handler, nil, parentPath .. name ..".index", false)
+                          else
+                            handler[funcName](handler, nil, parentPath .. name, false)
+                          end
                           if value.class then
                             for k, class in pairs(value.class) do
                                 -- print("", class, parentPath .. name)
