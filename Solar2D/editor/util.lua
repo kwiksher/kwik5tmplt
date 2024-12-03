@@ -14,8 +14,26 @@ function M.getFileName(str)
   return n:sub(0, #n - 4)
 end
 
-local isTarget = function(layerEntry, layerName)
+local getName = function(layerEntry, parent)
+  print(json.encode(layerEntry))
   for key, v in pairs(layerEntry) do
+    print("", key)
+    if key == "class" then
+    elseif key == "event" then
+    else
+      if parent then
+        return parent .."/"..key
+      else
+        return key
+      end
+    end
+  end
+  return nil
+end
+
+local isTarget = function(layerName, layerEntry, parent)
+  for key, v in pairs(layerEntry) do
+    print("", key)
     if key == "class" then
     elseif key == "event" then
     elseif key == layerName then
@@ -44,14 +62,15 @@ function M.isExist(book, page, layer, class)
 end
 
 function M.updateIndexModel(_scene, _layerName, class, _type)
+  print("%%%", _layerName)
   local layerName = _layerName
-  local child    = _layerName:split("/")
-  if #child > 1 then
-    layerName = child[1]
-    child = child[2]
-  else
-    child = nil
-  end
+  -- local child    = _layerName:split("/")
+  -- if #child > 1 then
+  --   layerName = child[1]
+  --   child = child[2]
+  -- else
+  --   child = nil
+  -- end
   --
   local scene =
     _scene or
@@ -70,20 +89,22 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
   scene.onInit = nil
   local copied = M.copyTable(scene)
   scene.onInit = onInit
+  print("----- copied -----")
+  print(json.prettify(copied))
 
-  -- print("%%%", layerName)
-  local function processLayers(layers, nLevel)
+  print("%%%", layerName)
+  local function processLayers(layers, nLevel, parent)
     for i = 1, #layers do
-      -- print("%%%", i)
       local layer = layers[i]
       local children = {}
-      --
-      if isTarget(layer, layerName) then
-        -- print("%%%", layerName)
-        if child then -- continue to find the target child
-          layerName = child
-          child = nil
-        else
+      ---
+      local name = getName(layer, parent)
+      print("@@@", name, layerName )
+      if name == layerName then
+        -- if child then -- continue to find the target child
+        --   layerName = child
+        --   child = nil
+        -- else
           local target = layer[layerName]
           if target.class == nil then
             target.class = {}
@@ -93,13 +114,13 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
             table.insert(target.class, class)
           end
           layerName = nil
-        end
+        -- end
       end
 
       --
       local children = {}
       for key, value in pairs(layer) do
-        -- print(key, value)
+        print(key, value.class)
         if key == "class" then
         elseif key == "event" then
         else
@@ -130,7 +151,7 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
         --   -- just empty layer without class nor event
         --   v.class = {class}
         -- end
-        processLayers(children, nLevel + 1)
+        processLayers(children, nLevel + 1, name)
       else
         -- newEntry.layers = false
       end
@@ -185,7 +206,7 @@ function M.createIndexModel(_scene, layerName, class, noRecursive)
       local newEntry = {}
       local children = {}
       --
-      if isTarget(layer, layerName) then
+      if isTarget(layerName, layer) then
         local target = layer[layerName]
         if target.class == nil then
           newEntry["class".. nLevel] = {}
@@ -209,7 +230,7 @@ function M.createIndexModel(_scene, layerName, class, noRecursive)
       for key, value in next, layer do
         -- print("", key, #value, tostring(is_array(value)))
         if key == "class" then
-          -- if newEntry.class == nil then -- this means not isTarget(layer, layerName)
+          -- if newEntry.class == nil then -- this means not isTarget(layerName, layer)
           --   newEntry.class = value
           -- end
         elseif key == "event" then
@@ -308,7 +329,7 @@ function M.selectFromIndexModel(model, args)
       --
       for key, value in pairs(layer) do
         -- print(key, value)
-        if isTarget(layer, target[level]) then
+        if isTarget(target[level], layer) then
           if nextTarget == nil then
             return {type = "layer", file = key, value = value}
           elseif layer.class and isClass(layer, nextTarget) then
