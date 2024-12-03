@@ -51,15 +51,16 @@ function M:setClassProps(classProps)
   self.classProps = classProps
 end
 
-function M:setPosition(_xIndex, _yIndex)
+function M:getPosition(_xIndex, _yIndex)
   local xIndex = _xIndex or 0
   local yIndex = _yIndex or 0
 
-  local marginX, marginY =22 + xIndex, 44 + yIndex
+  local marginX, marginY =22 + xIndex*5, 44 + yIndex
   -- self.x = self.rootGroup.selectLayer.x + marginX
   self.rectWidth = 100 + 10
-  self.x = self.rectWidth/2 + marginX
-  self.y = self.rootGroup.selectLayer.y + marginY
+  -- self.x = self.rectWidth/2 + marginX
+  -- self.y = self.rootGroup.selectLayer.y + marginY
+  return  self.rectWidth/2 + marginX, self.rootGroup.selectLayer.y + marginY
 end
 
 function M:render(models, xIndex, yIndex, parentObj)
@@ -68,7 +69,7 @@ function M:render(models, xIndex, yIndex, parentObj)
   local objs = {}
   local option = self.option
   --
-  self:setPosition(xIndex, yIndex)
+  local posX, posY = self:getPosition(xIndex, yIndex)
   --
   for i = 1, #models do
     local model = models[i]
@@ -87,8 +88,8 @@ function M:render(models, xIndex, yIndex, parentObj)
     end
     -- option.x = self.x + self.rootGroup.selectLayer.width/2 + xIndex *5
     --option.y = self.rootGroup.selectLayer.contentBounds.yMax + 10 + option.height * count
-    option.x = self.x --  + xIndex * 5
-    option.y = self.y  + option.height * (count -1 + yIndex)
+    option.x = posX --  + xIndex * 5
+    option.y = posY  + option.height * (count -1 + yIndex)
     -- print("#", count, yIndex, entry.name)
     option.width = 100
 
@@ -108,7 +109,7 @@ function M:render(models, xIndex, yIndex, parentObj)
     obj:addEventListener("touch", obj)
     obj:addEventListener("mouse", self.mouseHandler)
 
-    local rect = display.newRect(obj.x, obj.y, self.rectWidth, option.height)
+    local rect = display.newRect(obj.x - xIndex*5, obj.y, self.rectWidth, option.height)
     rect:setFillColor(0.8 + xIndex*0.05)
     rect.strokeWidth = 1
     self.group:insert(rect)
@@ -124,10 +125,10 @@ function M:render(models, xIndex, yIndex, parentObj)
         -- print("#", entry.class[k])
         option.text = entry.class[k]
         -- option.text = entry.class[k]:sub(1, 5)
-        -- option.x = self.x + self.rootGroup.selectLayer.width/2 + last_x
+        -- option.x = posX + self.rootGroup.selectLayer.width/2 + last_x
         -- option.y = self.rootGroup.selectLayer.contentBounds.yMax + 10 + option.height * (count-1)
-        option.x = self.x + last_x
-        option.y = self.y + option.height * (count - 1 + yIndex)
+        option.x = posX + last_x
+        option.y = posY + option.height * (count - 1 + yIndex)
         option.width = nil
         local classObj = self.newText(option)
         --classObj.width = 50
