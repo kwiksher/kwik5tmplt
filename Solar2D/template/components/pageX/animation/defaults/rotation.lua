@@ -30,6 +30,7 @@ local M = {
     xSwipe=nil,
     ySwipe=nil,
     anchorPoint = "Center",
+    useLang = false
   },
   breadcrumbs = nil,
   layerOptions = {

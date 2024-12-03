@@ -30,7 +30,8 @@ local M = {
     resetAtEnd=false,
     easing=NIL,
     xSwipe=nil,
-    ySwipe=nil
+    ySwipe=nil,
+    useLang = false
   },
   breadcrumbs = nil,
   layerOptions = {

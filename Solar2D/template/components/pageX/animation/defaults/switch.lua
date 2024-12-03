@@ -8,6 +8,7 @@ local M = {
     delay=0,
     duration=100,
     to = NIL,
+    useLang = false
   },
   layerOptions = {
   },

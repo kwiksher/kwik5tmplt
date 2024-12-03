@@ -70,6 +70,7 @@ M.properties = {
   -- flip
   xSwipe   = {{xSwipe}},
   ySwipe   = {{ySwipe}},
+  useLang  = {{useLang}}
 {{/properties}}
 }
   --
