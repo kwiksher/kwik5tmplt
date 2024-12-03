@@ -46,6 +46,7 @@ local M = {
   -- 'outBack'
   -- 'inOutBack'
   ------------
+    useLang = false
   },
   breadcrumbs = nil,
   layerOptions = {
