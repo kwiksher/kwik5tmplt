@@ -440,13 +440,32 @@ function M.getModelDirs(book, page, layer)
   return ret
 end
 
-function M.getLayerNameWithParent(obj)
-  local ret = obj.layer
+-- function M.getLayerNameWithParent(obj)
+--   local ret = obj.layer
+--   if obj.parentObj then
+--     ret = obj.parentObj.layer.."/"..obj.layer
+--     -- print("", ret)
+--   end
+--   return ret
+-- end
+
+function M.getParent(obj)
+  local ret = ""
   if obj.parentObj then
-    ret = obj.parentObj.layer.."/"..obj.layer
-    -- print("", ret)
+    ret = M.getParent(obj.parentObj, ret) .. obj.parentObj.layer .. "/" .. ret
   end
   return ret
+end
+
+function M.getLayerPath(obj)
+  local ret = obj.layer
+  if obj.parentObj then
+    local parent = M.getLayerPath(obj.parentObj)
+    return parent.."/"..ret
+    -- print("", ret)
+  else
+    return ret
+  end
 end
 
 function M.saveLua(tmplt, dst, _model, partial)
@@ -723,14 +742,6 @@ M.setSelection = function(self, obj)
     end
     self.selections = tmp
   end
-end
-
-function M.getParent(obj)
-  local ret = ""
-  if obj.parentObj then
-    ret = M.getParent(obj.parentObj, ret) .. obj.parentObj.layer .. "/" .. ret
-  end
-  return ret
 end
 
 function M.renderIndex(book, page, model)

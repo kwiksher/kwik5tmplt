@@ -760,9 +760,8 @@ function M.publishForSelections(UI, args, controller, decoded)
   print(json.prettify(selections))
   for i, obj in next, selections do
     if obj.parentObj then
-        if obj.parentObj  then -- class has been set, so the layer == "witch/en/button"
-          layer = obj.parentObj.layer.."/"..obj.layer
-        end
+      -- class has been set, so the layer == "witch/en/button"
+      layer = util.getLayerPath(target)
     else
       layer = obj.layer
     end

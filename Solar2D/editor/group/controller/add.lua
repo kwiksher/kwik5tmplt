@@ -19,8 +19,7 @@ local command = function (params)
     -- add them to layersTable
     local obj = props.layersboxSelections[i]
     if obj.parentObj then
-      print("#", util.getParent(obj))
-      local parentText = util.getParent(obj):gsub("/",".") --  "- GroupA.Ellipse"
+      local parentText = util.getLayerPath(obj):gsub("/",".") --  "- GroupA.Ellipse"
       workTable[#workTable + 1] = parentText ..obj.text
     else
       workTable[#workTable + 1] = obj.text
