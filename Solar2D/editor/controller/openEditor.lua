@@ -35,7 +35,7 @@ local instance =
       for i, v in next, UI.editor.selections do
         print("", v.layer, v.text, v.class )
         if v.parentObj then
-          local layer = v.parentObj.layer .."/"..v.layer
+          local layer = util.getLayerPath(v)
           commands.openEditorForLayer(UI.book, UI.page, layer, v.class)
         else
           commands.openEditorForLayer(UI.book, UI.page, v.layer, v.class)

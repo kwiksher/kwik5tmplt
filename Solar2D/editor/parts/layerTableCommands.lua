@@ -10,6 +10,7 @@ local propsTable = require(parent .. "propsTable")
 local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 local classProps = require("editor.parts.classProps")
 local buttons = require("editor.parts.buttons")
+local util = require("editor.util")
 
 local posX = display.contentCenterX * 0.4
 
@@ -104,7 +105,7 @@ local function singleSelection(layerTable, target, isNotLayer)
     if not isNotLayer then
       UI.editor:setCurrnetSelection()
       if target.layer and target.layer:len() then
-        local name = util.getLayerNameWithParent(target)
+        local name = util.getLayerPath(target)
         -- print("@@@@@", name)
         UI.editor.currentLayer = name
       else
@@ -163,7 +164,7 @@ local function showFocus(layerTable)
     local name = v.layer
     -- print(i, v.layer)
     if v.parentObj then
-      name = v.parentObj.layer.."/"..v.layer
+      name = util.getLayerPath(v)
       -- print("", name)
     end
     local obj = UI.sceneGroup[name]
@@ -244,8 +245,9 @@ function M.commandHandler(layerTable, target, event)
       -- print("", "singleSelection")
       local layer = target.layer
       if target.parentObj then
-        layer = target.parentObj.layer .."/" .. layer
+        layer = util.getLayerPath(target)
       end
+
 
       if actionCommandPropsTable:setActiveProp(layer, target.class) then
         layerTable:hide()
@@ -333,7 +335,7 @@ local function showClassProps(layerTable, target)
     --
     -- target.isSelected = true
     if target.layer and target.layer:len() then
-      local name = util.getLayerNameWithParent(target)
+      local name = util.getLayerPath(target)
       -- print("####", name)
       UI.editor.currentLayer = name
     else
@@ -400,7 +402,7 @@ function M.commandHandlerClass(layerTable, target, event)
 
       local layer = target.layer
       if target.parentObj then
-        layer = target.parentObj.layer .."/" .. layer
+        layer = util.getLayerPath(target)
       end
       actionCommandPropsTable:setActiveProp(layer, target.class)
       classProps:setActiveProp(layer, target.class)

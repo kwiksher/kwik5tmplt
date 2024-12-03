@@ -234,6 +234,11 @@ function M:create(UI)
   --
   UI.editor.rootGroup:addEventListener("labelStore", function(event)
     self:didHide()
+    if self.objs then
+      for i, obj in next, self.objs do
+        obj:removeSelf()
+      end
+    end
     self.objs = showLabels(event, self.rootGroup)
 
     -- timer.performWithDelay( 10,

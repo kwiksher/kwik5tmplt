@@ -101,7 +101,7 @@ local instance =
           path = "App/" .. book .. "/components/" .. page .. "/layers/" .. obj.layer .. "_" .. obj.class
           name = obj.layer
           if obj.parentObj then
-            name = obj.parentObj.layer .."/"..name
+            name = util.getLayerPath(obj)
           end
         else --class==nil
           path = "App/" .. book .. "/components/" .. page .. "/layers/" .. obj.layer
