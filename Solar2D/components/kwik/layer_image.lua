@@ -98,7 +98,7 @@ function M:createImage(UI)
   -- obj.type = "image"
   --
   sceneGroup[self.name] = obj
-  -- print("@@@@", self.name)
+  print("@@@@", self.name, obj)
 
   --
   if self.layerAsBg then

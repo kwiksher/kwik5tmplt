@@ -757,7 +757,7 @@ function M.publishForSelections(UI, args, controller, decoded)
   else
     selections = {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
   end
-  print(json.prettify(selections))
+  -- print(json.prettify(selections))
   for i, obj in next, selections do
     if obj.parentObj then
       -- class has been set, so the layer == "witch/en/button"
@@ -769,7 +769,10 @@ function M.publishForSelections(UI, args, controller, decoded)
     model.name = obj.layer
 
     updatedModel = util.updateIndexModel(updatedModel, layer, class, model.properties._type or model.properties.type)
-    -- print(json.encode(updatedModel))
+    print(json.prettify(updatedModel))
+  end
+
+local function test ()
     --- save json
     -----------
     -- print(book, page, layer, classFolder, args.index)

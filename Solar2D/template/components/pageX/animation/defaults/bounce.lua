@@ -21,7 +21,8 @@ local M = {
     resetAtEnd=false,
     easing="outCirc",
     xSwipe=nil,
-    ySwipe=nil
+    ySwipe=nil,
+    useLang = false
   },
   breadcrumbs = nil,
   layerOptions = {

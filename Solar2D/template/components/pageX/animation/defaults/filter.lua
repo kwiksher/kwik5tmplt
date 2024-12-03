@@ -12,6 +12,7 @@ local M = {
     easing     = "inQuad",
     reverse    = nil,
     resetAtEnd = nil,
+    useLang = false
   },
   -- composite = {
   --   effect   = "composite.normalMapWith1PointLight",
