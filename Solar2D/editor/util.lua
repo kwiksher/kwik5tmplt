@@ -33,7 +33,7 @@ end
 
 local isTarget = function(layerName, layerEntry, parent)
   for key, v in pairs(layerEntry) do
-    print("", key)
+    -- print("", key)
     if key == "class" then
     elseif key == "event" then
     elseif key == layerName then
@@ -89,17 +89,17 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
   scene.onInit = nil
   local copied = M.copyTable(scene)
   scene.onInit = onInit
-  print("----- copied -----")
-  print(json.prettify(copied))
+  -- print("----- copied -----")
+  -- print(json.prettify(copied))
 
-  print("%%%", layerName)
+  -- print("%%%", layerName)
   local function processLayers(layers, nLevel, parent)
-    print(json.encode(layers))
+    -- print(json.encode(layers))
     for k, layer in pairs(layers) do
       local children = {}
       ---
       local name, value = getLayer(layer, parent)
-      print("@@@", #layer, name, layerName )
+      -- print("@@@", #layer, name, layerName )
       if name == layerName then
         -- if child then -- continue to find the target child
         --   layerName = child
