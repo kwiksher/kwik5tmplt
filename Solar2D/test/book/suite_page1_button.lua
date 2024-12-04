@@ -7,6 +7,9 @@ local pageTable
 local layerTable
 local actionTable = require("editor.action.actionTable")
 local groupTable = require("editor.group.groupTable")
+local actionbox = require("editor.parts.actionbox")
+local actionButtonContext = require("editor.action.buttonContext")
+local picker = require("editor.picker.name")
 
 local helper = require("test.helper")
 
@@ -72,7 +75,7 @@ function M.suite_setup()
   ---
   -- bookTable.commandHandler({book="book"}, nil,  true)
   -- pageTable.commandHandler({page="page1"},nil,  true)
-  selectors.componentSelector.iconHander()
+  -- selectors.componentSelector.iconHander()
 end
 
 function M.setup()
@@ -81,11 +84,22 @@ end
 function M.teardown()
 end
 
-function M.test_onTap()
+function xM.test_onTap()
 
   helper.selectLayer("star", "button", false) -- isRightClick
-  helper.selectLayer("star", "button", true) -- isRightClick
+  helper.selectIcon("Interactions", "Button")
+  helper.clickProp(actionbox.objs, "onTap")
+  helper.clickButton("New", actionButtonContext)
+  picker.obj.field.text = "testAction"
+  helper.clickObj(picker.buttonObjs, "Continue")
 
+  helper.selectActionGroup("Animation")
+  helper.selectActionCommand("animation", "play")
+
+  --helper.selectLayer("GroupA/SubA/Triangle", "linear", false) -- isRightClick
+
+
+  -- helper.selectLayer("star", "button", true) -- isRightClick
   -- helper.clickProp(actionbox.objs, "onTap")
 
 end
@@ -154,7 +168,6 @@ function M.xtest_new_button()
 
     helper.selectIcon("Interactions", "Button")
 
-    local actionbox = require("editor.parts.actionbox")
     local obj = actionbox.objs[1]
     obj:dispatchEvent({name="tap", target=obj})
 

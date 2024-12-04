@@ -374,36 +374,35 @@ function M:gotoLastSelection(_props)
 
   timer.performWithDelay(1000, function()
     pageTable.commandHandler({page=props.page},{},  true)
-  end)
-
-  if props.selections and props.selections[1] then
-    selectors.componentSelector.iconHander()
-    selectors.componentSelector:onClick(true,  "layerTable")
-
-    if props.selections[1].name == "action pasted" then
-      helper.selectIcon("action")
-    elseif props.selections[1].name == "pasted" then
-      local class = props.selections[1].class
-      if class == "audio" then
-        selectors.componentSelector:onClick(true,  "audioTable")
-      elseif class == "group" then
-        selectors.componentSelector:onClick(true,  "groupTable")
-      elseif class == "timer" then
-        selectors.componentSelector:onClick(true,  "timerTable")
-      elseif class == "variable" then
-        selectors.componentSelector:onClick(true,  "variableTable")
-      elseif class == "joint" then
-        selectors.componentSelector:onClick(true,  "jointTable")
-      elseif class == "page" then
-        selectors.projectPageSelector:onClick(true)
+    ---[[
+    if props.selections and props.selections[1] then
+      selectors.componentSelector.iconHander()
+      selectors.componentSelector:onClick(true,  "layerTable")
+      if props.selections[1].name == "action pasted" then
+        helper.selectIcon("action")
+      elseif props.selections[1].name == "pasted" then
+        local class = props.selections[1].class
+        if class == "audio" then
+          selectors.componentSelector:onClick(true,  "audioTable")
+        elseif class == "group" then
+          selectors.componentSelector:onClick(true,  "groupTable")
+        elseif class == "timer" then
+          selectors.componentSelector:onClick(true,  "timerTable")
+        elseif class == "variable" then
+          selectors.componentSelector:onClick(true,  "variableTable")
+        elseif class == "joint" then
+          selectors.componentSelector:onClick(true,  "jointTable")
+        elseif class == "page" then
+          selectors.projectPageSelector:onClick(true)
+        end
+      elseif Shapes[props.selections[1].class] then
+        helper.selectLayer(props.selections[1].name)
+      else
+        helper.selectLayer(props.selections[1].name, props.selections[1].class)
       end
-    elseif Shapes[props.selections[1].class] then
-      helper.selectLayer(props.selections[1].name)
-    else
-      helper.selectLayer(props.selections[1].name, props.selections[1].class)
     end
-  end
-
+    --]]
+  end)
   return false
 end
 
@@ -443,7 +442,7 @@ function M:didShow(UI)
     if not self.isReloaded then
       self.isReloaded = true
       ----------------------------
-      self:gotoLastSelection() -- self.lastSelection
+      --self:gotoLastSelection() -- self.lastSelection
     end
   end
 
