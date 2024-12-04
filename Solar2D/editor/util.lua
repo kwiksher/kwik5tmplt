@@ -14,17 +14,17 @@ function M.getFileName(str)
   return n:sub(0, #n - 4)
 end
 
-local getName = function(layerEntry, parent)
-  print(json.encode(layerEntry))
+local getLayer = function(layerEntry, parent)
+  -- print(json.encode(layerEntry))
   for key, v in pairs(layerEntry) do
     print("", key)
     if key == "class" then
     elseif key == "event" then
     else
       if parent then
-        return parent .."/"..key
+        return parent .."/"..key, v
       else
-        return key
+        return key,  v
       end
     end
   end
@@ -94,36 +94,51 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
 
   print("%%%", layerName)
   local function processLayers(layers, nLevel, parent)
-    for i = 1, #layers do
-      local layer = layers[i]
+    print(json.encode(layers))
+    for k, layer in pairs(layers) do
       local children = {}
       ---
-      local name = getName(layer, parent)
-      print("@@@", name, layerName )
+      local name, value = getLayer(layer, parent)
+      print("@@@", #layer, name, layerName )
       if name == layerName then
         -- if child then -- continue to find the target child
         --   layerName = child
         --   child = nil
         -- else
-          local target = layer[layerName]
-          if target.class == nil then
-            target.class = {}
+          if value.class == nil then
+            value.class = {}
           end
           --
-          if not isClass(target, class) then
-            table.insert(target.class, class)
+          if not isClass(value, class) then
+            table.insert(value.class, class)
           end
           layerName = nil
         -- end
       end
 
       --
+      ---[[
+      if layer.class then
+        for key, value in pairs(layer) do
+          if key == "class" then
+          else
+            processLayers(value, nLevel + 1, key)
+          end
+        end
+      else
+        for key, value in pairs(layer) do
+          if type(value) == "table" then
+            processLayers(value, nLevel + 1, name)
+          end
+        end
+      end
+      --[[
       local children = {}
       for key, value in pairs(layer) do
         print(key, value.class)
         if key == "class" then
-        elseif key == "event" then
         else
+          children[#children + 1] = value
           if type(value) == "table" and next(value) then
             if value.class == nil then
               --
@@ -146,6 +161,9 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
           end
         end
       end
+      --]]
+
+      --[[
       if #children > 0 then
         -- if next(v) == nil then
         --   -- just empty layer without class nor event
@@ -155,6 +173,7 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
       else
         -- newEntry.layers = false
       end
+      --]]
     end
   end
   --
