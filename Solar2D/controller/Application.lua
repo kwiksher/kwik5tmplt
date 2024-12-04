@@ -61,6 +61,15 @@ function newModule(name)
   if isLayers then
     M.name = M.name:sub(8)
   end
+  local names = name:split(".")
+  local last= names[#names]
+  local isClass = last:find("_")
+  if isClass then
+    M.layerMod   =  parent ..last:sub(1, isClass-1  )
+  else
+    M.layerMod   =  parent ..last
+  end
+  -- print(M.name, M.layerMod)
   M.newInstance = newInstance
   return parent, root, M
 end
