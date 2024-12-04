@@ -106,7 +106,6 @@ local function singleSelection(layerTable, target, isNotLayer)
       UI.editor:setCurrnetSelection()
       if target.layer and target.layer:len() then
         local name = util.getLayerPath(target)
-        -- print("@@@@@", name)
         UI.editor.currentLayer = name
       else
         print("Warning target.layer is not found")
@@ -250,6 +249,7 @@ function M.commandHandler(layerTable, target, event)
 
 
       if actionCommandPropsTable:setActiveProp(layer, target.class) then
+        -- print("@@@ fromActive.class")
         layerTable:hide()
         UI.editor.currentClass = fromActive.class
         UI.editor.currentLayer = fromActive.layer
@@ -264,6 +264,7 @@ function M.commandHandler(layerTable, target, event)
       local classProps = layerTable.classProps or classProps
       if classProps:setActiveProp(layer) then
         layerTable:hide()
+        -- print("@@@ fromActive.class", fromActive.class)
         UI.editor.currentClass = fromActive.class
         UI.editor.currentLayer = fromActive.layer
         UI.editor.selections = fromActive.selections
@@ -381,6 +382,9 @@ function M.commandHandlerClass(layerTable, target, event)
   if event.phase == "began" or event.phase == "moved" then
     return
   end
+
+  local fromActive = { selections = {}, layer = UI.editor.currentLayer, class = UI.editor.currentClass}
+
   --
   clearSelections(layerTable, "class")
   --
@@ -404,8 +408,27 @@ function M.commandHandlerClass(layerTable, target, event)
       if target.parentObj then
         layer = util.getLayerPath(target)
       end
-      actionCommandPropsTable:setActiveProp(layer, target.class)
-      classProps:setActiveProp(layer, target.class)
+
+      if actionCommandPropsTable:setActiveProp(layer, target.class) then
+        layerTable:hide()
+        UI.editor.currentClass = fromActive.class
+        UI.editor.currentLayer = fromActive.layer
+        UI.editor.selections = fromActive.selections
+        layerTable.group.x = layerTable.group.oriX
+        layerTable.group.y = layerTable.group.oriY
+        return -- notice!
+      end
+
+      if classProps:setActiveProp(layer, target.class) then
+        layerTable:hide()
+        print("@@@ fromActive.class", fromActive.class)
+        UI.editor.currentClass = fromActive.class
+        UI.editor.currentLayer = fromActive.layer
+        UI.editor.selections = fromActive.selections
+        layerTable.group.x = layerTable.group.oriX
+        layerTable.group.y = layerTable.group.oriY
+        return -- notice!
+      end
 
       -- recover selections
       if UI.editor.selections_backup and #UI.editor.selections_backup > 0 then
