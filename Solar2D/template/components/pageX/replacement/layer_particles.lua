@@ -1,4 +1,5 @@
 local parent,root, M = newModule(...)
+local layerProps = require(M.layerMod).layerProps
 
 local M = {
   name ="{{name}}",
@@ -12,8 +13,6 @@ local M = {
     {{/properties}}
   }
 }
---
-local layerProps = require(parent.."{{layer}}")
 --
 M.x = layerProps.x
 M.y = layerProps.y

@@ -769,10 +769,8 @@ function M.publishForSelections(UI, args, controller, decoded)
     model.name = obj.layer
 
     updatedModel = util.updateIndexModel(updatedModel, layer, class, model.properties._type or model.properties.type)
-    print(json.prettify(updatedModel))
-  end
+    -- print(json.prettify(updatedModel))
 
-local function test ()
     --- save json
     -----------
     -- print(book, page, layer, classFolder, args.index)
