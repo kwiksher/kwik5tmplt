@@ -29,6 +29,8 @@ function M.create(scene, model)
     UI.animations       = {}
     UI.dynamictexts      = {}
     UI.variables        = {}
+    UI.groups           = {}
+    UI.timers           = {}
     UI.tSearch          = nil
     UI.lang             = "en"
     UI.langClassDelegate = true

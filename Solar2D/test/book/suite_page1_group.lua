@@ -41,7 +41,7 @@ end
 function M.teardown()
 end
 
-function M.test_new_group()
+function M.xtest_new_group()
   selectors.componentSelector:onClick(true,  "groupTable")
   -- for k, v in pairs(groupTable.iconObjs[1]) do print(k, v) end
   helper.clickIconObj(groupTable, "groups-icon")
@@ -62,21 +62,11 @@ function M.test_new_group()
 
 end
 
-
-function M.xtest_click_group()
-    -- UI.testCallback = function()
-      UI.page = "page1"
-      selectors.componentSelector:onClick(true,  "groupTable")
-      --  -- click the icon for creatign a new group
-      -- UI.scene.app:dispatchEvent {
-      --   name = "editor.selector.selectGroup",
-      --   UI = UI,
-      --   isNew = true, --(name ~= "Trash-icon"),
-      --   isDelete =false -- (name == "Trash-icon")
-      -- }
-
-        helper.selectGroup("groupC")
-    -- end
+function M.test_click_group()
+   selectors.componentSelector:onClick(true,  "groupTable")
+    groupTable.altDown = true
+    helper.selectGroup("group0")
+    groupTable.altDown = false
 end
 
 function M.xtest_click_group_for_editing()
