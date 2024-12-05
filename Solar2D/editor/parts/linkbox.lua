@@ -76,7 +76,8 @@ M.newText = newText
 
 function M:createTable(UI, rows, selectedIndex, selectedValue)
   -- print("createTable", #rows, selectedValue)
-
+  local json = require("json")
+  -- print(json.prettify(rows))
   local option = self.option
   --
   local scrollView =
@@ -94,7 +95,7 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
   local index = 0
   local instance = self
   --
-  local function createRow(entry, xIndex, parentObj)
+  local function createRow(entry, xIndex, parentObj, nLevel)
     -- print("createRow", entry.name)
     local group = display.newGroup()
     -- name
@@ -169,11 +170,11 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
     self.objs[index] = obj
 
     -- children
-    if entry.children and #entry.children > 0 then
-      --  print(#entry.children)
+    local children = entry["layers"..nLevel]
+    if children and #children > 0 then
       if nodeMap[entry.name] == nil then
-        for i = 1, #entry.children do
-          local _obj = createRow(entry.children[i], xIndex + 1, obj)
+        for i = 1, #children do
+          local _obj = createRow(children[i], xIndex + 1, obj, nLevel+1)
         end
       end
       obj.text = "- " .. entry.name
@@ -215,7 +216,7 @@ function M:createTable(UI, rows, selectedIndex, selectedValue)
   --
   --
   for k, entry in pairs(rows) do
-    createRow(entry, 0)
+    createRow(entry, 0, nil, 1)
   end
   --
   if #self.objs > 0 and selectedIndex and selectedIndex > 0 then

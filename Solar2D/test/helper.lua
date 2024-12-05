@@ -30,6 +30,15 @@ function exports.init(props)
   audioTable = props.audioTable
 end
 
+function exports.clickIconObj(tbl,name)
+  for i, obj in next, tbl.iconObjs do
+    if obj.muiOptions.name == name then
+      obj.callBack({target={muiOptions={name=name}}})
+      break
+    end
+  end
+end
+
 function exports.clickIcon(toolGroup, tool)
   local toolbar = require("editor.parts.toolbar")
   local obj = toolbar.layerToolMap[toolGroup]

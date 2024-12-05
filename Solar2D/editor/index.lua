@@ -368,13 +368,15 @@ function M:gotoLastSelection(_props)
   -- }
 
   UI.editor.lastSelection = {book = props.book, page= props.page}
-
+  if props.book == nil or props.book:len() == 0 then
+    return
+  end
   local obj = helper.selectBook(props.book)
   bookTable.commandHandler(obj, {phase="ended"},  true)
 
   timer.performWithDelay(1000, function()
     pageTable.commandHandler({page=props.page},{},  true)
-    ---[[
+    --[[
     if props.selections and props.selections[1] then
       selectors.componentSelector.iconHander()
       selectors.componentSelector:onClick(true,  "layerTable")
