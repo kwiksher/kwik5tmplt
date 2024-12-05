@@ -2,6 +2,8 @@ local BC          = require("commands.kwik.baseCommand")
 local json        = require("json")
 local editor      = require("editor.group.index")
 local util        = require("editor.util")
+local controller = require("editor.group.index").controller
+
 --
 local command = function (params)
 	local UI    = params.UI
@@ -22,10 +24,10 @@ local command = function (params)
     --
     tableData = require("template.components.pageX.group.defaults.group")
 
-    UI.editor.groupLayersStore:set(tableData) -- layersTable
+    UI.editor.groupLayersStore:set{members = tableData} -- layersTable
     local model = util.createIndexModel(UI.scene.model)
     -- print(json.encode(model))
-    UI.editor.layerJsonStore:set(model.components.layers) -- layersbox
+    UI.editor.layerJsonStore:set{layers = model.components.layers} -- layersbox
 
   elseif params.isDelete then
     print(params.class, "delete")
@@ -52,31 +54,9 @@ local command = function (params)
     -- let's remove entries of tableData from boxData
     --    members = ["GroupA.Ellipse", "GroupA.SubA.Triangle"]
 
-    local function iterator(entries, parent)
-      for i, v in next, entries do
-        local parent = nil
-        local name = v.name
+    controller.workTable = tableData.members
+    controller.iterator(model.components.layers, nil, 1)
 
-        local function check(parent, name)
-          for i=1, #tableData.members do
-            local _name = tableData.members[i]
-            if parent then
-              if parent .."."..name == _name then
-                return true
-              end
-            elseif name == _name then
-              return true
-            end
-          end
-        end
-        v.isFiltered = check(parent, name)
-        if v.children then
-            iterator(v.children, name)
-        end
-      end
-    end
-
-    iterator(model.components.layers)
 
     -- local boxData = util.read( UI.editor.currentBook, UI.page, function(parent, name)
     --   for i=1, #tableData.layers do
@@ -93,8 +73,8 @@ local command = function (params)
     -- end)
 
 
-    UI.editor.layerJsonStore:set(model.components.layers) -- layersbox
-    UI.editor.groupLayersStore:set(tableData) -- layersTable
+    UI.editor.layerJsonStore:set{layers = model.components.layers}-- layersbox
+    UI.editor.groupLayersStore:set{members = tableData} -- layersTable
 
 
   end

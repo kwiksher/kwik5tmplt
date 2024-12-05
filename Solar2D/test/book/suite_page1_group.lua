@@ -41,6 +41,28 @@ end
 function M.teardown()
 end
 
+function M.test_new_group()
+  selectors.componentSelector:onClick(true,  "groupTable")
+  -- for k, v in pairs(groupTable.iconObjs[1]) do print(k, v) end
+  helper.clickIconObj(groupTable, "groups-icon")
+  --[[
+      -- layersbox -> layersTable
+      local layersbox = require("editor.group.layersbox")
+      local names = {"cat", "cat_face1"}
+      -- layersbox.controlDown = true -- multi
+      layersbox.controlDown = true
+      helper.selectEntries(layersbox, names)
+      -- click add button
+      helper.clickButton("add")
+--]]
+
+  -- local button = "save"
+  -- local obj = require("editor.group.buttons").objs[button]
+  -- obj:tap()
+
+end
+
+
 function M.xtest_click_group()
     -- UI.testCallback = function()
       UI.page = "page1"
@@ -92,27 +114,6 @@ function M.xtest_click_group_linear_for_editing()
     groupTable.altDown = false
 
   -- end
-end
-
-function M.xtest_new_group()
-  selectors.componentSelector:onClick(true,  "groupTable")
-  -- for k, v in pairs(groupTable.iconObjs[1]) do print(k, v) end
-  local obj = groupTable.iconObjs[1]
-  obj.callBack({target={muiOptions={name="groups-icon"}}})
-
-      -- layersbox -> layersTable
-      local layersbox = require("editor.group.layersbox")
-      local names = {"cat", "cat_face1"}
-      -- layersbox.controlDown = true -- multi
-      layersbox.controlDown = true
-      helper.selectEntries(layersbox, names)
-      -- click add button
-      helper.clickButton("add")
-
-  -- local button = "save"
-  -- local obj = require("editor.group.buttons").objs[button]
-  -- obj:tap()
-
 end
 
 return M

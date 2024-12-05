@@ -40,7 +40,7 @@ function M:init(UI)
   -- actionbox:init(UI)
   -- group specific UI
   layersbox:init(UI, self.x-480/2-20, self.y, nil, nil, "layer")
-  layersTable:init(UI, self.x + 480/2 + 20, self.y)
+  layersTable:init(UI, self.x + 480/2+8 , self.y )
   buttons:init(UI, self.x , self.y-20)
   --
   controller:init{
@@ -61,5 +61,44 @@ function M:init(UI)
   end
 
 end
+
+--remove them from layersbox
+local check = function(parent, name)
+  -- let's remove entries of tableData from boxData
+  --    layers = ["GroupA.Ellipse", "GroupA.SubA.Triangle"]
+  print(parent, name)
+  local workTable = controller.workTable
+  for i=1, #workTable do
+    local _name = workTable[i]
+    if parent then
+      if parent .."."..name == _name then
+        return true
+      end
+      print("@", parent, name, _name)
+    elseif name == _name then
+      print("@", name, _name)
+      return true
+    end
+  end
+  return false
+end
+
+function controller.iterator(entries, parent, nLevel)
+  for i, v in next, entries do
+    --local parent = nil
+    local name = v.name
+
+    v.isFiltered = check(parent, name)
+    local children = v["layers"..nLevel]
+    if children and #children>0 then
+        if parent then
+          controller.iterator(children, parent.."."..name, nLevel+1)
+        else
+          controller.iterator(children, name, nLevel+1)
+        end
+    end
+  end
+end
+
 
 return M
