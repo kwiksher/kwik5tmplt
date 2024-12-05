@@ -127,11 +127,12 @@ function _M:create(UI)
 end
 
 function _M:addEventListener()
+ print("addEventListener")
  Runtime:addEventListener("key", onKeyEvent)
 end
 
 function _M:removeEventListener(UI)
-
+  print("removeEventListener")
   Runtime:removeEventListener("key", onKeyEvent)
 
   local sceneGroup = UI.sceneGroup

@@ -10,7 +10,7 @@ local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
-    -- print(name)
+    print(name)
     if params.props and params.props.book then
       print("delete book")
     else
@@ -40,6 +40,7 @@ local instance =
 
       --local classFolder = UI.editor:getClassFolderName(data.class)
       local book, page = UI.book, UI.page
+      local class = params.class or obj.class
       local entries
       if class == "audio" then
         entries = indexModel.components.audios
@@ -85,8 +86,8 @@ local instance =
           path = "App/" .. book .. "/components/" .. page .. "/audios/" .. obj.subclass .. "." .. obj.audio
           name = obj.subclass .. "." .. obj.audio
         elseif class == "group" then
-          path = "App/" .. book .. "/components/" .. page .. "/groups/" .. obj.group
-          name = obj.group
+          path = "App/" .. book .. "/components/" .. page .. "/groups/" .. obj.layer -- because groupTable is __index=layerTable
+          name = obj.layer
         elseif class == "timer" then
           path = "App/" .. book .. "/components/" .. page .. "/timers/" .. obj.timer
           name = obj.timer
@@ -108,13 +109,14 @@ local instance =
           name = obj.layer
         end
 
-        -- print(name)
+        print(name)
         local entry = namesMap[name]
-        -- printTable(namesMap)
+        --printTable(namesMap)
         --
         if entry then
-          targets[#targets + 1] = {index = entry[1], obj=entry[2], path = path, class = class}
+          targets[#targets + 1] = {index = entry[1], obj=entry[2], path = path ..".lua", class = class}
         end
+        print(json.encode(targets))
       end
       --
       table.sort(
@@ -142,8 +144,11 @@ local instance =
         -- print(obj.name, classKey)
         if v.class == nil then
           -- table.remove(indexModel,v.index) -- delete from index
+          -- table.remove(entries, v.index)
+          -- print(json.encode(entries))
         elseif v.class == "audio" then
         elseif v.class == "group" then
+          table.remove(entries, v.index)
         elseif v.class == "timer" then
         elseif v.class == "variable" then
         elseif v.class == "joint" then
@@ -162,6 +167,7 @@ local instance =
       --
       scripts.saveSelection(book, page, {{name = "deleted", class = class}})
       --
+      print(json.prettify(indexModel))
       local indexFile = util.renderIndex(book, page, indexModel)
       files[#files + 1] = indexFile
       --

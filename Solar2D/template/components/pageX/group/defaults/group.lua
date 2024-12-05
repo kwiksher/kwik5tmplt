@@ -1,5 +1,5 @@
 local M = {
-  name       = "group-new",
+  name       = "group0",
   members   = {},
   properties = {
     alpha = NIL,
