@@ -17,11 +17,13 @@ local command = function (params)
   local tableData
 
   UI.editor.currentTool = editor
-
+  controller.isNew = false
+  --
   if params.isNew then
     --local boxData = util.read( UI.editor.currentBook, UI.page)
     --print(json.encode(boxData))
     --
+    controller.isNew = true
     tableData = require("template.components.pageX.group.defaults.group")
 
     UI.editor.groupLayersStore:set{members = tableData} -- layersTable
@@ -31,6 +33,21 @@ local command = function (params)
 
   elseif params.isDelete then
     print(params.class, "delete")
+    print(json.encode(controller.selectbox.selections)) -- selectbox == groupTable
+    UI.editor.selections = controller.selectbox.selections
+
+    ---[[
+    UI.scene.app:dispatchEvent {
+      name = "editor.classEditor.delete",
+      UI = UI,
+      class = "group",
+      icon = "trash-icon",
+      isNew = false, --(name ~= "trash-icon" and name ~="Properties-icon"),
+      isDelete = true --(name == "trash-icon")
+    }
+    --]]
+    return
+
   elseif name:len() > 0 then
     --
     -- layersTable (group members)
