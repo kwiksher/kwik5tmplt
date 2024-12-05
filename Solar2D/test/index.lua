@@ -13,7 +13,7 @@ local M = {
     -- lunatest.suite("test.book.suite_page1_animation", props)
     -- lunatest.suite("test.book.suite_page1_button", props)
     -- lunatest.suite("test.book.suite_page1_action", props)
-    -- lunatest.suite("test.book.suite_page1_group", props)
+    lunatest.suite("test.book.suite_page1_group", props)
     -- lunatest.suite("test.book.suite_page1_audio", props)
     -- lunatest.suite("test.book.suite_page1_select_copy_paste", props)
 

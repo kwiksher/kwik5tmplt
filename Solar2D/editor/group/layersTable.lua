@@ -52,7 +52,7 @@ function M:init(UI, x, y, width, height)
   self.x = x
   self.y = y
   self.width= width or 80*2
-  self.height=height or 100
+  self.height=height or 200
   self.selections = {}
 
 end
@@ -174,6 +174,7 @@ function M:create(UI)
 
   UI.editor.groupLayersStore:listen(
       function(foo, fooValue)
+        if fooValue == nil then return end
         local objs = {}
          -- create drag-item scrollview
         local scrollView = widget.newDragItemsScrollView{
@@ -193,11 +194,11 @@ function M:create(UI)
 
         local last_x, last_y = 2, 0 -- scrollView.x , scrollView.y
 
-
-        for i=1, #fooValue.value.members do
+        self.members = fooValue.members or {}
+        for i=1, #self.members do
           local _group = display.newGroup()
 
-          local name = fooValue.value.members[i]
+          local name = fooValue.members[i]
           option.text = name
           local obj = newText(option)
 
@@ -220,7 +221,6 @@ function M:create(UI)
           objs[#objs+1] = obj
 
         end
-        self.members = fooValue.value.members
         self.objs = objs
       end
     )
