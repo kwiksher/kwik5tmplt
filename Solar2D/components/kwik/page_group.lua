@@ -55,9 +55,9 @@ function M:create(UI)
   local layers       = UI.layers
   local props = self.properties
   if props.isLuaTable then
-    UI.data[self.name] = {}
+    UI.groups[self.name] = {}
     for k, v in pairs(self.members) do
-      UI.data[self.name][k] = v -- {{chldName}}
+      UI.groups[self.name][k] = v -- {{chldName}}
     end
   else
     local group = display.newGroup()
@@ -89,6 +89,7 @@ function M:create(UI)
     sceneGroup[self.name] = group
     -- print("@@@@", self.name)
     self.group = group
+    UI.groups[self.name] = group
   end
 end
 --
@@ -96,6 +97,12 @@ function M:didShow(UI)
 end
 --
 function M:destroy(UI)
+  if props.isLuaTable then
+    UI.groups[self.name] = nil
+  else
+    UI.groups[self.name]:removeSelf()
+    UI.groups[self.name] = nil
+  end
 end
 --
 function M:willHide(UI)
