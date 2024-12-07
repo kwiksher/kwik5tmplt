@@ -91,7 +91,8 @@ local command = function (params)
 
 
     UI.editor.layerJsonStore:set{layers = model.components.layers}-- layersbox
-    UI.editor.groupLayersStore:set{members = tableData} -- layersTable
+    UI.editor.groupLayersStore:set{members = tableData.members} -- layersTable
+    -- print(json.prettify(tableData))
 
 
   end
