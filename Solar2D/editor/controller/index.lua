@@ -477,6 +477,8 @@ function M:command()
           end
         end
       end
+    elseif params.isDelete then
+      print("isDelete")
     else
       -- read from models/{class}/{name}.json
       local decoded = util.decode(book, page, params.class, name, {subclass = params.subclass, isNew = params.isNew, isDelete = params.isDelete}) -- this reads models/xx.json

@@ -175,6 +175,9 @@ function M:create(UI)
   UI.editor.groupLayersStore:listen(
       function(foo, fooValue)
         if fooValue == nil then return end
+        -- local json = require("json")
+      --  print(json.prettify(fooValue))
+
         local objs = {}
          -- create drag-item scrollview
         local scrollView = widget.newDragItemsScrollView{
@@ -195,11 +198,13 @@ function M:create(UI)
         local last_x, last_y = 2, 0 -- scrollView.x , scrollView.y
 
         self.members = fooValue.members or {}
+        -- print(#self.members)
         for i=1, #self.members do
           local _group = display.newGroup()
 
           local name = fooValue.members[i]
           option.text = name
+          -- print(name)
           local obj = newText(option)
 
           scrollView:attachListener(_group, listener, 100, 20, 20) -- dragtime, angle, radius,(touchthreshold)
@@ -221,6 +226,7 @@ function M:create(UI)
           objs[#objs+1] = obj
 
         end
+        -- print("num of objs", #objs)
         self.objs = objs
       end
     )

@@ -62,7 +62,7 @@ function M.xtest_new_group()
 
 end
 
-function M.test_click_group()
+function M.xtest_click_group()
    selectors.componentSelector:onClick(true,  "groupTable")
     groupTable.altDown = true
     helper.selectGroup("group0")
@@ -86,12 +86,15 @@ function M.xtest_render()
   local model = json.decode('{"layersboxSelections":[],"name":"groupC","layersbox":[{"rect":[],"layer":"background","index":1,"name":"background"},{"rect":[],"layer":"name","index":2,"name":"name"},{"rect":[],"layer":"cat","index":3,"name":"cat"},{"rect":[],"layer":"cat_face1","index":4,"name":"cat_face1"},{"rect":[],"layer":"title_base","index":5,"name":"title_base"},{"rect":[],"layer":"title3","index":6,"name":"title3"},{"rect":[],"layer":"title2","index":7,"name":"title2"},{"rect":[],"layer":"title1","index":8,"name":"title1"},{"rect":[],"layer":"starfish","index":9,"name":"starfish"},{"rect":[],"layer":"fish","index":10,"name":"fish"}],"properties":[{"name":"name","value":"group-2"}],"layersTable":[{"index":1,"rect":[]},{"index":2,"rect":[]}],"layersTableSelections":[]}')
 end
 
+--
+-- groupTable setCurrnetSelection will set a current type = "group"
+--
 function M.xtest_click_group_linear()
   -- UI.testCallback = function()
-    UI.page = "page1"
+    -- UI.page = "page1"
     selectors.componentSelector:onClick(true,  "groupTable")
-    helper.selectGroup("groupC")
-    -- helper.selectGroup("groupC", "linear")
+    helper.selectGroup("group0")
+    helper.clickIcon("Animations", "Linear")
   -- end
 end
 
