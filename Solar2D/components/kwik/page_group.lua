@@ -65,12 +65,14 @@ function M:create(UI)
     group.anchorY = 0.5
     group.anchorChildren = true
 
+    -- printKeys(sceneGroup)
     for i=1, #self.members do
-      local obj = sceneGroup[self.members[i]]
+      local member = self.members[i]:gsub("%.","/")
+      local obj = sceneGroup[member]
       if obj then
         group:insert(obj)
       else
-        print("## error layer not found", self.members[i] )
+        print("## error layer not found", self.members[i], member )
       end
     end
 
