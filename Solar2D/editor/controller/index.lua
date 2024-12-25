@@ -400,7 +400,7 @@ function M:updateAsset(text, asset)
 end
 
 function M:load(book, page, layer, class, isNew, asset, _type)
-  -- print("read", page, layer, class, isNew)
+  --  print("#load", book, page, layer, class, isNew, asset, _type)
   -- the values are used in useClassEdtiorProps()
   self.page = page
   self.layer = layer
@@ -426,12 +426,14 @@ function M:load(book, page, layer, class, isNew, asset, _type)
     -- print(json.encode(model))
     self:redraw()
   elseif layer then
-
     -- this comes from clicking layerTable.class
     local layerName = layer or "index"
     --local path      = page .."/"..layerName.."_"..self.tool..".json"
     -- print( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua")
     local path      = system.pathForFile( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
+    if _type == "group" then
+      path      = system.pathForFile( "App/"..book.."/components/"..page .."/groups/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
+    end
     -- print("", path)
     if self.lastSelection ~= path then
       self.lastSelection   = path

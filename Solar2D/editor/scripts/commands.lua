@@ -879,15 +879,29 @@ function M.openEditor(book, page, type, name)
   os.execute(cmd)
 end
 
-function M.openEditorForLayer(book, page, layer, class)
-  -- print("App/" .. book .. "/components/" .. page .. "/" .. layer, class)
+function M.openEditorForLayer(book, page, layer, class, type)
+  -- print("openEditorForLayer", book, page, layer, class, type)
   local path = system.pathForFile("App/" .. book, system.ResourceDirectory)
   if class and class:len() > 3 and class ~= layer then
-    path = path .. "/components/" .. page .. "/layers/" .. layer .. "_" .. class .. ".lua"
+    if type == "group" then
+      path = path .. "/components/" .. page .. "/groups/" .. layer .. "_" .. class .. ".lua"
+    else
+      path = path .. "/components/" .. page .. "/layers/" .. layer .. "_" .. class .. ".lua"
+    end
   elseif layer == "index" then
     path = path .. "/components/" .. page .. "/index.lua"
   else
-    path = path .. "/components/" .. page .. "/layers/" .. layer .. ".lua"
+    if type == "group" then
+      path = path .. "/components/" .. page .. "/groups/" .. layer .. ".lua"
+    elseif type == "timer" then
+     path = path .. "/components/" .. page .. "/timers/" .. layer .. ".lua"
+    elseif type == "variable" then
+      path = path .. "/components/" .. page .. "/variables/" .. layer .. ".lua"
+    elseif type == "joint" then
+      path = path .. "/components/" .. page .. "/joints/" .. layer .. ".lua"
+      else
+      path = path .. "/components/" .. page .. "/layers/" .. layer .. ".lua"
+    end
   end
   --
   -- local url = "vscode://file/" .. path

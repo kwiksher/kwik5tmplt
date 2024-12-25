@@ -82,13 +82,16 @@ function M:commandHandler(eventObj, event)
   elseif self.controlDown then -- mutli selections
     layerTableCommands.multiSelections(self, target)
   else
-    if layerTableCommands.singleSelection(self, target) then
+    if layerTableCommands.singleSelection(self, target, true) then -- isNotLayer == true
       self.UI.editor.currentLayer = target.layer
       self.UI.editor:setCurrnetSelection(target.layer, target.name, "group") -- _type == group, page, sprite
       -- print("@@@@@@", target.layer, target.class)
       classPropsPhysics:setActiveProp(target.layer, target.class)
     end
   end
+  -- print("@@@@", #self.selections)
+  self.UI.editor.selections = self.selections
+
   return true
 
 end
@@ -107,27 +110,36 @@ function M:commandHandlerClass(target, event)
   --
   buttons:hide()
   --
+  UI.editor:setCurrnetSelection(target.layer, class, "group") -- _type == group, page, sprite
+  -- print("@@@@", UI.editor.currentType)
+
   if self:isAltDown() then
     -- print("", "isAltDown")
     --showClassProps(self, target, "group")
-    tree.backboard = {
-      show = true,
-      group  = target.layer,
-      class = class
-    }
-    -- for instance, obj.animation = "animA", obj.group = "grouA"
-    --  see obj[self.id] = name in render
-    --
-    --tree.backboard[self.id] = target[self.id],
-    tree:setConditionStatus("select component", bt.SUCCESS, true)
-    tree:setActionStatus("load "..self.id, bt.RUNNING, true)
-    tree:setConditionStatus("select "..self.id, bt.SUCCESS)
+    if self.selection ~= target then
+      self.selection = target
+      for i = 1, #self.selections do
+        self.selections[i].rect:setFillColor(0.8)
+      end
+      --
+      self.selections = {target}
+      target.isSelected = true
+      target.rect:setFillColor(0,1,0)
+
+      UI.scene.app:dispatchEvent {
+        name = "editor.selector.selectTool",
+        UI = UI,
+        class = target.class,
+        isNew = false,
+        layer = layerName,
+      }
+    end
 
   elseif self:isControlDown() then -- mutli selections
     -- print("", "isControlDown")
     layerTableCommands.multiSelections(self, target)
   else
-    if layerTableCommands.singleSelection(self, target) then
+    if layerTableCommands.singleSelection(self, target, true) then -- isNotLayer
       -- print("", "singleSelection")
       actionCommandPropsTable:setActiveProp(target.layer, target.class)
       classProps:setActiveProp(target.layer, target.class)
@@ -136,6 +148,7 @@ function M:commandHandlerClass(target, event)
     end
   end
   UI.editor.selections = self.selections
+  -- print("@@@@", UI.editor.currentType)
   return true
 end
 
