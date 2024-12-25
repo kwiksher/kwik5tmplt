@@ -1,6 +1,5 @@
 local name = ...
 local parent, root = newModule(name)
-local util = require("editor.util")
 
 local M = {} -- layerTable
 local bt = require(root .. "controller.BTree.btree")

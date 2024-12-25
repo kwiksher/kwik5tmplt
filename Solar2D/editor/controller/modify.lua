@@ -1,6 +1,7 @@
 local name = ...
 local parent, root = newModule(name)
 local toolbar = require("editor.parts.toolbar")
+local util = require("editor.util")
 
 local instance =
   require("commands.kwik.baseCommand").new(
@@ -19,7 +20,7 @@ local instance =
     else
       -- edit one layer
       -- local layer = UI.editor.selections[1]
-      if target.class then
+      if target.class and target.class:len() > 0 then
         UI.scene.app:dispatchEvent {
           name = "editor.selector.selectTool",
           UI = UI,
@@ -28,10 +29,21 @@ local instance =
           layer = target.layer,
           -- toogle = true -- <========
         }
+      elseif UI.editor.currentType == "group" then
+        UI.scene.app:dispatchEvent {
+          name = "editor.selector.selectGroup",
+          UI = UI,
+          class = "group",
+          group = target.layer,
+        }
+
       else
-        UI:dispatchEvent {
+        local path = util.getParent(target)
+        UI.scene.app:dispatchEvent {
           name = "editor.selector.selectLayer",
           UI = UI,
+          path = path,
+          isIndex = target.isIndex,
           layer = target.layer,
         }
       end
