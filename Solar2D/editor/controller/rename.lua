@@ -6,18 +6,18 @@ local confirmation = require("editor.picker.confirmation")
 local scripts = require("editor.scripts.commands")
 --
 local function getListener(props, selections)
-  print("@@", props.layer, props.class, props.target, props.selections[1])
+  -- print("@@", props.layer, props.class, props.target, props.selections)
   if selections and #selections > 1 then
     return nil, nil
   elseif props then
     if props.book then
-      print("rename book")
+      -- print("rename book")
       return props.book, "book", scripts.renameBook
     elseif props.page then
-      print("rename page", props.page)
+      -- print("rename page", props.page)
       return props.page, "page", scripts.renamePage
     elseif props.audio then
-      print("rename audio", props.audio, props.type)
+      -- print("rename audio", props.audio, props.type)
       return props.audio, "audio/" .. props.type, scripts.renameAudio
     elseif props.layer and props.group  == true  then
       return props.layer, "group", scripts.renameGroup -- because groupTable is inherting layerTable
@@ -28,10 +28,10 @@ local function getListener(props, selections)
     elseif props.class == "variables"  then
       return props.target, "variable", scripts.renameVariable
     elseif props.layer then
-      print("rename layer")
+      -- print("rename layer")
       return props.layer, "layer", scripts.renameLayer
     else
-      print(props.class, selections[1].text)
+      -- print(props.class, selections[1].text)
       -- print(props.class, selections[1].text, selections[1][props.class])
     end
   end
@@ -47,7 +47,7 @@ local instance =
     --
     if _type then
       local function listener(value)
-        print("newValue=", value)
+        -- print("newValue=", value)
         if value and value == "Continue" and picker.obj.field.text:len() > 0 then
           if params.props.audio then
             script(UI.book, UI.page, params.props.type, oldValue, picker.obj.field.text) -- _dst == Solar2D
@@ -55,7 +55,7 @@ local instance =
             script(UI.book, UI.page, oldValue, picker.obj.field.text) -- _dst == Solar2D
           end
         else
-          print("user cancel")
+          -- print("user cancel")
         end
         confirmation:destroy()
         picker:destroy()
@@ -64,7 +64,7 @@ local instance =
       picker:create(nil, "Please input a " .. _type .. " name")
       picker.obj.text = ""
     else
-      print("error no type")
+      -- print("error no type")
     end
   end
 )
