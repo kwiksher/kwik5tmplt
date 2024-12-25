@@ -31,6 +31,20 @@ local command = function (params)
     className = UI.editor:getClassFolderName(params.class)
   end
   local pathMod = "App."..UI.editor.currentBook..".components."..UI.page ..".layers."..params.path..getFileName(layerName, params.class)
+
+  --
+  -- selectLayer comes from contextButton.modify
+  --
+  if UI.editor.currentType == "group" then
+    pathMod = "App."..UI.editor.currentBook..".components."..UI.page ..".groups."..params.path..getFileName(layerName, params.class)
+  elseif UI.editor.currentType == "variable" then
+    pathMod = "App."..UI.editor.currentBook..".components."..UI.page ..".variables."..params.path..getFileName(layerName, params.class)
+  elseif UI.editor.currentType == "timer" then
+    pathMod = "App."..UI.editor.currentBook..".components."..UI.page ..".timers."..params.path..getFileName(layerName, params.class)
+  elseif UI.editor.currentType == "joint" then
+    pathMod = "App."..UI.editor.currentBook..".components."..UI.page ..".joints."..params.path..getFileName(layerName, params.class)
+  end
+  ---
   local pathJson = "App/"..UI.editor.currentBook.."/models/"..UI.page .."/"..params.path..getFileName(layerName, className)..".json"
   local path = system.pathForFile( pathJson, system.ResourceDirectory)
   -- print("pathMod", pathMod)

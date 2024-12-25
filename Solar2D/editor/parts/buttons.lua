@@ -476,7 +476,7 @@ function M:showContextMenu(x,y, options)
         --
         -- for buttons in row
         --
-        if obj.rect.buttonsInRow and not (options or {}).isPageContent then
+        if self.contextMenuOptions.class == "shape" and obj.rect.buttonsInRow and not (options or {}).isPageContent then
           local index = 1
           local pos_x=0
           for i, o in next, obj.rect.buttonsInRow do
