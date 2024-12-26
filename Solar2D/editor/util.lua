@@ -109,7 +109,7 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
             value.class = {}
           end
           --
-          if not isClass(value, class) then
+          if not isClass(value, class) and class:len() > 0 then
             table.insert(value.class, class)
           end
           layerName = nil
@@ -856,7 +856,7 @@ function M.saveIndex(book, page, layer, class, model)
       end
     end
   else
-    print("TODO for timer, variable, audio")
+    print("save index.json:TODO for timer, variable, audio")
   end
   decoded.onInit = nil
   -- print(json.encode(decoded))
@@ -945,7 +945,7 @@ function M.uniqueName(str, _sep)
   local sep = _sep or "_"
   local out = M.split(str, sep)
   if #out == 1 then
-    return str
+    return str..sep.."1"
   else
     local num = tonumber(out[#out]) + 1
     out[#out] = tostring(num)
