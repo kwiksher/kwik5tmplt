@@ -1,12 +1,25 @@
 local name = ...
 local parent,root = newModule(name)
 local basePropsControl = require("editor.parts.basePropsControl")
+local json = require("json")
 
 local function getModel(params)
   local model = {}
   for k, v in pairs(params) do
     if not basePropsControl.filter(k) then
-      model[k] = v
+      if k== "properties" then
+        model[k] = {}
+        for key, value in pairs(v) do
+          --print(key, value, type(value),  #value)
+          if type(value) == "table" and #value == 0 then
+            model[k][key] = "NIL"
+          else
+            model[k][key] = value
+          end
+          end
+      else
+        model[k] = v
+      end
     end
   end
   return model
@@ -43,10 +56,13 @@ local instance = require("commands.kwik.baseCommand").new(
         params = require("App."..UI.book..".components."..UI.page..".audios."..v.subclass.."."..v.audio)
         model = getModel(params)
         table.insert(components.audios, model)
-      elseif props.class =="group" then
-        params = require("App."..UI.book..".components."..UI.page..".groups."..v.group)
+      elseif UI.editor.currentType =="group" then
+        printKeys(v)
+        params = require("App."..UI.book..".components."..UI.page..".groups."..v.layer)
         model = getModel(params)
-        table.insert(components.group, model)
+        print(json.prettify(model))
+        table.insert(components.groups, model)
+        data.type = "group"
       elseif props.class =="timer" then
         params = require("App."..UI.book..".components."..UI.page..".timers."..v.timer)
         model = getModel(params)

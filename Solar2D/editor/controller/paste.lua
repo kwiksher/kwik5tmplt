@@ -2,11 +2,12 @@ local name = ...
 local parent, root = newModule(name)
 local util = require("editor.util")
 local scripts = require("editor.scripts.commands")
+local json = require("json")
 
 local instance = require("commands.kwik.baseCommand").new(
 function(params)
   local UI = params.UI
-   print(name)
+  --  print(name)
 
   local layer = UI.editor.currentLayer
   local selections = UI.editor.selections or { layer }
@@ -15,6 +16,9 @@ function(params)
   -- clipboard.actions = {}
   -- clipboard.actionCommands = {}
   -- --
+
+  -- print(json.prettify(data))
+
   local files = {}
   local indexModel =  util.createIndexModel(UI.scene.model)
   local updatedModel = UI.scene.model
@@ -27,7 +31,7 @@ function(params)
   --
   if params.selections then
   elseif class == "page" then
-    print("paste page")
+    -- print("paste page")
     local src = "App/" .. book .. "/index.lua"
     scripts.backupFiles(src)
     scripts.copyPage(book, page, page.."_copied") -- _dst == Solar2D
@@ -37,7 +41,7 @@ function(params)
       mod = require("editor.audio.index")
       entries = data.components.audios
       indexEntries = indexModel.components.audios
-    elseif class == "group" then
+    elseif data.type == "group" then
       mod = require("editor.group.index")
       entries = data.components.groups
       indexEntries =indexModel.components.groups
@@ -68,6 +72,7 @@ function(params)
     local controller = mod.controller
 
     if not isLayerClass then
+      -- print(json.prettify(indexEntries))
       for i, v in next, indexEntries do
         namesMap[v.name] = i
       end
@@ -78,16 +83,36 @@ function(params)
         --
         if index then
           model.name = util.uniqueName(model.name)
+          layer = model.name
+          if data.type == "group" then
+            local entry = {}
+            entry[layer] = {}
+            table.insert(updatedModel.components.groups, entry)
+          elseif data.type == "timer" then
+            table.insert(updatedModel.components.timers, layer)
+          elseif data.type == "variable" then
+            table.insert(updatedModel.components.variables, layer)
+          elseif data.type == "joint" then
+            table.insert(updatedModel.components.joints, layer)
+          end
+        end
+
+        if data.type == "group" then
+          model.type = "group"
+          classFolder = "group"
         end
         --
-        updatedModel = util.updateIndexModel(updatedModel, layer, class)
+        -- print ("@@@", layer, class)
+        -- print(json.prettify(model))
+
+        updatedModel = util.updateIndexModel(updatedModel, layer, class, model.type)
         -- save lua
         files[#files+1] = controller:render(book, page, layer, classFolder, class, model)
             -- save json
         files[#files+1] = controller:save(book, page, layer, classFolder, model)
       end
     else
-      print("-- copy a class model to selected layers --")
+      -- print("-- copy a class model to selected layers --")
       local model = entries[1]
       for i, v in next, selections do
         local layer = v.layer

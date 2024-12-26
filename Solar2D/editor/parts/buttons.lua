@@ -440,21 +440,33 @@ function M:showContextMenu(x,y, options)
   if options then
     self.contextButtons = options.contextButtons or _contextMenus
   end
+
+  local function filterVisible(key)
+    if key == "rename" then
+      if self.contextMenuOptions.isMultiSelection then
+        return false
+      end
+      if self.contextMenuOptions.class and self.contextMenuOptions.class:len() > 0 then
+        return false
+      end
+    end
+
+    if key == "create" then
+      if self.contextMenuOptions.class == "shape" then
+        return true
+      else
+        return false
+      end
+    end
+    return true
+  end
+
   local index = 0
   local pos ={x=x, y=y}
   for i, key in next, self.contextButtons do
     for k, obj in next, self.objs do
-      local skipNewRename = false
-      if key == "create" or key == "rename" then
-        if self.contextMenuOptions.isMultiSelection then
-          skipNewRename = true
-        end
-        if self.contextMenuOptions.class and self.contextMenuOptions.class:len() > 0 then
-          skipNewRename = true
-        end
-      end
       -- print(key, obj.rect.eventName, skipNewRename)
-      if key  == obj.rect.eventName and not skipNewRename then
+      if key  == obj.rect.eventName and filterVisible(key) then
         obj.isVisible = true
         obj.rect.isVisible = obj.isVisible
 

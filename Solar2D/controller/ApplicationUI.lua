@@ -145,7 +145,7 @@ function M.create(scene, model)
                                 -- print("",class, parentPath..firstEntry.name)
                                 handler[funcName](handler, class, parentPath .. firstEntry.name, false)
                               end
-                            elseif value.class then
+                            elseif value.class and value.class:len() > 0  then
                               for i, class in next, value.class do
                                 handler[funcName](handler, class, parentPath .. name, false)
                               end
@@ -170,11 +170,13 @@ function M.create(scene, model)
                           if value.class then
                             for k, class in pairs(value.class) do
                                 -- print("", class, parentPath .. name)
-                                table.insert(classEntries, {
-                                    class = class,
-                                    path = parentPath .. name  -- see sceneHandler.lua, it splits to load layer_linear.lua by split('.')
-                                })
-                                handler[funcName](handler, class, parentPath .. name, false)
+                                if class:len() > 0 then
+                                  table.insert(classEntries, {
+                                      class = class,
+                                      path = parentPath .. name  -- see sceneHandler.lua, it splits to load layer_linear.lua by split('.')
+                                  })
+                                  handler[funcName](handler, class, parentPath .. name, false)
+                                end
                             end
                           end
                         end
@@ -213,7 +215,9 @@ function M.create(scene, model)
                     if value.class then
                       for k, class in pairs(value.class) do
                           --print("", class, parentPath .. name)
-                          handler[funcName](handler, "groups", name.."_"..class, false)
+                          if class:len() > 0 then
+                            handler[funcName](handler, "groups", name.."_"..class, false)
+                          end
                       end
                     end
                   end
