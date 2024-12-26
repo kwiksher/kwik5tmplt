@@ -240,7 +240,12 @@ function M:render(book, page, layer, classFolder, class, model)
       tmplt =  "template/components/pageX/"..classFolder.."/layer_animation.lua"
     end
     if model.type =="group" then
-      dst =  "App/"..book.."/components/"..page.."/groups/"..layer.."_"..class ..".lua"
+      if class:len() > 0 then
+        dst =  "App/"..book.."/components/"..page.."/groups/"..layer.."_"..class ..".lua"
+      else
+        tmplt =  "template/components/pageX/group/group.lua"
+        dst =  "App/"..book.."/components/"..page.."/groups/"..layer..".lua"
+      end
     else
       dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
     end
@@ -260,7 +265,16 @@ function M:render(book, page, layer, classFolder, class, model)
   --
   local  layerDirs = util.getLayerDirs(book,page, layer)
   util.mkdir(unpack(layerDirs))
+
+  -- when copy/paste is used in a different PC with a sample, these folders needs to be created
   util.mkdir("App", book, "components", page, "joints")
+  util.mkdir("App", book, "components", page, "timers")
+  util.mkdir("App", book, "components", page, "variables")
+  util.mkdir("App", book, "components", page, "groups")
+  util.mkdir("App", book, "components", page, "audios", "short")
+  util.mkdir("App", book, "components", page, "audios", "long")
+  util.mkdir("App", book, "components", page, "audios", "sync")
+
   util.saveLua(tmplt, dst, model)
   return dst
 end
