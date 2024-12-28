@@ -78,10 +78,10 @@ function(params)
       end
 
       for i, model in next, entries do
-        local layer = model.name
+        -- local layer = model.name
         local index = namesMap[model.name]
         --
-        if index then
+        if index and (data.class == nil or data.class:len() ==0) then
           model.name = util.uniqueName(model.name)
           layer = model.name
           if data.type == "group" then
@@ -100,6 +100,9 @@ function(params)
         if data.type == "group" then
           model.type = "group"
           classFolder = "group"
+          if class and class:len() > 0 then
+            classFolder = UI.editor:getClassFolderName(data.class)
+          end
         end
         --
         -- print ("@@@", layer, class)
