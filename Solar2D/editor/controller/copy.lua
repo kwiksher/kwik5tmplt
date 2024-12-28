@@ -38,9 +38,9 @@ local instance = require("commands.kwik.baseCommand").new(
     local clipboard = UI.editor.clipboard
     local data, components = {}, {}
     --- these are tables in index.lua
-    components.layers = {}
+    components.layers = {} -- if a class is copied, this layers table holds the class properties
     components.audios = {}
-    components.groups = {}
+    components.groups = {} -- if a class of group is copied, this groups table holds the class properties
     components.timers = {}
     components.variables = {}
     components.joints = {}
@@ -58,12 +58,17 @@ local instance = require("commands.kwik.baseCommand").new(
         table.insert(components.audios, model)
       elseif UI.editor.currentType =="group" then
         printKeys(v)
-        params = require("App."..UI.book..".components."..UI.page..".groups."..v.layer)
+        data.type = "group"
+        if props.class then
+          print("group class", v.class)
+          params = require("App."..UI.book..".components."..UI.page..".groups."..v.layer.."_"..v.class)
+        else
+          params = require("App."..UI.book..".components."..UI.page..".groups."..v.layer)
+        end
         model = getModel(params)
         print(json.prettify(model))
         table.insert(components.groups, model)
-        data.type = "group"
-      elseif props.class =="timer" then
+    elseif props.class =="timer" then
         params = require("App."..UI.book..".components."..UI.page..".timers."..v.timer)
         model = getModel(params)
         table.insert(components.timers, model)

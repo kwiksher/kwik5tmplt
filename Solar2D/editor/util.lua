@@ -44,6 +44,7 @@ local isTarget = function(layerName, layerEntry, parent)
 end
 --
 local isClass = function(v, class)
+  -- print(v, class)
   for j = 1, #v.class do
     if v.class[j] == class then
       return true
@@ -99,7 +100,7 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
       local children = {}
       ---
       local name, value = getLayer(layer, parent)
-      -- print("@@@", #layer, name, layerName )
+      print("@@@", name, layerName, value )
       if name == layerName then
         -- if child then -- continue to find the target child
         --   layerName = child
@@ -112,7 +113,7 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
           if not isClass(value, class) and class:len() > 0 then
             table.insert(value.class, class)
           end
-          layerName = nil
+          layerName = "found it!"
         -- end
       end
 
