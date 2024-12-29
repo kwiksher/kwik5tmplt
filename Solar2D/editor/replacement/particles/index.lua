@@ -28,6 +28,8 @@ function M:init(UI)
   selectbox     : init(UI, self.x + self.width/2, self.y, self.width*0.74, self.height)
   classProps   : init(UI, self.x + self.width*1.5 + 2, self.y,  self.width, self.height)
   classProps.model = model.props
+  classProps.type  = current
+
   --
   pointABbox   : init(UI, display.contentWidth*0.25,  display.contentHeight*0.75,  self.width, self.height)
   AtoBbutton   : init(UI, self.x + self.width * 9, self.y,  self.width, self.height)

@@ -65,8 +65,15 @@ local command = function (params)
     local actionEditor  = require("editor.action.index")
     actionTable.actionbox:setActiveProp(newAction.name)
     actionEditor:hide()
-    partsButtons:show()
     classProps:show()
+    if classProps.type == "editor.timer.index" then
+      for i, v in next, actionEditor.otherButtons do
+        v:show()
+      end
+    else
+      partsButtons:show()
+    end
+
   elseif not readonly then
     -- save index lua
     files[#files+1] = util.renderIndex(UI.editor.currentBook, page,updatedModel)

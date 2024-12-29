@@ -1,5 +1,5 @@
 local M = {
-  name = "rotation",
+  name = "rotation0",
   class="Rotation",
   from = {
     x = nil,

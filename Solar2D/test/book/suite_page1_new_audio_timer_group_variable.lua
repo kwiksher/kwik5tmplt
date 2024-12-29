@@ -5,6 +5,13 @@ local UI
 local bookTable
 local pageTable
 local layerTable
+local helper = require("test.helper")
+
+local timerTable = require("editor.timer.timerTable")
+local picker = require("editor.picker.name")
+local actionbox = require("editor.parts.actionbox")
+local actionboxButtonContext = require("editor.parts.buttonContext")
+
 
 function M.init(props)
   selectors = props.selectors
@@ -12,24 +19,17 @@ function M.init(props)
   bookTable = props.bookTable
   pageTable = props.pageTable
   layerTable = props.layerTable
+  helper.init(props)
+
 end
 
-local book = "bookFree"
-local page = "page1"
+local book = "book"
+local page = "portrait"
 
 function M.suite_setup()
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)
   --
-  UI.scene.app:dispatchEvent {
-    name = "editor.selector.selectApp",
-    UI = UI
-  }
-  -- appFolder = system.pathForFile("App", system.ResourceDirectory) -- default
-  -- useTinyfiledialogs = false -- default
-  ---
-  bookTable.commandHandler({book=book}, nil,  true)
-  pageTable.commandHandler({page=page},nil,  true)
   selectors.componentSelector.iconHander()
   -- selectors.componentSelector:onClick(true,  "layerTable") --isVisible = true
 end
@@ -81,11 +81,21 @@ end
   end
 --]]
 
---[[
-  function M.test_new_timer()
-    selectors.componentSelector:onClick(true,  "timerTable")
-  end
---]]
+function M.test_new_timer()
+  selectors.componentSelector:onClick(true,  "timerTable")
+  helper.clickIconObj(timerTable, "timers-icon")
+  picker:continue("timer1")
+
+  -- timer.performWithDelay(3000, function()
+  --   helper.clickProp(actionbox.objs, "onComplete")
+  --   helper.clickButton("New", actionboxButtonContext)
+  -- end)
+
+--  helper.selectActionGroup("Controls")
+
+
+
+end
 
 --[[
   function M.test_new_variable()

@@ -1,5 +1,5 @@
 local M = {
-  name = "switch",
+  name = "switch0",
   class="Switch",
   properties = {
     target = NIL,

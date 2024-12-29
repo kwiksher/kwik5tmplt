@@ -1,5 +1,5 @@
 local M = {
-  name = "counter",
+  name = "counter0",
   class="counter",
   properties = {
     target = NIL,

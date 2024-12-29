@@ -17,9 +17,13 @@ local classProps = require(root .. "parts.classProps")
 local actionbox = require(root .. ".parts.actionbox")
 -- this set editor.timer.save, cacnel
 local buttons = require(parent .. "buttons")
+local picker = require("editor.picker.name")
 
 local controller = require("editor.controller.index").new("timer")
 local M = require(root .. "parts.baseClassEditor").new(model, controller)
+--
+M.x = display.contentCenterX + display.actualContentWidth/8
+
 
 function M:init(UI)
   self.UI = UI
@@ -27,8 +31,11 @@ function M:init(UI)
   -- UI.editor.viewStore = self.group
 
   selectbox:init()
+  print("@@@@", self.x, self.y)
   classProps:init(UI, self.x + self.width * 1.5, self.y, self.width, self.height)
   classProps.model = model.props
+  classProps.type  = current
+
   --
   actionbox:init(UI)
   buttons:init(UI)
@@ -37,7 +44,8 @@ function M:init(UI)
     selectbox = selectbox,
     classProps = classProps,
     actionbox = actionbox,
-    buttons = buttons
+    buttons = buttons,
+    picker        = picker
   }
   --
   controller.view = self

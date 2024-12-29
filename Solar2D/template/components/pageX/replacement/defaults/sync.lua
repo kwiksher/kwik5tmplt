@@ -1,5 +1,5 @@
 local M = {
-  name = "alphabet",
+  name = "sync0",
   class = "sync",
   folder = "audios/sync",
   properties = {

@@ -1,5 +1,5 @@
 local M = {
-  name = "sprite",
+  name = "sprite0",
   class = "sprite",
   properties = {
     target = NIL,

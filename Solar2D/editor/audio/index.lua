@@ -44,6 +44,8 @@ function M:init(UI)
   selectbox:init()
   classProps:init(UI, self.x + self.width, self.y,  self.width, self.height)
   classProps.model = model.props
+  classProps.type  = current
+
   classProps.UI = UI
   --
   actionbox:init(UI, self.x+self.width, display.contentCenterY)
