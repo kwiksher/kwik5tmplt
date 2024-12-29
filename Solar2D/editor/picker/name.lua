@@ -39,7 +39,7 @@ function M:create(callback, message)
         -- print("@", self.obj.field.text)
         if event.target.text == "CANCEL" then
           if callback then
-            callback()
+            callback("cancel")
           end
           self:destroy()
         else
@@ -100,6 +100,7 @@ function M:hide()
 end
 
 function M:show()
+  -- print(debug.traceback())
   if self.obj then
     self.obj.field.isVisible = true
     self.obj.isVisible = true

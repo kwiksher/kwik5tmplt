@@ -1,5 +1,5 @@
 local M = {
-  name = "filter",
+  name = "filter0",
   class = "Filter",
   properties ={
     target     = NIL,

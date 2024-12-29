@@ -1,5 +1,5 @@
 local M = {
-  name = "bounce",
+  name = "bounce0",
   class="Bounce",
   from = nil,
   to = {

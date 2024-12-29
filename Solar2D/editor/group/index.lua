@@ -35,6 +35,8 @@ function M:init(UI)
   classProps:init(UI, display.contentCenterX+480*0.6 , display.contentCenterY,  self.width, self.height)
   classProps.option.width = 54
   classProps.model = model.props
+  classProps.type  = current
+
   classProps:setValue{name="group-1"}
   --
   -- actionbox:init(UI)

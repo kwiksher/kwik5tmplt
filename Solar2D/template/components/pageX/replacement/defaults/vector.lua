@@ -1,5 +1,5 @@
 local M = {
-  name = "vector",
+  name = "vector0",
   class="vector",
   -- actionName = "",
   properties = {

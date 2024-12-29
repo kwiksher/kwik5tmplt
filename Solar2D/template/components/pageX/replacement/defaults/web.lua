@@ -1,5 +1,5 @@
 local M = {
-  name = "web",
+  name = "web0",
   class="web",
   -- actionName = "",
   properties = {

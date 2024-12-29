@@ -82,10 +82,16 @@ function M.iconHander()
     end
 end
 
-local buttons  = require("editor.action.buttons")
+local buttons            = require("editor.action.buttons")
 local partsButtons       = require("editor.parts.buttons")
 local classProps    = require("editor.parts.classProps")
 local actionTable = require("editor.action.actionTable")
+--
+M.otherButtons = {}
+
+function M:addToogleButton(mod)
+  self.otherButtons[#self.otherButtons+1] = mod
+end
 
 function M:showActionTable(actionbox, isNew)
   actionTable.actionbox = actionbox
@@ -98,6 +104,10 @@ function M:showActionTable(actionbox, isNew)
     }
     partsButtons:hide()
     classProps:hide()
+    print(classProps.type)
+    for i, v in next, self.otherButtons do
+      v:hide()
+    end
   else
     ---
     --- there were multiple instances of actionbox from selectAudio, actionTable and sync's word action

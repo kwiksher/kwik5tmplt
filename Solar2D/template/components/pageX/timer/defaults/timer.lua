@@ -1,9 +1,9 @@
 local M = {
-  name       = "timer-new",
+  name       = "timer0",
   properties = {
     delay      = 0,
     iterations = 1,
-  }
+  },
   actions = {
     actionName = "",
   }

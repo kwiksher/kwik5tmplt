@@ -10,7 +10,7 @@ local instance =
   function(params)
     local UI = params.UI
     local options = params.props.options
-    print(name, UI.page)
+    -- print(name, UI.page)
     if options then
       if  options.type == "action" then
         for i, v in next, options.selections  do
@@ -26,17 +26,19 @@ local instance =
           commands.openEditor(UI.book, UI.page, options.type, v[options.type] )
         end
       elseif options.type =="asset" then
-        print(UI.book, options.folder )
+        -- print(UI.book, options.folder )
         commands.openFinder(UI.book, options.folder )
       end
     elseif UI.editor.selections == nil  then
-      print("selection == nil")
+      -- print("selection == nil")
       commands.openEditorForLayer(UI.book, UI.page, "index")
     else
-      print("type", UI.editor.currentType)
+      -- print("type", UI.editor.currentType)
       for i, v in next, UI.editor.selections do
-        print("", v.layer, v.text, v.class )
-        if v.parentObj then
+        -- printKeys(v)
+        if v.class == "audio" then
+          commands.openEditorForAudio(UI.book, UI.page, v.audio, v.subclass)
+        elseif v.parentObj then
           local layer = util.getLayerPath(v)
           commands.openEditorForLayer(UI.book, UI.page, layer, v.class)
         else

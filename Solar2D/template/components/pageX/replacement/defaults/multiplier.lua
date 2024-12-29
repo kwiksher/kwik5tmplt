@@ -1,5 +1,5 @@
 local M = {
-  name = "multiplier",
+  name = "multiplier0",
   class="multiplier",
   -- actionName = "",
   properties = {

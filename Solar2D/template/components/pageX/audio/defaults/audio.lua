@@ -1,5 +1,5 @@
 local M = {
-  name = "audio_",
+  name = "audio0",
   class="audio",
   type = "short",
   properties = {

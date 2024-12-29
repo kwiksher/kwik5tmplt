@@ -13,7 +13,7 @@ local M = {
     -- lunatest.suite("test.book.suite_page1_animation", props)
     -- lunatest.suite("test.book.suite_page1_button", props)
     -- lunatest.suite("test.book.suite_page1_action", props)
-    lunatest.suite("test.book.suite_page1_group", props)
+    -- lunatest.suite("test.book.suite_page1_group", props)
     -- lunatest.suite("test.book.suite_page1_audio", props)
     -- lunatest.suite("test.book.suite_page1_select_copy_paste", props)
 
@@ -30,7 +30,7 @@ local M = {
     -- lunatest.suite("test.book.suite_new_shape_transform", props)
     -- lunatest.suite("test.book.suite_new_timer", props)
     -- lunatest.suite("test.book.suite_new_variable", props)
-    -- lunatest.suite("test.book.suite_page1_new_audio_timer_group_variable", props)
+    lunatest.suite("test.book.suite_page1_new_audio_timer_group_variable", props)
 
     -- lunatest.suite("test.bookTest.bookTest_importer", props)
 

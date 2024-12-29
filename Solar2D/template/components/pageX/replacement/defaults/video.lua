@@ -1,5 +1,5 @@
 local M = {
-  name = "video",
+  name = "video0",
   class="video",
   properties = {
     target = NIL,
