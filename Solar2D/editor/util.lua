@@ -404,7 +404,7 @@ function M.selectFromIndexModel(model, args)
 end
 
 -- https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value
-function M.copyTable(tbl)
+function M.copyTable(tbl, convert)
   local new_tbl = {}
   if tbl then
     for key, value in pairs(tbl) do
@@ -420,7 +420,9 @@ function M.copyTable(tbl)
         -- Problems may occur if the function has upvalues.
       elseif value_type == "table" and valid then
         -- print(key)
-        new_value = M.copyTable(value)
+        new_value = M.copyTable(value, convert)
+      elseif convert then
+        new_value = tostring(value)
       else
         new_value = value
       end

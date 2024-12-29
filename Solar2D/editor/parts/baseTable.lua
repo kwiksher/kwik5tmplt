@@ -255,11 +255,18 @@ function M:createIcons (_marginX, _marginY)
         -- should we use BT with "add component"?
         -- for k, v in pairs(event.target.muiOptions) do print(k, v) end
         local name = event.target.muiOptions.name
+
+        local class = self.id
+        if name == "trash-icon" then
+          -- for a class is selected, we need a class value
+          class = self.UI.editor.currentClass
+        end
+
         if self.anchorName then
           self.UI.scene.app:dispatchEvent {
             name = "editor.selector."..self.anchorName,
             UI = self.UI,
-            class = self.id,
+            class = class,
             icon = name,
             isNew = (name ~= "trash-icon" and name ~="Properties-icon"),
             isDelete = (name == "trash-icon")
@@ -270,7 +277,7 @@ function M:createIcons (_marginX, _marginY)
           self.UI.scene.app:dispatchEvent {
             name = "editor.selector."..eventName,
             UI = self.UI,
-            class = self.id,
+            class = class,
             icon = name,
             isNew = (name ~= "trash-icon" and name ~="Properties-icon"),
             isDelete = (name == "trash-icon")
