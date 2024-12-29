@@ -39,12 +39,13 @@ local instance =
       local namesMap = {}
 
       --local classFolder = UI.editor:getClassFolderName(data.class)
+      print(UI.editor.currentType, params.class)
       local book, page = UI.book, UI.page
-      local class = params.class or obj.class
+      local class = params.class
       local entries
       if class == "audio" then
         entries = indexModel.components.audios
-      elseif class == "group" then
+      elseif UI.editor.currentType == "group" then
         entries = indexModel.components.groups
       elseif class == "timer" then
         entries = indexModel.components.timers
@@ -83,11 +84,16 @@ local instance =
         local name
         local path
         if class == "audio" then
-          path = "App/" .. book .. "/components/" .. page .. "/audios/" .. obj.subclass .. "." .. obj.audio
+          path = "App/" .. book .. "/components/" .. page .. "/audios/" .. obj.subclass .. "/" .. obj.audio
           name = obj.subclass .. "." .. obj.audio
-        elseif class == "group" then
-          path = "App/" .. book .. "/components/" .. page .. "/groups/" .. obj.layer -- because groupTable is __index=layerTable
-          name = obj.layer
+        elseif UI.editor.currentType == "group" then
+          if class == "group" then
+            path = "App/" .. book .. "/components/" .. page .. "/groups/" .. obj.layer -- because groupTable is __index=layerTable
+            name = obj.layer
+          else
+            path = "App/" .. book .. "/components/" .. page .. "/groups/" .. obj.layer.. "_" .. obj.class
+            name = obj.layer
+          end
         elseif class == "timer" then
           path = "App/" .. book .. "/components/" .. page .. "/timers/" .. obj.timer
           name = obj.timer
@@ -147,7 +153,7 @@ local instance =
           -- table.remove(entries, v.index)
           -- print(json.encode(entries))
         elseif v.class == "audio" then
-        elseif v.class == "group" then
+        elseif UI.editor.currentType == "group" and v.class == "group" then
           table.remove(entries, v.index)
         elseif v.class == "timer" then
         elseif v.class == "variable" then

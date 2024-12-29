@@ -45,6 +45,9 @@ function(params)
       mod = require("editor.group.index")
       entries = data.components.groups
       indexEntries =indexModel.components.groups
+      if class and class:len() > 0 then
+        isLayerClass = true
+      end
     elseif class == "timer" then
       mod = require("editor.timer.index")
       entries = data.components.timers
@@ -102,6 +105,10 @@ function(params)
           classFolder = "group"
           if class and class:len() > 0 then
             classFolder = UI.editor:getClassFolderName(data.class)
+            --
+            -- pasting a buton class of animations or interactions
+            --
+
           end
         end
         --
@@ -115,16 +122,23 @@ function(params)
         files[#files+1] = controller:save(book, page, layer, classFolder, model)
       end
     else
-      -- print("-- copy a class model to selected layers --")
+      -- print("-- copy a class model to selected layers or groups --")
       local model = entries[1]
       for i, v in next, selections do
         local layer = v.layer
-        model.name = "button"
+        model.name = layer
         model.layer = layer
         if model.properties.target then
           model.properties.target = layer
         end
-        updatedModel = util.updateIndexModel(updatedModel, layer, class)
+        if data.type == "group" then
+          -- classFolder = "group"
+          model.type  = "group" -- is a linear/button copied from a normal layer instead of a group?
+        end
+        -- print ("@@@", layer, class, data,type)
+        -- print(json.prettify(model))
+
+        updatedModel = util.updateIndexModel(updatedModel, layer, class, data.type) -- data.type for group
         -- save lua
         files[#files+1] = controller:render(book, page, layer, classFolder, class, model)
             -- save json

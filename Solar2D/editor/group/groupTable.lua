@@ -158,6 +158,7 @@ local buttons = require("editor.parts.buttons")
 -- See group = true makes rename for handleing group
 function M.mouseHandler(event)
   if event.isSecondaryButtonDown and event.target.isSelected then
+    -- printKeys(event.target)
     buttons:showContextMenu(posX, event.y, {layer = event.target.layer, group = true, class = event.target.class, isMultiSelection = isMultiSelection})
   else
     -- print("@@@@not selected")

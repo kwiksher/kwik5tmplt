@@ -40,7 +40,7 @@ local command = function (params)
     UI.scene.app:dispatchEvent {
       name = "editor.classEditor.delete",
       UI = UI,
-      class = "group",
+      class = params.class,
       icon = "trash-icon",
       isNew = false, --(name ~= "trash-icon" and name ~="Properties-icon"),
       isDelete = true --(name == "trash-icon")
