@@ -103,6 +103,7 @@ function M:useClassEditorProps(UI)
     ySwipe = "nil",
     reverse = "nil",
     resetAtEnd = "nil",
+    useLang  = false
   }
 
   if selectbox.selectedObj then

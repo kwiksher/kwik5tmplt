@@ -2,27 +2,31 @@ local name = ...
 local parent,root = newModule(name)
 local basePropsControl = require("editor.parts.basePropsControl")
 local json = require("json")
+local util = require("editor.util")
 
 local function getModel(params)
+  return util.copyTable(params, true)
+  --[[
   local model = {}
   for k, v in pairs(params) do
     if not basePropsControl.filter(k) then
       if k== "properties" then
-        model[k] = {}
-        for key, value in pairs(v) do
-          --print(key, value, type(value),  #value)
-          if type(value) == "table" and #value == 0 then
-            model[k][key] = "NIL"
-          else
-            model[k][key] = value
-          end
-          end
+        model[k] = util.copyTable(v)
+        -- for key, value in pairs(v) do
+        --   --print(key, value, type(value),  #value)
+        --   if type(value) == "table" and #value == 0 then
+        --     model[k][key] = "NIL"
+        --   else
+        --     model[k][key] = value
+        --   end
+        -- end
       else
         model[k] = v
       end
     end
   end
   return model
+  --]]
 end
 
 local instance = require("commands.kwik.baseCommand").new(
@@ -57,9 +61,9 @@ local instance = require("commands.kwik.baseCommand").new(
         model = getModel(params)
         table.insert(components.audios, model)
       elseif UI.editor.currentType =="group" then
-        printKeys(v)
+        -- printKeys(v)
         data.type = "group"
-        if props.class then
+        if props.class:len() > 0  then
           print("group class", v.class)
           params = require("App."..UI.book..".components."..UI.page..".groups."..v.layer.."_"..v.class)
         else

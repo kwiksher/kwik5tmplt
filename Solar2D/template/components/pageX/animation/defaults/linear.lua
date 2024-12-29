@@ -27,8 +27,8 @@ local M = {
     reverse=false,
     resetAtEnd=false,
     easing="inCircular",
-    xSwipe=nil,
-    ySwipe=nil,
+    xSwipe=false,
+    ySwipe=false,
     useLang = false
   },
   audio = {
