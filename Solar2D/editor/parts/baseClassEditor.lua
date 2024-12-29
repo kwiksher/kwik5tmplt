@@ -45,6 +45,8 @@ function M:init(UI)
   -- selectbox:init(UI, self.x, self.y, self.width/2, self.height)
   classProps:init(UI, self.x + self.width*1.5, self.y,  self.width, self.height)
   classProps.model = self.model.props
+  classProps.type  = current
+
   --
   actionbox:init(UI)
   buttons:init(UI)

@@ -1,5 +1,5 @@
 local M = {
-  name = "swipe",
+  name = "swipe0",
   class="swipe",
   properties = {
     target = NIL,

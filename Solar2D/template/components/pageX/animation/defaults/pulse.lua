@@ -1,5 +1,5 @@
 local M = {
-  name = "pulse",
+  name = "pulse0",
   class="Pulse",
   from = {
     x = nil,

@@ -1,5 +1,5 @@
 local M = {
-  name = "inputText",
+  name = "input0",
   class="inputtext",
   properties = {
     target = NIL,

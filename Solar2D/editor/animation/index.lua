@@ -51,6 +51,7 @@ function M:init(UI)
   selectbox     : init(UI, self.x + self.width/2, self.y, self.width*0.74, self.height)
   classProps   : init(UI, self.x + self.width, self.y,  self.width, self.height)
   classProps.model = model.props
+  classProps.type  = current
 
   breadcrumbsProps   : init(UI, self.x + self.width, self.y+235,  self.width, self.height)
   breadcrumbsProps.model = model.breadcrumbs

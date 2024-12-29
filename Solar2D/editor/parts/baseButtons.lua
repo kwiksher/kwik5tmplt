@@ -6,7 +6,7 @@ M.name = current
 M.weight = 1
 
 local App = require("Application")
-local rootButtons = require(parent.."buttons")
+-- local rootButtons = require(parent.."buttons")
 
 --
 -- local button = require("extlib.com.gieson.Button")
@@ -43,15 +43,16 @@ function M:init(UI)
 end
 --
 function M:_create(UI)
+  self.UI = UI
 
   -- print("create", self.name)
   local group = display.newGroup()
 
   local function tapHandler(event)
-    -- print("tap")
+    -- print("tap", self.UI)
     UI.scene.app:dispatchEvent {
       name = "editor."..self.commandClass.."." .. event.eventName,
-      UI = UI
+      UI = self.UI
     }
   end
 

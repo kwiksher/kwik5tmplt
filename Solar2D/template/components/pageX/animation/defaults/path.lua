@@ -1,5 +1,5 @@
 local M = {
-  name = "path",
+  name = "path0",
   class="Path",
   from = {
     alpha = 1,

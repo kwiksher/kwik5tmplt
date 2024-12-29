@@ -1,5 +1,5 @@
 local M = {
-  name = "linear",
+  name = "linear0",
   class="Linear",
   from = {
     x = 0,

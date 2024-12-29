@@ -868,6 +868,13 @@ function M.openEditorForCommand(book, page, name)
   os.execute(cmd)
 end
 
+function M.openEditorForAudio(book, page, name, subclass)
+  local path =
+    system.pathForFile("App/" .. book .. "/components/" .. page .. "/audios/"..subclass.."/" .. name .. ".lua", system.ResourceDirectory)
+  local cmd = "code " .. path
+  os.execute(cmd)
+end
+
 -- type == audios, groups, page, timers, variables
 function M.openEditor(book, page, type, name)
   local path =
