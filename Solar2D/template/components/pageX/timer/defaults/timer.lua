@@ -5,7 +5,7 @@ local M = {
     iterations = 1,
   },
   actions = {
-    actionName = "",
+    onComplete = "",
   }
 }
 

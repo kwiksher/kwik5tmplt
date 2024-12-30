@@ -90,7 +90,8 @@ local actionTable = require("editor.action.actionTable")
 M.otherButtons = {}
 
 function M:addToogleButton(mod)
-  self.otherButtons[#self.otherButtons+1] = mod
+  self.otherButtons = {}
+  self.otherButtons[1] = mod
 end
 
 function M:showActionTable(actionbox, isNew)
@@ -102,11 +103,13 @@ function M:showActionTable(actionbox, isNew)
       isNew = true,
       UI = self.UI
     }
-    partsButtons:hide()
     classProps:hide()
-    print(classProps.type)
-    for i, v in next, self.otherButtons do
-      v:hide()
+    if classProps.type == "editor.timer.index" then
+      for i, v in next, self.otherButtons do
+        v:hide()
+      end
+    else
+      partsButtons:hide()
     end
   else
     ---

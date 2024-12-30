@@ -89,7 +89,7 @@ function M:useClassEditorProps()
   end
   --
   if self.picker then
-    props.name = picker.obj.field.text
+    props.name = picker:getValue()
   end
 
   return props

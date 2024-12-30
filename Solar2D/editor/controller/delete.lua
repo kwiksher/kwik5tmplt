@@ -6,10 +6,36 @@ local json = require("json")
 
 local types = {"page", "timer", "group", "variables", "layer"}
 
+
+local M = {}
+
+function M:createNamesMapByLayer(layers, parent)
+  for i, v in next, layers do
+    if parent then
+      self.namesMap[parent.."/"..v.name] = {i, v}
+    else
+      self.namesMap[v.name] = {i, v}
+    end
+    for k, vv in pairs(v) do
+      -- layers1, layer2, layers3
+      if k:find("layers") then
+          self:createNamesMapByLayer(vv ,v.name)
+      end
+    end
+  end
+end
+
+function M:createNamesMap(entries)
+  for i, v in next, entries do
+      self.namesMap[v] = {i, v}
+  end
+end
+
 local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
+    local props = params.props or {}
     print(name)
     if params.props and params.props.book then
       print("delete book")
@@ -28,6 +54,7 @@ local instance =
       local page = UI.page
 
       local selections = UI.editor.selections or {UI.editor.currentLayer}
+      print(json.prettify(selections))
       --
       local files, targets = {}, {}
       local indexModel = util.createIndexModel(UI.scene.model) -- noRecursive
@@ -36,51 +63,41 @@ local instance =
 
       local updatedModel = UI.scene.model
       -- UI.scene.model
-      local namesMap = {}
+      M.namesMap = {}
 
       --local classFolder = UI.editor:getClassFolderName(data.class)
-      print(UI.editor.currentType, params.class)
+      print(UI.editor.currentType, params.class, props.class)
       local book, page = UI.book, UI.page
-      local class = params.class
+      local class = params.class or props.class
       local entries
       if class == "audio" then
         entries = indexModel.components.audios
+        M:createNamesMapByLayer(entries)
       elseif UI.editor.currentType == "group" then
         entries = indexModel.components.groups
+        M:createNamesMapByLayer(entries)
       elseif class == "timer" then
         entries = indexModel.components.timers
+        M:createNamesMap(entries)
       elseif class == "variable" then
         entries = indexModel.components.variables
+        M:createNamesMap(entries)
       elseif class == "joint" then
         entries = indexModel.components.joints
+        M:createNamesMap(entries)
       elseif class == "page" then
         -- TODO
       else
         entries = indexModel.components.layers
+        M:createNamesMapByLayer(entries)
       end
 
-      local function createNamesMap(layers, parent)
-        for i, v in next, layers do
-          if parent then
-            namesMap[parent.."/"..v.name] = {i, v}
-          else
-            namesMap[v.name] = {i, v}
-          end
-          for k, vv in pairs(v) do
-            -- layers1, layer2, layers3
-            if k:find("layers") then
-                createNamesMap(vv ,v.name)
-            end
-          end
-        end
-      end
       --
-      createNamesMap(entries)
-
-      -- print(json.prettify(namesMap))
+      print(json.prettify(entries))
+      -- print(json.prettify(M.namesMap))
 
       for i, obj in next, selections do
-        local class = params.class or obj.class
+        local class = params.class or obj.class or props.class
         local name
         local path
         if class == "audio" then
@@ -116,11 +133,10 @@ local instance =
         end
 
         print(name)
-        local entry = namesMap[name]
-        --printTable(namesMap)
+        local entry = M.namesMap[name]
         --
         if entry then
-          targets[#targets + 1] = {index = entry[1], obj=entry[2], path = path ..".lua", class = class}
+          targets[#targets + 1] = {index = entry[1], layer=entry[2], path = path ..".lua", class = class}
         end
         print(json.encode(targets))
       end
@@ -144,28 +160,33 @@ local instance =
       local targetsDelete = {}
       for i, v in next, targets do
         -- print(v.index, v.path, v.class)
-        local obj = v.obj
-        -- printTable(obj)
-        local classKey = getClass(obj)
-        -- print(obj.name, classKey)
+        local layer = v.layer
+        -- printTable(layer)
+        -- print(layer.name, classKey)
         if v.class == nil then
+          print("somthing wrong in deleting an entry")
           -- table.remove(indexModel,v.index) -- delete from index
           -- table.remove(entries, v.index)
           -- print(json.encode(entries))
         elseif v.class == "audio" then
-        elseif UI.editor.currentType == "group" and v.class == "group" then
+          table.remove(entries, v.index)
+        elseif UI.editor.currentType == "group" or v.class == "group" then
           table.remove(entries, v.index)
         elseif v.class == "timer" then
+          table.remove(entries, v.index)
         elseif v.class == "variable" then
+          table.remove(entries, v.index)
         elseif v.class == "joint" then
+          table.remove(entries, v.index)
         else
+          local classKey = getClass(layer)
           local updated = {}
-          for ii, vv in next, obj[classKey] do -- Notice
+          for ii, vv in next, layer[classKey] do -- Notice
             if vv ~= v.class then
               updated[#updated + 1] = vv
             end
           end
-          obj[classKey] = updated
+          layer[classKey] = updated
         end
         files[#files + 1] = v.path
         targetsDelete[#targetsDelete + 1] = v.path

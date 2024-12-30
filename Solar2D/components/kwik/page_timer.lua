@@ -8,7 +8,7 @@ function M:create(UI)
 end
 --
 function M:didShow(UI)
-  self.timerObj = timer.performWithDelay( self.delay, function()
+  self.timerObj = timer.performWithDelay( self.properties.delay, function()
       if self.actionName then
         UI.scene:dispatchEvent({name = self.actionName })
       end
