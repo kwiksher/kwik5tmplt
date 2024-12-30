@@ -17,7 +17,7 @@ end
 local getLayer = function(layerEntry, parent)
   -- print(json.encode(layerEntry))
   for key, v in pairs(layerEntry) do
-    print("", key)
+    -- print("", key)
     if key == "class" then
     elseif key == "event" then
     else
@@ -100,7 +100,7 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
       local children = {}
       ---
       local name, value = getLayer(layer, parent)
-      print("@@@", name, layerName, value )
+      -- print("@@@", name, layerName, value )
       if name == layerName then
         -- if child then -- continue to find the target child
         --   layerName = child
@@ -953,6 +953,28 @@ function M.uniqueName(str, _sep)
     local num = tonumber(out[#out]) + 1
     out[#out] = tostring(num)
     return table.concat(out, "_")
+  end
+end
+
+function M:createNamesMapByLayer(layers, parent)
+  for i, v in next, layers do
+    if parent then
+      self.namesMap[parent.."/"..v.name] = {i, v}
+    else
+      self.namesMap[v.name] = {i, v}
+    end
+    for k, vv in pairs(v) do
+      -- layers1, layer2, layers3
+      if k:find("layers") then
+          self:createNamesMapByLayer(vv ,v.name)
+      end
+    end
+  end
+end
+
+function M:createNamesMap(entries)
+  for i, v in next, entries do
+      self.namesMap[v] = {i, v}
   end
 end
 
