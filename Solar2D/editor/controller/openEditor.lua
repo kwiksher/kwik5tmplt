@@ -38,6 +38,12 @@ local instance =
         -- printKeys(v)
         if v.class == "audio" then
           commands.openEditorForAudio(UI.book, UI.page, v.audio, v.subclass)
+        elseif v.class == "timer" then
+            commands.openEditor(UI.book, UI.page, "timers",v.timer)
+        elseif v.class == "variable" then
+                commands.openEditor(UI.book, UI.page, "variables",v.variable)
+       elseif v.class == "joint" then
+            commands.openEditor(UI.book, UI.page, "joints",v.joint)
         elseif v.parentObj then
           local layer = util.getLayerPath(v)
           commands.openEditorForLayer(UI.book, UI.page, layer, v.class)

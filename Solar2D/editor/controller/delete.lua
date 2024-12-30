@@ -6,31 +6,6 @@ local json = require("json")
 
 local types = {"page", "timer", "group", "variables", "layer"}
 
-
-local M = {}
-
-function M:createNamesMapByLayer(layers, parent)
-  for i, v in next, layers do
-    if parent then
-      self.namesMap[parent.."/"..v.name] = {i, v}
-    else
-      self.namesMap[v.name] = {i, v}
-    end
-    for k, vv in pairs(v) do
-      -- layers1, layer2, layers3
-      if k:find("layers") then
-          self:createNamesMapByLayer(vv ,v.name)
-      end
-    end
-  end
-end
-
-function M:createNamesMap(entries)
-  for i, v in next, entries do
-      self.namesMap[v] = {i, v}
-  end
-end
-
 local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
@@ -63,7 +38,7 @@ local instance =
 
       local updatedModel = UI.scene.model
       -- UI.scene.model
-      M.namesMap = {}
+      util.namesMap = {}
 
       --local classFolder = UI.editor:getClassFolderName(data.class)
       print(UI.editor.currentType, params.class, props.class)
@@ -72,24 +47,24 @@ local instance =
       local entries
       if class == "audio" then
         entries = indexModel.components.audios
-        M:createNamesMapByLayer(entries)
+        util:createNamesMapByLayer(entries)
       elseif UI.editor.currentType == "group" then
         entries = indexModel.components.groups
-        M:createNamesMapByLayer(entries)
+        util:createNamesMapByLayer(entries)
       elseif class == "timer" then
         entries = indexModel.components.timers
-        M:createNamesMap(entries)
+        util:createNamesMap(entries)
       elseif class == "variable" then
         entries = indexModel.components.variables
-        M:createNamesMap(entries)
+        util:createNamesMap(entries)
       elseif class == "joint" then
         entries = indexModel.components.joints
-        M:createNamesMap(entries)
+        util:createNamesMap(entries)
       elseif class == "page" then
         -- TODO
       else
         entries = indexModel.components.layers
-        M:createNamesMapByLayer(entries)
+        util:createNamesMapByLayer(entries)
       end
 
       --
@@ -133,7 +108,7 @@ local instance =
         end
 
         print(name)
-        local entry = M.namesMap[name]
+        local entry = util.namesMap[name]
         --
         if entry then
           targets[#targets + 1] = {index = entry[1], layer=entry[2], path = path ..".lua", class = class}

@@ -259,22 +259,35 @@ function M:createIcons (_marginX, _marginY)
         local name = event.target.muiOptions.name
 
         local class = self.id
-        if name == "trash-icon" then
-          -- for a class is selected, we need a class value
-          class = self.UI.editor.currentClass
-        end
+        -- print(class)
+        -- if name == "trash-icon" then
+        --   -- for a class is selected, we need a class value
+        --   class = self.UI.editor.currentClass or self.id
+        -- end
 
         if self.anchorName then
-          self.UI.scene.app:dispatchEvent {
-            name = "editor.selector."..self.anchorName,
-            UI = self.UI,
-            class = class,
-            icon = name,
-            isNew = (name ~= "trash-icon" and name ~="Properties-icon"),
-            isDelete = (name == "trash-icon")
-          }
+          if name == "trash-icon" then
+            -- print("@@@@", class)
+            self.UI.scene.app:dispatchEvent {
+              name = "editor.classEditor.delete",
+              UI = self.UI,
+              class = class,
+              icon = name,
+              isNew = (name ~= "trash-icon" and name ~="Properties-icon"),
+              isDelete = (name == "trash-icon")
+            }
+          else
+            self.UI.scene.app:dispatchEvent {
+              name = "editor.selector."..self.anchorName,
+              UI = self.UI,
+              class = class,
+              icon = name,
+              isNew = (name ~= "trash-icon" and name ~="Properties-icon"),
+              isDelete = (name == "trash-icon")
+            }
+          end
         else -- use icon.eventMap
-          print(name)
+          print("use icon.eventMap",name)
           local eventName = self.eventMap[name:gsub("-icon", "")] or self.anchorName
           self.UI.scene.app:dispatchEvent {
             name = "editor.selector."..eventName,
