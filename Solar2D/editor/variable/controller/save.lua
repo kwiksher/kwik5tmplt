@@ -24,7 +24,7 @@ local instance = require("commands.kwik.baseCommand").new(
     args.name          = args.selected.variable -- this comes from variableTable == selectbox
     args.newName       = params.newName
     if controller.picker then
-      args.newName = controller.picker.obj.field.text
+      args.newName = controller.picker:getValue()
       args.name = args.newName
     end
     ---

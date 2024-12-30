@@ -32,7 +32,7 @@ local posX = display.contentCenterX*0.75
 
 function M.mouseHandler(event, class, selections)
   if event.isSecondaryButtonDown then -- event.target.isSelected
-    contextButtons:showContextMenu(posX, event.y,  {target = event.target, class=class, selections=selections})
+    contextButtons:showContextMenu(event.x + 100, event.y,  {target = event.target, class=class, selections=selections})
   else
     -- print("@@@@not selected")
   end
@@ -136,14 +136,15 @@ end
 M.newText = newText
 --
 function M:commandHandler(eventObj, event)
+  local UI = self.UI
   if event.phase == "began" or event.phase == "moved" then
     return
   end
-  local fromActive = { selections = {}, layer = self.UI.editor.currentLayer, class = self.UI.editor.currentClass}
+  local fromActive = { selections = {}, layer = UI.editor.currentLayer, class = UI.editor.currentClass}
   -- print("fromActive", fromActive.layer, fromActive.class)
 
-  if self.UI.editor.selections then
-    for i, v in next, self.UI.editor.selections do
+  if UI.editor.selections then
+    for i, v in next, UI.editor.selections do
       -- print("#", v.layer)
       table.insert(fromActive.selections, v)
     end
@@ -181,8 +182,8 @@ function M:commandHandler(eventObj, event)
   elseif self.controlDown then -- mutli selections
     layerTableCommands.multiSelections(self, target)
   else
-    if self.UI.editor.selections then
-      for i, v in next, self.UI.editor.selections do
+    if UI.editor.selections then
+      for i, v in next, UI.editor.selections do
         -- print("#", v.layer)
         table.insert(fromActive.selections, v)
       end
@@ -190,7 +191,7 @@ function M:commandHandler(eventObj, event)
     --
     if layerTableCommands.singleSelection(self, target) then
       if target.layer then
-        self.UI.editor:setCurrnetSelection(target.layer)
+        UI.editor:setCurrnetSelection(target.layer)
       end
       -- target.isSelected = true
       if target.variable then
@@ -200,30 +201,31 @@ function M:commandHandler(eventObj, event)
           local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
            if actionCommandPropsTable:setActiveProp(target.variable) then  -- setActiveProps(layer, class) class is set nil here
             self:hide()
-            self.UI.editor.currentClass = fromActive.class
-            self.UI.editor.currentLayer = fromActive.layer
-            self.UI.editor.selections = fromActive.selections
-            -- print("@@@@", self.UI.editor.currentLayer, self.UI.editor.currentClass)
+            UI.editor.currentClass = fromActive.class
+            UI.editor.currentLayer = fromActive.layer
+            UI.editor.selections = fromActive.selections
+            -- print("@@@@", UI.editor.currentLayer, UI.editor.currentClass)
           end
         else
           -- fromActive == dynamictext
           if classProps:setActiveProp(target.variable, "variable") then
             self:hide()
-            self.UI.editor.currentClass = fromActive.class
-            self.UI.editor.currentLayer = fromActive.layer
-            self.UI.editor.selections = fromActive.selections
-            -- print("@@@@", self.UI.editor.currentLayer, self.UI.editor.currentClass)
+            UI.editor.currentClass = fromActive.class
+            UI.editor.currentLayer = fromActive.layer
+            UI.editor.selections = fromActive.selections
+            -- print("@@@@", UI.editor.currentLayer, UI.editor.currentClass)
           end
         end
       else
         if target.name then
           -- print("### currentClass ##")
-          self.UI.editor.currentClass = target.name
+          UI.editor.currentClass = target.name
         end
       end
       -- printKeys(target)
     end
   end
+  UI.editor.selections = self.selections
   return true
 
 end
@@ -284,7 +286,7 @@ function M:createIcons (_marginX, _marginY)
           }
         end
         --
-        if  #self.selections > 0 then
+        if  self.selections and #self.selections > 0 then
           for i = 1, #self.selections do
             if self.selections[i].rect then
               self.selections[i].rect:setFillColor(0.8)
@@ -343,7 +345,7 @@ function M:create(UI)
       obj:addEventListener("touch", obj)
       obj:addEventListener("mouse", function(event)
         -- print("self.type", self.type)
-        self.mouseHandler(event, self.type, self.selections)
+        self.mouseHandler(event, self.id, self.selections)
       end)
       --
       local rect = display.newRect(obj.x, obj.y, obj.width + 10, option.height)

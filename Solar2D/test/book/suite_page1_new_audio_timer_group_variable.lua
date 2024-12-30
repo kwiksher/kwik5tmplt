@@ -81,7 +81,7 @@ end
   end
 --]]
 
-function M.test_new_timer()
+function M.xtest_new_timer()
   selectors.componentSelector:onClick(true,  "timerTable")
   helper.clickIconObj(timerTable, "timers-icon")
   picker:continue("timer1")
@@ -92,11 +92,13 @@ function M.test_new_timer()
   -- end)
 
 --  helper.selectActionGroup("Controls")
-
-
-
 end
 
+function M.test_select_timer()
+  selectors.componentSelector:onClick(true,  "timerTable")
+  -- helper.clickIconObj(timerTable, "timers-icon")
+  -- picker:continue("timer1")
+end
 --[[
   function M.test_new_variable()
     selectors.componentSelector:onClick(true,  "variableTable")

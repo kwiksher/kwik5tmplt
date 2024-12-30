@@ -79,8 +79,16 @@ function M:create(callback, message)
   self.isOn = true
  end
 
+function M:getValue()
+  if self.obj and self.obj.field then
+    self.lastValue = self.obj.field.text
+  end
+  return self.lastValue
+end
+
 function M:continue(value)
   self.obj.field.text = value
+  self.lastValue = value
   self.callback(value)
   self:destroy()
   self.isOn = false
