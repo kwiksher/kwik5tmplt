@@ -57,16 +57,17 @@ function M:init(UI)
 end
 
 function controller:render(book, page, class, name, model)
-  local dst = "App/" .. book .. "/" .. page .. "/components/timers/" .. name .. ".lua"
-  local tmplt = "template/components/pageX/timers/timer.lua"
-  util.mkdir("App", book, page, "components", "timers", class)
+  local dst = "App/" .. book .. "/components/".. page .. "/timers/" .. name .. ".lua"
+  local tmplt = "template/components/pageX/timer/timer.lua"
+  util.mkdir("App", book, "components", page, "timers")
+  print(dst, tmplt)
   util.saveLua(tmplt, dst, model)
   return dst
 end
 
 function controller:save(book, page, class, name, model)
-  local dst = "App/" .. book .. "/models/" .. page .. "/timers/" .. class .. "/" .. name .. ".json"
-  util.mkdir("App", book, "models", page, "timers", class)
+  local dst = "App/" .. book .. "/models/" .. page .. "/timers/ " .. name .. ".json"
+  util.mkdir("App", book, "models", page, "timers")
   util.saveJson(dst, model)
   return dst
 end

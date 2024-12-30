@@ -7,44 +7,76 @@ local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
     local UI = params.UI
-    local target = params.props
-    print(target.layer, target.class)
-    for i, v in next, UI.editor.selections do
-      print("", v.text)
-    end
+    local props = params.props
+    printKeys(props.target)
+    -- print(props.layer, props.class)
+    -- for i, v in next, UI.editor.selections do
+    --   print("", v.text)
+    -- end
     --
     if UI.editor.selections and #UI.editor.selections > 1 then
-       -- use selection to load the props and if saved, apply it to the selected layers
-       -- how to tell multiple editing to save button' event?
-       --
+      -- use selection to load the props and if saved, apply it to the selected layers
+      -- how to tell multiple editing to save button' event?
+      --
     else
       -- edit one layer
       -- local layer = UI.editor.selections[1]
-      if target.class and target.class:len() > 0 then
-        UI.scene.app:dispatchEvent {
-          name = "editor.selector.selectTool",
-          UI = UI,
-          class = target.class,
-          isNew = false,
-          layer = target.layer,
-          -- toogle = true -- <========
-        }
+      if props.class and props.class:len() > 0 then
+        if props.class == "timer" then
+          print(props.target.timer)
+          UI.scene.app:dispatchEvent {
+            name = "editor.selector.selectTimer",
+            UI = UI,
+            class = props.class,
+            isNew = false,
+            timer = props.target.timer
+            -- toogle = true -- <========
+          }
+        elseif props.class == "variable" then
+          print(props.target.variable)
+          UI.scene.app:dispatchEvent {
+            name = "editor.selector.selectVariable",
+            UI = UI,
+            class = props.class,
+            isNew = false,
+            timer = props.target.variable
+            -- toogle = true -- <========
+          }
+        elseif props.class == "joint" then
+          print(props.target.joint)
+          UI.scene.app:dispatchEvent {
+            name = "editor.selector.selectJoint",
+            UI = UI,
+            class = props.class,
+            isNew = false,
+            timer = props.target.joint
+            -- toogle = true -- <========
+          }
+        else
+          UI.scene.app:dispatchEvent {
+            name = "editor.selector.selectTool",
+            UI = UI,
+            class = props.class,
+            isNew = false,
+            layer = props.layer
+            -- toogle = true -- <========
+          }
+        end
       elseif UI.editor.currentType == "group" then
         UI.scene.app:dispatchEvent {
           name = "editor.selector.selectGroup",
           UI = UI,
           class = "group",
-          group = target.layer,
+          group = props.layer
         }
-
       else
-        local path = util.getParent(target)
+        local path = util.getParent(props)
         UI.scene.app:dispatchEvent {
           name = "editor.selector.selectLayer",
           UI = UI,
           path = path,
-          isIndex = target.isIndex,
-          layer = target.layer,
+          isIndex = props.isIndex,
+          layer = props.layer
         }
       end
     end

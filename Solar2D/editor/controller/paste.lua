@@ -23,7 +23,7 @@ function(params)
   local indexModel =  util.createIndexModel(UI.scene.model)
   local updatedModel = UI.scene.model
   -- UI.scene.model
-  local namesMap = {}
+  util.namesMap = {}
 
   local classFolder = UI.editor:getClassFolderName(data.class)
   local book, page, class = UI.book, UI.page, data.class
@@ -41,87 +41,94 @@ function(params)
       mod = require("editor.audio.index")
       entries = data.components.audios
       indexEntries = indexModel.components.audios
+      util:createNamesMapByLayer(indexEntries)
     elseif data.type == "group" then
       mod = require("editor.group.index")
       entries = data.components.groups
       indexEntries =indexModel.components.groups
-      if class and class:len() > 0 then
+      util:createNamesMapByLayer(indexEntries)
+      if class and class:len() > 0 and class ~="group" then -- it should be one of animations or interactins
         isLayerClass = true
       end
     elseif class == "timer" then
       mod = require("editor.timer.index")
       entries = data.components.timers
       indexEntries = indexModel.components.timers
+      util:createNamesMap(indexEntries)
     elseif class == "variable" then
       mod = require("editor.variable.index")
       entries = data.components.variables
       indexEntries = indexModel.components.variables
+      util:createNamesMap(indexEntries)
     elseif class == "joint" then
       mod = require("editor.physics.index")
       entries = data.components.joints
       indexEntries = indexModel.components.joints
+      util:createNamesMap(indexEntries)
     elseif class == "page" then
     elseif class then
       mod = UI.editor:getClassModule(class) or {}
       entries = data.components.layers
       indexEntries = indexModel.components.layers
       isLayerClass = #entries == 1
+      util:createNamesMapByLayer(indexEntries)
     else --class==nil
       mod = {controller=require("editor.control.index")}
       entries = data.components.layers
       indexEntries = indexModel.components.layers
+      util:createNamesMapByLayer(indexEntries)
     end
 
     local controller = mod.controller
 
     if not isLayerClass then
       -- print(json.prettify(indexEntries))
-      for i, v in next, indexEntries do
-        namesMap[v.name] = i
-      end
-
       for i, model in next, entries do
         -- local layer = model.name
-        local index = namesMap[model.name]
+        -- printKeys(model)
+        local entry = util.namesMap[model.name]
         --
-        if index and (data.class == nil or data.class:len() ==0) then
+        if entry then -- and (data.class == nil or data.class:len() ==0)
+          -- print("####", model.name)
           model.name = util.uniqueName(model.name)
-          layer = model.name
-          if data.type == "group" then
-            local entry = {}
-            entry[layer] = {}
-            table.insert(updatedModel.components.groups, entry)
-          elseif data.type == "timer" then
-            table.insert(updatedModel.components.timers, layer)
-          elseif data.type == "variable" then
-            table.insert(updatedModel.components.variables, layer)
-          elseif data.type == "joint" then
-            table.insert(updatedModel.components.joints, layer)
-          end
+          -- print("@@@@", model.name)
+        else
+          -- print("not found in indexEntries", model.name)
+          -- for k, v in pairs(util.namesMap) do
+          --   print(k, v)
+          -- end
         end
 
         if data.type == "group" then
+          local entry = {}
+          entry[model.name] = {}
+          table.insert(updatedModel.components.groups, entry)
           model.type = "group"
           classFolder = "group"
-          if class and class:len() > 0 then
-            classFolder = UI.editor:getClassFolderName(data.class)
-            --
-            -- pasting a buton class of animations or interactions
-            --
-
-          end
+        elseif class == "timer" then
+          table.insert(updatedModel.components.timers, model.name)
+        elseif class == "variable" then
+          table.insert(updatedModel.components.variables, model.name)
+        elseif class == "joint" then
+          table.insert(updatedModel.components.joints, model.name)
         end
         --
-        -- print ("@@@", layer, class)
+        -- print ("@@@", model.name, class)
         -- print(json.prettify(model))
 
-        updatedModel = util.updateIndexModel(updatedModel, layer, class, model.type)
+        updatedModel = util.updateIndexModel(updatedModel, model.name, class, model.type)
         -- save lua
-        files[#files+1] = controller:render(book, page, layer, classFolder, class, model)
+        if class == "timer" then
+          files[#files+1] = controller:render(book, page, nil, model.name, model)
+          -- save json
+          files[#files+1] = controller:save(book, page, nil, model.name, model)
+        else
+          files[#files+1] = controller:render(book, page, model.name, classFolder, class, model)
             -- save json
-        files[#files+1] = controller:save(book, page, layer, classFolder, model)
+          files[#files+1] = controller:save(book, page, model.name, classFolder, model)
+        end
       end
-    else
+    else -- this is for class entry of layer and group
       -- print("-- copy a class model to selected layers or groups --")
       local model = entries[1]
       for i, v in next, selections do
