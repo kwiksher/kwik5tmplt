@@ -15,7 +15,8 @@ local M = {
 local W = display.viewableContentWidth
 local H = display.viewableContentHeight
 
-function M:create(UI)
+function M:init(UI)
+  local props       = self.properties
   local  walls = self.walls
   if walls then
     if walls.top then
@@ -39,16 +40,19 @@ function M:create(UI)
       self.wR:setFillColor(0,0,0)
     end
   end
+  physics.start()
+  physics.setDrawMode(props.drawMode)
+  physics.setScale = props.scale
+  print(props.gravityX, props.gravityY)
+  physics.setGravity(props.gravityX, props.gravityY)
+
 end
 --
 function M:didShow(UI)
   local sceneGroup  = UI.scene.view
   local layer       = UI.layer
+  local props       = self.properties
    -- Physics
-  physics.start()
-  physics.setDrawMode(props.drawMode)
-  physics.setScale = props.scale
-  physics.setGravity(props.grapvityX, props.gravityY)
   -- Invert gravity on orientation change
   if props.invert then
    local kOrientation, gx, gy = system.orientation, physics.getGravity()
@@ -96,4 +100,9 @@ function M:destroy()
   physics.stop()
 end
 --
+
+M.set = function(instance)
+	return setmetatable(instance, {__index=M})
+end
+
 return M

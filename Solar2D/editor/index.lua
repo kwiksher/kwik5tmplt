@@ -17,8 +17,8 @@ M.lastSelection = { book="book", page="page12"}
 M.contextInit = false
 M.storeInit   = false
 
-local gotoLastOn = true
-local unitTestOn = true
+local gotoLastOn = false
+local unitTestOn = false
 local httpServerOn = true
 
 M.viewStore = {}

@@ -18,8 +18,8 @@ function M:create(UI)
       friction = {{friction}},
       gravityScale = {{gravityScale}},
       isSensor = {{isSensor}},
-      radius = {{radius}}, -- NIL means use object width/2
-      shape   =" {{shape}}", -- "circle", -- rectangle,  path
+      radius = {{radius}}, -- 0 means use object width/2 if cirlce is selected
+      shape   ="{{shape}}", -- "circle", -- rectangle,  path
       type = "{{type}}", -- kinematic, static, dynamic
    {{/properties}}
   }

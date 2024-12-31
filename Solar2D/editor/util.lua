@@ -422,7 +422,11 @@ function M.copyTable(tbl, convert)
         -- Problems may occur if the function has upvalues.
       elseif value_type == "table" and valid then
         -- print(key)
-        new_value = M.copyTable(value, convert)
+        if value == NIL then
+          new_value = ""
+        else
+          new_value = M.copyTable(value, convert)
+        end
       elseif convert then
         new_value = tostring(value)
       else
