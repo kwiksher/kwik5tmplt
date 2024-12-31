@@ -643,7 +643,7 @@ function M.publish(UI, args, controller, decoded)
   --
   -- print(args.model)
   local model  -- getModelFrom uses args.props.properties
-    if #args.props.properties > 0 then
+  if args.props.properties  and #args.props.properties > 0 then
     model = getModelFrom(args)
   else
     model = args.model  or args.props
@@ -678,6 +678,7 @@ function M.publish(UI, args, controller, decoded)
     --  for modifying a layer model will have a class value as 'image' when created by UXP plugin.
     --
     local classFolder = UI.editor:getClassFolderName(args.class)
+    -- print(classFolder)
     -- save lua
     -- print("@@@", model.name)
     files[#files + 1] = controller:render(book, page, layer, classFolder, class, model)

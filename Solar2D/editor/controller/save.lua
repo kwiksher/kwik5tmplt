@@ -38,37 +38,16 @@ local instance =
       class = UI.editor.currentClass
     end
 
-    local controller = UI.editor:getClassModule(class or "properties").controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
-    for k, v in pairs(controller:useClassEditorProps(UI)) do
-      -- if type (v) == "table" then
-      --   print(k, json.prettify(v))
-      -- else
-      --   print(k, v)
-      -- end
-      props[k] = v
-    end
-
-    local layer = props.layer or UI.editor.currentLayer
-    if layer == nil then
-      layer = props.name
-      print("layer", layer, class)
-    else
-      print("layer", props.name, layer, class)
-    end
-
-    if not props.isNew then
-      scripts.publishForSelections(UI, {
-        book= props.book, page=props.page,
-        layer = layer,
-        class = class,
-        props = props}, controller, params.decoded or {})
-    else
+    local mod = UI.editor:getClassModule(class or "properties") or {controller = require("editor.controller.index")}
+    local controller = mod.controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
+    if props.shapedWith then
       print("new layer")
+      local layer = props.name
       local updatedModel = util.createIndexModel(UI.scene.model)
       local index = params.index or #updatedModel.components.layers + 1
       if not props.isMove then
         local newLayer = {name=props.name}
-        layer = newLayer
+        -- layer = newLayer
         table.insert(updatedModel.components.layers, index, newLayer)
         -- print(json.prettify(updatedModel))
       end
@@ -80,6 +59,31 @@ local instance =
         class = props.shapedWith or class, -- rectangle,text, image, ellipse
         props = props},
         controller)
+    else
+      for k, v in pairs(controller:useClassEditorProps(UI)) do
+        -- if type (v) == "table" then
+        --   print(k, json.prettify(v))
+        -- else
+        --   print(k, v)
+        -- end
+        props[k] = v
+      end
+
+      local layer = props.layer or UI.editor.currentLayer
+      if layer == nil then
+        layer = props.name
+        print("layer", layer, class)
+      else
+        print("layer", props.name, layer, class)
+      end
+
+      if not props.isNew then
+        scripts.publishForSelections(UI, {
+          book= props.book, page=props.page,
+          layer = layer,
+          class = class,
+          props = props}, controller, params.decoded or {})
+      end
 
     end
     --  local tmplt = params.UI.page ..

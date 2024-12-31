@@ -85,7 +85,7 @@ function M.drawRect(UI, listener)
       local rectangle = display.newRect( xStart, yStart, width, height)
       rectangle.anchorX, rectangle.anchorY = anchorX, anchorY
       rectangle.xScale, rectangle.yScale = xScale, yScale
-
+      rectangle:setFillColor(0.8)
 
       if isFinal then -- phase == "ended"
         ---

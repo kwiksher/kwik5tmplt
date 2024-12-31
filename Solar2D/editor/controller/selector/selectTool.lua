@@ -37,7 +37,7 @@ local lastTool
 --
 local command = function (params)
 	local UI    = params.UI
- 	-- print("selectTool", UI.editor:getClassModule(params.class), params.class, params.isNew )
+ 	print("selectTool", UI.editor:getClassModule(params.class), params.class, params.isNew )
   if params.asset then
     -- links is an array of layer names
     for k, v in pairs(params.asset) do print("", k, v) end
@@ -50,7 +50,7 @@ local command = function (params)
     local command = require("editor.scripts.commands")
     command.openEditorByPath("App/uiHandler.lua")
    elseif tool then
-    -- print("### tool", params.class, tool.id)
+    print("### tool", params.class, tool.id)
     if lastTool then
       -- print("### lastTool", lastTool.name)
       lastTool.controller:hide()
@@ -60,11 +60,13 @@ local command = function (params)
     if params.hide then
       tool.controller:hide()
       return
-    end
-
-    if params.toogle then
+    elseif params.toogle then
       tool.controller:toggle()
       tool.group:toFront()
+    elseif params.class == "new_rectangle" or params.class == "new_ellipse" or params.class == "new_text" then
+      UI.scene.app:dispatchEvent{name="editor.classEditor.shape."..params.class,
+        UI = UI}
+
     else
       propsButtons:hide()
       propsTable:hide()
