@@ -19,7 +19,7 @@ function M:create(UI)
     motorSpeed = {{motorSpeed}},
     isLimitEnabled = {{isLimitEnabled}},
     rotationX = {{rotationX}},
-    rotationY = {{rorationY}}
+    rotationY = {{rotationY}}
   {{/pivot}}
   {{#piston}}
     anchor_x = {{anchor_x}},

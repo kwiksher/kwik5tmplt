@@ -1,6 +1,6 @@
 local M = {
   name = "properties",
-  class="properties",
+  class="page",
   -- actionName = "",
   properties = {
       orientation = "landscapeLeft",

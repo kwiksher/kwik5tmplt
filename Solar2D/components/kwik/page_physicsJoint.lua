@@ -48,11 +48,15 @@ local M = {
 
 
 function M:create(UI)
-  local sceneGroup  = UI.scene.view
+  local sceneGroup  = UI.sceneGroup
   local layer       = UI.layer
   local bodyA         = sceneGroup[self.properties.bodyA]
   local bodyB       = sceneGroup[self.properties.bodyB]
-  local body = sceneGroup[self.properties.body] -- for touch
+  local body
+
+  if self.properties.body then
+    body = sceneGroup[self.properties.body] -- for touch
+  end
 
   if (bodyA == nil or bodyB== nil) and body==nil then
     print("Error no body")
@@ -65,54 +69,72 @@ function M:create(UI)
     "touch",
   }
 
-
   local obj
-  local anchor_x, anchor_y= app.getPosition(params.anchor_x, props.anchor_y)
-  -- local params = self[props.type] or self.properties
-  local params = self.properties
+  -- local props = self[props.type] or self.properties
+  local props = self.properties
+  local anchor_x, anchor_y= app.getPosition(props.anchor_x, props.anchor_y)
 
-  if props.type == "pistion" or props.type == "wheel" then
-    local axisX, axisY = app.getPosition(params.axisX, params.axisY)
+  if props.type == "piston" or props.type == "wheel" then
+    local axisX, axisY = app.getPosition(props.axisX, props.axisY)
     obj = physics.newJoint(props.type, bodyB, bodyA, anchor_x, anchor_y, axisX, axisY)
   elseif props.type == "distance" then
-    local anchorA_x, anchorA_y= app.getPosition(params.anchorA_x, params.anchorA_y)
-    local anchorB_x, anchorB_y= app.getPosition(params.anchorB_x, params.anchorB_y)
+    local anchorA_x, anchorA_y= app.getPosition(props.anchorA_x, props.anchorA_y)
+    local anchorB_x, anchorB_y= app.getPosition(props.anchorB_x, props.anchorB_y)
     obj = physics.newJoint(props.type, bodyA, bodyB, anchorA_x, anchorA_y, anchorB_x, anchorB_y)
   elseif props.type == "pulley" then
-    local statA_x, statA_y = app.getPosition(params.statA_x, params.statA_y)
-    local statB_x, statB_y = app.getPosition(params.statB_x, params.statB_y)
-    local bodyA_x, bodyA_y = app.getPosition(params.bodyA_x, params.bodyA_y)
-    local bodyB_x, bodyB_y = app.getPosition(params.bodyB_x, params.bodyB_y)
+    local statA_x, statA_y = app.getPosition(props.statA_x, props.statA_y)
+    local statB_x, statB_y = app.getPosition(props.statB_x, props.statB_y)
+    local bodyA_x, bodyA_y = app.getPosition(props.bodyA_x, props.bodyA_y)
+    local bodyB_x, bodyB_y = app.getPosition(props.bodyB_x, props.bodyB_y)
     obj = physics.newJoint(props.type, bodyB, bodyA, statA_x, statA_y, statB_x, statB_y, bodyA_x, bodyA_y, bodyB_x, bodyB_y, self.pulley.ratio)
   elseif props.type == "rope" then
-    local offsetA_x, offsetA_y = app.getPosition(params.offsetA_x, params.offsetA_y)
-    local offsetB_x, offsetB_y = app.getPosition(params.offseA_x, params.offsetB_y)
+    local offsetA_x, offsetA_y = app.getPosition(props.offsetA_x, props.offsetA_y)
+    local offsetB_x, offsetB_y = app.getPosition(props.offseA_x, props.offsetB_y)
     obj = physics.newJoint( "rope", bodyA, bodyB, offsetA_x, offsetA_y, offsetB_x, offsetB_y )
   elseif props.type == "gear" then
-    obj = physics.newJoint( "gear", bodyA, bodyB, params.joint1, params.joint2, params.ratio )
+    obj = physics.newJoint( "gear", bodyA, bodyB, props.joint1, props.joint2, props.ratio )
   elseif props.type == "touch" then
     obj = physics.newJoint(props.type, bodyA, anchor_x, anchor_y)
-  else
-    obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y)
+  else -- pivot
+    -- print(props.type, bodyA, bodyB, anchor_x, anchor_y)
+
+    if UI.props.editing  then
+      -- UI.sceneGroup.x = display.contentCenterX
+      -- UI.sceneGroup.y = display.contentCenterY
+      -- UI.sceneGroup.anchorX = .5
+      -- UI.sceneGroup.anchorY = .5
+      obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x + UI.sceneGroup.x/2, anchor_y + UI.sceneGroup.y/2)
+    else
+      obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y)
+    end
+
+  end
+
+  if obj == nil then
+    print("## Error creating a joint")
+    return
   end
   --
   if props.type == "pivot" then
     if props.rotationX or props.rotationY then
-      local rotX, rotY =app.getPosition( params.rotationX, params.rotationY)
+      local rotX, rotY =app.getPosition( props.rotationX, props.rotationY)
       obj.isLimitEnabled = true
       obj:setRotationLimits(rotX, rotY)
     end
   end
   --
   if props.type == "pivot" or props.tyope == "pistion" then
-    if params.isMotorEnabled then
-      obj.isMotorEnabled = params.isMotorEnabled
-      obj.motorSpeed = params.motorSpeed
-      obj.motorForce = params.motorForce
-      obj.maxMotorTorque = params.maxMotorTorque
+    if props.isMotorEnabled then
+      obj.isMotorEnabled = props.isMotorEnabled
+      obj.motorSpeed = props.motorSpeed
+      obj.motorForce = props.motorForce
+      obj.maxMotorTorque = props.maxMotorTorque
     end
   end
 end
+
+M._create = M.create
+
 --
 function M:didShow(UI)
 end

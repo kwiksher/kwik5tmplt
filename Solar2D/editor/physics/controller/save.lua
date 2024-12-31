@@ -42,7 +42,7 @@ local instance =
       end
       --
       scripts.publish(UI, args, controller)
-    elseif props.class == "physics" then  -- physics env
+    elseif props.class == "page" then  -- physics env
       args.class = "page"
       args.props.name  = "physics"
       local function isPhysics()
