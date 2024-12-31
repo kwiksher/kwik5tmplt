@@ -19,8 +19,8 @@ function M:create(UI)
       gravityScale = {{gravityScale}},
       isSensor = {{isSensor}},
       radius = {{radius}}, -- NIL means use object width/2
-      shape   =" {{shape}}", -- "circle", -- rect,  path
-      type = "{{type}}",
+      shape   =" {{shape}}", -- "circle", -- rectangle,  path
+      type = "{{type}}", -- kinematic, static, dynamic
    {{/properties}}
   }
 
