@@ -9,8 +9,8 @@ local M = {
     gravityScale = NIL,
     isSensor = false,
     radius = NIL,
-    shape   = "circle", -- rect,  path
-    type = "static",
+    shape   = "rectangle", -- circle -- rectangle,  path
+    type = "dynamic", -- dynamic, kinematic, static
   },
   dataPath = "", -- physicsEdtior(CodeAndWeb)
   dataShape = {}
@@ -28,7 +28,7 @@ function M:didShow(UI)
   -- print("@@@@", props.shape)
   if props.shape == "circle" then
     physics.addBody(obj, props.type, {density=props.density, friction=props.friction, bounce=props.bounce, radius=props.radius })
-  elseif props.shape == "rect" then
+  elseif props.shape == "rectangle" then
     physics.addBody(obj, props.type, {density=props.density, friction=props.friction, bounce=props.bounce })
   elseif props.shape == "path" then
     physics.addBody(obj, props.type, {density=props.density, friction=props.friction, bounce=props.bounce, shape=self.dataShape })

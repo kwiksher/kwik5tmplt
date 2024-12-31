@@ -16,7 +16,10 @@ function M:setValue(decoded, index, template)
       --self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
       --local value = self.selectbox.model[selectIndex]
       self.selectbox:setValue({})
-      decoded.properties["_body"] = self.layer
+      -- print("@@@@", decoded.class)
+      if decoded.class ~= "page" then
+        decoded.properties["_body"] = self.layer
+      end
       self.classProps:setValue(decoded)
     end
     self.class = decoded.class

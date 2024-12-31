@@ -45,9 +45,11 @@ end
 --
 local isClass = function(v, class)
   -- print(v, class)
-  for j = 1, #v.class do
-    if v.class[j] == class then
-      return true
+  if v.class then
+    for j = 1, #v.class do
+      if v.class[j] == class then
+        return true
+      end
     end
   end
   return false
