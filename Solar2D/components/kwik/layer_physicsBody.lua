@@ -17,7 +17,7 @@ local M = {
 }
 --
 
-function M:didShow(UI)
+function M:create(UI)
   local sceneGroup  = UI.sceneGroup
   local layer       = UI.layer
   local curPage = UI.curPage
@@ -47,6 +47,8 @@ function M:didShow(UI)
     end
   end
 end
+
+M._create = M.create
 --
 M.set = function(model)
   return setmetatable( model, {__index=M})

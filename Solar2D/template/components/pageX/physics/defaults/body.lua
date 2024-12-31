@@ -7,7 +7,7 @@ local M = {
     friction = 1,
     gravityScale = 1.0,
     isSensor = false,
-    radius = NIL,
+    radius = 0,  -- 0 means use object width/2 if cirlce is selected
     shape   = "rectangle", -- circle, rectangle,  path
     type = "dynamic", -- static, -- dynamic, kinematic
 

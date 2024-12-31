@@ -21,4 +21,4 @@ M.walls = {
   {{/walls}}
 }
 
-return M
+return require("components.kwik.page_physics").set(M)
