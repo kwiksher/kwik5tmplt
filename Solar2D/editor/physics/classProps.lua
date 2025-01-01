@@ -86,10 +86,15 @@ function M:setActiveProp(layer, class)
     local objA = UI.sceneGroup[bodyA.field.text]
     local objB = UI.sceneGroup[bodyB.field.text]
 
+    local bodyA_x = bodyA.field.text ..".x + " .. bodyA.field.text ..".width/2"
+    local bodyA_y = bodyA.field.text ..".y + " .. bodyA.field.text ..".height/2"
+    local bodyB_x = bodyB.field.text ..".x + " .. bodyB.field.text ..".width/2"
+    local bodyB_y = bodyB.field.text ..".y + " .. bodyB.field.text ..".height/2"
+
     if joint == "touch" then
-      fields.anchor_x.field.text = bodyA.field.text ..".x"
-      fields.anchor_x.field.text = bodyA.field.text ..".y"
-      pointA:setValue(objA)
+      fields.anchor_x.field.text = bodyA_x
+      fields.anchor_x.field.text = bodyA_y
+      pointA:setValue{x=objA.x + objA.width/2, y = objA.y + objA.height/2}
       pointA:setActiveEntry(bodyA)
       pointB:setValue()
     else
@@ -97,21 +102,21 @@ function M:setActiveProp(layer, class)
       if bodyA.field.text:len() > 0 then
         -- print(joint, bodyA.field.text)
         if joint == "pivot" then
-          fields.anchor_x.field.text = bodyA.field.text ..".x"
-          fields.anchor_y.field.text = bodyA.field.text ..".y"
+          fields.anchor_x.field.text = bodyA_x
+          fields.anchor_y.field.text = bodyA_y
         elseif joint == "piston" then
-          fields.anchor_x.field.text = bodyA.field.text ..".x"
-          fields.anchor_y.field.text = bodyA.field.text ..".y"
+          fields.anchor_x.field.text = bodyA_x
+          fields.anchor_y.field.text = bodyA_y
         elseif joint == "distance" then
-          fields.anchorA_x.field.text = bodyA.field.text ..".x"
-          fields.anchorA_y.field.text = bodyA.field.text ..".y"
+          fields.anchorA_x.field.text = bodyA_x
+          fields.anchorA_y.field.text = bodyA_y
         elseif joint == "pulley" then
-          fields.statA_x.field.text = bodyA.field.text ..".x"
-          fields.statA_y.field.text = bodyA.field.text ..".y"
-          fields.bodyA_x.field.text = bodyA.field.text ..".x"
-          fields.bodyA_y.field.text = bodyA.field.text ..".y"
+          fields.statA_x.field.text = bodyA_x
+          fields.statA_y.field.text = bodyA_y
+          fields.bodyA_x.field.text = bodyA_x
+          fields.bodyA_y.field.text = bodyA_y
         end
-        pointA:setValue(objA)
+        pointA:setValue{x=objA.x + objA.width/2, y = objA.y + objA.height/2}
         -- pointA:setActiveEntry(bodyA)
         pointA:setBodyName(bodyA.field.text)
       else
@@ -120,19 +125,19 @@ function M:setActiveProp(layer, class)
       -- for B
       if bodyB.field.text:len() > 0 then
         if joint == "distance" then
-          fields.anchorB_x.field.text = bodyB.field.text ..".x"
-          fields.anchorB_y.field.text = bodyB.field.text ..".y"
+          fields.anchorB_x.field.text = bodyB_x
+          fields.anchorB_y.field.text = bodyB_y
         elseif joint == "pulley" then
-          fields.statB_x.field.text = bodyB.field.text ..".x"
-          fields.statB_y.field.text = bodyB.field.text ..".y"
-          fields.bodyB_x.field.text = bodyB.field.text ..".x"
-          fields.bodyB_y.field.text = bodyB.field.text ..".y"
+          fields.statB_x.field.text = bodyB_x
+          fields.statB_y.field.text = bodyB_y
+          fields.bodyB_x.field.text = bodyB_x
+          fields.bodyB_y.field.text = bodyB_y
         elseif joint == "wheel" then
-          fields.anchor_x.field.text = bodyB.field.text ..".x"
-          fields.anchor_y.field.text = bodyB.field.text ..".y"
+          fields.anchor_x.field.text = bodyB_x
+          fields.anchor_y.field.text = bodyB_y
           pointA:setValue()
         end
-        pointB:setValue(objB)
+        pointB:setValue{x=objB.x + objB.width/2, y = objB.y + objB.height/2}
         -- pointB:setActiveEntry(bodyB)
         pointB:setBodyName(bodyB.field.text)
       else

@@ -495,6 +495,9 @@ function M:command()
       end
     elseif params.isDelete then
       print("isDelete")
+    elseif params.isNew and params.class == "joint" then
+      print("new Joint")
+      native.showAlert( "alert", "you can create a joint from physic tool")
     else
       -- read from models/{class}/{name}.json
       local decoded = util.decode(book, page, params.class, name, {subclass = params.subclass, isNew = params.isNew, isDelete = params.isDelete}) -- this reads models/xx.json
