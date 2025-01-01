@@ -9,7 +9,7 @@ function M:create(UI)
   self.properties = {
       bounce = 1,
       density = 1,
-      friction = 1,
+      friction = 0,
       gravityScale = 1,
       isSensor = false,
       radius = 0, -- NIL means use object width/2
