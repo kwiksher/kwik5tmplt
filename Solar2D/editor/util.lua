@@ -601,6 +601,9 @@ function M.decode(book, page, class, _name, options)
   local name = _name
   if options.isNew then
     local path = "template.components.pageX." .. class .. ".defaults." .. class
+    if class == "joint" then
+      path = "template.components.pageX.physics.defaults." .. class
+    end
     return require(path)
   elseif options.isDelete then
     print(class, "delete")

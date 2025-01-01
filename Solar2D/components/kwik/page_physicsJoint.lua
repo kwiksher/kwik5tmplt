@@ -80,6 +80,14 @@ function M:create(UI)
   elseif props.type == "distance" then
     local anchorA_x, anchorA_y= app.getPosition(props.anchorA_x, props.anchorA_y)
     local anchorB_x, anchorB_y= app.getPosition(props.anchorB_x, props.anchorB_y)
+
+    if UI.props.editing  then
+      anchorA_x = anchorA_x + UI.sceneGroup.x/2
+      anchorA_y = anchorA_y + UI.sceneGroup.y/2
+      anchorB_x = anchorB_x + UI.sceneGroup.x/2
+      anchorB_y = anchorB_y + UI.sceneGroup.y/2
+
+    end
     obj = physics.newJoint(props.type, bodyA, bodyB, anchorA_x, anchorA_y, anchorB_x, anchorB_y)
   elseif props.type == "pulley" then
     local statA_x, statA_y = app.getPosition(props.statA_x, props.statA_y)
