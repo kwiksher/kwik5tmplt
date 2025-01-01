@@ -49,11 +49,14 @@ local M = {
     bodyA = "",
     bodyB = "",
     isMotorEnabled=true,
-    maxMotorTorque = 1000,
+    maxMotorForce = 1000,
     motorForce = 10,
     motorSpeed = -30,
     axisX = 0,
-    axisY = -1,
+    axisY = 1,
+    isMotorEnabled=true,
+    limitX = -100,
+    limitY = 0
   },
   wheel = {
     bodyA = "",

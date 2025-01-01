@@ -86,10 +86,20 @@ function M:setActiveProp(layer, class)
     local objA = UI.sceneGroup[bodyA.field.text]
     local objB = UI.sceneGroup[bodyB.field.text]
 
-    local bodyA_x = bodyA.field.text ..".x + " .. bodyA.field.text ..".width/2"
-    local bodyA_y = bodyA.field.text ..".y + " .. bodyA.field.text ..".height/2"
-    local bodyB_x = bodyB.field.text ..".x + " .. bodyB.field.text ..".width/2"
-    local bodyB_y = bodyB.field.text ..".y + " .. bodyB.field.text ..".height/2"
+    local bodyA_x = bodyA.field.text .. ".x"
+    local bodyA_y = bodyA.field.text .. ".y"
+    local bodyB_x = bodyB.field.text .. ".x"
+    local bodyB_y = bodyB.field.text .. ".y"
+
+    if objA.shapedWith and objA.anchorX == 0 then
+      bodyA_x = bodyA_x .."+".. bodyA.field.text ..".width/2"
+      bodyA_y = bodyA_y.."+" .. bodyA.field.text ..".height/2"
+    end
+
+    if objB.shapedWith and objB.anchorY == 0 then
+      bodyB_x = bodyA_x .."+".. bodyB.field.text ..".width/2"
+      bodyB_y = bodyA_y.."+" .. bodyB.field.text ..".height/2"
+    end
 
     if joint == "touch" then
       fields.anchor_x.field.text = bodyA_x
@@ -101,7 +111,7 @@ function M:setActiveProp(layer, class)
       -- for A
       if bodyA.field.text:len() > 0 then
         -- print(joint, bodyA.field.text)
-        if joint == "pivot" then
+        if joint == "pivot" or joint == "weld"  or joint == "friction" then
           fields.anchor_x.field.text = bodyA_x
           fields.anchor_y.field.text = bodyA_y
         elseif joint == "piston" then
