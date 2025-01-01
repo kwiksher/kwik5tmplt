@@ -10,6 +10,18 @@ function M:create(UI)
     bodyA = "{{bodyA}}",
     bodyB = "{{bodyB}}",
     type = "{{type}}", --pistoin, distance, pulle, + defaultSet
+    {{#friction}}
+    anchor_x = {{anchor_x}},
+    anchor_y = {{anchor_y}},
+    maxForce = {{maxForce}},
+    maxTorque = {{maxTorque}}
+  {{/friction}}
+  {{#weld}}
+    anchor_x = {{anchor_x}},
+    anchor_y = {{anchor_y}},
+    frequency = {{frequency}},
+    dampingRatio = {{dampingRatio}}
+  {{/weld}}
   {{#pivot}}
     anchor_x = {{anchor_x}},
     anchor_y = {{anchor_y}},
@@ -26,16 +38,21 @@ function M:create(UI)
     anchor_y = {{anchor_y}},
     isMotorEnabled= {{isMotorEnabled}},
     maxMotorTorque = {{maxMotorTorque}},
-    motorForce = {{motorForce}},
     motorSpeed = {{motorSpeed}},
     axisX = {{axisX}},
     axisY = {{axisY}},
+    isLimitEnabled = {{isLimitEnabled}},
+    limitX = {{limitX}},
+    limitY = {{limitY}},
   {{/piston}}
   {{#wheel}}
     anchor_x = {{anchor_x}},
     anchor_y = {{anchor_y}},
     axisX = {{axisX}},
-    axisY = {{axisY}}
+    axisY = {{axisY}},
+    springFrequency = {{springFrequency}},
+    springDampingRatio = {{springDampingRatio}}
+
   {{/wheel}}
   {{#distance}}
     anchorA_x = {{anchorA_x}},
@@ -59,6 +76,7 @@ function M:create(UI)
     offsetA_y= {{offsetA_y}},
     offsetB_x = {{offsetB_x}},
     offsetB_y = {{offsetB_y}},
+    maxLength = {{maxLength}}
   {{/rope}}
   {{#gear}}
     joint1="{{joint1}}",

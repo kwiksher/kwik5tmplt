@@ -63,41 +63,72 @@ function M:create(UI)
     return
   end
 
-  local defaultSet = table:mySet{
-    "friction",
-    "weld",
-    "touch",
-  }
 
+  local function getPosition(x, y, editing)
+    local x, y = app.getPosition(x, y)
+    if UI.props.editing  then
+      print("getPosition", x, y, UI.sceneGroup.x/2, UI.sceneGroup.y/2)
+      x = x + UI.sceneGroup.x/2
+      y = y + UI.sceneGroup.y/2
+    end
+    return x, y
+  end
+  --
   local obj
   -- local props = self[props.type] or self.properties
   local props = self.properties
-  local anchor_x, anchor_y= app.getPosition(props.anchor_x, props.anchor_y)
+  local anchor_x, anchor_y= getPosition(props.anchor_x, props.anchor_y)
+  --
+  if props.type == "friction" then
+    local axisX, axisY = getPosition(props.axisX, props.axisY)
+    obj = physics.newJoint(props.type, bodyB, bodyA, anchor_x, anchor_y)
+    obj.maxForce = props.maxForce
+    obj.maxTorque = props.maxTorque
+  elseif props.type == "weld" then
+    local axisX, axisY = getPosition(props.axisX, props.axisY)
+    obj = physics.newJoint(props.type, bodyB, bodyA, anchor_x, anchor_y)
+    obj.frequency = props.frequency
+    obj.dampingRatio = props.dampingRatio
+  elseif props.type == "piston" then
+    -- local axisX, axisY = getPosition(props.axisX, props.axisY)
+    obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y, props.axisX, props.axisY)
 
-  if props.type == "piston" or props.type == "wheel" then
-    local axisX, axisY = app.getPosition(props.axisX, props.axisY)
-    obj = physics.newJoint(props.type, bodyB, bodyA, anchor_x, anchor_y, axisX, axisY)
-  elseif props.type == "distance" then
-    local anchorA_x, anchorA_y= app.getPosition(props.anchorA_x, props.anchorA_y)
-    local anchorB_x, anchorB_y= app.getPosition(props.anchorB_x, props.anchorB_y)
+    -- obj.isLimitEnabled = true
+    -- obj:setLimits( -140, 0 )
+    -- obj.isMotorEnabled = true
+    -- obj.motorSpeed = -30
+    -- obj.maxMotorForce = 1000
 
-    if UI.props.editing  then
-      anchorA_x = anchorA_x + UI.sceneGroup.x/2
-      anchorA_y = anchorA_y + UI.sceneGroup.y/2
-      anchorB_x = anchorB_x + UI.sceneGroup.x/2
-      anchorB_y = anchorB_y + UI.sceneGroup.y/2
-
+    if props.isMotorEnabled then
+      -- print("#### piston #### ",  anchor_x, anchor_y, props.axisX, props.axisY)
+      obj.isMotorEnabled = props.isMotorEnabled
+      obj.motorSpeed = props.motorSpeed
+      obj.maxMotorForce = props.maxMotorForce
     end
+    if props.isLimitEnabled then
+      obj.isLimitEnabled = true
+      obj:setLimits(props.limitX, props.limitY)
+    end
+  elseif props.type == "wheel" then
+    -- local axisX, axisY = getPosition(props.axisX, props.axisY)
+    obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y, props.axisX, props.axisY)
+    obj.springDampingRatio = props.springDampingRatio
+    obj.springFrequency    = props.springFrequency
+  elseif props.type == "distance" then
+    print("bodyA shapedWith class",bodyA.shapedWith, bodyA.class)
+    print("bodyA anchor",bodyA.anchorX, bodyA.anchorY)
+    local anchorA_x, anchorA_y= getPosition(props.anchorA_x, props.anchorA_y)
+    local anchorB_x, anchorB_y= getPosition(props.anchorB_x, props.anchorB_y)
     obj = physics.newJoint(props.type, bodyA, bodyB, anchorA_x, anchorA_y, anchorB_x, anchorB_y)
   elseif props.type == "pulley" then
-    local statA_x, statA_y = app.getPosition(props.statA_x, props.statA_y)
-    local statB_x, statB_y = app.getPosition(props.statB_x, props.statB_y)
-    local bodyA_x, bodyA_y = app.getPosition(props.bodyA_x, props.bodyA_y)
-    local bodyB_x, bodyB_y = app.getPosition(props.bodyB_x, props.bodyB_y)
+    local statA_x, statA_y = getPosition(props.statA_x, props.statA_y)
+    local statB_x, statB_y = getPosition(props.statB_x, props.statB_y)
+    local bodyA_x, bodyA_y = getPosition(props.bodyA_x, props.bodyA_y)
+    local bodyB_x, bodyB_y = getPosition(props.bodyB_x, props.bodyB_y)
     obj = physics.newJoint(props.type, bodyB, bodyA, statA_x, statA_y, statB_x, statB_y, bodyA_x, bodyA_y, bodyB_x, bodyB_y, self.pulley.ratio)
   elseif props.type == "rope" then
-    local offsetA_x, offsetA_y = app.getPosition(props.offsetA_x, props.offsetA_y)
-    local offsetB_x, offsetB_y = app.getPosition(props.offseA_x, props.offsetB_y)
+    local offsetA_x, offsetA_y = getPosition(props.offsetA_x, props.offsetA_y)
+    local offsetB_x, offsetB_y = getPosition(props.offseA_x, props.offsetB_y)
     obj = physics.newJoint( "rope", bodyA, bodyB, offsetA_x, offsetA_y, offsetB_x, offsetB_y )
   elseif props.type == "gear" then
     obj = physics.newJoint( "gear", bodyA, bodyB, props.joint1, props.joint2, props.ratio )
@@ -105,39 +136,22 @@ function M:create(UI)
     obj = physics.newJoint(props.type, bodyA, anchor_x, anchor_y)
   else -- pivot
     -- print(props.type, bodyA, bodyB, anchor_x, anchor_y)
-
-    if UI.props.editing  then
-      -- UI.sceneGroup.x = display.contentCenterX
-      -- UI.sceneGroup.y = display.contentCenterY
-      -- UI.sceneGroup.anchorX = .5
-      -- UI.sceneGroup.anchorY = .5
-      obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x + UI.sceneGroup.x/2, anchor_y + UI.sceneGroup.y/2)
-    else
-      obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y)
+    obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y)
+    if props.rotationX or props.rotationY then
+      local rotX, rotY =getPosition( props.rotationX, props.rotationY)
+      if props.isMotorEnabled then
+        obj:setRotationLimits(rotX, rotY)
+        obj.isMotorEnabled = props.isMotorEnabled
+        obj.motorSpeed = props.motorSpeed
+        obj.motorForce = props.motorForce
+        obj.maxMotorTorque = props.maxMotorTorque
+      end
     end
-
   end
 
   if obj == nil then
     print("## Error creating a joint")
     return
-  end
-  --
-  if props.type == "pivot" then
-    if props.rotationX or props.rotationY then
-      local rotX, rotY =app.getPosition( props.rotationX, props.rotationY)
-      obj.isLimitEnabled = true
-      obj:setRotationLimits(rotX, rotY)
-    end
-  end
-  --
-  if props.type == "pivot" or props.tyope == "pistion" then
-    if props.isMotorEnabled then
-      obj.isMotorEnabled = props.isMotorEnabled
-      obj.motorSpeed = props.motorSpeed
-      obj.motorForce = props.motorForce
-      obj.maxMotorTorque = props.maxMotorTorque
-    end
   end
 end
 
