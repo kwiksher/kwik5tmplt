@@ -123,9 +123,19 @@ function M:cancelAllTransitions()
 end
 --
 function M.getPosition(x, y)
-    local mX = x and (x * 0.25 - 480 * 0.5) or 0
-    local mY = y and (y * 0.25 - 320 * 0.5) or 0
+  local editorWidth, editorHeight = display.contentWidth - 480, display.contentHeight -320
+    -- local mX = x and (x * 0.25 - 480 * 0.5) or 0
+    -- local mY = y and (y * 0.25 - 320 * 0.5) or 0
+   local mX = x and (x * 0.25 + editorWidth * 0.5) or 0
+   local mY = y and (y * 0.25 + editorHiehg * 0.5 ) or 0
+
     return mX, mY
+end
+
+function M.getCenter(x, y)
+  local mX = x and (x + display.contentWidth * 0.5) or display.contentCenterX
+  local mY = y and (y + display.contentHeight * 0.5) or display.contentCenterY
+  return mX, mY
 end
 
 

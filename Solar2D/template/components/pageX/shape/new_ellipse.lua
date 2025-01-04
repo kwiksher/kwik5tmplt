@@ -1,7 +1,8 @@
 -- $weight={{weight}}
 --
 local parent,root, M = newModule(...)
-
+local app = require "controller.Application"
+--
 local _layerProps = {
   name     = "{{name}}",
   x        = {{x}},
@@ -13,6 +14,9 @@ local _layerProps = {
   anchorX = {{anchorX}},
   anchorY = {{anchorY}},
   rotation = {{rotation}},
+  {{#path}}
+   radius   = {{radius}}
+  {{/path}}
   {{#fill }}
   color    = { {{r}}, {{g}}, {{b}}, {{a}} },
   {{/fill }}
@@ -32,10 +36,12 @@ function M:create(UI)
   self.imagePath = layerProps.name.."." .. (layerProps.type or ".png")
   local path = UI.props.imgDir..self.imagePath
   -- local path = system.pathForFile(UI.props.imgDir..self.imagePath, system.ResourceDirectory)
-  local obj = display.newImage(
-      path,
-      layerProps.x,
-      layerProps.y)
+  local x, y = app.getCenter(layerProps.x, layerProps.y)
+
+  local obj = display.newCircle(
+      x,
+      y,
+    layerProps.radius)
 
   if obj == nil then
     obj = display.newText(layerProps)

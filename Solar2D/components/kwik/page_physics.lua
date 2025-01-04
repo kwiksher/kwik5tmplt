@@ -43,7 +43,7 @@ function M:init(UI)
   physics.start()
   physics.setDrawMode(props.drawMode)
   physics.setScale = props.scale
-  print(props.gravityX, props.gravityY)
+  print("physics.start",props.drawMode, props.gravityX, props.gravityY)
   physics.setGravity(props.gravityX, props.gravityY)
 
 end
@@ -89,6 +89,7 @@ function M:didHide()
     Runtime:removeEventListener("orientation", self.orientationHandler);
     self.orientationHandler = nil
   end
+  print("didHide")
   physics.stop()
 end
 
@@ -97,6 +98,7 @@ function M:destroy()
   if self.orientationHandler then
     Runtime:removeEventListener("orientation", self.orientationHandler);
   end
+  print("destroy")
   physics.stop()
 end
 --

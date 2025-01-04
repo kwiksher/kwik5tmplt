@@ -64,13 +64,18 @@ function M:create(UI)
   end
 
 
-  local function getPosition(x, y, editing)
-    local x, y = app.getPosition(x, y)
-    if UI.props.editing  then
-      print("getPosition", x, y, UI.sceneGroup.x/2, UI.sceneGroup.y/2)
-      x = x + UI.sceneGroup.x/2
-      y = y + UI.sceneGroup.y/2
-    end
+  local function getPosition(x, y)
+    -- local x, y = app.getPosition(x, y)
+    --local x, y = x or 0, y or 0
+
+    -- local x = x and (x  - 480 * 0.5) or 0
+    -- local y = y and (y  - 320 * 0.5) or 0
+
+    -- if UI.props.editing  then
+    --   print("getPosition", x, y, UI.sceneGroup.x/2, UI.sceneGroup.y/2)
+    --   x = x + UI.sceneGroup.x/2
+    --   y = y + UI.sceneGroup.y/2
+    -- end
     return x, y
   end
   --
@@ -81,7 +86,7 @@ function M:create(UI)
   --
   if props.type == "friction" then
     local axisX, axisY = getPosition(props.axisX, props.axisY)
-    obj = physics.newJoint(props.type, bodyB, bodyA, anchor_x, anchor_y)
+    obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y)
     obj.maxForce = props.maxForce
     obj.maxTorque = props.maxTorque
   elseif props.type == "weld" then
@@ -125,7 +130,26 @@ function M:create(UI)
     local statB_x, statB_y = getPosition(props.statB_x, props.statB_y)
     local bodyA_x, bodyA_y = getPosition(props.bodyA_x, props.bodyA_y)
     local bodyB_x, bodyB_y = getPosition(props.bodyB_x, props.bodyB_y)
-    obj = physics.newJoint(props.type, bodyB, bodyA, statA_x, statA_y, statB_x, statB_y, bodyA_x, bodyA_y, bodyB_x, bodyB_y, self.pulley.ratio)
+    print("@@@@ pulley",      statA_x, statA_y,
+      statB_x, statB_y,
+      bodyA_x, bodyA_y,
+      bodyB_x, bodyB_y,
+      props.ratio)
+
+    -- obj = physics.newJoint(props.type, bodyA, bodyB,
+    --   bodyA.x, bodyA.y-100,
+    --   bodyB.x, bodyB.y-140,
+    --   bodyA.x, bodyA.y,
+    --   bodyB.x, bodyB.y,
+    --   1.0)
+
+      obj = physics.newJoint(props.type, bodyA, bodyB,
+      statA_x, statA_y,
+      statB_x, statB_y,
+      bodyA_x, bodyA_y,
+      bodyB_x, bodyB_y,
+      props.ratio)
+
   elseif props.type == "rope" then
     local offsetA_x, offsetA_y = getPosition(props.offsetA_x, props.offsetA_y)
     local offsetB_x, offsetB_y = getPosition(props.offseA_x, props.offsetB_y)
