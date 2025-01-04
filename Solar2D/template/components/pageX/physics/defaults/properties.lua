@@ -11,7 +11,7 @@ local M = {
       gravityY = 9.8,
       drawMode = "Hybrid"
   },
-  walls = {top=false, bottom=false, left=false, right=false}
+  walls = {top=false, bottom=true, left=false, right=false}
 }
 
 return M
