@@ -14,7 +14,7 @@ local model = {
       },
       {
         rect_1 = {
-          class={ "body", }  }
+        }
       },
     },
     audios = {
@@ -23,7 +23,7 @@ local model = {
     },
     timers = {  },
     variables = {  },
-    joints    = { },
+    joints    = {  "rect_0_touch",  },
     page = { "physics",  }
   },
   commands = {  },
