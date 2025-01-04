@@ -6,7 +6,10 @@ local util = require "lib.util"
 function M:setProps(layerProps)
   self.imageWidth  = layerProps.width/4
   self.imageHeight = layerProps.height/4
-  self.mX, self.mY   = app.getPosition(layerProps.x, layerProps.y, self.align)
+  -- self.mX, self.mY   = app.getPosition(layerProps.x, layerProps.y, self.align)
+  local editorWidth, editorHeight = display.contentWidth - 480, display.contentHeight -320
+  self.mX, self.mY   = layerProps.x*0.25 + editorWidth/2 , layerProps.y*0.25 + editorHeight/2
+
   layerProps.mX, layerProps.mY = self.mX, self.mY
   --
   self.randXStart  = app.getPosition(layerProps.randXStart)
