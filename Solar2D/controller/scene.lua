@@ -42,10 +42,10 @@ M.new = function(sceneName, model)
       --self.UI.sceneGroup = self.view
       --
       if self.UI.props.editing  then
-        self.UI.sceneGroup.x = display.contentCenterX
-        self.UI.sceneGroup.y = display.contentCenterY
-        self.UI.sceneGroup.anchorX = .5
-        self.UI.sceneGroup.anchorY = .5
+        -- self.UI.sceneGroup.x = display.contentCenterX
+        -- self.UI.sceneGroup.y = display.contentCenterY
+        -- self.UI.sceneGroup.anchorX = .5
+        -- self.UI.sceneGroup.anchorY = .5
       end
 
       self.view:insert(self.UI.sceneGroup)

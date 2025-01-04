@@ -177,7 +177,25 @@ function M.drawEllipse(UI)
       ellipse.xScale, ellipse.yScale = xScale, yScale
 
       if isFinal then
-        return ellipse
+         -- TODO                ---
+        local _props = json.decode(ellipse._properties)
+        _props.isNew = true
+        _props.shapedWith = "new_ellipse"
+        _props.name = "ellipse_"..#UI.layers
+        _props.x, _props.y = UI.sceneGroup:contentToLocal(_props.x, _props.y)
+
+        UI.scene.app:dispatchEvent {
+          name = "editor.classEditor.save",
+          UI = UI,
+          decoded = nil, --selectbox.decoded,
+          props = _props
+        }
+
+        Runtime:removeEventListener( "touch", touchListener )
+        Runtime:removeEventListener("key", onKeyEvent)
+        if onCreate then
+          onCreate("ended", _props)
+        end
       else
         tempShape = ellipse
       end
