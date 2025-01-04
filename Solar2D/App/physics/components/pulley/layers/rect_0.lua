@@ -2,12 +2,14 @@
 --
 local parent,root, M = newModule(...)
 local util = require("lib.util")
+local app = require "controller.Application"
+--
 local _layerProps = {
   name     = "rect_0",
-  x        = -24,
+  x        = -100,
   y        = -21,
-  width    =  59,
-  height    =  54,
+  width    =  70,
+  height    =  70,
   xScale = 1,
   yScale = 1,
   anchorX = 0,
@@ -26,9 +28,10 @@ end
 function M:create(UI)
   local layerProps = self.layerProps or _layerProps
   self.layerProps = layerProps
+  local x, y = app.getCenter(layerProps.x, layerProps.y)
   local obj = display.newRect(
-    layerProps.x,
-    layerProps.y,
+    x,
+    y,
     layerProps.width, layerProps.height)
   obj.xScale = layerProps.xScale
   obj.yScale = layerProps.yScale
