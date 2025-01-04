@@ -23,7 +23,7 @@ local model = {
     },
     timers = {  },
     variables = {  },
-    joints    = { },
+    joints    = {  "rect_0_rect_1_pulley",  },
     page = { "physics",  }
   },
   commands = {  },

@@ -1,4 +1,7 @@
 local M = {}
+local app = require "controller.Application"
+--
+
 --
 M.properties = {
   blendMode = "normal",

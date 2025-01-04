@@ -8,8 +8,8 @@ function M:create(UI)
     bodyA = "rect_0",
     bodyB = "rect_1",
     type = "friction", --pistoin, distance, pulle, + defaultSet
-    anchor_x = rect_0.x+rect_0.width/2,
-    anchor_y = rect_0.y+rect_0.height/2,
+    anchor_x = rect_1.x+rect_1.width/2,
+    anchor_y = rect_1.y+rect_1.height/2,
     maxForce = 0.5,
     maxTorque = 0.028
   }
