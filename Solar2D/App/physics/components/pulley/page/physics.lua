@@ -8,7 +8,7 @@ local M = {
     invert = false,
     scale = 1,
     gravityX = 0,
-    gravityY = 0,
+    gravityY = 1.0,
     drawMode = "hybrid", -- "hybrid" -- normal, debug
   }
 }
