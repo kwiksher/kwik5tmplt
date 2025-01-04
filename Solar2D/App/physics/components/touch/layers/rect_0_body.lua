@@ -14,7 +14,7 @@ function M:create(UI)
     isSensor = true,
     radius = NIL, -- NIL means use object width/2
     shape   ="rectangle", -- "circle", -- rectangle,  path
-    type = "static", -- kinematic, static, dynamic
+    type = "dynamic", -- kinematic, static, dynamic
   }
   self:_create(UI)
 
