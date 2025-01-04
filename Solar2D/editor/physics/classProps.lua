@@ -45,6 +45,8 @@ function M:tapListener(event, type)
     layerTableCommands.showFocus(layerTable)
   else
     self.activeProp = event.target.text
+    -- print("activeProp", event.target.text)
+    layerTable.classProps = self
     basePropsControl.handler[type](event, self)
   end
 end
@@ -90,20 +92,25 @@ function M:setActiveProp(layer, class)
     local bodyA_y = bodyA.field.text .. ".y"
     local bodyB_x = bodyB.field.text .. ".x"
     local bodyB_y = bodyB.field.text .. ".y"
+    local offsetA_x, offsetA_y, offsetB_x, offsetB_y = 0, 0, 0, 0
 
     if objA.shapedWith and objA.anchorX == 0 then
       bodyA_x = bodyA_x .."+".. bodyA.field.text ..".width/2"
       bodyA_y = bodyA_y.."+" .. bodyA.field.text ..".height/2"
+      offsetA_x = bodyA.field.text ..".width/2"
+      offsetA_y =  bodyA.field.text ..".height/2"
     end
 
-    if objB.shapedWith and objB.anchorY == 0 then
+    if objB and objB.shapedWith and objB.anchorY == 0 then
       bodyB_x = bodyA_x .."+".. bodyB.field.text ..".width/2"
       bodyB_y = bodyA_y.."+" .. bodyB.field.text ..".height/2"
+      offsetB_x =  bodyB.field.text ..".width/2"
+      offsetB_y =  bodyB.field.text ..".height/2"
     end
 
     if joint == "touch" then
       fields.anchor_x.field.text = bodyA_x
-      fields.anchor_x.field.text = bodyA_y
+      fields.anchor_y.field.text = bodyA_y
       pointA:setValue{x=objA.x + objA.width/2, y = objA.y + objA.height/2}
       pointA:setActiveEntry(bodyA)
       pointB:setValue()
@@ -120,6 +127,9 @@ function M:setActiveProp(layer, class)
         elseif joint == "distance" then
           fields.anchorA_x.field.text = bodyA_x
           fields.anchorA_y.field.text = bodyA_y
+        elseif joint == "rope" then
+          fields.offsetA_x.field.text = offsetA_x
+          fields.offsetA_y.field.text = offsetA_y
         elseif joint == "pulley" then
           fields.statA_x.field.text = bodyA_x
           fields.statA_y.field.text = bodyA_y
@@ -142,6 +152,9 @@ function M:setActiveProp(layer, class)
           fields.statB_y.field.text = bodyB_y
           fields.bodyB_x.field.text = bodyB_x
           fields.bodyB_y.field.text = bodyB_y
+        elseif joint == "rope" then
+          fields.offsetB_x.field.text = offsetB_x
+          fields.offsetB_y.field.text = offsetB_y
         elseif joint == "wheel" then
           fields.anchor_x.field.text = bodyB_x
           fields.anchor_y.field.text = bodyB_y

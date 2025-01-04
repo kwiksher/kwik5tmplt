@@ -502,7 +502,8 @@ function M:command()
       -- read from models/{class}/{name}.json
       local decoded = util.decode(book, page, params.class, name, {subclass = params.subclass, isNew = params.isNew, isDelete = params.isDelete}) -- this reads models/xx.json
       --
-      print("From selectors")
+      print("From selectors", decoded.class)
+      self.class = decoded.class or parms.class -- see physics controller uses for joint's pointA, pointB show/hide
       self.classProps:didHide(UI)
       self.classProps:destroy(UI)
       self.classProps:init(UI)
@@ -521,6 +522,7 @@ function M:command()
       self.classProps:create(UI)
       self.classProps:didShow(UI)
       self.classProps:show()
+      self:show()
       --
       -- action
       if self.actionbox then

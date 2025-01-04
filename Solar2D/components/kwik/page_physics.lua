@@ -7,35 +7,61 @@ local M = {
     scale = 1,
     gravityX = 0,
     gravityY = 9.8,
-    drawMode = "Hybrid"
+    drawMode = "Hybrid",
+    walls = {top=false, bottom=true, left=false, right=false}
   },
-  walls = {top=false, bottom=false, left=false, right=false}
 }
 --
-local W = display.viewableContentWidth
-local H = display.viewableContentHeight
+
+local centerX = display.contentCenterX
+local centerY = display.contentCenterY
+local areaWidth = 480
+local areaHeight = 320
+
+if system.orientation == "portrait" then
+  areaWidth = 320
+  areaHeight = 480
+end
+  -- Create horizontal guide lines
+  local topGuideLine = display.newLine(centerX- areaWidth / 2, centerY - areaHeight / 2, centerX + areaWidth / 2, centerY - areaHeight / 2)
+  topGuideLine.strokeWidth = 2
+  topGuideLine:setStrokeColor( 1, 1, 0, 0.5 ) -- Yellow color
+
+  local bottomGuideLine = display.newLine(centerX-areaWidth/2, centerY + areaHeight / 2, centerX + areaWidth / 2, centerY + areaHeight / 2)
+  bottomGuideLine.strokeWidth = 2
+  bottomGuideLine:setStrokeColor( 1, 1, 0, 0.5 ) -- Yellow color
+
+  -- Create vertical guide lines
+  local leftGuideLine = display.newLine(centerX - areaWidth / 2, centerY - areaHeight / 2, centerX - areaWidth / 2, centerY + areaHeight / 2)
+  leftGuideLine.strokeWidth = 2
+  leftGuideLine:setStrokeColor( 1, 1, 0, 0.5 ) -- Yellow color
+
+  local rightGuideLine = display.newLine(centerX + areaWidth / 2, centerY - areaHeight / 2, centerX + areaWidth / 2, centerY + areaHeight / 2)
+  rightGuideLine.strokeWidth = 2
+  rightGuideLine:setStrokeColor( 1, 1, 0, 0.5 ) -- Yellow color
 
 function M:init(UI)
   local props       = self.properties
-  local  walls = self.walls
+  local  walls = self.properties.walls
+  local sceneGroup = UI.sceneGroup
   if walls then
     if walls.top then
-      self.wT = display.newRect(W/2,-1,W,0)
+      self.wT = display.newRect(centerX,centerY-areaHeight/2,areaWidth,1)
       self.wT:setFillColor(0,0,0)
       sceneGroup:insert(self.wT)
      end
     if walls.bottom then
-      self.wB = display.newRect(W/2,H+1,W,1)
+      self.wB = display.newRect(centerX,centerY+areaHeight/2,areaWidth,1)
       sceneGroup:insert(self.wB)
       self.wB:setFillColor(0,0,0)
     end
     if walls.left then
-      self.wL = display.newRect(-1,H/2,0,H)
+      self.wL = display.newRect(centerX-areaWidth/2, centerY, 1, areaHeight)
       sceneGroup:insert(self.wL)
       self.wL:setFillColor(0,0,0)
     end
     if walls.right then
-      self.wR = display.newRect(W+1,H/2,0,H)
+      self.wR = display.newRect(centerX+areaWidth/2, centerY,1,areaHeight)
       sceneGroup:insert(self.wR)
       self.wR:setFillColor(0,0,0)
     end
@@ -46,6 +72,24 @@ function M:init(UI)
   print("physics.start",props.drawMode, props.gravityX, props.gravityY)
   physics.setGravity(props.gravityX, props.gravityY)
 
+end
+
+function M:create(UI)
+  local  walls = self.properties.walls
+  if walls then
+    if walls.top then
+      physics.addBody(self.wT, "static")
+     end
+    if walls.bottom then
+      physics.addBody(self.wB, "static")
+    end
+    if walls.left then
+      physics.addBody(self.wL, "static")
+    end
+    if walls.right then
+      physics.addBody(self.wR, "static")
+    end
+  end
 end
 --
 function M:didShow(UI)
@@ -67,21 +111,6 @@ function M:didShow(UI)
    Runtime:addEventListener("orientation", self.orientationHandler);
   end
   --
-  local  walls = self.walls
-  if walls then
-    if walls.top then
-      physics.addBody(self.wT, "static")
-     end
-    if walls.bottom then
-      physics.addBody(self.wB, "static")
-    end
-    if walls.left then
-      physics.addBody(self.wL, "static")
-    end
-    if walls.right then
-      physics.addBody(self.wR, "static")
-    end
-  end
 end
 
 function M:didHide()

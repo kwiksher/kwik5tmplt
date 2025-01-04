@@ -2,8 +2,13 @@ local M = {}
 
 function M:create(UI)
 {{#properties}}
+  {{^touch}}
   local {{bodyA}} = UI.sceneGroup["{{bodyA}}"]
   local {{bodyB}} = UI.sceneGroup["{{bodyB}}"]
+  {{/touch}}
+  {{#touch}}
+  local {{body}} = UI.sceneGroup["{{body}}"]
+  {{/touch}}
   self.name = "{{name}}"
   self.class ="joint"
   self.properties = {
@@ -16,6 +21,14 @@ function M:create(UI)
     maxForce = {{maxForce}},
     maxTorque = {{maxTorque}}
   {{/friction}}
+  {{#touch}}
+    body     = "{{body}}",
+    anchor_x = {{anchor_x}},
+    anchor_y = {{anchor_y}},
+    frequency = {{frequency}},
+    dampingRatio = {{dampingRatio}},
+    maxForce = {{maxForce}},
+  {{/touch}}
   {{#weld}}
     anchor_x = {{anchor_x}},
     anchor_y = {{anchor_y}},

@@ -49,7 +49,7 @@ local instance =
             UI = UI,
             class = props.class,
             isNew = false,
-            timer = props.target.joint
+            joint = props.target.joint
             -- toogle = true -- <========
           }
         else
