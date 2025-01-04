@@ -139,8 +139,10 @@ local function showLayerProps(layerTable, target)
     end
   else
     layerTable.selection = target
-    for i = 1, #layerTable.selections do
-      layerTable.selections[i].rect:setFillColor(0.8)
+    if layerTable.selections then
+      for i = 1, #layerTable.selections do
+        layerTable.selections[i].rect:setFillColor(0.8)
+      end
     end
     layerTable.selections = {target}
     target.isSelected = true
@@ -262,6 +264,7 @@ function M.commandHandler(layerTable, target, event)
       --
       local classProps = layerTable.classProps or classProps
       if classProps:setActiveProp(layer) then
+        layerTable.classProps = nil -- physycis has own classProps
         layerTable:hide()
         -- print("@@@ fromActive.class", fromActive.class)
         UI.editor.currentClass = fromActive.class

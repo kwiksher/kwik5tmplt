@@ -125,7 +125,7 @@ end
 
 -- layer
 
-local function tapListenerLayer(event)
+local function tapListenerLayer(event, classProps)
   local selectors = require(parent .. "selectors")
   selectors.componentSelector:onClick(true, "layerTable", true)
 end

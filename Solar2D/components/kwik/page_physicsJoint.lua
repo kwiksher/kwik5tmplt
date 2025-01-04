@@ -130,11 +130,11 @@ function M:create(UI)
     local statB_x, statB_y = getPosition(props.statB_x, props.statB_y)
     local bodyA_x, bodyA_y = getPosition(props.bodyA_x, props.bodyA_y)
     local bodyB_x, bodyB_y = getPosition(props.bodyB_x, props.bodyB_y)
-    print("@@@@ pulley",      statA_x, statA_y,
-      statB_x, statB_y,
-      bodyA_x, bodyA_y,
-      bodyB_x, bodyB_y,
-      props.ratio)
+    -- print("@@@@ pulley",      statA_x, statA_y,
+    --   statB_x, statB_y,
+    --   bodyA_x, bodyA_y,
+    --   bodyB_x, bodyB_y,
+    --   props.ratio)
 
     -- obj = physics.newJoint(props.type, bodyA, bodyB,
     --   bodyA.x, bodyA.y-100,
@@ -152,12 +152,15 @@ function M:create(UI)
 
   elseif props.type == "rope" then
     local offsetA_x, offsetA_y = getPosition(props.offsetA_x, props.offsetA_y)
-    local offsetB_x, offsetB_y = getPosition(props.offseA_x, props.offsetB_y)
+    local offsetB_x, offsetB_y = getPosition(props.offsetB_x, props.offsetB_y)
     obj = physics.newJoint( "rope", bodyA, bodyB, offsetA_x, offsetA_y, offsetB_x, offsetB_y )
   elseif props.type == "gear" then
     obj = physics.newJoint( "gear", bodyA, bodyB, props.joint1, props.joint2, props.ratio )
   elseif props.type == "touch" then
-    obj = physics.newJoint(props.type, bodyA, anchor_x, anchor_y)
+    obj = physics.newJoint(props.type, body, anchor_x, anchor_y)
+    obj.maxForce = props.maxForce
+    obj.frequency = props.frequency
+    obj.dampingRatio = props.dampingRatio
   else -- pivot
     -- print(props.type, bodyA, bodyB, anchor_x, anchor_y)
     obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y)
@@ -177,6 +180,7 @@ function M:create(UI)
     print("## Error creating a joint")
     return
   end
+  self.joint = obj
 end
 
 M._create = M.create

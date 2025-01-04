@@ -84,8 +84,14 @@ function M:useClassEditorProps(UI)
   end
   if self.class == "joint" then
     local objs = self.classProps.objs
-    local bodyA, bodyB, typeObj = objs[1], objs[2], objs[3]
-    props.name = bodyA.field.text.."_"..bodyB.field.text .."_"..typeObj.field.text
+    -- print("@@@@", objs[1], objs[2])
+    if objs[2].text == "_type" then
+      local body, typeObj = objs[1], objs[2]
+      props.name = body.field.text.."_"..typeObj.field.text
+    else
+      local bodyA, bodyB, typeObj = objs[1], objs[2], objs[3]
+      props.name = bodyA.field.text.."_"..bodyB.field.text .."_"..typeObj.field.text
+    end
     props.isNew = true
   end
   props.class = self.class
