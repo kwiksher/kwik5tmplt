@@ -13,9 +13,14 @@ local model = {
           class={ "body", }  }
       },
       {
-        rect_1 = {
+        ellipse_0 = {
           class={ "body", }  }
       },
+      {
+        ellipse_1 = {
+          class={ "body", }  }
+      },
+
     },
     audios = {
     },
@@ -23,7 +28,7 @@ local model = {
     },
     timers = {  },
     variables = {  },
-    joints    = { },
+    joints    = {  "rect_0_ellipse_0_wheel","rect_0_ellipse_1_wheel"  },
     page = { "physics",  }
   },
   commands = {  },

@@ -4,19 +4,18 @@ local parent,root, M = newModule(...)
 local util = require("lib.util")
 local app = require "controller.Application"
 --
-
 local _layerProps = {
-  name     = "rect_0",
-  x        = -75,
-  y        = -20,
-  width    =  150,
-  height    =  50,
+  name     = "rect_2",
+  x        = 382,
+  y        = 259,
+  width    =  220,
+  height    =  93,
   xScale = 1,
-  yScale = 1,
+  yScale = 0.422727,
   anchorX = 0,
   anchorY = 0,
   rotation = 0,
-  color    = { 0.4078431372549, 0.8, 0.8, 1 },
+  color    = { 0.8, 0.8, 0.8, 1 },
   shapedWith = "new_rectangle",
   imageFile = "",
   imageFolder = ""
@@ -29,7 +28,8 @@ end
 function M:create(UI)
   local layerProps = self.layerProps or _layerProps
   self.layerProps = layerProps
-  local x, y = app.getCenter(layerProps.x, layerProps.y)
+  -- local x, y = app.getCenter(layerProps.x, layerProps.y)
+  local x, y = layerProps.x, layerProps.y
   local obj = display.newRect(
     x,
     y,
