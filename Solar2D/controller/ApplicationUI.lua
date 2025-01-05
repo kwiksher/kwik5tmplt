@@ -30,6 +30,7 @@ function M.create(scene, model)
     UI.dynamictexts      = {}
     UI.variables        = {}
     UI.groups           = {}
+    UI.joints           = {}
     UI.timers           = {}
     UI.tSearch          = nil
     UI.lang             = "en"

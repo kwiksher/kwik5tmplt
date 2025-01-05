@@ -116,12 +116,13 @@ function M:create(UI)
     end
   elseif props.type == "wheel" then
     -- local axisX, axisY = getPosition(props.axisX, props.axisY)
+    -- print("@@@@@ wheel")
     obj = physics.newJoint(props.type, bodyA, bodyB, anchor_x, anchor_y, props.axisX, props.axisY)
     obj.springDampingRatio = props.springDampingRatio
     obj.springFrequency    = props.springFrequency
   elseif props.type == "distance" then
-    print("bodyA shapedWith class",bodyA.shapedWith, bodyA.class)
-    print("bodyA anchor",bodyA.anchorX, bodyA.anchorY)
+    -- print("bodyA shapedWith class",bodyA.shapedWith, bodyA.class)
+    -- print("bodyA anchor",bodyA.anchorX, bodyA.anchorY)
     local anchorA_x, anchorA_y= getPosition(props.anchorA_x, props.anchorA_y)
     local anchorB_x, anchorB_y= getPosition(props.anchorB_x, props.anchorB_y)
     obj = physics.newJoint(props.type, bodyA, bodyB, anchorA_x, anchorA_y, anchorB_x, anchorB_y)
@@ -155,7 +156,11 @@ function M:create(UI)
     local offsetB_x, offsetB_y = getPosition(props.offsetB_x, props.offsetB_y)
     obj = physics.newJoint( "rope", bodyA, bodyB, offsetA_x, offsetA_y, offsetB_x, offsetB_y )
   elseif props.type == "gear" then
-    obj = physics.newJoint( "gear", bodyA, bodyB, props.joint1, props.joint2, props.ratio )
+    local joint1 = UI.joints[props.joint1]
+    local joint2 = UI.joints[props.joint2]
+    -- printKeys(UI.joints)
+    obj = physics.newJoint( "gear", bodyA, bodyB, joint1, joint2, props.ratio )
+    if obj then print("Gear is created!!") end
   elseif props.type == "touch" then
     obj = physics.newJoint(props.type, body, anchor_x, anchor_y)
     obj.maxForce = props.maxForce
@@ -181,6 +186,7 @@ function M:create(UI)
     return
   end
   self.joint = obj
+  UI.joints[self.name] = obj
 end
 
 M._create = M.create
