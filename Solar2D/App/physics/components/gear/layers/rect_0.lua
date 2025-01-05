@@ -6,10 +6,10 @@ local app = require "controller.Application"
 --
 local _layerProps = {
   name     = "rect_0",
-  x        = -24,
-  y        = -21,
-  width    =  59,
-  height    =  54,
+  x        = -80,
+  y        = - 10,
+  width    =  240,
+  height    =  20,
   xScale = 1,
   yScale = 1,
   anchorX = 0,
