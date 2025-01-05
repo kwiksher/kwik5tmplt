@@ -15,7 +15,7 @@ local _layerProps = {
   anchorY = {{anchorY}},
   rotation = {{rotation}},
   {{#path}}
-   radius   = {{radius}}
+   radius   = {{radius}},
   {{/path}}
   {{#fill }}
   color    = { {{r}}, {{g}}, {{b}}, {{a}} },
@@ -36,8 +36,8 @@ function M:create(UI)
   self.imagePath = layerProps.name.."." .. (layerProps.type or ".png")
   local path = UI.props.imgDir..self.imagePath
   -- local path = system.pathForFile(UI.props.imgDir..self.imagePath, system.ResourceDirectory)
-  local x, y = app.getCenter(layerProps.x, layerProps.y)
-
+  -- local x, y = app.getCenter(layerProps.x, layerProps.y)
+  local x, y = layerProps.x, layerProps.y
   local obj = display.newCircle(
       x,
       y,
@@ -56,6 +56,10 @@ function M:create(UI)
   obj.rotation = layerProps.rotation or 0
 
   obj.layerIndex = #UI.layers+1
+
+  obj.xScale = layerProps.xScale
+  obj.yScale = layerProps.yScale
+
   UI.layers[obj.layerIndex] = obj
   UI.sceneGroup:insert(obj)
   UI.sceneGroup[obj.name] = obj

@@ -17,13 +17,14 @@ function M:create(UI)
       density = {{density}},
       friction = {{friction}},
       gravityScale = {{gravityScale}},
+      isFixedRotation = {{isFixedRotation}},
       isSensor = {{isSensor}},
       radius = {{radius}}, -- 0 means use object width/2 if cirlce is selected
       shape   ="{{shape}}", -- "circle", -- rectangle,  path
       type = "{{type}}", -- kinematic, static, dynamic
    {{/properties}}
   }
-
+  self:_create(UI)
 end
 
 return require("components.kwik.layer_physicsBody").set(M)

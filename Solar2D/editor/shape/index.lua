@@ -32,6 +32,17 @@ end
 function M:show()
 end
 
+local function countShapes(shape, objs)
+  local count = 0
+  for i, obj in next, objs do
+    if obj.name:find(shape) then
+      count = count +1
+    end
+  end
+  return count
+end
+
+
 local function getProps(obj, index)
   local _props = json.decode(obj._properties)
   _props.isNew = true -- recreate it for moving
@@ -92,7 +103,7 @@ function M.drawRect(UI, listener)
         local _props = json.decode(rectangle._properties)
         _props.isNew = true
         _props.shapedWith = "new_rectangle"
-        _props.name = "rect_"..#UI.layers
+        _props.name = "rect_"..countShapes("rect_", UI.layers)
         _props.x, _props.y = UI.sceneGroup:contentToLocal(_props.x, _props.y)
 
         UI.scene.app:dispatchEvent {
@@ -171,8 +182,17 @@ function M.drawEllipse(UI)
     local xScale = width/maxDistance
     local yScale = height/maxDistance
 
+    if M.controlDown then
+       if xScale > yScale then
+         yScale = xScale
+       else
+        xScale = yScale
+       end
+    end
+
     if xScale ~= 0 and yScale ~= 0 then
       local ellipse = display.newCircle( xStart, yStart, maxDistance*0.5 )
+      ellipse:setFillColor(0.8)
       ellipse.anchorX, ellipse.anchorY = anchorX, anchorY
       ellipse.xScale, ellipse.yScale = xScale, yScale
 
@@ -181,7 +201,7 @@ function M.drawEllipse(UI)
         local _props = json.decode(ellipse._properties)
         _props.isNew = true
         _props.shapedWith = "new_ellipse"
-        _props.name = "ellipse_"..#UI.layers
+        _props.name = "ellipse_"..countShapes("ellipse_", UI.layers)
         _props.x, _props.y = UI.sceneGroup:contentToLocal(_props.x, _props.y)
 
         UI.scene.app:dispatchEvent {
@@ -274,7 +294,7 @@ function M.drawText(UI, listener)
       local _props = json.decode(obj._properties)
       _props.isNew = true
       _props.shapedWith = "new_text"
-      _props.name = "text_"..#UI.layers
+      _props.name = "text_"..countShapes("text_", UI.layers)
       _props.font = "native.systemFont"
       _props.fontSize= props.size
       _props.text = obj.text

@@ -64,15 +64,15 @@ local instance = require("commands.kwik.baseCommand").new(
         -- printKeys(v)
         data.type = "group"
         if props.class:len() > 0  then
-          print("group class", v.class)
+          -- print("group class", v.class)
           params = require("App."..UI.book..".components."..UI.page..".groups."..v.layer.."_"..v.class)
         else
           params = require("App."..UI.book..".components."..UI.page..".groups."..v.layer)
         end
         model = getModel(params)
-        print(json.prettify(model))
+        -- print(json.prettify(model))
         table.insert(components.groups, model)
-    elseif props.class =="timer" then
+      elseif props.class =="timer" then
         params = require("App."..UI.book..".components."..UI.page..".timers."..v.timer)
         model = getModel(params)
         table.insert(components.timers, model)
@@ -86,7 +86,7 @@ local instance = require("commands.kwik.baseCommand").new(
         table.insert(components.joint, model)
       elseif props.class =="page" then
         table.insert(components.page, v.page)
-      elseif props.class then -- layer's class like linear, button, sprite ..
+      elseif props.class and props.class:len()>0 then -- layer's class like linear, button, sprite ..
         print("App."..UI.book..".components."..UI.page..".layers."..v.layer.."_"..v.class)
         params = require("App."..UI.book..".components."..UI.page..".layers."..v.layer.."_"..v.class)
         model = getModel(params)

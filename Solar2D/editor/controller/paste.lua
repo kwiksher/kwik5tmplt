@@ -66,14 +66,14 @@ function(params)
       indexEntries = indexModel.components.joints
       util:createNamesMap(indexEntries)
     elseif class == "page" then
-    elseif class then
+    elseif class and class:len() > 0 then
       mod = UI.editor:getClassModule(class) or {}
       entries = data.components.layers
       indexEntries = indexModel.components.layers
       isLayerClass = #entries == 1
       util:createNamesMapByLayer(indexEntries)
     else --class==nil
-      mod = {controller=require("editor.control.index")}
+      mod = {controller=require("editor.controller.index")}
       entries = data.components.layers
       indexEntries = indexModel.components.layers
       util:createNamesMapByLayer(indexEntries)
@@ -111,12 +111,29 @@ function(params)
           table.insert(updatedModel.components.variables, model.name)
         elseif class == "joint" then
           table.insert(updatedModel.components.joints, model.name)
+        elseif model.layerProps and model.layerProps.shapedWith then  -- shape
+          local props = model.layerProps
+          local newLayer = {}
+          newLayer[model.name] = {}
+          classFolder = "shape"
+          class = props.shapedWith
+          for k, v in pairs(props) do
+            if k == "color" then
+              model.fill = {r=v[1], g= v[2], b=v[3], a=v[4]}
+            elseif k == "radius" then
+              model.path = {radius = v}
+            elseif k~="name" then
+              model[k] = v
+            end
+          end
+          table.insert(updatedModel.components.layers, newLayer)
+        else
+          updatedModel = util.updateIndexModel(updatedModel, model.name, class, model.type)
         end
         --
         -- print ("@@@", model.name, class)
         -- print(json.prettify(model))
-
-        updatedModel = util.updateIndexModel(updatedModel, model.name, class, model.type)
+        --
         -- save lua
         if class == "timer" then
           files[#files+1] = controller:render(book, page, nil, model.name, model)
@@ -135,7 +152,7 @@ function(params)
         local layer = v.layer
         model.name = layer
         model.layer = layer
-        if model.properties.target then
+        if model.properties and model.properties.target then
           model.properties.target = layer
         end
         if data.type == "group" then
