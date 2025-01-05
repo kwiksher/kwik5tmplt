@@ -32,7 +32,7 @@ end
 function M:create(UI)
   local layerProps = self.layerProps or _layerProps
   self.layerProps = layerProps
-  layerProps.x, layerProps.y = app.getCenter(layerProps.x, layerProps.y)
+  -- layerProps.x, layerProps.y = app.getCenter(layerProps.x, layerProps.y)
 
   local  obj = display.newText(layerProps)
 
