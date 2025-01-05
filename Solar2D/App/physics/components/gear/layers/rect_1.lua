@@ -7,12 +7,12 @@ local app = require "controller.Application"
 
 local _layerProps = {
   name     = "rect_1",
-  x        = 9,
-  y        = -46,
-  width    =  55,
-  height    =  54,
+  x        = 160+5,
+  y        = -60,
+  width    =  20,
+  height    =  120,
   xScale = 1,
-  yScale = 0.981818,
+  yScale = 1,
   anchorX = 0,
   anchorY = 0,
   rotation = 0,
