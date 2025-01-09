@@ -4,23 +4,23 @@ local parent,root, M = newModule(...)
 local app = require "controller.Application"
 --
 local _layerProps = {
-  name     = "ellipse_1",
-  x        = display.contentCenterX,
-  y        = display.contentCenterY-80,
-  width    =  80,
-  height    =  80,
+  name     = "ellipse_0",
+  x        = 960/2 + 10 ,
+  y        = 337,
+  width    =  60,
+  height    =  60,
   xScale = 1,
   yScale = 1,
   anchorX = 0,
   anchorY = 0,
   rotation = 0,
-  radius   = 80,
-  color    = { 0.8, 0.8, 0.8, 1 },
+   radius   = 30,
+  color    = { 0, 1, 1, 1 },
   shapedWith = "new_ellipse"
 }
 --
 function M:init(UI)
---local sceneGroup = UI.sceneGroup
+  --local sceneGroup = UI.sceneGroup
 end
 --
 function M:create(UI)
@@ -32,10 +32,12 @@ function M:create(UI)
   -- local path = system.pathForFile(UI.props.imgDir..self.imagePath, system.ResourceDirectory)
   -- local x, y = app.getCenter(layerProps.x, layerProps.y)
   local x, y = layerProps.x, layerProps.y
+
   local obj = display.newCircle(
-    x,
-    y,
+      x,
+      y,
     layerProps.radius)
+    print("@@@@@", obj.x, obj.y)
   if obj == nil then
     obj = display.newText(layerProps)
   end

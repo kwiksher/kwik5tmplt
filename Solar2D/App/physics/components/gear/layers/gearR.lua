@@ -4,18 +4,18 @@ local parent,root, M = newModule(...)
 local app = require "controller.Application"
 --
 local _layerProps = {
-  name     = "ellipse_0",
-  x        = display.contentCenterX-80,
-  y        = display.contentCenterY-40,
-  width    =  40,
-  height    =  40,
+  name     = "gearR",
+  x        = display.contentCenterX,
+  y        = display.contentCenterY-80,
+  width    =  80,
+  height    =  80,
   xScale = 1,
   yScale = 1,
   anchorX = 0,
   anchorY = 0,
   rotation = 0,
-  radius   = 40,
-  color    = { 0.8, 0, 0.8, 1 },
+  radius   = 80,
+  color    = { 0.8, 0.8, 0.8, 1 },
   shapedWith = "new_ellipse"
 }
 --
