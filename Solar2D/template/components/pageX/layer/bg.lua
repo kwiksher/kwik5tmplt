@@ -21,11 +21,7 @@ function M:create(UI)
   local sceneGroup = UI.sceneGroup
   local properties = self.properties
 
-  local imageSuffix = display.imageSuffix
-  print( imageSuffix )
-  local scale = imageSuffix=="@2x" and 2 or 1
-  scale = imqgeSuffix == "@4x"  and 4 or scale
-  print(scale)
+  local scale = app.getImageSuffix()
 
   local x, y = app.getCenter(properties.x, properties.y)
   print(x, y)

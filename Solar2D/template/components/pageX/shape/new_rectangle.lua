@@ -59,12 +59,15 @@ function M:create(UI)
     obj.imageName = filename
     obj.imageFolder= folder
     filename = util.split(filename, ".")
-    local is2x4x = util.isFile(filename[1]..display.imageSuffix.."."..filename[2])
+    --
     local paint = {type= "image"}
-    if is2x4x then
-      paint.filename = filename[1]..display.imageSuffix.."."..filename[2]
-    else
+    if display.imageSuffix == nil then
       paint.filename = fullpath
+    else
+      local is2x4x = util.isFile(filename[1]..display.imageSuffix.."."..filename[2])
+      if is2x4x then
+        paint.filename = filename[1]..display.imageSuffix.."."..filename[2]
+      end
     end
     obj.fill =  paint
   end

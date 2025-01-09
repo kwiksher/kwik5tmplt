@@ -73,8 +73,7 @@ local instance =
 
       for i, obj in next, selections do
         local class = params.class or obj.class or props.class
-        local name
-        local path
+        local name, path, shapedWith
         if class == "audio" then
           path = "App/" .. book .. "/components/" .. page .. "/audios/" .. obj.subclass .. "/" .. obj.audio
           name = obj.subclass .. "." .. obj.audio
@@ -96,7 +95,7 @@ local instance =
           path = "App/" .. book .. "/components/" .. page .. "/joints/" .. obj.joint
           name = obj.joint
         elseif class == "page" then
-        elseif class then
+        elseif class and class:len() > 0 then
           path = "App/" .. book .. "/components/" .. page .. "/layers/" .. obj.layer .. "_" .. obj.class
           name = obj.layer
           if obj.parentObj then
@@ -105,13 +104,14 @@ local instance =
         else --class==nil
           path = "App/" .. book .. "/components/" .. page .. "/layers/" .. obj.layer
           name = obj.layer
+          shapedWith = UI.sceneGroup[name].shapedWith
         end
 
         print(name)
         local entry = util.namesMap[name]
         --
         if entry then
-          targets[#targets + 1] = {index = entry[1], layer=entry[2], path = path ..".lua", class = class}
+          targets[#targets + 1] = {index = entry[1], layer=entry[2], path = path ..".lua", class = class, shapedWith = shapedWith}
         end
         print(json.encode(targets))
       end
@@ -153,15 +153,19 @@ local instance =
           table.remove(entries, v.index)
         elseif v.class == "joint" then
           table.remove(entries, v.index)
+        elseif v.shapedWith then
+          table.remove(entries, v.index)
         else
           local classKey = getClass(layer)
           local updated = {}
-          for ii, vv in next, layer[classKey] do -- Notice
-            if vv ~= v.class then
-              updated[#updated + 1] = vv
+          if layer[classKey] then
+            for ii, vv in next, layer[classKey] do -- Notice
+              if vv ~= v.class then
+                updated[#updated + 1] = vv
+              end
             end
+            layer[classKey] = updated
           end
-          layer[classKey] = updated
         end
         files[#files + 1] = v.path
         targetsDelete[#targetsDelete + 1] = v.path
@@ -170,6 +174,8 @@ local instance =
       scripts.saveSelection(book, page, {{name = "deleted", class = class}})
       --
       print(json.prettify(indexModel))
+      print(json.prettify(targetsDelete))
+      --
       local indexFile = util.renderIndex(book, page, indexModel)
       files[#files + 1] = indexFile
       --

@@ -97,6 +97,8 @@ function M:render(models, xIndex, yIndex, parentObj)
     obj.layer = entry.name
     obj.class = ""
     obj.parentObj = parentObj
+    obj.shapedWith = UI.sceneGroup[entry.name].shapedWith
+
     -- obj.touch = commandHandler
     -- obj:addEventListener("touch", obj)
 

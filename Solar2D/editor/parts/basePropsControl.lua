@@ -268,10 +268,13 @@ end
 -- asset images
 --
 local imagePicker = require("editor.parts.imagePicker")
+local App = require("controller.Application")
+
 ---
 local function tapListenerImage(event)
   -- print("tap")
   local obj = event.target
+  local book = App.currentName
   --
   local function pickerListener(path)
     local fullpath = path or "App/bookFree/assets/images/canvas/bigCandice.png"
@@ -283,19 +286,21 @@ local function tapListenerImage(event)
 
     filename = editorUtil.split(filename, ".")
 
-    local is2x4x = util.isFile(filename[1] .. display.imageSuffix .. "." .. filename[2])
+    print(display.imageSuffix )
     local paint = {type = "image"}
-    if is2x4x then
-      paint.filename = filename[1] .. display.imageSuffix .. "." .. filename[2]
-    else
+    if display.imageSuffix == nil then
       paint.filename = fullpath -- "bookOne/images/bigCandice.png",
+    else
+      local is2x4x = util.isFile(filename[1] .. display.imageSuffix .. "." .. filename[2])
+      if is2x4x then
+        paint.filename = filename[1] .. display.imageSuffix .. "." .. filename[2]
+      end
     end
-
     obj.targetObject.fill = paint
   end
 
   local value = obj.field.text or ""
-  imagePicker.show(pickerListener, value, obj.page)
+  imagePicker.show(pickerListener, value, book, obj.page)
 end
 
 local function tapListenerEasing(event)

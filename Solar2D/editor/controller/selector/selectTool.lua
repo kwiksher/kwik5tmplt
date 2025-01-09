@@ -66,7 +66,9 @@ local command = function (params)
     elseif params.class == "new_rectangle" or params.class == "new_ellipse" or params.class == "new_text" then
       UI.scene.app:dispatchEvent{name="editor.classEditor.shape."..params.class,
         UI = UI}
-
+    elseif params.class == "new_image" then
+      native.showAlert("not implemented yet", "You can create a new rect and then click imageFile for browsing images")
+      return
     else
       propsButtons:hide()
       propsTable:hide()

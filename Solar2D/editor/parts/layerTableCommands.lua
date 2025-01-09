@@ -27,7 +27,7 @@ function M.mouseHandler(event)
     -- local posX, posY = event.target:contentToLocal(event.x, event.y)
     -- local posX, posY = event.target:localToContent(event.x, event.y)
     -- print(posX, posY)
-    buttons:showContextMenu(posX, event.y, {layer = event.target.layer, class = event.target.class, isMultiSelection = isMultiSelection})
+    buttons:showContextMenu(posX, event.y, {layer = event.target.layer, class = event.target.class, isMultiSelection = isMultiSelection, shapedWith=event.target.shapedWith})
   else
     -- print("@@@@not selected")
   end
