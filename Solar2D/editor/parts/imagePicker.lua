@@ -19,6 +19,7 @@ local M = {}
 local widget = require("widget")
 local util   = require("editor.util")
 local wildcard = require("extlib.wildcard")
+local json     = require("json")
 --
 local prevHover, hoverObj
 local mouseHover = require "extlib.plugin.mouseHover" -- the plugin is activated by default.
@@ -104,6 +105,9 @@ M.new = function(_params, listener)
   --images = loadImages(params.path or "App/bookFree/assets/images/page1/", params.baseDir or system.ResourceDirectory)
   local book = params.book or "book"
   local asset = util.readAssets(book, "images")
+
+  print(json.prettify(asset))
+
   -- scrollview
   local nTop, nLeft, nWidth, nHeight, nVert, nHor
   -- background
@@ -382,7 +386,7 @@ end
 ------------------------------------------------------------------------------------
 -- SHOW image PICKER
 ------------------------------------------------------------------------------------
-function imagePicker.show(listener, value, page)
+function imagePicker.show(listener, value, book, page)
 
   local blur = display.newRect( display.contentCenterX, display.contentCenterY, display.contentWidth, display.contentHeight )
   blur.x, blur.y = centerX, centerY
@@ -399,6 +403,7 @@ function imagePicker.show(listener, value, page)
       direction     = "right",
       currentImage = value,
       -- background = background
+      book = book,
      page = page,
      blur = blur
   }
