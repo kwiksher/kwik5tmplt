@@ -21,7 +21,7 @@ local _layerProps = {
   -- width    = nil, -- {{width}},
   font     = {{font}},
   fontSize = {{size}}, -- {{fontSize}}
-  align    = "{{align}}"  -- Alignment parameter
+  align    = "{{align}}",  -- Alignment parameter
   shapedWith    = "new_text"
 }
 --

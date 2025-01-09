@@ -240,6 +240,12 @@ function M.loadPage(UI)
   UI.editor.assetStore:set{value = {decoded=UI.editor.assets}}
 end
 
+function M.getImageSuffix()
+  local imageSuffix = display.imageSuffix
+  local scale = imageSuffix=="@2x" and 2 or 1
+  scale = imageSuffix == "@4x"  and 4 or scale
+  return scale
+end
 
 function M.new(Props)
     local app = display.newGroup()
