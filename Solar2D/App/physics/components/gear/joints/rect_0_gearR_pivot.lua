@@ -1,16 +1,22 @@
 local M = {}
 function M:create(UI)
-  local ellipse_1 = UI.sceneGroup["ellipse_1"]
-  local rect_1 = UI.sceneGroup["rect_1"]
-  self.name = "ellipse_1_rect_1_gear"
+  local rect_0 = UI.sceneGroup["rect_0"]
+  local gearR = UI.sceneGroup["gearR"]
+  self.name = "rect_0_gearR_pivot"
   self.class ="joint"
   self.properties = {
-    bodyA = "ellipse_1",
-    bodyB = "rect_1",
-    type = "gear", --pistoin, distance, pulle, + defaultSet
-    joint1="rect_0_ellipse_1_pivot",
-    joint2="rect_0_rect_1_piston",
-    ratio  = -1*40/80,
+    bodyA = "rect_0",
+    bodyB = "gearR",
+    type = "pivot", --pistoin, distance, pulle, + defaultSet
+    anchor_x = gearR.x+gearR.width/2,
+    anchor_y = gearR.y+gearR.height/2,
+    isMotorEnabled= false,
+    maxMotorTorque = 1000,
+    motorForce = 1,
+    motorSpeed = 10,
+    isLimitEnabled = false,
+    rotationX = 0,
+    rotationY = 0
   }
   self:_create(UI)
   --[[

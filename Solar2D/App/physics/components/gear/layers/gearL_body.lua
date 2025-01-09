@@ -1,11 +1,11 @@
 local M = {
-  name = "ellipse_0",
+  name = "gearL",
   class="body",
   dataPath = NIL, -- physicsEdtior(CodeAndWeb)
   dataShape ={}
 }
 function M:create(UI)
-  local ellipse_0 = UI.sceneGroup["ellipse_0"]
+  local gearL = UI.sceneGroup["gearL"]
   self.properties = {
     bounce = 1,
     density = 1,
