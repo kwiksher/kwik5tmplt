@@ -8,7 +8,7 @@ M.properties = {
   width     = 1920/4 ,
   name      = "bg",
   x         =  0, -- display.contentCenterX,
-  y         =  140, -- display.contentCenterY,
+  y         =  0, display.contentCenterY,
   alpha     = 1,
   color     = {1,1,1,1},
   textColor = {0,0,0,1}
@@ -37,7 +37,7 @@ function M:create(UI)
       fontSize = 10,
       align = "center",
       x = x,
-      y = layerProps.y,
+      y = properties.y,
   }
   local pageText = display.newText(options)
   pageText:setFillColor(unpack(properties.textColor))
