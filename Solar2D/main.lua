@@ -22,9 +22,9 @@ local common = {
 }
 
 require("controller.index").bootstrap{
-  name="shape",
+  name="physics",
   editing = true,
-  goPage = "rect",
+  goPage = "distance",
   language = "en",
   position = {x=0, y=0},
   common = common} -- scenes.index

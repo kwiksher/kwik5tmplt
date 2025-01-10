@@ -13,7 +13,7 @@ local M = {
     drawMode = "{{drawMode}}", -- "hybrid" -- normal, debug
     {{#walls}}
     walls = {
-      top={{top}}, bottom={{bottom}}, left={{left}}, right={{right}} }
+      top={{top}}, bottom={{bottom}}, left={{left}}, right={{right}}
     }
     {{/walls}}
    {{/properties}}
