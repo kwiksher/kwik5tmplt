@@ -1,6 +1,7 @@
 -- $.weight=
 --
 local scenes = {
+  "basic",
   "distance",
   "friction",
   "gear",
