@@ -41,7 +41,7 @@ local instance =
     local mod = UI.editor:getClassModule(class or "properties") or {controller = require("editor.controller.index")}
     local controller = mod.controller -- each tool.contoller can overide render/save. So page tools of audio, group, timer should use own render/save
     if props.shapedWith then
-      print("new layer")
+      -- print("new layer")
       local layer = props.name
       local updatedModel = util.createIndexModel(UI.scene.model)
       local index = params.index or #updatedModel.components.layers + 1
@@ -72,9 +72,9 @@ local instance =
       local layer = props.layer or UI.editor.currentLayer
       if layer == nil then
         layer = props.name
-        print("layer", layer, class)
+        -- print("layer", layer, class)
       else
-        print("layer", props.name, layer, class)
+        -- print("layer", props.name, layer, class)
       end
 
       if not props.isNew then

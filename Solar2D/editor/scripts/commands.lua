@@ -753,10 +753,11 @@ function M.publishForSelections(UI, args, controller, decoded)
     if target == nil or target:len() == 0 then
        native.showAlert( "alert", "Please select a layer or _target for creating a component")
       return false
+    else
+      selections =  {{text=target, class =UI.editor.currentClass, layer=target }}
     end
-    selections =  {{text=target, class =UI.editor.currentClass, layer=target }}
   else
-    selections = {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
+    -- selections = {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
   end
   -- print(json.prettify(selections))
   for i, obj in next, selections do

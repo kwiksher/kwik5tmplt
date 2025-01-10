@@ -27,7 +27,6 @@ mkdir models/$page
 
 cd components/$page
 cp "$newPageIndex" .
-echo $SCRIPT_DIR/$dst/editor/template/components/pageX/layer/bg.lua layers/bg.lua
-cp $SCRIPT_DIR/$dst/editor/template/components/pageX/layer/bg.lua layers/bg.lua
+cp $SCRIPT_DIR/$dst/template/components/pageX/layer/bg.lua layers/bg.lua
 cd $SCRIPT_DIR/$dst
 exit
