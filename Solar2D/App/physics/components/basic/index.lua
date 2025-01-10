@@ -10,16 +10,20 @@ local model = {
       },
       {
         rect_0 = {
-          class={ "body", }  }
+          class={ "body","force", }  }
       },
       {
         ellipse_0 = {
-          class={ "body", }  }
+          class={ "body","collision", }  }
       },
     },
     audios = {
     },
     groups = {
+      {
+        hitGroup = {
+        }
+      },
     },
     timers = {  },
     variables = {  },
