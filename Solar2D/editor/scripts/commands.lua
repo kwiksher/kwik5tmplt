@@ -651,6 +651,7 @@ function M.publish(UI, args, controller, decoded)
   ---
   -- local _dump = util.copyTable(model)
   -- print(json.encode(_dump))
+  print(json.prettify(model))
 
   local files = {}
   --
@@ -758,12 +759,12 @@ function M.publishForSelections(UI, args, controller, decoded)
     end
   else
     -- selections = {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
+    print(json.prettify(selections))
   end
-  -- print(json.prettify(selections))
   for i, obj in next, selections do
     if obj.parentObj then
       -- class has been set, so the layer == "witch/en/button"
-      layer = util.getLayerPath(target)
+      layer = util.getLayerPath(obj)
     else
       layer = obj.layer
     end
@@ -785,6 +786,7 @@ function M.publishForSelections(UI, args, controller, decoded)
     -- decoded[model.index].actionName = model.actionName
     -- decoded[model.index].name=model.name
     --
+    -- print(json.prettify(model))
     -- save lua
     files[#files + 1] = controller:render(book, page, layer, classFolder, class, model)
     -- save json

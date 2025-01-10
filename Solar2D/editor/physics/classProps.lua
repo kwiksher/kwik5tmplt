@@ -52,19 +52,19 @@ function M:tapListener(event, type)
 end
 
 M.onTapLayerSet = table:mySet{"_target", "_bodyA", "_bodyB", "_body"}
-M.onTapActionSet =  table:mySet{"onComplete"}
+M.onTapActionSet =  table:mySet{"onComplete", "onCollision"}
 M.onTapPosXYSet = table:mySet{"anchor_x", "anchorA_x", "anchorB_x", "statA_x", "stateB_x", "bodyA_x", "bodyB_x", "offsetA_x", "offsetB_x"}
 --
 function M:setActiveProp(layer, class)
-  -- print("setActiveProp", self.name)
+  print("setActiveProp", self.activeProp, layer, class)
   local name =self.activeProp
   local value = layer
   local UI = self.UI
   --
-  if self.activeProp =="othersGroup" then
+  if self.activeProp =="others" then
     -- print("@@@@", layer, class)
     for i,v in next, self.objs do
-      if v.text == "othersGroup" then
+      if v.text == "others" then
         v.field.text = layer
         break
       end

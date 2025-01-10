@@ -71,6 +71,9 @@ local instance =
         end
 
         if not props.isNew or #UI.editor.selections > 1 then
+
+          -- print(json.prettify(props))
+
           scripts.publishForSelections(
             UI,
             {
