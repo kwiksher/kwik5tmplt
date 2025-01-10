@@ -6,7 +6,7 @@ props.anchorName = "selectGroup"
 props.icons      = {"groups", "trash"}
 props.type       = "groups"
 
-local M = setmetatable({}, {__index=require(root.."parts.layerTable")})
+local M = setmetatable({name="groupTable"}, {__index=require(root.."parts.layerTable")})
 
 local bt = require(root .. "controller.BTree.btree")
 local tree = require(root .. "controller.BTree.selectorsTree")
@@ -49,6 +49,17 @@ function M:commandHandler(eventObj, event)
   if event.phase == "began" or event.phase == "moved" then
     return
   end
+  local UI = self.UI
+
+  local fromActive = { selections = {}, layer = UI.editor.currentLayer, class = UI.editor.currentClass}
+  print("fromActive", fromActive.layer, fromActive.class)
+  if UI.editor.selections then
+    for i, v in next, UI.editor.selections do
+      print("#", v.layer)
+      table.insert(fromActive.selections, v)
+    end
+  end
+
   layerTableCommands.clearSelections(self, "group")
 
   local target = eventObj -- or event.target
@@ -86,7 +97,16 @@ function M:commandHandler(eventObj, event)
       self.UI.editor.currentLayer = target.layer
       self.UI.editor:setCurrnetSelection(target.layer, target.name, "group") -- _type == group, page, sprite
       -- print("@@@@@@", target.layer, target.class)
-      classPropsPhysics:setActiveProp(target.layer, target.class)
+      if classPropsPhysics:setActiveProp(target.layer, target.class) then
+        self:hide()
+        UI.editor.currentClass = fromActive.class
+        UI.editor.currentLayer = fromActive.layer
+        -- print(UI.editor.currentLayer)
+        UI.editor.selections = fromActive.selections
+        -- local json = require("json")
+        -- print(json.prettify(UI.editor.selections))
+        return true
+      end
     end
   end
   -- print("@@@@", #self.selections)
@@ -173,7 +193,7 @@ function M:create(UI)
   -- --self.commandHandler = commands.commandHandler
 
   -- if self.rootGroup then return end
-
+  -- print(debug.traceback())
   self:initScene(UI)
   self.selections = {}
 
@@ -181,12 +201,14 @@ function M:create(UI)
 
   UI.editor.groupStore:listen(
     function(foo, fooValue)
+      -- local json = require("json")
+      -- print(json.prettify(fooValue))
       self:destroy()
       self.selection = nil
       self.selections = {}
       self.objs = {}
       self.iconObjs = {}
-      if fooValue.value then
+      if fooValue and fooValue.value then
         -- print("@@@@@", self.indentX, self.indentY)
         self.objs = self:render(fooValue.value, self.indentX, self.indentY)
         if #fooValue.value == 0 then
@@ -200,15 +222,21 @@ function M:create(UI)
       self.rootGroup["groupTable"] = self.group
 
       -- print(self.id,  #self.objs)
-      if fooValue.value  then
+      -- if #self.objs > 0 then
+      --   printKeys(self.objs[1])
+      -- end
+
+      if fooValue and fooValue.value  then
         -- print(debug.traceback())
         self:show()
       else
         self:hide()
       end
-      if fooValue.isActiveProp then
-        self.group.x = display.contentCenterX+120
-        self.group.y = display.contentCenterY-120
+      if fooValue and fooValue.isActiveProp then
+        self.group.oriX = self.group.x
+        self.group.oriY = self.group.y
+        self.group.x = display.contentCenterX+100
+        self.group.y = 50 --display.contentCenterY-120
       end
 
     end

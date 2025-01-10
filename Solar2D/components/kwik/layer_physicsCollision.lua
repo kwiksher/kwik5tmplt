@@ -3,7 +3,7 @@ local M = {
   properties = {
     isRemoveOther = true,
     isRemoveSelf = true,
-    othersGroup = ""
+    others = "",
   },
   actions = {
     { onCollision="" }
@@ -16,10 +16,18 @@ function M:didShow(UI)
   local props       = self.properties
   ---
   local obj = sceneGroup[self.name]
-  local others = props.othersGroup.members
-  for i, other in next, others do
-    print("others", i, other)
+
+  local function getOthers ()
+    if props.others and props.others:len() > 0 then
+      local mod = require("App."..UI.book..".components."..UI.page..".groups." ..props.others)
+      return mod.members
+    end
+    return {}
   end
+  local others = getOthers()
+  -- for i, other in next, others do
+  --     print("others", i, other)
+  --   end
   if obj== nil then print ("Error missing", self.name) return end
 
    local function onCollision(self, event)

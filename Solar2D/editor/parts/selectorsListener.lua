@@ -45,6 +45,7 @@ local function componentHandler(UI, storeTable, isActiveProp)
     elseif storeTable == "audioTable" then
       UI.editor.audioStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.audios}
     elseif storeTable == "groupTable" then
+      print("storeTable == groupTable")
       UI.editor.groupStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.groups or {}}
     elseif storeTable == "timerTable" then
       -- print(storeTable, #UI.scene.model.components.timers)
@@ -103,7 +104,7 @@ function M:addListener(UI, buttons, propsTable)
       if storeTable == "groupTable" then
         local groupTable = require("editor.group.groupTable")
         if isAcvtiveProp then
-          groupTable:setIndent(100, 0)
+          -- groupTable:setIndent(100, 0)
         else
           groupTable:setIndent(0,0)
         end

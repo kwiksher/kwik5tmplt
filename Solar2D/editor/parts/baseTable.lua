@@ -14,7 +14,7 @@ local contextButtons = require("editor.parts.buttons")
 local util = require("lib.util")
 
 local classProps = require("editor.parts.classProps")
-local debugName = "_layerTable"
+local debugName = "groupTable"
 
 M.x       = 100
 M.y       = 66 -- 44
@@ -428,7 +428,6 @@ end
 function M:show()
   if self.name == debugName then
     print(self.name, "show", #self.objs)
-    print(debug.traceback())
   end
   if self.group then
     self.group.isVisible = true
@@ -476,7 +475,7 @@ function M:hide()
 end
 --
 function M:destroy()
-  -- print(debug.traceback())
+  -- print(self.name)
    if self.name == debugName then
     print("`@@@", self.name, "destroy")
     -- print(debug.traceback())
