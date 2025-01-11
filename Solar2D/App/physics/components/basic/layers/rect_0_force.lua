@@ -1,12 +1,12 @@
 local M = {
-  name = NIL,
+  name = "rect_0",
   class="force",
   properties = {
     event = "touch",
     isInitial = false,
     isImpluse = true,
     type = "", -- push, none
-    xForce = 10,
+    xForce = 20,
     yForce = 10,
   }
 }

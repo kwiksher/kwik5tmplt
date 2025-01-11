@@ -129,14 +129,14 @@ function _M:create(UI)
 end
 
 function _M:addEventListener()
- print("addEventListener")
+--  print("addEventListener")
  if off == false then
   Runtime:addEventListener("key", onKeyEvent)
  end
 end
 
 function _M:removeEventListener(UI)
-  print("removeEventListener")
+  -- print("removeEventListener")
   if off == false then
     Runtime:removeEventListener("key", onKeyEvent)
   end

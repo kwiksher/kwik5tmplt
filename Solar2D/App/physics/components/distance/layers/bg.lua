@@ -22,13 +22,13 @@ function M:create(UI)
   local properties = self.properties
 
   local imageSuffix = display.imageSuffix
-  print( imageSuffix )
+  -- print( imageSuffix )
   local scale = imageSuffix=="@2x" and 2 or 1
   scale = imqgeSuffix == "@4x"  and 4 or scale
-  print(scale)
+  -- print(scale)
 
   local x, y = app.getCenter(properties.x, properties.y)
-  print(x, y)
+  -- print(x, y)
   local obj = display.newRect(x, y, properties.width*scale, properties.height*scale)
   obj:setFillColor(unpack(properties.color))
   sceneGroup:insert(obj)

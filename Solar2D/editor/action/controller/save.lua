@@ -61,11 +61,19 @@ local command = function (params)
     newAction.controller = controller
     UI.editor.currentActionForSave = function() return newAction.name, newAction.actions, newAction.controller end
     local partsButtons       = require("editor.parts.buttons")
-    local classProps    = require("editor.parts.classProps")
+    local classProps         = require("editor.parts.classProps")
+    local classPropsPhysics  = require("editor.physics.classProps")
     local actionEditor  = require("editor.action.index")
     actionTable.actionbox:setActiveProp(newAction.name)
+    --
     actionEditor:hide()
-    classProps:show()
+    --
+    if classProps.origVisible then
+      classProps:show()
+    end
+    if classPropsPhysics.origVisible then
+      classPropsPhysics:show()
+    end
     if classProps.type == "editor.timer.index" then
       for i, v in next, actionEditor.otherButtons do
         v:show()

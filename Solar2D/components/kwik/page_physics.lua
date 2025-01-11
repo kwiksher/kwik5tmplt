@@ -69,7 +69,7 @@ function M:init(UI)
   physics.start()
   physics.setDrawMode(props.drawMode)
   physics.setScale = props.scale
-  print("physics.start",props.drawMode, props.gravityX, props.gravityY)
+  -- print("physics.start",props.drawMode, props.gravityX, props.gravityY)
   physics.setGravity(props.gravityX, props.gravityY)
 
 end

@@ -1,20 +1,20 @@
 local physics = require("physics")
 
 local M = {
-  name = NIL, -- must be a layer name
-  properties = {
-    bounce = 0,
-    density = 0,
-    friction = 0,
-    gravityScale = NIL,
-    isFixedRotation = false,
-    isSensor = false,
-    radius = NIL,
-    shape   = "rectangle", -- circle -- rectangle,  path
-    type = "dynamic", -- dynamic, kinematic, static
-  },
-  dataPath = "", -- physicsEdtior(CodeAndWeb)
-  dataShape = {}
+  -- name = NIL, -- must be a layer name
+  -- properties = {
+  --   bounce = 0,
+  --   density = 0,
+  --   friction = 0,
+  --   gravityScale = NIL,
+  --   isFixedRotation = false,
+  --   isSensor = false,
+  --   radius = NIL,
+  --   shape   = "rectangle", -- circle -- rectangle,  path
+  --   type = "dynamic", -- dynamic, kinematic, static
+  -- },
+  -- dataPath = "", -- physicsEdtior(CodeAndWeb)
+  -- dataShape = {}
 }
 --
 
