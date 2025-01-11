@@ -12,7 +12,11 @@ local M = {
     others  =  "{{others}}"
     {{/properties}}
   },
-  actions = { onCollision="{{onCollision}}" },
+  actions = {
+    {{#actions}}
+      onCollision="{{onCollision}}"
+    {{/actions}}
+  },
 }
 
 return require("components.kwik.layer_physicsCollision").set(M)

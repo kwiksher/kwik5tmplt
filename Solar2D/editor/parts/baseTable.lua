@@ -14,7 +14,7 @@ local contextButtons = require("editor.parts.buttons")
 local util = require("lib.util")
 
 local classProps = require("editor.parts.classProps")
-local debugName = "groupTable"
+local debugName = "_groupTable"
 
 M.x       = 100
 M.y       = 66 -- 44

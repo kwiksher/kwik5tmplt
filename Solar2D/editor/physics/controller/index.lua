@@ -48,7 +48,7 @@ function M:setValue(decoded, index, template)
     local actions = decoded[index].actions
     if actions then
       for k, v in pairs (actions) do
-        props[#props+1] = {name=k, value=""}
+        props[#props+1] = {name=k, value=v}
       end
       self.actionbox:setValue(props)
       -- self.actionbox:initActiveProp(actions)
@@ -110,6 +110,15 @@ function M:useClassEditorProps(UI)
   props.class = self.class
   --
   -- props.actionName =self.actionbox.value
+
+  if self.actionbox then
+    props.actions =self.actionbox:getValue()
+  end
+  --
+  -- if self.picker then
+  --   props.name = picker:getValue()
+  -- end
+
   return props
 end
 

@@ -30,7 +30,7 @@ local model = {
     joints    = {  },
     page = { "physics",  }
   },
-  commands = {  },
+  commands = {   "testPhysics",  },
   onInit = function(scene) print("onInit") end
 }
 local scene = require('controller.scene').new(sceneName, model)

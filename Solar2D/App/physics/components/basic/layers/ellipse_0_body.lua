@@ -13,7 +13,7 @@ function M:create(UI)
     gravityScale = 1,
     isFixedRotation = false,
     isSensor = false,
-    radius = 10, -- 0 means use object width/2 if cirlce is selected
+    radius = 0, -- 0 means use object width/2 if cirlce is selected
     shape   ="circle", -- "circle", -- rectangle,  path
     type = "", -- kinematic, static, dynamic
   }

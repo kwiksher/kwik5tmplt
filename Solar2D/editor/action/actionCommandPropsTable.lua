@@ -214,8 +214,9 @@ end
 --
 --
 local Animation = table:mySet{"linear", "blink", "bounce", "pulse", "rotaion", "tremble"}
-local Layer     = table:mySet{"image", "layer", "audio", "variable"}
+local Layer     = table:mySet{"image", "layer", "audio", "variable", "physics"}
 local Layer_Class = table:mySet{ "button", "countdown", "filter", "multiplier", "particles", "sprite", "readme", "video", "web"}
+
 --
 function M:setActiveProp(layer, class)
   -- print("setActiveProp", self.activeProp, layer, class)
