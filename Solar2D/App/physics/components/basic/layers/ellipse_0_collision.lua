@@ -9,6 +9,8 @@ local M = {
     isRemoveSelf = true,
     others  =  "hitGroup"
   },
-  actions = { onCollision="" },
+  actions = {
+    onCollision="testPhysics"
+  },
 }
 return require("components.kwik.layer_physicsCollision").set(M)

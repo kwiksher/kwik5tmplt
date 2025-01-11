@@ -84,7 +84,8 @@ end
 
 local buttons            = require("editor.action.buttons")
 local partsButtons       = require("editor.parts.buttons")
-local classProps    = require("editor.parts.classProps")
+local classProps         = require("editor.parts.classProps")
+local classPropsPhysics  = require("editor.physics.classProps")
 local actionTable = require("editor.action.actionTable")
 --
 M.otherButtons = {}
@@ -103,7 +104,13 @@ function M:showActionTable(actionbox, isNew)
       isNew = true,
       UI = self.UI
     }
+
+    classProps.origVisible = classProps.isVisible
     classProps:hide()
+
+    classPropsPhysics.origVisible = classPropsPhysics.isVisible
+    classPropsPhysics:hide()
+
     if classProps.type == "editor.timer.index" then
       for i, v in next, self.otherButtons do
         v:hide()

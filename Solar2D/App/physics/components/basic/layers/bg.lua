@@ -24,7 +24,7 @@ function M:create(UI)
   local scale = app.getImageSuffix()
 
   local x, y = app.getCenter(properties.x, properties.y)
-  print(x, y)
+  -- print(x, y)
   local obj = display.newRect(x, y, properties.width*scale, properties.height*scale)
   obj:setFillColor(unpack(properties.color))
   sceneGroup:insert(obj)
