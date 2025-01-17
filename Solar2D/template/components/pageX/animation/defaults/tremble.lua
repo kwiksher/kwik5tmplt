@@ -1,5 +1,5 @@
 local M = {
-  name = "tremble",
+  name = "tremble0",
   class="Tremble",
   from = {
     x = nil,
@@ -30,7 +30,8 @@ local M = {
     resetAtEnd=false,
     easing=NIL,
     xSwipe=nil,
-    ySwipe=nil
+    ySwipe=nil,
+    useLang = false
   },
   breadcrumbs = nil,
   layerOptions = {

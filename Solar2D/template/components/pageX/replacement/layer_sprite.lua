@@ -1,7 +1,7 @@
-local name = ...
-local parent,root = newModule(name)
+local parent,root, M = newModule(...)
+local layerProps = require(M.layerMod).layerProps
+
 local json = require("json")
-local layerProps = require(parent.."{{layer}}")
 
 local M = {
   name ="{{name}}",

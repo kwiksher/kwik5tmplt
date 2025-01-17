@@ -1,5 +1,5 @@
 local M = {
-  name = "linear",
+  name = "linear0",
   class="Linear",
   from = {
     x = 0,
@@ -27,8 +27,9 @@ local M = {
     reverse=false,
     resetAtEnd=false,
     easing="inCircular",
-    xSwipe=nil,
-    ySwipe=nil
+    xSwipe=false,
+    ySwipe=false,
+    useLang = false
   },
   audio = {
     name = "",

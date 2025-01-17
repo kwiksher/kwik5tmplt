@@ -33,6 +33,8 @@ function M:init(UI)
   assetTable:init(UI, display.contentCenterX, 40, self.width*0.74, self.height)
   classProps:init(UI, self.x + self.width*1.5, self.y,  self.width, self.height)
   classProps.model = model.props
+  classProps.type  = current
+
   classProps.UI = UI
   --
   --actionbox:init(UI)

@@ -34,7 +34,7 @@ local flipSet = {
 }
 
 M.dragHandler = function(self, event)
-  local props = self.properties
+  local props = self.properties or {}
   local UI = self.UI
   local target = event.target
   local dropArea = target.dropArea
@@ -132,7 +132,7 @@ function M:activate(obj)
   if obj == nil then
     return
   end
-  local props = self.properties
+  local props = self.properties or {boundaries = {}}
   ---
   local options = {}
   if props.constrainAngle then
@@ -162,13 +162,13 @@ function M:activate(obj)
   -- obj.dragHandler = self.dragHandler
   -- self.obj = obj
   self.listener = function(event)
-    -- print("event")
+    print("event")
     -- self has the all the props of layer_drag, obj does not have them
     --   see setmetatable is used for the model not to object
     self:dragHandler(event)
   end
   -- print(MultiTouch.MULTITOUCH_EVENT)
-  -- obj:addEventListener( MultiTouch.MULTITOUCH_EVENT, self.listener)
+  obj:addEventListener( MultiTouch.MULTITOUCH_EVENT, self.listener)
 end
 
 function M:deactivate(obj)

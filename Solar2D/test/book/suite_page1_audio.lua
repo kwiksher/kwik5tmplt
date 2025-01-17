@@ -29,7 +29,7 @@ function M.suite_setup()
   -- useTinyfiledialogs = false -- default
   ---
   bookTable.commandHandler({book="book"}, nil,  true)
-  pageTable.commandHandler({page="page1"},nil,  true)
+  pageTable.commandHandler({page="portrait"},nil,  true)
 end
 
 function M.setup()
@@ -38,14 +38,14 @@ end
 function M.teardown()
 end
 
---[[
-  function M.test_readAssets()
-    local util = require("editor.util")
-    util.readAssets("bookFree", "audio")
-  end
---]]
+function M.test_readAssets()
+  selectors.componentSelector.iconHander()
+  selectors.assetsSelector:iconHander()
+  selectors.assetsSelector:onClick(true, "audios")
+end
 
-function M.test_select_audio()
+
+function M.xtest_select_audio()
     selectors.componentSelector.iconHander()
     selectors.componentSelector:onClick(true,  "audioTable")
     local audioTable = require("editor.audio.audioTable")

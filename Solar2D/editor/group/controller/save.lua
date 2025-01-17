@@ -13,19 +13,26 @@ local instance = require("commands.kwik.baseCommand").new(
     print(name)
     -- for i, v in next, layersTable.objs do print(i, v.text) end
 
+    print("properties")
+    local newName
+    for i, v in next, props.properties do
+      print("", i ,v.name, v.value)
+      if v.name == "_name" then
+        newName = v.value
+        break
+      end
+    end
+
     local updatedModel = util.createIndexModel(UI.scene.model)
-    if props.isNew then
+    local index = params.index or #updatedModel.components.groups + 1
+    if props.isNew or controller.isNew then
       print("new group")
-      local index = params.index or #updatedModel.components.groups + 1
-      local newGroup = {name=props.name}
+      local newGroup = {name=newName}
       table.insert(updatedModel.components.groups, index, newGroup)
       print(json.prettify(updatedModel))
     elseif not props.isMove then
-    end
-
-    print("properties")
-    for i, v in next, props.properties do
-      print("", i ,v.name, v.value)
+    else
+      updatedModel.components.groups[index] = {name = newName}
     end
 
     print("members(layerTable)")
@@ -33,14 +40,11 @@ local instance = require("commands.kwik.baseCommand").new(
       print(i,  v)
     end
     props.members = props.layersTable
-
     -- for k, v in pairs(props.layersTable) do print("", k ,v.text) end
-
-
     scripts.publish(UI, {
       book=UI.editor.currentBook, page=UI.editor.currentPage or UI.page,
       updatedModel = updatedModel,
-      layer = props.name,
+      layer = newName,
       class = "group",
       props = props},
       controller)

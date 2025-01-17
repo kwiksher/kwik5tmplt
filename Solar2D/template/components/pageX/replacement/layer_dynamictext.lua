@@ -1,5 +1,5 @@
-local name = ...
-local parent,root = newModule(name)
+local parent,root, M = newModule(...)
+local layerProps = require(M.layerMod).layerProps
 --
 -- see pageX/layer/layer_text.lua
 --
@@ -22,7 +22,7 @@ local M = {
   },
 }
 --
-M.layerProps = require(parent.."{{layer}}")
+M.layerProps = layerProps
 --
 M.x = M.layerProps.mX
 M.y = M.layerProps.mY

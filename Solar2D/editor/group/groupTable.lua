@@ -6,7 +6,7 @@ props.anchorName = "selectGroup"
 props.icons      = {"groups", "trash"}
 props.type       = "groups"
 
-local M = setmetatable({}, {__index=require(root.."parts.layerTable")})
+local M = setmetatable({name="groupTable"}, {__index=require(root.."parts.layerTable")})
 
 local bt = require(root .. "controller.BTree.btree")
 local tree = require(root .. "controller.BTree.selectorsTree")
@@ -49,6 +49,17 @@ function M:commandHandler(eventObj, event)
   if event.phase == "began" or event.phase == "moved" then
     return
   end
+  local UI = self.UI
+
+  local fromActive = { selections = {}, layer = UI.editor.currentLayer, class = UI.editor.currentClass}
+  print("fromActive", fromActive.layer, fromActive.class)
+  if UI.editor.selections then
+    for i, v in next, UI.editor.selections do
+      print("#", v.layer)
+      table.insert(fromActive.selections, v)
+    end
+  end
+
   layerTableCommands.clearSelections(self, "group")
 
   local target = eventObj -- or event.target
@@ -82,13 +93,25 @@ function M:commandHandler(eventObj, event)
   elseif self.controlDown then -- mutli selections
     layerTableCommands.multiSelections(self, target)
   else
-    if layerTableCommands.singleSelection(self, target) then
+    if layerTableCommands.singleSelection(self, target, true) then -- isNotLayer == true
       self.UI.editor.currentLayer = target.layer
       self.UI.editor:setCurrnetSelection(target.layer, target.name, "group") -- _type == group, page, sprite
       -- print("@@@@@@", target.layer, target.class)
-      classPropsPhysics:setActiveProp(target.layer, target.class)
+      if classPropsPhysics:setActiveProp(target.layer, target.class) then
+        self:hide()
+        UI.editor.currentClass = fromActive.class
+        UI.editor.currentLayer = fromActive.layer
+        -- print(UI.editor.currentLayer)
+        UI.editor.selections = fromActive.selections
+        -- local json = require("json")
+        -- print(json.prettify(UI.editor.selections))
+        return true
+      end
     end
   end
+  -- print("@@@@", #self.selections)
+  self.UI.editor.selections = self.selections
+
   return true
 
 end
@@ -107,27 +130,36 @@ function M:commandHandlerClass(target, event)
   --
   buttons:hide()
   --
+  UI.editor:setCurrnetSelection(target.layer, class, "group") -- _type == group, page, sprite
+  -- print("@@@@", UI.editor.currentType)
+
   if self:isAltDown() then
     -- print("", "isAltDown")
     --showClassProps(self, target, "group")
-    tree.backboard = {
-      show = true,
-      group  = target.layer,
-      class = class
-    }
-    -- for instance, obj.animation = "animA", obj.group = "grouA"
-    --  see obj[self.id] = name in render
-    --
-    --tree.backboard[self.id] = target[self.id],
-    tree:setConditionStatus("select component", bt.SUCCESS, true)
-    tree:setActionStatus("load "..self.id, bt.RUNNING, true)
-    tree:setConditionStatus("select "..self.id, bt.SUCCESS)
+    if self.selection ~= target then
+      self.selection = target
+      for i = 1, #self.selections do
+        self.selections[i].rect:setFillColor(0.8)
+      end
+      --
+      self.selections = {target}
+      target.isSelected = true
+      target.rect:setFillColor(0,1,0)
+
+      UI.scene.app:dispatchEvent {
+        name = "editor.selector.selectTool",
+        UI = UI,
+        class = target.class,
+        isNew = false,
+        layer = layerName,
+      }
+    end
 
   elseif self:isControlDown() then -- mutli selections
     -- print("", "isControlDown")
     layerTableCommands.multiSelections(self, target)
   else
-    if layerTableCommands.singleSelection(self, target) then
+    if layerTableCommands.singleSelection(self, target, true) then -- isNotLayer
       -- print("", "singleSelection")
       actionCommandPropsTable:setActiveProp(target.layer, target.class)
       classProps:setActiveProp(target.layer, target.class)
@@ -136,6 +168,7 @@ function M:commandHandlerClass(target, event)
     end
   end
   UI.editor.selections = self.selections
+  -- print("@@@@", UI.editor.currentType)
   return true
 end
 
@@ -145,6 +178,7 @@ local buttons = require("editor.parts.buttons")
 -- See group = true makes rename for handleing group
 function M.mouseHandler(event)
   if event.isSecondaryButtonDown and event.target.isSelected then
+    -- printKeys(event.target)
     buttons:showContextMenu(posX, event.y, {layer = event.target.layer, group = true, class = event.target.class, isMultiSelection = isMultiSelection})
   else
     -- print("@@@@not selected")
@@ -159,7 +193,7 @@ function M:create(UI)
   -- --self.commandHandler = commands.commandHandler
 
   -- if self.rootGroup then return end
-
+  -- print(debug.traceback())
   self:initScene(UI)
   self.selections = {}
 
@@ -167,12 +201,14 @@ function M:create(UI)
 
   UI.editor.groupStore:listen(
     function(foo, fooValue)
+      -- local json = require("json")
+      -- print(json.prettify(fooValue))
       self:destroy()
       self.selection = nil
       self.selections = {}
       self.objs = {}
       self.iconObjs = {}
-      if fooValue.value then
+      if fooValue and fooValue.value then
         -- print("@@@@@", self.indentX, self.indentY)
         self.objs = self:render(fooValue.value, self.indentX, self.indentY)
         if #fooValue.value == 0 then
@@ -186,15 +222,21 @@ function M:create(UI)
       self.rootGroup["groupTable"] = self.group
 
       -- print(self.id,  #self.objs)
-      if fooValue.value  then
+      -- if #self.objs > 0 then
+      --   printKeys(self.objs[1])
+      -- end
+
+      if fooValue and fooValue.value  then
         -- print(debug.traceback())
         self:show()
       else
         self:hide()
       end
-      if fooValue.isActiveProp then
-        self.group.x = display.contentCenterX+120
-        self.group.y = display.contentCenterY-120
+      if fooValue and fooValue.isActiveProp then
+        self.group.oriX = self.group.x
+        self.group.oriY = self.group.y
+        self.group.x = display.contentCenterX+100
+        self.group.y = 50 --display.contentCenterY-120
       end
 
     end

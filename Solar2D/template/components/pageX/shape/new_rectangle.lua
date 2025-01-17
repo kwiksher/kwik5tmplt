@@ -2,7 +2,8 @@
 --
 local parent,root, M = newModule(...)
 local util = require("lib.util")
-
+local app = require "controller.Application"
+--
 local _layerProps = {
   name     = "{{name}}",
   x        = {{x}},
@@ -29,10 +30,12 @@ end
 function M:create(UI)
   local layerProps = self.layerProps or _layerProps
   self.layerProps = layerProps
+  -- local x, y = app.getCenter(layerProps.x, layerProps.y)
+  local x, y = layerProps.x, layerProps.y
 
   local obj = display.newRect(
-      layerProps.x,
-      layerProps.y,
+      x,
+      y,
       layerProps.width, layerProps.height)
 
   obj.xScale = layerProps.xScale
@@ -56,12 +59,15 @@ function M:create(UI)
     obj.imageName = filename
     obj.imageFolder= folder
     filename = util.split(filename, ".")
-    local is2x4x = util.isFile(filename[1]..display.imageSuffix.."."..filename[2])
+    --
     local paint = {type= "image"}
-    if is2x4x then
-      paint.filename = filename[1]..display.imageSuffix.."."..filename[2]
-    else
+    if display.imageSuffix == nil then
       paint.filename = fullpath
+    else
+      local is2x4x = util.isFile(filename[1]..display.imageSuffix.."."..filename[2])
+      if is2x4x then
+        paint.filename = filename[1]..display.imageSuffix.."."..filename[2]
+      end
     end
     obj.fill =  paint
   end

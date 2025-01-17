@@ -2,6 +2,9 @@ local current = ...
 local parent,root, M = newModule(current)
 --
 local model      = require("editor.physics.model")
+local json       = require("json")
+local yaml = require("server.yaml")
+
 
 local selectIndex = 1
 
@@ -16,7 +19,10 @@ function M:setValue(decoded, index, template)
       --self.selectbox:setTemplate(decoded)  -- "linear 1", "rotation 1" ...
       --local value = self.selectbox.model[selectIndex]
       self.selectbox:setValue({})
-      decoded.properties["_body"] = self.layer
+      -- print("@@@@", decoded.class)
+      if decoded.class ~= "page" then
+        decoded.properties["_body"] = self.layer
+      end
       self.classProps:setValue(decoded)
     end
     self.class = decoded.class
@@ -42,7 +48,7 @@ function M:setValue(decoded, index, template)
     local actions = decoded[index].actions
     if actions then
       for k, v in pairs (actions) do
-        props[#props+1] = {name=k, value=""}
+        props[#props+1] = {name=k, value=v}
       end
       self.actionbox:setValue(props)
       -- self.actionbox:initActiveProp(actions)
@@ -70,10 +76,20 @@ function M:useClassEditorProps(UI)
     local name = obj.text
     local value = obj.field.text
     name = name:gsub("_body", "body")
-    props.properties[#props.properties + 1] = {name = name, value=value}
     if name == "_type" then
       props.properties[#props.properties + 1] = {name=value, value=true}
+    elseif name == "walls" then
+      local  v= yaml.eval("{"..value.."}")
+      -- print(json.prettify(v))
+      local _value ={}
+      for k, _v in pairs(v) do
+        _value[k] = tostring(_v)
+      end
+      props.properties[#props.properties + 1] = {name = name, value=_value}
+    else
+      props.properties[#props.properties + 1] = {name = name, value=value}
     end
+
     if name == "body" then
       -- props.name = value
       props.layer = value
@@ -81,13 +97,28 @@ function M:useClassEditorProps(UI)
   end
   if self.class == "joint" then
     local objs = self.classProps.objs
-    local bodyA, bodyB, typeObj = objs[1], objs[2], objs[3]
-    props.name = bodyA.field.text.."_"..bodyB.field.text .."_"..typeObj.field.text
+    -- print("@@@@", objs[1], objs[2])
+    if objs[2].text == "_type" then
+      local body, typeObj = objs[1], objs[2]
+      props.name = body.field.text.."_"..typeObj.field.text
+    else
+      local bodyA, bodyB, typeObj = objs[1], objs[2], objs[3]
+      props.name = bodyA.field.text.."_"..bodyB.field.text .."_"..typeObj.field.text
+    end
     props.isNew = true
   end
   props.class = self.class
   --
   -- props.actionName =self.actionbox.value
+
+  if self.actionbox then
+    props.actions =self.actionbox:getValue()
+  end
+  --
+  -- if self.picker then
+  --   props.name = picker:getValue()
+  -- end
+
   return props
 end
 

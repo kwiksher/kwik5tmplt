@@ -1,3 +1,6 @@
+local parent,root, M = newModule(...)
+local layerProps = require(M.layerMod).layerProps
+
 local M = {
   loop = true,
   rewind = true,
@@ -8,8 +11,6 @@ local M = {
 }
 --
 M.singleNames = {"PagePrevM", "PageNextM"}
---
-local layerProps = require(parent.."{{layer}}")
 --
 M.x = layerProps.x
 M.y = layerProps.y

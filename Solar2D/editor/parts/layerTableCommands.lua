@@ -1,6 +1,5 @@
 local name = ...
 local parent, root = newModule(name)
-local util = require("editor.util")
 
 local M = {} -- layerTable
 local bt = require(root .. "controller.BTree.btree")
@@ -10,6 +9,7 @@ local propsTable = require(parent .. "propsTable")
 local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
 local classProps = require("editor.parts.classProps")
 local buttons = require("editor.parts.buttons")
+local util = require("editor.util")
 
 local posX = display.contentCenterX * 0.4
 
@@ -27,7 +27,7 @@ function M.mouseHandler(event)
     -- local posX, posY = event.target:contentToLocal(event.x, event.y)
     -- local posX, posY = event.target:localToContent(event.x, event.y)
     -- print(posX, posY)
-    buttons:showContextMenu(posX, event.y, {layer = event.target.layer, class = event.target.class, isMultiSelection = isMultiSelection})
+    buttons:showContextMenu(posX, event.y, {layer = event.target.layer, class = event.target.class, isMultiSelection = isMultiSelection, shapedWith=event.target.shapedWith})
   else
     -- print("@@@@not selected")
   end
@@ -104,8 +104,7 @@ local function singleSelection(layerTable, target, isNotLayer)
     if not isNotLayer then
       UI.editor:setCurrnetSelection()
       if target.layer and target.layer:len() then
-        local name = util.getLayerNameWithParent(target)
-        -- print("@@@@@", name)
+        local name = util.getLayerPath(target)
         UI.editor.currentLayer = name
       else
         print("Warning target.layer is not found")
@@ -140,8 +139,10 @@ local function showLayerProps(layerTable, target)
     end
   else
     layerTable.selection = target
-    for i = 1, #layerTable.selections do
-      layerTable.selections[i].rect:setFillColor(0.8)
+    if layerTable.selections then
+      for i = 1, #layerTable.selections do
+        layerTable.selections[i].rect:setFillColor(0.8)
+      end
     end
     layerTable.selections = {target}
     target.isSelected = true
@@ -163,7 +164,7 @@ local function showFocus(layerTable)
     local name = v.layer
     -- print(i, v.layer)
     if v.parentObj then
-      name = v.parentObj.layer.."/"..v.layer
+      name = util.getLayerPath(v)
       -- print("", name)
     end
     local obj = UI.sceneGroup[name]
@@ -244,10 +245,12 @@ function M.commandHandler(layerTable, target, event)
       -- print("", "singleSelection")
       local layer = target.layer
       if target.parentObj then
-        layer = target.parentObj.layer .."/" .. layer
+        layer = util.getLayerPath(target)
       end
 
+
       if actionCommandPropsTable:setActiveProp(layer, target.class) then
+        -- print("@@@ fromActive.class")
         layerTable:hide()
         UI.editor.currentClass = fromActive.class
         UI.editor.currentLayer = fromActive.layer
@@ -261,7 +264,9 @@ function M.commandHandler(layerTable, target, event)
       --
       local classProps = layerTable.classProps or classProps
       if classProps:setActiveProp(layer) then
+        layerTable.classProps = nil -- physycis has own classProps
         layerTable:hide()
+        -- print("@@@ fromActive.class", fromActive.class)
         UI.editor.currentClass = fromActive.class
         UI.editor.currentLayer = fromActive.layer
         UI.editor.selections = fromActive.selections
@@ -333,7 +338,7 @@ local function showClassProps(layerTable, target)
     --
     -- target.isSelected = true
     if target.layer and target.layer:len() then
-      local name = util.getLayerNameWithParent(target)
+      local name = util.getLayerPath(target)
       -- print("####", name)
       UI.editor.currentLayer = name
     else
@@ -379,6 +384,9 @@ function M.commandHandlerClass(layerTable, target, event)
   if event.phase == "began" or event.phase == "moved" then
     return
   end
+
+  local fromActive = { selections = {}, layer = UI.editor.currentLayer, class = UI.editor.currentClass}
+
   --
   clearSelections(layerTable, "class")
   --
@@ -400,10 +408,29 @@ function M.commandHandlerClass(layerTable, target, event)
 
       local layer = target.layer
       if target.parentObj then
-        layer = target.parentObj.layer .."/" .. layer
+        layer = util.getLayerPath(target)
       end
-      actionCommandPropsTable:setActiveProp(layer, target.class)
-      classProps:setActiveProp(layer, target.class)
+
+      if actionCommandPropsTable:setActiveProp(layer, target.class) then
+        layerTable:hide()
+        UI.editor.currentClass = fromActive.class
+        UI.editor.currentLayer = fromActive.layer
+        UI.editor.selections = fromActive.selections
+        layerTable.group.x = layerTable.group.oriX
+        layerTable.group.y = layerTable.group.oriY
+        return -- notice!
+      end
+
+      if classProps:setActiveProp(layer, target.class) then
+        layerTable:hide()
+        print("@@@ fromActive.class", fromActive.class)
+        UI.editor.currentClass = fromActive.class
+        UI.editor.currentLayer = fromActive.layer
+        UI.editor.selections = fromActive.selections
+        layerTable.group.x = layerTable.group.oriX
+        layerTable.group.y = layerTable.group.oriY
+        return -- notice!
+      end
 
       -- recover selections
       if UI.editor.selections_backup and #UI.editor.selections_backup > 0 then

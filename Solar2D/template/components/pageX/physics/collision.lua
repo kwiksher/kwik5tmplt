@@ -9,10 +9,14 @@ local M = {
     body          = "{{body}}",
     isRemoveOther = {{isRemoveOther}},
     isRemoveSelf = {{isRemoveSelf}},
-    othersGroup  =  require(root.."groups.".."{{othersGroup}}")
+    others  =  "{{others}}"
     {{/properties}}
   },
-  actions = { onCollision="{{onCollision}}" },
+  actions = {
+    {{#actions}}
+      onCollision="{{onCollision}}"
+    {{/actions}}
+  },
 }
 
 return require("components.kwik.layer_physicsCollision").set(M)

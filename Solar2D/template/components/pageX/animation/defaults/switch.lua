@@ -1,5 +1,5 @@
 local M = {
-  name = "switch",
+  name = "switch0",
   class="Switch",
   properties = {
     target = NIL,
@@ -8,6 +8,7 @@ local M = {
     delay=0,
     duration=100,
     to = NIL,
+    useLang = false
   },
   layerOptions = {
   },

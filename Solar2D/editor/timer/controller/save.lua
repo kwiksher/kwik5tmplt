@@ -8,10 +8,10 @@ local instance = require("commands.kwik.baseCommand").new(
   function (params)
     local args = {
       UI            = params.UI,
-      book          = params.book or  UI.editor.currentBook,
+      book          = params.book or  params.UI.editor.currentBook,
       page          = params.page or params.UI.page,
       updatedModel  = util.createIndexModel(params.UI.scene.model),
-      properties      = params.properties or controller.classProps:getValue(),
+      props = {properties      = params.properties or controller.classProps:getValue()},
       completebox   = params.actionbox or controller.actionbox,
       isNew         = params.isNew
     }
@@ -19,7 +19,15 @@ local instance = require("commands.kwik.baseCommand").new(
     args.selected      =  selectbox.selection or {}
     --
     args.class         = "timer"
+    --
     args.name          = args.selected.timer
+    args.newName       = params.newName
+    if controller.picker then
+      printKeys(controller.picker)
+      args.newName = controller.picker:getValue()
+      args.name = args.newName
+    end
+    --
     args.append        = function(value, index)
         local dst = args.updatedModel.components.timers or {}
         if index then
@@ -29,7 +37,7 @@ local instance = require("commands.kwik.baseCommand").new(
         end
     end
 
-    scripts.publish(UI, args, controller)
+    scripts.publish(params.UI, args, controller)
    end
 )
 --[[

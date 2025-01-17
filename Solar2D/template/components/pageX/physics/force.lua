@@ -1,5 +1,5 @@
 local M = {
-  name = NIL,
+  name = "{{layer}}",
   class="force",
   properties = {
     {{#properties}}

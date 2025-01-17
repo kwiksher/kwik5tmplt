@@ -30,13 +30,24 @@ function exports.init(props)
   audioTable = props.audioTable
 end
 
+function exports.clickIconObj(tbl,name)
+  for i, obj in next, tbl.iconObjs do
+    if obj.muiOptions.name == name then
+      obj.callBack({target={muiOptions={name=name}}})
+      break
+    end
+  end
+end
+
 function exports.clickIcon(toolGroup, tool)
   local toolbar = require("editor.parts.toolbar")
   local obj = toolbar.layerToolMap[toolGroup]
   obj.callBack{target=obj}
   -- for k, v in pairs(toolbar.toolMap) do print(k, v) end
-  local tool = toolbar.toolMap[obj.id.."-"..tool]
-  tool.callBack{target=tool}
+  timer.performWithDelay(1000, function()
+    local tool = toolbar.toolMap[obj.id.."-"..tool]
+    tool.callBack{target=tool}
+  end)
 end
 
 function exports.selectIcon(toolGroup, tool)
@@ -49,8 +60,10 @@ function exports.selectIcon(toolGroup, tool)
     local obj = toolbar.layerToolMap[toolGroup]
     obj.callBack{target=obj}
     if tool then
-      local obj = toolbar.toolMap[obj.id.."-"..tool]
-      obj.callBack{target=obj}
+      timer.performWithDelay(1000, function()
+        local obj = toolbar.toolMap[obj.id.."-"..tool]
+        obj.callBack{target=obj}
+      end)
     end
   end
 end

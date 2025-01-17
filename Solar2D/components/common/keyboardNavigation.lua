@@ -3,6 +3,8 @@
 local _M = {}
 local App = require("controller.Application")
 --
+local off = true
+
 function _M:init(UI)
 end
 
@@ -127,12 +129,17 @@ function _M:create(UI)
 end
 
 function _M:addEventListener()
- Runtime:addEventListener("key", onKeyEvent)
+--  print("addEventListener")
+ if off == false then
+  Runtime:addEventListener("key", onKeyEvent)
+ end
 end
 
 function _M:removeEventListener(UI)
-
-  Runtime:removeEventListener("key", onKeyEvent)
+  -- print("removeEventListener")
+  if off == false then
+    Runtime:removeEventListener("key", onKeyEvent)
+  end
 
   local sceneGroup = UI.sceneGroup
   local app = App.get()

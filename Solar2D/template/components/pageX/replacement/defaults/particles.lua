@@ -1,5 +1,5 @@
 local M = {
-  name = "particles",
+  name = "particles0",
   class="particles",
   -- actionName = "",
   properties = {
