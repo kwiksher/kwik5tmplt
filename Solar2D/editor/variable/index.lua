@@ -34,8 +34,12 @@ function M:init(UI)
   -- UI.editor.viewStore = self.group
   --
   selectbox:init()
+  -- print("@@@@", self.x, self.y)
+
   classProps:init(UI, self.x + self.width*1.5, self.y,  self.width, self.height)
   classProps.model = model.props
+  classProps.type  = current
+
   --
   -- actionbox:init(UI)
   buttons:init(UI)

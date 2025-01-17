@@ -1,5 +1,5 @@
 local M = {
-  name = "map",
+  name = "map0",
   class="map",
   properties = {
     target = NIL,

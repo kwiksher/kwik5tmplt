@@ -32,6 +32,17 @@ end
 function M:show()
 end
 
+local function countShapes(shape, objs)
+  local count = 0
+  for i, obj in next, objs do
+    if obj.name:find(shape) then
+      count = count +1
+    end
+  end
+  return count
+end
+
+
 local function getProps(obj, index)
   local _props = json.decode(obj._properties)
   _props.isNew = true -- recreate it for moving
@@ -84,15 +95,32 @@ function M.drawRect(UI, listener)
     if xScale ~= 0 and yScale ~= 0 then
       local rectangle = display.newRect( xStart, yStart, width, height)
       rectangle.anchorX, rectangle.anchorY = anchorX, anchorY
-      rectangle.xScale, rectangle.yScale = xScale, yScale
-
+      -- print(rectangle.anchorX, rectangle.anchorY)
+      -- rectangle.xScale, rectangle.yScale = xScale, yScale
+      rectangle:setFillColor(0.8)
 
       if isFinal then -- phase == "ended"
+        print("anchor", rectangle.anchorX, rectangle.anchorY)
+        print("scale", rectangle.scaleX, rectangle.scahleY)
+
+        local deltaX, deltaY = rectangle.width * 0.5, rectangle.height * 0.5
+        if anchorX == 1 then
+          deltaX = -1*deltaX
+        end
+        if anchorY == 1 then
+          deltaY = -1*deltaY
+        end
+        -- rectangle.width = rectangle.width/xScale
+        -- rectangle.height = rectangle.height/yScale
+        -- rectangle.xScale, rectangle.yScale = 1,1
+
+        rectangle.anchorX, rectangle.anchorY = 0.5, 0.5
+        rectangle:translate(deltaX, deltaY)
         ---
         local _props = json.decode(rectangle._properties)
         _props.isNew = true
         _props.shapedWith = "new_rectangle"
-        _props.name = "rect_"..#UI.layers
+        _props.name = "rect_"..countShapes("rect_", UI.layers)
         _props.x, _props.y = UI.sceneGroup:contentToLocal(_props.x, _props.y)
 
         UI.scene.app:dispatchEvent {
@@ -171,13 +199,55 @@ function M.drawEllipse(UI)
     local xScale = width/maxDistance
     local yScale = height/maxDistance
 
+    if M.controlDown then
+       if xScale > yScale then
+         yScale = xScale
+       else
+        xScale = yScale
+       end
+    end
+
     if xScale ~= 0 and yScale ~= 0 then
       local ellipse = display.newCircle( xStart, yStart, maxDistance*0.5 )
+      ellipse:setFillColor(0.8)
       ellipse.anchorX, ellipse.anchorY = anchorX, anchorY
       ellipse.xScale, ellipse.yScale = xScale, yScale
 
       if isFinal then
-        return ellipse
+
+        local cB = ellipse.contentBounds
+        -- local deltaX, deltaY = ellipse.width * 0.5, ellipse.height * 0.5
+        local deltaX, deltaY = (cB.xMax- cB.xMin) * 0.5, (cB.yMax-cB.yMin) * 0.5
+        if anchorX == 1 then
+          deltaX = -1*deltaX
+        end
+        if anchorY == 1 then
+          deltaY = -1*deltaY
+        end
+        --ellipse:translate(deltaX, deltaY)
+        -- print(ellipse.anchorX, ellipse.anchorY, ellipse.x, ellipse.y)
+        -- print(ellipse.anchorX, ellipse.anchorY, ellipse.x, ellipse.y)
+        ellipse.anchorX, ellipse.anchorY = 0.5, 0.5
+        ellipse:translate(deltaX, deltaY)
+
+        local _props = json.decode(ellipse._properties)
+        _props.isNew = true
+        _props.shapedWith = "new_ellipse"
+        _props.name = "ellipse_"..countShapes("ellipse_", UI.layers)
+        _props.x, _props.y = UI.sceneGroup:contentToLocal(_props.x, _props.y)
+
+        UI.scene.app:dispatchEvent {
+          name = "editor.classEditor.save",
+          UI = UI,
+          decoded = nil, --selectbox.decoded,
+          props = _props
+        }
+
+        Runtime:removeEventListener( "touch", touchListener )
+        Runtime:removeEventListener("key", onKeyEvent)
+        if onCreate then
+          onCreate("ended", _props)
+        end
       else
         tempShape = ellipse
       end
@@ -256,10 +326,12 @@ function M.drawText(UI, listener)
       local _props = json.decode(obj._properties)
       _props.isNew = true
       _props.shapedWith = "new_text"
-      _props.name = "text_"..#UI.layers
+      _props.name = "text_"..countShapes("text_", UI.layers)
       _props.font = "native.systemFont"
-      _props.fontSize= props.size
+      _props.fontSize= _props.size
       _props.text = obj.text
+      _props.align = "center"
+      _props.fill = {r=0, g=0, b=0, a=1}
 
       UI.scene.app:dispatchEvent {
         name = "editor.classEditor.save",
@@ -323,15 +395,28 @@ function M.drawText(UI, listener)
       rectangle:setStrokeColor(0, 1, 0, 0.8)
 
       if isFinal then
+        --
+        local deltaX, deltaY = rectangle.width * 0.5, rectangle.height * 0.5
+        if anchorX == 1 then
+          deltaX = -1*deltaX
+        end
+        if anchorY == 1 then
+          deltaY = -1*deltaY
+        end
+        rectangle:translate(deltaX, deltaY)
+        rectangle.anchorX, rectangle.anchorY = 0.5, 0.5
+
+        ---
         options.x = rectangle.x
         options.y = rectangle.y
         options.width = rectangle.width
         options.height = rectangle.height
-        --
+
         --
         local obj = display.newText(options)
         obj.anchorX = rectangle.anchorX
         obj.anchorY = rectangle.anchorY
+
 
         -- local obj = display.newText(options.text, rectangle.x, rectangle.y, options.font, options.fontSize )
                 -- local obj = display.newText(options.text, rectangle.x+rectangle.width/2, rectangle.y + rectangle.height*0.25, options.font, options.fontSize )
@@ -415,7 +500,7 @@ function M.move(UI, obj, listener)
     isFocus = true,
     isPage = false,
     --
-    isFlip = true,
+    isFlip = false,
     flip = "right",  -- flipSet.right
     flipSet  = {
       right = {
@@ -463,11 +548,11 @@ function M.move(UI, obj, listener)
       onMoved= nil, -- action
       onShapeHandler = function(event)
         --
-        -- for k, v in pairs(event) do print(k, v) end
+        for k, v in pairs(event) do print(k, v) end
         --
         if event.phase == "ended" then
           local obj = event.target
-          -- print("@@@@@", obj.name, obj.shapedWith)
+          print("@@@@@", obj.name, obj.shapedWith)
           local _props = getProps(obj, #UI.layers)
           print(json.prettify( _props ))
           UI.scene.app:dispatchEvent {

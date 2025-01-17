@@ -14,8 +14,26 @@ function M.getFileName(str)
   return n:sub(0, #n - 4)
 end
 
-local isTarget = function(layerEntry, layerName)
+local getLayer = function(layerEntry, parent)
+  -- print(json.encode(layerEntry))
   for key, v in pairs(layerEntry) do
+    -- print("", key)
+    if key == "class" then
+    elseif key == "event" then
+    else
+      if parent then
+        return parent .."/"..key, v
+      else
+        return key,  v
+      end
+    end
+  end
+  return nil
+end
+
+local isTarget = function(layerName, layerEntry, parent)
+  for key, v in pairs(layerEntry) do
+    -- print("", key)
     if key == "class" then
     elseif key == "event" then
     elseif key == layerName then
@@ -26,9 +44,12 @@ local isTarget = function(layerEntry, layerName)
 end
 --
 local isClass = function(v, class)
-  for j = 1, #v.class do
-    if v.class[j] == class then
-      return true
+  -- print(v, class)
+  if v.class then
+    for j = 1, #v.class do
+      if v.class[j] == class then
+        return true
+      end
     end
   end
   return false
@@ -44,14 +65,15 @@ function M.isExist(book, page, layer, class)
 end
 
 function M.updateIndexModel(_scene, _layerName, class, _type)
+  print("%%%", _layerName)
   local layerName = _layerName
-  local child    = _layerName:split("/")
-  if #child > 1 then
-    layerName = child[1]
-    child = child[2]
-  else
-    child = nil
-  end
+  -- local child    = _layerName:split("/")
+  -- if #child > 1 then
+  --   layerName = child[1]
+  --   child = child[2]
+  -- else
+  --   child = nil
+  -- end
   --
   local scene =
     _scene or
@@ -70,39 +92,56 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
   scene.onInit = nil
   local copied = M.copyTable(scene)
   scene.onInit = onInit
+  -- print("----- copied -----")
+  -- print(json.prettify(copied))
 
   -- print("%%%", layerName)
-  local function processLayers(layers, nLevel)
-    for i = 1, #layers do
-      -- print("%%%", i)
-      local layer = layers[i]
+  local function processLayers(layers, nLevel, parent)
+    -- print(json.encode(layers))
+    for k, layer in pairs(layers) do
       local children = {}
-      --
-      if isTarget(layer, layerName) then
-        -- print("%%%", layerName)
-        if child then -- continue to find the target child
-          layerName = child
-          child = nil
-        else
-          local target = layer[layerName]
-          if target.class == nil then
-            target.class = {}
+      ---
+      local name, value = getLayer(layer, parent)
+      -- print("@@@", name, layerName, value )
+      if name == layerName then
+        -- if child then -- continue to find the target child
+        --   layerName = child
+        --   child = nil
+        -- else
+          if value.class == nil then
+            value.class = {}
           end
           --
-          if not isClass(target, class) then
-            table.insert(target.class, class)
+          if not isClass(value, class) and class:len() > 0 then
+            table.insert(value.class, class)
           end
-          layerName = nil
-        end
+          layerName = "found it!"
+        -- end
       end
 
       --
+      ---[[
+      if layer.class then
+        for key, value in pairs(layer) do
+          if key == "class" then
+          else
+            processLayers(value, nLevel + 1, key)
+          end
+        end
+      else
+        for key, value in pairs(layer) do
+          if type(value) == "table" then
+            processLayers(value, nLevel + 1, name)
+          end
+        end
+      end
+      --[[
       local children = {}
       for key, value in pairs(layer) do
-        -- print(key, value)
+        print(key, value.class)
         if key == "class" then
-        elseif key == "event" then
         else
+          children[#children + 1] = value
           if type(value) == "table" and next(value) then
             if value.class == nil then
               --
@@ -125,15 +164,19 @@ function M.updateIndexModel(_scene, _layerName, class, _type)
           end
         end
       end
+      --]]
+
+      --[[
       if #children > 0 then
         -- if next(v) == nil then
         --   -- just empty layer without class nor event
         --   v.class = {class}
         -- end
-        processLayers(children, nLevel + 1)
+        processLayers(children, nLevel + 1, name)
       else
         -- newEntry.layers = false
       end
+      --]]
     end
   end
   --
@@ -185,7 +228,7 @@ function M.createIndexModel(_scene, layerName, class, noRecursive)
       local newEntry = {}
       local children = {}
       --
-      if isTarget(layer, layerName) then
+      if isTarget(layerName, layer) then
         local target = layer[layerName]
         if target.class == nil then
           newEntry["class".. nLevel] = {}
@@ -209,7 +252,7 @@ function M.createIndexModel(_scene, layerName, class, noRecursive)
       for key, value in next, layer do
         -- print("", key, #value, tostring(is_array(value)))
         if key == "class" then
-          -- if newEntry.class == nil then -- this means not isTarget(layer, layerName)
+          -- if newEntry.class == nil then -- this means not isTarget(layerName, layer)
           --   newEntry.class = value
           -- end
         elseif key == "event" then
@@ -308,7 +351,7 @@ function M.selectFromIndexModel(model, args)
       --
       for key, value in pairs(layer) do
         -- print(key, value)
-        if isTarget(layer, target[level]) then
+        if isTarget(target[level], layer) then
           if nextTarget == nil then
             return {type = "layer", file = key, value = value}
           elseif layer.class and isClass(layer, nextTarget) then
@@ -363,7 +406,7 @@ function M.selectFromIndexModel(model, args)
 end
 
 -- https://stackoverflow.com/questions/640642/how-do-you-copy-a-lua-table-by-value
-function M.copyTable(tbl)
+function M.copyTable(tbl, convert)
   local new_tbl = {}
   if tbl then
     for key, value in pairs(tbl) do
@@ -379,7 +422,13 @@ function M.copyTable(tbl)
         -- Problems may occur if the function has upvalues.
       elseif value_type == "table" and valid then
         -- print(key)
-        new_value = M.copyTable(value)
+        if value == NIL then
+          new_value = ""
+        else
+          new_value = M.copyTable(value, convert)
+        end
+      elseif convert then
+        new_value = tostring(value)
       else
         new_value = value
       end
@@ -440,13 +489,32 @@ function M.getModelDirs(book, page, layer)
   return ret
 end
 
-function M.getLayerNameWithParent(obj)
-  local ret = obj.layer
+-- function M.getLayerNameWithParent(obj)
+--   local ret = obj.layer
+--   if obj.parentObj then
+--     ret = obj.parentObj.layer.."/"..obj.layer
+--     -- print("", ret)
+--   end
+--   return ret
+-- end
+
+function M.getParent(obj)
+  local ret = ""
   if obj.parentObj then
-    ret = obj.parentObj.layer.."/"..obj.layer
-    -- print("", ret)
+    ret = M.getParent(obj.parentObj, ret) .. obj.parentObj.layer .. "/" .. ret
   end
   return ret
+end
+
+function M.getLayerPath(obj)
+  local ret = obj.layer
+  if obj.parentObj then
+    local parent = M.getLayerPath(obj.parentObj)
+    return parent.."/"..ret
+    -- print("", ret)
+  else
+    return ret
+  end
 end
 
 function M.saveLua(tmplt, dst, _model, partial)
@@ -533,6 +601,9 @@ function M.decode(book, page, class, _name, options)
   local name = _name
   if options.isNew then
     local path = "template.components.pageX." .. class .. ".defaults." .. class
+    if class == "joint" then
+      path = "template.components.pageX.physics.defaults." .. class
+    end
     return require(path)
   elseif options.isDelete then
     print(class, "delete")
@@ -725,14 +796,6 @@ M.setSelection = function(self, obj)
   end
 end
 
-function M.getParent(obj)
-  local ret = ""
-  if obj.parentObj then
-    ret = M.getParent(obj.parentObj, ret) .. obj.parentObj.layer .. "/" .. ret
-  end
-  return ret
-end
-
 function M.renderIndex(book, page, model)
   local dst = "App/" .. book .. "/components/" .. page .. "/index.lua"
   --local dst = "index.lua"
@@ -786,6 +849,8 @@ end
 function M.saveIndex(book, page, layer, class, model)
   local dst = "App/" .. book .. "/models/" .. page .. "/index.json"
   --local dst = "index.json"
+  M.mkdir("App", book, "models", page)
+  --
   local decoded = M.copyTable(model)
   if layer then
     for i = 1, #decoded.components.layers do
@@ -803,7 +868,7 @@ function M.saveIndex(book, page, layer, class, model)
       end
     end
   else
-    print("TODO for timer, variable, audio")
+    print("save index.json:TODO for timer, variable, audio")
   end
   decoded.onInit = nil
   -- print(json.encode(decoded))
@@ -892,11 +957,33 @@ function M.uniqueName(str, _sep)
   local sep = _sep or "_"
   local out = M.split(str, sep)
   if #out == 1 then
-    return str
+    return str..sep.."1"
   else
     local num = tonumber(out[#out]) + 1
     out[#out] = tostring(num)
     return table.concat(out, "_")
+  end
+end
+
+function M:createNamesMapByLayer(layers, parent)
+  for i, v in next, layers do
+    if parent then
+      self.namesMap[parent.."/"..v.name] = {i, v}
+    else
+      self.namesMap[v.name] = {i, v}
+    end
+    for k, vv in pairs(v) do
+      -- layers1, layer2, layers3
+      if k:find("layers") then
+          self:createNamesMapByLayer(vv ,v.name)
+      end
+    end
+  end
+end
+
+function M:createNamesMap(entries)
+  for i, v in next, entries do
+      self.namesMap[v] = {i, v}
   end
 end
 

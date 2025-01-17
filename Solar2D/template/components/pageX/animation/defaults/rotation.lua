@@ -1,5 +1,5 @@
 local M = {
-  name = "rotation",
+  name = "rotation0",
   class="Rotation",
   from = {
     x = nil,
@@ -30,6 +30,7 @@ local M = {
     xSwipe=nil,
     ySwipe=nil,
     anchorPoint = "Center",
+    useLang = false
   },
   breadcrumbs = nil,
   layerOptions = {

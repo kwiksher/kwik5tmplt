@@ -5,7 +5,7 @@ local M = require("editor.parts.baseProps").new()
 ---------------------------
 M.name = "onComplete"
 M.selectedTextLabel = ""
-M.onTapActionSet = table:mySet{"onTap", "onComplete", "onMoved", "onDropped", "onReleased"}
+M.onTapActionSet = table:mySet{"onTap", "onComplete", "onMoved", "onDropped", "onReleased", "onCollision"}
 M.props = {
   -- {name="onComplete", value=""}
 }
@@ -25,7 +25,7 @@ function M:setActiveProp(value)
   local name =self.activeProp or ""
   for i,v in next, self.objs or {} do
     if v.text == name then
-      print("setActiveProp", self.activeProp, value)
+      -- print("setActiveProp", self.activeProp, value)
       v.field.text = value
       -- print("###", self.activeProp, value, #self.objs, self)
       return true
@@ -66,13 +66,21 @@ function M:initActiveProp(actions)
 end
 
 function M:getValue(name)
-  print(name)
+  -- print(name)
   if self.objs then
-    for i,v in next, self.objs do
-      print(v.text)
-      if v.text == name then
-        return v.field.text
+    if name then
+      for i,v in next, self.objs do
+        -- print(v.text)
+        if v.text == name then
+          return v.field.text
+        end
       end
+    else
+      local ret = {}
+      for i,v in next, self.objs do
+        ret[v.text] = v.field.text
+      end
+      return ret
     end
   end
 end

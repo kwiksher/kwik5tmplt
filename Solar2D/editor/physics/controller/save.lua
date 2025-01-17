@@ -8,7 +8,7 @@ local json = require("json")
 local instance =
   require("commands.kwik.baseCommand").new(
   function(params)
-    print("", name, params.class)
+    -- print("", name, params.class)
     local UI = params.UI
     local props = controller:useClassEditorProps(UI)
     local args = {
@@ -38,11 +38,11 @@ local instance =
       if not isJoint() then
         local index = params.index or #args.updatedModel.components.joints + 1
         table.insert(args.updatedModel.components.joints, index, props.name)
-        print(json.encode(args.updatedModel.components))
+        -- print(json.encode(args.updatedModel.components))
       end
       --
       scripts.publish(UI, args, controller)
-    elseif props.class == "physics" then  -- physics env
+    elseif props.class == "page" then  -- physics env
       args.class = "page"
       args.props.name  = "physics"
       local function isPhysics()
@@ -58,13 +58,28 @@ local instance =
       end
       scripts.publish(UI, args, controller)
     else -- multi new/edit
-        if #UI.editor.selections > 1 then
+
+      -- print("@@@", props.layer, props.class)
+
+        local layer = props.layer or UI.editor.currentLayer
+        if layer == nil then
+          layer = props.name
+          -- print("layer", layer, props.class)
+          props.layer = props.name
+        else
+          -- print("layer", props.name, layer, props.class)
+        end
+
+        if not props.isNew or #UI.editor.selections > 1 then
+
+          -- print(json.prettify(props))
+
           scripts.publishForSelections(
             UI,
             {
               book = props.book,
               page = props.page,
-              layer = props.layer,
+              layer = layer,
               class = props.class,
               props = props
             },
@@ -73,8 +88,7 @@ local instance =
           )
         else
           -- single new/edit
-          print("@@@", props.layer, props.class)
-          args.updatedModel = util.createIndexModel(params.UI.scene.model, props.layer, props.class)
+          args.updatedModel = util.createIndexModel(params.UI.scene.model, layer, props.class)
           scripts.publish(UI, args, controller)
         end
     end

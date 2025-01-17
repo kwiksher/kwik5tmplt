@@ -440,21 +440,34 @@ function M:showContextMenu(x,y, options)
   if options then
     self.contextButtons = options.contextButtons or _contextMenus
   end
+
+  local function filterVisible(key)
+    if key == "rename" then
+      if self.contextMenuOptions.isMultiSelection then
+        return false
+      end
+      if self.contextMenuOptions.class and self.contextMenuOptions.class:len() > 0 then
+        return false
+      end
+    end
+
+    if key == "create" then
+      if self.contextMenuOptions.shapedWith then
+        return true
+      else
+        return false
+      end
+    end
+    return true
+  end
+
   local index = 0
   local pos ={x=x, y=y}
+  print("showContextMenu", x, y)
+
   for i, key in next, self.contextButtons do
     for k, obj in next, self.objs do
-      local skipNewRename = false
-      if key == "create" or key == "rename" then
-        if self.contextMenuOptions.isMultiSelection then
-          skipNewRename = true
-        end
-        if self.contextMenuOptions.class and self.contextMenuOptions.class:len() > 0 then
-          skipNewRename = true
-        end
-      end
-      -- print(key, obj.rect.eventName, skipNewRename)
-      if key  == obj.rect.eventName and not skipNewRename then
+      if key  == obj.rect.eventName and filterVisible(key) then
         obj.isVisible = true
         obj.rect.isVisible = obj.isVisible
 
@@ -476,11 +489,14 @@ function M:showContextMenu(x,y, options)
         --
         -- for buttons in row
         --
-        if obj.rect.buttonsInRow and not (options or {}).isPageContent then
+        print(key, obj.rect.eventName, (options or {}).isPageContent )
+        print(self.contextMenuOptions.shapedWith, obj.rect.buttonsInRow  )
+        if self.contextMenuOptions.shapedWith and obj.rect.buttonsInRow and not (options or {}).isPageContent then
           local index = 1
           local pos_x=0
+          print(key)
           for i, o in next, obj.rect.buttonsInRow do
-            -- print(i, o.text)
+            print("",i, o.text)
             o.isVisible = false
             o.rect.isVisible = o.isVisible
             -- if options and options.orientation =="horizontal" then

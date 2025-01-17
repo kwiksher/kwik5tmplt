@@ -1,7 +1,3 @@
--- Code created by Kwik - Copyright: kwiksher.com {{year}}
--- Version: {{vers}}
--- Project: {{ProjName}}
---
 local ActionCommand = {}
 local AC           = require("commands.kwik.actionCommand")
 --
@@ -88,14 +84,16 @@ function ActionCommand:new()
     -- target layer :sceneGroup[layerName]
     -- target animation : layer.animations[index]
     --
-    obj = UI.sceneGroup["{{target}}"]
     {{#pause}}
+      obj = UI.animations["{{target}}"]
       AC.Animation:pause(obj)
     {{/pause}}
     {{#resume}}
+      obj = UI.animations["{{target}}"]
       AC.Animation:resume(obj)
     {{/resume}}
     {{#play}}
+      obj = UI.animations["{{target}}"]
       AC.Animation:play(obj) --  {{index}}
     {{/play}}
   {{/animation}}

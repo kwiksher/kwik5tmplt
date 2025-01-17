@@ -45,6 +45,7 @@ local function componentHandler(UI, storeTable, isActiveProp)
     elseif storeTable == "audioTable" then
       UI.editor.audioStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.audios}
     elseif storeTable == "groupTable" then
+      print("storeTable == groupTable")
       UI.editor.groupStore:set{isActiveProp = isActiveProp, value=UI.scene.model.components.groups or {}}
     elseif storeTable == "timerTable" then
       -- print(storeTable, #UI.scene.model.components.timers)
@@ -103,7 +104,7 @@ function M:addListener(UI, buttons, propsTable)
       if storeTable == "groupTable" then
         local groupTable = require("editor.group.groupTable")
         if isAcvtiveProp then
-          groupTable:setIndent(100, 0)
+          -- groupTable:setIndent(100, 0)
         else
           groupTable:setIndent(0,0)
         end
@@ -137,7 +138,7 @@ function M:addListener(UI, buttons, propsTable)
       keyboardNavigation:addEventListener(UI)
       componentSelector:hide()
       assetsSelector:hide()
-      assetsSelector.iconObj.isVisible = false
+      assetsSelector.iconObj.isVisible = true
       for k, tool in pairs(UI.editor.editorTools) do
         --print(k, tool.id)
         tool:hide()
@@ -166,6 +167,7 @@ function M:addListener(UI, buttons, propsTable)
   function self.assetsSelector:onClick(isVisible, assetName)
     -- print("onClick", UI.editor.currentBook, assetName)
     -- UI.editor.assetStore:set{{}}
+
     if isVisible then
       componentSelector:hide()
       UI.editor.assets = require("editor.asset.index").controller:read(UI.editor.currentBook)
@@ -179,12 +181,14 @@ function M:addListener(UI, buttons, propsTable)
         -- print(assetName, print(json.encode(UI.editor.assets[assetName])))
         UI.editor.assetStore:set{value={class = assetName, decoded = UI.editor.assets[assetName]}}
       else
+        componentSelector:onClick(true)
         UI.editor.assetStore:set{value={decoded = UI.editor.assets}}
       end
     else
       UI.editor.assetStore:set{value={}}
     end
-
+    projectPageSelector:hide()
+    keyboardNavigation:removeEventListener(UI)
   end
 end
 

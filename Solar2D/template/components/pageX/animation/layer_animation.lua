@@ -15,8 +15,6 @@ local M = {
   --
 }
 
-M.obj = require(parent.."{{layer}}").obj
-
 {{#layerOptions}}
 M.layerOptions = {
   --
@@ -70,6 +68,7 @@ M.properties = {
   -- flip
   xSwipe   = {{xSwipe}},
   ySwipe   = {{ySwipe}},
+  useLang  = {{useLang}}
 {{/properties}}
 }
   --
@@ -122,7 +121,7 @@ local function onEndHandler (UI)
 end
 --
 function M:create(UI)
-  if UI.langClassDelegate then
+  if UI.langClassDelegate and useLang then
     local t = self.name:split("/")
     self.name = t[1].."/".. UI.lang
   end
@@ -134,6 +133,8 @@ function M:create(UI)
   end
   self:initAnimation(UI, self.obj, onEndHandler)
   self.animation = self:buildAnim(UI)
+  UI.animations[self.name.."_"..self.class] = self.animation
+
 end
 --
 function M:didShow(UI)

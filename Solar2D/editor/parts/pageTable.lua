@@ -5,7 +5,7 @@ local buttons    = require("editor.parts.buttons")
 
 local Props = {
   name = "page",
-  icons      = {"Properties", "newPage", "trash"},
+  icons      = {"lockPage", "Properties", "newPage", "trash"},
   marginX = 69,
   setPosition = function(self)
     -- self.x = self.x
@@ -35,7 +35,13 @@ local M, bt, tree = require(parent .."baseTable").new(Props)
 
 local btNodeName = "select page"
 
-M.anchorName = "selectPageIcons"
+--M.anchorName = "selectPageIcons"
+M.eventMap = {
+  lockPage = "lockPage",
+  Properties = "selectPageIcons",
+  newPage    = "selectPageIcons",
+  trash      = "selectPageIcons"
+}
 
 function M.btHandler(target)
   local self = M
@@ -92,18 +98,21 @@ function M.commandHandler(target, event, isReload)
   -- print("commandHandler", self.objs)
   -- print("", debug.traceback())
   self.isReload = isReload -- we will take if off when reload is ended
-  if isReload and self.objs then
-    for i=1, #self.objs do
-      if self.objs[i].page == target.page then
-        -- print("", self.objs[i].page)
-        target = self.objs[i]
-        self.selection = target
-        break
-      end
-    end
+  self.btHandler(target)
+  if isReload then
+    print("###### isReload")
+    self.lockPage = target.page
+    -- for i=1, #self.objs do
+    --   if self.objs[i].page == target.page then
+    --     -- print("", self.objs[i].page)
+    --     target = self.objs[i]
+    --     target.lockIcon.isVisible = true
+    --     self.selection = target
+    --     break
+    --   end
+    -- end
   end
 
-  self.btHandler(target)
 end
 --]]
 
@@ -201,8 +210,19 @@ function M:createTable(UI, entries, selection)
         end
       end
 
+      local lockIcon = display.newImage("assets/images/icons/lockPage.png")
+      lockIcon.x = obj.x + 40
+      lockIcon.y = obj.y
+      lockIcon.isVisible = false
+      if self.lockPage == obj.page then
+        lockIcon.isVisible = true
+      end
+
+      obj.lockIcon = lockIcon
+
       group:insert(obj.rect)
       group:insert(obj)
+      group:insert(obj.lockIcon)
       scrollView:insert(group)
       return obj
     end
@@ -262,6 +282,16 @@ function M:create(UI)
   -- end
   -- --
   -- table.sort(fooValue.value,compare)
+end
+
+function M:setLock(page)
+  for i=1, #self.objs do
+    if self.objs[i].page == page then
+      self.objs[i].lockIcon.isVisible = true
+    elseif self.objs[i].lockIcon then
+      self.objs[i].lockIcon.isVisible = false
+    end
+  end
 end
 --
 -- function M:didShow(UI)

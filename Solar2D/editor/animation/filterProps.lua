@@ -88,7 +88,7 @@ function M:createTable(props)
           self:tapListener(event, "filters")
         end
       )
-    elseif prop.name == "color" or prop.name:find("color") or prop.name == "imageFile" then
+    elseif prop.name == "color" or prop.name:find("color")  then -- or prop.name == "imageFile"
       -- obj.fieldAlpha = alphaObj.field
       imageObj = obj
       obj.targetObject = self.targetObject

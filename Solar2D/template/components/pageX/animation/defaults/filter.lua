@@ -1,5 +1,5 @@
 local M = {
-  name = "filter",
+  name = "filter0",
   class = "Filter",
   properties ={
     target     = NIL,
@@ -12,6 +12,7 @@ local M = {
     easing     = "inQuad",
     reverse    = nil,
     resetAtEnd = nil,
+    useLang = false
   },
   -- composite = {
   --   effect   = "composite.normalMapWith1PointLight",

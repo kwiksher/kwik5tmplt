@@ -19,7 +19,7 @@ function M:play(anim)
     if anim.from then
       anim.from:toBeginning()
       anim.from:play()
-    else
+    elseif anim.to then
       anim.to:toBeginning()
       anim.to:play()
     end

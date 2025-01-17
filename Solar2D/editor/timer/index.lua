@@ -17,9 +17,13 @@ local classProps = require(root .. "parts.classProps")
 local actionbox = require(root .. ".parts.actionbox")
 -- this set editor.timer.save, cacnel
 local buttons = require(parent .. "buttons")
+local picker = require("editor.picker.name")
 
 local controller = require("editor.controller.index").new("timer")
 local M = require(root .. "parts.baseClassEditor").new(model, controller)
+--
+M.x = display.contentCenterX + display.actualContentWidth/8
+
 
 function M:init(UI)
   self.UI = UI
@@ -27,8 +31,11 @@ function M:init(UI)
   -- UI.editor.viewStore = self.group
 
   selectbox:init()
+  -- print("@@@@", self.x, self.y)
   classProps:init(UI, self.x + self.width * 1.5, self.y, self.width, self.height)
   classProps.model = model.props
+  classProps.type  = current
+
   --
   actionbox:init(UI)
   buttons:init(UI)
@@ -37,7 +44,8 @@ function M:init(UI)
     selectbox = selectbox,
     classProps = classProps,
     actionbox = actionbox,
-    buttons = buttons
+    buttons = buttons,
+    picker        = picker
   }
   --
   controller.view = self
@@ -49,16 +57,17 @@ function M:init(UI)
 end
 
 function controller:render(book, page, class, name, model)
-  local dst = "App/" .. book .. "/" .. page .. "/components/timers/" .. name .. ".lua"
-  local tmplt = "template/components/pageX/timers/timer.lua"
-  util.mkdir("App", book, page, "components", "timers", class)
+  local dst = "App/" .. book .. "/components/".. page .. "/timers/" .. name .. ".lua"
+  local tmplt = "template/components/pageX/timer/timer.lua"
+  util.mkdir("App", book, "components", page, "timers")
+  print(dst, tmplt)
   util.saveLua(tmplt, dst, model)
   return dst
 end
 
 function controller:save(book, page, class, name, model)
-  local dst = "App/" .. book .. "/models/" .. page .. "/timers/" .. class .. "/" .. name .. ".json"
-  util.mkdir("App", book, "models", page, "timers", class)
+  local dst = "App/" .. book .. "/models/" .. page .. "/timers/ " .. name .. ".json"
+  util.mkdir("App", book, "models", page, "timers")
   util.saveJson(dst, model)
   return dst
 end

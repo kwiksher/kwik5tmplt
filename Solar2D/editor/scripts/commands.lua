@@ -643,7 +643,7 @@ function M.publish(UI, args, controller, decoded)
   --
   -- print(args.model)
   local model  -- getModelFrom uses args.props.properties
-    if #args.props.properties > 0 then
+  if args.props.properties  and #args.props.properties > 0 then
     model = getModelFrom(args)
   else
     model = args.model  or args.props
@@ -651,6 +651,7 @@ function M.publish(UI, args, controller, decoded)
   ---
   -- local _dump = util.copyTable(model)
   -- print(json.encode(_dump))
+  print(json.prettify(model))
 
   local files = {}
   --
@@ -678,6 +679,7 @@ function M.publish(UI, args, controller, decoded)
     --  for modifying a layer model will have a class value as 'image' when created by UXP plugin.
     --
     local classFolder = UI.editor:getClassFolderName(args.class)
+    -- print(classFolder)
     -- save lua
     -- print("@@@", model.name)
     files[#files + 1] = controller:render(book, page, layer, classFolder, class, model)
@@ -752,17 +754,17 @@ function M.publishForSelections(UI, args, controller, decoded)
     if target == nil or target:len() == 0 then
        native.showAlert( "alert", "Please select a layer or _target for creating a component")
       return false
+    else
+      selections =  {{text=target, class =UI.editor.currentClass, layer=target }}
     end
-    selections =  {{text=target, class =UI.editor.currentClass, layer=target }}
   else
-    selections = {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
+    -- selections = {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
+    print(json.prettify(selections))
   end
-  print(json.prettify(selections))
   for i, obj in next, selections do
     if obj.parentObj then
-        if obj.parentObj  then -- class has been set, so the layer == "witch/en/button"
-          layer = obj.parentObj.layer.."/"..obj.layer
-        end
+      -- class has been set, so the layer == "witch/en/button"
+      layer = util.getLayerPath(obj)
     else
       layer = obj.layer
     end
@@ -770,7 +772,8 @@ function M.publishForSelections(UI, args, controller, decoded)
     model.name = obj.layer
 
     updatedModel = util.updateIndexModel(updatedModel, layer, class, model.properties._type or model.properties.type)
-    -- print(json.encode(updatedModel))
+    -- print(json.prettify(updatedModel))
+
     --- save json
     -----------
     -- print(book, page, layer, classFolder, args.index)
@@ -783,6 +786,7 @@ function M.publishForSelections(UI, args, controller, decoded)
     -- decoded[model.index].actionName = model.actionName
     -- decoded[model.index].name=model.name
     --
+    -- print(json.prettify(model))
     -- save lua
     files[#files + 1] = controller:render(book, page, layer, classFolder, class, model)
     -- save json
@@ -868,6 +872,13 @@ function M.openEditorForCommand(book, page, name)
   os.execute(cmd)
 end
 
+function M.openEditorForAudio(book, page, name, subclass)
+  local path =
+    system.pathForFile("App/" .. book .. "/components/" .. page .. "/audios/"..subclass.."/" .. name .. ".lua", system.ResourceDirectory)
+  local cmd = "code " .. path
+  os.execute(cmd)
+end
+
 -- type == audios, groups, page, timers, variables
 function M.openEditor(book, page, type, name)
   local path =
@@ -879,15 +890,29 @@ function M.openEditor(book, page, type, name)
   os.execute(cmd)
 end
 
-function M.openEditorForLayer(book, page, layer, class)
-  -- print("App/" .. book .. "/components/" .. page .. "/" .. layer, class)
+function M.openEditorForLayer(book, page, layer, class, type)
+  -- print("openEditorForLayer", book, page, layer, class, type)
   local path = system.pathForFile("App/" .. book, system.ResourceDirectory)
   if class and class:len() > 3 and class ~= layer then
-    path = path .. "/components/" .. page .. "/layers/" .. layer .. "_" .. class .. ".lua"
+    if type == "group" then
+      path = path .. "/components/" .. page .. "/groups/" .. layer .. "_" .. class .. ".lua"
+    else
+      path = path .. "/components/" .. page .. "/layers/" .. layer .. "_" .. class .. ".lua"
+    end
   elseif layer == "index" then
     path = path .. "/components/" .. page .. "/index.lua"
   else
-    path = path .. "/components/" .. page .. "/layers/" .. layer .. ".lua"
+    if type == "group" then
+      path = path .. "/components/" .. page .. "/groups/" .. layer .. ".lua"
+    elseif type == "timer" then
+     path = path .. "/components/" .. page .. "/timers/" .. layer .. ".lua"
+    elseif type == "variable" then
+      path = path .. "/components/" .. page .. "/variables/" .. layer .. ".lua"
+    elseif type == "joint" then
+      path = path .. "/components/" .. page .. "/joints/" .. layer .. ".lua"
+      else
+      path = path .. "/components/" .. page .. "/layers/" .. layer .. ".lua"
+    end
   end
   --
   -- local url = "vscode://file/" .. path

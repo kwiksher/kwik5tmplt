@@ -1,5 +1,5 @@
 local M = {
-  name = "path",
+  name = "path0",
   class="Path",
   from = {
     alpha = 1,
@@ -31,7 +31,8 @@ local M = {
     resetAtEnd=false,
     easing="inQuad",
     xSwipe=nil,
-    ySwipe=nil
+    ySwipe=nil,
+    useLang = false
   },
   breadcrumbs = {
     enable  = false,
