@@ -37,7 +37,7 @@ function M:create(UI)
       fontSize = 10,
       align = "center",
       x = x,
-      y = 140,
+      y = 140, --properties.y,
   }
   local pageText = display.newText(options)
   pageText:setFillColor(unpack(properties.textColor))
