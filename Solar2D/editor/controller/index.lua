@@ -89,7 +89,7 @@ function M:useClassEditorProps()
   end
   --
   if self.picker then
-    props.name = picker.obj.field.text
+    props.name = picker:getValue()
   end
 
   return props
@@ -240,7 +240,12 @@ function M:render(book, page, layer, classFolder, class, model)
       tmplt =  "template/components/pageX/"..classFolder.."/layer_animation.lua"
     end
     if model.type =="group" then
-      dst =  "App/"..book.."/components/"..page.."/groups/"..layer.."_"..class ..".lua"
+      if class:len() > 0 then
+        dst =  "App/"..book.."/components/"..page.."/groups/"..layer.."_"..class ..".lua"
+      else
+        tmplt =  "template/components/pageX/group/group.lua"
+        dst =  "App/"..book.."/components/"..page.."/groups/"..layer..".lua"
+      end
     else
       dst = "App/"..book.."/components/"..page.."/layers/"..layer.."_"..class ..".lua"
     end
@@ -260,7 +265,16 @@ function M:render(book, page, layer, classFolder, class, model)
   --
   local  layerDirs = util.getLayerDirs(book,page, layer)
   util.mkdir(unpack(layerDirs))
+
+  -- when copy/paste is used in a different PC with a sample, these folders needs to be created
   util.mkdir("App", book, "components", page, "joints")
+  util.mkdir("App", book, "components", page, "timers")
+  util.mkdir("App", book, "components", page, "variables")
+  util.mkdir("App", book, "components", page, "groups")
+  util.mkdir("App", book, "components", page, "audios", "short")
+  util.mkdir("App", book, "components", page, "audios", "long")
+  util.mkdir("App", book, "components", page, "audios", "sync")
+
   util.saveLua(tmplt, dst, model)
   return dst
 end
@@ -400,7 +414,7 @@ function M:updateAsset(text, asset)
 end
 
 function M:load(book, page, layer, class, isNew, asset, _type)
-  -- print("read", page, layer, class, isNew)
+  --  print("#load", book, page, layer, class, isNew, asset, _type)
   -- the values are used in useClassEdtiorProps()
   self.page = page
   self.layer = layer
@@ -426,12 +440,14 @@ function M:load(book, page, layer, class, isNew, asset, _type)
     -- print(json.encode(model))
     self:redraw()
   elseif layer then
-
     -- this comes from clicking layerTable.class
     local layerName = layer or "index"
     --local path      = page .."/"..layerName.."_"..self.tool..".json"
     -- print( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua")
     local path      = system.pathForFile( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
+    if _type == "group" then
+      path      = system.pathForFile( "App/"..book.."/components/"..page .."/groups/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
+    end
     -- print("", path)
     if self.lastSelection ~= path then
       self.lastSelection   = path
@@ -477,11 +493,17 @@ function M:command()
           end
         end
       end
+    elseif params.isDelete then
+      print("isDelete")
+    elseif params.isNew and params.class == "joint" then
+      print("new Joint")
+      native.showAlert( "alert", "you can create a joint from physic tool")
     else
       -- read from models/{class}/{name}.json
       local decoded = util.decode(book, page, params.class, name, {subclass = params.subclass, isNew = params.isNew, isDelete = params.isDelete}) -- this reads models/xx.json
       --
-      print("From selectors")
+      print("From selectors", decoded.class)
+      self.class = decoded.class or parms.class -- see physics controller uses for joint's pointA, pointB show/hide
       self.classProps:didHide(UI)
       self.classProps:destroy(UI)
       self.classProps:init(UI)
@@ -500,6 +522,7 @@ function M:command()
       self.classProps:create(UI)
       self.classProps:didShow(UI)
       self.classProps:show()
+      self:show()
       --
       -- action
       if self.actionbox then

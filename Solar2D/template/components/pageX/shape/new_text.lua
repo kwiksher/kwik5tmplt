@@ -1,7 +1,8 @@
 -- $weight={{weight}}
 --
 local parent,root, M = newModule(...)
-
+local app = require "controller.Application"
+--
 local _layerProps = {
   name     = "{{name}}",
   x        = {{x}},
@@ -20,7 +21,7 @@ local _layerProps = {
   -- width    = nil, -- {{width}},
   font     = {{font}},
   fontSize = {{size}}, -- {{fontSize}}
-  align    = "{{align}}"  -- Alignment parameter
+  align    = "{{align}}",  -- Alignment parameter
   shapedWith    = "new_text"
 }
 --
@@ -31,6 +32,7 @@ end
 function M:create(UI)
   local layerProps = self.layerProps or _layerProps
   self.layerProps = layerProps
+  -- layerProps.x, layerProps.y = app.getCenter(layerProps.x, layerProps.y)
 
   local  obj = display.newText(layerProps)
 

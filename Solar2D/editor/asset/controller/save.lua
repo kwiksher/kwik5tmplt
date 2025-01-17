@@ -92,7 +92,7 @@ local instance = require("commands.kwik.baseCommand").new(
     -- publish
     scripts.backupFiles(files)
     scripts.executeCopyFiles(files)
-    scripts.delete(files)
+    --scripts.delete(files)
 
   end
 )

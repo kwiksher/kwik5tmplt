@@ -61,6 +61,15 @@ function newModule(name)
   if isLayers then
     M.name = M.name:sub(8)
   end
+  local names = name:split(".")
+  local last= names[#names]
+  local isClass = last:find("_")
+  if isClass then
+    M.layerMod   =  parent ..last:sub(1, isClass-1  )
+  else
+    M.layerMod   =  parent ..last
+  end
+  -- print(M.name, M.layerMod)
   M.newInstance = newInstance
   return parent, root, M
 end
@@ -114,9 +123,19 @@ function M:cancelAllTransitions()
 end
 --
 function M.getPosition(x, y)
-    local mX = x and (x * 0.25 - 480 * 0.5) or 0
-    local mY = y and (y * 0.25 - 320 * 0.5) or 0
+  local editorWidth, editorHeight = display.contentWidth - 480, display.contentHeight -320
+    -- local mX = x and (x * 0.25 - 480 * 0.5) or 0
+    -- local mY = y and (y * 0.25 - 320 * 0.5) or 0
+   local mX = x and (x * 0.25 + editorWidth * 0.5) or 0
+   local mY = y and (y * 0.25 + editorHiehg * 0.5 ) or 0
+
     return mX, mY
+end
+
+function M.getCenter(x, y)
+  local mX = x and (x + display.contentWidth * 0.5) or display.contentCenterX
+  local mY = y and (y + display.contentHeight * 0.5) or display.contentCenterY
+  return mX, mY
 end
 
 
@@ -221,6 +240,12 @@ function M.loadPage(UI)
   UI.editor.assetStore:set{value = {decoded=UI.editor.assets}}
 end
 
+function M.getImageSuffix()
+  local imageSuffix = display.imageSuffix
+  local scale = imageSuffix=="@2x" and 2 or 1
+  scale = imageSuffix == "@4x"  and 4 or scale
+  return scale
+end
 
 function M.new(Props)
     local app = display.newGroup()

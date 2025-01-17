@@ -1,5 +1,5 @@
 local M = {
-  name = "spin",
+  name = "spin0",
   class="spin",
   properties = {
     target = NIL,

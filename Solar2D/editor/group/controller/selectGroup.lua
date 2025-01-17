@@ -2,6 +2,8 @@ local BC          = require("commands.kwik.baseCommand")
 local json        = require("json")
 local editor      = require("editor.group.index")
 local util        = require("editor.util")
+local controller = require("editor.group.index").controller
+
 --
 local command = function (params)
 	local UI    = params.UI
@@ -15,20 +17,37 @@ local command = function (params)
   local tableData
 
   UI.editor.currentTool = editor
-
+  controller.isNew = false
+  --
   if params.isNew then
     --local boxData = util.read( UI.editor.currentBook, UI.page)
     --print(json.encode(boxData))
     --
+    controller.isNew = true
     tableData = require("template.components.pageX.group.defaults.group")
 
-    UI.editor.groupLayersStore:set(tableData) -- layersTable
+    UI.editor.groupLayersStore:set{members = tableData} -- layersTable
     local model = util.createIndexModel(UI.scene.model)
     -- print(json.encode(model))
-    UI.editor.layerJsonStore:set(model.components.layers) -- layersbox
+    UI.editor.layerJsonStore:set{layers = model.components.layers} -- layersbox
 
   elseif params.isDelete then
     print(params.class, "delete")
+    print(json.encode(controller.selectbox.selections)) -- selectbox == groupTable
+    UI.editor.selections = controller.selectbox.selections
+
+    ---[[
+    UI.scene.app:dispatchEvent {
+      name = "editor.classEditor.delete",
+      UI = UI,
+      class = params.class,
+      icon = "trash-icon",
+      isNew = false, --(name ~= "trash-icon" and name ~="Properties-icon"),
+      isDelete = true --(name == "trash-icon")
+    }
+    --]]
+    return
+
   elseif name:len() > 0 then
     --
     -- layersTable (group members)
@@ -52,31 +71,9 @@ local command = function (params)
     -- let's remove entries of tableData from boxData
     --    members = ["GroupA.Ellipse", "GroupA.SubA.Triangle"]
 
-    local function iterator(entries, parent)
-      for i, v in next, entries do
-        local parent = nil
-        local name = v.name
+    controller.workTable = tableData.members
+    controller.iterator(model.components.layers, nil, 1)
 
-        local function check(parent, name)
-          for i=1, #tableData.members do
-            local _name = tableData.members[i]
-            if parent then
-              if parent .."."..name == _name then
-                return true
-              end
-            elseif name == _name then
-              return true
-            end
-          end
-        end
-        v.isFiltered = check(parent, name)
-        if v.children then
-            iterator(v.children, name)
-        end
-      end
-    end
-
-    iterator(model.components.layers)
 
     -- local boxData = util.read( UI.editor.currentBook, UI.page, function(parent, name)
     --   for i=1, #tableData.layers do
@@ -93,8 +90,9 @@ local command = function (params)
     -- end)
 
 
-    UI.editor.layerJsonStore:set(model.components.layers) -- layersbox
-    UI.editor.groupLayersStore:set(tableData) -- layersTable
+    UI.editor.layerJsonStore:set{layers = model.components.layers}-- layersbox
+    UI.editor.groupLayersStore:set{members = tableData.members} -- layersTable
+    -- print(json.prettify(tableData))
 
 
   end

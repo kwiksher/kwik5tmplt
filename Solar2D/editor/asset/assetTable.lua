@@ -275,11 +275,12 @@ function M:destroy()
         -- print("@@@@@", self.objs[i].name)
         mui.removeWidgetByName(self.objs[i].name)
       else
-        if self.objs[i].rect then
+        if self.objs[i].rect and self.objs[i].rect.removeSelf then
           self.objs[i].rect:removeSelf()
         end
         if self.objs[i].removeSelf then
           self.objs[i]:removeSelf()
+          self.objs[i] = nil
         end
       end
     end

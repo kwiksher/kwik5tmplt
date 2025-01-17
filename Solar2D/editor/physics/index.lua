@@ -43,6 +43,8 @@ function M:init(UI)
   selectbox:init(UI, display.contentCenterX-480/1.5, self.y, self.width, self.height)
   classProps:init(UI, self.x + self.width, self.y, 100, self.height)
   classProps.model = self.model.props
+  classProps.type  = current
+
   --
   actionbox:init(UI, self.x+ self.width, display.contentCenterY)
   buttons:init(UI, self.x , display.contentHeight/2)

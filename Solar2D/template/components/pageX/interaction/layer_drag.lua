@@ -1,7 +1,6 @@
-local name = ...
-local parent,root = newModule(name)
+local parent,root, M = newModule(...)
+local layerProps = require(M.layerMod).layerProps
 
-local layerProps = require(parent.."{{layer}}").properties
 local MultiTouch = require("extlib.dmc_multitouch")
 
 function M:dbounds()

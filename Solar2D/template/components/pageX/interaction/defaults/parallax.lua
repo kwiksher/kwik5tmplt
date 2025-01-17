@@ -1,5 +1,5 @@
 local M = {
-  name = "parallax",
+  name = "parallax0",
   class="parallax",
   properties = {
     target = NIL,

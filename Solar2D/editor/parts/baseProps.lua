@@ -5,7 +5,7 @@ local M = {}
 M.name = name
 M.weight = 1
 
-M.x = display.actualContentWidth - 200
+M.x = display.actualContentWidth - 195
 M.y = 10
 
 local json = require("json")
@@ -262,7 +262,7 @@ function M:createTable(props)
       obj:addEventListener("tap", function(event) self:tapListener(event, 'action')end)
     elseif prop.name == "variable" then
       obj:addEventListener("tap", function(event) self:tapListener(event, 'variable')end)
-    elseif prop.name == "othersGroup" then
+    elseif prop.name == "others" then
         obj:addEventListener("tap", function(event) self:tapListener(event, 'group')end)
     elseif self.onTapLayerSet[prop.name] then
       -- print(self.onTapLayerSet[prop.name])
@@ -271,7 +271,7 @@ function M:createTable(props)
       obj:addEventListener("tap", function(event) self:tapListener(event, 'posXY')end)
     elseif prop.name == 'alpha' then
       alphaObj = obj
-    elseif prop.name == 'color' or prop.name:find("color")  or prop.name == 'imageFile' then
+    elseif prop.name == 'color' or prop.name:find("color")  then --  or prop.name == 'imageFile'
       -- obj.fieldAlpha = alphaObj.field
       imageObj = obj
       obj.targetObject = self.targetObject

@@ -59,6 +59,11 @@ function M:drawRect()
       rectangle.xScale, rectangle.yScale = xScale, yScale
       if  phase == "ended" or phase == "cancelled" then
         ---
+        local w, h = rectangle.width, rectangle.height
+        rectangle.xScale, rectangle.yScale = 1
+        rectangle.width = rectangle.width*xScale
+        rectangle.height = rectangle.height*yScale
+
         self.obj = rectangle
         Runtime:removeEventListener( "touch", touchListener )
         Runtime:removeEventListener("key", onKeyEvent)

@@ -30,7 +30,7 @@ mkdir -p components/$page/variables
 mkdir -p components/$page/joints
 mkdir -p models/$page
 
-cp ../../editor/template/components/pageX/layer/bg.lua components/$page/layers/bg.lua
+cp ../../template/components/pageX/layer/bg.lua components/$page/layers/bg.lua
 
 cd components/$page
 #cp $newPageIndex index.lua

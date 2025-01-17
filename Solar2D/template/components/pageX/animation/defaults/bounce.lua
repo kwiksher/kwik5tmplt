@@ -1,5 +1,5 @@
 local M = {
-  name = "bounce",
+  name = "bounce0",
   class="Bounce",
   from = nil,
   to = {
@@ -21,7 +21,8 @@ local M = {
     resetAtEnd=false,
     easing="outCirc",
     xSwipe=nil,
-    ySwipe=nil
+    ySwipe=nil,
+    useLang = false
   },
   breadcrumbs = nil,
   layerOptions = {

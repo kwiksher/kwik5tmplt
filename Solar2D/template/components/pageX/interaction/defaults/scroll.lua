@@ -1,5 +1,5 @@
 local M = {
-  name = "scroll",
+  name = "scroll0",
   class="scroll",
   properties = {
     target = NIL,

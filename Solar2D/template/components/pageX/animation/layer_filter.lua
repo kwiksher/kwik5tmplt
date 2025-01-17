@@ -11,6 +11,7 @@ local M = {
   resetAtEnd = nil,
   xSwipe     = nil,
   ySwipe     = nil,
+  useLang = false,
   {{#composite}}
   composite = {
     name   = NIL,

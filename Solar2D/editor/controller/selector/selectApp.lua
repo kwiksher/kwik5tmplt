@@ -60,7 +60,8 @@ local command = function (params)
 			end
 			if #books > 0 then
         local function compare(a,b)
-          return a.weight < b.weight
+          return a.name < b.name
+          -- return a.weight < b.weight
         end
         --
         table.sort(books,compare)

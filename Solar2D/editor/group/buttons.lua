@@ -32,14 +32,14 @@ end
 
 function M:create(UI)
   M:_create(UI)
-  self.model[1].obj.x = self.x +0
+  self.model[1].obj.x = self.x -220
   self.model[1].obj.y = self.y + 30
-  self.model[1].obj.rect.x = self.x + 0
+  self.model[1].obj.rect.x = self.x + -220
   self.model[1].obj.rect.y = self.y+ 30
-  self.model[2].obj.x = self.x + 0
-  self.model[2].obj.y = self.y + self.model[1].obj.height + 30 + 5
-  self.model[2].obj.rect.x = self.x + 0
-  self.model[2].obj.rect.y = self.y+self.model[1].obj.height + 30 + 5
+  self.model[2].obj.x = self.x + 220
+  self.model[2].obj.y = self.y + 30 -- self.model[1].obj.height
+  self.model[2].obj.rect.x = self.x + 220
+  self.model[2].obj.rect.y = self.y+ 30
   self.group:toFront()
   self:hide()
 end

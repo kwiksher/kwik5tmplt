@@ -1,6 +1,7 @@
 local M = {}
 local current = ...
 local parent,root = newModule(current)
+local actionEditor = require("editor.action.index")
 --
 local App = require("Application")
 
@@ -34,6 +35,8 @@ function M:create(UI)
   --UI.editor.groupEditor:insert(self.group)
   self.group:toFront()
   self:hide()
+  --
+  actionEditor:addToogleButton(self)
 end
 
 return M

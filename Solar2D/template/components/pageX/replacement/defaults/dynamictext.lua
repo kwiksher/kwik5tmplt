@@ -1,5 +1,5 @@
 local M = {
-  name = "",
+  name = "dynamic0",
   class="dynamictext",
   properties = {
     target = NIL,
