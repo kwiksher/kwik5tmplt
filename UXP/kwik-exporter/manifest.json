@@ -1,5 +1,5 @@
 {
-  "id": "com.kwiksher.kwik5.exporter-ps",
+  "id": "com.kwiksher.kwik5.exporter",
   "name": "Kwik Exporter",
   "version": "0.1.0",
   "main": "main.js",
