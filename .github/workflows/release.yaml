@@ -54,11 +54,15 @@ jobs:
         filename: ${{ env.RELEASE_FILENAME_exporter }}
         exclusions: '*.git*'
 
-    - name: Rename for ccx
+    - name: copy for ccx
       run: |
         cd UXP
         source ./copy_photoshop.command
         source ./copy_solar2d.command
+
+    - name: Rename for ccx
+      run: |
+        cd UXP
         mv ${{env.CCX_Dir}} ${{env.CCX_NAME}}
 
     - name: Archive Release exporter ccx
