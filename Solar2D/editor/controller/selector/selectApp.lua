@@ -8,7 +8,7 @@ local util = require("lib.util")
 local bookstore = require("App.bookstore")
 
 local function isIgnored(file)
-  for i, v in next, bookstore.bookignored do
+  for i, v in next, bookstore.bookignored or {} do
     if file == v then
       return true
     end
