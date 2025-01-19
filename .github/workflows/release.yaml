@@ -57,6 +57,8 @@ jobs:
     - name: Rename for ccx
       run: |
         cd UXP
+        source ./copy_photoshop.command
+        source ./copy_solar2d.command
         mv ${{env.CCX_Dir}} ${{env.CCX_NAME}}
 
     - name: Archive Release exporter ccx
@@ -65,7 +67,7 @@ jobs:
         type: 'zip'
         directory: UXP
         path:  ${{env.CCX_NAME}}
-        filename: ${{ env.CCX_NAME}}.exporter-ps_PS.ccx
+        filename: ${{ env.CCX_NAME}}.exporter_PS.ccx
         exclusions: '*.git*'
 
     - name: Archive Release framework
