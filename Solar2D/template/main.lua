@@ -1,6 +1,8 @@
 require("components.common.myComponent")
 system.setTapDelay( 0.2 )
-
+--
+-- require("installer.index").init()
+--
 local restore = false
 --restore = true
 if restore then
