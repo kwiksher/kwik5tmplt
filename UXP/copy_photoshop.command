@@ -1,4 +1,4 @@
 dst=kwik-exporter/kwik/base-proj/Photoshop
 
-cp -rf ../Phottoshop/book $dst
-cp -rf ../Phottoshop/icon $dst
+cp -rf ../Photoshop/book $dst
+cp -rf ../Photoshop/icon $dst
