@@ -65,7 +65,7 @@
         "schemes":
             [ "https", "corona"],
         "extensions":
-            [ ".xd", ".psd", "*.lua" ]
+            [ "",".xd", ".psd", "*.lua" ]
     }
   }
 }
