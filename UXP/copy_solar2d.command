@@ -1,5 +1,21 @@
 dst=kwik-exporter/kwik/base-proj/Solar2D
 
+mkdir -p  $dst/AndroidResources
+mkdir -p  $dst/assets
+mkdir -p  $dst/commands
+mkdir -p  $dst/components
+mkdir -p  $dst/controller
+mkdir -p  $dst/editor
+mkdir -p  $dst/en.lproj
+mkdir -p  $dst/extlib
+mkdir -p  $dst/Images.xcassets
+mkdir -p  $dst/installer
+mkdir -p  $dst/lib
+mkdir -p  $dst/plugin
+mkdir -p  $dst/server
+mkdir -p  $dst/template
+mkdir -p  $dst/LaunchScreen.storyboardc
+
 cp -rf ../Solar2D/AndroidResources $dst
 #cp -rf ../Solar2D/App $dst
 cp -rf ../Solar2D/assets $dst
@@ -14,7 +30,6 @@ cp -rf ../Solar2D/Images.xcassets $dst
 cp -rf ../Solar2D/installer $dst
 #cp -rf ../Solar2D/installer copy 1 $dst
 cp -rf ../Solar2D/lib $dst
-cp -rf ../Solar2D/models $dst
 cp -rf ../Solar2D/plugin $dst
 cp -rf ../Solar2D/server $dst
 cp -rf ../Solar2D/template $dst
