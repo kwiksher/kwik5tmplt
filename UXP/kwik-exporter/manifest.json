@@ -1,5 +1,5 @@
 {
-  "id": "com.kwiksher.kwik5.exporter-ps",
+  "id": "com.kwiksher.kwik5.dev-ps",
   "name": "Kwik Exporter",
   "version": "0.1.0",
   "main": "main.js",
@@ -65,7 +65,7 @@
         "schemes":
             [ "https", "corona"],
         "extensions":
-            [ ".xd", ".psd", "*.lua" ]
+            [ "",".xd", ".psd", "*.lua" ]
     }
   }
 }
