@@ -31,9 +31,11 @@ local function infinityBackHandler(self, event)
       self.x = self.x - props.speed
     end
   elseif (props.direction == "right") then --horizontal loop
-    if self.x   > (xd - (props.speed * 2) + self.width/4) then
-      self.x = -xd + self.width/4
-      -- print(self.x, xd - (props.speed * 2), self.width/2)
+    -- if self.x   > (xd - (props.speed * 2) + self.width/4) then
+    if self.x   > self.oriX  + self.width/2  then
+      self.x = self.oriX
+      -- self.x = self.x  -xd*2 --  + self.width/4
+      -- print(self.x, xd - (props.speed * 2), self.width/8)
     else
       self.x = self.x + props.speed
     end
@@ -113,6 +115,7 @@ function M.createInfinityImage(UI, layer_1, props)
       layer_2.y = layer_1.oriY
     else
       layer_2.x = -layer_1.width + marginX
+      layer_2.oriX = layer_2.x
       layer_2.y = layer_1.oriY
     end
     layer_1.enterFrame = infinityBackHandler

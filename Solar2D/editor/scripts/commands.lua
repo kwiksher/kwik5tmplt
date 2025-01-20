@@ -678,7 +678,7 @@ function M.publish(UI, args, controller, decoded)
     --  'shape' class will be avairable and expected here for creating a new layer if isNew
     --  for modifying a layer model will have a class value as 'image' when created by UXP plugin.
     --
-    local classFolder = UI.editor:getClassFolderName(args.class)
+    local classFolder = args.class and UI.editor:getClassFolderName(args.class) or nil
     -- print(classFolder)
     -- save lua
     -- print("@@@", model.name)
@@ -725,7 +725,7 @@ function M.publishForSelections(UI, args, controller, decoded)
 
   -- print(json.encode(args))
   local model  -- getModelFrom uses args.props.properties
-  if #args.props.properties > 0 then
+  if args.props.properties and #args.props.properties > 0 then
     model = getModelFrom(args)
   else
     model = args.model  or args.props
@@ -771,7 +771,8 @@ function M.publishForSelections(UI, args, controller, decoded)
     model.layer = layer
     model.name = obj.layer
 
-    updatedModel = util.updateIndexModel(updatedModel, layer, class, model.properties._type or model.properties.type)
+    local groupType =  model.properties and (model.properties._type or model.properties.type) or nil
+    updatedModel = util.updateIndexModel(updatedModel, layer, class, groupType)
     -- print(json.prettify(updatedModel))
 
     --- save json
