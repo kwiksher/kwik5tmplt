@@ -24,7 +24,11 @@ function M:setProps(layerProps)
   self.imageName = "/"..layerProps.name.."." ..layerProps.type
   --
   self.blendMode = layerProps.blendMode
+  --
+  self.infinity = layerProps.infinity
+  --
   self.layerProps = layerProps
+
 end
 
 function M:setPropsFromDisplayObject(layerProps)
@@ -111,7 +115,6 @@ function M:createImage(UI)
   end
   --
   return obj
-
 end
 
 function M:createRect(UI)
@@ -162,10 +165,10 @@ function M:createRect(UI)
     sceneGroup:insert( obj)
   end
   --
+
   return obj
 
 end
-
 
 --
 M.new = function()
