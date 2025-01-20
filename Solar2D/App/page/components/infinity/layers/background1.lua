@@ -2,6 +2,7 @@
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
+local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
@@ -13,6 +14,13 @@ local layerProps = {
   x         = 2100 + (-180 -2100)/2,
   y         = 1031 + (1231 - 1031)/2,
   alpha     = 100/100,
+  --
+  infinity = {
+    speed = 1,
+    distance = 0,
+    direction = "right",
+  },
+
 }
 
 M.align       = ""
@@ -41,13 +49,25 @@ function M:create(UI)
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
-  UI.layers[#UI.layers] = self:createImage(UI)
+  local obj = self:createImage(UI)
+  UI.layers[#UI.layers] = obj
+  self.obj = obj
+
+  if self.infinity then
+    infinity.createInfinityImage(UI, self.obj, self.infinity)
+  end
 end
 --
 function M:didShow(UI)
+  if self.infinity then
+    infinity.addEventListener(self.obj)
+  end
 end
 --
 function M:didHide(UI)
+  if self.infinity then
+    --infinity.removeEventListener(self.obj)
+  end
 end
 --
 function  M:destroy(UI)

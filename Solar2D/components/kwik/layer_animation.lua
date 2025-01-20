@@ -337,7 +337,7 @@ local function createAnimationFunc(self, UI, tool)
       -- end
       animObjTo = gtween.new(layer, self.properties.duration / 1000, propsTo, options)
       animObjTo:pause()
-      return animObjTo
+      return {to = animObjTo}
     else -- linear
       self.properties.duration = self.properties.duration or 1000
       --

@@ -79,12 +79,7 @@ function M:useClassEditorProps(UI)
     if name == "_type" then
       props.properties[#props.properties + 1] = {name=value, value=true}
     elseif name == "walls" then
-      local  v= yaml.eval("{"..value.."}")
-      -- print(json.prettify(v))
-      local _value ={}
-      for k, _v in pairs(v) do
-        _value[k] = tostring(_v)
-      end
+      local _value =yaml.evalTable(value)
       props.properties[#props.properties + 1] = {name = name, value=_value}
     else
       props.properties[#props.properties + 1] = {name = name, value=value}

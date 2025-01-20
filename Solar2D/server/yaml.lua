@@ -611,4 +611,13 @@ exports.getYaml = function(v)
   return value, yamltype
 end
 
+exports.evalTable = function(str)
+  local  v = exports.eval("{"..str.."}")
+  local value ={}
+  for k, _v in pairs(v) do
+    value[k] = tostring(_v)
+  end
+  return value
+end
+
 return exports

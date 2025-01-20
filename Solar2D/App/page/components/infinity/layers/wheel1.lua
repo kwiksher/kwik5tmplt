@@ -21,7 +21,7 @@ M.randXEnd    = nil
 M.randYStart  = nil
 M.randYEnd    = nil
 --
-M.scaleX     = nil
+M.xScale    = 0.9
 M.scaleY     = nil
 M.rotation   = nil
 --

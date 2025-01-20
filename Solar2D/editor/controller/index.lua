@@ -7,6 +7,8 @@ local util = require("editor.util")
 local json = require("json")
 local lustache = require "extlib.lustache"
 local toolbar = require(root.."parts.toolbar")
+local yaml = require("server.yaml")
+
 
 function M:init(viewGroup)
   self.viewGroup = viewGroup or {}
@@ -71,7 +73,26 @@ function M:useClassEditorProps()
     print("#Error self.classProps is nil for ", self.tool)
     return nil
   end
+  --
   local properties = self.classProps:getValue()
+  -- init
+  local initProps = {
+    randXStart  = "NIL",
+    randXEnd    = "NIL",
+    randYStart  = "NIL",
+    randYEnd    = "NIL",
+    --,
+    xScale     = "NIL",
+    yScale     = "NIL",
+    rotation   = "NIL",
+    --,
+    layerAsBg     = "NIL",
+    isSharedAsset = "NIL",
+  }
+  for k, v in pairs(initProps) do
+    props.properties[#props.properties+1] = {name = k, value = v}
+  end
+  --
   for i, entry in next, properties do
     print("", properties[i].name, type(properties[i].value))
     if entry.name == "_target" then
@@ -79,6 +100,12 @@ function M:useClassEditorProps()
     elseif entry.name  == "color" then
         local nums = util.split(entry.value, ',')
         props.properties[#props.properties+1] = { name = "color", value = {r= tonumber(nums[1])/255, g=tonumber(nums[2])/255, b=tonumber(nums[3])/255, a=(tonumber(nums[4]) or 1)} }
+    elseif entry.name == "infinity" then
+      props.properties[#props.properties+1] = { name = entry.name, value = yaml.evalTable(entry.value)}
+    elseif entry.name == "_height" then
+      props.properties[#props.properties+1] = {name = "height", value = entry.value}
+    elseif entry.name == "_width" then
+      props.properties[#props.properties+1] = {name = "width", value = entry.value}
     else
       props.properties[#props.properties+1] = {name = entry.name, value = entry.value}
     end

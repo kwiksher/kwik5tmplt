@@ -8,7 +8,7 @@ local instance =
   function(params)
     local UI = params.UI
     local props = params.props
-    printKeys(props.target)
+    -- printKeys(props.target)
     -- print(props.layer, props.class)
     -- for i, v in next, UI.editor.selections do
     --   print("", v.text)

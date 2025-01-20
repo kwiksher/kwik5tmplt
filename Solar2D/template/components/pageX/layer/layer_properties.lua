@@ -1,8 +1,7 @@
--- $weight={{weight}}
+local M = {}
 --
-local parent,root, M = newModule(...)
-
-local _layerProps = {
+M.properties = {
+  {{#properties}}
   blendMode = "{{blendMode}}",
   height    = {{height}},
   width     = {{width}} ,
@@ -35,35 +34,20 @@ local _layerProps = {
   fontSize = {{fontSize}},
   {{/text}}
   ---
-  infinity = {{infinity}},
-  infinitySpeed = {{infinitySpeed}},
-  infinityDistance = {{infinityDistance}},
+  {{#infinity}}
+  infinity = {
+    speed = {{speed}},
+    distance = {{distance}},
+    direction = "{{direction}}",
+  },
+  {{/infinity}}
   ---
   {{#imagePath}}
   imagePath   = {{imagePath}},
   imageHeight = {{imageHeight}},
   imageWidth  = {{imageWidth}}
   {{/imagePath}}
+  {{/properties}}
 }
---
-function M:init(UI)
-  --local sceneGroup = UI.sceneGroup
-end
---
-function M:create(UI)
-end
---
-function M:didShow(UI)
-end
---
-function M:didHide(UI)
-end
---
-function  M:destroy(UI)
-end
---
-function M:new(props)
-  return self:newInstance(props, _layerProps)
-end
 --
 return M
