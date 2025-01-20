@@ -1,242 +1,147 @@
--- Code created by Kwik - Copyright: kwiksher.com {{year}}
--- Version: {{vers}}
--- Project: {{ProjName}}
+local M = {}
 --
-local _M = {}
---
-local _K = require "controller.Application"
 local util = require "lib.util"
+--
 -- Infinity background animation
+--
+local count = 0
+
 local function infinityBackHandler(self, event)
-     local xd, yd = self.x,self.y
-     if (self.direction == "left" or self.direction == "right") then
-         xd = self.width
-         if (self.distance ~= nil) then
-            xd = self.width + self.distance
-        end
-     elseif (self.direction == "up" or self.direction == "down") then
-         yd = self.height
-         if (self.distance ~= nil) then
-            yd = self.height + self.distance
-        end
-     end
-     if (self.direction == "left") then  --horizontal loop
-        if self.x < (-xd + (self.speed*2)) then
-           self.x = xd
-        else
-           self.x = self.x - self.speed
-        end
-     elseif (self.direction == "right") then  --horizontal loop
-        if self.x > (xd - (self.speed*2)) then
-           self.x = -xd
-        else
-           self.x = self.x + self.speed
-        end
-     elseif (self.direction == "up") then  --vertical loop
-        if self.y < (-yd + (self.speed*2)) then
-           self.y = yd
-        else
-           self.y = self.y - self.speed
-        end
-     elseif (self.direction == "down") then  --vertical loop
-        if self.y > (yd - (self.speed*2)) then
-           self.y = -yd
-        else
-           self.y = self.y + self.speed
-        end
-     end
+  local xd, yd = self.x, self.y
+  local props = self.infinityProps
+  -- printKeys(self)
+  -- count = count + 1
+  -- if count > 10 then return end
+
+  if (props.direction == "left" or props.direction == "right") then
+    xd = self.width
+    if (props.distance ~= nil) then
+      xd = self.width + props.distance
+    end
+  elseif (props.direction == "up" or props.direction == "down") then
+    yd = self.height
+    if (props.distance ~= nil) then
+      yd = self.height + props.distance
+    end
+  end
+  if (props.direction == "left") then --horizontal loop
+    if self.x < (-xd + (props.speed * 2) + self.width/4) then
+      self.x = xd + self.width/4
+    else
+      self.x = self.x - props.speed
+    end
+  elseif (props.direction == "right") then --horizontal loop
+    if self.x   > (xd - (props.speed * 2) + self.width/4) then
+      self.x = -xd + self.width/4
+      -- print(self.x, xd - (props.speed * 2), self.width/2)
+    else
+      self.x = self.x + props.speed
+    end
+  elseif (props.direction == "up") then --vertical loop
+    if self.y < (-yd + (props.speed * 2)) then
+      self.y = yd
+    else
+      self.y = self.y - props.speed
+    end
+  elseif (props.direction == "down") then --vertical loop
+    if self.y > (yd - (props.speed * 2)) then
+      self.y = -yd
+    else
+      self.y = self.y + props.speed
+    end
+  end
 end
 --
-local function createInfinityImage(self, sceneGroup, layer)
-  local layer_2 = display.newImageRect( UI.props.imgDir..self.imagePath, UI.props.systemDir, self.imageWidth, self.imageHeight)
+function M.createInfinityImage(UI, layer_1, props)
+  print(props)
+  props.width = layer_1.width
+  local sceneGroup = UI.sceneGroup
+  local layer_2 =
+    display.newImageRect(UI.props.imgDir .. layer_1.imagePath, UI.props.systemDir, layer_1.width, layer_1.height)
+  layer_1.infinityProps = props
+  layer_2.infinityProps = props
   -- layer_2 = newImageRect({{bn}}, imageWidth, imageHeight )
-  if layer_2 == nil then return end
-  layer_2.blendMode = self.blendMode
+  if layer_2 == nil then
+    return
+  end
+  layer_2.blendMode = layer_1.blendMode
   sceneGroup:insert(layer_2)
-  sceneGroup[self.layerName.."_2"] = layer_2
+  sceneGroup[layer_1.name .. "_2"] = layer_2
   --
-  layer.anchorX = 0
-  layer.anchorY = 0;
-  util.repositionAnchor(layer, 0,0)
+  local marginX = layer_1.width/2
+  local marginY = 0 -- layer_1.height/2
+
+  -- props.direction = "left"
+  --
+  layer_1.anchorX = 0
+  layer_1.anchorY = 0
+  util.repositionAnchor(layer_1, 0, 0)
   --
   layer_2.anchorX = 0
-  layer_2.anchorY = 0;
-  util.repositionAnchor(layer_2, 0,0)
+  layer_2.anchorY = 0
+  util.repositionAnchor(layer_2, 0, 0)
   --
-  if self.inifityDirection == "up" then
-  layer.x = layer.oriX
-  layer.y = 0;
-  if self.infinityDistance > 0 then
-    layer_2.y = layer.height + self.infinityDistance
-    layer_2.x = layer.oriX;
-    layer.distance = self.infinityDistance
-    layer_2.distance = self.infinityDistance
-  else
-    layer_2.y = layer.height
-    layer_2.x = layer.oriX;
-  end
-    layer.enterFrame = infinityBackHandler
-    layer.speed = self.infinitySpeed
-    layer.direction = self.infinityDirection
+  if props.direction == "up" then
+    layer_1.x = layer_1.oriX
+    layer_1.y = 0
+    if props.distance > 0 then
+      layer_2.y = layer_1.height + props.distance
+      layer_2.x = layer_1.oriX
+    else
+      layer_2.y = layer_1.height
+      layer_2.x = layer_1.oriX
+    end
+    layer_1.enterFrame = infinityBackHandler
     layer_2.enterFrame = infinityBackHandler
-    layer_2.speed = self.infinitySpeed
-    layer_2.direction = self.infinityDirection
-  elseif self.inifityDirection == "down" then
-  layer.x = layer.oriX
-  layer.y = 0;
-  if self.infinityDistance > 0 then
-    layer_2.y = -layer.height - self.infinityDistance
-    layer_2.x = layer.oriX;
-    layer.distance = idist
-    layer_2.distance = idist
-  else
-    layer_2.y = -layer.height
-    layer_2.x = layer.oriX;
-  end
-    layer.enterFrame = infinityBackHandler
-    layer.speed = self.infinitySpeed
-    layer.direction = self.infinityDirection
+  elseif props.direction == "down" then
+    layer_1.x = layer_1.oriX
+    layer_1.y = 0
+    if props.distance > 0 then
+      layer_2.y = -layer_1.height - props.distance
+      layer_2.x = layer_1.oriX
+    else
+      layer_2.y = -layer_1.height
+      layer_2.x = layer_1.oriX
+    end
+    layer_1.enterFrame = infinityBackHandler
     layer_2.enterFrame = infinityBackHandler
-    layer_2.speed = self.infinitySpeed
-    layer_2.direction = self.infinityDirection
-  elseif self.inifityDirection == "right" then
-  layer.x = 0
-  layer.y = layer.oriY;
-  if self.infinityDistance > 0 then
-    layer_2.x = -layer.width + self.infinityDistance
-    layer_2.y = layer.oriY;
-    layer.distance = idist
-    layer_2.distance = idist
-  else
-    layer_2.x = -layer.width
-    layer_2.y = layer.oriY;
-  end
-  layer.enterFrame = infinityBackHandler
-  layer.speed = self.infinitySpeed
-  layer.direction = self.infinityDirection
-  layer_2.enterFrame = infinityBackHandler
-  layer_2.speed = self.infinitySpeed
-  layer_2.direction = self.infinityDirection
-  elseif self.inifityDirection == "left" then
-  layer.x = 0
-  layer.y = layer.oriY;
-  if self.infinityDistance > 0 then
-    layer_2.x = layer.width + self.infinityDistance
-    layer_2.y = layer.oriY;
-          layer.distance = idist
-          layer_2.distance = idist
-  else
-    layer_2.x = layer.width
-    layer_2.y = layer.oriY;
-  end
-    layer.enterFrame = infinityBackHandler
-    layer.speed = self.infinitySpeed
-    layer.direction = self.infinityDirection
+  elseif props.direction == "right" then
+    layer_1.x = 0 + marginX
+    layer_1.y = layer_1.oriY
+    if props.distance > 0 then
+      layer_2.x = -layer_1.width + props.distance
+      layer_2.y = layer_1.oriY
+    else
+      layer_2.x = -layer_1.width + marginX
+      layer_2.y = layer_1.oriY
+    end
+    layer_1.enterFrame = infinityBackHandler
     layer_2.enterFrame = infinityBackHandler
-    layer_2.speed = self.infinitySpeed
-    layer_2.direction = self.infinityDirection
+  elseif props.direction == "left" then
+    layer_1.x = 0 - marginX
+    layer_1.y = layer_1.oriY
+    if props.distance > 0 then
+      layer_2.x = layer_1.width + props.distance
+      layer_2.y = layer_1.oriY
+    else
+      layer_2.x = layer_1.width - marginX
+      layer_2.y = layer_1.oriY
+    end
+    layer_1.enterFrame = infinityBackHandler
+    layer_2.enterFrame = infinityBackHandler
   end
-end
-
-function _M:newImage(UI, sceneGroup)
-  --print("######", UI.props.imgDir..self.imagePath)
-  local layer = display.newImageRect( UI.props.imgDir..self.imagePath, UI.props.systemDir, self.imageWidth, self.imageHeight)
-  -- layer = newImageRect({{bn}}, imageWidth, imageHeight )
-  if layer == nil then return end
-  layer.imagePath = self.imagePath
-  layer.x = self.mX
-  layer.y = self.mY
-  layer.alpha = self.oriAlpha
-  layer.oldAlpha = self.oriAlpha
-  layer.blendMode = self.blendMode
-  if self.randXStart > 0 then
-    layer.x = math.random( self.randXStart, self.randXEnd)
-  end
-  if self.randYStart > 0 then
-    layer.y = math.random( self.randYStart, self.randYEnd)
-  end
-  if self.xScale then
-    layer.xScale = self.xScale
-  end
-  if self.yScale then
-    layer.yScale = self.yScale
-  end
-  if self.rotation then
-    layer:rotate( self.rotation )
-  end
-  layer.oriX = layer.x
-  layer.oriY = layer.y
-  layer.oriXs = layer.xScale
-  layer.oriYs = layer.yScale
-  layer.name = self.layerName
-  layer.type = "image"
-  sceneGroup[self.layerName] = layer
-  if self.layerAsBg then
-    sceneGroup:insert( 1, layer)
-  else
-    sceneGroup:insert( layer)
-  end
-  --
-  if self.infinity then
-    createInfinityImage(self, sceneGroup, layer)
-  end
-  return layer
-end
-
-
-function _M:myNewImage(UI)
-  return self:newImage(UI, UI.sceneGroup)
+  layer_1.infinityLayer = layer_2
 end
 --
-function _M:comicImage(UI)
-  local sceneGroup = UI.sceneGroup
-  local options = {
-    frames ={},
-     sheetContentWidth = self.imageWidth,
-     sheetContentHeight = self.imageHeight
-   }
-   local widthDiff = options.sheetContentWidth - self.mX/2
-   local heightDiff = options.sheetContentHeight - self.mY/2
-   --
-   for i=1, #self.layerSet do
-     local target = self.layerSet[i]
-     local _x = (target.x - target.width/2)/4 + widthDiff/2
-     local _y = (target.y - target.height/2)/4 + heightDiff/2
-     -- print(_x, _y)
-     options.frames[i] = {
-       x = _x,
-       y = _y,
-       width = target.width/4,
-       height = target.height/4
-     }
-     -- print(target.width/4, target.height/4)
-   end
-   local group = display.newGroup()
-   local sheet = graphics.newImageSheet(UI.props.imgDir..self.imagePath, UI.props.systemDir, options )
-   for i=1, #self.layerSet do
-     local target = self.layerSet[i]
-     local frame = options.frames[i]
-     local frame1 = display.newImageRect( sheet, i, frame.width, frame.height )
-     frame1.x, frame1.y = _K.getPosition(target.x, target.y)
-     frame1.name = target.myLName
-     frame1.oriX              = frame1.x
-     frame1.oriY              = frame1.y
-     frame1.oriXs             = 1
-     frame1.oriYs             = 1
-     frame1.oldAlpha          = 1
-     frame1.anim              = {}
-     target.panel = frame1
-     UI.layer[target.myLName] = frame1
-     group:insert(frame1)
-   end
-   --
-   UI.layer[self.layerSetName] = group
-  --  sceneGroup:insert(layer) necessary?
+
+function M.addEventListener(layer_1)
+   Runtime:addEventListener("enterFrame", layer_1)
+   Runtime:addEventListener("enterFrame", layer_1.infinityLayer)
+end
+---
+function M.removeEventListener(layer_1)
+  Runtime:addEventListener("enterFrame", layer_1)
+  Runtime:addEventListener("enterFrame", layer_1.infinityLayer)
 end
 
-_M.new = function()
-	local instance = {}
-	return setmetatable(instance, {__index=_M})
-end
-
-return _M
+return M
