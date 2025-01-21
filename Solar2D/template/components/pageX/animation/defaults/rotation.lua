@@ -1,14 +1,7 @@
 local M = {
   name = "rotation0",
   class="Rotation",
-  from = {
-    x = nil,
-    y = nil,
-    alpha = 1,
-    xScale = 1,
-    yScale = 1,
-    rotation = 0
-  },
+  from = nil,
   to = {
     x = nil,
     y = nil,

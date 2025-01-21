@@ -46,6 +46,8 @@ function M:create(UI)
   obj.rotation = layerProps.rotation or 0
   obj.shapedWith = layerProps.shapedWith
 
+  obj.oldAlpha = 1
+
   obj.layerIndex = #UI.layers+1
   UI.layers[obj.layerIndex] = obj
   UI.sceneGroup:insert(obj)

@@ -239,14 +239,14 @@ local function createPropsFrom(self, layer, _mX, _mY)
     props.yScale = layer.yScale
   elseif self.class == "rotation" then
     props.rotation = layer.rotation
-  elseif self.class == "shake" then
+  elseif self.class == "shake" or self.class == "tremble" then
     props.rotation = layer.rotation
   elseif self.class == "bounce" then
     props.y = mY
   elseif self.class == "blink" then
     props.xScale = layer.xScale
     props.yScale = layer.yScale
-  elseif (self.class == "linear" or self.class == "Dissolve" or self.class == "Path") then
+  elseif (self.class == "linear" or self.class == "dissolve" or self.class == "switch" or self.class == "path") then
     if value then
       if value.x then
         props.x = mX
@@ -308,7 +308,7 @@ local function createAnimationFunc(self, UI, tool)
   local onEndHandler = function()
     local layer = self.obj
     if self.properties.resetAtEnd then
-      if self.subclass == "Shake" then
+      if self.class == "Shake" or self.class == "tremble" then
         layer.rotation = 0
       end
       layer.x = layer.oriX
@@ -335,6 +335,10 @@ local function createAnimationFunc(self, UI, tool)
       -- for k, v in pairs(propsTo) do
       --   print(k, v)
       -- end
+      if class == "bounce" then
+         propsTo.y = layer.y + propsTo.y
+      end
+      --
       animObjTo = gtween.new(layer, self.properties.duration / 1000, propsTo, options)
       animObjTo:pause()
       return {to = animObjTo}
@@ -400,6 +404,7 @@ animationFactory.switch = function(self, UI)
   layer.xScale = layer.oriXs
   layer.yScale = layer.oriYs
   local newLayer = sceneGroup[self.properties.to]
+  print("@@@@@", self.properties.to, newLayer)
   --
   local animObj = {}
   animObj.play = function()
@@ -412,39 +417,41 @@ animationFactory.switch = function(self, UI)
   animObj.pause = function()
     print("pause is not supported in dissove")
   end
-  return animObj
+  return {to = animObj}
 end
 
-function M:init()
+function M:_init(layer)
+  local obj = self.obj or layer
   -- print("@@@", self.from.x, self.from.y)
   if self.from then
-    if self.from.x then
-      self.obj.x = self.from.x
+    if type(self.from.x) == "number" then
+      obj.x = self.from.x
     end
-    if self.from and self.from.y then
-      self.obj.y = self.from.y
+    if self.from and type(self.from.y) == "number" then
+      obj.y = self.from.y
     end
-    if self.from.rotation then
-      self.obj.rotation = self.from.rotation
+    if type(self.from.rotation) == "number" then
+      obj.rotation = self.from.rotation
     end
-    if self.from.xScale then
-      self.obj.xScale = self.from.xScale * self.obj.xScale
+    if type(self.from.xScale) == "number" then
+      obj.xScale = self.from.xScale * obj.xScale
     end
-    if self.from.yScale then
-      self.obj.yScale = self.from.yScale * self.obj.yScale
+    if type(self.from.yScale) == "number" then
+      obj.yScale = self.from.yScale * obj.yScale
     end
-    if self.from.alpha then
-      self.obj.alpha = self.from.alpha
+    if type(self.from.alpha) == "number" then
+      obj.alpha = self.from.alpha
     end
   end
   if self.pathProps and self.pathProps.newAngle then -- path
-    self.obj.newAngle = tonumber(self.pathProps.newAngle)
+    obj.newAngle = tonumber(self.pathProps.newAngle)
   end
 end
 
 --
 function M:initAnimation(UI, layer, _onEndHandler)
   self.onEndHandler = _onEndHandler
+  self:_init(layer)
   --
   if not (self.class == "switch" or self.class == "path") then
     self.buildAnim = animationFactory["gtween"]

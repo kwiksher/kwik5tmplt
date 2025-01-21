@@ -3,6 +3,7 @@ local parent, root = newModule(name)
 local Animation = require("components.kwik.layer_animation")
 local Filter = require("components.kwik.layer_filter")
 
+local animPropSet = table:mySet{"x", "y", "rotation", "xScale", "yScale", "alpha"}
 
 local instance =
   require("commands.kwik.baseCommand").new(
@@ -14,6 +15,18 @@ local instance =
     if props.to.color1 then
       for k, v in pairs(props.to.color1) do
         print("", k, v)
+      end
+    end
+
+    for k, v in pairs(props.to) do
+      if animPropSet[k] then
+        props.to[k] = tonumber(v)
+      end
+    end
+
+    for k, v in pairs(props.from) do
+      if animPropSet[k] then
+        props.from[k] = tonumber(v)
       end
     end
 
@@ -42,7 +55,7 @@ local instance =
         player:initAnimation(UI, sceneGroup[props.layer], onEndHandler)
         player.tween = player:buildAnim(UI)
         -- player.tween:pause()
-        player:init()
+        player:_init()
         if player.tween.from then
           player.tween.from:play()
         else

@@ -7,6 +7,7 @@ local M = {
     autoPlay=true,
     delay=0,
     duration=100,
+    loop = 0,
     to = NIL,
     useLang = false
   },
