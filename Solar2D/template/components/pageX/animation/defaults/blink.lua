@@ -4,17 +4,17 @@ local M = {
   from = {
     x = nil,
     y = nil,
-    alpha = 1,
-    xScale = 1,
-    yScale = 0.1,
-    rotation = 0
+    alpha = nil,
+    xScale = nil,
+    yScale = nil,
+    rotation = nil
   },
   to = {
     x = nil,
     y = nil,
     alpha = 1,
     xScale = 1,
-    yScale = 1,
+    yScale = 0.1,
     rotation = 0
   },
   properties = {
@@ -26,8 +26,8 @@ local M = {
     loop=3,
     reverse=false,
     resetAtEnd=false,
-    xSwipe=nil,
-    ySwipe=nil,
+    xSwipe=false,
+    ySwipe=false,
     easing   = "inOutBack",
   -- 'Linear'
   -- 'inOutExpo'

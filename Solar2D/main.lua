@@ -1,7 +1,10 @@
 require("components.common.myComponent")
-
+system.setTapDelay( 0.2 )
+--
+-- require("installer.index").init()
+--
 local restore = false
--- restore = true
+--restore = true
 if restore then
   os.execute("cd " .. system.pathForFile("../", system.ResourceDirectory) .. "; source undo_lua.command")
   return
@@ -17,17 +20,18 @@ local common = {
   components = {
     -- "align",
     "thumbnailNavigation",
-    "index"
+    "index" -- this loads editor!
+    -- "keyboardNavigation",
   }
 }
 
 require("controller.index").bootstrap{
-  name="interaction",
+  name="animation",
   editing = true,
-  goPage = "button",
+  goPage = "blink",
   language = "en",
   position = {x=0, y=0},
   common = common} -- scenes.index
 
 -- for product release
--- require("controller.index").bootstrap({name="book", edting = false, goPage = "portrait", position = {x=0, y=0}, common = common}) -- scenes.index
+-- require("controller.index").bootstrap({name="page", edting = false, goPage = "infinity", position = {x=0, y=0}, common = common}) -- scenes.index

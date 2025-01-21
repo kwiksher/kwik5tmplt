@@ -88,8 +88,22 @@ function M:useClassEditorProps(UI)
     properties = {},
     breadcrumbs = {},
     easing="Linear",
-    to = {},
-    from={},
+    to = {
+      x = "nil",
+      y = "nil",
+      alpha = "nil",
+      rotation = "nil",
+      xScale = "nil",
+      yScale = "nil"
+    },
+    from={
+      x = "nil",
+      y = "nil",
+      alpha = "nil",
+      rotation = "nil",
+      xScale = "nil",
+      yScale = "nil"
+    },
     actionName = nil,
     layerOptions = {
       referencePoint = "Center",
@@ -195,12 +209,38 @@ function M:useClassEditorProps(UI)
 
   --from
   --to
-  if #pointABbox.objs.A > 0 then
+  if #pointABbox.objs.A > 0 or #pointABbox.objs.B > 0 then
     local AB = pointABbox:getValue()
+    print(json.prettify(AB))
+
     for i=1, #AB do
-      props.from[AB[i].name] = tonumber(AB[i].A )
-      props.to[AB[i].name] = tonumber(AB[i].B )
+      if AB[i].name == "x" or AB[i].name == "y" then
+        if AB[i].A:len() > 0 then
+          props.from[AB[i].name] = tonumber(AB[i].A )
+        else
+          props.from[AB[i].name] = "nil"
+        end
+        if AB[i].B:len() > 0 then
+          props.to[AB[i].name] = tonumber(AB[i].B )
+        else
+          props.from[AB[i].name] =  "nil"
+        end
+      else
+        if AB[i].A:len() > 0 then
+          props.from[AB[i].name] = tonumber(AB[i].A )
+        else
+          props.from[AB[i].name] = "nil"
+        end
+        --
+        if AB[i].B:len() > 0 then
+          props.to[AB[i].name] = tonumber(AB[i].B )
+        else
+          props.to[AB[i].name] = "nil"
+        end
+      end
     end
+    print(json.prettify(props.from))
+    print(json.prettify(props.to))
   end
   props.actions = {onComplete = actionbox.getValue("onComplete")} --selectedTextLabel
   --breadcrumbs

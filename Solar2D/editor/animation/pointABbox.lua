@@ -50,7 +50,7 @@ function M:getValue()
   for i=1, #self.model do
     local value = self.objs.A[i].text
     self.model[i].A = value or self.model[i].A
-
+    --
     value = self.objs.B[i].text
     self.model[i].B = value or self.model[i].B
   end
