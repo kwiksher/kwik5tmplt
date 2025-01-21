@@ -10,5 +10,6 @@ local scenes = {
   "rotation",
   "switch",
   "tremble",
+  "infinity",
 }
 return scenes

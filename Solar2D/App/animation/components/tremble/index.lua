@@ -9,11 +9,12 @@ local model = {
         }
       },
       {
-        rect_0 = {  }
+        rect_0 = {
+          class={ "tremble", }  }
       },
       {
         ellipse_0 = {
-            }
+        }
       },
     },
     audios = {
