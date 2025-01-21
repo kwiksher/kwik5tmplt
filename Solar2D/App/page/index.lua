@@ -1,6 +1,12 @@
 -- $.weight=
 --
 local scenes = {
-    "infinity",
+  "addCode",
+  "audio",
+  "group",
+  "lang",
+  "properties",
+  "timer",
+  "variable",
 }
 return scenes
