@@ -29,13 +29,13 @@ local props = {
 function M:init(UI)
   -- if not self.contextInit then
   --   print(debug.traceback())
-  --   local app = App.get()
-  --   for i = 1, #self.commands do
-  --     app.context:mapCommand(
-  --       "editor.classEditor." .. self.commands[i],
-  --       "editor.controller." .. self.commands[i]
-  --     )
-  --   end
+    local app = App.get()
+    for i = 1, #self.commands do
+      app.context:mapCommand(
+        "editor.classEditor." .. self.commands[i],
+        "editor.controller." .. self.commands[i]
+      )
+    end
   --   self.contextInit = true
   -- end
 end
@@ -94,7 +94,7 @@ function M:create(UI)
     -- }
     local options = {
       parent   = self.group,
-      text     = "A->B",
+      text     = "preview",
       x        = props.x,
       y        = props.y,
       --width    = props.width,

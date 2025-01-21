@@ -60,6 +60,8 @@ function M:create(UI)
   obj.xScale = layerProps.xScale
   obj.yScale = layerProps.yScale
 
+  obj.oldAlpha = 1
+
   UI.layers[obj.layerIndex] = obj
   UI.sceneGroup:insert(obj)
   UI.sceneGroup[obj.name] = obj

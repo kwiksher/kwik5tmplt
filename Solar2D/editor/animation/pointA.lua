@@ -67,7 +67,9 @@ function M:init(UI, x, y, width, height)
 end
 --
 function M:create(UI)
-    -- print("create", self.name)
+    print("create", self.name)
+    if self.x == nil then return end
+    --
     self.objs = {}
     self.group = display.newGroup()
     UI.sceneGroup:insert(self.group)
@@ -100,8 +102,8 @@ function M:create(UI)
   )
     --self.group:translate(display.contentCenterX-100, display.contentCenterY)
     self.group.ptA = ptA
-    self.group.x = self.x
-    self.group.y = self.y
+    self.group.x = display.contentCenterX + self.x
+    self.group.y = display.contentCenterY + self.y
 end
 --
 function M:didShow(UI) end
@@ -121,20 +123,22 @@ end
 
 --
 function M:toggle()
+  print("@ toggle")
   for i, obj in next, self.objs do
    obj.isVisible = not obj.isVisible
   end
 end
 
 function M:show()
-  -- print("@ show")
+  print("@ show", self.group.x, self.group.y)
+
   for i, obj in next, self.objs or {} do
     obj.isVisible = true
   end
 end
 
 function M:hide()
-  -- print("@ hide")
+  print("@ hide")
   for i, obj in next, self.objs or {} do
     obj.isVisible = false
   end

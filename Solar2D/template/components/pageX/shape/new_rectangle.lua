@@ -44,6 +44,8 @@ function M:create(UI)
   obj.anchorY = layerProps.anchorY or 0.5
   obj.rotation = layerProps.rotation or 0
 
+  obj.oldAlpha = 1
+
   obj.name = layerProps.name
   if layerProps.color then
     obj:setFillColor(unpack(layerProps.color))
