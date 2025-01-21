@@ -20,8 +20,8 @@ local M = {
     reverse=true,
     resetAtEnd=false,
     easing="outCirc",
-    xSwipe=nil,
-    ySwipe=nil,
+    xSwipe=false,
+    ySwipe=false,
     useLang = false
   },
   breadcrumbs = nil,

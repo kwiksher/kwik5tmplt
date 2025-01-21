@@ -53,16 +53,15 @@ function M:create(UI)
   UI.layers[#UI.layers] = obj
   self.obj = obj
 
-  if self.infinity then
-    infinity.createInfinityImage(UI, self.obj, self.infinity)
-  end
+  -- if self.infinity then
+  --   infinity.createInfinityImage(UI, self.obj, self.infinity)
+  -- end
 end
 --
 function M:didShow(UI)
-  if self.infinity then
-    infinity.addEventListener(self.obj)
-  end
-
+  -- if self.infinity then
+  --   infinity.addEventListener(self.obj)
+  -- end
 end
 --
 function M:didHide(UI)

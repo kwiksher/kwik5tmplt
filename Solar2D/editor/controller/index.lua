@@ -470,7 +470,7 @@ function M:load(book, page, layer, class, isNew, asset, _type)
     -- this comes from clicking layerTable.class
     local layerName = layer or "index"
     --local path      = page .."/"..layerName.."_"..self.tool..".json"
-    -- print( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua")
+    print( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua")
     local path      = system.pathForFile( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
     if _type == "group" then
       path      = system.pathForFile( "App/"..book.."/components/"..page .."/groups/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
@@ -480,6 +480,8 @@ function M:load(book, page, layer, class, isNew, asset, _type)
       self.lastSelection   = path
       local decoded = self:loadLua(book, page, layer, class, isNew, _type)
       self:reset()
+      print(json.prettify(decoded))
+      --
       self:setValue(decoded, 1)
       self:redraw()
     else

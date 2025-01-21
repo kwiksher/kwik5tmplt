@@ -27,8 +27,8 @@ local M = {
     reverse=false,
     resetAtEnd=false,
     easing="outCirc",
-    xSwipe=nil,
-    ySwipe=nil,
+    xSwipe=false,
+    ySwipe=false,
     anchorPoint = "Center",
     useLang = false
   },

@@ -29,8 +29,8 @@ local M = {
     reverse=false,
     resetAtEnd=false,
     easing=NIL,
-    xSwipe=nil,
-    ySwipe=nil,
+    xSwipe=false,
+    ySwipe=false,
     useLang = false
   },
   breadcrumbs = nil,

@@ -16,6 +16,7 @@ local layerProps = {
   alpha     = {{opacity}}/100,
   infinity = {
     {{#infinity}}
+    enabled = false,
     speed = {{speed}},
     distance = {{distance}},
     direction = "{{direction}}",
@@ -30,8 +31,8 @@ M.randXEnd    = {{randXEnd}}
 M.randYStart  = {{randYStart}}
 M.randYEnd    = {{randYEnd}}
 --
-M.scaleX     = {{scaleW}}
-M.scaleY     = {{scaleH}}
+M.xScale     = {{scaleW}}
+M.yScale     = {{scaleH}}
 M.rotation   = {{rotation}}
 --
 M.layerAsBg     = {{layerAsBg}}
