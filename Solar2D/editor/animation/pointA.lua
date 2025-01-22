@@ -123,22 +123,21 @@ end
 
 --
 function M:toggle()
-  print("@ toggle")
+  -- print("@ toggle")
   for i, obj in next, self.objs do
    obj.isVisible = not obj.isVisible
   end
 end
 
 function M:show()
-  print("@ show", self.group.x, self.group.y)
-
+  -- print("@ show", self.group.x, self.group.y)
   for i, obj in next, self.objs or {} do
     obj.isVisible = true
   end
 end
 
 function M:hide()
-  print("@ hide")
+  -- print("@ hide")
   for i, obj in next, self.objs or {} do
     obj.isVisible = false
   end

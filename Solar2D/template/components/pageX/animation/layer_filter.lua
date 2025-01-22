@@ -1,38 +1,46 @@
 local M = {
-  target     = NIL,
-  type    = {{type}}, -- group, page, sprite
-  animation  = false,
-  delay      = 0,
-  duration   = 1000,
-  autoPlay   = true,
-  loop       = 1,        -- 0 to play once
-  easing     = "inQuad",
-  reverse    = nil,
-  resetAtEnd = nil,
-  xSwipe     = nil,
-  ySwipe     = nil,
-  useLang = false,
+  {{#properties}}
+  properties = {
+    target     = {{layer}},
+    type    = "{{type}}", -- group, page, sprite
+    animation  = false,
+    delay      = 0,
+    duration   = 1000,
+    autoPlay   = true,
+    loop       = 1,        -- 0 to play once
+    easing     = "inQuad",
+    -- reverse    = nil,
+    -- resetAtEnd = nil,
+  },
+  {{/properties}}
   {{#composite}}
   composite = {
-    name   = NIL,
-    paint1 = NIL,
-    paint2 = NIL,
-    folder = NIL
+    -- name   = "composite.{{effect}}",
+    type = "composite",
+    effect = "{{effect}}",
+    paint1 = "{{paint1}}",
+    paint2 = "{{paint2}}",
+    folder = "{{folder}}"
   },
   {{/composite}}
   {{#filter}}
   filter = {
-    name = NIL,
+    -- name = "filter.{{effect}}",
+    type = "filter",
+    effect = "{{effect}}"
   } ,
   {{/filter}}
   {{#generator}}
   generator = {
-    name = NIL,
+    -- name = "generator.{{effect}}",
+    type = "generator",
+    effect = "{{effect}}"
   } ,
   {{/generator}}
-  actions = {onComplete = NIL},
+  -- actions = {onComplete = NIL},
+  layer == "{{layer}}",
+  filterTable = {},
 }
---
 --
 --
 {{#bloom}}
@@ -79,7 +87,6 @@ M.filterTable["filter.bloom"] = {
     end
 }
 {{/bloom}}
---
 {{#blur}}
 M.filterTable["filter.blur"] = {
     set = function(effect, value)
@@ -90,7 +97,6 @@ M.filterTable["filter.blur"] = {
     end
 }
 {{/blur}}
---
 {{#blurGaussian}}
 M.filterTable["filter.blurGaussian"] = {
     set = function(effect, value)
@@ -122,7 +128,6 @@ M.filterTable["filter.blurGaussian"] = {
     end
 }
 {{/blurGaussian}}
---
 {{#blurHorizontal}}
 M.filterTable["filter.blurHorizontal"] = {
     set = function(effect, value)
@@ -147,7 +152,6 @@ M.filterTable["filter.blurHorizontal"] = {
 }
 {{/blurHorizontal}}
 --
---
 {{#blurVertical}}
 M.filterTable["filter.blurVertical"] = {
     set = function(effect, value)
@@ -171,7 +175,6 @@ M.filterTable["filter.blurVertical"] = {
     end
 }
 {{/blurVertical}}
---
 {{#brightness}}
 M.filterTable["filter.brightness"] = {
     set = function(effect, value)
@@ -192,7 +195,6 @@ M.filterTable["filter.brightness"] = {
     end
 }
 {{/brightness}}
---
 {{#bulge}}
 M.filterTable["filter.bulge"] = {
     set = function(effect, value)
@@ -213,7 +215,6 @@ M.filterTable["filter.bulge"] = {
     end
 }
 {{/bulge}}
---
 {{#chromaKey}}
 M.filterTable["filter.chromaKey"] = {
     set = function(effect, value)
@@ -248,7 +249,6 @@ M.filterTable["filter.chromaKey"] = {
     end
 }
 {{/chromaKey}}
---
 {{#colorChannelOffset}}
 M.filterTable["filter.colorChannelOffset"] = {
     set = function(effect, value)
@@ -272,7 +272,6 @@ M.filterTable["filter.colorChannelOffset"] = {
     end
 }
 {{/colorChannelOffset}}
---
 {{#contrast}}
 M.filterTable["filter.contrast"] = {
     set = function(effect, value)
@@ -293,7 +292,6 @@ M.filterTable["filter.contrast"] = {
     end
 }
 {{/contrast}}
---
 {{#crosshatch}}
 M.filterTable["filter.crosshatch"] = {
     set = function(effect, value)
@@ -314,7 +312,6 @@ M.filterTable["filter.crosshatch"] = {
     end
 }
 {{/crosshatch}}
---
 {{#crystallize}}
 M.filterTable["filter.crystallize"] = {
     set = function(effect, value)
@@ -335,7 +332,6 @@ M.filterTable["filter.crystallize"] = {
     end
 }
 {{/crystallize}}
---
 {{#desaturate}}
 M.filterTable["filter.desaturate"] = {
     set = function(effect, value)
@@ -356,7 +352,6 @@ M.filterTable["filter.desaturate"] = {
     end
 }
 {{/desaturate}}
---
 {{#dissolve}}
 M.filterTable["filter.dissolve"] = {
     set = function(effect, value)
@@ -377,7 +372,6 @@ M.filterTable["filter.dissolve"] = {
     end
 }
 {{/dissolve}}
---
 {{#duotone}}
 M.filterTable["filter.duotone"] = {
     set = function(effect, value)
@@ -447,7 +441,6 @@ M.filterTable["filter.duotone"] = {
     end
 }
 {{/duotone}}
---
 {{#emboss}}
 M.filterTable["filter.emboss"] = {
     set = function(effect, value)
@@ -468,7 +461,6 @@ M.filterTable["filter.emboss"] = {
     end
 }
 {{/emboss}}
---
 {{#exposure}}
 M.filterTable["filter.exposure"] = {
     set = function(effect, value)
@@ -489,7 +481,6 @@ M.filterTable["filter.exposure"] = {
     end
 }
 {{/exposure}}
---
 {{#frostedGlass}}
 M.filterTable["filter.frostedGlass"] = {
     set = function(effect, value)
@@ -510,7 +501,6 @@ M.filterTable["filter.frostedGlass"] = {
     end
 }
 {{/frostedGlass}}
---
 {{#grayscale}}
 M.filterTable["filter.grayscale"] = {
     set = function(effect, value)
@@ -521,7 +511,6 @@ M.filterTable["filter.grayscale"] = {
     end
 }
 {{/grayscale}}
---
 {{#hue}}
 M.filterTable["filter.hue"] = {
     set = function(effect, value)
@@ -542,7 +531,6 @@ M.filterTable["filter.hue"] = {
     end
 }
 {{/hue}}
---
 {{#invert}}
 M.filterTable["filter.invert"] = {
     set = function(effect, value)
@@ -553,7 +541,6 @@ M.filterTable["filter.invert"] = {
     end
 }
 {{/invert}}
---
 {{#iris}}
 M.filterTable["filter.iris"] = {
     set = function(effect, value)
@@ -586,7 +573,6 @@ M.filterTable["filter.iris"] = {
     end
 }
 {{/iris}}
---
 {{#levels}}
 M.filterTable["filter.levels"] = {
     set = function(effect, value)
@@ -613,7 +599,6 @@ M.filterTable["filter.levels"] = {
     end
 }
 {{/levels}}
---
 {{#linearWipe}}
 M.filterTable["filter.linearWipe"] = {
     set = function(effect, value)
@@ -643,7 +628,6 @@ M.filterTable["filter.linearWipe"] = {
     end
 }
 {{/linearWipe}}
---
 {{#median}}
 M.filterTable["filter.median"] = {
     set = function(effect, value)
@@ -654,7 +638,6 @@ M.filterTable["filter.median"] = {
     end
 }
 {{/median}}
---
 {{#monotone}}
 M.filterTable["filter.monotone"] = {
     set = function(effect, value)
@@ -684,7 +667,6 @@ M.filterTable["filter.monotone"] = {
     end
 }
 {{/monotone}}
---
 {{#opTile}}
 M.filterTable["filter.opTile"] = {
     set = function(effect, value)
@@ -711,7 +693,6 @@ M.filterTable["filter.opTile"] = {
     end
 }
 {{/opTile}}
---
 {{#pixelate}}
 M.filterTable["filter.pixelate"] = {
     set = function(effect, value)
@@ -732,7 +713,6 @@ M.filterTable["filter.pixelate"] = {
     end
 }
 {{/pixelate}}
---
 {{#polkaDots}}
 M.filterTable["filter.polkaDots"] = {
     set = function(effect, value)
@@ -759,7 +739,6 @@ M.filterTable["filter.polkaDots"] = {
     end
 }
 {{/polkaDots}}
---
 {{#posterize}}
 M.filterTable["filter.posterize"] = {
     set = function(effect, value)
@@ -780,7 +759,6 @@ M.filterTable["filter.posterize"] = {
     end
 }
 {{/posterize}}
---
 {{#radialWipe}}
 M.filterTable["filter.radialWipe"] = {
     set = function(effect, value)
@@ -813,7 +791,6 @@ M.filterTable["filter.radialWipe"] = {
     end
 }
 {{/radialWipe}}
---
 {{#saturate}}
 M.filterTable["filter.saturate"] = {
     set = function(effect, value)
@@ -834,7 +811,6 @@ M.filterTable["filter.saturate"] = {
     end
 }
 {{/saturate}}
---
 {{#scatter}}
 M.filterTable["filter.scatter"] = {
     set = function(effect, value)
@@ -855,7 +831,6 @@ M.filterTable["filter.scatter"] = {
     end
 }
 {{/scatter}}
---
 {{#sepia}}
 M.filterTable["filter.sepia"] = {
     set = function(effect, value)
@@ -876,7 +851,6 @@ M.filterTable["filter.sepia"] = {
     end
 }
 {{/sepia}}
---
 {{#sharpenLuminance}}
 M.filterTable["filter.sharpenLuminance"] = {
     set = function(effect, value)
@@ -897,7 +871,6 @@ M.filterTable["filter.sharpenLuminance"] = {
     end
 }
 {{/sharpenLuminance}}
---
 {{#sobel}}
 M.filterTable["filter.sobel"] = {
     set = function(effect, value)
@@ -913,7 +886,6 @@ M.filterTable["filter.sobel"] = {
     end
 }
 {{/sobel}}
---
 {{#straighten}}
 M.filterTable["filter.straighten"] = {
     set = function(effect, value)
@@ -940,7 +912,6 @@ M.filterTable["filter.straighten"] = {
     end
 }
 {{/straighten}}
---
 {{#swirl}}
 M.filterTable["filter.swirl"] = {
     set = function(effect, value)
@@ -961,7 +932,6 @@ M.filterTable["filter.swirl"] = {
     end
 }
 {{/swirl}}
---
 {{#vignette}}
 M.filterTable["filter.vignette"] = {
     set = function(effect, value)
@@ -982,7 +952,6 @@ M.filterTable["filter.vignette"] = {
     end
 }
 {{/vignette}}
---
 {{#vignetteMask}}
 M.filterTable["filter.vignetteMask"] = {
     set = function(effect, value)
@@ -1006,7 +975,6 @@ M.filterTable["filter.vignetteMask"] = {
     end
 }
 {{/vignetteMask}}
---
 {{#wobble}}
 M.filterTable["filter.wobble"] = {
     set = function(effect, value)
@@ -1027,7 +995,6 @@ M.filterTable["filter.wobble"] = {
     end
 }
 {{/wobble}}
---
 {{#woodCut}}
 M.filterTable["filter.woodCut"] = {
     set = function(effect, value)
@@ -1048,7 +1015,6 @@ M.filterTable["filter.woodCut"] = {
     end
 }
 {{/woodCut}}
---
 {{#zoomBlur}}
 M.filterTable["filter.zoomBlur"] = {
     set = function(effect, value)
@@ -1075,7 +1041,6 @@ M.filterTable["filter.zoomBlur"] = {
     end
 }
 {{/zoomBlur}}
---
 {{#checkerboard}}
 M.filterTable["generator.checkerboard"] = {
     set = function(effect, value)
@@ -1125,7 +1090,6 @@ M.filterTable["generator.checkerboard"] = {
     end
 }
 {{/checkerboard}}
---
 {{#lenticularHalo}}
 M.filterTable["generator.lenticularHalo"] = {
     set = function(effect, value)
@@ -1155,7 +1119,6 @@ M.filterTable["generator.lenticularHalo"] = {
     end
 }
 {{/lenticularHalo}}
---
 {{#linearGradient}}
 M.filterTable["generator.linearGradient"] = {
     set = function(effect, value)
@@ -1217,7 +1180,6 @@ M.filterTable["generator.linearGradient"] = {
     end
 }
 {{/linearGradient}}
---
 {{#marchingAnts}}
 M.filterTable["generator.marchingAnts"] = {
     set = function(effect, value)
@@ -1228,7 +1190,6 @@ M.filterTable["generator.marchingAnts"] = {
     end
 }
 {{/marchingAnts}}
---
 {{#perlinNoise}}
 M.filterTable["generator.perlinNoise"] = {
     set = function(effect, value)
@@ -1275,7 +1236,6 @@ M.filterTable["generator.perlinNoise"] = {
     end
 }
 {{/perlinNoise}}
---
 {{#radialGradient}}
 M.filterTable["generator.radialGradient"] = {
     set = function(effect, value)
@@ -1335,7 +1295,6 @@ M.filterTable["generator.radialGradient"] = {
     end
 }
 {{/radialGradient}}
---
 {{#random}}
 M.filterTable["generator.random"] = {
     set = function(effect, value)
@@ -1346,7 +1305,6 @@ M.filterTable["generator.random"] = {
     end
 }
 {{/random}}
---
 {{#stripes}}
 M.filterTable["generator.stripes"] = {
     set = function(effect, value)
@@ -1383,7 +1341,6 @@ M.filterTable["generator.stripes"] = {
     end
 }
 {{/stripes}}
---
 {{#sunbeams}}
 M.filterTable["generator.sunbeams"] = {
     set = function(effect, value)
@@ -1414,7 +1371,6 @@ M.filterTable["generator.sunbeams"] = {
     end
 }
 {{/sunbeams}}
---
 {{#add}}
 M.filterTable["composite.add"] = {
     set = function(effect, value)
@@ -1435,7 +1391,6 @@ M.filterTable["composite.add"] = {
     end
 }
 {{/add}}
---
 {{#average}}
 M.filterTable["composite.average"] = {
     set = function(effect, value)
@@ -1456,7 +1411,6 @@ M.filterTable["composite.average"] = {
     end
 }
 {{/average}}
---
 {{#colorBurn}}
 M.filterTable["composite.colorBurn"] = {
     set = function(effect, value)
@@ -1477,7 +1431,6 @@ M.filterTable["composite.colorBurn"] = {
     end
 }
 {{/colorBurn}}
---
 {{#colorDodge}}
 M.filterTable["composite.colorDodge"] = {
     set = function(effect, value)
@@ -1498,7 +1451,6 @@ M.filterTable["composite.colorDodge"] = {
     end
 }
 {{/colorDodge}}
---
 {{#darken}}
 M.filterTable["composite.darken"] = {
     set = function(effect, value)
@@ -1519,7 +1471,6 @@ M.filterTable["composite.darken"] = {
     end
 }
 {{/darken}}
---
 {{#difference}}
 M.filterTable["composite.difference"] = {
     set = function(effect, value)
@@ -1540,7 +1491,6 @@ M.filterTable["composite.difference"] = {
     end
 }
 {{/difference}}
---
 {{#exclusion}}
 M.filterTable["composite.exclusion"] = {
     set = function(effect, value)
@@ -1561,7 +1511,6 @@ M.filterTable["composite.exclusion"] = {
     end
 }
 {{/exclusion}}
---
 {{#glow}}
 M.filterTable["composite.glow"] = {
     set = function(effect, value)
@@ -1582,7 +1531,6 @@ M.filterTable["composite.glow"] = {
     end
 }
 {{/glow}}
---
 {{#hardLight}}
 M.filterTable["composite.hardLight"] = {
     set = function(effect, value)
@@ -1603,7 +1551,6 @@ M.filterTable["composite.hardLight"] = {
     end
 }
 {{/hardLight}}
---
 {{#hardMix}}
 M.filterTable["composite.hardMix"] = {
     set = function(effect, value)
@@ -1624,7 +1571,6 @@ M.filterTable["composite.hardMix"] = {
     end
 }
 {{/hardMix}}
---
 {{#lighten}}
 M.filterTable["composite.lighten"] = {
     set = function(effect, value)
@@ -1645,7 +1591,6 @@ M.filterTable["composite.lighten"] = {
     end
 }
 {{/lighten}}
---
 {{#linearLight}}
 M.filterTable["composite.linearLight"] = {
     set = function(effect, value)
@@ -1666,7 +1611,6 @@ M.filterTable["composite.linearLight"] = {
     end
 }
 {{/linearLight}}
---
 {{#multiply}}
 M.filterTable["composite.multiply"] = {
     set = function(effect, value)
@@ -1687,7 +1631,6 @@ M.filterTable["composite.multiply"] = {
     end
 }
 {{/multiply}}
---
 {{#negation}}
 M.filterTable["composite.negation"] = {
     set = function(effect, value)
@@ -1708,7 +1651,6 @@ M.filterTable["composite.negation"] = {
     end
 }
 {{/negation}}
---
 {{#normalMapWith1DirLight}}
 M.filterTable["composite.normalMapWith1DirLight"] = {
     set = function(effect, value)
@@ -1755,7 +1697,6 @@ M.filterTable["composite.normalMapWith1DirLight"] = {
     end
 }
 {{/normalMapWith1DirLight}}
---
 {{#normalMapWith1PointLight}}
 M.filterTable["composite.normalMapWith1PointLight"] = {
     set = function(effect, value)
@@ -1815,7 +1756,6 @@ M.filterTable["composite.normalMapWith1PointLight"] = {
     end
 }
 {{/normalMapWith1PointLight}}
---
 {{#overlay}}
 M.filterTable["composite.overlay"] = {
     set = function(effect, value)
@@ -1836,7 +1776,6 @@ M.filterTable["composite.overlay"] = {
     end
 }
 {{/overlay}}
---
 {{#phoenix}}
 M.filterTable["composite.phoenix"] = {
     set = function(effect, value)
@@ -1857,7 +1796,6 @@ M.filterTable["composite.phoenix"] = {
     end
 }
 {{/phoenix}}
---
 {{#pinLight}}
 M.filterTable["composite.pinLight"] = {
     set = function(effect, value)
@@ -1878,7 +1816,6 @@ M.filterTable["composite.pinLight"] = {
     end
 }
 {{/pinLight}}
---
 {{#screen}}
 M.filterTable["composite.screen"] = {
     set = function(effect, value)
@@ -1899,7 +1836,6 @@ M.filterTable["composite.screen"] = {
     end
 }
 {{/screen}}
---
 {{#softLight}}
 M.filterTable["composite.softLight"] = {
     set = function(effect, value)
@@ -1920,7 +1856,6 @@ M.filterTable["composite.softLight"] = {
     end
 }
 {{/softLight}}
---
 {{#subtract}}
 M.filterTable["composite.subtract"] = {
     set = function(effect, value)
@@ -1941,7 +1876,6 @@ M.filterTable["composite.subtract"] = {
     end
 }
 {{/subtract}}
---
 {{#vividLight}}
 M.filterTable["composite.vividLight"] = {
     set = function(effect, value)
@@ -1962,7 +1896,6 @@ M.filterTable["composite.vividLight"] = {
     end
 }
 {{/vividLight}}
-
 {{#reflec}}
 M.filterTable["composite.reflect"] = {
     set = function(effect, value)
@@ -1984,5 +1917,18 @@ M.filterTable["composite.reflect"] = {
 }
 {{/reflec}}
 
+local name
+if M.filter then
+  name = "filter."..M.filter.type
+elseif M.composite then
+  name = "filter."..M.composite.type
+elseif M.generator
+  name = "filter."..M.generator.type
+end
+--
+M.to = M.filterTable[name].get()
+M.from = M.filterTable[name].get()
+M.filterTable[name].set(M.from)
+-- M.filter.params = M.filterTable[name].get()
 return M
 

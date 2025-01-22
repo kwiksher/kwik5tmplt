@@ -28,13 +28,16 @@ local props = {
 ---
 function M:init(UI)
   -- if not self.contextInit then
-  --   print(debug.traceback())
+    -- print(debug.traceback())
     local app = App.get()
     for i = 1, #self.commands do
-      app.context:mapCommand(
-        "editor.classEditor." .. self.commands[i],
-        "editor.controller." .. self.commands[i]
-      )
+      local eventName = "editor.classEditor." .. self.commands[i]
+      if app.context.commands[eventName] == nil then
+        app.context:mapCommand(
+          eventName,
+          "editor.controller." .. self.commands[i]
+        )
+      end
     end
   --   self.contextInit = true
   -- end

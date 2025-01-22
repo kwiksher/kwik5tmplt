@@ -61,7 +61,7 @@ function M:applyFilterTable(obj)
       -- param.effectFrom = {}
       -- filterTable[name].set(param.effectFrom)
       param.onComplete = function()
-        if self.actions.onComplete then
+        if type(self.actions.onComplete) == "string" then
           Runtime:dispatchEvent({name=UI.page..self.actions.onComplete, event={}, UI=UI})
         end
       end
@@ -125,14 +125,18 @@ end
 function M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   local obj = sceneGroup[self.layer]
-  local animation = self.properties.animation == "true"
+  local animation = type(self.properties.animation) == "string" and self.properties.animation == "true" or self.properties.animation
+  --
   --
   if self.properties.autoPlay then
     if self.filter then
       obj.fill.effect = self.effect
       self:applyFilterTable(obj)
+      -- print(animation, type(animation))
       if animation then
-        transition.kwikFilter(obj, self:applyFilterTable(nil) )
+        -- printKeys(self.properties)
+        local params = self:applyFilterTable(nil)
+        transition.kwikFilter(obj, params )
       end
     elseif self.generator then
       if self.generator.name == "generator.marchingAnts" then

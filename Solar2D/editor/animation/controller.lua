@@ -205,13 +205,11 @@ function M:useClassEditorProps(UI)
     end
     props.to = params
     --
-  end
-
+  elseif #pointABbox.objs.A > 0 or #pointABbox.objs.B > 0 then
   --from
   --to
-  if #pointABbox.objs.A > 0 or #pointABbox.objs.B > 0 then
     local AB = pointABbox:getValue()
-    print(json.prettify(AB))
+    -- print(json.prettify(AB))
 
     for i=1, #AB do
       if AB[i].name == "x" or AB[i].name == "y" then
