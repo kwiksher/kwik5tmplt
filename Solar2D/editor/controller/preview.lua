@@ -2,6 +2,7 @@ local name = ...
 local parent, root = newModule(name)
 local Animation = require("components.kwik.layer_animation")
 local Filter = require("components.kwik.layer_filter")
+local json   = require("json")
 
 local animPropSet = table:mySet{"x", "y", "rotation", "xScale", "yScale", "alpha"}
 
@@ -46,8 +47,10 @@ local instance =
       end
       --
       if params.class == "filter" then
-        local player = Filter.set(props)
+        -- printKeys(props)
         props.properties.autoPlay = true
+        props.properties.animation = true
+        local player = Filter.set(props)
         player:create(UI)
         player:didShow(UI)
       else

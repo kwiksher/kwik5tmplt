@@ -56,7 +56,7 @@ function M:init(UI)
   breadcrumbsProps   : init(UI, self.x + self.width, self.y+235,  self.width, self.height)
   breadcrumbsProps.model = model.breadcrumbs
   -- as same position as breadcrumbs
-  filterProps   : init(UI, self.x + self.width-12, self.y+235,  self.width+30, self.height)
+  filterProps   : init(UI, self.x + self.width-12, self.y+240,  self.width+30, self.height)
   ---
   pathProps:init(UI, self.x + self.width, self.y+240,  self.width, self.height)
   --

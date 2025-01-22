@@ -480,7 +480,7 @@ function M:load(book, page, layer, class, isNew, asset, _type)
       self.lastSelection   = path
       local decoded = self:loadLua(book, page, layer, class, isNew, _type)
       self:reset()
-      print(json.prettify(decoded))
+      -- print(json.prettify(decoded))
       --
       self:setValue(decoded, 1)
       self:redraw()
