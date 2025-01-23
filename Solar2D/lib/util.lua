@@ -355,7 +355,7 @@ local function isArray(t)
 end
 
 function exports.flattenKeys(_parentKey, v)
-  print(_parentKey)
+  -- print(_parentKey)
   local ret = {}
   local parentKey = _parentKey or ""
   if type(v) == "table" then

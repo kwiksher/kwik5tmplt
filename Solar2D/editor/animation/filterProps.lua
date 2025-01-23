@@ -55,7 +55,7 @@ end
 
 local option, newText, newTextField = M.option, M.newText, M.newTextField
 
-function M:createTable(props)
+function M:createTable(props, propsTo)
   local UI = self.UI
   local objs = {}
   local alphaObj, imageObj
@@ -115,10 +115,17 @@ function M:createTable(props)
     else
       option.text = prop.value
     end
-
+    --
     local objField = newTextField(option)
     obj.field = objField
-
+    --
+    if propsTo and #propsTo >= i   then
+      if type(prop.value) == "boolean" then
+        option.text = tostring(propsTo[i].value)
+      else
+        option.text = propsTo[i].value
+      end
+    end
     -- TO
     if  not stringSet[prop.name] then
       obj.field.width = obj.field.width/2
@@ -194,7 +201,7 @@ function M:create(UI)
         end
       end
     end
-    self:createTable(self.props)
+    self:createTable(self.props, self.propsTo)
     addSetValue()
   else
     -- print("no props")
@@ -239,12 +246,23 @@ end
 -- "levels", "blur.vertical","blur.horixaontal" "add"
 -- "vertical", "horizontal"
 
+local function getFlatten(name, value, fooValue)
+  local _name = name:sub(2)
+  if colorSet[_name] then
+    return {name = _name, value = basePropsControl._yamlValue("color", value)}
+  else
+    return  {name = _name, value = basePropsControl._yamlValue(_name, value, fooValue)}
+  end
+end
+
 function M:setValue(fooValue)
-  local props = {}
+  local props, propsTo = {}, {}
   local _fooValue = fooValue or {}
-  local params = _fooValue.properties or _fooValue
+  -- local properties = _fooValue.properties or _fooValue
+    -- printKeys(properties)
   --
-  for k, v in pairs(params) do
+  for k, v in pairs(_fooValue) do
+    -- print(k, json.encode(v))
     --
     if not basePropsControl.filter(k) then
       local prop
@@ -252,20 +270,28 @@ function M:setValue(fooValue)
         local entries = util.flattenKeys(nil, v)
         for name, value in pairs(entries) do
           -- print("", name:sub(2), value)
-          local _name = name:sub(2)
-          if colorSet[_name] then
-            prop = {name = _name, value = basePropsControl._yamlValue("color", value)}
-          else
-            prop = {name = _name, value = basePropsControl._yamlValue(_name, value, params)}
-          end
           -- print("","", prop.value)
+          prop = getFlatten(name, value, _fooValue)
+          props[#props + 1] = prop
+          propsTo[#propsTo + 1] = prop
+        end
+      elseif k == "from" then
+        local entries = util.flattenKeys(nil, v)
+        for name, value in pairs(entries) do
+          prop = getFlatten(name, value, _fooValue)
           props[#props + 1] = prop
         end
+      elseif k == "to" then
+        local entries = util.flattenKeys(nil, v)
+        for name, value in pairs(entries) do
+          prop = getFlatten(name, value, _fooValue)
+          propsTo[#propsTo + 1] = prop
+        end
       elseif k == "effect" then
-        prop = {name = "_effect", value = basePropsControl._yamlValue(k, v, params)}
+        prop = {name = "_effect", value = basePropsControl._yamlValue(k, v, _fooValue)}
         props[#props + 1] = prop
       elseif k == "type" then
-        prop = {name = "_type", value = basePropsControl._yamlValue(k, v, params)}
+        prop = {name = "_type", value = basePropsControl._yamlValue(k, v, _fooValue)}
         props[#props + 1] = prop
       elseif k == "paint1" then
         local UI = M.UI
@@ -276,7 +302,7 @@ function M:setValue(fooValue)
         prop = {name = k, value = "images/"..UI.page}
         props[#props + 1] = prop
       else
-        prop = {name = k, value = basePropsControl._yamlValue(k, v, params)}
+        prop = {name = k, value = basePropsControl._yamlValue(k, v, _fooValue)}
         props[#props + 1] = prop
       end
     end
@@ -288,6 +314,15 @@ function M:setValue(fooValue)
   --
   table.sort(props, compare)
   self.props = props
+  ---
+  if propsTo and #propsTo > 0 then
+    table.sort(propsTo, compare)
+  end
+  self.propsTo = propsTo
+  --
+  -- print(json.prettify(self.props))
+  -- print(json.prettify(self.propsTo))
+
 end
 
 function M:show(skip)
