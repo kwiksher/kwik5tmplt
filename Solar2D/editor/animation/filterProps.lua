@@ -290,9 +290,11 @@ function M:setValue(fooValue)
       elseif k == "effect" then
         prop = {name = "_effect", value = basePropsControl._yamlValue(k, v, _fooValue)}
         props[#props + 1] = prop
+        propsTo[#propsTo + 1] = prop
       elseif k == "type" then
         prop = {name = "_type", value = basePropsControl._yamlValue(k, v, _fooValue)}
         props[#props + 1] = prop
+        propsTo[#propsTo + 1] = prop
       elseif k == "paint1" then
         local UI = M.UI
         prop = {name = k, value = UI.editor.currentLayer..".png"}

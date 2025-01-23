@@ -194,6 +194,8 @@ function M:useClassEditorProps(UI)
     end
     --
     props[params.type] = params
+    props[params.effect] = true
+    --
     props.from = params
     -- print("------------------")
     -- printTable(props.from, true)
