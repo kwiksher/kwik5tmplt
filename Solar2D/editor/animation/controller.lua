@@ -237,12 +237,14 @@ function M:useClassEditorProps(UI)
         end
       end
     end
-    print(json.prettify(props.from))
-    print(json.prettify(props.to))
   end
+
+  -- print(json.prettify(props.from))
+  -- print(json.prettify(props.to))
+
   props.actions = {onComplete = actionbox.getValue("onComplete")} --selectedTextLabel
   --breadcrumbs
-  printTable(props)
+  -- printTable(props)
   return props
 end
 
@@ -254,19 +256,27 @@ end
 
 -- this handler should be called from selectbox to set one of animtations user selected
 function M:setValue(decoded, index, template)
-  -- print(debug.traceback())
+  print(debug.traceback())
   if decoded == nil then print("## Error setValue ##") return end
   if not template then
     -- print(json.encode(decoded[index]))
     selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
     classProps:setValue(decoded[index].properties)
     breadcrumbsProps:setValue(decoded[index].breadcrumbs)
-    if decoded[index].composite then
-      filterProps:setValue(decoded[index].composite)
-    elseif decoded[index].filter then
-      filterProps:setValue(decoded[index].filter)
-    elseif decoded[index].generator then
-      filterProps:setValue(decoded[index].generator)
+    -- if decoded[index].composite then
+    --   filterProps:setValue(decoded[index].composite)
+    -- elseif decoded[index].filter then
+    --   filterProps:setValue(decoded[index].filter)
+    -- elseif decoded[index].generator then
+    --   filterProps:setValue(decoded[index].generator)
+    -- end
+    if decoded[index].filter then
+      filterProps:setValue{
+        effect = decoded[index].filter.effect,
+        type= decoded[index].filter.type,
+        to =   decoded[index].to,
+        from = decoded[index].from
+      }
     end
     if decoded[index].path then
       pathProps:setValue(decoded[index].path)

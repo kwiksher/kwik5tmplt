@@ -408,7 +408,10 @@ function M:loadLua(book, page, layer,class, isNew, _type)
     if _type == "group" then
       path =  "App."..book..".components."..page ..".groups."..layerName.."_"..class
     end
-    local mod = require(path:gsub("/", "."))
+    local _path = path:gsub("/", ".")
+    -- print(_path)
+    package.loaded[_path] = nil
+    local mod = require(_path)
     return {mod}
   else
     -- for audios, groups, timers, variables
@@ -480,8 +483,6 @@ function M:load(book, page, layer, class, isNew, asset, _type)
       self.lastSelection   = path
       local decoded = self:loadLua(book, page, layer, class, isNew, _type)
       self:reset()
-      -- print(json.prettify(decoded))
-      --
       self:setValue(decoded, 1)
       self:redraw()
     else
