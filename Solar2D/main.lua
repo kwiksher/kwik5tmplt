@@ -28,10 +28,10 @@ local common = {
 require("controller.index").bootstrap{
   name="animation",
   editing = true,
-  goPage = "blink",
+  goPage = "path",
   language = "en",
   position = {x=0, y=0},
   common = common} -- scenes.index
 
 -- for product release
--- require("controller.index").bootstrap({name="page", edting = false, goPage = "infinity", position = {x=0, y=0}, common = common}) -- scenes.index
+-- require("controller.index").bootstrap({name="animation", edting = false, goPage = "path", position = {x=0, y=0}, common = common}) -- scenes.index

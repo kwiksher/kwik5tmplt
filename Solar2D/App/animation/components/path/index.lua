@@ -1,33 +1,35 @@
 local sceneName = ...
 --
-local model = {
-  --name = "",
-  components = {
-    layers = {
-      {
-        bg = {
-        }
+local scene = require('controller.scene').new(sceneName, {
+    --name = "path",
+	components = {
+		layers = {
+			{
+				SnowFlake = {
+					class = {  }
+				}
+			},
+			{
+				star = {
+					class = {  }
+				}
+			},
+		},
+		audios = {
+			long = {  },
+			short = {   }
+		},
+		groups = {
       },
-      {
-        rect_0 = {  }
-      },
-      {
-        ellipse_0 = {
-            }
-      },
-    },
-    audios = {
-    },
-    groups = {
-    },
-    timers = {  },
-    variables = {  },
-    joints    = {  },
-    page = {  }
-  },
-  commands = {  },
-  onInit = function(scene) print("onInit") end
-}
-local scene = require('controller.scene').new(sceneName, model)
+		timers = {  },
+		variables = {  },
+		joints = {  },
+		page = {  }
+	},
+	commands = {  },
+	onInit = function(scene)
+		print("onInit")
+	end
+})
 --
 return scene
