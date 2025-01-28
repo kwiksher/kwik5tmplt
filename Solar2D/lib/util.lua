@@ -382,6 +382,15 @@ end
 
 exports.isArray = isArray
 
+
+function exports.toBoolean(str)
+  if type(str) == 'boolean' then
+      return str
+  end
+  return str and string.lower(str) == "true" and true or false
+end
+
+
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/templates/components/layer_props.lua
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/../templates/components/layer_props.lua: No such file or directory
 return exports
