@@ -378,10 +378,9 @@ local function createAnimationFunc(self, UI, tool)
     self.path.newAngle = tonumber(self.path.newAngle)
     local extraValues = createPropsTo(self, layer)
     animObj = btween.new(layer, self.properties.duration / 1000, self.curve, extraValues, options)
-
     animObj.pathAnim = true
     animObj:pause()
-    return animObj
+    return {to = animObj}
   else
     print("Error")
   end
@@ -460,12 +459,20 @@ function M:initAnimation(UI, layer, _onEndHandler)
     -- print(self.class)
     if self.class == "path" then
       local json = require("json")
+      print(json.prettify(self.path))
+      print(json.prettify(self.properties))
+      --
+      if self.path.filename:len() == 0 then
+        print("Error path json not found")
+        return false
+      end
       local path =
         system.pathForFile(
         "App/" .. UI.book .. "/assets/images/" .. UI.page .. "/" .. self.path.filename,
         system.ResourceDirectory
       )
       if path then
+        print(path)
         local decoded, pos, msg = json.decodeFile(path)
         if not decoded then
           print("Decode failed at " .. tostring(pos) .. ": " .. tostring(msg))
@@ -526,6 +533,7 @@ function M:initAnimation(UI, layer, _onEndHandler)
     layer.anchorY = 1
     util.repositionAnchor(layer, 0.5, 1)
   end
+  return true
 end
 
 function M:setCurve(pathPoints, closed, pause)
