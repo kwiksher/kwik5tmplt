@@ -53,16 +53,18 @@ local instance =
         local player = Filter.set(props)
         player:create(UI)
         player:didShow(UI)
-      else
+      else -- path
+        printKeys(props)
         local sceneGroup = UI.sceneGroup
-        player:initAnimation(UI, sceneGroup[props.layer], onEndHandler)
-        player.tween = player:buildAnim(UI)
+        if player:initAnimation(UI, sceneGroup[props.layer], onEndHandler) then
+          player.tween = player:buildAnim(UI)
         -- player.tween:pause()
-        player:_init()
-        if player.tween.from then
-          player.tween.from:play()
-        else
-          player.tween.to:play()
+          player:_init()
+          if player.tween.from then
+            player.tween.from:play()
+          else
+            player.tween.to:play()
+          end
         end
       end
     end

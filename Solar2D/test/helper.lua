@@ -51,6 +51,7 @@ function exports.clickIcon(toolGroup, tool)
 end
 
 function exports.selectIcon(toolGroup, tool)
+  local deferred = Deferred()
   -- local toolbar = UI.editor.toolbar
   if toolGroup == "action" then
     local obj = UI.editor.actionIcon
@@ -60,12 +61,14 @@ function exports.selectIcon(toolGroup, tool)
     local obj = toolbar.layerToolMap[toolGroup]
     obj.callBack{target=obj}
     if tool then
-      timer.performWithDelay(1000, function()
+      timer.performWithDelay(500, function()
         local obj = toolbar.toolMap[obj.id.."-"..tool]
         obj.callBack{target=obj}
+        deferred:resolve()
       end)
     end
   end
+  return deferred:promise()
 end
 
 function exports.selectActionGroup(name)
@@ -123,6 +126,7 @@ exports.clickObj = exports.clickProp
 
 function exports.setProp(objs, name, value)
   for i, obj in next, objs do
+    print(obj.text)
     if obj.text == name then
       obj.field.text = value
       return
