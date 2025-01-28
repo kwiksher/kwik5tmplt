@@ -1,6 +1,14 @@
 -- $.weight=
 --
 local scenes = {
-    "path",
+  "blink",
+  "bounce",
+  "filter",
+  "linear",
+  "path",
+  "pulse",
+  "rotation",
+  "switch",
+  "tremble",
 }
 return scenes
