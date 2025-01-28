@@ -86,7 +86,7 @@ function M:useClassEditorProps(UI)
   print("useClassEditorProps", UI)
   local props = {
     properties = {},
-    breadcrumbs = {},
+    breadcrumbs = {enable = false},
     easing="Linear",
     to = {
       x = "nil",
@@ -164,12 +164,19 @@ function M:useClassEditorProps(UI)
   if #pathProperties == 0 then
     props.path = nil
   else
-    props.path = {}
+    props.path = {
+      filename = "nil",
+      newAngle = "NIL",
+      closed = "nil",
+      pause = "nil",
+      autoTurn = "nil"
+    }
+    --
     for i=1, #pathProperties do
       local name = pathProperties[i].name
       if name == "_filename" then
         props.path.filename = pathProperties[i].value
-      else
+      elseif pathProperties[i].value:len() > 0 then
         props.path[name] = pathProperties[i].value
       end
     end

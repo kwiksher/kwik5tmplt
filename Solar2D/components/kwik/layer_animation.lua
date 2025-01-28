@@ -139,9 +139,9 @@ local function createOptions(self, UI)
   -- print("--- options ---")
   local options = {
     repeatCount = tonumber(self.properties.loop),
-    reflect = self.properties.reverse == "true",
-    xSwipe = self.properties.xSwipe,
-    ySwipe = self.properties.ySwipe,
+    reflect = util.toBoolean(self.properties.reverse),
+    xSwipe = util.toBoolean(self.properties.xSwipe),
+    ySwipe = util.toBoolean(self.properties.ySwipe),
     delay = self.properties.delay / 1000
   }
 
@@ -307,7 +307,7 @@ local function createAnimationFunc(self, UI, tool)
   ---
   local onEndHandler = function()
     local layer = self.obj
-    if self.properties.resetAtEnd then
+    if util.toBoolean(self.properties.resetAtEnd) then
       if self.class == "Shake" or self.class == "tremble" then
         layer.rotation = 0
       end
@@ -536,7 +536,10 @@ function M:initAnimation(UI, layer, _onEndHandler)
   return true
 end
 
-function M:setCurve(pathPoints, closed, pause)
+function M:setCurve(pathPoints, _closed, _pause)
+  local pause  = util.toBoolean(_pause)
+  local closed =util.toBoolean(_closed)
+
   local pathCurve = {}
 
   local curX = 0
