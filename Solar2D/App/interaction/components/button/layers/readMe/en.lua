@@ -33,6 +33,7 @@ M.layerAsBg     = nil
 M.isSharedAsset = nil
 --
 M:setProps(layerProps)
+print("#####", M.imagePath)
 --
 function M:init(UI)
   --local sceneGroup = UI.scene.view
