@@ -1,4 +1,4 @@
--- $weight=0
+-- $weight=2
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
@@ -6,14 +6,14 @@ local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
-  height    =  627 - 551,
-  width     = 701 - 330 ,
-  kind      = solidColor,
-  name      = "over",
+  height    =  1150 - 943,
+  width     = 182 - 66 ,
+  kind      = pixel,
+  name      = "facebook",
   type      = "png",
-  x         = 701 + (330 -701)/2,
-  y         = 551 + (627 - 551)/2,
-  alpha     = 0, -- 36.07843137254902/100,
+  x         = 182 + (66 -182)/2,
+  y         = 943 + (1150 - 943)/2,
+  alpha     = 100/100,
   infinity = {
   },
 

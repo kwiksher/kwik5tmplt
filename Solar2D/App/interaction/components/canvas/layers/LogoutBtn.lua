@@ -1,4 +1,4 @@
--- $weight=0
+-- $weight=1
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
@@ -6,14 +6,14 @@ local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
-  height    =  627 - 551,
-  width     = 701 - 330 ,
+  height    =  1255 - 1161,
+  width     = 334 - 83 ,
   kind      = solidColor,
-  name      = "over",
+  name      = "LogoutBtn",
   type      = "png",
-  x         = 701 + (330 -701)/2,
-  y         = 551 + (627 - 551)/2,
-  alpha     = 0, -- 36.07843137254902/100,
+  x         = 334 + (83 -334)/2,
+  y         = 1161 + (1255 - 1161)/2,
+  alpha     = 100/100,
   infinity = {
   },
 
