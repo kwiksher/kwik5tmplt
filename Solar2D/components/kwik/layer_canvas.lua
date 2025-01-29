@@ -16,7 +16,7 @@ function M:setCanvas(obj)
   self.lineTable = {}
   self.undone = {}
 
-  self.obj:setFillColor(unpack(self.properties.color))
+  self.obj:setFillColor(unpack(self.properties.canvasColor))
   -- sceneGroup:insert( self)
 end
 --

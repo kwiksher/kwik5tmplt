@@ -100,7 +100,7 @@ function M.commandHandler(target, event, isReload)
   self.isReload = isReload -- we will take if off when reload is ended
   self.btHandler(target)
   if isReload then
-    print("###### isReload")
+    -- print("###### isReload")
     self.lockPage = target.page
     -- for i=1, #self.objs do
     --   if self.objs[i].page == target.page then

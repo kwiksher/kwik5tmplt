@@ -119,8 +119,8 @@ function M:init(UI, x, y, w, h)
   buttonContext:init(UI, basePropsControl.buttonContextListener)
 end
 --
-local yamlArray = {}
-local yamlHash = {}
+local yamlArray = table:mySet{"color", "brushColor", "canvasColor", "boundaries"}
+local yamlHash = table:mySet{}
 -- use props instead of model because it has been sorted for view
 
 local function _getValue(name, fieldText, currentValue, assetValue)

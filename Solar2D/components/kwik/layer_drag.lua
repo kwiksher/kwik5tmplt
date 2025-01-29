@@ -107,6 +107,7 @@ M.dragHandler = function(self, event)
           UI.scene:dispatchEvent({name = self.actions.onDropped, event = {UI = UI}})
         end
       elseif props.backToOrigin then
+        -- printKeys(target)
         target.x = target.oriX
         target.y = target.oriY
       end
@@ -135,7 +136,7 @@ function M:activate(obj)
   local props = self.properties or {boundaries = {}}
   ---
   local options = {}
-  if props.constrainAngle then
+  if type(props.constrainAngle) == "number" then
     options.constrainAngle = props.constrainAngle
   end
   if props.boundaries.xMin then
@@ -145,7 +146,7 @@ function M:activate(obj)
     options.yBounds = {props.boundaries.yMin, props.boundaries.yMax}
   end
   --
-  MultiTouch.activate(obj, "move", "single")
+  MultiTouch.activate(obj, "move", "single", options)
   --
   if self.isDrop then
     obj.lock = 0
@@ -162,7 +163,7 @@ function M:activate(obj)
   -- obj.dragHandler = self.dragHandler
   -- self.obj = obj
   self.listener = function(event)
-    print("event")
+    -- print("event")
     -- self has the all the props of layer_drag, obj does not have them
     --   see setmetatable is used for the model not to object
     self:dragHandler(event)

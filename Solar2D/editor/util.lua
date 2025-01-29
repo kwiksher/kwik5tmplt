@@ -546,6 +546,7 @@ function M.saveLua(tmplt, dst, _model, partial)
       output = output:gsub("&#39;", "'")
       output = output:gsub("class={  }", "")
       output = output:gsub("&quot;", '"')
+      output = output:gsub('"NIL"', '""')
 
       local formatted = formatter.indentcode(output, "\n", true, "  ")
       if formatted then

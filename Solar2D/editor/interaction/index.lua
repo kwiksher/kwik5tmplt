@@ -72,6 +72,7 @@ function controller:useClassEditorProps(UI)
   end
   --
   local properties = self.classProps:getValue()
+  local eventTypeIndex, isOver = false
   for i, entry in next, properties do
     -- print("", properties[i].name, type(properties[i].value))
     if entry.name == "_target" then
@@ -80,9 +81,21 @@ function controller:useClassEditorProps(UI)
     elseif entry.name == "boundaries" then
       local v = {xMin=entry.value[1], xMax = entry.value[2], yMin = entry.value[3], yMax = entry.value[4]}
       props.properties[#props.properties+1] = {name = "boundaries", value = v}
+    elseif entry.name == "canvasColor" or entry.name == "brushColor" then
+      local v = {r=entry.value[1], g = entry.value[2], b = entry.value[3], a = entry.value[4]}
+      props.properties[#props.properties+1] = {name = entry.name, value = v}
     else
+      if entry.name == "eventType" then
+        eventTypeIndex = #props.properties+1
+      elseif entry.name == "over" and entry.value:len() > 0 then
+        isOver = true
+      end
       props.properties[#props.properties+1] = {name = entry.name, value = entry.value}
     end
+  end
+  --
+  if isOver then
+    props.properties[eventTypeIndex].value = "touch"
   end
   --
   props.actions ={}

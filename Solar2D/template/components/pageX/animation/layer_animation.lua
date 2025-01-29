@@ -107,7 +107,9 @@ M.actions = { onComplete = "{{actionName}}" }
 M.breadcrumbs = {
     dispose  = {{dispose}},
     shape    = {{shape}},
-    Color    = {{color}},
+    {{#color}}
+    color    =  { {{{r}}, {{g}}, {{b}}, {{a}} },
+    {{/color}}
     interval = {{bInterval}},
     time     = {{time}},
     width  = {{width}},
