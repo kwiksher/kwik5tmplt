@@ -154,6 +154,10 @@ function M:useClassEditorProps(UI)
         props.breadcrumbs.width = breadcrumbsProperties[i].value
       elseif name == "_height" then
         props.breadcrumbs.height = breadcrumbsProperties[i].value
+      elseif name == "color" then
+        local value = breadcrumbsProperties[i].value
+        local v = {r=value[1], g = value[2], b = value[3], a = value[4]}
+        props.breadcrumbs[name] = v
       else
         props.breadcrumbs[name] = breadcrumbsProperties[i].value
       end

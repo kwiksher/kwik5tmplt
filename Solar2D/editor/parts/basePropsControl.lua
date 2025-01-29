@@ -40,7 +40,7 @@ function M._yamlValue(k, v, params)
       -- for k, v in pairs (yaml.eval(test)) do
       -- print(k, v, type(v))
       -- end
-      if key == "color" or key == "canvasColor" then
+      if key == "color" or key == "canvasColor" or key =="brushColor" then
         -- print(v[1], v[2], v[3], v[4])
         value, yamltype =
           yaml.getYaml(

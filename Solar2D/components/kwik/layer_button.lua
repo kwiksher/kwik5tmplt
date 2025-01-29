@@ -28,7 +28,7 @@ function M:createButton(UI)
       -- local path1 = system.pathForFile( UI.props.imgDir ..self.layerProps.imagePath, system.ResourceDirectory)
       -- local path2 = system.pathForFile( UI.props.imgDir ..UI.page.."/"..props.over..".png", system.ResourceDirectory)
 
-      local path1 =  UI.props.imgDir ..self.layerProps.imagePath
+      local path1 =  UI.props.imgDir ..UI.page.."/"..self.layerProps.name.."."..self.layerProps.type
       local path2 =  UI.props.imgDir ..UI.page.."/"..props.over..".png"
 
       if path1 and path2 then

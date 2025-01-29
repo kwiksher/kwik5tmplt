@@ -67,7 +67,7 @@ function M:init(UI, x, y, width, height)
 end
 --
 function M:create(UI)
-    print("create", self.name)
+    -- print("create", self.name)
     if self.x == nil then return end
     --
     self.objs = {}

@@ -62,17 +62,43 @@ function newModule(name)
     M.name = M.name:sub(8)
   end
   local names = name:split(".")
-  local last= names[#names]
-  local isClass = last:find("_")
-  if isClass then
-    M.layerMod   =  parent ..last:sub(1, isClass-1  )
+  local last = names[#names]
+
+  -- Handle the last segment to find the last underscore
+  local reversedLast = last:reverse()
+  local reversedPos = reversedLast:find("_")
+  if reversedPos then
+    local originalPos = #last - reversedPos + 1
+    M.layerMod = parent .. last:sub(1, originalPos - 1)
   else
-    M.layerMod   =  parent ..last
+    M.layerMod = parent .. last
   end
-  -- print(M.name, M.layerMod)
+
   M.newInstance = newInstance
   return parent, root, M
 end
+
+-- function _newModule(name)
+--   local M = {}
+--   local parent = name:match("(.-)[^%.]+$")
+--   local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
+--   M.name = name:sub(root:len()+1)
+--   local isLayers = M.name:find("layers.")
+--   if isLayers then
+--     M.name = M.name:sub(8)
+--   end
+--   local names = name:split(".")
+--   local last= names[#names]
+--   local isClass = last:find("_")
+--   if isClass then
+--     M.layerMod   =  parent ..last:sub(1, isClass-1  )
+--   else
+--     M.layerMod   =  parent ..last
+--   end
+--   -- print(M.name, M.layerMod)
+--   M.newInstance = newInstance
+--   return parent, root, M
+-- end
 
 local AppContext = require("controller.ApplicationContext")
 local composer = require("composer")
