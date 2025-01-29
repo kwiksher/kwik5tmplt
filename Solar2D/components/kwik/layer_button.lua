@@ -5,10 +5,10 @@ local app = require "Application"
 --
 function M:createButton(UI)
   local sceneGroup = UI.sceneGroup
-  -- print(self.properties.target)
   local layerName = self.properties.target
   local obj = sceneGroup[layerName]
   local props = self.properties
+  -- print(self.properties.target, props.type, props.eventType)
   if props.type ~= "group" and props.eventType == "touch"   then
       local function onReleaseHandler(event)
         -- print("onReleaseHandler")
@@ -67,10 +67,11 @@ function M:createButton(UI)
     --   setImage(obj, model) then
     --
 
-  if props.mask:len() > 0 and UI.imagePage then
-      local path = system.pathForFile(  UI.props.imgDir ..UI.imagePage.. props.mask, system.ResourceDirectory)
+  if props.mask:len() > 0 then
+      local path = system.pathForFile(  UI.props.imgDir ..UI.page.. "/"..props.mask..".png", system.ResourceDirectory)
       if path then
-        local mask = graphics.newMask( UI.props.imgDir ..UI.imagePage.. props.mask, UI.props.systemDir)
+        -- print( UI.props.imgDir ..UI.page.. "/"..props.mask)
+        local mask = graphics.newMask( UI.props.imgDir ..UI.page.."/".. props.mask..".png", UI.props.systemDir)
         obj:setMask(mask)
       end
   end
