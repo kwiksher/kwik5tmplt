@@ -9,11 +9,12 @@ local model = {
         }
       },
       {
-        rect_0 = {  }
+        rect_0 = {
+        }
       },
       {
         ellipse_0 = {
-            }
+          class={ "pinch", }  }
       },
     },
     audios = {
