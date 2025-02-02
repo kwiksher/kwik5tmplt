@@ -10,9 +10,12 @@ local M = {
     type  = "{{type}}",
     isActive = "{{isActive}}",
     constrainAngle = {{constrainAngle}},
-    xStart={{xStart}}, yStart={{eEnd}}, yStart={{yStart}}, yEnd = {{yEnd}},
-    min = {{min}},
-    max = {{max}}
+    xStart={{xStart}},
+    yStart={{yStart}},
+    yStart={{yStart}},
+    yEnd = {{yEnd}},
+    scaleMin = {{scaleMin}},
+    scaleMax = {{scaleMax}}
     {{/properties}}
   },
   --

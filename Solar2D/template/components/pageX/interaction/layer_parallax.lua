@@ -7,8 +7,9 @@ local M = {
   properties = {
     {{#properties}}
     target = "{{layer}}",
-    type  = "{{type}}",
     isActive = "{{isActive}}",
+    dampX = {{dampX}},
+    dampY = {{dampY}},
     dpx = {{dpx}},
     dpy = {{dpy}},
     {{/properties}}

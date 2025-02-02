@@ -2,7 +2,12 @@ require "extlib.lunatest"
 local M = {
   run = function (props)
     print("============ lunatest =============")
-    lunatest.suite("test.animation.suite_path_animation", props)
+
+    lunatest.suite("test.interaction.suite_pinch", props)
+
+    -- lunatest.suite("test.interaction.suite_parallax", props)
+
+    -- lunatest.suite("test.animation.suite_path_animation", props)
 
     -- lunatest.suite("test.keyboard.suite_page1", props)
     -- lunatest.suite("test.lingualSample.suite_lingual_page2", props)
