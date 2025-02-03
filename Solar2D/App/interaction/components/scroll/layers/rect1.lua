@@ -1,4 +1,4 @@
--- $weight=4
+-- $weight=3
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
@@ -6,14 +6,14 @@ local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
-  height    =  1280 - 0,
-  width     = 1944 - -7 ,
-  kind      = pixel,
-  name      = "bg",
+  height    =  875 - 375,
+  width     = 487 - -361 ,
+  kind      = gradientFill,
+  name      = "rect1",
   type      = "png",
-  x         = 1944 + (-7 -1944)/2,
-  y         = 0 + (1280 - 0)/2,
-  alpha     = 100/100,
+  x         = 487 + (-361 -487)/2,
+  y         = 375 + (875 - 375)/2,
+  alpha     = 76.07843137254902/100,
   infinity = {
   },
   -- text properties

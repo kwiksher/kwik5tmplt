@@ -8,8 +8,8 @@ local M = {
     isActive = "true",
     dampX = true,
     dampY = true,
-    dpx = 0.5,
-    dpy = 0.5,
+    dpx = 0.1,
+    dpy = 0.1,
   },
   --
   actions={
