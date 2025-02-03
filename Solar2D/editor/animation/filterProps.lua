@@ -310,15 +310,13 @@ function M:setValue(fooValue)
     end
   end
   --
-  local function compare(a, b)
-    return a.name < b.name
-  end
   --
-  table.sort(props, compare)
+  util.sortProps(props)
+  ---
   self.props = props
   ---
   if propsTo and #propsTo > 0 then
-    table.sort(propsTo, compare)
+    util.sortProps(propsTo)
   end
   self.propsTo = propsTo
   --

@@ -1,52 +1,47 @@
 local sceneName = ...
 --
 local model = {
-  --name = "scroll",
-	components = {
-		layers = {
-			{
-				bg = {
-					class = {  }
-				}
-			},
-			{
-				rect1 = {
-					class = {  }
-				}
-			},
-			{
-				rect2 = {
-					class = {  }
-				}
-			},
-			{
-				rect3 = {
-					class = {  }
-				}
-			},
-			{
-				article = {
-					class = {  }
-				}
-			},
-		},
-		audios = {
-			long = {  },
-			short = {   }
-		},
-		groups = {
+  --name = "",
+  components = {
+    layers = {
+      {
+        bg = {
+        }
+      },
+      {
+        rect1 = {
+        }
+      },
+      {
+        rect2 = {
+          class={ "scroll", }  }
+      },
+      {
+        rect3 = {
+        }
+      },
+      {
+        article = {
+        }
+      },
     },
-		timers = {  },
-		variables = {  },
-		joints = {  },
-		page = {  }
-	},
-	commands = {  },
-	onInit = function(scene)
-		print("onInit")
-	end
+    audios = {
+      long={  }, short={   }
+    },
+    groups = {
+      {
+        group0 = {
+        }
+      },
+    },
+    timers = {  },
+    variables = {  },
+    joints    = {  },
+    page = {  }
+  },
+  commands = {  },
+  onInit = function(scene) print("onInit") end
 }
-
 local scene = require('controller.scene').new(sceneName, model)
 --
 return scene

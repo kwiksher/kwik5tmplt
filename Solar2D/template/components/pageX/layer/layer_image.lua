@@ -25,8 +25,8 @@ local layerProps = {
   -- text properties
   contents =  "{{contents}}",
   font =  "{{font}}",
-  fontSize =  {{}},
-  alignment =  "{{}}",
+  fontSize =  {{fontSize}},
+  alignment =  "{{alignment}}",
   {{#color}}
   color    =  { {{{red}}, {{green}}, {{blue}}, 1 },
   {{/color}}

@@ -101,16 +101,14 @@ function M:create(UI)
     -- local posY  = display.contentCenterY + 1280/4 * 0.5  +  (option.height)/2
     local posY  = self.y
     -- print("", debug.traceback())
-    local function compare(a,b)
-      return a.name < b.name
-    end
     --
     for i=1, #props.properties do
       if props.properties[i].name == "target" then
         props.properties[i].name = "_target"
       end
     end
-    table.sort(props.properties,compare)
+    --
+    util.sortProps(props.properties)
     ---
     local objs = {}
     for i=1, #props.properties do

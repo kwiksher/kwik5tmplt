@@ -390,6 +390,13 @@ function exports.toBoolean(str)
   return str and string.lower(str) == "true" and true or false
 end
 
+local function compare(a,b)
+  return a.name < b.name
+end
+
+function exports.sortProps(tbl)
+  table.sort(tbl,compare)
+end
 
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/templates/components/layer_props.lua
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/../templates/components/layer_props.lua: No such file or directory

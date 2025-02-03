@@ -19,7 +19,7 @@ local layerProps = {
   -- text properties
   contents =  "",
   font =  "",
-  fontSize =  ,
+  fontSize =  0,
   alignment =  "",
   orientation = "",
 }

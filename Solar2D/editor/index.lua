@@ -18,7 +18,7 @@ M.contextInit = false
 M.storeInit   = false
 
 local gotoLastOn = true
-local unitTestOn = false
+local unitTestOn = true
 local httpServerOn = true
 
 M.viewStore = {}
