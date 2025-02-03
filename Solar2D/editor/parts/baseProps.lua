@@ -1,5 +1,6 @@
 local name = ...
 local parent, root = newModule(name)
+local util = require("lib.util")
 --
 local M = {}
 M.name = name
@@ -15,7 +16,34 @@ local util = require("lib.util")
 local yaml = require("server.yaml")
 -- local actionbox  = require(parent.."actionbox")
 
-local Prefix_Layers = table:mySet{"target", "type","bodyA","bodyB" ,"width","height", "filename" }
+local hyphenOrder = {"target", "type","bodyA","bodyB" ,"height", "width", "filename" }
+local Prefix_Layers = table:mySet(hyphenOrder)
+--
+local hyphenIndices = {}
+for i, v in ipairs(hyphenOrder) do
+    hyphenIndices["_"..v] = i
+end
+
+local function compare(a, b)
+    local aIndex = hyphenIndices[a.name]
+    local bIndex = hyphenIndices[b.name]
+
+    -- Both elements are in the hyphen table
+    if aIndex and bIndex then
+        return aIndex < bIndex
+    end
+
+    -- Only one element is in the hyphen table
+    if aIndex then return true end
+    if bIndex then return false end
+
+    -- Neither element is in the hyphen table - sort alphabetically
+    return a.name < b.name
+end
+
+util.sortProps = function(tbl)
+    table.sort(tbl, compare)
+end
 ---
 local appFont
 if ( "android" == system.getInfo( "platform" ) or "win32" == system.getInfo( "platform" ) ) then
@@ -194,11 +222,8 @@ function M:setValue(fooValue)
     end
   end
   --
-  local function compare(a,b)
-    return a.name < b.name
-  end
   --
-  table.sort(props,compare)
+  util.sortProps(props)
   self.props = props
     -- self:createTable(props)
     -- self:show()

@@ -59,14 +59,8 @@ local command = function (params)
 				end
 			end
 			if #books > 0 then
-        local function compare(a,b)
-          return a.name < b.name
-          -- return a.weight < b.weight
-        end
-        --
-        table.sort(books,compare)
-
-				UI.editor.bookStore:set{value=books}
+        util.sortProps(books)
+	  		UI.editor.bookStore:set{value=books}
 			end
 			UI.appFolder = appFolder
 		end

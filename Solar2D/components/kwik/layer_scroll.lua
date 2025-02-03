@@ -5,14 +5,13 @@ local App = require("controller.application")
 --
 function M:setScroll(UI)
   local sceneGroup = UI.sceneGroup
-  local layerName = self.properties.target
+  local layerName = self.properties.targetGroup
   self.obj = sceneGroup[layerName]
   if self.isPage then
     self.obj = sceneGroup
   end
 
   local sceneGroup = UI.scene.view
-  local layerName = self.properties.target
   local obj = UI.sceneGroup[layerName]
   if obj == nil then
     return
@@ -75,7 +74,7 @@ function M:setScroll(UI)
       height = _height,
       scrollWidth = _scrollWidth,
       scrollHeight = _scrollHeight,
-      baseDir = App.getProps().systemDir
+      baseDir = UI.props.systemDir
     }
 
     if props.hideScrollBar then
@@ -160,7 +159,7 @@ function M:setScroll(UI)
       height = _height,
       scrollWidth = _scrollWidth,
       scrollHeight = _scrollHeight,
-      baseDir = App.getProps().systemDir
+      baseDir = UI.props.systemDir
     }
 
     if props.hideScrollBar then
@@ -193,10 +192,8 @@ function M:setScroll(UI)
   end
 end
 
-end
---
---
-function M:didShow(UI)
+M.set = function(model)
+  return setmetatable(model, {__index = M})
 end
 --
 return M

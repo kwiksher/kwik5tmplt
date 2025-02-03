@@ -2,6 +2,7 @@ local current = ...
 local parent,root, M = newModule(current)
 local widget = require( "widget" )
 local util = require("editor.util")
+local libUtil = require("lib.util")
 
 local option = {
   parent   = nil,
@@ -25,12 +26,8 @@ function M:setValue(decoded, index)
     print(k, v)
     self.model[#self.model+1] = {name=v.name, class=v.class}
   end
-
-  local function compare(a,b)
-    return a.name < b.name
-  end
   --
-  table.sort(self.model,compare)
+  libUtil.sortProps(self.model)
   self.selectedIndex = index
 end
 
@@ -60,11 +57,8 @@ function M:setTemplate(template)
     end
   end
 
-  local function compare(a,b)
-    return a.name < b.name
-  end
   --
-   table.sort(self.model,compare)
+  libUtil.sortProps(self.model)
 
   self.selectedIndex = 1
   self.selectedTextLabel = self.model[self.selectedIndex].entries["_type"]

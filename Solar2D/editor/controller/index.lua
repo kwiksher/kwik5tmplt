@@ -461,6 +461,22 @@ function M:load(book, page, layer, class, isNew, asset, _type)
       model = self:mergeAsset(decoded[1], asset)
     end
     --
+    if class == "scroll" then
+      local pathMod = "App."..book..".components."..page ..".layers."..layer
+      if _type == "group" then
+        pathMod = "App."..book..".components."..page ..".groups."..layer
+      end
+      local decoded = require(pathMod:gsub("/", "."))
+      if not decoded then
+        print("Error")
+        return
+      end
+      printKeys(model.properties)
+      printKeys(decoded.layerProps)
+      model.properties.width = decoded.layerProps.width
+      model.properties.height = decoded.layerProps.height
+    end
+    --
     -- this is for group animation
     if _type then
       model.properties.type = _type

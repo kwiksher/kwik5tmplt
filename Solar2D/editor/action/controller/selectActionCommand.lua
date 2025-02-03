@@ -1,6 +1,8 @@
 local AC = require("commands.kwik.actionCommand")
 local json = require("json")
 local util = require("editor.util")
+local libUtil = require("lib.util")
+
 
 local name = ...
 local parent = name:match("(.-)[^%.]+$")
@@ -52,11 +54,7 @@ local command = function (params)
       model[#model+1] = {name=k, params=v}
     end
     --
-    local function compare(a,b)
-      return a.name < b.name
-    end
-    --
-    table.sort(model,compare)
+    libUtil.sortProps(model)
     --
     commandbox:setValue(UI, commandClass, model, index)
     --
