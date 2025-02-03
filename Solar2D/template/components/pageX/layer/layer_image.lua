@@ -22,7 +22,15 @@ local layerProps = {
     direction = "{{direction}}",
     {{/infinity}}
   },
-
+  -- text properties
+  contents =  "{{contents}}",
+  font =  "{{font}}",
+  fontSize =  {{}},
+  alignment =  "{{}}",
+  {{#color}}
+  color    =  { {{{red}}, {{green}}, {{blue}}, 1 },
+  {{/color}}
+  orientation = "{{orientation}}",
 }
 
 M.align       = "{{align}}"
