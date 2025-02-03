@@ -48,7 +48,7 @@ function M.test_emulator()
     for i, v in next, names do
       objs[i] = UI.sceneGroup[v] or {}
     end
-    mod.dummyDispatcher(objs, 1000)
+    mod.dummyDispatcher(objs, 400)
   end)
 
 end
