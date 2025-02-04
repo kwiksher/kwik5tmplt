@@ -2,16 +2,18 @@ local M = {
   name = "scroll0",
   class="scroll",
   properties = {
-    target = NIL,
-    type   = NIL,
-    isActive = true,
-    area = "object", -- page, paragraph, manual
+    target = "",
+    contents  = "",
+    type  = "group",
+    isActive = "true",
+    area     = "layer",
+    hideBackGround = true,
+    horizontalScrollDisabled = false,
+    verticalScrollDisabled = true,
+    positionX = NIL,
+    positionY = NIL,
     width = NIL,
-    height = NIL,
-    top = NIL,
-    left = NIL,
-    scrollWith = NIL,
-    scrollHeight = NIL
+    height   = NIL
   }
 }
 

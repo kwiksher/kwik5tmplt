@@ -10,6 +10,7 @@ local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 local json = require("json")
 local bt = require(parent..'controller.BTree.btree')
 local tree = require(parent.."controller.BTree.selectorsTree")
+local util = require("lib.util")
 --
 local guides = require(parent.."parts.guides")
 --
@@ -342,6 +343,10 @@ function M:gotoLastSelection(_props)
       -- Close the file handle
       io.close( file )
       props = json.decode(contents)
+      -- check it
+      if not util.isDir("App/"..props.book.."/components/"..props.page) then
+        props.book =nil
+      end
       ---
       --- remove it
       -- local result, reason = os.remove( path )
@@ -372,39 +377,41 @@ function M:gotoLastSelection(_props)
     return
   end
   local obj = helper.selectBook(props.book)
-  bookTable.commandHandler(obj, {phase="ended"},  true)
+  if obj then
+    bookTable.commandHandler(obj, {phase="ended"},  true)
 
-  timer.performWithDelay(1000, function()
-    pageTable.commandHandler({page=props.page},{},  true)
-    --[[
-    if props.selections and props.selections[1] then
-      selectors.componentSelector.iconHander()
-      selectors.componentSelector:onClick(true,  "layerTable")
-      if props.selections[1].name == "action pasted" then
-        helper.selectIcon("action")
-      elseif props.selections[1].name == "pasted" then
-        local class = props.selections[1].class
-        if class == "audio" then
-          selectors.componentSelector:onClick(true,  "audioTable")
-        elseif class == "group" then
-          selectors.componentSelector:onClick(true,  "groupTable")
-        elseif class == "timer" then
-          selectors.componentSelector:onClick(true,  "timerTable")
-        elseif class == "variable" then
-          selectors.componentSelector:onClick(true,  "variableTable")
-        elseif class == "joint" then
-          selectors.componentSelector:onClick(true,  "jointTable")
-        elseif class == "page" then
-          selectors.projectPageSelector:onClick(true)
+    timer.performWithDelay(1000, function()
+       pageTable.commandHandler({page=props.page},{},  true)
+      --[[
+      if props.selections and props.selections[1] then
+        selectors.componentSelector.iconHander()
+        selectors.componentSelector:onClick(true,  "layerTable")
+        if props.selections[1].name == "action pasted" then
+          helper.selectIcon("action")
+        elseif props.selections[1].name == "pasted" then
+          local class = props.selections[1].class
+          if class == "audio" then
+            selectors.componentSelector:onClick(true,  "audioTable")
+          elseif class == "group" then
+            selectors.componentSelector:onClick(true,  "groupTable")
+          elseif class == "timer" then
+            selectors.componentSelector:onClick(true,  "timerTable")
+          elseif class == "variable" then
+            selectors.componentSelector:onClick(true,  "variableTable")
+          elseif class == "joint" then
+            selectors.componentSelector:onClick(true,  "jointTable")
+          elseif class == "page" then
+            selectors.projectPageSelector:onClick(true)
+          end
+        elseif Shapes[props.selections[1].class] then
+          helper.selectLayer(props.selections[1].name)
+        else
+          helper.selectLayer(props.selections[1].name, props.selections[1].class)
         end
-      elseif Shapes[props.selections[1].class] then
-        helper.selectLayer(props.selections[1].name)
-      else
-        helper.selectLayer(props.selections[1].name, props.selections[1].class)
       end
-    end
-    --]]
-  end)
+      --]]
+    end)
+  end
   return false
 end
 
