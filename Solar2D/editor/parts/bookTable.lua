@@ -66,9 +66,9 @@ end
 --
 function M.commandHandler(target, event, isReload)
   local UI = M.UI
-  if event and (event.phase == "began" or event.phase == "moved") then return end
+  if event and (event.phase == "began" or event.phase == "moved") or target == nil then return end
   buttons:hide()
-  if isReload then
+  if isReload  then
     for i=1, #M.objs do
       if M.objs[i].book == target.book then
         target = M.objs[i]
