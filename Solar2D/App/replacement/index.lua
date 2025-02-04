@@ -10,6 +10,7 @@ local scenes = {
   "particles",
   "sprite",
   "sync",
+  "text",
   "vector",
   "video",
   "web",
