@@ -20,10 +20,10 @@ local model = {
         rect3 = {
         }
       },
-      {
-        article = {
-        }
-      },
+      -- {
+      --   article = {
+      --   }
+      -- },
     },
     audios = {
       long={  }, short={   }
