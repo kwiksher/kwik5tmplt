@@ -344,7 +344,7 @@ function M:gotoLastSelection(_props)
       io.close( file )
       props = json.decode(contents)
       -- check it
-      if not util.isDir("App/"..props.book.."/components/"..props.page) then
+      if props.page == nil or not util.isDir("App/"..props.book.."/components/"..props.page) then
         props.book =nil
       end
       ---

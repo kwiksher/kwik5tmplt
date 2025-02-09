@@ -16,8 +16,11 @@ local M = {
   },
   --
   actions={
+  {{#actions}}
     onBack = "{{onBack}}",
     onForward ="{{onForward}}",
+   {{/actions}}
+
   },
   --
   layerProps = layerProps

@@ -20,8 +20,10 @@ local M = {
   },
   --
   actions={
+  {{#actions}}
     onEnded ="{{onEnded}}",
     onMoved="{{onMoved}}"
+  {{/actions}}
   },
   --
   layerProps = layerProps

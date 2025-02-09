@@ -25,6 +25,10 @@ function M.init(props)
 end
 
 function M.suite_setup()
+  -- selectors.projectPageSelector:show()
+  -- selectors.projectPageSelector:onClick(true)
+  -- selectors.componentSelector.iconHander()
+  -- selectors.componentSelector:onClick(true, "layerTable")
 end
 
 function M.setup()

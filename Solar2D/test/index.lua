@@ -3,7 +3,13 @@ local M = {
   run = function (props)
     print("============ lunatest =============")
 
-    lunatest.suite("test.interaction.suite_pinch", props)
+     lunatest.suite("test.interaction.suite_swipe", props)
+
+    --  lunatest.suite("test.interaction.suite_spin", props)
+
+    -- lunatest.suite("test.interaction.suite_shake", props)
+
+    -- lunatest.suite("test.interaction.suite_pinch", props)
 
     -- lunatest.suite("test.interaction.suite_parallax", props)
 

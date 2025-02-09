@@ -390,6 +390,17 @@ function exports.toBoolean(str)
   return str and string.lower(str) == "true" and true or false
 end
 
+function exports.toNumber (var)
+  if type(var) == "string" then
+    print("1")
+    return tonumber(var)
+  elseif type(var) == "table" then
+    return 0
+  end
+  print("2", type(var))
+  return tonumber(var)
+end
+
 local function compare(a,b)
   return a.name < b.name
 end
@@ -397,6 +408,8 @@ end
 function exports.sortProps(tbl)
   table.sort(tbl,compare)
 end
+
+
 
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/templates/components/layer_props.lua
 --/Users/ymmtny/Documents/GitHub/kwik5/sandbox/Ps/react-uxp-styles/Project/Solar2D/src/App/../templates/components/layer_props.lua: No such file or directory

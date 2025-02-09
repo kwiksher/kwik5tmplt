@@ -4,8 +4,8 @@ local M = {
   properties = {
     target = NIL,
     type   = NIL,
-    minAngle  = NIL,
-    maxAngle  = NIL,
+    minAngle  = 0,
+    maxAngle  = 0,
     isActive = true
   },
   actions={

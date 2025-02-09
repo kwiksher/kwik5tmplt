@@ -8,28 +8,33 @@ M.spinHandler = function(event)
   local target = event.target
   local props = target.spin
   local UI = props.UI
+  event.UI = UI
   if event.direction == "clockwise" then
     if props.actions.onClokwise then
-          UI.scene:dispatchEvent({name=props.actions.onClokwise, event={UI=UI, event=event}  })
+          UI.scene:dispatchEvent({name=props.actions.onClokwise, event=event  })
     end
   elseif event.direction == "counter_clockwise" then
     if props.actions.onCounterClockwise then
-          UI.scene:dispatchEvent({name=props.actions.onCounterClockwise , event={UI=UI, event=event}  })
+          UI.scene:dispatchEvent({name=props.actions.onCounterClockwise , event=event  })
     end
-  elseif props.actions.onShapeHandler then
-      props.actions.onShapeHandler(event)
+  end
+
+  if props.actions.onEnded and event.phase == "ended" then
+    UI.scene:dispatchEvent({name=props.actions.onEnded , event=event  })
+      -- props.actions.onShapeHandler(event)
   end
   return true
 end
 
 function M:setSpin(UI)
   local sceneGroup = UI.sceneGroup
-  local layerName  = self.layerProps.name
+  local layerName  = self.properties.target
   self.obj        = sceneGroup[layerName]
   if self.isPage then
     self.obj = sceneGroup
   end
   self.obj.spin = self
+  self.UI = UI
 end
 ---
 function M:activate(UI)
@@ -42,10 +47,10 @@ function M:activate(UI)
     options.constrainAngle=props.constrainAngle
   end
   --
-  if props.minAngle or props.maxAngle then
-    _K.MultiTouch.activate( obj, "rotate", "single",   { minAngle = properties.minAgnle, maxAngle =  properties.maxAngle } )
+  if props.minAngle > 0 or props.maxAngle > 0  then
+    MultiTouch.activate( obj, "rotate", "single",   { minAngle =props.minAgnle, maxAngle = props.maxAngle } )
   else
-    _K.MultiTouch.activate( obj, "rotate", "single" )
+    MultiTouch.activate( obj, "rotate", "single" )
   end
   obj:addEventListener( MultiTouch.MULTITOUCH_EVENT,self.spinHandler)
 end
