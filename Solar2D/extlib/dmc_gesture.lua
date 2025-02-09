@@ -206,6 +206,7 @@ function swipeTouchHandler( event )
 
 			if vector >= dmc.swipeLength then
 				e.direction = direction_given_angle( angle, dmc.limitAngle )
+        e.swippedLength = vector
 			end
 
 			-- fill in rest of event and dispatch
@@ -243,10 +244,10 @@ local Gesture = {}
 --== Constants ==--
 
 local MAX_LIMIT_ANGLE = 45
-local MIN_SWIPE_LENGTH = 10
+local MIN_SWIPE_LENGTH = 10/4
 
 Gesture.DEFAULT_LIMIT_ANGLE = 20
-Gesture.DEFAULT_SWIPE_LENGTH = 150
+Gesture.DEFAULT_SWIPE_LENGTH = 150/4
 
 Gesture.SWIPE_EVENT = SWIPE_EVENT
 
