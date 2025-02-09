@@ -9,11 +9,12 @@ local model = {
         }
       },
       {
-        rect_0 = {  }
+        rect_0 = {
+          class={ "shake", }  }
       },
       {
         ellipse_0 = {
-            }
+        }
       },
     },
     audios = {
@@ -25,7 +26,7 @@ local model = {
     joints    = {  },
     page = {  }
   },
-  commands = {  },
+  commands = {   "shakeAction",  },
   onInit = function(scene) print("onInit") end
 }
 local scene = require('controller.scene').new(sceneName, model)
