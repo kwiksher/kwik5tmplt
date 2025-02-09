@@ -466,15 +466,23 @@ function M:load(book, page, layer, class, isNew, asset, _type)
       if _type == "group" then
         pathMod = "App."..book..".components."..page ..".groups."..layer
       end
-      local decoded = require(pathMod:gsub("/", "."))
-      if not decoded then
+      local _decoded = require(pathMod:gsub("/", "."))
+      if not _decoded then
         print("Error")
         return
       end
-      printKeys(model.properties)
-      printKeys(decoded.layerProps)
-      model.properties.width = decoded.layerProps.width
-      model.properties.height = decoded.layerProps.height
+      -- printKeys(model.properties)
+      -- printKeys(_decoded.layerProps)
+      model.properties.width = _decoded.layerProps.width
+      model.properties.height = _decoded.layerProps.height
+    elseif class =="text" then -- replacemnt
+      local pathMod = "App."..book..".components."..page ..".layers."..layer
+      local _decoded = require(pathMod:gsub("/", "."))
+      if not _decoded then
+        print("Error")
+        return
+      end
+      model.properties.contents = _decoded.layerProps.contents
     end
     --
     -- this is for group animation
