@@ -8,9 +8,22 @@ local model = {
         bg = {
         }
       },
+      -- {
+      --   rect1 = {
+      --   }
+      -- },
+      -- {
+      --   rect2 = {
+      --     class={ "scroll", }  }
+      -- },
+      -- {
+      --   rect3 = {
+      --   }
+      -- },
       {
         article = {
-          class={ "text","scroll", }  }
+          class = {"text"}
+        }
       },
     },
     audios = {
