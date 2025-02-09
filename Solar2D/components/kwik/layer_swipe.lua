@@ -1,11 +1,13 @@
 local M = {}
 local Gesture = require("extlib.dmc_gesture")
+local util   = require("lib.util")
 --
 M.swipeHandler = function(event)
-  local target = event.target
+  local target = event.target or {}
   local props = target.swipe
   local UI = props.UI
   if event.phase == "ended" and event.direction ~= nil then
+    -- print(event.phase, event.direction)
     if event.direction == "up" then
       if props.actions.onUp then
         UI.scene:dispatchEvent({name = props.actions.onUp, event = event})
@@ -29,17 +31,25 @@ end
 
 function M:setSwipe(UI)
   local sceneGroup = UI.sceneGroup
-  local layerName = self.layerProps.name
+  local layerName  = self.properties.target
   self.obj = sceneGroup[layerName]
   if self.isPage then
     self.obj = sceneGroup
   end
+  self.UI = UI
   self.obj.swipe = self
 end
 
 function M:activate(UI)
   local obj = self.obj
-  Gesture.activate(obj, self.properties.dbounds)
+  local props = self.properties
+    local dbounds = {
+    swipeLength = util.toNumber(props.swipeLength),
+    limitAngle =  util.toNumber(props.limitAngle),
+    useStrictBounds = util.toBoolean(props.useStrictBounds)
+  }
+  printKeys(dbounds)
+  Gesture.activate(obj, dbounds)
   obj:addEventListener(Gesture.SWIPE_EVENT, self.swipeHandler)
 end
 --
@@ -48,4 +58,8 @@ function M:deactivate(UI)
   obj:removeEventListener(Gesture.SWIPE_EVENT, self.swipeHandler)
 end
 --
+M.set = function(model)
+  return setmetatable( model, {__index=M})
+end
+
 return M

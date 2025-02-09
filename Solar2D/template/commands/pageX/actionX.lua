@@ -12,8 +12,9 @@ function ActionCommand:new()
 		local layers      = UI.layers
     local event      = params.event
     local obj        = event.target
-    --printKeys(event.target)
-
+    --
+    -- local alert = native.showAlert("Alert", "Hello", { "OK" } )
+    -- printKeys(event.target)
     -- local conditions = require("App." .. UI.book..".common.conditions")
     -- local expressions = require("App." .. UI.book.."common.expressions")
 

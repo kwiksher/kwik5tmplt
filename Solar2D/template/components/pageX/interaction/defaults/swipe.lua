@@ -5,8 +5,8 @@ local M = {
     target = NIL,
     type   = NIL,
     isActive = true,
-    swipeLength = 120,
-    limitAngle = NIL,
+    swipeLength = 120/4,
+    limitAngle = 30,
     useStrictBounds = false
   },
   actions={

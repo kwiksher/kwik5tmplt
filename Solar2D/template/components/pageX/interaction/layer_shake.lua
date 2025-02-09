@@ -13,7 +13,9 @@ local M = {
   },
   --
   actions={
+  {{#actions}}
     onComplete = "{{onComplete}}",
+  {{/actions}}
   },
   --
   layerProps = layerProps
