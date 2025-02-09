@@ -6,7 +6,7 @@ local json = require("json")
 local M = require("editor.controller.index").new("replacement")
 local previewPanel = require(root.."previewPanel")
 
-
+local util = require("lib.util")
 
 function M:init(viewGroup)
   self.viewGroup = viewGroup
@@ -141,8 +141,12 @@ function M:useClassEditorProps(UI)
     end
 
     if name  == "color" then
-      local nums = util.split(entry.value, ',')
-      value = {r= tonumber(nums[1])/255, g=tonumber(nums[2])/255, b=tonumber(nums[3])/255, a=(tonumber(nums[4]) or 1)}
+      if type(value) == "table" then
+        value = {r= tonumber(value[1])/255, g=tonumber(value[2])/255, b=tonumber(value[3])/255, a=(tonumber(value[4]) or 1)}
+      else
+        local nums = util.split(value, ',')
+        value = {r= tonumber(nums[1])/255, g=tonumber(nums[2])/255, b=tonumber(nums[3])/255, a=(tonumber(nums[4]) or 1)}
+      end
     end
     props.properties[#props.properties+ 1] = {name = name, value = value}
   end

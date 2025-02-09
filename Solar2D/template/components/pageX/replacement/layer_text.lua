@@ -4,6 +4,7 @@ local layerProps = require(M.layerMod).layerProps
 local M = {
   name = "article",
   properties = {
+    {{#properties}}
     contents =  "{{contents}}",
     font =  {{font}}, -- "HiraMaruProN-W4",
     fontSize =  {{fontSize}},
@@ -17,6 +18,7 @@ local M = {
     paddingX = {{paddingX}},
     paddingY = {{paddingY}},
     alpha = {{alpha}}
+    {{/properties}}
   },
   layerProps = layerProps
 }

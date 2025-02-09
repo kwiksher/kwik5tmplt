@@ -11,7 +11,7 @@ local M = {
     orientation = "horizontal",
     scaleX = NIL,
     scaleY = NIL,
-    paddingX = NIL,
+    paddingX = 0,
     paddingY = -2,
     alpha = NIL
   }

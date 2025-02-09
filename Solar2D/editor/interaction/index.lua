@@ -84,6 +84,8 @@ function controller:useClassEditorProps(UI)
     elseif entry.name == "canvasColor" or entry.name == "brushColor" then
       local v = {r=entry.value[1], g = entry.value[2], b = entry.value[3], a = entry.value[4]}
       props.properties[#props.properties+1] = {name = entry.name, value = v}
+    elseif entry.name == "_width" or entry.name == "_height" then
+        props.properties[#props.properties+1] = {name = entry.name:sub(2), value = entry.value}
     else
       if entry.name == "eventType" then
         eventTypeIndex = #props.properties+1
