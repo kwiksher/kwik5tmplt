@@ -8,6 +8,10 @@ function M:setScroll(UI)
   local obj = sceneGroup[self.properties.target]
   local contents = sceneGroup[self.properties.contents]
 
+  -- print(self.properties.contents)
+  -- print(contents)
+  -- printKeys(contents)
+
   if self.isPage then
     self.obj = sceneGroup
   end
