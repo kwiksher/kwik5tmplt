@@ -22,6 +22,14 @@ function M:create(UI)
       height = layerProps.height/4,
     }
 
+    if props.width == NIL then
+      options.width = nil
+    end
+
+    if props.height == NIL then
+      options.height = nil
+    end
+
     if props.font == "native.systemFont" then
       options.font = native.systemFont
     end
@@ -66,6 +74,7 @@ function M:create(UI)
     obj.oriYs = obj.yScale
     obj.alpha = layerProps.alpha or 1
     obj.oldAlpha = layerProps.alpha or 1
+    obj.layerProps = layerProps
     sceneGroup:insert( obj)
     if sceneGroup[layerProps.name] then
       sceneGroup[layerProps.name]:removeSelf()

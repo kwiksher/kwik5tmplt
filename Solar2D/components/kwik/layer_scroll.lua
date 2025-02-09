@@ -41,6 +41,13 @@ function M:setScroll(UI)
     _height = props.height or display.actualContentHeight
     _scrollWidth = props.scrollWidth or display.actualContentWidth
     _scrollHeight = props.scrollHeight or display.actualContentHeight
+  elseif props.area == "paragraph" or props.type == "paragraph" then
+    _top = obj.layerProps.mY   -  obj.layerProps.height/8
+    _left = obj.layerProps.mX  -  obj.layerProps.width/8
+    _width = obj.layerProps.width/4
+    _height = obj.layerProps.height/4
+    _scrollWidth = obj.widht   -- props.scrollWidth
+    _scrollHeight = obj.height  --props.scrollHeight
   elseif props.area == "object" or props.area == "layer" then
     _top = obj.contentBounds.yMin
     _left = obj.contentBounds.xMin
@@ -48,13 +55,6 @@ function M:setScroll(UI)
     _height = obj.height
     _scrollWidth = props.scrollWidth or obj.width
     _scrollHeight = props.scrollHeight or obj.height
-  elseif props.area == "paragraph" then
-    _top = obj.y
-    _left = obj.x
-    _width = obj.layerProps.widht
-    _height = obj.layerProps.height
-    _scrollWidth = props.scrollWidth
-    _scrollHeight = props.scrollHeight
   elseif props.area == "manual" then
     _top = props.top
     _left = props.left
@@ -96,8 +96,8 @@ function M:setScroll(UI)
     left = _left,
     width = _width,
     height = _height,
-    -- scrollWidth = _scrollWidth,
-    -- scrollHeight = _scrollHeight,
+    scrollWidth = nil,
+    scrollHeight = nil,
     baseDir = UI.props.systemDir,
     -- listener = scrollListener
   }
@@ -108,9 +108,9 @@ function M:setScroll(UI)
   options.verticalScrollDisabled   = props.verticalScrollDisabled
 
   local scrollObj = widget.newScrollView(options)
-  if scrollObj then
-    printKeys(options)
-  end
+  -- if scrollObj then
+  --   printKeys(options)
+  -- end
 
   if props.maskFile then
     local mask = graphics.newMask(_K.imgDir .. props.maskFile)
@@ -120,21 +120,22 @@ function M:setScroll(UI)
   -- local background = display.newImageRect( "App/interaction/assets/images/scroll/scrollimage.png", 768, 1024 )
   --scrollObj:insert( background )
   --
+  -- print("@@@ contents width, height", contents.width, contents.height)
+  -- print("@@@ scroll (visible) width, height", scrollObj.width, scrollObj.height)
+
   contents.x = contents.width/2
   contents.y = contents.height/2
-  scrollObj:insert(contents)
   sceneGroup:insert(scrollObj)
+  scrollObj:insert(contents)
 
-  print("@@@ contents width, height", contents.width, contents.height)
-  print("@@@ scroll (visible) width, height", scrollObj.width, scrollObj.height)
   -- print("@@@ scrollWidth, scrollHeight", options.scrollWidth, options.scrollHeight)
+---[[
 
-
-  if props.positionX and props.positionY then
+  if type(props.positionX) == "number" and type(props.positionY) == "number"  then
     scrollObj:scrollToPosition {x = -1 * props.positionX, y = -1 * props.positionY}
-  elseif props.positionX then
+  elseif type(props.positionX) == "number" then
       scrollObj:scrollToPosition {x = -1 * props.positionX, y = nil}
-  elseif props.positionY then
+  elseif type(props.positionY) == "number" then
     scrollObj:scrollToPosition {x = nil, y = -1 * props.positionY}
   elseif props.horizontalScrollDisabled then
     if props.type == "group" then
@@ -150,6 +151,7 @@ function M:setScroll(UI)
       -- scrollObj:scrollToPosition {x = contents.width/2, y=nil}
     end
   end
+--]]
 
   --
   -- if props.area ~= "manual" then

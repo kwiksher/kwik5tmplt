@@ -40,7 +40,7 @@ function M:init(viewGroup)
   if self.selectbox then
     self.selectbox.useClassEditorProps = function() return self:useClassEditorProps() end
     self.selectbox.classEditorHandler = function(decoded, index)
-      print("classEditorHandler", index)
+      -- print("classEditorHandler", index)
       self:reset()
       self:setValue(decoded, index)
       self:redraw()
@@ -52,7 +52,7 @@ end
 --
 function M:useClassEditorProps()
   -- print(debug.traceback())
-  print("editor.controller.useClassEditorProps", self.id)
+  -- print("editor.controller.useClassEditorProps", self.id)
   local props = { properties = {}}
   if self.selectbox.selectedObj and self.selectbox.selectedText then
     props = {
@@ -94,7 +94,7 @@ function M:useClassEditorProps()
   end
   --
   for i, entry in next, properties do
-    print("", properties[i].name, type(properties[i].value))
+    -- print("", properties[i].name, type(properties[i].value))
     if entry.name == "_target" then
       props.properties[#props.properties+1] = {name = "target", value = entry.value}
     elseif entry.name  == "color" then
@@ -489,7 +489,7 @@ function M:load(book, page, layer, class, isNew, asset, _type)
     -- this comes from clicking layerTable.class
     local layerName = layer or "index"
     --local path      = page .."/"..layerName.."_"..self.tool..".json"
-    print( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua")
+    -- print( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua")
     local path      = system.pathForFile( "App/"..book.."/components/"..page .."/layers/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
     if _type == "group" then
       path      = system.pathForFile( "App/"..book.."/components/"..page .."/groups/"..layerName.."_"..self.class..".lua", system.ResourceDirectory)
@@ -521,7 +521,7 @@ function M:command()
     local book = params.book or UI.editor.currentBook
     local page  = params.page or UI.page
 
-    for k, v in pairs(params) do print(k, v) end
+    -- for k, v in pairs(params) do print(k, v) end
     if params.hide then
       -- print("@@@@@")
       self:hide()
@@ -542,13 +542,13 @@ function M:command()
     elseif params.isDelete then
       print("isDelete")
     elseif params.isNew and params.class == "joint" then
-      print("new Joint")
+      -- print("new Joint")
       native.showAlert( "alert", "you can create a joint from physic tool")
     else
       -- read from models/{class}/{name}.json
       local decoded = util.decode(book, page, params.class, name, {subclass = params.subclass, isNew = params.isNew, isDelete = params.isDelete}) -- this reads models/xx.json
       --
-      print("From selectors", decoded.class)
+      -- print("From selectors", decoded.class)
       self.class = decoded.class or parms.class -- see physics controller uses for joint's pointA, pointB show/hide
       self.classProps:didHide(UI)
       self.classProps:destroy(UI)
@@ -560,7 +560,7 @@ function M:command()
       if model and model.properties == nil then
           print("#Warning properties are missing", params.class, name)
       else
-        print(json.encode(model.properties))
+        -- print(json.encode(model.properties))
       end
       -- properties
       self.classProps:setValue(model)
@@ -581,7 +581,7 @@ function M:command()
         --
         local listener = function(name)
           if name and name:len() > 0 then
-            print( name )
+            -- print( name )
             self.classProps:show()
           else
             print("TODO popup error message")
