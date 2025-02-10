@@ -1,8 +1,9 @@
+local parent,root, M = newModule(...)
+local layerProps = require(M.layerMod).layerProps
 local M = {
-  name = "counter0",
-  class="counter",
+  name = "rect_0",
   properties = {
-    target = NIL,
+    target = "rect_0",
     countValue = 10,
     font =  "native.systemFont", -- "HiraMaruProN-W4",
     fontSize =  30,
@@ -17,8 +18,9 @@ local M = {
     autoPlay = true
   },
   actions = {
-    onComplete = "",
-  }
+    onComplete = ""
+  },
+  layerProps = layerProps
 }
-
-return M
+--
+return require("components.kwik.layer_counter").set(M)

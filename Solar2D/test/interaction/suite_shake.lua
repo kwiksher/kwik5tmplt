@@ -48,7 +48,7 @@ end
 
 function M.test_emulator()
   local mod = require("components.kwik.layer_shake")
-  local obj = UI.sceneGroup["rect_0"]
+  local obj = UI.sceneGroup["ellipse_0"]
   if obj then
     mod.createShakeEmulator(obj, function(event)
       event.target = obj

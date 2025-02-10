@@ -20,8 +20,10 @@ function M:setProps(layerProps)
   self.name = layerProps.name
   self.oriAlpha  = layerProps.alpha
   --
-  self.imagePath = layerProps.name.."." .. layerProps.type
-  self.imageName = "/"..layerProps.name.."." ..layerProps.type
+  if layerProps.type then
+    self.imagePath = layerProps.name.."." .. layerProps.type
+    self.imageName = "/"..layerProps.name.."." ..layerProps.type
+  end
   --
   self.blendMode = layerProps.blendMode
   --

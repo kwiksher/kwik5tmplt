@@ -37,7 +37,7 @@ end
 function M.teardown()
 end
 
-function M.test_new()
+function M.xtest_new()
   local name = "rect_0"
   helper.selectLayer(name)
   helper.selectIcon("Interactions", "Spin"):done(

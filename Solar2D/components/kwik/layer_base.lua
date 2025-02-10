@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 --
 local setProps = require("components.kwik.layer_image").setProps
 --

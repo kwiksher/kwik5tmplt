@@ -13,16 +13,22 @@ function ActionCommand:new()
     local event      = params.event
     local obj        = event.target
     --
-    local alert = native.showAlert("Alert", "Hello", { "OK" } )
+    -- local alert = native.showAlert("Alert", "Hello", { "OK" } )
     -- printKeys(event.target)
     -- local conditions = require("App." .. UI.book..".common.conditions")
     -- local expressions = require("App." .. UI.book.."common.expressions")
+    --
+    -- target layer :sceneGroup[layerName]
+    -- target animation : layer.animations[index]
+    --
+    obj = UI.animations["rect_0_tremble"]
+    AC.Animation:play(obj) --
   end
   return setmetatable( command, {__index=AC})
 end
 --
 ActionCommand.model = [[
-{"name":"shakeAction","actions":[]}
+{"name":"shakeAction","actions":[{"command":"animation.play","params":{"target":"rect_0_tremble"}}]}
 ]]
 --
 return ActionCommand

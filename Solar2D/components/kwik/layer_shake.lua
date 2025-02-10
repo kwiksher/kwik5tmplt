@@ -41,7 +41,7 @@ function M.createShakeEmulator(target, callback)
 
   local function handleTouch(event)
     if event.phase == "began" then
-      print("event began", event.id ~= (touch and touch1.id) )
+      print("event began", event.id ~= (touch1 and touch1.id) )
     elseif event.phase == "moved" then
       print("event moved")
     elseif event.phase == "ended" or event.phase == "cancelled" then
