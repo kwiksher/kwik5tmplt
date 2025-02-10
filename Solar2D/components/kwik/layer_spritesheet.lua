@@ -18,32 +18,14 @@ function M:create(UI)
   end
   obj.x        = self.layerProps.mX or 0
   obj.y        = self.layerProps.mY or 0
-  obj.alpha    = self.layerProps.oriAlpha or 1
-  obj.oldAlpha = self.layerProps.oriAlpha
-  if self.layerProps.randX then
-      obj.x = math.random(randXStart , randXEnd)
-  end
-  if self.layerProps.randY then
-      obj.y = math.random( randYStart , randYEnd)
-  end
+
 
   if self.layerProps.imageWidth then
     obj:scale(self.layerProps.imageWidth/obj.width, self.layerProps.imageHeight/obj.height)
   end
 
-  if self.layerProps.scaleW then
-      obj.xScale = self.layerProps.scaleW
-  end
-  if self.layerProps.scaleW then
-    obj.yScale = self.layerProps.scaleW
-  end
-  if self.layerProps.rotate then
-      obj:rotate( self.layerProps.rotate )
-  end
-  -- obj.oriX = obj.x
-  obj.oriY = obj.y
-  obj.oriXs = obj.xScale
-  obj.oriYs = obj.yScale
+  self:setLayerProps(obj)
+
   obj.name = self.layerProps.name or "_preview"
   obj.type = "sprite"
 

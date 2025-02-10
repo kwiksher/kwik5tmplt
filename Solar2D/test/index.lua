@@ -1,22 +1,26 @@
 require "extlib.lunatest"
+--
+
 local M = {
+  --
   run = function (props)
     print("============ lunatest =============")
+    local UI = props.UI
+    --
+    local function set (book, page)
+      if book == UI.book and page:find(UI.page)  then
+        lunatest.suite("test."..book..".suite_"..page, props)
+      end
+    end
 
-     lunatest.suite("test.interaction.suite_swipe", props)
-
-    --  lunatest.suite("test.interaction.suite_spin", props)
-
-    -- lunatest.suite("test.interaction.suite_shake", props)
-
-    -- lunatest.suite("test.interaction.suite_pinch", props)
-
-    -- lunatest.suite("test.interaction.suite_parallax", props)
-
-    -- lunatest.suite("test.animation.suite_path_animation", props)
-
-    -- lunatest.suite("test.keyboard.suite_page1", props)
-    -- lunatest.suite("test.lingualSample.suite_lingual_page2", props)
+    set("interaction", "swipe")
+    set("interaction", "spin")
+    set("interaction", "shake")
+    set("interaction", "pinch")
+    set("interaction", "parallax")
+    set("animation", "path_animation")
+    set("keyboard", "page1")
+    set("lingualSample", "lingual_page2")
 
     -- lunatest.suite("test.book.suite_assets", props)
     -- lunatest.suite("test.book.suite_page1_page_props", props)

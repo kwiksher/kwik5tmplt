@@ -12,29 +12,32 @@ end
 --
 function M:create(UI)
   local sceneGroup = UI.sceneGroup
-  local layer = UI.layer
+  local layerName  = self.properties.target
+  local props = self.properties
+  local layerProps = self.layerProps
   local obj
-  if self:isSingleton(self.name) then
-    obj = sceneGroup[self.name]
+  --
+  if self:isSingleton(layerName) then
+    obj = sceneGroup[layerName]
     if obj == nil or obj.play == nil then
       print("singleton:newVideo")
-      obj = native.newVideo(self.x, self.y, self.width, self.height)
+      obj = native.newVideo(layerProps.mX, layerProps.mY, layerProps.imageWidth,layerProps.imageHeight)
       obj.isLoaded = false
     end
   else
-    -- print(self.x, self.y, self.width, self.height)
-    -- local circle = display.newCircle( self.x, self.y ,100 )
-    obj = native.newVideo(self.x, self.y, self.width, self.height)
+    -- print(layerProps.mX, layerProps.mY, layerProps.imageWidth,layerProps.imageHeight)
+    -- local circle = display.newCircle( layerProps.mX, layerProps.mY ,100 )
+    obj = native.newVideo(layerProps.mX, layerProps.mY, layerProps.imageWidth,layerProps.imageHeight)
     -- print(obj.x, obj.y)
   end
 
   --
-  if self:isSingleton(self.name) then
+  if self:isSingleton(layerName) then
     if not obj.isLoaded then
       if self.isLocal then
         obj:load(UI.props.videoDir .. self.url, UI.props.systemDir)
       else
-        obj:load(self.url, media.RemoteSource)
+        obj:load(props.url, media.RemoteSource)
       end
       obj.isLoaded = true
     else
@@ -42,15 +45,15 @@ function M:create(UI)
       obj:pause()
     end
   else
-    if self.isLocal then
-      obj:load(UI.props.videoDir .. self.url, UI.props.systemDir)
+    if props.isLocal then
+      obj:load(UI.props.videoDir .. props.url, UI.props.systemDir)
     else
-      obj:load(self.url, media.RemoteSource)
+      obj:load(props.url, media.RemoteSource)
     end
   end
-  if self.autoPlay then
+  if props.autoPlay then
 
-    -- print("@@@", UI.props.videoDir .. self.url, UI.props.systemDir)
+    -- print("@@@", UI.props.videoDir .. props.url, UI.props.systemDir)
 
     obj:play()
   end
@@ -61,6 +64,27 @@ function M:create(UI)
   --   obj:play()
   -- end
 
+  self:setLayerProps(obj)
+  --
+  obj.name = layerName
+  obj.type = "video"
+  --sceneGroup:insert(obj)
+  -- local origin = sceneGroup[layerName]
+  -- if origin then
+  --   obj.layerIndex = origin.layerIndex
+  --   origin:removeSelf()
+  -- else
+  --   obj.layerIndex = obj.layerIndex + 1
+  -- end
+  sceneGroup[layerName] = obj
+  -- UI.layers[obj.layerIndex] = obj
+  ---
+  UI.videos[#UI.videos + 1] = obj
+
+end
+--
+function M:didShow (UI)
+
   if self.loop or self.rewind then
     self.listener = function(event)
       if event.phase == "ended" then
@@ -70,40 +94,19 @@ function M:create(UI)
         if self.loop then
           obj:play()
         end
-        if self.onComplete then
-          UI.scene:dispatchEvent({name = self.onComplete, layer = obj})
+        if self.actions.onComplete then
+          UI.scene:dispatchEvent({name = self.actions.onComplete, layer = obj})
         end
       end
     end
     obj:addEventListener("video", self.listener)
   end
-
-  self:setLayerProps(obj)
-  obj.name = self.name
-  obj.type = "video"
-  --sceneGroup:insert(obj)
-  local origin = sceneGroup[obj.name]
-  if origin then
-    obj.layerIndex = origin.layerIndex
-    origin:removeSelf()
-  else
-    obj.layerIndex = #UI.layers + 1
-  end
-  sceneGroup[obj.name] = obj
-  UI.layers[obj.layerIndex] = obj
-  ---
-  if UI.props.muteVideos == nil then
-    UI.props.muteVideos = {}
-  end
-  if UI.props.muteVideos[self.name] == true then
-    obj.isMuted = true
-  end
 end
 --
-function M:destroy(UI)
+function M:didHide(UI)
   local sceneGroup = UI.sceneGroup
   local layer = UI.layer
-  local obj = sceneGroup[self.name]
+  local obj = sceneGroup[layerName]
   if obj ~= nil then
     if self.loop or self.rewind then
       if obj ~= nil and self.listener ~= nil then
@@ -112,7 +115,7 @@ function M:destroy(UI)
       end
     end
     --
-    if self:isSingleton(self.name) then
+    if self:isSingleton(layerName) then
       for i = 1, 32 do
         if audio.isChannelActive(i) then
         --   print('channel '..i..' is active')
@@ -123,7 +126,7 @@ function M:destroy(UI)
       if obj then
         obj:pause()
         obj:removeSelf()
-        sceneGroup[self.name] = nil
+        sceneGroup[layerName] = nil
       end
     end
   end

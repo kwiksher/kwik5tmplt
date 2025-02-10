@@ -2,10 +2,11 @@ local parent,root, M = newModule(...)
 local layerProps = require(M.layerMod).layerProps
 
 local M = {
-  name = "{{name}}",
+  name = "article",
   properties = {
     {{#properties}}
-    contents =  "{{contents}}",
+    text =  "{{text}}",
+    inputType = "{{inputType}}","
     font =  {{font}}, -- "HiraMaruProN-W4",
     fontSize =  {{fontSize}},
     alignment =  "{{alignment}}",
@@ -17,10 +18,12 @@ local M = {
     scaleY = {{scaleY}},
     paddingX = {{paddingX}},
     paddingY = {{paddingY}},
-    alpha = {{alpha}}
+    alpha = {{alpha}},
+    variable = {{variable}},
+    dynamicText = {{dynamicText}}
     {{/properties}}
   },
   layerProps = layerProps
 }
 --
-return require("components.kwik.layer_text").set(M)
+return require("components.kwik.layer_textinput").set(M)

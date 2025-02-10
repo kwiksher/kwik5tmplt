@@ -13,7 +13,7 @@ function ActionCommand:new()
     local event      = params.event
     local obj        = event.target
     --
-    local alert = native.showAlert("Alert", "Hello", { "OK" } )
+    local alert = native.showAlert("Alert", "direction is "..event.direction, { "OK" } )
 
     printKeys(event)
     -- local conditions = require("App." .. UI.book..".common.conditions")

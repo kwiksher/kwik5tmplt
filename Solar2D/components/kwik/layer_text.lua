@@ -1,12 +1,7 @@
 local M = require("components.kwik.layer_base").new()
 --
-function M:init(UI)
-  -- self:setProps(self.layerProps)
-end
-
 function M:create(UI)
     local sceneGroup  = UI.sceneGroup
-    local layer       = UI.layer
     local props      = self.properties
     local layerProps = self.layerProps
     local options
@@ -57,23 +52,8 @@ function M:create(UI)
     -- --
     obj.anchorX = 0.5
     obj.anchorY = 0.5
-    obj.xScale = props.scaleX or 1
-    obj.yScale = props.scaleY or 1
     ---
-    obj:rotate(props.rotate or 0)
-    if self.randXStart and self.randXStart > 0 then
-      obj.x = math.random( self.randXStart, self.randXEnd)
-    end
-    if self.randYStart and self.randYStart > 0  then
-      obj.y = math.random( self.randYStart, self.randYEnd)
-    end
-    ---
-    obj.oriX = obj.x
-    obj.oriY = obj.y
-    obj.oriXs = obj.xScale
-    obj.oriYs = obj.yScale
-    obj.alpha = layerProps.alpha or 1
-    obj.oldAlpha = layerProps.alpha or 1
+    self:setLayerProps(obj)
     obj.layerProps = layerProps
     sceneGroup:insert( obj)
     if sceneGroup[layerProps.name] then

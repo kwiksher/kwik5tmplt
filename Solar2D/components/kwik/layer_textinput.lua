@@ -1,132 +1,144 @@
--- Code created by Kwik - Copyright: kwiksher.com {{year}}
--- Version: {{vers}}
--- Project: {{ProjName}}
---
-local _M = {}
---
-local _K = require "Application"
---
+local M = require("components.kwik.layer_base").new()
 local Var = require("components.kwik.vars")
 --
-function _M:allListeners(UI)
-  local sceneGroup  = UI.scene.view
-  local layer       = UI.layer
-  if layer.{{myLName}} == nil then return end
-  {{#variable}}
-    if Var:kwkVarCheck("{{elContent}}") ~= nil then
-       UI.{{elContent}} = Var:kwkVarCheck("{{elContent}}")
-       layer.{{myLName}}.text=UI.{{elContent }}
-    else
-       layer.{{myLName}}.text="{{contents}}"
-    end
-  {{/variable}}
+--
+function M:create(UI)
+  local sceneGroup  = UI.sceneGroup
+  local props      = self.properties
+  local layerProps = self.layerProps
+  local options
   --
-  local function fieldHandler_{{myLName}}(event)
+  local options = {
+    text = props.text,
+    inputType = props.inputType,
+    fontSize = props.fontSize/2,
+    font = props.font,
+    --align = props.alignment,
+    x = layerProps.mX + (props.paddingX or 0),
+    y = layerProps.mY + (props.paddingY or 0),
+    width = layerProps.width/4,
+    height = layerProps.height/4,
+  }
+
+  if props.width == NIL then
+    options.width = nil
+  end
+
+  if props.height == NIL then
+    options.height = nil
+  end
+
+  if props.font == "native.systemFont" then
+    options.font = native.systemFont
+  end
+
+--   local textOptions =
+-- {
+-- 	parent = group,
+-- 	text = table.concat(arr, ", "),
+-- 	x = 10,--display.contentCenterX,
+-- 	y = 0,
+-- 	width = row.contentWidth-100,
+-- 	font = native.systemFont,
+-- 	fontSize = row.params.fontSize,
+-- 	align = "left" -- Alignment parameter
+-- }
+
+  local obj = display.newText( options )
+
+  local obj = native.newTextField( options.x, options.y, options.width, options.height )
+  obj.text = options.text
+  obj.inputType = options.inputType
+  --
+  obj.originalH = obj.height
+  obj.originalW = obj.width
+  obj:setFillColor (unpack(props.color))
+  -- obj.x = obj.x + options.width/2 + (props.paddingX or 0)
+  -- --
+  -- obj.y = obj.y + (props.paddingY or 0)
+  -- --
+  obj.anchorX = 0.5
+  obj.anchorY = 0.5
+  obj.xScale = props.scaleX or 1
+  obj.yScale = props.scaleY or 1
+  ---
+  obj:rotate(props.rotate or 0)
+  if self.randXStart and self.randXStart > 0 then
+    obj.x = math.random( self.randXStart, self.randXEnd)
+  end
+  if self.randYStart and self.randYStart > 0  then
+    obj.y = math.random( self.randYStart, self.randYEnd)
+  end
+  ---
+  obj.oriX = obj.x
+  obj.oriY = obj.y
+  obj.oriXs = obj.xScale
+  obj.oriYs = obj.yScale
+  obj.alpha = layerProps.alpha or 1
+  obj.oldAlpha = layerProps.alpha or 1
+  obj.layerProps = layerProps
+  sceneGroup:insert( obj)
+  if sceneGroup[layerProps.name] then
+    sceneGroup[layerProps.name]:removeSelf()
+    sceneGroup[layerProps.name] = nil
+  end
+  sceneGroup[layerProps.name] = obj
+end
+
+function M:didShow(UI)
+  local sceneGroup  = UI.sceneGroup
+  local props      = self.properties
+  local layerProps = self.layerProps
+  if self.obj == nil then return end
+  --
+  if props.variable:len() > 0 then
+    if Var:kwkVarCheck(props.variable) ~= nil then
+       local value = Var:kwkVarCheck(props.variable)
+       self.obj.text = value
+    else
+       self.obj.text= props.text
+    end
+  end
+  --
+  local function fieldHandler(event)
     if ("began" == event.phase) then
     elseif ("ended" == event.phase) then
     elseif ("submitted" == event.phase) then
-      {{#variable}}
-         UI.{{elContent}} = layer.{{myLName}}.text
-      {{/variable}}
-      {{^variable}}
-        local path = system.pathForFile( "{{elContent}}", system.DocumentsDirectory )
+      local value = self.obj.text
+      if props.variable:len() > 0 then
+         UI.variables[props.variable] =value
+      else
+        local path = system.pathForFile( props.variable, system.ApplicationSupportDirectory )
         local file = io.open( path, "w+" )
-        file:write( layer.{{myLName}}.text )
+        file:write( self.obj.text )
         io.close( file )
-      {{/variable}}
-      {{#dynamic}}
-        layer.{{$.kwik.myProj.pages.page[myi].replacement[bi].name}}.text = UI.{{elContent}}
-      {{/dynamic}}
-      {{#elTrigger}}
-        {{elTrigger}}()
-      {{/elTrigger}}
+
+        if props.dynamicText:len() > 0  then
+          local target = sceneGroup[props.dynamicText]
+          if target then
+            target.text =value
+          end
+        end
+      if self.actions.onCompelete then
+        UI.scene:dispatchEvent({name = self.actions.onComplete, layer = obj})
+      end
       native.setKeyboardFocus(nil)
       end
     end
-  {{^multLayers}}
-    layer.{{myLName}}:addEventListener( "userInput", fieldHandler_{{myLName}} )
-  {{/multLayers}}
+  self.obj:addEventListener( "userInput", fieldHandler )
+  self.fieldHandler = fieldHandler
 end
 --
-function _M:localVars(UI)
+function M:didHide(UI)
+  if self.fieldHandler then
+    self.obj:removeEventListener( "userInput", self.fieldHandler )
+    self.fieldHandler = nil
+  end
 end
 --
-{{#ultimate}}
-local imageWidth = {{elW}}/4
-local imageHeight = {{elH}}/4
-local mX, mY = _K.ultimatePosition({{mX}}, {{mY}})
-{{#randX}}
-local randXStart = _K.ultimatePosition({{randXStart}})
-local randXEnd = _K.ultimatePosition({{randXEnd}})
-{{/randX}}
-{{#randY}}
-local dummy, randYStart = _K.ultimatePosition(0, {{randYStart}})
-local dummy, randYEnd     = _K.ultimatePosition(0, {{randYEnd}})
-{{/randY}}
-{{/ultimate}}
-{{^ultimate}}
-local imageWidth = {{elW}}
-local imageHeight = {{elH}}
-local mX = {{mX}}
-local mY = {{mY}}
-{{#randX}}
-local randXStart = {{randXStart}}
-local randXEnd = {{randXEnd}}
-{{/randX}}
-{{#randY}}
-local randYStart = {{randYStart}}
-local randYEnd = {{randYEnd}}
-{{/randY}}
-{{/ultimate}}
-local oriAlpha = {{oriAlpha}}
---
-function _M:localPos(UI)
-  local sceneGroup  = UI.scene.view
-  local layer       = UI.layer
-  {{#multLayers}}
-    UI.tab{{um}}["{{dois}}"] = { {{elKey}}, imageWidth, imageHeight, mX, mY, oriAlpha }
-  {{/multLayers}}
-  {{^multLayers}}
-    layer.{{myLName}} = native.newTextField( mX, mY, imageWidth, imageHeight )
-    layer.{{myLName}}.input = "{{elKey}}"
-    {{#randX}}
-      layer.{{myLName}}.x = math.random(randXStart, randXEnd)
-    {{/randX}}
-    {{#randY}}
-      layer.{{myLName}}.y = math.random(randYStart, randYEnd)
-    {{/randY}}
-    {{#scaleW}}
-      layer.{{myLName}}.xScale = {{scaleW}}
-    {{/scaleW}}
-    {{#scaleH}}
-      layer.{{myLName}}.yScale = {{scaleH}}
-    {{/scaleH}}
-    {{#rotate}}
-      layer.{{myLName}}:rotate( {{rotate}})
-    {{/rotate}}
-    layer.{{myLName}}.anchorX = 0.5
-    layer.{{myLName}}.anchorY = 0;
-    _K.repositionAnchor(layer.{{myLName}},0.5,0);
-    layer.{{myLName}}.oriX = layer.{{myLName}}.x
-    layer.{{myLName}}.oriY = layer.{{myLName}}.y
-    layer.{{myLName}}.oriXs = layer.{{myLName}}.xScale
-    layer.{{myLName}}.oriYs = layer.{{myLName}}.yScale
-    sceneGroup:insert( layer.{{myLName}})
-    sceneGroup.{{myLName}} = layer.{{myLName}}
-  {{/multLayers}}
+M.set = function(instance)
+  -- print(instance.x, instance.y, instance.width, instance.height)
+  return setmetatable(instance, {__index = M})
 end
 --
-function _M:toDispose(UI)
-  local sceneGroup  = UI.scene.view
-  local layer       = UI.layer
-  if layer.{{myLName}} == nil then return end
-  {{^multLayers}}
-    layer.{{myLName}}:removeSelf()
-    layer.{{myLName}} = nil
-  {{/multLayers}}
-end
---
-function _M:localVars()
-end
---
-return _M
+return M

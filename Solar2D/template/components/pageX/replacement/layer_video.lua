@@ -2,12 +2,21 @@ local parent,root, M = newModule(...)
 local layerProps = require(M.layerMod).layerProps
 
 local M = {
-  loop = true,
-  rewind = true,
-  isLocal = true,
-  url = "",
-  autoPlay = true,
-  onCompelete = "action_{{elTrigger}}"
+  properties = {
+    {{#properties}}
+    loop     = "{{loop}}",
+    rewind   = "{{rewind}}",
+    isLocal  = "{{isLocal}}",
+    url      = "{{url}}",
+    autoPlay = "{{autoPlay}}",
+    {{/properties}}
+  },
+  action = {
+    {{#actions}}
+    onCompelete = "{{onComplete}}"
+    {{/actions}}
+  },
+  layerProps = layerProps
 }
 --
 M.singleNames = {"PagePrevM", "PageNextM"}

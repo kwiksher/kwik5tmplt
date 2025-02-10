@@ -77,11 +77,10 @@ function M.createPinchEmulator(target, callback)
 
   local function handleTouch(event)
     if event.phase == "began" then
-      print("event began", event.id ~= (touch and touch1.id) )
+      --print("event began", event.id ~= (touch and touch1.id) )
       if not touch1 then
         touch1 = event
       elseif not touch2 and event.id ~= touch1.id then  -- Ensure it's a different touch
-        print("666666666666")
         touch2 = event
         initialDistance = distance(touch1.x, touch1.y, touch2.x, touch2.y)
       end

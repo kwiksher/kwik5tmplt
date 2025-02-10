@@ -4,6 +4,8 @@ local M = {
   -- actionName = "",
   properties = {
     target = NIL,
+    type = "rectangle",
+    isBackground = false
   }
 }
 

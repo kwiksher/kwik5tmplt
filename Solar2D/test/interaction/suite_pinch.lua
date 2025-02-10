@@ -44,7 +44,8 @@ function M.test_emulator()
   -- transition.to(obj, {time=3000, xScale = 0.1, yScale = 0.1})
   if obj then
     mod.createPinchEmulator(obj, function(scale)
-      if scale < obj.pinch.properties.max then
+      if scale == nil then return end
+      if  scale < obj.pinch.properties.scaleMax then
         transition.to(obj, {time=1000, xScale = scale, yScale = scale})
       else
         transition.to(obj, {time=1000, xScale = obj.pinch.properties.scaleMax, yScale = obj.pinch.properties.scaleMax})
