@@ -5,10 +5,13 @@ local M = {
   --
   run = function (props)
     print("============ lunatest =============")
+    lunatest.reset_suites()
+    --
     local UI = props.UI
     --
     local function set (book, page)
       if book == UI.book and page:find(UI.page)  then
+        print("  ", "test."..book..".suite_"..page)
         lunatest.suite("test."..book..".suite_"..page, props)
       end
     end
@@ -21,6 +24,22 @@ local M = {
     set("animation", "path_animation")
     set("keyboard", "page1")
     set("lingualSample", "lingual_page2")
+
+    set("replacement","counter")
+    set("replacement","dynamicText")
+    set("replacement","inputText")
+    set("replacement","map")
+    set("replacement","mask")
+    set("replacement","multiplier")
+    set("replacement","particles")
+    set("replacement","sprite")
+    set("replacement","sync")
+    set("replacement","text")
+    set("replacement","textinput")
+    set("replacement","vector")
+    set("replacement","video_png")
+    set("replacement","video")
+    set("replacement","web")
 
     -- lunatest.suite("test.book.suite_assets", props)
     -- lunatest.suite("test.book.suite_page1_page_props", props)

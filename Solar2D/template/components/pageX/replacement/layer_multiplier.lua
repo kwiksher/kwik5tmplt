@@ -4,7 +4,32 @@ local layerProps = require(M.layerMod).layerProps
 local M = {
   name = "{{name}}",
   properties = {
-    {{#properties}}
+    {{#properties}}1
+    target         = "{{target}}",
+    alphaMax       = {{alphaMax}},
+    alphaMin       = {{alphaMin}},
+    autoPlay       = {{autoPlay}},
+    enabledWind    = {{enabledWind}},
+    enablePhysics  = {{enablePhysics}},
+    enableSeonsor  = {{enableSeonsor}},
+    fixedDistance  = {{fixedDistance}},
+    interval       = {{interval}},
+    numOfCopies    = {{numOfCopies}},
+    playForever    = {{playForever}},
+    rotationMax    = {{rotationMax}},
+    rotationMin    = {{rotationMin}},
+    shape          = "{{shape}}",
+    weightMax      = {{weightMax}},
+    weightMin      = {{weightMin}},
+    windSpeed      = {{windSpeed}},
+    xEnd           = {{xEnd}},
+    xSaleMax       = {{xSaleMax}},
+    xScaleMin      = {{xScaleMin}},
+    xStart         = {{xStart}},
+    yEnd           = {{yEnd}},
+    ySaleMax       = {{ySaleMax}},
+    yScaleMin      = {{yScaleMin}},
+    yStart         = {{yStart}},
     {{/properties}}
   },
   layerProps = layerProps

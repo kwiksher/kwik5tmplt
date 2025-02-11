@@ -62,6 +62,11 @@ function exports.selectIcon(toolGroup, tool)
     obj.callBack{target=obj}
     if tool then
       timer.performWithDelay(500, function()
+        if toolbar.toolMap == nil then
+          native.showAlert("fail", "Have you closed a tool(class) editor with Escape?")
+          deferred:resolve()
+          return
+        end
         local obj = toolbar.toolMap[obj.id.."-"..tool]
         obj.callBack{target=obj}
         deferred:resolve()

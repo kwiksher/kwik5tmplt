@@ -4,6 +4,10 @@ local M = {
   -- actionName = "",
   properties = {
     target = NIL,
+    url    = "index.html",
+    isLocal = true,
+    width = 320,
+    height = 480
   }
 }
 

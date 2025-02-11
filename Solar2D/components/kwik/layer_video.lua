@@ -80,6 +80,7 @@ function M:create(UI)
   -- UI.layers[obj.layerIndex] = obj
   ---
   UI.videos[#UI.videos + 1] = obj
+  self.obj = obj
 
 end
 --
@@ -89,13 +90,13 @@ function M:didShow (UI)
     self.listener = function(event)
       if event.phase == "ended" then
         if self.rewind then
-          obj:seek(0) --rewind video after play
+          self.obj:seek(0) --rewind video after play
         end
         if self.loop then
-          obj:play()
+          self.obj:play()
         end
         if self.actions.onComplete then
-          UI.scene:dispatchEvent({name = self.actions.onComplete, layer = obj})
+          UI.scene:dispatchEvent({name = self.actions.onComplete, layer = self.obj})
         end
       end
     end
@@ -106,11 +107,10 @@ end
 function M:didHide(UI)
   local sceneGroup = UI.sceneGroup
   local layer = UI.layer
-  local obj = sceneGroup[layerName]
-  if obj ~= nil then
+  if self.obj ~= nil then
     if self.loop or self.rewind then
-      if obj ~= nil and self.listener ~= nil then
-        obj:removeEventListener("video", self.listener)
+      if self.obj ~= nil and self.listener ~= nil then
+        self.obj:removeEventListener("video", self.listener)
         self.listener = nil
       end
     end
@@ -123,9 +123,10 @@ function M:didHide(UI)
         end
       end
     else
-      if obj then
-        obj:pause()
-        obj:removeSelf()
+      if self.obj then
+        self.obj:pause()
+        self.obj:removeSelf()
+        self.obj = nil
         sceneGroup[layerName] = nil
       end
     end
@@ -133,7 +134,7 @@ function M:didHide(UI)
 end
 
 ---------------------------
-M.new = function(instance)
+M.set = function(instance)
   -- print(instance.x, instance.y, instance.width, instance.height)
   return setmetatable(instance, {__index = M})
 end

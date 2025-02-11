@@ -24,6 +24,7 @@ function lib.bootstrap(Props)
         audioDir    = "App/"..Props.name.."/assets/audios/",
         videoDir    = "App/"..Props.name.."/assets/videos/",
         particleDir = "App/"..Props.name.."/assets/particles/",
+        wwwDir = "App/"..Props.name.."/assets/www/",
         trans       = {},
         gt          = {},
         timerStash  = {},

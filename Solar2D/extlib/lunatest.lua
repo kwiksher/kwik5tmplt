@@ -1123,3 +1123,9 @@ end
 
 -- Put it in the same namespace as the other assert_ functions.
 _importing_env.assert_random = assert_random
+
+-- Add the following code at the end of the file to expose a function for resetting suites:
+function reset_suites()
+   suites = {}
+   failed_suites = {}
+end
