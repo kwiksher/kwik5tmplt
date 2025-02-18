@@ -4,12 +4,12 @@ local parent,root, M = newModule(...)
 local util = require("lib.util")
 local app = require "controller.Application"
 --
-local _layerProps = {
+local layerProps = {
   name     = "rect_0",
   x        = 424,
   y        = 272.5,
-  width    =  62,
-  height    =  59,
+  width    =  300,
+  height    =  200,
   xScale = 1,
   yScale = 1,
   anchorX = 0.5,
@@ -20,14 +20,14 @@ local _layerProps = {
   imageFile = "",
   imageFolder = ""
 }
+M.layerProps = layerProps
 --
 function M:init(UI)
 --local sceneGroup = UI.sceneGroup
 end
 --
 function M:create(UI)
-  local layerProps = self.layerProps or _layerProps
-  self.layerProps = layerProps
+  local layerProps = self.layerProps
   -- local x, y = app.getCenter(layerProps.x, layerProps.y)
   local x, y = layerProps.x, layerProps.y
   local obj = display.newRect(
@@ -39,6 +39,7 @@ function M:create(UI)
   obj.anchorX = layerProps.anchorX or 0.5
   obj.anchorY = layerProps.anchorY or 0.5
   obj.rotation = layerProps.rotation or 0
+  obj.oldAlpha = 1
   obj.name = layerProps.name
   if layerProps.color then
     obj:setFillColor(unpack(layerProps.color))
@@ -80,7 +81,7 @@ function  M:destroy(UI)
 end
 --
 function M:new(props)
-  return self:newInstance(props, _layerProps)
+  return self:newInstance(props, layerProps)
 end
 --
 return M

@@ -11,11 +11,17 @@ function M:create(UI)
       fontSize = props.fontSize/2,
       font = props.font,
       --align = props.alignment,
-      x = layerProps.mX + (props.paddingX or 0),
-      y = layerProps.mY + (props.paddingY or 0),
       width = layerProps.width/4,
       height = layerProps.height/4,
     }
+
+    if layerProps.shapedWith then
+      options.x = layerProps.x + (props.paddingX or 0)
+      options.y = layerProps.y + (props.paddingY or 0)
+    else
+      options.x = layerProps.mX + (props.paddingX or 0)
+      options.y = layerProps.mY + (props.paddingY or 0)
+    end
 
     if props.width == NIL then
       options.width = nil

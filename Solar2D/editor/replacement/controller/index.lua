@@ -7,6 +7,8 @@ local M = require("editor.controller.index").new("replacement")
 local previewPanel = require(root.."previewPanel")
 
 local util = require("lib.util")
+local yaml = require("server.yaml")
+
 
 function M:init(viewGroup)
   self.viewGroup = viewGroup
@@ -102,7 +104,7 @@ local numParams = table:mySet{"_height", "_width", "numFrames", "sheetContentWid
 -- local Prefix_Layers = require("editor.parts.baseProps").Prefix_Layers
 --
 function M:useClassEditorProps(UI)
-  -- print("useClassEditorProps")
+  print("useClassEditorProps")
   local props = {
     book  = UI.book,
     index = self.selectbox.selectedIndex,
@@ -114,7 +116,7 @@ function M:useClassEditorProps(UI)
   local properties = self.classProps:getValue()
   local sheetType = "uniform-sized"
   for i=1, #properties do
-    -- print("", properties[i].name, type(properties[i].value))
+    print("", properties[i].name, type(properties[i].value))
     -- props.properties[properties[i].name] = properties[i].value
     local name, value = properties[i].name, properties[i].value
     print(name, value)
@@ -148,6 +150,11 @@ function M:useClassEditorProps(UI)
         value = {r= tonumber(nums[1])/255, g=tonumber(nums[2])/255, b=tonumber(nums[3])/255, a=(tonumber(nums[4]) or 1)}
       end
     end
+
+    if name == "marker" then
+      value = yaml.evalTable(value)
+    end
+
     props.properties[#props.properties+ 1] = {name = name, value = value}
   end
 

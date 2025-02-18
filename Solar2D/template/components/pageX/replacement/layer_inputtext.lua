@@ -1,26 +1,23 @@
+
 local parent,root, M = newModule(...)
-local layerProps = require(M.layerMod).layerProps
+local layerProps = require(M.layerMod).layerProps or {}
 
 local M = {
   name = "article",
   properties = {
     {{#properties}}
     text =  "{{text}}",
-    inputType = "{{inputType}}","
+    inputType = "{{inputType}}",
     font =  {{font}}, -- "HiraMaruProN-W4",
     fontSize =  {{fontSize}},
-    alignment =  "{{alignment}}",
+    -- alignment =  "{{alignment}}",
     {{#color}}
     color    = { {{r}}, {{g}}, {{b}}, {{a}} },
     {{/color}}
-    orientation = "{{orientation}}",
-    scaleX = {{scaleX}},
-    scaleY = {{scaleY}},
     paddingX = {{paddingX}},
     paddingY = {{paddingY}},
-    alpha = {{alpha}},
-    variable = {{variable}},
-    dynamicText = {{dynamicText}}
+    variable = "{{variable}}",
+    dynamicText = "{{dynamicText}}"
     {{/properties}}
   },
   layerProps = layerProps

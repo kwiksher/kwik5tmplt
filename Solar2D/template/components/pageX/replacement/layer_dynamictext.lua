@@ -1,5 +1,5 @@
 local parent,root, M = newModule(...)
-local layerProps = require(M.layerMod).layerProps
+local layerProps = require(M.layerMod).layerProps or {}
 --
 -- see pageX/layer/layer_text.lua
 --
@@ -10,8 +10,8 @@ local M = {
     {{#properties}}
     variable = "{{variable}}",
     type     = "{{type}}",
-    offsetX = {{offsetX}},
-    offsetY = {{offsetY}},
+    paddingX = {{paddingX}},
+    paddingY = {{paddingY}},
     {{#color}}
     color    = { {{r}}, {{g}}, {{b}}, {{a}} },
     {{/color}}
@@ -24,8 +24,4 @@ local M = {
 --
 M.layerProps = layerProps
 --
-M.x = M.layerProps.mX
-M.y = M.layerProps.mY
-
-
 return require("components.kwik.layer_dynamictext").new(M)
