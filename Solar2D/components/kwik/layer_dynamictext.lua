@@ -1,4 +1,4 @@
-local M = {}
+local M = require("components.kwik.layer_base").new()
 
 local App = require("controller.Application")
 local util = require("lib.util")
@@ -6,71 +6,93 @@ local util = require("lib.util")
 function M:create(UI)
   local sceneGroup  = UI.sceneGroup
   local layerProps = self.layerProps
+  local props = self.properties
 
-  local mVar = UI:getVariable(self.properties.variable) or ""
-  if self.properties.type == "global" then
+  local mVar = UI:getVariable(props.variable) or ""
+  if props.type == "global" then
     local app = App.get()
-    myVar = app:getVariable(self.properties.variable) or ""
+    myVar = app:getVariable(props.variable) or ""
   end
   ---
 
   local _font = native.systemFont
-  if self.properties.font:len() > 0 then
-    _font = self.properties.font
+  if type(props.font)=="string" and props.font:len() > 0 then
+    if props.font == "native.systemFont" then
+      options.font = native.systemFont
+    else
+      _font = props.font
+    end
   end
   --
   local options = {
     text = mVar,
-    x = self.x + self.properties.offsetX, -- + layerProps.imageWidth/2,
-    y = self.y + self.properties.offsetY,
-    fontSize = self.properties.fontSize,
+    fontSize = props.fontSize/2,
     font = _font,
-    align = self.properties.align }
+    -- width = layerProps.width/4,
+    -- height = layerProps.height/4,
+    -- align = props.align
+   }
+
+    if layerProps.shapedWith then
+      options.x = layerProps.x + (props.paddingX or 0)
+      options.y = layerProps.y + (props.paddingY or 0)
+    else
+      options.x = layerProps.mX + (props.paddingX or 0)
+      options.y = layerProps.mY + (props.paddingY or 0)
+    end
+
+  printKeys(options)
 
   local obj = display.newText(options)
   if obj == nil then return end
-  obj:setFillColor( unpack(self.properties.color) )
+  print("#####")
+  printKeys(props.color)
+
+  obj:setFillColor( unpack(props.color) )
   obj.anchorX = 0.5
   obj.anchorY = 0.25
   util.repositionAnchor(obj,0.5,0)
 
-  obj.alpha     = layerProps.oriAlpha
-  obj.oldAlpha  = layerProps.oriAlpha
-  obj.blendMode = layerProps.blendMode
-  --
-  obj.layerAsBg = layerProps.layerAsBg
-  obj.isSharedAsset = layerProps.isSharedAsset
-  ---
-  obj.shapedWith  = layerProps.shapedWith
-  obj.randXStart  = layerProps.randXStart
-  obj.randXEnd    = layerProps.randXEnd
-  obj.randYStart  = layerProps.randYStart
-  obj.randYEnd    = layerProps.randYEnd
-  obj.type        = layerProps.type
-  obj.kind        = layerProps.kind
+  self:setLayerProps(obj)
+  obj.layerProps = layerProps
 
- if layerProps.randXStart and layerProps.randXStart > 0 then
-  obj.x = math.random( layerProps.randXStart, layerProps.randXEnd)
- end
- if layerProps.randYStart and layerProps.randYStart > 0  then
-    obj.y = math.random( layerProps.randYStart, layerProps.randYEnd)
- end
- if layerProps.xScale then
-   obj.xScale = layerProps.xScale
- end
- if layerProps.yScale then
-   obj.yScale = layerProps.yScale
- end
- if layerProps.rotation then
-   obj:rotate( layerProps.rotation )
- end
+--   obj.alpha     = layerProps.oriAlpha
+--   obj.oldAlpha  = layerProps.oriAlpha
+--   obj.blendMode = layerProps.blendMode
+--   --
+--   obj.layerAsBg = layerProps.layerAsBg
+--   obj.isSharedAsset = layerProps.isSharedAsset
+--   ---
+--   obj.shapedWith  = layerProps.shapedWith
+--   obj.randXStart  = layerProps.randXStart
+--   obj.randXEnd    = layerProps.randXEnd
+--   obj.randYStart  = layerProps.randYStart
+--   obj.randYEnd    = layerProps.randYEnd
+--   obj.type        = layerProps.type
+--   obj.kind        = layerProps.kind
 
-  obj.oriX     = obj.x
-  obj.oriY     = obj.y
-  obj.oriXs    = obj.xScale
-  obj.oriYs    = obj.yScale
-  obj.alpha    = layerProps.oriAlpha
-  obj.oldAlpha = layerProps.oriAlpha
+--  if layerProps.randXStart and layerProps.randXStart > 0 then
+--   obj.x = math.random( layerProps.randXStart, layerProps.randXEnd)
+--  end
+--  if layerProps.randYStart and layerProps.randYStart > 0  then
+--     obj.y = math.random( layerProps.randYStart, layerProps.randYEnd)
+--  end
+--  if layerProps.xScale then
+--    obj.xScale = layerProps.xScale
+--  end
+--  if layerProps.yScale then
+--    obj.yScale = layerProps.yScale
+--  end
+--  if layerProps.rotation then
+--    obj:rotate( layerProps.rotation )
+--  end
+
+--   obj.oriX     = obj.x
+--   obj.oriY     = obj.y
+--   obj.oriXs    = obj.xScale
+--   obj.oriYs    = obj.yScale
+--   obj.alpha    = layerProps.oriAlpha or 1
+--   obj.oldAlpha = layerProps.oriAlpha or 1
 
   local targetObj = sceneGroup[self.name]
   sceneGroup:remove(targetObj)
@@ -81,22 +103,13 @@ function M:create(UI)
   self.UI = UI
 
   --- we need the link information for setVar to update dynamictext
-  local tbl = UI.dynamictexts[self.properties.variable] or {}
+  local tbl = UI.dynamictexts[props.variable] or {}
   tbl[#tbl+1] = self.obj
-  UI.dynamictexts[self.properties.variable]  = tbl
+  UI.dynamictexts[props.variable]  = tbl
   -- for k, entry in next, UI.dynamictexts do
   --   print(k, #entry)
   -- end
 
-end
-
-function M:didShow(UI)
-end
---
-function M:didHide(UI)
-end
-
-function  M:destroy(UI)
 end
 
 function M:update(value)

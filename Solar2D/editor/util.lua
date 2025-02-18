@@ -65,7 +65,7 @@ function M.isExist(book, page, layer, class)
 end
 
 function M.updateIndexModel(_scene, _layerName, class, _type)
-  print("%%%", _layerName)
+  -- print("%%%", _layerName)
   local layerName = _layerName
   -- local child    = _layerName:split("/")
   -- if #child > 1 then

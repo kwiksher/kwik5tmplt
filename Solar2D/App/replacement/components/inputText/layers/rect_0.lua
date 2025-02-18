@@ -4,7 +4,7 @@ local parent,root, M = newModule(...)
 local util = require("lib.util")
 local app = require "controller.Application"
 --
-local _layerProps = {
+local layerProps = {
   name     = "rect_0",
   x        = 424,
   y        = 272.5,
@@ -20,6 +20,8 @@ local _layerProps = {
   imageFile = "",
   imageFolder = ""
 }
+
+M.layerProps = layerProps
 --
 function M:init(UI)
 --local sceneGroup = UI.sceneGroup
@@ -80,7 +82,7 @@ function  M:destroy(UI)
 end
 --
 function M:new(props)
-  return self:newInstance(props, _layerProps)
+  return self:newInstance(props, layerProps)
 end
 --
 return M

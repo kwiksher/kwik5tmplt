@@ -32,8 +32,13 @@ local command = function (params)
   for k, v in pairs(_props) do
     print("", v.name, v.value)
     if v.name == "color" then
-      local nums = util.split(v.value, ',')
-      props.fill = {r= tonumber(nums[1])/255, g=tonumber(nums[2])/255, b=tonumber(nums[3])/255, a=(tonumber(nums[4]) or 1)}
+      if type(v.value) == "table" then
+        printKeys(v.value)
+        props.fill = {r= tonumber(v.value[1])/255, g=tonumber(v.value[2])/255, b=tonumber(v.value[3])/255, a=(tonumber(v.value[4]) or 1)}
+      elseif type(v.value) =="string" then
+        local nums = util.split(v.value, ',')
+        props.fill = {r= tonumber(nums[1])/255, g=tonumber(nums[2])/255, b=tonumber(nums[3])/255, a=(tonumber(nums[4]) or 1)}
+      end
     elseif v.name == "infinity" then
       props[v.name] = yaml.evalTable(v.value)
     elseif v.name == "_height" then

@@ -489,9 +489,10 @@ function M:load(book, page, layer, class, isNew, asset, _type)
     if _type then
       model.properties.type = _type
     end
+    model.properties.target = layer
     --
     self:setValue(model, nil, true)
-    -- print(json.encode(model))
+    print(json.encode(model))
     self:redraw()
   elseif layer then
     -- this comes from clicking layerTable.class
@@ -557,7 +558,7 @@ function M:command()
       local decoded = util.decode(book, page, params.class, name, {subclass = params.subclass, isNew = params.isNew, isDelete = params.isDelete}) -- this reads models/xx.json
       --
       -- print("From selectors", decoded.class)
-      self.class = decoded.class or parms.class -- see physics controller uses for joint's pointA, pointB show/hide
+      self.class = decoded.class or params.class -- see physics controller uses for joint's pointA, pointB show/hide
       self.classProps:didHide(UI)
       self.classProps:destroy(UI)
       self.classProps:init(UI)

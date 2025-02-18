@@ -761,23 +761,24 @@ function M.publishForSelections(UI, args, controller, decoded)
     -- selections = {{text=UI.editor.currentLayer, class =UI.editor.currentClass, layer=UI.editor.currentLayer }}
     print(json.prettify(selections))
   end
+  print("@@@@", layer)
   for i, obj in next, selections do
     if obj.parentObj then
       -- class has been set, so the layer == "witch/en/button"
       layer = util.getLayerPath(obj)
     else
-      layer = obj.layer
+      layer = obj.layer or obj.name
     end
     model.layer = layer
-    model.name = obj.layer
-
+    model.name = obj.layer or obj.name
+    print("@@@@", layer, model.layer)
     local groupType =  model.properties and (model.properties._type or model.properties.type) or nil
-    updatedModel = util.updateIndexModel(updatedModel, layer, class, groupType)
+    updatedModel = util.updateIndexModel(updatedModel, model.layer, class, groupType)
     -- print(json.prettify(updatedModel))
 
     --- save json
     -----------
-    -- print(book, page, layer, classFolder, args.index)
+    -- print(book, page, model.layer, classFolder, args.index)
     if model.index then
       decoded[model.index] = model
     else
@@ -789,12 +790,12 @@ function M.publishForSelections(UI, args, controller, decoded)
     --
     -- print(json.prettify(model))
     -- save lua
-    files[#files + 1] = controller:render(book, page, layer, classFolder, class, model)
+    files[#files + 1] = controller:render(book, page, model.layer, classFolder, class, model)
     -- save json
-    files[#files + 1] = controller:save(book, page, layer, classFolder, decoded)
+    files[#files + 1] = controller:save(book, page, model.layer, classFolder, decoded)
     -- save asset
     if classWithAssets[class] then
-      files[#files + 1] = controller:renderAssets(book, page, layer, classFolder, class, model)
+      files[#files + 1] = controller:renderAssets(book, page, model.layer, classFolder, class, model)
     end
   end
   ---
