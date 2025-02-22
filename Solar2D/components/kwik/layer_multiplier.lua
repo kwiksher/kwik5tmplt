@@ -1,8 +1,8 @@
-local M = {}
+local M = require("components.kwik.layer_base").new()
 --
 function M:create(UI)
   local sceneGroup = UI.sceneGroup
-  local layeName = UI.properties.target
+  local layeName = self.properties.target
   local props = self.properties
   local layerProps = self.layerProps
   --
@@ -12,7 +12,7 @@ end
 --
 function M:didShow(UI)
   local sceneGroup = UI.sceneGroup
-  local layeName = UI.properties.target
+  local layeName =self.properties.target
   local props = self.properties
   local layerProps = self.layerProps
 
@@ -25,11 +25,12 @@ function M:didShow(UI)
   end
   --
   local handler = function(counter)
+    print(counter)
     if props.enabledWind then
       physics.setGravity(math.random(props.windSpeed * -1, props.windSpeed) / 10, 4)
     end
     --
-    objs.counter = display.newImageRect(_K.imgDir .. imagePath, _K.systemDir, imageWidth, imageHeight)
+    objs.counter = display.newImageRect(UI.props.imgDir .. layerProps.imagePath, UI.props.systemDir, layerProps.imageWidth, layerProps.imageHeight)
     --
     if props.fixedDistance then
       objs.counter.x = math.random(props.xStart, props.xEnd)
@@ -58,32 +59,35 @@ function M:didShow(UI)
       objs.counter.linearDumping = pweight * objs.counter.xScale
     end
     self.group:insert(objs.counter)
+    self.objs = objs
   end
   --
   local function copyHandler()
+    print("copyHandler")
     if self.timer0 then
       count = count + 1
       if handler ~= nil then
         handler(count)
       end
+      print("", self.maxCopies, props.playForever)
       if (count == self.maxCopies and props.playForever) then
         if self.timer1 then
           timer.cancel(self.timer1)
         end
-        self.timer1 = timer.performWithDelay(props.interval, copyHandler, props.numOfCopies)
+        self.timer1 = timer.performWithDelay(props.interval*1000, copyHandler, props.numOfCopies)
         self.maxCopies = count + props.numOfCopies
       end
     end
   end
   --
-  local timerHandler = function()
-    UI.timers[UI.timers + 1] = timer.performWithDelay(props.interval, copyHandler, props.numOfCopies)
-  end
   if props.autoPlay then
-    timerHandler()
+    print("@@@@@@@@@", props.interval*1000,  props.numOfCopies)
+    self.timer0 = timer.performWithDelay(props.interval*1000, copyHandler, props.numOfCopies)
+    UI.timers[#UI.timers + 1] = self.timer0
   end
   --
-  if self.hashasMutliplier then
+  if self.hashasMutliplier == nil then
+    self.hashasMutliplier = true
     -- Clean up memory for Multiplier set to forever
     -- control variable to dispose kClean via kNavi
     self.cleanHandler = function()
@@ -103,8 +107,11 @@ local function isReachedEnd(y, props)
 end
 --
 function M:codeMultiplier(UI)
-  local sceneGroup = UI.scene.view
+  local sceneGroup = UI.sceneGroup
   local layer = UI.layer
+  local objs = self.objs
+  --
+  if objs == nil then return end
   --
   for i = 1, self.maxCopies do
     if objs[i] ~= nil then
@@ -118,7 +125,7 @@ function M:codeMultiplier(UI)
 end
 --
 function M:didHide(UI)
-  if slef.hasMutliplier then
+  if self.hasMutliplier then
     if self.cleanHandler ~= nil then
       Runtime:removeEventListener("enterFrame", self.cleanHandler)
       self.cleanHandler = nil
@@ -133,7 +140,7 @@ function M:didHide(UI)
 end
 --
 function M:destroy(UI)
-  local sceneGroup = UI.scene.view
+  local sceneGroup = UI.sceneGroup
   local layer = UI.layer
   self.group:removeSelf()
   self.group = nil
@@ -142,4 +149,7 @@ function M:destroy(UI)
   end
 end
 --
+M.set = function(instance)
+  return setmetatable(instance, {__index = M})
+end
 return M

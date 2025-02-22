@@ -26,9 +26,9 @@ local common = {
 }
 
 require("controller.index").bootstrap{
-  name="interaction",
+  name="replacement",
   editing = true,
-  goPage = "button",
+  goPage = "multiplier",
   language = "en",
   position = {x=0, y=0},
   common = common} -- scenes.index

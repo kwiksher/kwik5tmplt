@@ -38,7 +38,7 @@ function M.teardown()
 end
 
 function M.test_new()
-  local name = "rect_0"
+  local name = "balloon"
   helper.selectLayer(name)
   helper.selectIcon("Replacements", "Mask"):done(function() end)
 end

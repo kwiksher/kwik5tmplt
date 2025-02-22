@@ -2,25 +2,43 @@ local M = require("components.kwik.layer_base").new()
 --
 function M:create(UI)
   local sceneGroup = UI.sceneGroup
-  local layeName = UI.properties.target
+  local layerName = self.properties.target
   local props = self.properties
   local layerProps = self.layerProps
     --
     local target = sceneGroup[layerName]
     local group = display.newGroup()
     group:insert(target)
-    target.group = group
-    sceneGroup:insert(group)
 
-    local path = UI.props.imgDir..props.maskFile
+    local path = UI.props.imgDir..UI.page .."/"..props.mask ..".png"
+
+    if ( display.imageSuffix == "@4x" ) then
+      path = UI.props.imgDir..UI.page .."/"..props.mask .."@4x.png"
+    elseif ( display.imageSuffix == "@2x" ) then
+      path = UI.props.imgDir..UI.page .."/"..props.mask .."@2x.png"
+    end
+
     local mask = graphics.newMask(path, UI.props.systemDir)
     if mask then
-      target.group:setMask(mask)
-      target.group.maskScaleX = layerProps.scaleX
-      target.group.maskScaleY = layerProps.scaleY
-      target.group.maskX = layerProps.mX
-      target.group.maskY = layerProps.mY
+      group:setMask(mask)
+      group.maskScaleX = layerProps.scaleX
+      group.maskScaleY = layerProps.scaleY
+      group.maskX = layerProps.mX
+      group.maskY = layerProps.mY
+      --
+      if ( display.imageSuffix == "@4x" ) then
+        group.maskScaleX = 0.25 * layerProps.scaleX
+        group.maskScaleY = 0.25 * layerProps.scaleY
+      elseif ( display.imageSuffix == "@2x" ) then
+        group.maskScaleX = 0.5 * layerProps.scaleX
+        group.maskScaleY = 0.5 * layerProps.scaleY
+      end
+      target.group = group
+      -- target.isMasked = true
+      -- group.isMasked = true
+      sceneGroup:insert(group)
     end
+
 end
 --
 M.set = function(instance)

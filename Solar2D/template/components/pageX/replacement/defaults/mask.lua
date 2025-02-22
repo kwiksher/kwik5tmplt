@@ -4,7 +4,7 @@ local M = {
   -- actionName = "",
   properties = {
     target = NIL,
-    maskFile = ""
+    mask = ""
   }
 }
 
