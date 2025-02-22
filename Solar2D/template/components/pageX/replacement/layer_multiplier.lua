@@ -4,7 +4,7 @@ local layerProps = require(M.layerMod).layerProps or {}
 local M = {
   name = "{{name}}",
   properties = {
-    {{#properties}}1
+    {{#properties}}
     target         = "{{target}}",
     alphaMax       = {{alphaMax}},
     alphaMin       = {{alphaMin}},

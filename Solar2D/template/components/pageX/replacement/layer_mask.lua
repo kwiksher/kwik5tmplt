@@ -6,10 +6,19 @@ local M = {
   properties = {
     {{#properties}}
     target = "{{target}}",
-    maskFile = "{{maskFile}}"
+    mask = "{{mask}}"
     {{/properties}}
   },
   layerProps = layerProps
 }
+
+-- function M:didShow(UI)
+--   local obj = UI.sceneGroup[self.properties.target]
+--   timer.performWithDelay(1000, function()
+--     obj.group.maskScaleX = obj.group.maskScaleX * 1.5
+--     obj.group.maskScaleY = obj.group.maskScaleY * 1.5
+--   end, 5)
+-- end
+
 --
-return require("components.kwik.layer_map").set(M)
+return require("components.kwik.layer_mask").set(M)

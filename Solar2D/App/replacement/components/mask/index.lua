@@ -5,18 +5,16 @@ local model = {
   components = {
     layers = {
       {
-        bg = {
+        balloon = {
+          class={ "mask", }  }
+      },
+      {
+        circlemask = {
         }
-      },
-      {
-        rect_0 = {  }
-      },
-      {
-        ellipse_0 = {
-            }
       },
     },
     audios = {
+      long={  }, short={   }
     },
     groups = {
     },
