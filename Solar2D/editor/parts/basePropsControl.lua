@@ -113,11 +113,16 @@ local function tapListenerURL(event, classProps)
     assetEditor.controller:show()
     local selectors = require(parent .. "selectors")
     selectors.assetsSelector:show()
-    selectors.assetsSelector:onClick(true, event.target.class .. "s") --videos,audios, sprites..
+    print("@@@", event.target.class)
+    if event.target.class == "particles" then
+      selectors.assetsSelector:onClick(true, event.target.class) --videos,audios, sprites..
+    else
+      selectors.assetsSelector:onClick(true, event.target.class .. "s") --videos,audios, sprites..
+    end
     assetTable:setClassProps(classProps)
     assetButtons:hide()
-    local w, h = classProps:showThumnail(event.target.text, event.target.field.text, event.target.class)
     if event.target.text == "_filename" and classProps.class == "sprite" then
+      local w, h = classProps:showThumnail(event.target.text, event.target.field.text, event.target.class)
       classProps:updateSheetInfo(w, h)
     end
   end

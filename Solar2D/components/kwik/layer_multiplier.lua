@@ -28,10 +28,7 @@ function M:didShow(UI)
   --
   local handler = function(count)
     local obj
-    print("@@@@@@@@@@@@")
-    for k,v in pairs(layerProps) do print(k, v) end
-    print("@@@@@@@@@@@@")
-
+    -- for k,v in pairs(layerProps) do print(k, v) end
     if props.enabledWind then
       physics.setGravity(math.random(props.windSpeed * -1, props.windSpeed) / 10, props.gravityY)
     end
@@ -58,15 +55,32 @@ function M:didShow(UI)
       native.showAlert("Warning", "Instead of a shape image, use a layer image from Photoshop")
       return
     else
-      obj = display.newImageRect(UI.props.imgDir .. layerProps.imagePath, UI.props.systemDir, layerProps.imageWidth, layerProps.imageHeight)
+      local target = sceneGroup[props.target]
+      local imagePath = layerProps.name.."." .. layerProps.type
+      obj = display.newImageRect(UI.props.imgDir .. UI.page.."/"..imagePath, UI.props.systemDir, layerProps.width/4, layerProps.height/4)
+      if obj == nil then
+        print("Error newImageRect", UI.props.imgDir .. UI.page.."/"..imagePath)
+      end
+      obj.anchorX = layerProps.anchorX or 0.5
+      obj.anchorY = layerProps.anchorY or 0.5
+      obj.rotation = layerProps.rotation or 0
+      obj.shapedWith = layerProps.shapedWith
+      obj.oldAlpha = 1
+      obj.oriAlpha = layerProps.alpha or 1
+      obj.oriX = target.x
+      obj.oriY = target.y
     end
     --
+    local editorWidth, editorHeight = display.contentWidth - 480, display.contentHeight -320
+    local xStart, yStart  = props.xStart*0.25 + editorWidth/2 , props.yStart*0.25 + editorHeight/2
+    local xEnd, yEnd  = props.xEnd*0.25 + editorWidth/2 , props.yEnd*0.25 + editorHeight/2
+
     if props.fixedDistance then
-      obj.x = math.random(props.xStart, props.xEnd)
-      obj.y = math.random(props.yStart, props.yEnd)
+      obj.x = xStart + ((count - 1) * (xEnd-xStart)/numOfCopies)
+      obj.y = yStart + ((count - 1) * (yEnd-yStart)/numOfCopies)
     else
-      obj.x = obj.oriX + ((count - 1) * props.xStart)
-      obj.y = obj.oriY + ((count - 1) * props.yStart)
+      obj.x = math.random(xStart, xEnd)
+      obj.y = math.random(yStart, yEnd)
     end
     --
     obj.count = count

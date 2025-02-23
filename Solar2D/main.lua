@@ -28,7 +28,7 @@ local common = {
 require("controller.index").bootstrap{
   name="replacement",
   editing = true,
-  goPage = "multiplier",
+  goPage = "particles",
   language = "en",
   position = {x=0, y=0},
   common = common} -- scenes.index

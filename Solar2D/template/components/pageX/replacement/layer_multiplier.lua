@@ -15,6 +15,7 @@ local M = {
     fixedDistance  = {{fixedDistance}},
     fixedScaleMax   = {{fixedScaleMax}},
     fixedScaleMin   = {{fixedScaleMin}},
+    gravityY        = {{gravityY}},
     interval       = {{interval}},
     numOfCopies    = {{numOfCopies}},
     playForever    = {{playForever}},

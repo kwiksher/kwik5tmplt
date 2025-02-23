@@ -7,6 +7,7 @@ local scenes = {
   "map",
   "mask",
   "multiplier",
+  "snowman",
   "particles",
   "sprite",
   "sync",

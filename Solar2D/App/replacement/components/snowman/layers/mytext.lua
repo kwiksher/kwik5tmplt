@@ -1,50 +1,42 @@
--- $weight={{weight}}
+-- $weight=5
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
 local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
-  blendMode = "{{blendMode}}",
-  height    =  {{bounds.bottom}} - {{bounds.top}},
-  width     = {{bounds.right}} - {{bounds.left}} ,
-  kind      = {{kind}},
-  name      = "{{parent}}{{name}}",
+  blendMode = "normal",
+  height    =  436 - 354,
+  width     = 1152 - 516 ,
+  kind      = text,
+  name      = "mytext",
   type      = "png",
-  x         = {{bounds.right}} + ({{bounds.left}} -{{bounds.right}})/2,
-  y         = {{bounds.top}} + ({{bounds.bottom}} - {{bounds.top}})/2,
-  alpha     = {{opacity}}/100,
+  x         = 1152 + (516 -1152)/2,
+  y         = 354 + (436 - 354)/2,
+  alpha     = 100/100,
   infinity = {
-    {{#infinity}}
-    enabled = false,
-    speed = {{speed}},
-    distance = {{distance}},
-    direction = "{{direction}}",
-    {{/infinity}}
   },
   -- text properties
-  contents =  "{{contents}}",
-  font =  "{{font}}",
-  fontSize =  {{fontSize}},
-  alignment =  "{{alignment}}",
-  {{#color}}
-  color    =  { {{red}}, {{green}}, {{blue}}, 1 },
-  {{/color}}
-  orientation = "{{orientation}}",
+  contents =  "Oh, no! said the frozen/nsnowman when the snow started",
+  font =  "Geneva",
+  fontSize =  40,
+  alignment =  "left",
+  color    =  { 0, 0, 0, 1 },
+  orientation = "horizontal",
 }
 
-M.align       = "{{align}}"
-M.randXStart  = {{randXStart}}
-M.randXEnd    = {{randXEnd}}
-M.randYStart  = {{randYStart}}
-M.randYEnd    = {{randYEnd}}
+M.align       = ""
+M.randXStart  = nil
+M.randXEnd    = nil
+M.randYStart  = nil
+M.randYEnd    = nil
 --
-M.xScale     = {{scaleW}}
-M.yScale     = {{scaleH}}
-M.rotation   = {{rotation}}
+M.xScale     = nil
+M.yScale     = nil
+M.rotation   = nil
 --
-M.layerAsBg     = {{layerAsBg}}
-M.isSharedAsset = {{kwk}}
+M.layerAsBg     = nil
+M.isSharedAsset = nil
 --
 M:setProps(layerProps)
 --

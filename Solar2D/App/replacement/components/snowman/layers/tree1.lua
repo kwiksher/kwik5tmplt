@@ -1,50 +1,41 @@
--- $weight={{weight}}
+-- $weight=8
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
 local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
-  blendMode = "{{blendMode}}",
-  height    =  {{bounds.bottom}} - {{bounds.top}},
-  width     = {{bounds.right}} - {{bounds.left}} ,
-  kind      = {{kind}},
-  name      = "{{parent}}{{name}}",
+  blendMode = "normal",
+  height    =  895 - 614,
+  width     = 835 - 553 ,
+  kind      = pixel,
+  name      = "tree1",
   type      = "png",
-  x         = {{bounds.right}} + ({{bounds.left}} -{{bounds.right}})/2,
-  y         = {{bounds.top}} + ({{bounds.bottom}} - {{bounds.top}})/2,
-  alpha     = {{opacity}}/100,
+  x         = 835 + (553 -835)/2,
+  y         = 614 + (895 - 614)/2,
+  alpha     = 100/100,
   infinity = {
-    {{#infinity}}
-    enabled = false,
-    speed = {{speed}},
-    distance = {{distance}},
-    direction = "{{direction}}",
-    {{/infinity}}
   },
   -- text properties
-  contents =  "{{contents}}",
-  font =  "{{font}}",
-  fontSize =  {{fontSize}},
-  alignment =  "{{alignment}}",
-  {{#color}}
-  color    =  { {{red}}, {{green}}, {{blue}}, 1 },
-  {{/color}}
-  orientation = "{{orientation}}",
+  contents =  "",
+  font =  "",
+  fontSize =  nil,
+  alignment =  "",
+  orientation = "",
 }
 
-M.align       = "{{align}}"
-M.randXStart  = {{randXStart}}
-M.randXEnd    = {{randXEnd}}
-M.randYStart  = {{randYStart}}
-M.randYEnd    = {{randYEnd}}
+M.align       = ""
+M.randXStart  = nil
+M.randXEnd    = nil
+M.randYStart  = nil
+M.randYEnd    = nil
 --
-M.xScale     = {{scaleW}}
-M.yScale     = {{scaleH}}
-M.rotation   = {{rotation}}
+M.xScale     = nil
+M.yScale     = nil
+M.rotation   = nil
 --
-M.layerAsBg     = {{layerAsBg}}
-M.isSharedAsset = {{kwk}}
+M.layerAsBg     = nil
+M.isSharedAsset = nil
 --
 M:setProps(layerProps)
 --
