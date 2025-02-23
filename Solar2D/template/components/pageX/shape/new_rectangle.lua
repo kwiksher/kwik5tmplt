@@ -3,6 +3,7 @@
 local parent,root, M = newModule(...)
 local util = require("lib.util")
 local app = require "controller.Application"
+local shape = require("components.kwik.layer_shape")
 --
 local layerProps = {
   name     = "{{name}}",
@@ -33,48 +34,9 @@ function M:create(UI)
   local layerProps = self.layerProps
   -- local x, y = app.getCenter(layerProps.x, layerProps.y)
   local x, y = layerProps.x, layerProps.y
-
-  local obj = display.newRect(
-      x,
-      y,
-      layerProps.width, layerProps.height)
-
-  obj.xScale = layerProps.xScale
-  obj.yScale = layerProps.yScale
-  obj.anchorX = layerProps.anchorX or 0.5
-  obj.anchorY = layerProps.anchorY or 0.5
-  obj.rotation = layerProps.rotation or 0
-
-  obj.oldAlpha = 1
-
-  obj.name = layerProps.name
-  if layerProps.color then
-    obj:setFillColor(unpack(layerProps.color))
-  end
-
-  obj.shapedWith = layerProps.shapedWith
-
-  if layerProps.imageFile:len() > 0  then
-    local fullpath = layerProps.imageFolder..layerProps.imageFile
-    local splited = util.split(fullpath, '/')
-    local filename = splited[#splited]
-    local folder = fullpath:gsub(filename, "")
-    obj.imageName = filename
-    obj.imageFolder= folder
-    filename = util.split(filename, ".")
-    --
-    local paint = {type= "image"}
-    if display.imageSuffix == nil then
-      paint.filename = fullpath
-    else
-      local is2x4x = util.isFile(filename[1]..display.imageSuffix.."."..filename[2])
-      if is2x4x then
-        paint.filename = filename[1]..display.imageSuffix.."."..filename[2]
-      end
-    end
-    obj.fill =  paint
-  end
-
+  --
+  local obj = shape.createRectangle(layerProps)
+  --
   obj.layerIndex = #UI.layers+1
   UI.layers[obj.layerIndex] = obj
   UI.sceneGroup:insert(obj)
