@@ -1,4 +1,6 @@
 local M = require("components.kwik.layer_base").new()
+local shape = require("components.kwik.layer_shape")
+
 --
 function M:create(UI)
   local sceneGroup = UI.sceneGroup
@@ -24,46 +26,79 @@ function M:didShow(UI)
     physics.start(true)
   end
   --
-  local handler = function(counter)
-    print(counter)
+  local handler = function(count)
+    local obj
+    print("@@@@@@@@@@@@")
+    for k,v in pairs(layerProps) do print(k, v) end
+    print("@@@@@@@@@@@@")
+
     if props.enabledWind then
-      physics.setGravity(math.random(props.windSpeed * -1, props.windSpeed) / 10, 4)
+      physics.setGravity(math.random(props.windSpeed * -1, props.windSpeed) / 10, props.gravityY)
     end
     --
-    objs.counter = display.newImageRect(UI.props.imgDir .. layerProps.imagePath, UI.props.systemDir, layerProps.imageWidth, layerProps.imageHeight)
+    if layerProps.shapedWith == "new_rectangle" then
+      obj = shape.createRectangle(layerProps)
+    elseif layerProps.shapedWith == "new_elliipse" then
+      obj = shape.createCicle(layerProps)
+    elseif layerProps.shapedWith == "new_text" then
+      local  obj = display.newText(layerProps)
+      obj.name = layerProps.name
+      if layerProps.color then
+        obj:setFillColor(unpack(layerProps.color))
+      end
+      obj.anchorX = layerProps.anchorX or 0.5
+      obj.anchorY = layerProps.anchorY or 0.5
+      obj.rotation = layerProps.rotation or 0
+      obj.shapedWith = layerProps.shapedWith
+      obj.oldAlpha = 1
+      obj.oriAlpha = layerProps.alpha or 1
+      obj.oriX = layerProps.x
+      obj.oriY = layerProps.y
+    elseif layerProps.shapedWith == "new_image" then
+      native.showAlert("Warning", "Instead of a shape image, use a layer image from Photoshop")
+      return
+    else
+      obj = display.newImageRect(UI.props.imgDir .. layerProps.imagePath, UI.props.systemDir, layerProps.imageWidth, layerProps.imageHeight)
+    end
     --
     if props.fixedDistance then
-      objs.counter.x = math.random(props.xStart, props.xEnd)
-      objs.counter.y = math.random(props.yStart, props.yEnd)
+      obj.x = math.random(props.xStart, props.xEnd)
+      obj.y = math.random(props.yStart, props.yEnd)
     else
-      objs.counter.x = mX + ((counter - 1) * props.xStart)
-      objs.counter.y = mY + ((counter - 1) * props.yStart)
+      obj.x = obj.oriX + ((count - 1) * props.xStart)
+      obj.y = obj.oriY + ((count - 1) * props.yStart)
     end
     --
-    objs.counter.oldAlpha = layyerProps.oriAlpha
-    objs.counter.alpha = math.random(props.alphaMin, props.alphaMax) / 100
+    obj.count = count
+    obj.oldAlpha = obj.oriAlpha
+    obj.alpha = math.random(props.alphaMin*100, props.alphaMax*100) / 100
     --
-    objs.counter.xScale = math.random(props.xScaleMin, props.xSaleMax) / 100
-    objs.counter.yScale = math.random(props.yScaleMin, props.ySaleMax) / 100
+    if props.fixedScaleMax and props.fixedScaleMin then
+      obj.xScale = math.random(props.fixedScaleMin*100, props.fixedScaleMax*100) / 100
+      obj.yScale = obj.xScale
+    else
+      obj.xScale = math.random(props.xScaleMin*100, props.xSaleMax*100) / 100
+      obj.yScale = math.random(props.yScaleMin*100, props.ySaleMax*100) / 100
+    end
     --
-    objs.counter.rotation = math.random(props.rotationMin, props.rotationMax)
+    obj.rotation = math.random(props.rotationMin, props.rotationMax)
     --
     if props.enablePhysics then
-      physics.addBody(objs.counter, "dynamic", {density = pweight, friction = 0, bounce = 0, shape = porps.shape})
+      physics.addBody(obj, "dynamic", {density = pweight, friction = 0, bounce = 0, shape = props.physicShape})
       --
       if props.enableSeonsor then
-        objs.counter.isSensor = true
+        obj.isSensor = true
       end
       --
       local pweight = math.random(props.weightMin, props.weightMax)
-      objs.counter.linearDumping = pweight * objs.counter.xScale
+      obj.linearDumping = pweight * obj.xScale
     end
-    self.group:insert(objs.counter)
-    self.objs = objs
+    self.group:insert(obj)
   end
   --
   local function copyHandler()
     print("copyHandler")
+    printKeys(layerProps)
     if self.timer0 then
       count = count + 1
       if handler ~= nil then
@@ -85,6 +120,8 @@ function M:didShow(UI)
     self.timer0 = timer.performWithDelay(props.interval*1000, copyHandler, props.numOfCopies)
     UI.timers[#UI.timers + 1] = self.timer0
   end
+  --
+  self.objs = objs
   --
   if self.hashasMutliplier == nil then
     self.hashasMutliplier = true
