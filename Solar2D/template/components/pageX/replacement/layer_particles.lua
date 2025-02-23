@@ -8,7 +8,7 @@ local M = {
   properties = {
     {{#properties}}
     target = "{{target}}",
-    url = "{{url}}", -- kaboom_393.json
+    filename = "{{filename}}", -- kaboom_393.json
     autoPlay = {{autoPlay}},
     {{/properties}}
   }

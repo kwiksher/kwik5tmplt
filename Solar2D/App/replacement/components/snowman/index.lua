@@ -9,15 +9,48 @@ local model = {
         }
       },
       {
-        rect_0 = {
+        tree = {
+        }
+      },
+      {
+        tree2 = {
+        }
+      },
+      {
+        tree1 = {
           class={ "particles", }  }
       },
       {
-        ellipse_0 = {
+        tree3 = {
+        }
+      },
+      {
+        tree4 = {
+        }
+      },
+      {
+        mytext = {
+        }
+      },
+      {
+        ground = {
+        }
+      },
+      {
+        snowFlake = {
+          class={ "multiplier", }  }
+      },
+      {
+        snowman = {
+        }
+      },
+      {
+        hat = {
         }
       },
     },
     audios = {
+      long={  }, short={   }
     },
     groups = {
     },

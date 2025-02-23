@@ -4,7 +4,7 @@ local M = {
   -- actionName = "",
   properties = {
     target = NIL,
-    url = NIL,
+    filename = NIL,
     autoPlay = true
   }
 }

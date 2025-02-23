@@ -9,8 +9,8 @@ M.properties = {
   name      = "bg",
   x         =  0, -- display.contentCenterX,
   y         =  0, -- display.contentCenterY,
-  alpha     = 1,
-  color     = {1,1,1,1},
+  alpha     = 0.5,
+  color     = {0.5},
   textColor = {0,0,0,1}
 }
 
@@ -29,7 +29,6 @@ function M:create(UI)
   obj:setFillColor(unpack(properties.color))
   sceneGroup:insert(obj)
   sceneGroup[properties.name] = obj
-
   local options = {
       parent = sceneGroup,
       text = UI.page,
@@ -41,6 +40,7 @@ function M:create(UI)
   }
   local pageText = display.newText(options)
   pageText:setFillColor(unpack(properties.textColor))
+  sceneGroup:insert(pageText)
 
 end
 --
