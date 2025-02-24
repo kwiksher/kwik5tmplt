@@ -2,21 +2,26 @@ local M = require("components.kwik.layer_base").new()
 --
 local json = require("json")
 
+local useCanvas = true
+
 function M:create (UI)
   local sceneGroup = UI.sceneGroup
   local layerName  = self.properties.target
   local target     = sceneGroup[layerName]
   -- local group      = display.newGroup()
-  -- local particleCanvas = display.newContainer(target.width*2, target.height*10)
-  -- local rect = display.newRect(target.x, target.y,target.width*2, target.height*10)
-  -- rect:setFillColor(0)
-  -- -- particleCanvas:insert(rect)
+  if useCanvas then
+    self.particleCanvas = display.newContainer( display.contentWidth, display.contentHeight)
+    -- local rect = display.newRect(0,0, display.contentWidth, display.contentHeight)
+    -- rect:setFillColor(1,1,1,0.8)
+    -- self.particleCanvas:insert(rect)
+    self.particleCanvas.alpha = 1
+  end
   --
   local emitterParams
   -- print(self.properties.filename)
   if self.properties.filename:find(".json") then
     print("---- json -----")
-    local filePath = system.pathForFile( UI.props.particleDir.. self.properties.filename,UI.props.systemDir )
+    local filePath = system.pathForFile( "App/"..UI.book.."/assets/".. self.properties.filename,UI.props.systemDir )
     local f = io.open( filePath, "r" )
     local fileData = f:read( "*a" )
     f:close()
@@ -35,15 +40,13 @@ function M:create (UI)
     params[k] = v
   end
   params.textureFileName = UI.props.particleDir .. params.textureFileName
-  print( UI.props.particleDir )
+  -- print( UI.props.particleDir )
   --
-  printKeys(params)
+  -- printKeys(params)
   local obj = display.newEmitter( params, UI.props.systemDir )
   -- print("@@@", target.x, target.y, obj)
   -- if obj == nil then return end
   -- obj.alpha = 1
-  obj.x        = target.x
-  obj.y        = target.y
   obj.oriX     = target.oriX
   obj.oriY     = target.oriY
   obj.oriXs    = target.scaleX
@@ -51,13 +54,20 @@ function M:create (UI)
   obj.oldAlpha = target.alpha
   obj.class    = "particles"
 
-  -- particleCanvas:insert(obj)
-  -- particleCanvas.x = target.x
-  -- particleCanvas.y = target.y
+  if useCanvas then
+    self.particleCanvas:insert(obj)
+    self.particleCanvas.x = target.x
+    self.particleCanvas.y = target.y
+    sceneGroup:insert(self.particleCanvas)
+  else
+    obj.x        = target.x
+    obj.y        = target.y
+    sceneGroup:insert(obj)
+  end
+
 
   -- particleCanvas.x, particleCanvas.y = display.contentCenterX, display.contentCenterY
   -- sceneGroup:insert(rect)
-  sceneGroup:insert(obj)
 
   -- particleCanvas:toFront()
   -- obj.alpha   = target.alpha
