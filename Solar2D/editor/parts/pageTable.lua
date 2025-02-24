@@ -30,6 +30,7 @@ local Props = {
 }
 
 local horizontal = false
+local PAGE_MAX = 24
 
 local M, bt, tree = require(parent .."baseTable").new(Props)
 
@@ -122,7 +123,7 @@ function M:createTable(UI, entries, selection)
     local option = self.option
     -- local objs = {}
 
-    local max = math.min(10, #entries)
+    local max = math.min(PAGE_MAX, #entries)
     local width = self.width
     local height = self.option.height
     local scrollView

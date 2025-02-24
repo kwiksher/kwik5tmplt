@@ -2,7 +2,7 @@ local M = require("components.kwik.layer_base").new()
 --
 local json = require("json")
 
-local useCanvas = true
+local useCanvas = false
 
 function M:create (UI)
   local sceneGroup = UI.sceneGroup
