@@ -1,46 +1,32 @@
 local parent,root, M = newModule(...)
 local layerProps = require(M.layerMod).layerProps or {}
-
 local json = require("json")
-
 local M = {
-  name ="{{name}}",
-  class = "{{class}}", -- spritesheet
-  -- sheet = {{name}}_sheet,
+  name ="rect_0",
+  class = "sprite", -- spritesheet
+  -- sheet = rect_0_sheet,
   properties = {
-    {{#properties}}
-    target = "{{target}}",
-    filename = "{{filename}}",
-    sheetInfo = "{{sheetInfo}}",
-    sheetContentWidth  = {{sheetContentWidth}},
-    sheetContentHeight = {{sheetContentHeight}},
-    numFrames          = {{numFrames}},
-    width              = {{width}},
-    height             = {{height}},
-    sheetType  = "{{sheetType}}", -- uniform-sized TexturePacker, Animate
-    {{/properties}}
+    target   = "rect_0",
+    filename = "sprites/uma.png",
+    sheetInfo = "sprites/uma.lua",
+    sheetContentWidth  = 376,
+    sheetContentHeight = 188,
+    numFrames          = 8,
+    width              = 188,
+    height             = 188,
+    sheetType  = "TexturePacker", -- uniform-sized TexturePacker, Animate
   },
-  book = "{{book}}",
+  book = "replacement",
   layerProps = layerProps
-
 }
-
 M.sequenceData = {
-  {{#sequenceData}}
-      {{^count}}
-          { name = "{{name}}",
-            frames = { {{frames}} },
-      {{/count}}
-      {{#count}}
-          { name = "{{name}}",
-            start = {{start}},
-            count = {{count}},
-      {{/count}}
-            time = {{time}},
-            loopCount = {{loopCount}},
-            loopDirection = "{{loopDirection}}",
-          },
-  {{/sequenceData}}
+  { name = "default",
+    start = 1,
+    count = 8,
+    time = 1000,
+    loopCount = 0,
+    loopDirection = "forward",
+  },
 }
 --
 local options = nil
@@ -50,6 +36,7 @@ if M.properties.sheetType == "TexturePacker" then
   path = path:gsub("/", ".")
   path = path:gsub(".lua", "")
   --
+  print("###", path)
   local sheetInfo = require(path)
   options = {frames = sheetInfo.frames}
   --
@@ -73,9 +60,9 @@ elseif M.properties.sheetType == "Animate" then
     local animateJson = json.decode( jsonFile(M.properties.sheetInfo) )
     --print (sheetInfo, #animateJson.frames)
     for i=1, #animateJson.frames do
-        local frame = animateJson.frames[i].frame
-        local spriteSourceSize = animateJson.frames[i].spriteSourceSize
-        sheetInfo.frames[i] = {x=frame.x, y=frame.y, width=frame.w, height= frame.h, sourceX = spriteSourceSize.x, sourceY = spriteSourceSize.y, sourceWidth = spriteSourceSize.w, sourceHeight = spriteSourceSize.h}
+      local frame = animateJson.frames[i].frame
+      local spriteSourceSize = animateJson.frames[i].spriteSourceSize
+      sheetInfo.frames[i] = {x=frame.x, y=frame.y, width=frame.w, height= frame.h, sourceX = spriteSourceSize.x, sourceY = spriteSourceSize.y, sourceWidth = spriteSourceSize.w, sourceHeight = spriteSourceSize.h}
     end
     sheetInfo.sheetContentWidth = animateJson.meta.size.w
     sheetInfo.sheetContentHeight = animateJson.meta.size.h
@@ -90,7 +77,7 @@ else
     numFrames          = M.properties.numFrames,
     sheetContentWidth  = M.properties.sheetContentWidth,
     sheetContentHeight = M.properties.sheetContentHeight
-}
+  }
   M.imageWidth = options.width
   M.imageHeight = options.height
 end
