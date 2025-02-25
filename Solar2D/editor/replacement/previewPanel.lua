@@ -18,6 +18,9 @@ end
 
 function M:show(UI, props)
   props.layerProps = {name = "_preview", mX= self.x, mY = self.y}
+  if props.properties.target == nil then
+    props.properties.target = {x=self.x, y = self.y}
+  end
 
   if props.properties.sheetInfo and props.properties.sheetInfo:len() > 0 then
     if props.properties.sheetInfo:find(".lua") then

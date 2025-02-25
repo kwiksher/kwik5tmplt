@@ -1,8 +1,11 @@
-local M = {objs = {}}
+local M = require("components.kwik.layer_base").new()
+M.objs = {}
+
 --
 function M:create(UI)
   local sceneGroup  = UI.sceneGroup
   local layer       = UI.layer
+  local target      = sceneGroup[self.properties.target] or self.properties.target
   if self.sheet == nil then
     print("Error sheet is emptry")
     return
@@ -16,15 +19,15 @@ function M:create(UI)
     print("Error newSprite")
     return
   end
-  obj.x        = self.layerProps.mX or 0
-  obj.y        = self.layerProps.mY or 0
+  obj.x        = target.x or display.contentCenterX
+  obj.y        = target.y or  display.contentCenterY
 
 
   if self.layerProps.imageWidth then
     obj:scale(self.layerProps.imageWidth/obj.width, self.layerProps.imageHeight/obj.height)
   end
 
-  self:setLayerProps(obj)
+  -- self:setLayerProps(obj)
 
   obj.name = self.layerProps.name or "_preview"
   obj.type = "sprite"
@@ -35,12 +38,16 @@ function M:create(UI)
     obj:play()
   end
   if obj.name ~="_preview" then
-    local targetObj=sceneGroup[obj.name]
-    sceneGroup:remove(targetObj)
+    -- sceneGroup:remove(target)
+    target.alpha = 0
   end
-  sceneGroup[obj.name] = obj
+
+  printKeys(obj)
+
+  sceneGroup[obj.name.."_sprite"] = obj
   sceneGroup:insert( obj)
   self.objs[#self.objs+1] = obj
+  -- obj:toFront()
 
 end
 --

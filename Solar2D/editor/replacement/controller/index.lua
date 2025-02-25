@@ -129,29 +129,22 @@ function M:useClassEditorProps(UI)
       name = "width"
     elseif name == "_filename" then
       name = "filename"
-    end
-
-    if name == "sheetInfo" then
+    elseif name == "sheetInfo" then
       if value:find(".lua") then
         sheetType = "TexturePacker"
       elseif value:find(".json") then
         sheetType = "Animate"
       end
-    end
-    if name == "sheetType" and (value == NIL or value == "") then
+    elseif name == "sheetType" and (value == NIL or value == "") then
       value = sheetType
-    end
-
-    if name  == "color" then
+    elseif name  == "color" then
       if type(value) == "table" then
         value = {r= tonumber(value[1])/255, g=tonumber(value[2])/255, b=tonumber(value[3])/255, a=(tonumber(value[4]) or 1)}
       else
         local nums = util.split(value, ',')
         value = {r= tonumber(nums[1])/255, g=tonumber(nums[2])/255, b=tonumber(nums[3])/255, a=(tonumber(nums[4]) or 1)}
       end
-    end
-
-    if name == "marker" then
+    elseif name == "marker" then
       value = yaml.evalTable(value)
     end
 
@@ -160,6 +153,15 @@ function M:useClassEditorProps(UI)
 
   if self.listbox.type == "sequenceData" then
     props.sequenceData = self.listbox:getValue()
+    printKeys(props.sequenceData)
+    for i, v in next, props.sequenceData do
+      for key,value in pairs(v) do
+        print(key, value, type(value))
+        if ( key == "count" or key=="start" )  then
+          props.sequenceData[i][key] = tonumber(value)
+        end
+      end
+    end
   elseif self.listbox.type =="line" then -- this means sync (class == sync)
     props.line = self.listbox:getValue()
     props.textProps = self.textProps:getValue()
@@ -173,6 +175,7 @@ end
 function M:setValue(decoded, index, template)
   if decoded == nil then print("## Error setValue ##") return end
   if not template then
+    -- print("@", decoded[index].class)
     -- print(json.encode(decoded[index]))
     for k, v in pairs(decoded[index]) do print(k, v) end
     self.selectbox:setValue(decoded, index)  -- "linear 1", "rotation 1" ...
@@ -199,6 +202,10 @@ function M:setValue(decoded, index, template)
     if decoded[index].class == "sprite" then
       local value = decoded[index].properties.filename
       self.classProps:showThumnail("sprites", value, "sprites")
+      self.classProps.didShow = function(self, UI)
+        self.activeProp = "sheetInfo"
+        self:setActiveProp(value, "sprite")
+      end
     end
 
   else
@@ -225,6 +232,11 @@ function M:setValue(decoded, index, template)
     if decoded.class == "sprite" then
       local value = decoded.properties.filename
       self.classProps:showThumnail("sprites", value, "sprites")
+      self.classProps.didShow = function(self, UI)
+        self.activeProp = "sheetInfo"
+        self:setActiveProp(value, "sprite")
+
+      end
     end
 
   end
