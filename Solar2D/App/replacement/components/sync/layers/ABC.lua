@@ -1,4 +1,4 @@
--- $weight=1
+-- $weight=0
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
@@ -6,22 +6,23 @@ local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
-  height    =  1282 - 0,
-  width     = 1920 - 0 ,
-  kind      = pixel,
-  name      = "bg",
+  height    =  694 - 587,
+  width     = 1134 - 786 ,
+  kind      = text,
+  name      = "ABC",
   type      = "png",
-  x         = 1920 + (0 -1920)/2,
-  y         = 0 + (1282 - 0)/2,
+  x         = 1134 + (786 -1134)/2,
+  y         = 587 + (694 - 587)/2,
   alpha     = 100/100,
   infinity = {
   },
   -- text properties
-  contents =  "",
-  font =  "",
-  fontSize =  nil,
-  alignment =  "",
-  orientation = "",
+  contents =  "A B C",
+  font =  "Geneva",
+  fontSize =  132,
+  alignment =  "left",
+  color    =  { 0, 0, 0, 1 },
+  orientation = "horizontal",
 }
 
 M.align       = ""

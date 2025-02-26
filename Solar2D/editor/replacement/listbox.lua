@@ -58,10 +58,11 @@ function M:getValue()
 end
 
 function M:setValue(fooValue, type)
+  -- self:destroy()
   self.type = type or self.type
   self.value = fooValue or self.value
   -- print("####", self.type, #self.value)
-  print(json.prettify(self.value))
+  -- print(json.prettify(self.value))
   self:createTable()
 end
 
@@ -165,12 +166,16 @@ local option, newText = util.newTextFactory{
   height = 20,
 }
 
-function M:createTable ()
+function M:createTable()
   self.objs = {}
   option.parent = self.rootGroup
   option.text = self.name or ""
   option.x = self.x
   option.y = self.y
+  option.align="center"
+
+  -- printKeys(option)
+  -- print(debug.traceback())
 
   local labelText = newText(option)
 
@@ -186,7 +191,7 @@ function M:createTable ()
       end
       option.text    = row[i]
       local obj      = newText(option)
-      obj.x, obj.y   = i*self.rowWidth -40, index*self.rowHeight + 4
+      obj.x, obj.y   = i*self.rowWidth -40, index*self.rowHeight + 4 + 4
       obj.value      = row
       obj.index      = index
       obj.type       = self.type
@@ -225,17 +230,17 @@ function M:createTable ()
   -- --
   -- table.sort(headers, compare)
   -- --
+
   self.scrollView = widget.newDragItemsScrollView{
     backgroundColor = {1.0},
     left = self.x,
-    top = self.y,
+    top = self.y ,
     -- top=(display.actualContentHeight-1280/4 )/2,
     width= self.width, --display.contentWidth -20,
     -- width= self.width * #headers[self.type],
     height=self.height
   }
   --
-  --index = 0
   createRow(headers[self.type])
   --  --
   for i, entry in next, self.value do
@@ -259,10 +264,36 @@ function M:createTable ()
   option.text = "Add"
   option.x = self.scrollView.contentBounds.xMax - 10
   option.y = self.scrollView.contentBounds.yMin - 5
-  self.addButton = newText(option)
-  self.addButton:setFillColor(0,1,0)
-  self.addButton:addEventListener("tap", self.addEvent)
+  option.width = 40
+  option.height = 20
 
+  local canvas = display.newContainer(option.width, option.height)
+  canvas.x = option.x
+  canvas.y = option.y
+
+  -- Create the rectangle first
+  local rect = display.newRoundedRect(0, 0, option.width, option.height, 4)
+  rect:setFillColor(0, 0, 1)
+  canvas:insert(rect)
+
+  -- Position the text at 0,0 (center of the container)
+  option.x = 0
+  option.y = 0
+  -- Make sure anchor point is center and align is center
+  option.align = "center"
+  self.addButton = newText(option)
+  self.addButton:setFillColor(1, 1, 1)
+  -- Set anchor point if not already set by newText
+  self.addButton.anchorX = 0.5
+  self.addButton.anchorY = 0.25
+  canvas:insert(self.addButton)
+
+  -- Move container to front
+  canvas:toFront()
+
+  -- Add event listener to the rect
+  rect:addEventListener("tap", self.addEvent)
+  self.addButton.rect = rect
 end
 
 
@@ -274,6 +305,7 @@ function M:hide()
   if self.scrollView then
     self.scrollView.isVisible = false
     self.addButton.isVisible = false
+    self.addButton.rect.isVisible = false
   end
 end
 
@@ -281,6 +313,7 @@ function M:show()
   if self.scrollView then
     self.scrollView.isVisible = true
     self.addButton.isVisible = true
+    self.addButton.rect.isVisible = true
   end
 end
 
@@ -299,6 +332,7 @@ function M:destroy()
   if self.scrollView then
     self.scrollView:removeSelf()
     self.scrollView = nil
+    self.addButton.rect:removeSelf()
     self.addButton:removeSelf()
   end
 end

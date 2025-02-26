@@ -38,7 +38,7 @@ function M.teardown()
 end
 
 function M.test_new()
-  local name = "rect_0"
+  local name = "ABC"
   helper.selectLayer(name)
   helper.selectIcon("Replacements", "Sync"):done(function() end)
 end

@@ -1,7 +1,7 @@
 local M = require("editor.parts.baseProps").new()
 ---------------------------
 M.name = "audioProps"
-M.class ="audio"
+M.class ="sync"
 
 local assetTable = require("editor.asset.assetTable")
 local layerTable = require("editor.parts.layerTable")

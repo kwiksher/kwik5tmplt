@@ -203,7 +203,7 @@ end
 
 function exports.swapLangPrefix(name, lang)
   local t = name:split("/")
-  return lang.."/".. t[2]
+  return lang.."/".. (t[2] or "")
 end
 
 function exports.readSyncText(path,sentenceDirPath)

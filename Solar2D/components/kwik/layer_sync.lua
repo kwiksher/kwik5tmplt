@@ -98,17 +98,21 @@ function M:init(UI)
   -- print(UI.lang)
   if UI.langClassDelegate then
     --
-    self.properties.target = UI:getNameByLang(self.properties.target or "")
     -- print(self.properties.target)
-    self.audioProps.filename = libUtil.swapLangPrefix(self.audioProps.filename, UI.lang) -- en/my_father_is_nice.mp3
+    if UI.lang:len() > 0 then
+      self.properties.target = UI:getNameByLang(self.properties.target or "")
+      self.audioProps.filename = libUtil.swapLangPrefix(self.audioProps.filename, UI.lang) -- en/my_father_is_nice.mp3
     -- print(self.audioProps.filename)
-    self.textProps.sentenceDir = libUtil.swapLangPrefix(self.textProps.sentenceDir,UI.lang)  --  en/my_father_is_nice
+      self.textProps.sentenceDir = libUtil.swapLangPrefix(self.textProps.sentenceDir,UI.lang)  --  en/my_father_is_nice
+    end
     -- print(self.textProps.sentenceDir)
     ---
     local filename = self.audioProps.filename:gsub("mp3", "txt")
     filename = libUtil.swapLangPrefix(filename, UI.lang)
-    local path = "App/" .. UI.book.."/assets/audios/sync/"..filename
-    local sentenceDirPath = "App/"..UI.book.."/assets/audios/sync/"..self.textProps.sentenceDir
+    local path = "App/" .. UI.book.."/assets/audios/sync"..filename
+    local sentenceDirPath = "App/"..UI.book.."/assets/audios/"..self.textProps.sentenceDir
+    -- print("@@@", path)
+    -- print("@@@", sentenceDirPath)
     self.line = libUtil.readSyncText(path,sentenceDirPath )
   end
 
@@ -127,15 +131,15 @@ function M:create(UI)
   --
   local path =  App.getProps().audioDir..self.audioProps.filename
   if self.language then
-    if self.folder then
-      path = App.getProps().audioDir..UI.lang.."/"..self.folder.."/"..self.audioProps.filename
-    else
-      path = App.getProps().audioDir..UI.lang.."/"..self.audioProps.filename
-    end
+    -- if self.folder then
+    --   path = App.getProps().audioDir..UI.lang.."/"..self.folder.."/"..self.audioProps.filename
+    -- else
+      path = App.getProps().audioDir..UI.lang..self.audioProps.filename
+    -- end
   else
-    if self.folder then
-      path = App.getProps().audioDir..self.folder.."/"..self.audioProps.filename
-    end
+    -- if self.folder then
+      path = App.getProps().audioDir..self.audioProps.filename
+    -- end
   end
 
   --
@@ -147,12 +151,13 @@ function M:create(UI)
   end
 
   -- local x,y = App.getPosition(self.x, self.y)
+  -- print("@@@@@", self.properties.target)
   local target = sceneGroup[self.properties.target]
   if target==nil then
     print("Error", self.properties.target)
     return
   end
-  local x,y = target.x, target.y
+  local x,y = target.x - target.width/2, target.y - target.height/2
 
   -- need this?
   -- if self.speakerIcon then
@@ -223,7 +228,8 @@ function M:didShow(UI)
   local sceneGroup  = UI.sceneGroup
   -- print("saySentence", self.properties.autoPlay, self.talkButton)
   if self.properties.autoPlay and self.talkButton then
-      self.timerStash = timer.performWithDelay( self.properties.delay or 0,
+     local delay = tonumber(self.properties.delay) or 0
+      self.timerStash = timer.performWithDelay( delay,
         function()
           syncSound.saySentence{
           sentence= self.audioObj,

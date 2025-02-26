@@ -33,7 +33,7 @@ function M.create(scene, model)
     UI.joints           = {}
     UI.timers           = {}
     UI.tSearch          = nil
-    UI.lang             = "en"
+    UI.lang             = ""
     UI.langClassDelegate = true
 
     ---
@@ -45,7 +45,7 @@ function M.create(scene, model)
     --UI.numberOfPages         = #Application.scenes -- number of pages in the project
     --
     function UI:setLanguge()
-      if self.props.lang == "" then self.props.lang = "en" end
+      if self.props.lang == nil then self.props.lang = "" end
       -- Language switch
       --if (self.props.lang == "en") then self.tSearch = self.taben end
       -- Language switch
