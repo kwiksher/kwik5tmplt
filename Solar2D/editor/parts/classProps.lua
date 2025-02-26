@@ -86,7 +86,8 @@ function M:setActiveProp(layer, class)
       --   sheetContentHeight = 200
       -- }
       -- print("@@@@", UI.editor.currentClass)
-      return true -- this makes the table hide
+        return true -- this makes the table hide
+      end
     else
       -- TBI show popup
     end
