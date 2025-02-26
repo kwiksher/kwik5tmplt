@@ -7,7 +7,7 @@ local layerTable = require("editor.parts.layerTable")
 local libUtil    = require("lib.util")
 
 M.name = "textProps"
-M.class = "audio"
+M.class = "sync"
 M.type = "line" -- sequenceData
 local obj, sentenceDir
 
@@ -33,8 +33,12 @@ function M:setActiveProp(value)
   --  update listbox by reading timecodes txt
   --    check word.mp3 in sentenceDir
   local listbox = require(parent.."listbox")
-  local path = "App/" .. UI.book.."/assets/audios/sync/"..value
-  local sentenceDirPath = "App/"..UI.book.."/assets/audios/sync/"..sentenceDir
+  local path = "App/" .. UI.book.."/assets/audios/"..value
+  local sentenceDirPath = "App/"..UI.book.."/assets/audios/"..sentenceDir
+
+  print("@@@@ path" , path)
+  print("@@@@ sentenceDirPath" , sentenceDirPath)
+
   local entries = libUtil.readSyncText(path,sentenceDirPath )
   listbox:setValue(entries, self.type)
 end

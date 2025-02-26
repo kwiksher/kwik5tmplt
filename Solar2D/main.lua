@@ -4,7 +4,7 @@ system.setTapDelay( 0.2 )
 -- display.setDefault( "background", 1, 1, 1 )
 
 -- Create a gradient effect using rectangles Good for emitting particles!
---[[
+---[[
   local numRectangles = 100
   local rectHeight = display.contentHeight / numRectangles
   for i = 1, numRectangles do
@@ -43,8 +43,8 @@ local common = {
 require("controller.index").bootstrap{
   name="replacement",
   editing = true,
-  goPage = "sprite",
-  language = "en",
+  goPage = "sync",
+  language = "", -- empty string "" is for a single language project
   position = {x=0, y=0},
   common = common} -- scenes.index
 

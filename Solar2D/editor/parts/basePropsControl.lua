@@ -117,6 +117,7 @@ local function tapListenerURL(event, classProps)
     if event.target.class == "particles" then
       selectors.assetsSelector:onClick(true, event.target.class) --videos,audios, sprites..
     else
+      -- printKeys(event.target)
       selectors.assetsSelector:onClick(true, event.target.class .. "s") --videos,audios, sprites..
     end
     assetTable:setClassProps(classProps)

@@ -18,7 +18,7 @@ M.backgroundImg = "bg.png"
 function M:initPages(_lang)
   self.downloadable = self.URL ~= nil
   --
-  local lang                = _lang or "en"
+  local lang                = _lang or ""
   self.LIBRARY_PAGE         = self.LIBRARY_PAGES[lang]
   self.DIALOG_PAGE          = self.DIALOG_PAGES[lang]
   self.purchaseAlertMessage = self.purchaseAlertMessages[lang]

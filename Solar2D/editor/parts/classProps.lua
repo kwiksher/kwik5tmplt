@@ -85,7 +85,6 @@ function M:setActiveProp(layer, class)
       --   sheetContentWidth = 800,
       --   sheetContentHeight = 200
       -- }
-      end
       -- print("@@@@", UI.editor.currentClass)
       return true -- this makes the table hide
     else

@@ -9,14 +9,12 @@ local model = {
         }
       },
       {
-        rect_0 = {  }
-      },
-      {
-        ellipse_0 = {
-            }
+        ABC = {
+          class={ "sync", }  }
       },
     },
     audios = {
+      long={  }, short={   }
     },
     groups = {
     },
