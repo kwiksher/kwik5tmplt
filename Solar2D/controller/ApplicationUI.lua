@@ -25,6 +25,7 @@ function M.create(scene, model)
     UI.layers = {}
     -- All audio files on a table
     UI.audios           = {}
+    UI.videos           = {}
     UI.audios.kAutoPlay = 0
     UI.animations       = {}
     UI.dynamictexts      = {}

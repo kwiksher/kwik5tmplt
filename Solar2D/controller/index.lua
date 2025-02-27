@@ -18,6 +18,7 @@ function lib.bootstrap(Props)
         appName     = Props.name,
         editing     = Props.editing,
         systemDir   = system.ResourceDirectory,
+        assetDir      = "App/"..Props.name.."/assets/",
         imgDir      = "App/"..Props.name.."/assets/images/",
         spriteDir   = "App/"..Props.name.."/assets/sprites/",
         thumbDir    = "App/"..Props.name.."/assets/thumbnails/",

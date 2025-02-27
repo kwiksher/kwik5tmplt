@@ -1,21 +1,15 @@
 local parent,root, M = newModule(...)
 local layerProps = require(M.layerMod).layerProps or {}
-
 local M = {
   properties = {
-    {{#properties}}
-    target = "{{target}}",
-    loop     = "{{loop}}",
-    rewind   = "{{rewind}}",
-    isLocal  = "{{isLocal}}",
-    url      = "{{url}}",
-    autoPlay = "{{autoPlay}}",
-    {{/properties}}
+    target   = "rect_0",
+    loop     = "true",
+    rewind   = "true",
+    isLocal  = "true",
+    url      = "videos/myvideo/kwikplanet.mp4",
+    autoPlay = "true",
   },
   actions = {
-    {{#actions}}
-    onCompelete = "{{onComplete}}"
-    {{/actions}}
   },
   layerProps = layerProps
 }

@@ -9,7 +9,7 @@ M.onTapActionSet = table:mySet {"onComplete"}
 M.onTapPosXYSet = table:mySet {"x", "y"}
 --
 function M:setActiveProp(layer, class)
-  -- print("activeProp", self.activeProp, layer)
+  print("activeProp", self.class, class, self.activeProp, layer)
   local name = self.activeProp
   local value = layer
   local UI = self.UI
@@ -57,6 +57,9 @@ function M:setActiveProp(layer, class)
     end
     --
     self:showThumnail(self.activeProp, layer, self.class)
+  elseif self.class == "video" and name == "url" then
+    local obj = self:getObj(name)
+    obj.field.text = value
   else
     --
     -- check

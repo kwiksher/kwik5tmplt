@@ -2,15 +2,29 @@ local M = require("components.kwik.layer_base").new()
 --
 function M:create(UI)
   local sceneGroup = UI.sceneGroup
-  local layeName = UI.properties.target
+  local layerName = self.properties.target
   local props = self.properties
   local layerProps = self.layerProps
   local obj
-
-  if props.type == "rect" then
-    obj = display.newRect(layerProps.mX, layerProps.mY, layerProps.imageWidth, layerProps.imageHeight)
+  local options = {}
+  if layerProps.shapedWith then
+    options.x = layerProps.x + (props.paddingX or 0)
+    options.y = layerProps.y + (props.paddingY or 0)
+    options.width = layerProps.width
+    options.height = layerProps.height
+  else
+    options.x = layerProps.mX + (props.paddingX or 0)
+    options.y = layerProps.mY + (props.paddingY or 0)
+    options.width = layerProps.imageWidth
+    options.height = layerProps.imageHeight
+  end
+  --
+  if props.type == "rectangle" then
+    obj = display.newRect(options.x, options.y, options.width, options.height)
   elseif props.type == "circle" then
-    obj = display.newCircle(layerProps.mX, layerProps.mY, layerProps.imageWidth / 2)
+    obj = display.newCircle(options.x, options.y, options.width / 2)
+  else
+    print("Error", "invalid type for vector replacement")
   end
   --
   --
@@ -24,6 +38,9 @@ function M:create(UI)
     sceneGroup:insert(1, obj)
   else
     sceneGroup:insert(obj)
+  end
+  if sceneGroup[layerName] and sceneGroup[layerName].removeSelf then
+    sceneGroup[layerName]:removeSelf()
   end
   sceneGroup[layerName] = obj
   self.obj = obj

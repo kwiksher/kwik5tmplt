@@ -5,7 +5,8 @@ local M = {
   properties = {
     target = NIL,
     type = "rectangle",
-    isBackground = false
+    isBackground = false,
+    color = {0.8, 0.8, 0.5, 1}
   }
 }
 

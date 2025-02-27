@@ -3,7 +3,7 @@
 local parent,root, M = newModule(...)
 local app = require "controller.Application"
 --
-local _layerProps = {
+local layerProps = {
   name     = "ellipse_0",
   x        = 548.5,
   y        = 272,
@@ -18,13 +18,16 @@ local _layerProps = {
   color    = { 0.8, 0.8, 0.8, 1 },
   shapedWith = "new_ellipse"
 }
+
+M.layerProps = layerProps
+
 --
 function M:init(UI)
 --local sceneGroup = UI.sceneGroup
 end
 --
 function M:create(UI)
-  local layerProps = self.layerProps or _layerProps
+  local layerProps = self.layerProps or layerProps
   self.layerProps = layerProps
   local obj
   self.imagePath = layerProps.name.."." .. (layerProps.type or ".png")
@@ -63,7 +66,7 @@ function  M:destroy(UI)
 end
 --
 function M:new(props)
-  return self:newInstance(props, _layerProps)
+  return self:newInstance(props, layerProps)
 end
 --
 return M

@@ -9,12 +9,12 @@ local M = {
     target = "{{target}}",
     isBackgroud  = {{isBackground}},
     type = "{{type}}",
+    {{#color}}
+    color    = { {{r}}, {{g}}, {{b}}, {{a}} },
+    {{/color}}
     {{/properties}}
-  }
-}
+  },
+  layerProps = layerProps
+}--
 --
-M.x = layerProps.x
-M.y = layerProps.y
---
-
-return require("components.kwik.layer_vector").new(M)
+return require("components.kwik.layer_vector").set(M)
