@@ -1,6 +1,5 @@
 local name = ...
 local parent,root = newModule(name)
-
 local M = {
   name = "father/en", -- en
   layer = "en",
@@ -31,9 +30,7 @@ local M = {
     sentenceDir = "sync/en/my_father_is_nice", -- wordTouch
   },
   actions = {onComplete = ""},
-
 }
-
 M.line = {
   {
     name = "My",
@@ -70,7 +67,6 @@ M.line = {
 }
 --
 return require("components.kwik.layer_sync").set(M)
-
 --[[
 local M = {
   name = "alphabet",
@@ -79,13 +75,11 @@ local M = {
   autoPlay = true,
   channel = 2
 }
-
 M.line = {
   { start =  0, out = 1000, dur = 0, name = "A", file = "a.mp3", action = "onComplete"},
   { start =  1000, out = 2000, dur = 0, name = "B", file = "b.mp3", action = "onComplete"},
   { start =  2000, out = 3000, dur = 0, name = "C", file = "c.mp3", action = "onComplete"},
 }
-
 M.x            = 39
 M.y            = 300
 M.padding      = 10
