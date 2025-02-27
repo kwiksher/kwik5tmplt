@@ -9,11 +9,12 @@ local model = {
         }
       },
       {
-        rect_0 = {  }
+        rect_0 = {
+          class={ "video", }  }
       },
       {
         ellipse_0 = {
-            }
+        }
       },
     },
     audios = {

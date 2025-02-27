@@ -40,7 +40,7 @@ end
 function M.xtest_new()
   local name = "rect_0"
   helper.selectLayer(name)
-  helper.selectIcon("Replacements", "Text"):done(function() end)
+  helper.selectIcon("Replacements", "Vector"):done(function() end)
 end
 
 return M

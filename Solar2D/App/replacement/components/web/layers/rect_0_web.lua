@@ -1,15 +1,12 @@
 local parent,root, M = newModule(...)
 local layerProps = require(M.layerMod).layerProps or {}
-
 local M = {
   properties = {
-    {{#properties}}
-    target   = "{{target}}",
-    isLocal  = "{{isLocal}}",
-    url      = "{{url}}",
-    width    = {{width}},
-    height   = {{height}}
-    {{/properties}}
+    target   = "rect_0",
+    isLocal  = true,
+    url      = "index.html",
+    width    = 480,
+    height   = 320
   },
   layerProps = layerProps
 }

@@ -51,6 +51,7 @@ function exports.clickIcon(toolGroup, tool)
 end
 
 function exports.selectIcon(toolGroup, tool)
+  -- print(debug.traceback())
   local deferred = Deferred()
   -- local toolbar = UI.editor.toolbar
   if toolGroup == "action" then

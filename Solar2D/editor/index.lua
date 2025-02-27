@@ -347,6 +347,7 @@ function M:gotoLastSelection(_props)
   -- Open the file handle
   local file, errorString = io.open(path, "r")
   if file == nil then
+    print("gotoLastSelection no file")
     return
   end
   --
@@ -366,12 +367,13 @@ function M:gotoLastSelection(_props)
     -- Read data from file
     local contents = file:read("*a")
     -- Output the file contents
-    -- print( "Contents of " .. path .. "\n" .. contents )
+    print( "Contents of " .. path .. "\n" .. contents )
     -- Close the file handle
     io.close(file)
     props = json.decode(contents)
     -- check it
-    if props.page == nil or not util.isDir("App/" .. props.book .. "/components/" .. props.page) then
+    if props.page == nil or not util.isDir(props.book .. "/components/" .. props.page) then
+      print("gotoLastSelection page is null", "App/" .. (props.book or "") .. "/components/" .. (props.page or ""))
       props.book = nil
     end
   end
@@ -393,12 +395,13 @@ function M:gotoLastSelection(_props)
 
   UI.editor.lastSelection = {book = props.book, page = props.page}
   if props.book == nil or props.book:len() == 0 then
+    print("gotoLastSelection book is null")
     return
   end
+  --
   local obj = helper.selectBook(props.book)
   if obj then
     bookTable.commandHandler(obj, {phase = "ended"}, true)
-
     timer.performWithDelay(
       1000,
       function()
@@ -433,6 +436,8 @@ function M:gotoLastSelection(_props)
       --]]
       end
     )
+  else
+    print("gotoLastBook obj is null")
   end
   return false
 end

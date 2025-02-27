@@ -230,7 +230,7 @@ function M.loadPage(UI)
   --
   local bookName = UI.book
   local path =system.pathForFile( "App/"..bookName.."/models", system.ResourceDirectory)
-  if useModelJSON then
+  if useModelJSON and path then
     local success = lfs.chdir( path ) -- isDir works with current dir
     if success then
       local pages = {}

@@ -78,7 +78,7 @@ function M:didShow(UI)
     if self.Min > 0 and (self.Min < 10) then
       countText = "0"..self.Min
     end
-    print(countText)
+    -- print(countText)
     self.obj.text = countText
     self.countValue = props.countValue - 1
     ---

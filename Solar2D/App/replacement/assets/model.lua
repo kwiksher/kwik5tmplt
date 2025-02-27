@@ -7,6 +7,14 @@ local M = {
       links = {
       },
     },
+    {
+      name = "",
+      path = "videos",
+      links = {
+        {page= "video", layers = {
+          }},
+      },
+    },
   }
 }
 return M

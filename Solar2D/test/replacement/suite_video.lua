@@ -37,10 +37,10 @@ end
 function M.teardown()
 end
 
-function M.xtest_new()
+function M.test_new()
   local name = "rect_0"
   helper.selectLayer(name)
-  helper.selectIcon("Replacements", "Text"):done(function() end)
+  helper.selectIcon("Replacements", "Video"):done(function() end)
 end
 
 return M
