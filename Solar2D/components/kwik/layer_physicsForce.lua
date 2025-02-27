@@ -15,9 +15,10 @@ function M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   local layer = UI.layer
   local props = self.properties
-  local obj = sceneGroup[self.name]
+  local layerName = props.body
+  local obj = sceneGroup[layerName]
   if obj == nil then
-    print("obj nil", self.name)
+    print("obj nil", layerName)
     return
   end
   if props.type == "" or props.type == "none" then
@@ -71,8 +72,13 @@ function M:didShow(UI)
 end
 
 function M:didHide(UI)
+  local sceneGroup = UI.sceneGroup
   local props = self.properties
-  if props.type ~= "" or props.type == "none" then
+  local layerName = props.body
+  if layerName == nil then return end
+  local obj = sceneGroup[layerName]
+
+  if props.type ~= "" or props.type == "none" and obj then
     obj:removeEventListener(props.event, self.listener)
   end
 end

@@ -1,8 +1,9 @@
 local M = {
   bookignored = {"animation", "asset", "keyboard", "mybook", "page", "physics",
   -- "replacement", "lingualSample"
-  "shape", "book1"}
+  "shape", "book1"},
   -- "interaction",
+  languageBooks = {lingualSample = "en"}
 }
 --
 local pageCommand = require("components.bookstore.controller.pageCommand")

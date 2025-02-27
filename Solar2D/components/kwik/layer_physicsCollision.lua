@@ -4,8 +4,9 @@ function M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   local layer = UI.layer
   local props = self.properties
+  local layerName = props.body
   ---
-  local obj = sceneGroup[self.name]
+  local obj = sceneGroup[layerName]
   --printKeys(obj)
 
   local function getOthers()
@@ -22,8 +23,8 @@ function M:didShow(UI)
   end
   print("---------")
 
-  if obj == nil then
-    print("Error missing", self.name)
+  if obj == nil  or type(obj) == "string" then
+    print("Error missing", layerName)
     return
   end
 
@@ -39,7 +40,7 @@ function M:didShow(UI)
         end
         if props.isRemoveSelf then
           obj:removeSelf()
-          sceneGroup[self.name] = nil
+          sceneGroup[layerName] = nil
         end
         if props.isRemoveOther then
           otherObj:removeSelf()

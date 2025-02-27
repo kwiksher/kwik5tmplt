@@ -19,7 +19,7 @@ M.contextInit = false
 M.storeInit = false
 
 local gotoLastOn = true
-local unitTestOn = true
+local unitTestOn = false
 local httpServerOn = true
 local showPageName = true
 
