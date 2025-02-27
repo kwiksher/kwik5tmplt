@@ -377,7 +377,7 @@ local function createAnimationFunc(self, UI, tool)
   elseif tool == "btween" then
     self.path.newAngle = tonumber(self.path.newAngle)
     local extraValues = createPropsTo(self, layer)
-    printKeys(options)
+    -- printKeys(options)
     animObj = btween.new(layer, self.properties.duration / 1000, self.curve, extraValues, options)
     animObj.pathAnim = true
     animObj:pause()

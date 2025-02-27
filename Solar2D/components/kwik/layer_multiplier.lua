@@ -111,14 +111,14 @@ function M:didShow(UI)
   end
   --
   local function copyHandler()
-    print("copyHandler")
-    printKeys(layerProps)
+    -- print("copyHandler")
+    -- printKeys(layerProps)
     if self.timer0 then
       count = count + 1
       if handler ~= nil then
         handler(count)
       end
-      print("", self.maxCopies, props.playForever)
+      -- print("", self.maxCopies, props.playForever)
       if (count == self.maxCopies and props.playForever) then
         if self.timer1 then
           timer.cancel(self.timer1)
@@ -130,7 +130,7 @@ function M:didShow(UI)
   end
   --
   if props.autoPlay then
-    print("@@@@@@@@@", props.interval*1000,  props.numOfCopies)
+    -- print("@@@@@@@@@", props.interval*1000,  props.numOfCopies)
     self.timer0 = timer.performWithDelay(props.interval*1000, copyHandler, props.numOfCopies)
     UI.timers[#UI.timers + 1] = self.timer0
   end

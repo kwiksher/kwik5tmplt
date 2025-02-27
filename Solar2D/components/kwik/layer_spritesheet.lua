@@ -42,7 +42,7 @@ function M:create(UI)
     target.alpha = 0
   end
 
-  printKeys(obj)
+  -- printKeys(obj)
 
   sceneGroup[obj.name.."_sprite"] = obj
   sceneGroup:insert( obj)

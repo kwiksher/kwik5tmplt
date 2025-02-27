@@ -6,7 +6,7 @@ local bookTable
 local pageTable
 local layerTable
 local actionTable
-local helper = require("editor.tests.helper")
+local helper = require("test.helper")
 
 function M.init(props)
   selectors = props.selectors

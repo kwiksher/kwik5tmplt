@@ -17,7 +17,7 @@ function M:create(UI)
     options.width = layerProps.imageWidth
     options.height = layerProps.imageHeight
   end
-  printKeys(options)
+  -- printKeys(options)
 
   if ( ( system.getInfo("environment") == "simulator"
     or system.getInfo("platform") == "macos"

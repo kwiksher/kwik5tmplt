@@ -9,7 +9,7 @@ local layerTable
 local groupTable = require("editor.group.groupTable")
 local buttons = require("editor.group.buttons")
 
-local helper = require("editor.tests.helper")
+local helper = require("test.helper")
 
 function M.init(props)
   selectors = props.selectors

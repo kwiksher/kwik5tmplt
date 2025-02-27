@@ -6,7 +6,7 @@ local bookTable
 local pageTable
 local layerTable
 
-local helper = require("editor.tests.helper")
+local helper = require("test.helper")
 local json = require("json")
 
 function M.init(props)

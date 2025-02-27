@@ -16,7 +16,7 @@ local actionbox = require("editor.parts.actionbox")
 local buttons = require("editor.action.buttons")
 local actionCommandButtons = require("editor.action.actionCommandButtons")
 ----
-local helper = require("editor.tests.helper")
+local helper = require("test.helper")
 local picker = require("editor.picker.name")
 local actionButtonContext = require("editor.action.buttonContext")
 

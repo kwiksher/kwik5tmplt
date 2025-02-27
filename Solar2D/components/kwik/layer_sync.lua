@@ -95,24 +95,27 @@ end
 
 --
 function M:init(UI)
-  -- print(UI.lang)
+  print(self.audioProps.filename, UI.lang)
   if UI.langClassDelegate then
     --
     -- print(self.properties.target)
+    local filename = self.audioProps.filename:gsub("mp3", "txt")
+    local sentenceDirPath = "App/"..UI.book.."/assets/audios/"..self.textProps.sentenceDir
     if UI.lang:len() > 0 then
       self.properties.target = UI:getNameByLang(self.properties.target or "")
       self.audioProps.filename = libUtil.swapLangPrefix(self.audioProps.filename, UI.lang) -- en/my_father_is_nice.mp3
     -- print(self.audioProps.filename)
       self.textProps.sentenceDir = libUtil.swapLangPrefix(self.textProps.sentenceDir,UI.lang)  --  en/my_father_is_nice
+      --
+      filename = libUtil.swapLangPrefix(filename, UI.lang)
+      sentenceDirPath =  libUtil.swapLangPrefix(sentenceDirPath, UI.lang)
+
     end
     -- print(self.textProps.sentenceDir)
     ---
-    local filename = self.audioProps.filename:gsub("mp3", "txt")
-    filename = libUtil.swapLangPrefix(filename, UI.lang)
-    local path = "App/" .. UI.book.."/assets/audios/sync"..filename
-    local sentenceDirPath = "App/"..UI.book.."/assets/audios/"..self.textProps.sentenceDir
-    -- print("@@@", path)
-    -- print("@@@", sentenceDirPath)
+    local path = "App/" .. UI.book.."/assets/audios/"..filename
+    print("@@@", path)
+    print("@@@", sentenceDirPath)
     self.line = libUtil.readSyncText(path,sentenceDirPath )
   end
 

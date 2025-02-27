@@ -1,6 +1,6 @@
 local M = {
-  bookignored = {"animation", "asset", "keyboard", "lingualSample", "mybook", "page", "physics",
-  -- "replacement",
+  bookignored = {"animation", "asset", "keyboard", "mybook", "page", "physics",
+  -- "replacement", "lingualSample"
   "shape", "book1"}
   -- "interaction",
 }

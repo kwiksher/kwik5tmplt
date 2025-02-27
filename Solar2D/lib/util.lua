@@ -203,50 +203,59 @@ end
 
 function exports.swapLangPrefix(name, lang)
   local t = name:split("/")
-  return lang.."/".. t[2]
+  print(name, t[1], t[2])
+  return "sync/"..lang.."/".. t[3]
 end
 
-function exports.readSyncText(path,sentenceDirPath)
-  -- Read the file
-  local path = system.pathForFile( path, system.ResourceDirectory)
-
-  local file = io.open(path, "r")
-
+function exports.readSyncText(path, sentenceDirPath)
+  local fullPath = system.pathForFile(path, system.ResourceDirectory)
+  local file = io.open(fullPath, "r")
   if not file then
-      print("Error opening file: " .. path)
-      return
+      print("Error opening file: " .. fullPath)
+      return {}
   end
 
-  -- Initialize an empty table to store the data
+  local contents = file:read("*a")
+  io.close(file)
+
+  -- Remove carriage returns
+  contents = contents:gsub("\r", "")
+  -- Insert newline markers before every timestamp group.
+  -- This assumes that each row starts with a number like "0.185760"
+  contents = contents:gsub("(%d+%.%d+)[\t%s]+(%d+%.%d+)[\t%s]+", "\n%1\t%2\t")
+  -- Remove any leading newline
+  contents = contents:gsub("^%s*\n", "")
+
   local data = {}
 
-  -- Read each line and split by spaces
-  for line in file:lines() do
-    local startTime, endTime, name = line:match("(%S+)%s+(%S+)%s+(%S+)")
-    if startTime and endTime and name then
-       local newline = nil
-        if name:find("/n") then
-          newline = true
-          name = name:gsub("/n", "")
-        end
-      table.insert(data, {start = string.format("%.3f",tonumber(startTime)), out = string.format("%.3f",tonumber(endTime)), name = name, file=name:lower()..".mp3", action="", newline =newline})
+  for line in contents:gmatch("([^\n]+)") do
+    line = line:gsub("^%s*(.-)%s*$", "%1") -- trim whitespace
+    local startTime, endTime, text = line:match("^([%d%.]+)[\t%s]+([%d%.]+)[\t%s]+(.*)$")
+    if startTime and endTime and text then
+      local newline = false
+      if text:find("/n") then
+        newline = true
+        text = text:gsub("/n", "")
+      end
+      table.insert(data, {
+        start = string.format("%.3f", tonumber(startTime)),
+        out = string.format("%.3f", tonumber(endTime)),
+        name = text,
+        file = text:lower()..".mp3",
+        action = "",
+        newline = newline
+      })
+      print("Parsed: " .. startTime .. " - " .. endTime .. " - " .. text)
     else
-      print("Invalid line format: " .. line)
+      print("Invalid line format: '" .. line .. "'")
     end
   end
 
-  -- Close the file
-  file:close()
-
-  -- Print the parsed data (you can modify this part as needed)
-  for _, entry in ipairs(data) do
-      print(string.format("start: %.3f, end: %.3f, name: %s, newLine:%s ", entry.start, entry.out, entry.name, tostring(entry.newline)))
-  end
-
-  for i, v in next, data do
-    if system.pathForFile(sentenceDirPath.."/"..v.file,  system.ResourceDirectory ) == nil then
+  print("Total parsed entries: " .. #data)
+  for i, v in ipairs(data) do
+    if system.pathForFile(sentenceDirPath.."/"..v.file, system.ResourceDirectory) == nil then
       print("checking each mp3 for each word. You may ignore Warning above for", sentenceDirPath.."/"..v.file)
-      v.file =""
+      v.file = ""
     end
   end
 

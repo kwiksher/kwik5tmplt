@@ -153,10 +153,10 @@ function M:useClassEditorProps(UI)
 
   if self.listbox.type == "sequenceData" then
     props.sequenceData = self.listbox:getValue()
-    printKeys(props.sequenceData)
+    -- printKeys(props.sequenceData)
     for i, v in next, props.sequenceData do
       for key,value in pairs(v) do
-        print(key, value, type(value))
+        -- print(key, value, type(value))
         if ( key == "count" or key=="start" )  then
           props.sequenceData[i][key] = tonumber(value)
         end

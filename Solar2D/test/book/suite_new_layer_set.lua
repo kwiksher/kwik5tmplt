@@ -8,7 +8,7 @@ local layerTable
 local actionTable = require("editor.action.actionTable")
 local commandbox = require("editor.action.commandbox")
 local actionCommandPropsTable = require("editor.action.actionCommandPropsTable")
-local helper = require("editor.tests.helper")
+local helper = require("test.helper")
 
 local muiName = "editor.action.commandView-"
 local actionTable = require("editor.action.actionTable")
