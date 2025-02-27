@@ -41,12 +41,12 @@ function M:create(UI)
       options.y = layerProps.mY + (props.paddingY or 0)
     end
 
-  printKeys(options)
+  -- printKeys(options)
 
   local obj = display.newText(options)
   if obj == nil then return end
-  print("#####")
-  printKeys(props.color)
+  -- print("#####")
+  -- printKeys(props.color)
 
   obj:setFillColor( unpack(props.color) )
   obj.anchorX = 0.5

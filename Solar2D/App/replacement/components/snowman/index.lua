@@ -30,7 +30,7 @@ local model = {
       },
       {
         mytext = {
-        }
+          class={ "sync", }  }
       },
       {
         ground = {

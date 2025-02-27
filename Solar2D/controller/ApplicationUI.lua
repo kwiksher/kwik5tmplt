@@ -120,6 +120,10 @@ function M.create(scene, model)
                               --  })
                                if class == "lang" then
                                 isLang = true
+                                print("@@@@ isLang", UI.lang)
+                                if UI.lang == nil or UI.lang == "" then
+                                  native.showAlert("Waning", "main.lua needs a default lang code like 'en'")
+                                end
                                end
                               -- handler[funcName](handler, class, parentPath .. name..".index", false)
                             end

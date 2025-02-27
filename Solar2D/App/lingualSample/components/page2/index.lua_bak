@@ -10,11 +10,31 @@ local model = {
       },
       {
         witch = {     {
-          en = {
-            class={ "linear", }  }
+          pt = {
+          }
         },
         {
           ja = {
+          }
+        },
+        {
+          sp = {
+          }
+        },
+        {
+          en = {
+          }
+        },
+
+        }
+      },
+      {
+        fly = {     {
+          en = {
+          }
+        },
+        {
+          sp = {
           }
         },
         {
@@ -22,11 +42,11 @@ local model = {
           }
         },
         {
-          sp = {
+          ja = {
           }
         },
 
-        class={ "lang", }  }
+        }
       },
       {
         flyOver = {     {
@@ -34,7 +54,7 @@ local model = {
           }
         },
         {
-          ja = {
+          sp = {
           }
         },
         {
@@ -42,27 +62,7 @@ local model = {
           }
         },
         {
-          sp = {
-          }
-        },
-
-        class={ "lang", }  }
-      },
-      {
-        fly = {     {
-          en = {
-            class={ "button", }  }
-        },
-        {
           ja = {
-          }
-        },
-        {
-          pt = {
-          }
-        },
-        {
-          sp = {
           }
         },
 
@@ -71,10 +71,10 @@ local model = {
       {
         father = {     {
           en = {
-            class={ "sync", }  }
+          }
         },
         {
-          ja = {
+          sp = {
           }
         },
         {
@@ -82,7 +82,7 @@ local model = {
           }
         },
         {
-          sp = {
+          ja = {
           }
         },
 
@@ -90,6 +90,7 @@ local model = {
       },
     },
     audios = {
+      long={  }, short={   }
     },
     groups = {
     },
@@ -98,7 +99,7 @@ local model = {
     joints    = {  },
     page = {  }
   },
-  commands = {   "flyAnim",  },
+  commands = {  },
   onInit = function(scene) print("onInit") end
 }
 local scene = require('controller.scene').new(sceneName, model)

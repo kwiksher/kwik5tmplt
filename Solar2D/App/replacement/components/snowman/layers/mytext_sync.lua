@@ -1,68 +1,113 @@
 local name = ...
 local parent,root = newModule(name)
-
 local M = {
-  name = "father/en", -- en
-  layer = "en",
+  name = "mytext", -- mytext
+  layer = "mytext",
   class = "sync",
   folder = "sync",
   properties = {
-    target       = "father/en",
+    target       = "mytext",
     autoPlay     = true,
-    delay        = 0,
+    delay        = NIL,
     fadeDuration = 1000,
     speakerIcon = true,
     wordTouch   = true,
   },
   audioProps = {
-    filename    = "sync/en/my_father_is_nice.mp3",
+    filename    = "sync/snowman/ohno.mp3",
     channel      = 2,
     volume      = 10,
   },
   textProps = {
     folder       = nil,
     font         = "",
-    fontColor   = { 1,0,1 },
+    fontColor   = { 0,0,1 },
     fontColorHi = { 1,1,0 },
-    fontSize    = 36,
+    fontSize    = 16,
     language    = "",
-    padding     = 0,
+    padding     = 10,
     readDir     = "leftToRight",
-    sentenceDir = "sync/en/my_father_is_nice", -- wordTouch
+    sentenceDir = "sync/snowman/ohno", -- wordTouch
   },
   actions = {onComplete = ""},
-
 }
-
 M.line = {
   {
-    name = "My",
-    out = 0.543,
-    start = 0.245,
+    name = "Oh",
+    out = 0.418,
+    start = 0.186,
     file = "",
     action = "",
     dur = 0
   },
   {
-    name = "father",
-    out = 0.983,
-    start = 0.543,
+    name = "no",
+    out = 0.894,
+    start = 0.418,
     file = "",
     action = "",
     dur = 0
   },
   {
-    name = "is",
-    out = 1.174,
-    start = 0.983,
+    name = "said",
+    out = 1.382,
+    start = 1.115,
     file = "",
     action = "",
     dur = 0
   },
   {
-    name = "nice.",
-    out = 1.727,
-    start = 1.174,
+    name = "the",
+    out = 1.521,
+    start = 1.382,
+    file = "",
+    action = "",
+    dur = 0
+  },
+  {
+    name = "frozen",
+    out = 1.823,
+    start = 1.521,
+    file = "",
+    action = "",
+    dur = 0
+  },
+  {
+    name = "snowman",
+    out = 2.531,
+    start = 1.823,
+    file = "",
+    action = "",
+    dur = 0
+  },
+  {
+    name = "when",
+    out = 2.650,
+    start = 2.531,
+    file = "",
+    action = "",
+    dur = 0
+  },
+  {
+    name = "the",
+    out = 2.763,
+    start = 2.650,
+    file = "",
+    action = "",
+    dur = 0
+  },
+  {
+    name = "snow",
+    out = 3.042,
+    start = 2.763,
+    file = "",
+    action = "",
+    dur = 0
+  },
+  {
+    name = "started",
+    out = 3.611,
+    start = 3.042,
     file = "",
     action = "",
     dur = 0
@@ -70,7 +115,6 @@ M.line = {
 }
 --
 return require("components.kwik.layer_sync").set(M)
-
 --[[
 local M = {
   name = "alphabet",
@@ -79,13 +123,11 @@ local M = {
   autoPlay = true,
   channel = 2
 }
-
 M.line = {
   { start =  0, out = 1000, dur = 0, name = "A", file = "a.mp3", action = "onComplete"},
   { start =  1000, out = 2000, dur = 0, name = "B", file = "b.mp3", action = "onComplete"},
   { start =  2000, out = 3000, dur = 0, name = "C", file = "c.mp3", action = "onComplete"},
 }
-
 M.x            = 39
 M.y            = 300
 M.padding      = 10

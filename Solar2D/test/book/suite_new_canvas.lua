@@ -13,7 +13,7 @@ local actionEditor = require("editor.action.index")
 local colorPicker = require("extlib.colorPicker")
 
 
-local helper = require("editor.tests.helper")
+local helper = require("test.helper")
 
 function M.init(props)
   selectors = props.selectors

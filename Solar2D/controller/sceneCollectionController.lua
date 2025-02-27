@@ -7,7 +7,7 @@ local selectors = require("editor.parts.selectors")
 function M.onClick(event)
   local page = event.target._sceneName
   local book = M.book
-  printKeys(event.target)
+  -- printKeys(event.target)
   --
   selectors.projectPageSelector:show()
   selectors.projectPageSelector:onClick(true)

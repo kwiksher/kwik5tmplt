@@ -10,7 +10,7 @@ local pageName = "page2"
 local listbox = require("editor.replacement.listbox")
 local listPropsTable = require("editor.replacement.listPropsTable")
 
-local helper = require("editor.tests.helper")
+local helper = require("test.helper")
 local classProps = require("editor.parts.classProps")
 local assetTable = require("editor.asset.assetTable")
 local listButtons = require("editor.replacement.listButtons")
