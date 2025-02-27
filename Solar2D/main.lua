@@ -43,7 +43,7 @@ local common = {
 require("controller.index").bootstrap{
   name="replacement",
   editing = true,
-  goPage = "sync",
+  goPage = "counter",
   language = "", -- empty string "" is for a single language project
   position = {x=0, y=0},
   common = common} -- scenes.index

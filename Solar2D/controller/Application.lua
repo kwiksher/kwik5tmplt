@@ -249,6 +249,10 @@ function M.loadPage(UI)
     end
   else
     local sceneIndex = require( "App."..bookName..".index")
+    if path == nil then
+      print("##########", bookName)
+      return
+    end
     local success = lfs.chdir( path ) -- isDir works with current dir
     if success then
       local pages = {}

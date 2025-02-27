@@ -1,5 +1,7 @@
 system.activate("multitouch")
 
+local bookstore = require("App.bookstore")
+
 local trialCnt    = 1 -- set 0 for production
 
 -- Create library
@@ -14,6 +16,13 @@ function lib.bootstrap(Props)
 
     local app = App.getByName(Props.name)
     if app == nil then
+
+       local getLang = function(name)
+       if bookstore.languageBooks then
+          return bookstore.languageBooks[name]
+       end
+      end
+
       app = App.new{
         appName     = Props.name,
         editing     = Props.editing,
@@ -34,7 +43,7 @@ function lib.bootstrap(Props)
         goPage      = Props.goPage, -- sceneIndex,
         scenes       = require("App."..Props.name..".index"),
         kAutoPlay   = 0,
-        lang        = Props.language or "",
+        lang        = Props.language or getLang(Props.name) or "",
         position    = Props.position,
         --stage       = display.getCurrentStage(),
         randomAction = {},

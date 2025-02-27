@@ -7,6 +7,7 @@ local handlerComponent = require("controller.componentHandler")
 local handlerComponentLocal = require("controller.componentLocalHandler")
 --
 local uiHandler = require("App.uiHandler")
+local bookstore = require("App.bookstore")
 
 function M.create(scene, model)
     local UI = {}

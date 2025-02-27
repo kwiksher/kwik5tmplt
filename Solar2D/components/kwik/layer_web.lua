@@ -47,8 +47,20 @@ function M:create(UI)
 
 end
 --
+function M:didShow(UI)
+  if self.obj then
+    self.obj.isVisible = true
+  end
+end
+
+function M:didHide(UI)
+  if self.obj then
+    self.obj.isVisible = false
+  end
+end
+--
 function M:destroy(UI)
-  if self.obj  ~= nil then
+  if self.obj then
     self.obj:removeSelf()
     self.obj = nil
   end
