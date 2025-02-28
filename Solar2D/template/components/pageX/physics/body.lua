@@ -13,6 +13,7 @@ function M:create(UI)
   local {{layer}} = UI.sceneGroup["{{layer}}"]
   self.properties = {
   {{#properties}}
+      target = "{[layer]}",
       bounce = {{bounce}},
       density = {{density}},
       friction = {{friction}},
