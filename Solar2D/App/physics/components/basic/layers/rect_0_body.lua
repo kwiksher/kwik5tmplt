@@ -7,6 +7,7 @@ local M = {
 function M:create(UI)
   local rect_0 = UI.sceneGroup["rect_0"]
   self.properties = {
+    target = "rect_0",
     bounce = 1,
     density = 1,
     friction = 1,
