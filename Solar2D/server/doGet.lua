@@ -44,7 +44,7 @@ function M:process(request)
       end
       -- print("args[2]=", args[2])
       --harness:dispatchEevnt("editor.selector.selectBook", {book=args[2]})
-      harness.bookTable:commandHandler({book=args[1]}, nil,  true)
+      harness.bookTable.commandHandler({book=args[1]}, nil,  true)
       ret = nanostores.getValue(harness.UI.editor.pageStore)
     end
   elseif #args == 2 then
@@ -53,7 +53,7 @@ function M:process(request)
       ret = customManager.get()
     else
       --harness:dispatchEevnt("editor.selector.selectPage", {page=args[2]})
-      harness.pageTable:commandHandler({page=args[2]},nil,  true)
+      harness.pageTable.commandHandler({page=args[2]},nil,  true)
       harness.selectors.componentSelector:show()
       harness.selectors.componentSelector:onClick(true,  "layerTable")
       ret = nanostores.getValue(harness.UI.editor.layerStore)

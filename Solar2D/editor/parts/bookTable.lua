@@ -9,7 +9,7 @@ local Props = {
     -- self.x = self.x
     -- self.y = self.y
     self.x = 0
-    self.y = 33
+    self.y = 32
     self.width = 80
   end ,
   id = "book"
