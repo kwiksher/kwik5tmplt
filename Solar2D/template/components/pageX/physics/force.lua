@@ -3,6 +3,7 @@ local M = {
   class="force",
   properties = {
     {{#properties}}
+    body = "{[layer]}",
     event = "{{event}}",
     isInitial = {{isInitial}},
     isImpluse = {{isImpluse}},

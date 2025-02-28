@@ -6,7 +6,7 @@ local M = {
   class="collision",
   properties = {
     {{#properties}}
-    body          = "{{body}}",
+    body          = "{{layer}}",
     isRemoveOther = {{isRemoveOther}},
     isRemoveSelf = {{isRemoveSelf}},
     others  =  "{{others}}"
