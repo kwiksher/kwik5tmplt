@@ -4,16 +4,16 @@
 GET /app
 
 ###
-GET /bookTest01
+GET /replacement
 
 ###
-GET /bookTest01/page1
+GET /replacement/counter
 
 ### selectLayer
-GET /bookTest01/page1/imageOne
+GET /animation/counter/rect_0
 
 ###
-GET /bookTest01/page1/imageOne/?class=linear
+GET /animation/counter/rect_0/counter
 
 ### modify layer props
 POST /bookTest01/page1/imageOne/

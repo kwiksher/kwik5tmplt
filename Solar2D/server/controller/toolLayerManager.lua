@@ -10,9 +10,11 @@ local controller = require("editor.controller.index")
 function M.get(args)
   local ret = nil
   --
-  print("args[3]=", args[3])
-
   local layerTable = require("editor.parts.layerTable")
+  layerTable.altDown = true
+
+  print("args[3]=", args[3], #layerTable.objs)
+
   for i = 1, #layerTable.objs do
     local obj = layerTable.objs[i]
     if obj.layer == args[3] and obj.class == "" then
@@ -31,19 +33,20 @@ function M.get(args)
         end
       end
       --
+      print("args[4]=", args[4])
       if args[4] ~= nil then
         --look for class
         for j = 1, #obj.classEntries do
           local classObj = obj.classEntries[j]
           print("@@@", classObj.class, j) -- linear
-          --local toolName = harness.UI.editor:getTool(classObj.class)
+          --local toolName = harness.UI.editor:getClassModule(classObj.class)
           if classObj.class == args[4] then
             classObj:touch({phase = "ended"}) -- animation
             --
             -- how to fetch animation props
             --
-            local tool = harness.UI.editor:getTool(args[4])
-            ret.props = tool.controller:useClassEditorProps()
+            local tool = harness.UI.editor:getClassModule(args[4])
+            ret.props = tool.controller:useClassEditorProps(harness.UI)
             ret.type = "class"
             break
           end
@@ -75,6 +78,8 @@ function M.get(args)
     end
   end
 
+  layerTable.altDown = false
+
   -- /bookX/pageX/layerX/classX
   -- /bookX/pageX/layerX/childrenX
   --
@@ -90,7 +95,7 @@ function M.get(args)
 end
 --
 local function save (book, page, layer, class, data, index, isNew)
-  local tool = harness.UI.editor:getTool(class)
+  local tool = harness.UI.editor:getClassModule(class)
   local decoded = tool.controller:read(book, page, layer, class, isNew)
     --
   local props = decoded[index]

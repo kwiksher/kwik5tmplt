@@ -10,9 +10,9 @@ local Props = {
   setPosition = function(self)
     -- self.x = self.x
     -- self.y = self.y
-    self.x = 11
+    self.x = 0
     self.y = 52
-    self.width = 80
+    self.width = 84
     --
     self.option = {
       text = "",
