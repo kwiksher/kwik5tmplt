@@ -15,7 +15,7 @@ function M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   local layer = UI.layer
   local props = self.properties
-  local layerName = props.body
+  local layerName = props.body or ""
   local obj = sceneGroup[layerName]
   if obj == nil then
     print("obj nil", layerName)

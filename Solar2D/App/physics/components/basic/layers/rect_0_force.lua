@@ -2,6 +2,7 @@ local M = {
   name = "rect_0",
   class="force",
   properties = {
+    body = "rect_0",
     event = "touch",
     isInitial = false,
     isImpluse = true,
