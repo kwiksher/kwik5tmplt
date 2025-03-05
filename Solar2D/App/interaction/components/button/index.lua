@@ -5,18 +5,52 @@ local model = {
   components = {
     layers = {
       {
-        bg = {
+        kwkcover = {
         }
       },
       {
-        rect_0 = {  }
+        kwkwitch = {
+          class={ "button", }  }
       },
       {
-        ellipse_0 = {
-            }
+        kwkmask = {
+        }
+      },
+      {
+        readMe = {     {
+          en = {
+            class={ "button", }  }
+        },
+        {
+          ja = {
+            class={ "button", }  }
+        },
+        {
+          pt = {
+          }
+        },
+        {
+          sp = {
+          }
+        },
+
+        }
+      },
+      {
+        Candice = {
+        }
+      },
+      {
+        langTxt = {
+        }
+      },
+      {
+        over = {
+        }
       },
     },
     audios = {
+      long={  }, short={   }
     },
     groups = {
     },
@@ -25,7 +59,7 @@ local model = {
     joints    = {  },
     page = {  }
   },
-  commands = {  },
+  commands = {   "actEn",   "actJp",   "actWitch",  },
   onInit = function(scene) print("onInit") end
 }
 local scene = require('controller.scene').new(sceneName, model)

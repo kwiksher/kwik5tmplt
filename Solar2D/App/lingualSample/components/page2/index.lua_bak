@@ -1,0 +1,107 @@
+local sceneName = ...
+--
+local model = {
+  --name = "",
+  components = {
+    layers = {
+      {
+        kwkcover = {
+        }
+      },
+      {
+        witch = {     {
+          pt = {
+          }
+        },
+        {
+          ja = {
+          }
+        },
+        {
+          sp = {
+          }
+        },
+        {
+          en = {
+          }
+        },
+
+        }
+      },
+      {
+        fly = {     {
+          en = {
+          }
+        },
+        {
+          sp = {
+          }
+        },
+        {
+          pt = {
+          }
+        },
+        {
+          ja = {
+          }
+        },
+
+        }
+      },
+      {
+        flyOver = {     {
+          en = {
+          }
+        },
+        {
+          sp = {
+          }
+        },
+        {
+          pt = {
+          }
+        },
+        {
+          ja = {
+          }
+        },
+
+        }
+      },
+      {
+        father = {     {
+          en = {
+          }
+        },
+        {
+          sp = {
+          }
+        },
+        {
+          pt = {
+          }
+        },
+        {
+          ja = {
+          }
+        },
+
+        class={ "lang", }  }
+      },
+    },
+    audios = {
+      long={  }, short={   }
+    },
+    groups = {
+    },
+    timers = {  },
+    variables = {  },
+    joints    = {  },
+    page = {  }
+  },
+  commands = {  },
+  onInit = function(scene) print("onInit") end
+}
+local scene = require('controller.scene').new(sceneName, model)
+--
+return scene

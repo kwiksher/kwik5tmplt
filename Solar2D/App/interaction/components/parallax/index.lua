@@ -5,18 +5,33 @@ local model = {
   components = {
     layers = {
       {
-        bg = {
+        background2 = {
+             }
+      },
+      {
+        background1 = {
+          -- class={ "parallax", }
+          }
+      },
+      {
+        cat = {
+          class={ "parallax", }  }
+      },
+      {
+        water = {
+          class={ "parallax", }  }
+      },
+      {
+        fish = {
+          class={ "parallax", }  }
+      },
+      {
+        caption = {
         }
-      },
-      {
-        rect_0 = {  }
-      },
-      {
-        ellipse_0 = {
-            }
       },
     },
     audios = {
+      long={  }, short={   }
     },
     groups = {
     },

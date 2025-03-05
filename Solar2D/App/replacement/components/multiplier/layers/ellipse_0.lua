@@ -2,6 +2,7 @@
 --
 local parent,root, M = newModule(...)
 local app = require "controller.Application"
+local shape = require("components.kwik.layer_shape")
 --
 local _layerProps = {
   name     = "ellipse_0",
@@ -26,28 +27,8 @@ end
 function M:create(UI)
   local layerProps = self.layerProps or _layerProps
   self.layerProps = layerProps
-  local obj
-  self.imagePath = layerProps.name.."." .. (layerProps.type or ".png")
-  local path = UI.props.imgDir..self.imagePath
-  -- local path = system.pathForFile(UI.props.imgDir..self.imagePath, system.ResourceDirectory)
-  -- local x, y = app.getCenter(layerProps.x, layerProps.y)
-  local x, y = layerProps.x, layerProps.y
-  local obj = display.newCircle(
-    x,
-    y,
-    layerProps.radius)
-  if obj == nil then
-    obj = display.newText(layerProps)
-  end
-  obj.name = layerProps.name
-  obj:setFillColor(unpack(layerProps.color))
-  obj.shapedWith = layerProps.shapedWith
-  obj.anchorX = layerProps.anchorX or 0.5
-  obj.anchorY = layerProps.anchorY or 0.5
-  obj.rotation = layerProps.rotation or 0
+  local obj = shape.createCircle(layerProps)
   obj.layerIndex = #UI.layers+1
-  obj.xScale = layerProps.xScale
-  obj.yScale = layerProps.yScale
   UI.layers[obj.layerIndex] = obj
   UI.sceneGroup:insert(obj)
   UI.sceneGroup[obj.name] = obj

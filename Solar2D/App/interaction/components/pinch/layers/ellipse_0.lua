@@ -51,6 +51,7 @@ function M:create(UI)
   UI.layers[obj.layerIndex] = obj
   UI.sceneGroup:insert(obj)
   UI.sceneGroup[obj.name] = obj
+  print("@@@@@@@@@@", obj.name)
 end
 --
 function M:didShow(UI)

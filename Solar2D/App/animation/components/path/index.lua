@@ -5,18 +5,16 @@ local model = {
   components = {
     layers = {
       {
-        bg = {
+        SnowFlake = {
         }
       },
       {
-        rect_0 = {  }
-      },
-      {
-        ellipse_0 = {
-            }
+        star = {
+          class={ "path", }  }
       },
     },
     audios = {
+      long={  }, short={   }
     },
     groups = {
     },

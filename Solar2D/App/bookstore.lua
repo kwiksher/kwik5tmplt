@@ -1,9 +1,13 @@
 local M = {
-  -- bookignored = {"animation", "asset", "interaction", "keyboard", "lingualSample", "mybook", "page", "physics", "replacement", "shape", }
+  bookignored = { "asset", "mybook","book1"
+  -- "animation", "physics",  "keyboard", "replacement", "lingualSample", "page", "shape"
+  },
+  -- "interaction",
+  languageBooks = {lingualSample = "en"}
 }
 --
-local pageCommand = require("components.bookstore.controller.pageCommand")
-local model = require("components.bookstore.model.base")
+local pageCommand = require("plugin.kwik").pageCommand
+local model = require("plugin.kwik").model
 --
 model.debug = true
 model.URL = "http://localhost:8080/bookshop/"

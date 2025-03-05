@@ -9,11 +9,12 @@ local model = {
         }
       },
       {
-        rect_0 = {  }
+        rect_0 = {
+          class={ "dynamictext", }  }
       },
       {
         ellipse_0 = {
-            }
+        }
       },
     },
     audios = {
@@ -21,7 +22,7 @@ local model = {
     groups = {
     },
     timers = {  },
-    variables = {  },
+    variables = {  "myVar",  },
     joints    = {  },
     page = {  }
   },

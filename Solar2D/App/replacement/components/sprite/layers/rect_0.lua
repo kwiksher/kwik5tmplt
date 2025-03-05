@@ -4,9 +4,9 @@ local parent,root, M = newModule(...)
 local util = require("lib.util")
 local app = require "controller.Application"
 --
-local _layerProps = {
+local layerProps = {
   name     = "rect_0",
-  x        = 424,
+  x        = 580,
   y        = 272.5,
   width    =  62,
   height    =  59,
@@ -20,13 +20,15 @@ local _layerProps = {
   imageFile = "",
   imageFolder = ""
 }
+
+M.layerProps = layerProps
 --
 function M:init(UI)
 --local sceneGroup = UI.sceneGroup
 end
 --
 function M:create(UI)
-  local layerProps = self.layerProps or _layerProps
+  local layerProps = self.layerProps or layerProps
   self.layerProps = layerProps
   -- local x, y = app.getCenter(layerProps.x, layerProps.y)
   local x, y = layerProps.x, layerProps.y
@@ -80,7 +82,7 @@ function  M:destroy(UI)
 end
 --
 function M:new(props)
-  return self:newInstance(props, _layerProps)
+  return self:newInstance(props, layerProps)
 end
 --
 return M

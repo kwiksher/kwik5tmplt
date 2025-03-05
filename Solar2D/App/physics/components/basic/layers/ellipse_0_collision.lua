@@ -5,8 +5,8 @@ local M = {
   class="collision",
   properties = {
     body          = "ellipse_0",
-    isRemoveOther = true,
-    isRemoveSelf = true,
+    isRemoveOther = false,
+    isRemoveSelf = false,
     others  =  "hitGroup"
   },
   actions = {

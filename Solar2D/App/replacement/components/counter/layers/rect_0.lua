@@ -3,6 +3,7 @@
 local parent,root, M = newModule(...)
 local util = require("lib.util")
 local app = require "controller.Application"
+local image = require("components.kwik.layer_image")
 --
 local _layerProps = {
   name     = "rect_0",
@@ -20,6 +21,9 @@ local _layerProps = {
   imageFile = "",
   imageFolder = ""
 }
+
+image.setProps(M, _layerProps)
+
 --
 function M:init(UI)
 --local sceneGroup = UI.sceneGroup

@@ -5,18 +5,60 @@ local model = {
   components = {
     layers = {
       {
-        bg = {
+        back = {
         }
       },
       {
-        rect_0 = {  }
+        painting = {
+        }
       },
       {
-        ellipse_0 = {
-            }
+        butBlue = {
+        }
+      },
+      {
+        butWhite = {
+        }
+      },
+      {
+        butOrange = {
+        }
+      },
+      {
+        butCamera = {
+        }
+      },
+      {
+        butLarge = {
+        }
+      },
+      {
+        butMedium = {
+        }
+      },
+      {
+        bigCandice = {
+          class={ "canvas", }  }
+      },
+      {
+        twitter = {
+        }
+      },
+      {
+        facebook = {
+        }
+      },
+      {
+        LogoutBtn = {
+        }
+      },
+      {
+        Logout = {
+        }
       },
     },
     audios = {
+      long={  }, short={   }
     },
     groups = {
     },
