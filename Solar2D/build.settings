@@ -3,6 +3,9 @@ settings = {
         ["plugin.zip"] = {
             publisherId = "com.coronalabs",
         },
+        ["plugin.kwik"] = {
+             publisherId = "com.kwiksher",
+        },
         --Google in app billing v2
         ["plugin.google.iap.billing.v2"] = {
             -- required
