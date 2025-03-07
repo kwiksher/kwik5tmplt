@@ -26,12 +26,17 @@ jobs:
           owner: 'kwiksher'
           repository: 'kwik5-project-template'
 
-      - name: List files
+      - name: copy psd lua files
         run: |
           cd UXP
           source ./copy_solar2d.command
           source ./copy_photoshop.command
+      - name: copy solar2d and photoshop folders to kwik5-project-template
+        run: |
           cp -rf UXP/kwik-exporter/kwik kwik5-project-template/UXP/kwik-exporter
+          cp -rf UXP/kwik-exporter/kwik/base-proj/Photoshop kwik5-project-template
+          cp -rf UXP/kwik-exporter/kwik/base-proj/Solar2D kwik5-project-template
+          rm -rf kwik5-project-template/Solar2D/plugin
           cd kwik5-project-template
           git config --global user.email "yamamoto@kwiksher.com"
           git config --global user.name "kwiksher"
