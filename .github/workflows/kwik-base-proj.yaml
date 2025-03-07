@@ -26,7 +26,7 @@ jobs:
           owner: 'kwiksher'
           repository: 'kwik5-project-template'
 
-      - name: copy psd lua files
+      - name: copy psd lua files to UXP/kwik-exporter/kwik/base-proj/Solar2D and Photoshop
         run: |
           cd UXP
           source ./copy_solar2d.command
@@ -40,7 +40,9 @@ jobs:
           cd kwik5-project-template
           git config --global user.email "yamamoto@kwiksher.com"
           git config --global user.name "kwiksher"
-          git add -f kwik-exporter/kwik/*
+          git add -f Solar2D/*
+          git add -f Photoshop/*
+          git add -f UXP/*
           git commit -m "Update kwik exporter kwik/base-proj"
 
       - name: Push changes
