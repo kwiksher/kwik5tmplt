@@ -8,7 +8,7 @@ mkdir -p  $dst/custom
 mkdir -p  $dst/App
 
 cp -rf ../Solar2D/AndroidResources $dst
-cp -rf ../Solar2D/App/book $dst
+cp -rf ../Solar2D/App/book $dst/App
 cp -rf ../Solar2D/App/bookstore.lua $dst/App
 cp -rf ../Solar2D/App/uiHandler.lua $dst/App
 cp -rf ../Solar2D/custom $dst
