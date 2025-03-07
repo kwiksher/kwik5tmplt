@@ -35,7 +35,7 @@ jobs:
           cd kwik5-project-template
           git config --global user.email "yamamoto@kwiksher.com"
           git config --global user.name "kwiksher"
-          git add -f UXP/kwik-exporter/kwik/*
+          git add -f kwik-exporter/kwik/*
           git commit -m "Update kwik exporter kwik/base-proj"
 
       - name: Push changes
