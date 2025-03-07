@@ -3,8 +3,18 @@ local parent,root, M = newModule(...)
 -- TODO extlib table in kwik editor and template/uiHandler.lua
 --
 M.libs = {
-  {name="mycode", value = "keyboard.mycode"}
 }
+
+-- enable the line belor for kwik5-sample-books/App/keyvoard. See https://kwiksher.github.io/kwik5docs/tutorial/keyboard/index.html
+local keyboardPath = system.pathForFile("keyboard", system.ResourceDirectory)
+if keyboardPath then
+  local attr = lfs.attributes(keyboardPath)
+  if attr and attr.mode == "directory" then
+    table.insert(M.libs, {name="mycode", value = "keyboard.mycode"})
+    print("Keyboard module found and enabled")
+  end
+end
+
 
 function M:init(UI)
   for i, v in next, self.libs do
