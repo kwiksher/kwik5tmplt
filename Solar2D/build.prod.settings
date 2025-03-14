@@ -6,25 +6,25 @@ settings = {
        ["plugin.kwik"] = {
             publisherId = "com.kwiksher",
        },
-        --Google in app billing v2
-        ["plugin.google.iap.billing.v2"] = {
-            -- required
-            publisherId = "com.solar2d",
-            supportedPlatforms = { android = true },
-        },
-        --Amazon IAP
-        ["plugin.amazon.iap"] = {
-            publisherId = "com.coronalabs",
-            supportedPlatforms = { ["android-kindle"]=true }
-        },
+       -- Google in app billing v2
+       -- ["plugin.google.iap.billing.v2"] = {
+       --     -- required
+       --     publisherId = "com.solar2d",
+       --     supportedPlatforms = { android = true },
+       -- },
+       -- Amazon IAP
+       -- ["plugin.amazon.iap"] = {
+       --     publisherId = "com.coronalabs",
+       --     supportedPlatforms = { ["android-kindle"]=true }
+       -- },
        -- ["plugin.mouseHover"] = {
        --     publisherId = "sg.btn",
             --publisherId = "com.coronalabs",
             --supportedPlatforms = { ["android-kindle"]=true }
        --},
-       ["plugin.tinyfiledialogs"]={
-            publisherId = "com.xibalbastudios"
-       },
+       -- ["plugin.tinyfiledialogs"]={
+       --      publisherId = "com.xibalbastudios"
+       -- },
        ["plugin.nanosvg"] =
         {
             publisherId = "com.coronalabs"
@@ -34,7 +34,7 @@ settings = {
    --  default = "portrait",
    default = "landscapeRight",
       supported = {
-        "portrait", "portraitUpsideDown",
+        -- "portrait", "portraitUpsideDown",
         "landscapeLeft", "landscapeRight"
        },
     },
@@ -51,12 +51,14 @@ settings = {
     --     }
     },
     android  = {
-
+       minSdkVersion = "21",
       -- https://docs.coronalabs.com/guide/distribution/buildSettings/index.html
       -- usesExpansionFile = true,
       --
       usesPermissions  = {
+          "android.permission.READ_EXTERNAL_STORAGE",
           "android.permission.WRITE_EXTERNAL_STORAGE",
+          "android.permission.READ_MEDIA_IMAGES",
           -- "com.android.vending.BILLING",
           -- for recordAudio
           -- "android.permission.RECORD_AUDIO",
