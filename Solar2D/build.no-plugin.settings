@@ -3,9 +3,9 @@ settings = {
         ["plugin.zip"] = {
             publisherId = "com.coronalabs",
         },
-        ["plugin.kwik"] = {
-             publisherId = "com.kwiksher",
-        },
+       -- ["plugin.kwik"] = {
+       --      publisherId = "com.kwiksher",
+       -- },
         --Google in app billing v2
         ["plugin.google.iap.billing.v2"] = {
             -- required
@@ -51,10 +51,13 @@ settings = {
     --     }
     },
     android  = {
+
+      -- https://docs.coronalabs.com/guide/distribution/buildSettings/index.html
+      -- usesExpansionFile = true,
+      --
       usesPermissions  = {
-          "android.permission.INTERNET",
           "android.permission.WRITE_EXTERNAL_STORAGE",
-          "com.android.vending.BILLING",
+          -- "com.android.vending.BILLING",
           -- for recordAudio
           -- "android.permission.RECORD_AUDIO",
           --
@@ -69,7 +72,8 @@ settings = {
           --   "android.permission.READ_PHONE_STATE",
           --
           -- for expansion
-          --   "com.android.vending.CHECK_LICENSE",
+          -- "android.permission.INTERNET",
+          -- "com.android.vending.CHECK_LICENSE",
           --
           -- for camera
           -- "android.permission.CAMERA",
@@ -133,7 +137,7 @@ settings = {
     excludeFiles = {
         -- Exclude all files at all paths which end with "secret.txt"
         all = {  "Icon*.png", "Images.xcassets", "Icon*.ico", "Icon*.icns", "*.vbs", "*.bat", "*.command", "copy_projects",
-          template" },
+                "template" },
         android = { "LaunchScreen.storyboardc" },
         win32 = { "LaunchScreen.storyboardc" },
     },
