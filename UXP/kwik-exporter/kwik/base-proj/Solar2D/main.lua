@@ -29,7 +29,7 @@ local common = {
 
 require("controller.index").bootstrap{
   name="book1",
-  editing = true,
+  editor = true,
   goPage = "page1",
   position = {x=0, y=0},
   common = common} -- scenes.index

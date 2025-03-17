@@ -35,7 +35,7 @@ M.properties = {
   target = "ellipse_0",
   autoPlay = false,
   delay    = 0,
-  duration = 2000,
+  duration = 4000,
   loop     = 1,
   reverse  = false,
   resetAtEnd  = false,
@@ -124,7 +124,7 @@ end
 --
 function M:didHide(UI)
   if self.animation.to then
-    self.animation.to:pause()
+    -- self.animation.to:pause()
     -- self.animation.to:toBeginning()
   end
 end

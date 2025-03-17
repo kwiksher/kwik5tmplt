@@ -1,6 +1,6 @@
 local parent,root = newModule(...)
 local M = {
-  name = "ellipse_0",
+  name = "rect_0",
   --
   class = "linear",
 -- "Dissolve"
@@ -15,7 +15,7 @@ local M = {
 }
 M.layerOptions = {
   --
-  referencePoint = "Center",
+  referencePoint = "TopRight",
   -- "Center"
   -- "TopLeft"
   -- "TopCenter"
@@ -32,9 +32,9 @@ M.layerOptions = {
 -- animationProps
 M.properties = {
   type    = "", -- group, page, sprite
-  target = "ellipse_0",
-  autoPlay = false,
-  delay    = 0,
+  target = "rect_0",
+  autoPlay = true,
+  delay    = 1000,
   duration = 2000,
   loop     = 1,
   reverse  = false,
@@ -67,8 +67,8 @@ M.properties = {
 }
 --
 M.from = {
-  x     = 298,
-  y     = 206,
+  x     = 424,
+  y     = 272.5,
   --
   alpha = 1,
   yScale   = 1,
@@ -77,12 +77,12 @@ M.from = {
 }
 --
 M.to = {
-  x     = 590,
-  y     = 222,
+  x     = 424,
+  y     = 272.5,
   --
   alpha = 1,
   yScale   = 1.5,
-  xScale   = 1.5,
+  xScale   = 1,
   rotation = 90,
 }
 -- more option
@@ -116,7 +116,8 @@ function M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   if self.properties.autoPlay then
     if self.animation.to then
-      --self.animation.to:toBeginning()
+      print("#### didShow play")
+      self.animation.to:toBeginning()
       self.animation.to:play()
     end
   end
@@ -124,6 +125,7 @@ end
 --
 function M:didHide(UI)
   if self.animation.to then
+    print("#### didHide pause")
     self.animation.to:pause()
     -- self.animation.to:toBeginning()
   end

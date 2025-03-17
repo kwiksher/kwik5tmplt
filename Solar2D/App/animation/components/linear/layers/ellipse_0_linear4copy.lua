@@ -33,9 +33,9 @@ M.layerOptions = {
 M.properties = {
   type    = "", -- group, page, sprite
   target = "ellipse_0",
-  autoPlay = false,
+  autoPlay = true,
   delay    = 0,
-  duration = 2000,
+  duration = 1000,
   loop     = 1,
   reverse  = false,
   resetAtEnd  = false,
@@ -124,7 +124,7 @@ end
 --
 function M:didHide(UI)
   if self.animation.to then
-    self.animation.to:pause()
+    -- self.animation.to:pause()
     -- self.animation.to:toBeginning()
   end
 end
