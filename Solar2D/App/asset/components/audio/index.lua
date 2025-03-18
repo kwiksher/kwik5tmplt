@@ -9,14 +9,16 @@ local model = {
         }
       },
       {
-        rect_0 = {  }
+        rect_0 = {
+          class={ "button", }  }
       },
       {
         ellipse_0 = {
-            }
+        }
       },
     },
     audios = {
+      long={  }, short={ "Crickets",   }
     },
     groups = {
     },
@@ -25,7 +27,7 @@ local model = {
     joints    = {  },
     page = {  }
   },
-  commands = {  },
+  commands = {  "eventAudio",  },
   onInit = function(scene) print("onInit") end
 }
 local scene = require('controller.scene').new(sceneName, model)
