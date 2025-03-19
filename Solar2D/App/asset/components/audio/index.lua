@@ -28,7 +28,9 @@ local model = {
     page = {  }
   },
   commands = {  "eventAudio",  },
-  onInit = function(scene) print("onInit") end
+  onInit = function(scene)
+    --print("onInit")
+  end
 }
 local scene = require('controller.scene').new(sceneName, model)
 --

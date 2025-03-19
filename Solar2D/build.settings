@@ -22,9 +22,9 @@ settings = {
             --publisherId = "com.coronalabs",
             --supportedPlatforms = { ["android-kindle"]=true }
        --},
-       -- ["plugin.tinyfiledialogs"]={
-       --      publisherId = "com.xibalbastudios"
-       -- },
+       ["plugin.tinyfiledialogs"]={
+             publisherId = "com.xibalbastudios"
+       },
        ["plugin.nanosvg"] =
         {
             publisherId = "com.coronalabs"

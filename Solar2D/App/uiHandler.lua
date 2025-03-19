@@ -23,7 +23,7 @@ function M:init(UI)
 end
 
 function M:create(UI)
-  print(UI.props.appName, UI.props.goPage)
+  -- print(UI.props.appName, UI.props.gotoPage)
   -- UI.mycode:createDica(UI)
 end
 
