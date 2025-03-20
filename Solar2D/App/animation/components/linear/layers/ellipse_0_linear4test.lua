@@ -67,8 +67,8 @@ M.properties = {
 }
 --
 M.from = {
-  x     = 298,
-  y     = 206,
+  x     = 298 -240,
+  y     = 206 -135,
   --
   alpha = 1,
   yScale   = 1,
