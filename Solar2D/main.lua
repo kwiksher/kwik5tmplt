@@ -6,9 +6,9 @@ system.setTapDelay(0.2)
 --display.setDefault( "background", 0.2, 0.2, 0.2, 0.1 )
 kwik.useGradientBackground()
 --
-local mode = "editing"
+-- local mode = "editing"
 -- local mode = "production"
--- local mode = "dev"
+local mode = "dev"
 --
 local props
 --
@@ -115,8 +115,9 @@ local function setPlugin(mode)
         -- print("dev")
         local scripts
         if isWindows then
+          print("You need to run as administrator",
+               'runas /user:Administrator "cmd /c mklink /D plugin ..\\..\\kwik5-plugin"')
           scripts = {
-            'mklink /D plugin ..\\..\\kwik5-plugin',
             'move '..src..'kwik '..src..'\\_kwik',
             'move '..src..'kwik.lua '..src..'\\_kwik.lua',
           }
@@ -127,7 +128,7 @@ local function setPlugin(mode)
             'mv '..src..'kwik.lua '..src..'/_kwik.lua',
           }
         end
-        print(system.getInfo("architectureInfo"))
+        --print(system.getInfo("architectureInfo"))
         for i, v in next, scripts do
           os.execute(v)
         end
