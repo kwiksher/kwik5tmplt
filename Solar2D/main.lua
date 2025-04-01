@@ -20,7 +20,7 @@ if mode == "editing" or mode == "dev" then
     language = "", -- empty string "" is for a single language project
     position = {x = 0, y = 0},
     gotoLastBook = true,
-    unitTest = false,
+    unitTest = true,
     httpServer = false,
     showPageName = true
   }
@@ -38,7 +38,13 @@ elseif mode == "production" then
   }
 end
 
--- kwik.restore()
+--[[
+  if kwik.restore() then
+    native.showAlert("kwik", "restored comment it out kwik.restore()")
+    return 
+  end
+--]]
+--
 -- kwik.autoUpdate()
 
 kwik.setCustomModule(
