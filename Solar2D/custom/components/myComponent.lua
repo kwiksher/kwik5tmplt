@@ -56,7 +56,7 @@ printKeys = function(tbl)
   for k, v in pairs(tbl) do _print("printKeys", k,v) end
 end
 
-local util = require("plugin.kwik").lib.util
+local util = require("kwiksher.kwik").lib.util
 
 printTable = function(tbl, printType)
   local flatten_tbl = util.flattenKeys(nil, tbl)

@@ -3,7 +3,7 @@ settings = {
         ["plugin.zip"] = {
             publisherId = "com.coronalabs",
         },
-       -- ["plugin.kwik"] = {
+       -- ["kwiksher.kwik"] = {
        --      publisherId = "com.kwiksher",
        -- },
         --Google in app billing v2
