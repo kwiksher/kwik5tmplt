@@ -1,31 +1,40 @@
 local env = require("env")
+-- env.book = "book"
+-- env.goPage = "landscape"
+
+env.book = "LULU" -- "book"
+env.goPage = "LULU_Sitting_With_A_CAT_Refine"
+--
 --env.mode = "development"
---env.mode = "production"
+-- env.mode = "production"
 env.mode = "debug" -- need kwik5-plugin src from kwiksher's repo
+
 --
 if env.mode == "development" or env.mode == "debug" then
   env.props = {
-    name = "book",
+    name = env.book,
     editor = true,
-    gotoPage = "landscape",
+    gotoPage = env.goPage,
     language = "", -- empty string "" is for a single language project
     position = {x = 0, y = 0},
     gotoLastBook = true,
     unitTest = true,
     httpServer = false,
-    showPageName = true
+    showPageName = true,
+    turnOffNativeVideo = true
   }
 elseif env.mode == "production" then
   env.props = {
-    name = "book",
+    name = env.book,
     editor = false,
-    gotoPage = "landscape",
+    gotoPage = env.goPage,
     language = "", -- empty string "" is for a single language project
     position = {x = 0, y = 0},
     gotoLastBook = false,
     unitTest = false,
     httpServer = false,
-    showPageName = false
+    showPageName = false,
+    turnOffNativeVideo = false
   }
 end
 --
@@ -39,6 +48,22 @@ if env.setPlugin(env.mode)  then
   --display.setDefault( "background", 0.2, 0.2, 0.2, 0.1 )
   kwik.useGradientBackground()
   --
+
+  -- -- Key event listener for Alt+P to switch to production mode
+  -- local function onKeyEvent(event)
+  --   if event.phase == "down" then
+  --     if event.keyName == "p" and event.isAltDown then
+  --       env.props.editor = false
+  --       env.props.showPageName = false
+  --       print("Mode changed to production - restarting...")
+  --         Runtime:dispatchEvent{name="changeThisMug", appName=env.props.name, gotoPage=env.props.goPage, editor = false }
+  --       return true
+  --     end
+  --   end
+  --   return false
+  -- end
+
+  -- Runtime:addEventListener("key", onKeyEvent)
 
   --[[
     if kwik.restore() then

@@ -33,7 +33,6 @@ jobs:
           source ./copy_photoshop.command
       - name: copy solar2d and photoshop folders to kwik5-project-template
         run: |
-          cp -rf UXP/kwik-exporter/kwik kwik5-project-template/UXP/kwik-exporter
           cp -rf UXP/kwik-exporter/kwik/base-proj/Photoshop kwik5-project-template
           cp -rf UXP/kwik-exporter/kwik/base-proj/Solar2D kwik5-project-template
           rm -rf kwik5-project-template/Solar2D/plugin
@@ -44,6 +43,8 @@ jobs:
           git add -f Photoshop/*
           git add -f UXP/*
           git commit -m "Update kwik exporter kwik/base-proj"
+
+          #cp -rf UXP/kwik-exporter/kwik kwik5-project-template/UXP/kwik-exporter
 
       - name: Push changes
         uses: ad-m/github-push-action@master
