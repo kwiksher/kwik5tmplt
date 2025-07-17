@@ -1,23 +1,22 @@
 @echo off
 setlocal enabledelayedexpansion
 
+REM Check for --regonly argument
+if /i "%1"=="--regonly" (
+    call :install_registry_only
+    exit /b
+)
+
 REM Variables
 set "REPO=kwiksher/kwik5-project-template"
-set "PLUGIN_NAME=plugin"
-set "PLUGIN_DIR=%APPDATA%\Corona Labs\Corona Simulator\Plugins\%PLUGIN_NAME%"
+set "SOLAR2D_DIR=.\Solar2D"
+set "LUA_MODULES_TARGET=%SOLAR2D_DIR%\lua_modules"
+set "PLUGIN_DIR=%SOLAR2D_DIR%\lua_modules\kwiksher"
 set "SKINS_DIR=%APPDATA%\Corona Labs\Corona Simulator\Skins"
 set "DOWNLOADS_DIR=%USERPROFILE%\Downloads"
-set "TEMP_FILE=%DOWNLOADS_DIR%\plugin.data.tgz"
-set "TEMP_DIR=%DOWNLOADS_DIR%\kwik_plugin_temp"
-set "START_SOLAR2D_URL=https://raw.githubusercontent.com/kwiksher/kwik5-project-template/develop/Scripts/startSolar2D.bat"
-set "START_SOLAR2D_PATH=%APPDATA%\Corona Labs\Corona Simulator\startSolar2D.bat"
-set "SOLAR2D_REG_URL=https://raw.githubusercontent.com/kwiksher/kwik5-project-template/develop/Scripts/solar2d.reg"
-set "SOLAR2D_REG_PATH=%DOWNLOADS_DIR%\solar2d.reg"
-set "CORONA_7ZIP=C:\Program Files (x86)\Corona Labs\Corona\7za.exe"
-
-    
-REM Create a temporary file for processing
-set "TEMP_REG_FILE=%DOWNLOADS_DIR%\solar2d_temp.reg"
+set "TEMP_PLUGIN_FILE=%DOWNLOADS_DIR%\plugin-kwik.tgz"
+set "TEMP_SRC_FILE=%DOWNLOADS_DIR%\kwik5-project-template-src.tgz"
+set "EXTRACT_DIR=%DOWNLOADS_DIR%\kwik5-project-template-src"
 
 REM Create the plugin directory if it doesn't exist
 if not exist "%PLUGIN_DIR%" mkdir "%PLUGIN_DIR%"
@@ -25,161 +24,183 @@ if not exist "%PLUGIN_DIR%" mkdir "%PLUGIN_DIR%"
 REM Create the skins directory if it doesn't exist
 if not exist "%SKINS_DIR%" mkdir "%SKINS_DIR%"
 
-REM Fetch startSolar2D.bat file
-echo Downloading startSolar2D.bat...
-powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '%START_SOLAR2D_URL%' -OutFile '%START_SOLAR2D_PATH%' -UseBasicParsing}"
-if %errorlevel% neq 0 (
-    echo Failed to download startSolar2D.bat. Please check your internet connection.
-    echo Continuing with plugin installation...
-) else (
-    echo startSolar2D.bat downloaded successfully to %START_SOLAR2D_PATH%
-)
-
-REM Fetch solar2d.reg file
-echo Downloading solar2d.reg...
-powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '%SOLAR2D_REG_URL%' -OutFile '%SOLAR2D_REG_PATH%' -UseBasicParsing}"
-if %errorlevel% neq 0 (
-    echo Failed to download solar2d.reg. Please check your internet connection.
-    echo Continuing with plugin installation...
-) else (
-    echo solar2d.reg downloaded successfully to %SOLAR2D_REG_PATH%
-    
-    REM Replace %APPDATA% in solar2d.reg with the full path directly using batch
-    echo Replacing %%APPDATA%% in solar2d.reg with the full path...
-    
-    REM Show environment variable for debugging
-    echo APPDATA environment variable: %APPDATA%
-    
-    REM Process the registry file line by line and perform the replacement
-    type nul > "%TEMP_REG_FILE%"
-    
-    echo.
-    echo Original registry file contents:
-    echo --------------------------------------
-    type "%SOLAR2D_REG_PATH%"
-    echo --------------------------------------
-    echo.
-    
-    echo Processing registry file line by line...
-    
-    for /f "usebackq tokens=* delims=" %%a in ("%SOLAR2D_REG_PATH%") do (
-        set "line=%%a"
-        call :ProcessLine
-        echo Line: !processed_line!
-        echo !processed_line!>> "%TEMP_REG_FILE%"
-    )
-    
-    echo.
-    echo Contents of the modified registry file:
-    echo --------------------------------------
-    type "%TEMP_REG_FILE%" || echo Failed to display registry file contents
-    echo --------------------------------------
-    echo.
-    
-    REM Replace the original with the modified file
-    copy /Y "%TEMP_REG_FILE%" "%SOLAR2D_REG_PATH%" > nul
-    del "%TEMP_REG_FILE%"
-
-    REM Launch Registry Editor with the registry file
-    echo.
-    echo Opening the registry file with Registry Editor...
-    echo Please click "Yes" when prompted to add the entries to the registry.
-    echo.
-    start "" regedit.exe "%SOLAR2D_REG_PATH%"
-    
-    echo Waiting for Registry Editor to complete...
-    timeout /t 5 /nobreak >nul
-    
-    echo.
-    echo Testing the registry entry:
-    reg query "HKEY_CLASSES_ROOT\solar2d" 2>nul && (
-        echo Registry entry exists - installation successful!
-    ) || (
-        echo Registry entry may not be installed yet. Please confirm in the Registry Editor window.
-        echo If Registry Editor shows a confirmation prompt, click "Yes" to add the entries.
-    )
-)
-
 REM Fetch the latest release information
 echo Fetching information about the latest release...
+echo https://api.github.com/repos/%REPO%/releases/latest
 powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (Invoke-WebRequest -Uri 'https://api.github.com/repos/%REPO%/releases/latest' -UseBasicParsing).Content}" > "%DOWNLOADS_DIR%\release_info.json"
 if %errorlevel% neq 0 (
     echo Failed to connect to GitHub API. Please check your internet connection.
+    pause
     exit /b 1
 )
 
-REM Extract the download URL for plugin.data.tgz
-echo Extracting download URL...
-for /f "tokens=*" %%a in ('powershell -Command "& {$json = Get-Content '%DOWNLOADS_DIR%\release_info.json' | ConvertFrom-Json; $asset = $json.assets | Where-Object { $_.name -like '*plugin.data.tgz' }; $asset.browser_download_url}"') do (
-    set "DOWNLOAD_URL=%%a"
+REM Extract the download URL for plugin-kwik.tgz
+echo Extracting download URL for plugin-kwik.tgz...
+for /f "tokens=*" %%a in ('powershell -Command "& {$json = Get-Content '%DOWNLOADS_DIR%\release_info.json' | ConvertFrom-Json; $asset = $json.assets | Where-Object { $_.name -like '*plugin-kwik.tgz' }; $asset.browser_download_url}"') do (
+    set "PLUGIN_URL=%%a"
 )
 
-REM Check if we found a download URL
-if "!DOWNLOAD_URL!"=="" (
-    echo Could not find plugin.data.tgz in the latest release.
-    echo Please check if the file exists in the latest release of %REPO%.
+REM Extract the download URL for Source code (tar.gz)
+echo Extracting download URL for source code...
+for /f "tokens=*" %%a in ('powershell -Command "& {$json = Get-Content '%DOWNLOADS_DIR%\release_info.json' | ConvertFrom-Json; $json.tarball_url}"') do (
+    set "SRC_URL=%%a"
+)
+
+REM Download the plugin-kwik.tgz file
+echo Downloading plugin from !PLUGIN_URL!...
+if "!PLUGIN_URL!"=="" (
+    echo Could not find plugin-kwik.tgz in the latest release.
+    pause
     exit /b 1
 )
-
-REM Download the plugin.data.tgz file
-echo Downloading plugin from !DOWNLOAD_URL!...
-powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '!DOWNLOAD_URL!' -OutFile '%TEMP_FILE%' -UseBasicParsing}"
+powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '!PLUGIN_URL!' -OutFile '%TEMP_PLUGIN_FILE%' -UseBasicParsing}"
 if %errorlevel% neq 0 (
     echo Failed to download the plugin. Please check your internet connection.
+    pause
     exit /b 1
 )
 echo Download complete.
 
-REM Remove old files before extraction
+REM Remove old plugin files before extraction
 echo Removing old plugin files...
 if exist "%PLUGIN_DIR%\kwik.lua" del /q "%PLUGIN_DIR%\kwik.lua"
 if exist "%PLUGIN_DIR%\kwik" rmdir /s /q "%PLUGIN_DIR%\kwik"
 echo Old files removed.
 
-REM Extract the plugin.data.tgz file using 7-Zip or PowerShell
+REM Extract the plugin-kwik.tgz file
 echo Installing plugin to %PLUGIN_DIR%...
-
-REM Create temp extraction directory
-if exist "%TEMP_DIR%" rmdir /s /q "%TEMP_DIR%"
-mkdir "%TEMP_DIR%"
-
-REM Check if 7za.exe exists in the specified path
-if exist "%CORONA_7ZIP%" (
-    echo Extracting with 7za.exe from Corona Labs...
-    "%CORONA_7ZIP%" x "%TEMP_FILE%" -o"%TEMP_DIR%" -y -bd >nul 2>&1
-    "%CORONA_7ZIP%" x "%TEMP_DIR%\plugin.data.tar" -o"%TEMP_DIR%" -y -bd >nul 2>&1
+tar -xzf "%TEMP_PLUGIN_FILE%" -C "%PLUGIN_DIR%"
+if %errorlevel% equ 0 (
+    echo Plugin extracted successfully using tar.
 ) else (
-    REM Check if 7-Zip is installed and in PATH
-    where 7z >nul 2>nul
+    echo tar command failed or is not available. Trying PowerShell...
+    powershell -Command "& { try { Expand-Archive -Path '%TEMP_PLUGIN_FILE%' -DestinationPath '%PLUGIN_DIR%' -Force } catch { Write-Host 'PowerShell Expand-Archive failed.'; exit 1 } }"
     if %errorlevel% neq 0 (
-        echo 7-Zip not found. Using PowerShell tar extraction...
-        
-        REM Using PowerShell to extract
-        powershell -Command "& {Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::ExtractToDirectory('%TEMP_FILE%', '%TEMP_DIR%')}"
-    ) else (
-        echo Extracting with 7-Zip...
-        7z x "%TEMP_FILE%" -o"%TEMP_DIR%" -y -bd >nul 2>&1
-        7z x "%TEMP_DIR%\plugin.data.tar" -o"%TEMP_DIR%" -y -bd >nul 2>&1
+        echo Failed to extract plugin using all available methods.
+        pause
+        exit /b 1
+    )
+)
+echo Plugin installed successfully!
+
+REM Download the Source code (tar.gz) file
+echo Downloading source code from !SRC_URL!...
+powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '!SRC_URL!' -OutFile '%TEMP_SRC_FILE%' -UseBasicParsing}"
+if %errorlevel% neq 0 (
+    echo Failed to download the source code. Please check your internet connection.
+    pause
+    exit /b 1
+)
+echo Source code download complete.
+
+REM Remove old extracted files and target lua_modules
+echo Cleaning up old files for lua_modules...
+if exist "%EXTRACT_DIR%" rmdir /s /q "%EXTRACT_DIR%"
+REM Only remove contents of lua_modules except for kwiksher
+if exist "%LUA_MODULES_TARGET%" (
+    for /d %%d in ("%LUA_MODULES_TARGET%\*") do (
+        if /i not "%%~nxd"=="kwiksher" (
+            rmdir /s /q "%%d"
+        )
+    )
+    for %%f in ("%LUA_MODULES_TARGET%\*") do (
+        if /i not "%%~nxf"=="kwiksher" (
+            del /q "%%f"
+        )
     )
 )
 
-REM Copy extracted files to the plugin directory
-echo Copying kwik.lua and kwik directory to %PLUGIN_DIR%...
-if exist "%TEMP_DIR%\kwik.lua" xcopy /Y /Q "%TEMP_DIR%\kwik.lua" "%PLUGIN_DIR%\"
-if exist "%TEMP_DIR%\kwik" xcopy /E /I /Y /Q "%TEMP_DIR%\kwik" "%PLUGIN_DIR%\kwik\"
+REM Extract the tarball
+echo Extracting source code...
+if not exist "%EXTRACT_DIR%" mkdir "%EXTRACT_DIR%"
 
-if %errorlevel% neq 0 (
-    echo Failed to install the plugin. The file may be corrupted.
+REM Attempt to use tar.exe first, as it's most reliable
+tar -xzf "%TEMP_SRC_FILE%" -C "%EXTRACT_DIR%"
+if %errorlevel% equ 0 (
+    echo Source code extracted successfully using tar.
+) else (
+    echo tar command failed or is not available. Trying PowerShell...
+    powershell -Command "& {
+        try {
+            Expand-Archive -Path '%TEMP_SRC_FILE%' -DestinationPath '%EXTRACT_DIR%' -Force
+        } catch {
+            Write-Host 'PowerShell Expand-Archive failed. This may require the Microsoft.PowerShell.Archive module.'
+            Write-Host 'Please ensure you are running Windows 10+ or have PowerShell 5.1+ with the module installed.'
+            exit 1
+        }
+    }"
+    if %errorlevel% neq 0 (
+        echo Failed to extract source code using all available methods.
+        pause
+        exit /b 1
+    )
+)
+
+REM Find the extracted folder (it will be named kwiksher-kwik5-project-template-*)
+for /d %%d in ("%EXTRACT_DIR%\kwiksher-kwik5-project-template-*") do (
+    set "EXTRACTED_SUBDIR=%%d"
+    goto :found_subdir
+)
+:found_subdir
+
+echo --- DEBUG INFO ---
+echo EXTRACT_DIR is: %EXTRACT_DIR%
+echo EXTRACTED_SUBDIR is: !EXTRACTED_SUBDIR!
+echo Listing contents of EXTRACT_DIR:
+dir "%EXTRACT_DIR%"
+if defined EXTRACTED_SUBDIR (
+    echo Listing contents of EXTRACTED_SUBDIR:
+    dir /s "!EXTRACTED_SUBDIR!"
+)
+echo --- END DEBUG INFO ---
+
+if not defined EXTRACTED_SUBDIR (
+    echo Failed to find extracted source directory.
+    pause
     exit /b 1
 )
-echo Plugin installed successfully!
+
+REM Copy lua_modules to the target location
+echo Copying lua_modules to %LUA_MODULES_TARGET%...
+if exist "!EXTRACTED_SUBDIR!\Solar2D\lua_modules" (
+    echo Copying lua_modules, excluding kwiksher...
+    robocopy "!EXTRACTED_SUBDIR!\Solar2D\lua_modules" "%LUA_MODULES_TARGET%" /E /XD kwiksher
+) else (
+    echo lua_modules not found in source tarball, copying from ..\kwik5-project-template\Solar2D...
+    if exist "..\kwik5-project-template\Solar2D\lua_modules" (
+        echo Copying lua_modules from local ..\kwik5-project-template\Solar2D, excluding kwiksher...
+        robocopy "..\kwik5-project-template\Solar2D\lua_modules" "%LUA_MODULES_TARGET%" /E /XD kwiksher
+        echo Copied lua_modules from local ..\kwik5-project-template\Solar2D.
+    ) else (
+        echo lua_modules not found in ..\kwik5-project-template\Solar2D. Aborting.
+        pause
+        exit /b 1
+    )
+)
+
+REM Copy Scripts/startSolar2D.bat to Corona Simulator directory
+echo Copying startSolar2D.bat to Corona Simulator directory...
+set "CORONA_SIMULATOR_DIR=%APPDATA%\Corona Labs\Corona Simulator"
+if not exist "%CORONA_SIMULATOR_DIR%" mkdir "%CORONA_SIMULATOR_DIR%"
+if exist "!EXTRACTED_SUBDIR!\Scripts\startSolar2D.bat" (
+    copy /Y "!EXTRACTED_SUBDIR!\Scripts\startSolar2D.bat" "%CORONA_SIMULATOR_DIR%\"
+    echo startSolar2D.bat copied successfully.
+) else (
+    echo Scripts/startSolar2D.bat not found in source tarball, checking local path...
+    if exist "..\kwik5-project-template\Scripts\startSolar2D.bat" (
+        copy /Y "..\kwik5-project-template\Scripts\startSolar2D.bat" "%CORONA_SIMULATOR_DIR%\"
+        echo startSolar2D.bat copied from local path.
+    ) else (
+        echo Scripts/startSolar2D.bat not found. Skipping.
+    )
+)
 
 REM Create the kwikEditorLandscape.lua skin file
 echo Creating Kwik Editor Landscape skin file...
 (
 echo simulator =
 echo {
-echo   device = "win32",
+echo   device = "desktop-1920x1080",
 echo   screenOriginX = 0,
 echo   screenOriginY = 0,
 echo   screenWidth = 590,
@@ -194,10 +215,32 @@ echo }
 ) > "%SKINS_DIR%\kwikEditorLandscape.lua"
 echo Kwik Editor Landscape skin file created.
 
+REM Create the kwikEditorPortrait.lua skin file
+echo Creating Kwik Editor Portrait skin file...
+(
+echo simulator =
+echo {
+echo   device = "desktop-1920x1080",
+echo   screenOriginX = 0,
+echo   screenOriginY = 0,
+echo   screenWidth = 960,
+echo   screenHeight = 590,
+echo   deviceImage = nil,
+echo   displayManufacturer = "",
+echo   displayName = "Kwik Portrait",
+echo   supportsScreenRotation = true,
+echo   windowTitleBarName = "Kwik Portrait Editor"
+echo }
+) > "%SKINS_DIR%\kwikEditorPortrait.lua"
+echo Kwik Editor Portrait skin file created.
+
+call :install_registry_only
+
 REM Clean up
-@REM del "%TEMP_FILE%"
-@REM rmdir /s /q "%TEMP_DIR%"
-@REM del "%DOWNLOADS_DIR%\release_info.json"
+echo Cleaning up temp files...
+if exist "%TEMP_PLUGIN_FILE%" del /q "%TEMP_PLUGIN_FILE%"
+if exist "%TEMP_SRC_FILE%" del /q "%TEMP_SRC_FILE%"
+if exist "%EXTRACT_DIR%" rmdir /s /q "%EXTRACT_DIR%"
 
 REM Extract release tag for final message
 for /f "tokens=*" %%a in ('powershell -Command "& {$json = Get-Content '%DOWNLOADS_DIR%\release_info.json' -ErrorAction SilentlyContinue | ConvertFrom-Json; $json.tag_name}"') do (
@@ -208,15 +251,65 @@ REM Final message
 echo Installation complete. Plugin version: !RELEASE_TAG!
 echo You can now use the plugin in the Solar2D Simulator.
 echo Kwik Editor Landscape skin is available in the Simulator.
-echo Solar2D URL scheme handler is installed with startSolar2D.bat.
-echo.
-echo IMPORTANT: If the registry import failed, please run this script as administrator
-echo or manually import the registry file from: %SOLAR2D_REG_PATH%
 
+pause
 endlocal
+exit /b
 
-REM Subroutine to process a line and replace %APPDATA% with its actual value
-:ProcessLine
-set "ESCAPED_APPDATA=%APPDATA:\=\\%"
-set "processed_line=!line:%%APPDATA%%=%ESCAPED_APPDATA%!"
+:install_registry_only
+    REM Create solar2d.reg with dynamic user path
+    echo Creating solar2d.reg with dynamic user path...
+    set "SOLAR2D_REG_FILE=%~dp0solar2d.reg"
+
+    echo --- DEBUG: Registry File Path ---
+    echo Attempting to create file at: %SOLAR2D_REG_FILE%
+    echo Current directory is: %cd%
+    echo Script directory is: %~dp0
+    echo --- END DEBUG ---
+
+    set "ESCAPED_APPDATA=%APPDATA:\=\\%"
+    (
+    echo Windows Registry Editor Version 5.00
+    echo.
+    echo [HKEY_CLASSES_ROOT\solar2d]
+    echo @="URL:solar2d Protocol"
+    echo "URL Protocol"=""
+    echo.
+    echo [HKEY_CLASSES_ROOT\solar2d\shell\open\command]
+    echo @="\"!ESCAPED_APPDATA!\\Corona Labs\\Corona Simulator\\startSolar2D.bat\" \"%%1\""
+    ) > "%SOLAR2D_REG_FILE%"
+
+    REM --- DEBUG: Check file creation ---
+    if exist "%SOLAR2D_REG_FILE%" (
+        echo SUCCESS: solar2d.reg was created successfully.
+    ) else (
+        echo ERROR: Failed to create solar2d.reg.
+        echo Please check write permissions for the directory: %~dp0
+        pause
+        goto :eof
+    )
+    REM --- END DEBUG ---
+
+    echo solar2d.reg created at %SOLAR2D_REG_FILE%
+
+    REM Optionally install the registry entry
+    echo.
+    set /p "INSTALL_REGISTRY=Do you want to install the Solar2D protocol handler? (y/n): "
+    if /i "!INSTALL_REGISTRY!"=="y" (
+        echo Installing Solar2D protocol handler...
+        regedit /s "%SOLAR2D_REG_FILE%" 2>nul
+        if !errorlevel! equ 0 (
+            echo Solar2D protocol handler installed successfully.
+            echo You can now use URLs like: solar2d://open?url=file://path/to/main.lua
+        ) else (
+            echo Failed to install registry entry. Please run as Administrator and try:
+            echo   regedit /s "%SOLAR2D_REG_FILE%"
+            pause
+        )
+    ) else (
+        echo Skipped registry installation.
+        echo To install later, run as Administrator:
+        echo   regedit /s "%SOLAR2D_REG_FILE%"
+    )
+    echo.
 goto :eof
