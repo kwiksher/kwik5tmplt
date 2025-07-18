@@ -67,9 +67,9 @@ function M.setPlugin(mode)
 
       if path then
         print("Found installer file:", path)
-        local cmd = 'cd "'.. path.. '"; source install_plugin.sh'
+        local cmd = 'cd "'.. path.. '"; source update_kwik.sh'
         if isWindows then
-           cmd = "cd .. & start cmd /k call install_plugin.bat"
+           cmd = "cd .. & start cmd /k call update_kwik.bat"
         end
         print(cmd)
         os.execute(cmd)
