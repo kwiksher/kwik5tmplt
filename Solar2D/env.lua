@@ -14,6 +14,11 @@ if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   lldebugger.start()
 end
 
+local archInfo = system.getInfo("architectureInfo")
+      local isWindows = archInfo == "x86" or archInfo == "x64" or
+                       archInfo == "IA64" or archInfo == "ARM"
+
+
 local  function createSymbolicLink()
   -- Check if the file exists using absolute path
   local file_path = resourcePath .. "/lua_modules/kwiksher/kwik.lua"
@@ -24,20 +29,19 @@ local  function createSymbolicLink()
       return true
   else
     print("File NOT found:", file_path)
-    local scripts
     if isWindows then
       print("You may need to run as administrator",
             'runas /user:Administrator "cmd /c mklink /D lua_modules\\kwiksher ..\\..\\kwik5-plugin"')
     else
-      scripts = {
+      local scripts = {
         'cd ' .. resourcePath ..'/lua_modules && ln -s ../../../kwik5-plugin kwiksher',
       }
+      for i, v in next, scripts do
+        print(v)
+        os.execute(v)
+      end
     end
     --print(system.getInfo("architectureInfo"))
-    for i, v in next, scripts do
-      print(v)
-      os.execute(v)
-    end
     return false
   end
 end
@@ -55,10 +59,7 @@ function M.setPlugin(mode)
       createSymbolicLink()
     else
       -- Check for installer files
-      local archInfo = system.getInfo("architectureInfo")
-      local isWindows = archInfo == "x86" or archInfo == "x64" or
-                       archInfo == "IA64" or archInfo == "ARM"
-
+      
       local path
       path = system.pathForFile("", system.ResourceDirectory).."/../"
       if isWindows then
