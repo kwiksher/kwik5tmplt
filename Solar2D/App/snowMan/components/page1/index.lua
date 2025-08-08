@@ -14,27 +14,23 @@ local model = {
       },
       {
         tree2 = {
-          class={ "properties", } 
-         }
+          class={ "properties", }  }
       },
       {
         tree1 = {
-           class={ "properties", } 
-         }
+          class={ "properties", }  }
       },
       {
         tree3 = {
-           class={ "properties", } 
-         }
+          class={ "properties", }  }
       },
       {
         tree4 = {
-           class={ "properties", } 
-         }
+          class={ "properties", }  }
       },
       {
         mytext = {
-        }
+          class={ "sync", }  }
       },
       {
         ground = {
@@ -46,7 +42,7 @@ local model = {
       },
       {
         snowman = {
-        }
+          class={ "tremble", }  }
       },
       {
         hat = {
@@ -63,7 +59,7 @@ local model = {
     joints    = {  },
     page = {  }
   },
-  commands = {  },
+  commands = {   "action_sman",  },
   onInit = function(scene)  end
 }
 local scene = require('controller.scene').new(sceneName, model)
