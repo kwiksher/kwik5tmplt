@@ -56,7 +56,6 @@ function M:create(UI)
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
-  print("tree4 imagePath: " .. self.imagePath)
   local obj = self:createImage(UI)
   UI.layers[#UI.layers] = obj
   self.obj = obj
