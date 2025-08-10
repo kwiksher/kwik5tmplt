@@ -36,6 +36,12 @@ function M:create(UI)
     -- self.triangle = shapes.triangle.equi( display.contentCenterX, (display.actualContentHeight - 1280/4)/2 - 10, 20 )
     self.triangle = shapes.triangle.equi( 10, 10, 20 )
 
+      -- self.triangle.x = display.contentCenterX - 480/2 - (2048/4 - 480)/2 + 20 -- iPad 2048
+      self.triangle.x = display.contentCenterX - 480/2 - (2436/4 - 480)/2 -36 -- iPhone X
+      self.triangle.y = display.contentCenterY - 320/2 - (1536/4 - 320)/2 + 24
+
+    obj.group:translate(self.triangle.x, self.triangle.y)
+
     self.triangle:rotate(90)
     self.triangle:setFillColor(0,0,1)
     self.triangle.tap = function(event)
