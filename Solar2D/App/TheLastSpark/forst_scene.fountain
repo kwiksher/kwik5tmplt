@@ -1,0 +1,52 @@
+Title: The Last Spark
+Author: A. Storyteller
+Credit: A Visual Novel Example
+Scene: The Quiet Forest
+
+INT. OLD CABIN - DAY
+
+A dusty sunbeam cuts through the broken window of a small, abandoned cabin. Dust motes dance in the light.
+
+On the wooden table, a single, faintly glowing seed pulses with a soft, warm light. This is the LUMIN SEED.
+
+ELARA (19, with determined eyes and practical, worn-out clothing) carefully wraps the seed in a cloth and places it in her satchel.
+
+SFX: Rustling cloth, gentle wind
+
+ELARA
+(V.O.)
+The Lumin Seed was the last one. The last spark of the Great Tree's light. If I couldn't get it to the Sunstone Spire before the new moon...
+
+She doesn't finish the thought. She shoulders her satchel and steps outside.
+
+EXT. FOREST PATH - DAY
+
+The forest is unnervingly quiet. No birdsong, no rustle of creatures.
+
+Elara walks cautiously along the overgrown path.
+
+SFX: Crunch of footsteps on leaves, a distant, eerie caw
+
+Suddenly, a low growl rumbles from the shadows of the trees. A CORRUPTED WOLF, its form made of twisted bark and shadow, steps onto the path, blocking her way.
+
+Elara freezes, her hand instinctively going to the knife at her belt.
+
+ELARA
+(whispering)
+Oh no.
+
+The Corrupted Wolf snarls, baring jagged, wooden teeth.
+
+MUSIC: Tension_Builds.mp3 - Fades in
+
+CHARACTER: Corrupted Wolf
+IMAGE: corrupted_wolf_aggro.png
+
+DIALOGUE:
+* Fight it!
+* Try to calm it.
+* Run back to the cabin!
+
+MUSIC: Tension_Sting.mp3 - Hits a climax
+
+FADE OUT.
