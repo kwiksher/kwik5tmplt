@@ -4,12 +4,17 @@
 
 local scene = composer.newScene()
 local widget = require("widget")
-local helpers = require("App.TheLastSpark.forestScene_helpers")
+local helpers = require("App.TheLastSpark.cabinScene_helpers")
 
 local elara, luminSeed
 local background, vignette
 local dialogueText, nextButton
 local characterGroup
+
+-- Initialize game data for conditional logic
+_G.gameData = _G.gameData or {}
+_G.gameData.hasKey = false
+_G.gameData.hasMagicKey = false
 
 local sceneDialogue = {
     { type = "narration", text = "You stand before an old cabin in the woods." },
@@ -18,7 +23,9 @@ local sceneDialogue = {
 
     { type = "narration", text = "The door is firmly closed. You try the handle..." },
     { type = "sfx", sound = "door_rattle" },
-    { type = "object_state", object = "cabin_door", state = "open" },
+
+    -- Conditional: Door opens only if player has a key (string reference)
+    { type = "object_state_conditional", object = "cabin_door", state = "open", condition = "hasKey" },
     { type = "sfx", sound = "door_creak" },
 
     { type = "narration", text = "The door creaks open, revealing a dark interior." },
@@ -34,10 +41,16 @@ local sceneDialogue = {
     { type = "object_state", object = "chest", state = "locked" },
 
     { type = "narration", text = "The chest is locked. You search for a key..." },
+
+    -- Set flag when key is found (string reference)
+    { type = "custom", action = "setHasKey" },
+
     { type = "sfx", sound = "key_turn" },
     { type = "object_state", object = "chest", state = "unlocked" },
     { type = "sfx", sound = "chest_open" },
-    { type = "object_state", object = "chest", state = "open" },
+
+    -- Conditional: chest state depends on whether it was already looted (string reference)
+    { type = "object_state_conditional", object = "chest", state = "open", condition = "chestNotLooted" },
 
     { type = "narration", text = "The chest is empty! Someone got here first." },
     { type = "emotion", character = "elara", state = "scared" },

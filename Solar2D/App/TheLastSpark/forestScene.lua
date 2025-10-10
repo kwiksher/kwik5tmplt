@@ -128,6 +128,37 @@ function scene:create(event)
     wolf.y = 450
     wolf.isVisible = false
 
+    -- Object registry for state management
+    self._objects = {
+        elara = {
+            image = elara,
+            states = {
+                neutral = "images/elara_neutral.png",
+                scared = "images/elara_scared.png",
+                determined = "images/elara_determined.png",
+                happy = "images/elara_happy.png",
+            },
+            x = 300,
+            y = 500
+        },
+        wolf = {
+            image = wolf,
+            states = {
+                aggro = "images/corrupted_wolf_aggro.png",
+                calm = "images/corrupted_wolf_calm.png",
+            },
+            x = 900,
+            y = 450
+        },
+        luminSeed = {
+            image = luminSeed,
+            states = {
+                normal = "images/item_lumin_seed.png",
+                glowing = "images/item_lumin_seed_glowing.png",
+            }
+        }
+    }
+
     -- Attach helper methods now that scene objects exist
     helpers.attach(self, {
         background = background,
@@ -139,7 +170,8 @@ function scene:create(event)
         wolf = wolf,
         luminSeed = luminSeed,
         sceneDialogue = sceneDialogue,
-        audioFiles = audioFiles
+        audioFiles = audioFiles,
+        objects = self._objects,
     })
 end
 

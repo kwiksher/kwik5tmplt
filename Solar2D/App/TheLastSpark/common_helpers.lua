@@ -57,23 +57,34 @@ function M.methods:executeSceneStep(index)
         self:executeSceneStep(index + 1)
 
     elseif step.type == "object_state" then
-        if step.object then
-            self:changeObjectState(step.object, step.state)
-        end
+        if step.object then self:changeObjectState(step.object, step.state) end
         if step.objects then
-            for i, objName in ipairs(step.objects) do
+            for _, objName in ipairs(step.objects) do
                 self:changeObjectState(objName, step.state)
             end
         end
         self:executeSceneStep(index + 1)
 
     elseif step.type == "object_state_conditional" then
-        if step.object then
-            self:changeObjectStateConditional(step.object, step.state, step.condition)
-        end
+        if step.object then self:changeObjectStateConditional(step.object, step.state, step.condition) end
         if step.objects then
-            for i, objName in ipairs(step.objects) do
+            for _, objName in ipairs(step.objects) do
                 self:changeObjectStateConditional(objName, step.state, step.condition)
+            end
+        end
+        self:executeSceneStep(index + 1)
+
+    elseif step.type == "custom" then
+        -- Execute custom action/function
+        if step.action then
+            if self.executeAction then
+                -- Use scene-specific action execution (supports string lookup)
+                self:executeAction(step.action)
+            elseif type(step.action) == "function" then
+                -- Fallback: direct function call
+                step.action()
+            elseif type(step.action) == "string" then
+                print("Warning: Action string '" .. step.action .. "' provided but scene has no executeAction method!")
             end
         end
         self:executeSceneStep(index + 1)
@@ -127,7 +138,7 @@ function M.methods:playSFX(soundName, shouldLoop)
     if path then audio.play(audio.loadSound(path), options) end
 end
 
--- Generic show for objects registered in env.objects: just reveal if exists
+-- Generic object visibility helper using the scene's objects registry
 function M.methods:showObject(name)
     local env = self._env or {}
     local objects = env.objects or {}
@@ -137,7 +148,8 @@ function M.methods:showObject(name)
     end
 end
 
--- Change object visual state based on registry in env.objects
+-- Generic object state change: swap image for a named object/state
+-- Expects env.objects[objectName] = { states={ [state]=imagePath }, width,height,x,y, image? }
 function M.methods:changeObjectState(objectName, newState, onComplete)
     local env = self._env or {}
     local objects = env.objects or {}
@@ -174,25 +186,32 @@ function M.methods:changeObjectState(objectName, newState, onComplete)
     objectData.image.alpha = 0
     transition.fadeIn(objectData.image, { time = 500 })
 
-    -- Optional special effects
-    if newState == "broken" or newState == "shattered" then
-        transition.to(objectData.image, { time = 300, rotation = 5, transition = easing.continuousLoop })
-        timer.performWithDelay(300, function() objectData.image.rotation = 0 end)
-    end
-    if newState == "glowing" or newState == "pulsing" then
-        transition.to(objectData.image, { time = 800, xScale = 1.1, yScale = 1.1, alpha = 0.8, transition = easing.continuousLoop })
-    end
-
     if onComplete then
         timer.performWithDelay(600, onComplete)
     end
 end
 
 function M.methods:changeObjectStateConditional(objectName, newState, condition)
-    if condition then
+    -- Evaluate condition using scene's checkCondition method if available
+    local conditionMet = false
+
+    if self.checkCondition then
+        -- Use scene-specific condition checking
+        conditionMet = self:checkCondition(condition)
+    else
+        -- Fallback to basic evaluation
+        if type(condition) == "function" then
+            conditionMet = condition()
+        elseif type(condition) == "boolean" then
+            conditionMet = condition
+        else
+            conditionMet = (condition ~= nil and condition ~= false)
+        end
+    end
+
+    if conditionMet then
         self:changeObjectState(objectName, newState)
     else
-        -- If a default state is defined, fall back to it; otherwise no-op
         local env = self._env or {}
         local objects = env.objects or {}
         local od = objects[objectName]
@@ -263,6 +282,99 @@ function M.methods:handleChoice(choiceIndex, choiceText)
     end)
 end
 -- (Removed duplicate function-style helpers; use methods via metatable)
+
+-- Generic condition/action registry methods
+function M.methods:setCondition(key, value)
+    _G.gameData = _G.gameData or {}
+    _G.gameData[key] = value
+    print("Set condition: " .. key .. " = " .. tostring(value))
+end
+
+function M.methods:getCondition(key)
+    return _G.gameData and _G.gameData[key]
+end
+
+function M.methods:checkCondition(condition)
+    if type(condition) == "function" then
+        return condition()
+    elseif type(condition) == "boolean" then
+        return condition
+    elseif type(condition) == "string" then
+        -- Look up in scene-specific condition registry
+        local env = self._env or {}
+        local conditions = env.conditions or {}
+        local conditionFunc = conditions[condition]
+        if conditionFunc then
+            return conditionFunc()
+        else
+            print("Warning: Condition '" .. condition .. "' not found in registry!")
+            return false
+        end
+    end
+    return false
+end
+
+function M.methods:executeAction(actionName)
+    if type(actionName) == "function" then
+        -- Fallback: allow inline functions for backward compatibility
+        actionName()
+    elseif type(actionName) == "string" then
+        -- Look up in scene-specific action registry
+        local env = self._env or {}
+        local actions = env.actions or {}
+        local actionFunc = actions[actionName]
+        if actionFunc then
+            actionFunc()
+        else
+            print("Warning: Action '" .. actionName .. "' not found in registry!")
+        end
+    else
+        print("Warning: Invalid action type:", type(actionName))
+    end
+end
+
+function M.methods:changeEmotion(character, state)
+    local env = self._env or {}
+    local characterGroup = env.characterGroup
+    local objects = env.objects or {}
+
+    -- Generic implementation for any character
+    local charObj = objects[character]
+    if charObj then
+        -- Remove old image if it exists
+        if charObj.image and charObj.image.removeSelf then
+            pcall(function() charObj.image:removeSelf() end)
+        end
+
+        -- Get the state image path
+        local stateImage = charObj.states and charObj.states[state]
+        if stateImage then
+            -- Create new image with the emotion state
+            local width = charObj.width or 300
+            local height = charObj.height or 500
+            local newImage = display.newImageRect(characterGroup, stateImage, width, height)
+            newImage.x = charObj.x or display.contentCenterX
+            newImage.y = charObj.y or display.contentCenterY
+
+            -- Update the object registry
+            charObj.image = newImage
+            -- Also update env reference if it exists (for backward compatibility)
+            if env[character] then
+                env[character] = newImage
+            end
+
+            -- Fade in effect
+            newImage.alpha = 0
+            transition.fadeIn(newImage, { time = 500 })
+
+            print("Changed " .. character .. " emotion to: " .. state)
+        else
+            print("Warning: State '" .. state .. "' not found for " .. character)
+        end
+    else
+        print("Warning: Character '" .. character .. "' not found in objects registry!")
+    end
+end
 
 -- Determine player's choice from global gameData (or _G fallback)
 local function getPlayerChoice()

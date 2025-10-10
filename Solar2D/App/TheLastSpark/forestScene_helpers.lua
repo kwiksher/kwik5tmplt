@@ -37,6 +37,13 @@ function M.attach(scene, env)
     env.luminSeed = luminSeed
     env.sceneDialogue = sceneDialogue
     env.audioFiles = audioFiles
+    env.objects = env.objects or {}
+
+    -- Define scene-specific condition registry (if needed)
+    env.conditions = env.conditions or {}
+
+    -- Define scene-specific action registry (if needed)
+    env.actions = env.actions or {}
 
     -- set self._env and install methods via metatable
     scene._env = env
@@ -64,21 +71,9 @@ function M.attach(scene, env)
     end
 
     -- changeBackground, playSFX, advanceDialogue, showDialogue, showChoice, handleChoice
-    -- are provided by common.methods via metatable
+    -- changeEmotion are provided by common.methods via metatable
 
-
-    function scene:changeEmotion(character, state)
-        if character == "elara" and state == "scared" then
-            if elara and elara.removeSelf then
-                pcall(function() elara:removeSelf() end)
-            end
-            elara = display.newImageRect(characterGroup, "images/elara_scared.png", 300, 500)
-            elara.x = 300
-            elara.y = 500
-        end
-    end
-
-    -- showObject and changeEmotion are scene-specific and remain here
+    -- showObject is scene-specific and remains here
 
     function scene:transitionToNextScene()
         common.gotoSceneByChoice({
