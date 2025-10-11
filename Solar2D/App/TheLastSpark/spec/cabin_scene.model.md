@@ -304,3 +304,33 @@
 - Consider particle effects for Lumin Seed glow
 - Door slam should trigger screen shake effect
 - Final pan/focus on each choice option as Elara surveys them
+
+---
+
+## Assets referenced
+
+- images/lumin_seed_glowing.png
+- images/cabin_door_closed.png
+- images/cabin_door_open.png
+- images/key_iron.png
+- images/chest_locked.png
+- images/chest_unlocked.png
+- images/chest_open.png
+- images/key_brass.png
+- images/window_boarded.png
+- images/markings_arcane.png
+
+- audio/sfx_door_rattle.wav
+- audio/sfx_key_turn.wav
+- audio/sfx_door_creak.wav
+- audio/sfx_lock_click.wav
+- audio/sfx_chest_creak.wav
+- audio/sfx_door_slam.wav
+- audio/ambient_cabin_quiet.mp3
+- audio/music_cabin_tension.mp3
+
+- audio/vo_elara_found_seed.wav
+- audio/vo_elara_need_key.wav
+- audio/vo_elara_shocked.wav
+- audio/vo_elara_someone_first.wav
+- audio/vo_elara_panic.wav
