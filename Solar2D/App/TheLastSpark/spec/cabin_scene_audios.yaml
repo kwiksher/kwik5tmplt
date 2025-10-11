@@ -1,16 +1,26 @@
+- name: vo_elara_found_seed.wav
+  description: "Elara whispering to herself with wonder and relief: 'The Lumin Seed... I found it.'"
+- name: vo_elara_need_key.wav
+  description: "Elara thinking aloud, contemplative and slightly frustrated: 'There has to be a key somewhere around here...'"
+- name: vo_elara_shocked.wav
+  description: "Elara shocked and in disbelief, rising pitch: 'No... it can't be!'"
+- name: vo_elara_someone_first.wav
+  description: "Elara disappointed and defeated: 'Someone got here first.'"
+- name: vo_elara_panic.wav
+  description: "Elara panicking, loud and urgent: 'What?! No!'"
 - name: sfx_door_rattle.wav
-  description: ""
+  description: "Wooden door handle rattling, won't budge, short duration"
 - name: sfx_key_turn.wav
-  description: ""
+  description: "Metal key turning in lock mechanism, clear mechanical sound"
 - name: sfx_door_creak.wav
-  description: ""
+  description: "Old wooden door creaking open slowly, prolonged squeak"
 - name: sfx_lock_click.wav
-  description: ""
+  description: "Lock mechanism clicking open, clear metallic click"
 - name: sfx_chest_creak.wav
-  description: ""
+  description: "Wooden chest hinges creaking as lid opens"
 - name: sfx_door_slam.wav
-  description: ""
+  description: "Heavy wooden door slamming shut with thunderous bang, dramatic impact"
 - name: ambient_cabin_quiet.mp3
-  description: "Eerie quiet forest ambience, creaking wood (loop)"
+  description: "Eerie quiet forest ambience with creaking wood, mysterious and tense atmosphere (loop)"
 - name: music_cabin_tension.mp3
-  description: "Tension building music (triggered after door slams)"
+  description: "Tension building music, suspenseful and ominous, triggered after door slams shut (can loop)"
