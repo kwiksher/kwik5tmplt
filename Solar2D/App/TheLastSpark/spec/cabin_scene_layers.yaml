@@ -1,0 +1,213 @@
+# Background Layer
+- name: bg_cabin_interior
+  type: background
+  x: 0
+  y: 0
+  width: 1920
+  height: 1080
+  z_index: 0
+  visible: true
+  opacity: 100
+
+# Environment Props (back to front)
+- name: window_boarded
+  type: prop
+  x: 1600
+  y: 200
+  width: 150
+  height: 200
+  z_index: 10
+  visible: true
+  opacity: 100
+  text: "Boarded Window"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+- name: markings_arcane
+  type: prop
+  x: 200
+  y: 400
+  width: 200
+  height: 150
+  z_index: 15
+  visible: true
+  opacity: 100
+  text: "Arcane Markings"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+# Chest in corner (multiple states as separate layers)
+- name: chest_locked
+  type: prop
+  x: 1650
+  y: 700
+  width: 170
+  height: 130
+  z_index: 20
+  visible: true
+  opacity: 100
+  text: "Chest (Locked)"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+- name: chest_unlocked
+  type: prop
+  x: 1650
+  y: 700
+  width: 170
+  height: 130
+  z_index: 20
+  visible: false
+  opacity: 100
+  text: "Chest (Unlocked)"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+- name: chest_open
+  type: prop
+  x: 1650
+  y: 700
+  width: 170
+  height: 130
+  z_index: 20
+  visible: false
+  opacity: 100
+  text: "Chest (Open/Empty)"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+# Table (center of room)
+- name: table_wooden
+  type: prop
+  x: 860
+  y: 540
+  width: 200
+  height: 120
+  z_index: 25
+  color: "#8B7355"
+  visible: true
+  opacity: 100
+  text: "Wooden Table (placeholder)"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+# Lumin Seed (on table, center focus)
+- name: lumin_seed_glowing
+  type: prop
+  x: 910
+  y: 490
+  width: 100
+  height: 100
+  z_index: 30
+  visible: true
+  opacity: 100
+  text: "Lumin Seed"
+  font_size: 12
+  text_color: "#FFD700"
+
+# Keys (small items, position varies)
+- name: key_iron
+  type: prop
+  x: 100
+  y: 950
+  width: 50
+  height: 50
+  z_index: 35
+  visible: true
+  opacity: 100
+  text: "Iron Key"
+  font_size: 10
+  text_color: "#FFFFFF"
+
+- name: key_brass
+  type: prop
+  x: 800
+  y: 850
+  width: 50
+  height: 50
+  z_index: 35
+  visible: false
+  opacity: 100
+  text: "Brass Key (Hidden)"
+  font_size: 10
+  text_color: "#FFFFFF"
+
+# Character (Elara - multiple states)
+- name: elara_neutral
+  type: character
+  x: 400
+  y: 300
+  width: 400
+  height: 600
+  z_index: 40
+  visible: true
+  opacity: 100
+  text: "Elara (Neutral)"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+- name: elara_focused
+  type: character
+  x: 400
+  y: 300
+  width: 400
+  height: 600
+  z_index: 40
+  visible: false
+  opacity: 100
+  text: "Elara (Focused)"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+- name: elara_shocked
+  type: character
+  x: 400
+  y: 300
+  width: 400
+  height: 600
+  z_index: 40
+  visible: false
+  opacity: 100
+  text: "Elara (Shocked)"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+- name: elara_panicking
+  type: character
+  x: 400
+  y: 300
+  width: 400
+  height: 600
+  z_index: 40
+  visible: false
+  opacity: 100
+  text: "Elara (Panicking)"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+# Door (foreground or side)
+- name: cabin_door_closed
+  type: prop
+  x: 1700
+  y: 200
+  width: 220
+  height: 320
+  z_index: 50
+  visible: true
+  opacity: 100
+  text: "Door (Closed)"
+  font_size: 12
+  text_color: "#FFFFFF"
+
+- name: cabin_door_open
+  type: prop
+  x: 1700
+  y: 200
+  width: 220
+  height: 320
+  z_index: 50
+  visible: false
+  opacity: 100
+  text: "Door (Open)"
+  font_size: 12
+  text_color: "#FFFFFF"

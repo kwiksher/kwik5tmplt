@@ -1,0 +1,14 @@
+- name: sfx_rustling_cloth.wav
+  description: ""
+- name: sfx_wind_gentle.wav
+  description: ""
+- name: sfx_footsteps_forest.wav
+  description: ""
+- name: sfx_crow_caw_distant.wav
+  description: ""
+- name: sfx_wolf_growl_corrupted.wav
+  description: ""
+- name: music_Tension_Builds.mp3
+  description: "A slow-building, suspenseful track"
+- name: music_Tension_Sting.mp3
+  description: "A short, sharp, startling sound"

@@ -1,0 +1,105 @@
+# Forest Scene Visual Assets - Layer Specifications
+
+# Backgrounds
+- name: bg_cabin_interior
+  x: 0
+  y: 0
+  width: 1280
+  height: 720
+  color: "#8B7355"
+  text: "Cabin Interior Background"
+  font_size: 24
+  text_color: "#FFFFFF"
+
+- name: bg_forest
+  x: 0
+  y: 0
+  width: 1280
+  height: 720
+  color: "#2D5016"
+  text: "Forest Background"
+  font_size: 24
+  text_color: "#FFFFFF"
+
+# Characters - Elara (Left/center positioning)
+- name: elara_neutral
+  x: 320
+  y: 110
+  width: 300
+  height: 500
+  color: "#D4A574"
+  text: "Elara (Neutral)"
+  font_size: 18
+  text_color: "#FFFFFF"
+
+- name: elara_scared
+  x: 320
+  y: 110
+  width: 300
+  height: 500
+  color: "#D4A574"
+  text: "Elara (Scared)"
+  font_size: 18
+  text_color: "#FF4444"
+
+- name: elara_determined
+  x: 320
+  y: 110
+  width: 300
+  height: 500
+  color: "#D4A574"
+  text: "Elara (Determined)"
+  font_size: 18
+  text_color: "#44FF44"
+
+- name: elara_happy
+  x: 320
+  y: 110
+  width: 300
+  height: 500
+  color: "#D4A574"
+  text: "Elara (Happy)"
+  font_size: 18
+  text_color: "#FFFF44"
+
+# Characters - Wolf (Right/upper-right positioning)
+- name: corrupted_wolf_aggro
+  x: 780
+  y: 110
+  width: 400
+  height: 300
+  color: "#1A1A1A"
+  text: "Wolf (Aggressive)"
+  font_size: 18
+  text_color: "#FF0000"
+
+- name: corrupted_wolf_calm
+  x: 780
+  y: 110
+  width: 400
+  height: 300
+  color: "#444444"
+  text: "Wolf (Calm)"
+  font_size: 18
+  text_color: "#88FF88"
+
+# Props/Objects - Lumin Seed (Center positioning)
+- name: item_lumin_seed
+  x: 590
+  y: 310
+  width: 100
+  height: 100
+  color: "#FFD700"
+  text: "Lumin Seed"
+  font_size: 14
+  text_color: "#FFFFFF"
+
+- name: item_lumin_seed_glowing
+  x: 590
+  y: 310
+  width: 100
+  height: 100
+  color: "#FFFF00"
+  text: "Lumin Seed (Glowing)"
+  font_size: 14
+  text_color: "#FFFFFF"

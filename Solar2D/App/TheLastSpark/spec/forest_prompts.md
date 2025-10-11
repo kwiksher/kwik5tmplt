@@ -58,3 +58,25 @@ Consistency is key. You will create a "character sheet" with a base description 
 **C. Props**
 *   **Prompt for `item_lumin_seed.png`:**
     `"a single magical seed glowing with a soft, warm inner light, intricate markings on the shell, resting on a wooden table, close-up, highly detailed, fantasy"`
+
+#### 3. yaml for create layered psd
+
+Create a YAML file for layered PSD generation based on the Forest Scene technical model.
+
+Instructions:
+
+    $scene=forst_scene
+
+    Parse the `${scene}.model.md` file and extract all visual assets (backgrounds, characters, props/objects) with their specifications. Generate a YAML file in the format of `${scene}_layers.yaml` with the following structure for each layer:
+
+    ```yaml
+    - name: <asset_name>
+      x: <x_position>
+      y: <y_position>
+      width: <width_in_pixels>
+      height: <height_in_pixels>
+      color: <hex_color_or_placeholder>
+      text: <optional_text_label>
+      font_size: <optional_font_size>
+      text_color: <optional_text_color>
+    ```

@@ -1,0 +1,16 @@
+- name: sfx_door_rattle.wav
+  description: ""
+- name: sfx_key_turn.wav
+  description: ""
+- name: sfx_door_creak.wav
+  description: ""
+- name: sfx_lock_click.wav
+  description: ""
+- name: sfx_chest_creak.wav
+  description: ""
+- name: sfx_door_slam.wav
+  description: ""
+- name: ambient_cabin_quiet.mp3
+  description: "Eerie quiet forest ambience, creaking wood (loop)"
+- name: music_cabin_tension.mp3
+  description: "Tension building music (triggered after door slams)"
