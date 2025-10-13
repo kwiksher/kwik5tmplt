@@ -1,6 +1,7 @@
 -- Avoid Ghost Action
 -- Makes Pacman flee away from the dangerous ghost
 
+local bt = require("btree")
 local M = {}
 
 local function clamp(value, minValue, maxValue)
@@ -12,8 +13,7 @@ local function clamp(value, minValue, maxValue)
   return value
 end
 
-function M.create(bt, pacman, ghost, world, statusText)
-  return function()
+function M.create(pacman, ghost, world, statusText)
     local dx = pacman.x - ghost.x
     local dy = pacman.y - ghost.y
     local len = math.sqrt(dx * dx + dy * dy)
@@ -34,6 +34,5 @@ function M.create(bt, pacman, ghost, world, statusText)
     end
     return bt.RUNNING
   end
-end
 
 return M

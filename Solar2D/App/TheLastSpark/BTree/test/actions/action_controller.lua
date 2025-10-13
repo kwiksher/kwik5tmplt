@@ -9,13 +9,13 @@ local actionModel = {
   ["Eat Fruit"] = "actions.eat_fruit"
 }
 
-function M.createActions(bt, pacman, ghost, world, statusText)
+function M.createActions()
   local actions = {}
 
   -- Dynamically load and create actions from model
   for actionName, modulePath in pairs(actionModel) do
     local actionModule = require(modulePath)
-    actions[actionName] = actionModule.create(bt, pacman, ghost, world, statusText)
+    actions[actionName] = actionModule.create
   end
 
   return actions

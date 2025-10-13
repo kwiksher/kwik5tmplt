@@ -1,12 +1,11 @@
 -- Eat Fruit Action
 -- Makes Pacman collect bonus fruit items
 
+local bt = require("btree")
 local M = {}
+local state = {}
 
-function M.create(bt, pacman, ghost, world, statusText)
-  local state = {}
-
-  return function()
+function M.create(pacman, ghost, world, statusText)
     if not state.target or not state.target.active then
       state.target = world.itemController.findNearest(pacman, world.fruits)
     end
@@ -23,7 +22,6 @@ function M.create(bt, pacman, ghost, world, statusText)
       return bt.SUCCESS
     end
     return bt.RUNNING
-  end
 end
 
 return M

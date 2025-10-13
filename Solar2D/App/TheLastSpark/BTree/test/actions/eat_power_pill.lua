@@ -1,10 +1,10 @@
 -- Eat Power Pill Action
 -- Navigates Pacman to the nearest power pill
 
+local bt = require("btree")
 local M = {}
 
-function M.create(bt, pacman, ghost, world, statusText)
-  return function()
+function M.create(pacman, ghost, world, statusText)
     local target = world.itemController.findNearest(pacman, world.powerPills)
     if not target then
       pacman.controller.releaseControl(pacman, "Eat Power Pill")
@@ -16,7 +16,6 @@ function M.create(bt, pacman, ghost, world, statusText)
       return bt.SUCCESS
     end
     return bt.RUNNING
-  end
 end
 
 return M

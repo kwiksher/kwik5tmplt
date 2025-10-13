@@ -1,13 +1,12 @@
 -- Eat Pills Action
 -- Makes Pacman collect standard pills
 
+local bt = require("btree")
 local M = {}
+local state = {}
 
-function M.create(bt, pacman, ghost, world, statusText)
-  local state = {}
-
-  return function()
-    if not state.target or not state.target.active then
+function M.create(pacman, ghost, world, statusText)
+  if not state.target or not state.target.active then
       state.target = world.itemController.findNearest(pacman, world.pills)
     end
     local target = state.target
@@ -23,6 +22,5 @@ function M.create(bt, pacman, ghost, world, statusText)
     end
     return bt.RUNNING
   end
-end
 
 return M

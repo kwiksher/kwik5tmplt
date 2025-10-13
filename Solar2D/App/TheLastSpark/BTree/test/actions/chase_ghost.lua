@@ -1,10 +1,10 @@
 -- Chase Ghost Action
 -- Makes Pacman chase the scared ghost to capture it
 
+local bt = require("btree")
 local M = {}
 
-function M.create(bt, pacman, ghost, world, statusText)
-  return function()
+function M.create(pacman, ghost, world, statusText)
     pacman.controller.moveToItem(pacman, "Chase Ghost", ghost)
     if ghost.scaredTimer <= 0 then
       pacman.controller.releaseControl(pacman, "Chase Ghost")
@@ -16,6 +16,5 @@ function M.create(bt, pacman, ghost, world, statusText)
     end
     return bt.RUNNING
   end
-end
 
 return M
