@@ -1,53 +1,62 @@
 -------------------------------------------------------------------------------
--- Forest Scene - Solar2D Implementation
+-- Forest Scene View - Solar2D Implementation
 -------------------------------------------------------------------------------
+local composer = require("composer")
 
 local scene = composer.newScene()
-local widget = require("widget")
-local helpers = require("App.TheLastSpark.forestScene_helpers")
+local controller = require("controllers.forest_controller")
+local model = require("models.forest_model")
+local common = require("utils.common_helpers")
+local displayManager = require("views.display_manager")
+local ElaraDisplay = require("views.forest.elara_display")
+local LuminSeedDisplay = require("views.forest.lumin_seed_display")
+local WolfDisplay = require("views.forest.wolf_display")
+
+-- Layout diagram (keeps object placement explicit, similar to BT test scene)
+local layout = {
+    background = "images/bg_cabin.png",
+    notes = [[
+        [ luminSeed ]   → trail →   [ wolf ]
+                 |                       ↑
+              [ elara ]           (forest edge)
+    ]],
+    objects = {
+        elara = {
+            x = (model.objects.elara or {}).x or 300,
+            y = (model.objects.elara or {}).y or 500,
+            width = (model.objects.elara or {}).width or 300,
+            height = (model.objects.elara or {}).height or 500,
+            neutralState = ((model.objects.elara or {}).states or {}).neutral or "images/elara_neutral.png",
+        },
+        wolf = {
+            x = (model.objects.wolf or {}).x or 900,
+            y = (model.objects.wolf or {}).y or 450,
+            width = (model.objects.wolf or {}).width or 400,
+            height = (model.objects.wolf or {}).height or 300,
+            aggroState = ((model.objects.wolf or {}).states or {}).aggro or "images/corrupted_wolf_aggro.png",
+        },
+        luminSeed = {
+            x = (model.objects.luminSeed or {}).x or display.contentCenterX,
+            y = (model.objects.luminSeed or {}).y or 400,
+            width = (model.objects.luminSeed or {}).width or 100,
+            height = (model.objects.luminSeed or {}).height or 100,
+            idleState = ((model.objects.luminSeed or {}).states or {}).normal or "images/item_lumin_seed.png",
+        },
+    }
+}
 
 -- Local variables for this scene
 local elara, wolf, luminSeed
 local background, vignette
 local dialogueText
 local nextButton
-local characterGroup
+local characterGroup, uiGroup
 
 -- Scene sequence and dialogue
-local sceneDialogue = {
-    { type = "narration", text = "A dusty sunbeam cuts through the broken window of a small, abandoned cabin. Dust motes dance in the light." },
-    { type = "show", what = "luminseed" },
-    { type = "show", what = "elara" },
-    { type = "sfx", sound = "rustling" },
-    { type = "sfx", sound = "wind", loop = true },
-    { type = "vo", sound = "vo_elara_01", text = "The Lumin Seed was the last one. The last spark of the Great Tree's light..." },
-    { type = "scene", background = "forest" },
-    { type = "sfx", sound = "footsteps", loop = true },
-    { type = "sfx", sound = "caw" },
-    { type = "narration", text = "The forest is unnervingly quiet. No birdsong, no rustle of creatures." },
-    { type = "sfx", sound = "growl" },
-    { type = "show", what = "wolf" },
-    { type = "music", sound = "tension", action = "play" },
-    { type = "emotion", character = "elara", state = "scared" },
-    { type = "vo", sound = "vo_elara_02", text = "Oh no." },
-    { type = "choice", options = {
-        "Fight it!",
-        "Try to calm it.",
-        "Run back to the cabin!"
-    }}
-}
+local sceneDialogue = model.dialogue
 
 -- Audio file mappings
-local audioFiles = {
-    rustling = "audio/sfx_rustling_cloth.wav",
-    wind = "audio/sfx_wind_gentle.wav",
-    footsteps = "audio/sfx_footsteps_forest.wav",
-    caw = "audio/sfx_crow_caw_distant.wav",
-    growl = "audio/sfx_wolf_growl_corrupted.wav",
-    vo_elara_01 = "audio/elara_vo_01.wav",
-    vo_elara_02 = "audio/elara_whisper_ohno.wav",
-    tension = "audio/Music_Tension_Builds.mp3"
-}
+local audioFiles = model.audio
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -57,110 +66,68 @@ function scene:create(event)
     local sceneGroup = self.view
 
     -- Create display groups for organization
-    background = display.newGroup()
-    characterGroup = display.newGroup()
-    uiGroup = display.newGroup()
-
-    sceneGroup:insert(background)
-    sceneGroup:insert(characterGroup)
-    sceneGroup:insert(uiGroup)
+    local layers = displayManager.createSceneLayers(sceneGroup)
+    background = layers.background
+    characterGroup = layers.characters
+    uiGroup = layers.ui
 
     -- Initial background (cabin interior)
-    local bgImage = display.newImageRect(background, "images/bg_cabin.png", 1280, 720)
-    bgImage.x = display.contentCenterX
-    bgImage.y = display.contentCenterY
-
-    -- Create vignette for mood
-    vignette = display.newRect(background, display.contentCenterX, display.contentCenterY, 1280, 720)
-    vignette:setFillColor(0, 0, 0, 0.3)
-
-    -- Dialogue box
-    local dialogueBox = display.newRoundedRect(uiGroup, display.contentCenterX, 600, 1000, 120, 10)
-    dialogueBox:setFillColor(0, 0, 0, 0.8)
-    dialogueBox.strokeWidth = 2
-    dialogueBox:setStrokeColor(0.5, 0.3, 0.1)
-
-    -- Dialogue text
-    dialogueText = display.newText({
-        parent = uiGroup,
-        text = "",
-        x = display.contentCenterX,
-        y = 600,
-        width = 900,
-        height = 100,
-        font = native.systemFont,
-        fontSize = 24,
-        align = "center"
+    local backgroundElements = displayManager.createBackgroundLayer(background, {
+        image = layout.background,
     })
-    dialogueText:setFillColor(1, 1, 1)
+    vignette = backgroundElements.vignette
 
-    -- Next button (initially hidden)
-    nextButton = widget.newButton({
-        label = "Next",
-        shape = "roundedRect",
-        width = 120,
-        height = 50,
-        cornerRadius = 10,
-        fillColor = { default={0.2,0.5,0.2,1}, over={0.3,0.6,0.3,1} },
-        labelColor = { default={1,1,1}, over={0.8,0.8,0.8} },
+    -- Dialogue elements (text plus navigation)
+    local uiElements = displayManager.createDialogueInterface(uiGroup, {
         onRelease = function()
             self:advanceDialogue()
-        end
+        end,
     })
-    nextButton.x = display.contentWidth - 100
-    nextButton.y = 660
-    uiGroup:insert(nextButton)
-    nextButton.isVisible = false
+    dialogueText = uiElements.dialogueText
+    nextButton = uiElements.nextButton
 
     -- Pre-load characters (but don't show them yet)
-    elara = display.newImageRect(characterGroup, "images/elara_neutral.png", 300, 500)
-    elara.x = 300
-    elara.y = 500
-    elara.isVisible = false
+    local elaraTemplate = (model.objects or {}).elara or {}
+    local elaraLayout = layout.objects.elara or {}
+    local elaraModelData = common.buildDisplayModel(elaraTemplate, elaraLayout, { visible = false })
+    elara = ElaraDisplay.create(characterGroup, elaraModelData)
 
-    luminSeed = display.newImageRect(characterGroup, "images/item_lumin_seed.png", 100, 100)
-    luminSeed.x = display.contentCenterX
-    luminSeed.y = 400
-    luminSeed.isVisible = false
+    local seedTemplate = (model.objects or {}).luminSeed or {}
+    local seedLayout = layout.objects.luminSeed or {}
+    local seedModelData = common.buildDisplayModel(seedTemplate, seedLayout, { visible = false })
+    luminSeed = LuminSeedDisplay.create(characterGroup, seedModelData)
 
-    wolf = display.newImageRect(characterGroup, "images/corrupted_wolf_aggro.png", 400, 300)
-    wolf.x = 900
-    wolf.y = 450
-    wolf.isVisible = false
+    local wolfTemplate = (model.objects or {}).wolf or {}
+    local wolfLayout = layout.objects.wolf or {}
+    local wolfModelData = common.buildDisplayModel(wolfTemplate, wolfLayout, { visible = false })
+    wolf = WolfDisplay.create(characterGroup, wolfModelData)
 
-    -- Object registry for state management
-    self._objects = {
-        elara = {
-            image = elara,
-            states = {
-                neutral = "images/elara_neutral.png",
-                scared = "images/elara_scared.png",
-                determined = "images/elara_determined.png",
-                happy = "images/elara_happy.png",
-            },
-            x = 300,
-            y = 500
-        },
-        wolf = {
-            image = wolf,
-            states = {
-                aggro = "images/corrupted_wolf_aggro.png",
-                calm = "images/corrupted_wolf_calm.png",
-            },
-            x = 900,
-            y = 450
-        },
-        luminSeed = {
-            image = luminSeed,
-            states = {
-                normal = "images/item_lumin_seed.png",
-                glowing = "images/item_lumin_seed_glowing.png",
-            }
-        }
-    }
+    -- Object registry for state management (hydrated from model templates)
+    self._objects = {}
+    for name, template in pairs(model.objects or {}) do
+        self._objects[name] = common.deepCopy(template)
+    end
+    if self._objects.elara then
+        self._objects.elara.image = elara
+        self._objects.elara.displayModule = ElaraDisplay
+        self._objects.elara.parentGroup = characterGroup
+        self._objects.elara.visible = elara.isVisible
+    end
+    if self._objects.wolf then
+        self._objects.wolf.image = wolf
+        self._objects.wolf.displayModule = WolfDisplay
+        self._objects.wolf.parentGroup = characterGroup
+        self._objects.wolf.visible = wolf.isVisible
+    end
+    if self._objects.luminSeed then
+        self._objects.luminSeed.image = luminSeed
+        self._objects.luminSeed.displayModule = LuminSeedDisplay
+        self._objects.luminSeed.parentGroup = characterGroup
+        self._objects.luminSeed.visible = luminSeed.isVisible
+    end
 
     -- Attach helper methods now that scene objects exist
-    helpers.attach(self, {
+    controller.attach(self, {
         background = background,
         vignette = vignette,
         dialogueText = dialogueText,
@@ -194,11 +161,6 @@ end
 function scene:destroy(event)
     -- Clean up if needed
 end
-
--- -----------------------------------------------------------------------------------
--- Custom scene functions
--- -----------------------------------------------------------------------------------
--- Custom functions moved to helpers module
 
 -- -----------------------------------------------------------------------------------
 -- Scene event listeners

@@ -21,4 +21,4 @@ gameData = {
 }
 
 -- Load the first scene
-composer.gotoScene("scenes.forestScene")
+composer.gotoScene("forestScene")

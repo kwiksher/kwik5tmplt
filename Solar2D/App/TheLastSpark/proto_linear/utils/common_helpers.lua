@@ -1,10 +1,67 @@
 -------------------------------------------------------------------------------
--- Common Helpers - shared utilities across scenes
+-- Common Helpers - shared utilities across proto_linear scenes
 -------------------------------------------------------------------------------
 
 local M = {}
 local composer = composer or require("composer")
 local widget = require("widget")
+
+local function deepCopy(value)
+    if type(value) ~= "table" then
+        return value
+    end
+
+    local copy = {}
+    for k, v in pairs(value) do
+        copy[k] = deepCopy(v)
+    end
+    return copy
+end
+
+local IGNORED_MODEL_FIELDS = {
+    image = true,
+    displayModule = true,
+    parentGroup = true,
+}
+
+local function cloneModelData(value)
+    if type(value) ~= "table" then
+        return value
+    end
+
+    local copy = {}
+    for k, v in pairs(value) do
+        if not IGNORED_MODEL_FIELDS[k] then
+            copy[k] = cloneModelData(v)
+        end
+    end
+    return copy
+end
+
+function M.deepCopy(value)
+    return deepCopy(value)
+end
+
+function M.buildDisplayModel(template, layoutData, overrides)
+    local modelData = deepCopy(template or {})
+
+    layoutData = layoutData or {}
+    for key, value in pairs(layoutData) do
+        if type(key) == "string" and key:match("State$") then
+            modelData.defaultImage = value or modelData.defaultImage
+        else
+            modelData[key] = deepCopy(value)
+        end
+    end
+
+    if overrides then
+        for key, value in pairs(overrides) do
+            modelData[key] = deepCopy(value)
+        end
+    end
+
+    return modelData
+end
 
 -- Methods table for setmetatable __index usage. Each method expects self._env.
 M.methods = {}
@@ -145,6 +202,7 @@ function M.methods:showObject(name)
     local od = objects[name]
     if od and od.image then
         od.image.isVisible = true
+        od.visible = true
     end
 end
 
@@ -157,38 +215,89 @@ function M.methods:changeObjectState(objectName, newState, onComplete)
     local objectData = objects[objectName]
     if not objectData then
         print("Warning: Object '" .. tostring(objectName) .. "' not found!")
-        return
+        return false
     end
 
     local stateImage = objectData.states and objectData.states[newState]
     if not stateImage then
         print("Warning: State '" .. tostring(newState) .. "' not found for object '" .. tostring(objectName) .. "'!")
-        return
+        return false
     end
 
-    if not objectData.image then
-        objectData.image = display.newImageRect(
-            characterGroup,
-            stateImage,
-            objectData.width or 100,
-            objectData.height or 100
-        )
-        objectData.image.x = objectData.x or display.contentCenterX
-        objectData.image.y = objectData.y or display.contentCenterY
+    local parentGroup = objectData.parentGroup or characterGroup or self.view
+    if not parentGroup then
+        print("Warning: No display group available for object '" .. tostring(objectName) .. "'")
+        return false
+    end
+
+    local factory = objectData.displayModule
+    local previousImage = objectData.image
+    local wasVisible = true
+    local oldX, oldY, oldW, oldH
+
+    if previousImage then
+        wasVisible = previousImage.isVisible ~= false
+        oldX, oldY = previousImage.x, previousImage.y
+        oldW, oldH = previousImage.width, previousImage.height
+        pcall(function() previousImage:removeSelf() end)
+    elseif objectData.visible ~= nil then
+        wasVisible = objectData.visible
+    end
+
+    local modelData
+    if factory and type(factory.create) == "function" then
+        modelData = cloneModelData(objectData)
+        modelData.defaultImage = stateImage
+        modelData.visible = wasVisible
+    end
+
+    local newImage
+    if modelData then
+        newImage = factory.create(parentGroup, modelData)
     else
-        local oldX, oldY = objectData.image.x, objectData.image.y
-        local oldW, oldH = objectData.image.width, objectData.image.height
-        pcall(function() objectData.image:removeSelf() end)
-        objectData.image = display.newImageRect(characterGroup, stateImage, oldW, oldH)
-        objectData.image.x, objectData.image.y = oldX, oldY
+        local width = objectData.width or oldW or 100
+        local height = objectData.height or oldH or 100
+        newImage = display.newImageRect(parentGroup, stateImage, width, height)
+        newImage.x = objectData.x or oldX or display.contentCenterX
+        newImage.y = objectData.y or oldY or display.contentCenterY
     end
 
-    objectData.image.alpha = 0
-    transition.fadeIn(objectData.image, { time = 500 })
+    if not newImage then
+        print("Warning: Failed to create display for object '" .. tostring(objectName) .. "'")
+        return false
+    end
+
+    if wasVisible then
+        newImage.isVisible = true
+        newImage.alpha = 0
+        transition.fadeIn(newImage, { time = 500 })
+    else
+        newImage.isVisible = false
+        newImage.alpha = 0
+    end
+
+    objectData.image = newImage
+    objectData.parentGroup = parentGroup
+    if factory and type(factory.create) == "function" then
+        objectData.displayModule = factory
+    end
+    objectData.currentState = newState
+    objectData.defaultImage = stateImage
+    objectData.visible = wasVisible
+    objectData.width = objectData.width or newImage.width
+    objectData.height = objectData.height or newImage.height
+    objectData.x = objectData.x or newImage.x
+    objectData.y = objectData.y or newImage.y
+
+    if env[objectName] then
+        env[objectName] = newImage
+    end
 
     if onComplete then
         timer.performWithDelay(600, onComplete)
     end
+
+    return true
 end
 
 function M.methods:changeObjectStateConditional(objectName, newState, condition)
@@ -281,7 +390,6 @@ function M.methods:handleChoice(choiceIndex, choiceText)
         if self.transitionToNextScene then self:transitionToNextScene() end
     end)
 end
--- (Removed duplicate function-style helpers; use methods via metatable)
 
 -- Generic condition/action registry methods
 function M.methods:setCondition(key, value)
@@ -335,45 +443,24 @@ end
 
 function M.methods:changeEmotion(character, state)
     local env = self._env or {}
-    local characterGroup = env.characterGroup
     local objects = env.objects or {}
 
-    -- Generic implementation for any character
     local charObj = objects[character]
-    if charObj then
-        -- Remove old image if it exists
-        if charObj.image and charObj.image.removeSelf then
-            pcall(function() charObj.image:removeSelf() end)
-        end
-
-        -- Get the state image path
-        local stateImage = charObj.states and charObj.states[state]
-        if stateImage then
-            -- Create new image with the emotion state
-            local width = charObj.width or 300
-            local height = charObj.height or 500
-            local newImage = display.newImageRect(characterGroup, stateImage, width, height)
-            newImage.x = charObj.x or display.contentCenterX
-            newImage.y = charObj.y or display.contentCenterY
-
-            -- Update the object registry
-            charObj.image = newImage
-            -- Also update env reference if it exists (for backward compatibility)
-            if env[character] then
-                env[character] = newImage
-            end
-
-            -- Fade in effect
-            newImage.alpha = 0
-            transition.fadeIn(newImage, { time = 500 })
-
-            print("Changed " .. character .. " emotion to: " .. state)
-        else
-            print("Warning: State '" .. state .. "' not found for " .. character)
-        end
-    else
-        print("Warning: Character '" .. character .. "' not found in objects registry!")
+    if not charObj then
+        print("Warning: Character '" .. tostring(character) .. "' not found in objects registry!")
+        return
     end
+
+    local changed = self:changeObjectState(character, state)
+    if not changed then
+        return
+    end
+
+    if env[character] then
+        env[character] = charObj.image
+    end
+
+    print("Changed " .. character .. " emotion to: " .. state)
 end
 
 -- Determine player's choice from global gameData (or _G fallback)

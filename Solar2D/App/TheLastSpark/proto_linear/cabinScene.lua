@@ -1,173 +1,145 @@
 -------------------------------------------------------------------------------
--- Room Scene - Demonstrates generic object state handling
+-- Cabin Scene View - Demonstrates generic object state handling
 -------------------------------------------------------------------------------
+local composer = require("composer")
 
 local scene = composer.newScene()
-local widget = require("widget")
-local helpers = require("App.TheLastSpark.cabinScene_helpers")
+local controller = require("controllers.cabin_controller")
+local model = require("models.cabin_model")
+local common = require("utils.common_helpers")
+local displayManager = require("views.display_manager")
+local ElaraDisplay = require("views.cabin.elara_display")
+local LuminSeedDisplay = require("views.cabin.lumin_seed_display")
+local ChestDisplay = require("views.cabin.chest_display")
+local CabinDoorDisplay = require("views.cabin.cabin_door_display")
 
-local elara, luminSeed
+-- Layout map (helps visualize where interactive elements are placed)
+local layout = {
+    background = "images/bg_cabin.png",
+    notes = [[
+        [ elara ]      [ lumin_seed ]
+              \            |
+        [ chest ]   ---   [ cabin_door ]
+    ]],
+    objects = {
+        elara = {
+            x = (model.objects.elara or {}).x or 300,
+            y = (model.objects.elara or {}).y or 500,
+            width = (model.objects.elara or {}).width or 300,
+            height = (model.objects.elara or {}).height or 500,
+            neutralState = ((model.objects.elara or {}).states or {}).neutral or "images/elara_neutral.png",
+        },
+        lumin_seed = {
+            x = (model.objects.lumin_seed or {}).x or display.contentCenterX,
+            y = (model.objects.lumin_seed or {}).y or 400,
+            width = (model.objects.lumin_seed or {}).width or 100,
+            height = (model.objects.lumin_seed or {}).height or 100,
+            idleState = ((model.objects.lumin_seed or {}).states or {}).normal or "images/lumin_seed_normal.png",
+        },
+        chest = {
+            x = (model.objects.chest or {}).x or 420,
+            y = (model.objects.chest or {}).y or 540,
+            width = (model.objects.chest or {}).width or 170,
+            height = (model.objects.chest or {}).height or 130,
+            lockedState = ((model.objects.chest or {}).states or {}).locked or "images/chest_locked.png",
+            visible = false,
+        },
+        cabin_door = {
+            x = (model.objects.cabin_door or {}).x or 940,
+            y = (model.objects.cabin_door or {}).y or 520,
+            width = (model.objects.cabin_door or {}).width or 220,
+            height = (model.objects.cabin_door or {}).height or 320,
+            closedState = ((model.objects.cabin_door or {}).states or {}).closed or "images/door_closed.png",
+            visible = false,
+        },
+    }
+}
+
+local elara, luminSeed, chest, cabinDoor
 local background, vignette
 local dialogueText, nextButton
-local characterGroup
+local characterGroup, uiGroup
 
 -- Initialize game data for conditional logic
 _G.gameData = _G.gameData or {}
 _G.gameData.hasKey = false
 _G.gameData.hasMagicKey = false
 
-local sceneDialogue = {
-    { type = "narration", text = "You stand before an old cabin in the woods." },
-    { type = "show", what = "cabin_door" },
-    { type = "object_state", object = "cabin_door", state = "closed" },
-
-    { type = "narration", text = "The door is firmly closed. You try the handle..." },
-    { type = "sfx", sound = "door_rattle" },
-
-    -- Conditional: Door opens only if player has a key (string reference)
-    { type = "object_state_conditional", object = "cabin_door", state = "open", condition = "hasKey" },
-    { type = "sfx", sound = "door_creak" },
-
-    { type = "narration", text = "The door creaks open, revealing a dark interior." },
-    { type = "show", what = "elara" },
-    { type = "emotion", character = "elara", state = "determined" },
-
-    { type = "narration", text = "On a dusty table, you spot the Lumin Seed." },
-    { type = "show", what = "lumin_seed" },
-    { type = "object_state", object = "lumin_seed", state = "glowing" },
-
-    { type = "narration", text = "In the corner, an old chest catches your eye." },
-    { type = "show", what = "chest" },
-    { type = "object_state", object = "chest", state = "locked" },
-
-    { type = "narration", text = "The chest is locked. You search for a key..." },
-
-    -- Set flag when key is found (string reference)
-    { type = "custom", action = "setHasKey" },
-
-    { type = "sfx", sound = "key_turn" },
-    { type = "object_state", object = "chest", state = "unlocked" },
-    { type = "sfx", sound = "chest_open" },
-
-    -- Conditional: chest state depends on whether it was already looted (string reference)
-    { type = "object_state_conditional", object = "chest", state = "open", condition = "chestNotLooted" },
-
-    { type = "narration", text = "The chest is empty! Someone got here first." },
-    { type = "emotion", character = "elara", state = "scared" },
-    { type = "object_state", object = "chest", state = "empty" },
-
-    { type = "sfx", sound = "door_slam" },
-    { type = "object_state", object = "cabin_door", state = "closed" },
-    { type = "narration", text = "The door slams shut behind you! You're trapped!" },
-
-    { type = "choice", options = {
-        "Try to force the door open",
-        "Search for another way out",
-        "Investigate the strange markings"
-    }}
-}
-
-local audioFiles = {
-    door_rattle = "audio/sfx_door_rattle.wav",
-    door_creak = "audio/sfx_door_creak.wav",
-    key_turn = "audio/sfx_key_turn.wav",
-    chest_open = "audio/sfx_chest_open.wav",
-    door_slam = "audio/sfx_door_slam.wav",
-}
+local sceneDialogue = model.dialogue
+local audioFiles = model.audio
 
 function scene:create(event)
     local sceneGroup = self.view
 
-    background = display.newGroup()
-    characterGroup = display.newGroup()
-    uiGroup = display.newGroup()
+    local layers = displayManager.createSceneLayers(sceneGroup)
+    background = layers.background
+    characterGroup = layers.characters
+    uiGroup = layers.ui
 
-    sceneGroup:insert(background)
-    sceneGroup:insert(characterGroup)
-    sceneGroup:insert(uiGroup)
-
-    local bgImage = display.newImageRect(background, "images/bg_cabin.png", 1280, 720)
-    bgImage.x = display.contentCenterX
-    bgImage.y = display.contentCenterY
-
-    vignette = display.newRect(background, display.contentCenterX, display.contentCenterY, 1280, 720)
-    vignette:setFillColor(0, 0, 0, 0.3)
-
-    local dialogueBox = display.newRoundedRect(uiGroup, display.contentCenterX, 600, 1000, 120, 10)
-    dialogueBox:setFillColor(0, 0, 0, 0.8)
-    dialogueBox.strokeWidth = 2
-    dialogueBox:setStrokeColor(0.5, 0.3, 0.1)
-
-    dialogueText = display.newText({ parent = uiGroup, text = "", x = display.contentCenterX, y = 600, width = 900, height = 100, font = native.systemFont, fontSize = 24, align = "center" })
-    dialogueText:setFillColor(1, 1, 1)
-
-    nextButton = widget.newButton({
-        label = "Next",
-        shape = "roundedRect",
-        width = 120,
-        height = 50,
-        cornerRadius = 10,
-        fillColor = { default={0.2,0.5,0.2,1}, over={0.3,0.6,0.3,1} },
-        labelColor = { default={1,1,1}, over={0.8,0.8,0.8} },
-        onRelease = function() self:advanceDialogue() end
+    local backgroundElements = displayManager.createBackgroundLayer(background, {
+        image = layout.background,
     })
-    nextButton.x = display.contentWidth - 100
-    nextButton.y = 660
-    uiGroup:insert(nextButton)
-    nextButton.isVisible = false
+    vignette = backgroundElements.vignette
+
+    local uiElements = displayManager.createDialogueInterface(uiGroup, {
+        onRelease = function() self:advanceDialogue() end,
+    })
+    dialogueText = uiElements.dialogueText
+    nextButton = uiElements.nextButton
 
     -- Preload sample characters if desired (optional; object registry will create as needed)
-    elara = display.newImageRect(characterGroup, "images/elara_neutral.png", 300, 500)
-    elara.x, elara.y = 300, 500
-    elara.isVisible = false
+    local elaraTemplate = (model.objects or {}).elara or {}
+    local elaraLayout = layout.objects.elara or {}
+    local elaraModelData = common.buildDisplayModel(elaraTemplate, elaraLayout, { visible = false })
+    elara = ElaraDisplay.create(characterGroup, elaraModelData)
 
-    luminSeed = display.newImageRect(characterGroup, "images/lumin_seed_normal.png", 100, 100)
-    luminSeed.x, luminSeed.y = display.contentCenterX, 400
-    luminSeed.isVisible = false
+    local seedTemplate = (model.objects or {}).lumin_seed or {}
+    local seedLayout = layout.objects.lumin_seed or {}
+    local seedModelData = common.buildDisplayModel(seedTemplate, seedLayout, { visible = false })
+    luminSeed = LuminSeedDisplay.create(characterGroup, seedModelData)
 
-    -- Object registry
-    self._objects = {
-        elara = {
-            image = elara,
-            states = {
-                neutral = "images/elara_neutral.png",
-                scared = "images/elara_scared.png",
-                determined = "images/elara_determined.png",
-                happy = "images/elara_happy.png",
-            }
-        },
-        cabin_door = {
-            image = nil,
-            states = {
-                open = "images/door_open.png",
-                closed = "images/door_closed.png",
-                broken = "images/door_broken.png",
-            },
-            x = 900, y = 380, width = 220, height = 320
-        },
-        lumin_seed = {
-            image = luminSeed,
-            states = {
-                normal = "images/lumin_seed_normal.png",
-                glowing = "images/lumin_seed_glowing.png",
-                dim = "images/lumin_seed_dim.png",
-                pulsing = "images/lumin_seed_pulsing.png",
-            }
-        },
-        chest = {
-            image = nil,
-            states = {
-                locked = "images/chest_locked.png",
-                unlocked = "images/chest_unlocked.png",
-                open = "images/chest_open.png",
-                empty = "images/chest_empty.png",
-            },
-            x = 600, y = 420, width = 170, height = 130
-        },
-    }
+    local chestTemplate = (model.objects or {}).chest or {}
+    local chestLayout = layout.objects.chest or {}
+    local chestModelData = common.buildDisplayModel(chestTemplate, chestLayout, { visible = false })
+    chest = ChestDisplay.create(characterGroup, chestModelData)
 
-    -- Attach helper methods via metatable
-    helpers.attach(self, {
+    local doorTemplate = (model.objects or {}).cabin_door or {}
+    local doorLayout = layout.objects.cabin_door or {}
+    local doorModelData = common.buildDisplayModel(doorTemplate, doorLayout, { visible = false })
+    cabinDoor = CabinDoorDisplay.create(characterGroup, doorModelData)
+
+    -- Object registry sourced from model definitions
+    self._objects = {}
+    for name, template in pairs(model.objects or {}) do
+        self._objects[name] = common.deepCopy(template)
+    end
+    if self._objects.elara then
+        self._objects.elara.image = elara
+        self._objects.elara.displayModule = ElaraDisplay
+        self._objects.elara.parentGroup = characterGroup
+        self._objects.elara.visible = elara.isVisible
+    end
+    if self._objects.lumin_seed then
+        self._objects.lumin_seed.image = luminSeed
+        self._objects.lumin_seed.displayModule = LuminSeedDisplay
+        self._objects.lumin_seed.parentGroup = characterGroup
+        self._objects.lumin_seed.visible = luminSeed.isVisible
+    end
+    if self._objects.chest then
+        self._objects.chest.image = chest
+        self._objects.chest.displayModule = ChestDisplay
+        self._objects.chest.parentGroup = characterGroup
+        self._objects.chest.visible = chest.isVisible
+    end
+    if self._objects.cabin_door then
+        self._objects.cabin_door.image = cabinDoor
+        self._objects.cabin_door.displayModule = CabinDoorDisplay
+        self._objects.cabin_door.parentGroup = characterGroup
+        self._objects.cabin_door.visible = cabinDoor.isVisible
+    end
+
+    -- Attach helper methods via controller
+    controller.attach(self, {
         background = background,
         vignette = vignette,
         dialogueText = dialogueText,
@@ -175,6 +147,8 @@ function scene:create(event)
         characterGroup = characterGroup,
         elara = elara,
         luminSeed = luminSeed,
+        chest = chest,
+        cabinDoor = cabinDoor,
         sceneDialogue = sceneDialogue,
         audioFiles = audioFiles,
         objects = self._objects,
