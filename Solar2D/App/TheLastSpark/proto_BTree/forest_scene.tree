@@ -1,0 +1,32 @@
+->
+|    [Show cabin interior]
+|    [Show lumin seed]
+|    [Show Elara]
+|    [Play rustling sound]
+|    [Play wind sound]
+|    [Play Elara voice line 1]
+|    [Change to forest scene]
+|    [Play footsteps sound]
+|    [Play crow caw sound]
+|    [Show forest narration]
+|    [Play wolf growl]
+|    [Show wolf]
+|    [Play tension music]
+|    [Change Elara to scared]
+|    [Play Elara voice line 2]
+|    ?
+|    |    ->
+|    |    |    (player choice fight)
+|    |    |    [Focus on wolf]
+|    |    |    [Present choice: "Fight it!"]
+|    |    |    [Go to fight scene]
+|    |    ->
+|    |    |    (player choice calm)
+|    |    |    [Focus on Elara]
+|    |    |    [Present choice: "Try to calm it."]
+|    |    |    [Go to calm scene]
+|    |    ->
+|    |    |    (player choice retreat)
+|    |    |    [Focus on cabin]
+|    |    |    [Present choice: "Run back to the cabin!"]
+|    |    |    [Go to retreat scene]
