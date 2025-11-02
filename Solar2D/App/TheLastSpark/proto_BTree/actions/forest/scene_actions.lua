@@ -1,41 +1,37 @@
 -- Scene Actions
 -- Consolidated actions for scene transitions
 -- Accepts action parameter to specify which scene transition
+-- Uses action_helper for common functionality
 
 local bt = require("btree")
-local M = {}
+local actionHelper = require("utils.action_helper")
 
--- Action constants
-M.ACTIONS = {
-    CHANGE_TO_FOREST = "change_to_forest",
-    GO_TO_FIGHT = "go_to_fight",
-    GO_TO_CALM = "go_to_calm",
-    GO_TO_RETREAT = "go_to_retreat"
-}
+-- Create action module with helper methods
+local M = actionHelper.new()
 
+-- Override initialize since scene actions don't need scene objects
 function M.initialize(objects)
     -- Scene actions don't typically need scene objects
 end
 
-function M.execute(action)
-    if not action then
-        print("Error: No action specified for Scene")
-        return bt.FAILED
-    end
-
-    if action == M.ACTIONS.CHANGE_TO_FOREST then
+-- Register Scene-specific actions
+M.ACTIONS = {
+    forest = function()
         return M.changeToForestScene()
-    elseif action == M.ACTIONS.GO_TO_FIGHT then
+    end,
+
+    fight = function()
         return M.goToFightScene()
-    elseif action == M.ACTIONS.GO_TO_CALM then
+    end,
+
+    calm = function()
         return M.goToCalmScene()
-    elseif action == M.ACTIONS.GO_TO_RETREAT then
+    end,
+
+    retreat = function()
         return M.goToRetreatScene()
-    else
-        print("Error: Unknown Scene action - " .. tostring(action))
-        return bt.FAILED
-    end
-end
+    end,
+}
 
 function M.changeToForestScene()
     -- Change background to forest scene

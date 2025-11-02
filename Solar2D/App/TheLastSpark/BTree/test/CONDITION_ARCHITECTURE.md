@@ -164,10 +164,10 @@ local conditions = conditionController.createConditions(bt, pacman, world)
 ```lua
 local function onEnterFrame(event)
   -- ... update entities ...
-  
+
   -- Update all conditions
   conditionController.updateConditions(tree, conditions, pacman, ghost)
-  
+
   -- Behavior tree uses updated condition statuses
   tree:tick()
 end
@@ -277,7 +277,7 @@ local M = {}
 function M.create(world)
   return function(pacman, ghost)
     local distance = world.collisionController.distance(
-      pacman.x, pacman.y, 
+      pacman.x, pacman.y,
       ghost.x, ghost.y
     )
     return distance < 120 and bt.SUCCESS or bt.FAILED
@@ -327,15 +327,15 @@ end
 -- In main.lua game loop
 local function onEnterFrame(event)
   -- ... updates ...
-  
+
   conditionController.updateConditions(tree, conditions, pacman, ghost)
-  
+
   -- Debug: Print condition results
   for name, handler in pairs(conditions) do
     local result = handler(pacman, ghost)
     print(name .. ": " .. (result == bt.SUCCESS and "✓" or "✗"))
   end
-  
+
   tree:tick()
 end
 ```### Test Individual Condition

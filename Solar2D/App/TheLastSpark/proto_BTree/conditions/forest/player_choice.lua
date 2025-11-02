@@ -4,6 +4,15 @@
 
 local M = {}
 
+M.CONDITION_NAME = "player_choice"
+
+-- Condition types
+M.CONDITION_TYPES = {
+    CALM = "calm",
+    FIGHT = "fight",
+    RETREAT = "retreat"
+}
+
 -- Scene objects reference
 local sceneObjects = {}
 
@@ -47,19 +56,32 @@ function M.evaluate_retreat()
     end
 end
 
--- Generic evaluate function that can handle all three conditions
--- This maintains backward compatibility with the existing BTree system
 function M.evaluate(conditionType)
-    if conditionType == "calm" then
-        return M.evaluate_calm()
-    elseif conditionType == "fight" then
-        return M.evaluate_fight()
-    elseif conditionType == "retreat" then
-        return M.evaluate_retreat()
+    local functionName = "evaluate_" .. conditionType
+    if M[functionName] then
+        return M[functionName]()
     else
         print("Player choice condition: Unknown condition type - " .. tostring(conditionType))
         return false
     end
+end
+
+-- Generate condition wrappers for each condition type
+-- Returns a table of conditions that can be registered in the controller
+function M.generateConditions()
+    local conditionWrappers = {}
+
+    for _, conditionType in pairs(M.CONDITION_TYPES) do
+        local conditionName = M.CONDITION_NAME .. "_" .. conditionType
+        conditionWrappers[conditionName] = {
+            initialize = M.initialize,
+            evaluate = function()
+                return M.evaluate(conditionType)
+            end
+        }
+    end
+
+    return conditionWrappers
 end
 
 return M

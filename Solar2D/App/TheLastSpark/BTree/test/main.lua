@@ -113,6 +113,11 @@ tree:onActionActivation(function(_, actionNode)
     return
   end
   local result = handleActionNode(actionNode)
+  --
+  -- TBI UI:dispatchEvent to kwik action
+  --    actionNode.name
+  --    result
+  --
   tree:setActionStatus(actionNode.name, result or bt.FAILED)
 end)
 

@@ -484,4 +484,75 @@ function M.gotoSceneByChoice(mapping, options)
     composer.gotoScene(nextScene, options or { effect = "fade", time = 800 })
 end
 
+-------------------------------------------------------------------------------
+-- BTree Helper Functions
+-------------------------------------------------------------------------------
+
+-- Load behavior tree from file
+function M.loadBehaviorTree(treeFileName)
+    local bt = require("utils.btree")
+    local treeFilePath = system.pathForFile(treeFileName, system.ResourceDirectory)
+
+    if not treeFilePath then
+        print("ERROR: Could not find " .. treeFileName)
+        return nil
+    end
+
+    local file = io.open(treeFilePath, "r")
+    if not file then
+        print("ERROR: Could not open " .. treeFileName)
+        return nil
+    end
+
+    local treeText = file:read("*a")
+    file:close()
+
+    local tree = bt.BehaviorTree.fromText(treeText)
+    if not tree then
+        print("ERROR: Could not parse behavior tree")
+    else
+        print("Behavior tree loaded successfully from " .. treeFileName)
+    end
+
+    return tree
+end
+
+-- Start behavior tree with automatic ticking
+-- Returns the timer ID for later cleanup
+function M.startBehaviorTree(behaviorTree, tickInterval)
+    local bt = require("utils.btree")
+
+    if not behaviorTree then
+        print("ERROR: Cannot start behavior tree - tree not provided")
+        return nil
+    end
+
+    tickInterval = tickInterval or 50 -- Default 50ms tick rate
+
+    print("\n=== Starting Behavior Tree ===")
+
+    -- Create a timer that ticks the behavior tree
+    local tickTimer = timer.performWithDelay(tickInterval, function()
+        local result = behaviorTree:tick()
+
+        -- Check the result to determine if the tree has completed
+        if result == bt.SUCCESS then
+            print("Behavior tree completed successfully")
+            if tickTimer then
+                timer.cancel(tickTimer)
+                tickTimer = nil
+            end
+        elseif result == bt.FAILURE then
+            print("Behavior tree failed")
+            if tickTimer then
+                timer.cancel(tickTimer)
+                tickTimer = nil
+            end
+        end
+        -- RUNNING means the tree is still executing, so we continue ticking
+    end, 0)  -- 0 means repeat indefinitely
+
+    return tickTimer
+end
+
 return M

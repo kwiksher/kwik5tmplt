@@ -1,249 +1,203 @@
--- Display Manager
--- Coordinates all display components for the BTree forest scene
--- Manages creation, positioning, removal, and transitions of display objects
+-------------------------------------------------------------------------------
+-- Display Manager for BTree forest scene
+-- Coordinates all display components and provides shared display utilities
+-------------------------------------------------------------------------------
+local widget = require("widget")
 
 local M = {}
 
--- Display component references
-local displayComponents = {}
-local sceneGroup = nil
-local currentFocus = nil
-
--- Display states
-local DISPLAY_STATES = {
-    FOREST = "forest",
-    CABIN_FOCUS = "cabin_focus",
-    WOLF_FOCUS = "wolf_focus",
-    ELARA_FOCUS = "elara_focus",
-    CHOICE = "choice"
-}
-
--- Transition types
-local TRANSITION_TYPES = {
-    FADE = "fade",
-    SLIDE = "slide",
-    ZOOM = "zoom",
-    NONE = "none"
-}
-
--- Initialize the display manager
-function M.initialize(parentGroup)
-    sceneGroup = parentGroup
-    displayComponents = {}
-    currentFocus = DISPLAY_STATES.FOREST
-
-    print("Display Manager: Initialized with parent group")
-    return true
-end
-
--- Load all display components
-function M.loadDisplayComponents(models)
-    if not sceneGroup then
-        print("Display Manager: Error - Scene group not initialized")
-        return false
+-------------------------------------------------------------------------------
+-- Utility functions
+-------------------------------------------------------------------------------
+local function deepCopy(value)
+    if type(value) ~= "table" then
+        return value
     end
 
-    -- Load display modules
-    local elaraDisplay = require("views.elara_display")
-    local wolfDisplay = require("views.wolf_display")
-    local luminSeedDisplay = require("views.lumin_seed_display")
-    local cabinDisplay = require("views.cabin_display")
-
-    -- Create display objects
-    displayComponents.elara = elaraDisplay.create(sceneGroup, models.elara)
-    displayComponents.wolf = wolfDisplay.create(sceneGroup, models.wolf)
-    displayComponents.luminSeed = luminSeedDisplay.create(models.luminSeed)
-    displayComponents.cabin = cabinDisplay.create(models.cabin)
-
-    -- Initialize all as hidden
-    M.hideAll()
-
-    print("Display Manager: Loaded all display components")
-    return displayComponents
+    local copy = {}
+    for k, v in pairs(value) do
+        copy[k] = deepCopy(v)
+    end
+    return copy
 end
 
--- Get display components
-function M.getDisplayComponents()
-    return displayComponents
-end
-
--- Show specific element
-function M.showElement(elementName, transitionType)
-    if not displayComponents[elementName] then
-        print("Display Manager: Element not found - " .. elementName)
-        return false
-    end
-
-    if displayComponents[elementName].isVisible ~= nil then
-        -- For Solar2D display objects
-        displayComponents[elementName].isVisible = true
-    else
-        -- For custom display objects
-        displayComponents[elementName].visible = true
-    end
-
-    print("Display Manager: Showing " .. elementName .. " with transition: " .. (transitionType or TRANSITION_TYPES.NONE))
-    return true
-end
-
--- Hide specific element
-function M.hideElement(elementName, transitionType)
-    if not displayComponents[elementName] then
-        print("Display Manager: Element not found - " .. elementName)
-        return false
-    end
-
-    if displayComponents[elementName].isVisible ~= nil then
-        -- For Solar2D display objects
-        displayComponents[elementName].isVisible = false
-    else
-        -- For custom display objects
-        displayComponents[elementName].visible = false
-    end
-
-    print("Display Manager: Hiding " .. elementName .. " with transition: " .. (transitionType or TRANSITION_TYPES.NONE))
-    return true
-end
-
--- Hide all elements
-function M.hideAll()
-    for name, component in pairs(displayComponents) do
-        if component.isVisible ~= nil then
-            component.isVisible = false
-        else
-            component.visible = false
+local function withDefaults(params, defaults)
+    local merged = deepCopy(defaults or {})
+    if params then
+        for k, v in pairs(params) do
+            merged[k] = v
         end
     end
-    print("Display Manager: All elements hidden")
+    return merged
 end
 
--- Focus on wolf (camera/attention focus)
-function M.focusOnWolf()
-    currentFocus = DISPLAY_STATES.WOLF_FOCUS
-
-    -- Hide other elements
-    M.hideElement("elara")
-    M.hideElement("cabin")
-    M.hideElement("luminSeed")
-
-    -- Show wolf
-    M.showElement("wolf", TRANSITION_TYPES.ZOOM)
-
-    -- In a real implementation, this would animate camera to wolf position
-    -- transition.to(sceneGroup, {x = -displayComponents.wolf.x + display.contentCenterX, y = -displayComponents.wolf.y + display.contentCenterY, time = 1000})
-
-    print("Display Manager: Focused on wolf")
-    return true
+local function ensureColorComponents(color, default)
+    color = color or default
+    local r = color[1] or default[1]
+    local g = color[2] or default[2]
+    local b = color[3] or default[3]
+    local a = color[4] or default[4]
+    return r, g, b, a
 end
 
--- Focus on Elara
-function M.focusOnElara()
-    currentFocus = DISPLAY_STATES.ELARA_FOCUS
+-------------------------------------------------------------------------------
+-- Scene creation functions
+-------------------------------------------------------------------------------
 
-    -- Hide other elements
-    M.hideElement("wolf")
-    M.hideElement("cabin")
-    M.hideElement("luminSeed")
+-- Create and insert the display layers used by each scene
+function M.createSceneLayers(parentGroup)
+    local background = display.newGroup()
+    local characters = display.newGroup()
+    local ui = display.newGroup()
 
-    -- Show Elara
-    M.showElement("elara", TRANSITION_TYPES.ZOOM)
+    parentGroup:insert(background)
+    parentGroup:insert(characters)
+    parentGroup:insert(ui)
 
-    -- In a real implementation, this would animate camera to Elara position
-    -- transition.to(sceneGroup, {x = -displayComponents.elara.x + display.contentCenterX, y = -displayComponents.elara.y + display.contentCenterY, time = 1000})
-
-    print("Display Manager: Focused on Elara")
-    return true
+    return {
+        background = background,
+        characters = characters,
+        ui = ui,
+    }
 end
 
--- Focus on cabin
-function M.focusOnCabin()
-    currentFocus = DISPLAY_STATES.CABIN_FOCUS
+-- Build a background image (optional) and vignette overlay
+function M.createBackgroundLayer(group, params)
+    local defaultWidth = display.actualContentWidth or display.contentWidth or 1280
+    local defaultHeight = display.actualContentHeight or display.contentHeight or 720
+    local centerX = display.contentCenterX or (defaultWidth * 0.5)
+    local centerY = display.contentCenterY or (defaultHeight * 0.5)
 
-    -- Hide other elements
-    M.hideElement("wolf")
-    M.hideElement("elara")
-    M.hideElement("luminSeed")
+    local defaults = {
+        width = defaultWidth,
+        height = defaultHeight,
+        x = centerX,
+        y = centerY,
+        vignette = true,
+        vignetteX = centerX,
+        vignetteY = centerY,
+        vignetteWidth = defaultWidth,
+        vignetteHeight = defaultHeight,
+        vignetteColor = {0, 0, 0, 0.3},
+    }
 
-    -- Show cabin
-    M.showElement("cabin", TRANSITION_TYPES.ZOOM)
+    local opts = withDefaults(params, defaults)
 
-    -- In a real implementation, this would animate camera to cabin position
-    -- transition.to(sceneGroup, {x = -displayComponents.cabin.x + display.contentCenterX, y = -displayComponents.cabin.y + display.contentCenterY, time = 1000})
+    local width = opts.width
+    local height = opts.height
+    local bgImage
 
-    print("Display Manager: Focused on cabin")
-    return true
-end
-
--- Show forest scene (default state)
-function M.showForestScene()
-    currentFocus = DISPLAY_STATES.FOREST
-
-    -- Show all elements in their default positions
-    M.showElement("elara", TRANSITION_TYPES.FADE)
-    M.showElement("wolf", TRANSITION_TYPES.FADE)
-    M.showElement("cabin", TRANSITION_TYPES.FADE)
-    M.showElement("luminSeed", TRANSITION_TYPES.FADE)
-
-    -- Reset camera position
-    -- transition.to(sceneGroup, {x = 0, y = 0, time = 1000})
-
-    print("Display Manager: Showing forest scene")
-    return true
-end
-
--- Change element state (e.g., Elara to scared state)
-function M.changeElementState(elementName, newState)
-    if not displayComponents[elementName] then
-        print("Display Manager: Element not found - " .. elementName)
-        return false
+    if opts.image then
+        bgImage = display.newImageRect(group, opts.image, width, height)
+        bgImage.x = opts.x
+        bgImage.y = opts.y
     end
 
-    -- Check if the display module has changeState function
-    local displayModule = require("views." .. elementName .. "_display")
-    if displayModule and displayModule.changeState then
-        displayComponents[elementName] = displayModule.changeState(displayComponents[elementName], newState)
-        print("Display Manager: Changed " .. elementName .. " state to " .. newState)
-        return true
-    else
-        print("Display Manager: changeState not supported for " .. elementName)
-        return false
-    end
-end
-
--- Get current focus state
-function M.getCurrentFocus()
-    return currentFocus
-end
-
--- Check if element is visible
-function M.isElementVisible(elementName)
-    if not displayComponents[elementName] then
-        return false
+    local vignette
+    if opts.vignette ~= false then
+        local vx = opts.vignetteX or opts.x
+        local vy = opts.vignetteY or opts.y
+        local vw = opts.vignetteWidth or width
+        local vh = opts.vignetteHeight or height
+        vignette = display.newRect(group, vx, vy, vw, vh)
+        local r, g, b, a = ensureColorComponents(opts.vignetteColor, defaults.vignetteColor)
+        vignette:setFillColor(r, g, b, a)
     end
 
-    if displayComponents[elementName].isVisible ~= nil then
-        return displayComponents[elementName].isVisible
-    else
-        return displayComponents[elementName].visible
-    end
+    return {
+        background = bgImage,
+        vignette = vignette,
+    }
 end
 
--- Clean up display manager
-function M.cleanup()
-    for name, component in pairs(displayComponents) do
-        if component.removeSelf then
-            component:removeSelf()
-        end
+-- Create the dialogue UI elements (box, text, and next button)
+function M.createDialogueInterface(uiGroup, params)
+    local contentWidth = display.actualContentWidth or display.contentWidth or 1280
+    local contentHeight = display.actualContentHeight or display.contentHeight or 720
+    local centerX = display.contentCenterX or (contentWidth * 0.5)
+
+    local defaults = {
+        width = 1000,
+        height = 120,
+        x = centerX,
+        y = contentHeight - 120,
+        cornerRadius = 10,
+        fillColor = {0, 0, 0, 0.8},
+        strokeWidth = 2,
+        strokeColor = {0.5, 0.3, 0.1, 1},
+        initialText = "",
+        font = native.systemFont,
+        fontSize = 24,
+        align = "center",
+        textColor = {1, 1, 1, 1},
+        buttonLabel = "Next",
+        buttonShape = "roundedRect",
+        buttonWidth = 120,
+        buttonHeight = 50,
+        buttonCornerRadius = 10,
+        buttonFillColor = { default = {0.2, 0.5, 0.2, 1}, over = {0.3, 0.6, 0.3, 1} },
+        buttonLabelColor = { default = {1, 1, 1}, over = {0.8, 0.8, 0.8} },
+        onRelease = function() end,
+        buttonX = contentWidth - 100,
+        buttonY = contentHeight - 60,
+        buttonVisible = false,
+    }
+
+    local opts = withDefaults(params, defaults)
+
+    local boxWidth = opts.width
+    local boxHeight = opts.height
+    local box = display.newRoundedRect(
+        uiGroup,
+        opts.x,
+        opts.y,
+        boxWidth,
+        boxHeight,
+        opts.cornerRadius
+    )
+    local fr, fg, fb, fa = ensureColorComponents(opts.fillColor, defaults.fillColor)
+    box:setFillColor(fr, fg, fb, fa)
+
+    box.strokeWidth = opts.strokeWidth
+    if box.strokeWidth > 0 then
+        local sr, sg, sb, sa = ensureColorComponents(opts.strokeColor, defaults.strokeColor)
+        box:setStrokeColor(sr, sg, sb, sa)
     end
-    displayComponents = {}
-    sceneGroup = nil
-    currentFocus = nil
 
-    print("Display Manager: Cleaned up all display components")
+    local text = display.newText({
+        parent = uiGroup,
+        text = opts.initialText,
+        x = opts.textX or box.x,
+        y = opts.textY or box.y,
+        width = opts.textWidth or (boxWidth - 100),
+        height = opts.textHeight or (boxHeight - 20),
+        font = opts.font,
+        fontSize = opts.fontSize,
+        align = opts.align,
+    })
+    local tr, tg, tb, ta = ensureColorComponents(opts.textColor, defaults.textColor)
+    text:setFillColor(tr, tg, tb, ta)
+
+    local button = widget.newButton({
+        label = opts.buttonLabel,
+        shape = opts.buttonShape,
+        width = opts.buttonWidth,
+        height = opts.buttonHeight,
+        cornerRadius = opts.buttonCornerRadius,
+        fillColor = opts.buttonFillColor,
+        labelColor = opts.buttonLabelColor,
+        onRelease = opts.onRelease,
+    })
+    button.x = opts.buttonX
+    button.y = opts.buttonY
+    uiGroup:insert(button)
+    button.isVisible = opts.buttonVisible
+
+    return {
+        container = box,
+        dialogueText = text,
+        nextButton = button,
+    }
 end
-
--- Export display states and transition types for external use
-M.DISPLAY_STATES = DISPLAY_STATES
-M.TRANSITION_TYPES = TRANSITION_TYPES
 
 return M
