@@ -17,6 +17,7 @@ local modulePaths = {
     wait = "actions.forest.wait_action",
     show_choices = "actions.forest.show_choices_action",
     choice = "actions.forest.choice_action",
+    narration = "actions.forest.narration_action",
 }
 
 -- Show mapping
@@ -53,7 +54,8 @@ function M_controller.initialize(objects)
             wait = actions.wait,  -- Add wait to simple routing
             ui = actions.ui,  -- Add ui to simple routing
             show_choices = actions.show_choices,  -- Add show_choices to simple routing
-            choice = actions.choice  -- Add choice to simple routing (overrides default)
+            choice = actions.choice,  -- Add choice to simple routing (overrides default)
+            narration = actions.narration  -- Add narration to simple routing
         },
         additionalComplexRouting = complexRouting
     })

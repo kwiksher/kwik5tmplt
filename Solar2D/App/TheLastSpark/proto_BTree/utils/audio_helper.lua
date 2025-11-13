@@ -11,12 +11,96 @@ local M = {}
 -- Track active toasts for positioning
 local activeToasts = {}
 
+-- Active vo toast reference (only one at a time)
+local activeVoToast = nil
+
+-- Helper function to show a voice-over text toast
+local function showVoToast(message, duration)
+    duration = duration or 5000  -- Longer duration for vo text
+
+    -- Remove any existing vo toast
+    if activeVoToast then
+        if activeVoToast.background then
+            activeVoToast.background:removeSelf()
+        end
+        activeVoToast:removeSelf()
+        activeVoToast = nil
+    end
+
+    -- Position on top of narration field (dialogue box is at contentHeight - 120)
+    -- Place it just above the dialogue box
+    local yPosition = display.contentHeight - 180
+
+    local toast = display.newText({
+        text = message,
+        x = display.contentCenterX,
+        y = yPosition,
+        width = 900,  -- Wide toast for longer text
+        font = native.systemFont,
+        fontSize = 22,
+        align = "center"
+    })
+    toast:setFillColor(0.6, 0.8, 1)  -- Light blue color for voice-over
+
+    local background = display.newRoundedRect(
+        toast.x,
+        toast.y,
+        toast.width + 40,
+        toast.height + 20,
+        10
+    )
+    background:setFillColor(0.2, 0.2, 0.4, 0.9)  -- Dark blue background
+    background:toBack()
+    toast:toFront()
+
+    -- Store background reference
+    toast.background = background
+    activeVoToast = toast
+
+    -- Fade in
+    toast.alpha = 0
+    background.alpha = 0
+    transition.to(toast, {alpha = 1, time = 300})
+    transition.to(background, {alpha = 1, time = 300})
+
+    -- Fade out and remove after duration
+    timer.performWithDelay(duration, function()
+        if toast and toast.removeSelf then
+            transition.to(toast, {
+                alpha = 0,
+                time = 500,
+                onComplete = function()
+                    if activeVoToast == toast then
+                        activeVoToast = nil
+                    end
+                    if toast.removeSelf then
+                        toast:removeSelf()
+                    end
+                end
+            })
+        end
+        if background and background.removeSelf then
+            transition.to(background, {
+                alpha = 0,
+                time = 500,
+                onComplete = function()
+                    if background.removeSelf then
+                        background:removeSelf()
+                    end
+                end
+            })
+        end
+    end)
+end
+
 -- Helper function to show a toast notification
 local function showToast(message, duration)
     duration = duration or 3000
 
     -- Calculate Y position based on number of active toasts
-    local yOffset = 100 + (#activeToasts * 60)  -- Stack toasts 60 pixels apart
+    -- Position toasts above dialogue area (which is at contentHeight - 120)
+    -- Start at 250 pixels from bottom to avoid narration field
+    local yOffset = 250 + (#activeToasts * 60)  -- Stack toasts 60 pixels apart
 
     local toast = display.newText({
         text = message,
@@ -113,6 +197,9 @@ function M.new(modelPath, logPrefix)
     -- Sound type mapping (from dialogue)
     local soundTypes = {}
 
+    -- Voice-over text mapping (from dialogue)
+    local voTexts = {}
+
     -- Override initialize to handle audio preloading
     function audioModule.initialize(objects)
         audioModule.sceneObjects = objects
@@ -121,11 +208,15 @@ function M.new(modelPath, logPrefix)
         local model = require(modelPath)
         audioPaths = model.audio or {}
 
-        -- Build a map of sound types from dialogue
+        -- Build a map of sound types and vo texts from dialogue
         if model.dialogue then
             for _, entry in ipairs(model.dialogue) do
                 if entry.sound then
                     soundTypes[entry.sound] = entry.type
+                    -- Store vo text for voice-over entries
+                    if entry.type == "vo" and entry.text then
+                        voTexts[entry.sound] = entry.text
+                    end
                 end
             end
         end
@@ -163,6 +254,12 @@ function M.new(modelPath, logPrefix)
             print(logPrefix .. ": Playing " .. action)
             local channel = audioModule.getChannelForSound(action)
 
+            -- Show vo text as toast if available
+            local soundType = soundTypes[action]
+            if soundType == "vo" and voTexts[action] then
+                showVoToast(voTexts[action])
+            end
+
             -- Play audio directly using Solar2D audio library
             local success, err = pcall(function()
                 audio.play(audioHandles[action], { channel = channel })
@@ -177,6 +274,13 @@ function M.new(modelPath, logPrefix)
         else
             local fileName = audioPaths[action] or action
             print("Warning: Audio file not loaded for action - " .. tostring(action))
+
+            -- Show vo text as toast even if audio is missing
+            local soundType = soundTypes[action]
+            if soundType == "vo" and voTexts[action] then
+                showVoToast(voTexts[action])
+            end
+
             showToast("Missing audio: " .. fileName)
             return bt.SUCCESS  -- Return success to not block the tree execution
         end
