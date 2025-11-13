@@ -9,6 +9,98 @@ local M = {}
 -------------------------------------------------------------------------------
 -- Utility functions
 -------------------------------------------------------------------------------
+
+-- Custom newImageRect with fallback to gray rectangle if image fails to load
+function M.newImageRect(...)
+    local args = {...}
+    local parent, filename, baseDir, width, height
+
+    -- Parse arguments based on different newImageRect signatures
+    if type(args[1]) == "userdata" or type(args[1]) == "table" then
+        -- display.newImageRect(parent, filename, [baseDir,] width, height)
+        parent = args[1]
+        filename = args[2]
+        if type(args[3]) == "number" then
+            width = args[3]
+            height = args[4]
+        else
+            baseDir = args[3]
+            width = args[4]
+            height = args[5]
+        end
+    else
+        -- display.newImageRect(filename, [baseDir,] width, height)
+        filename = args[1]
+        if type(args[2]) == "number" then
+            width = args[2]
+            height = args[3]
+        else
+            baseDir = args[2]
+            width = args[3]
+            height = args[4]
+        end
+    end
+
+    -- Try to create the image
+    local img
+    if parent then
+        if baseDir then
+            img = display.newImageRect(parent, filename, baseDir, width, height)
+        else
+            img = display.newImageRect(parent, filename, width, height)
+        end
+    else
+        if baseDir then
+            img = display.newImageRect(filename, baseDir, width, height)
+        else
+            img = display.newImageRect(filename, width, height)
+        end
+    end
+
+    -- If image failed to load, create a text placeholder as fallback
+    if img == nil then
+        print("Image failed to load. Filename:", filename, "Type:", type(filename))
+
+        local placeholderText = "missing"
+        if filename and type(filename) == "string" then
+            placeholderText = filename:match("([^/]+)$") or filename
+            print("Extracted placeholder text:", placeholderText)
+        else
+            print("Filename is nil or not a string, using 'missing'")
+        end
+
+        -- Ensure width and height are valid numbers
+        width = tonumber(width) or 100
+        height = tonumber(height) or 100
+
+        if parent then
+            img = display.newText({
+                parent = parent,
+                text = placeholderText,
+                x = 0,
+                y = 0,
+                width = width * 0.8,
+                height = height * 0.8,
+                font = native.systemFont,
+                fontSize = 16,
+                align = "center"
+            })
+        else
+            img = display.newText({
+                text = placeholderText,
+                x = 0,
+                y = 0,
+                width = width * 0.8,
+                height = height * 0.8,
+                font = native.systemFont,
+                fontSize = 16,
+                align = "center"
+            })
+        end
+        img:setFillColor(0.7, 0.7, 0.7)
+    end    return img
+end
+
 local function deepCopy(value)
     if type(value) ~= "table" then
         return value
@@ -88,7 +180,7 @@ function M.createBackgroundLayer(group, params)
     local bgImage
 
     if opts.image then
-        bgImage = display.newImageRect(group, opts.image, width, height)
+        bgImage = M.newImageRect(group, opts.image, width, height)
         bgImage.x = opts.x
         bgImage.y = opts.y
     end

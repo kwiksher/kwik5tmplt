@@ -1,10 +1,12 @@
 -- Elara Display View
 -- Display logic for Elara character
 
+local displayManager = require("views.display_manager")
+
 local M = {}
 
 function M.create(parentGroup, modelData)
-    local elara = display.newImageRect(
+    local elara = displayManager.newImageRect(
         parentGroup,
         modelData.states[modelData.currentState],
         modelData.width,
@@ -22,20 +24,27 @@ function M.create(parentGroup, modelData)
 end
 
 function M.changeState(elara, newState)
-    if elara.modelData.states[newState] then
+    -- Store references before removing the object
+    local modelData = elara.modelData
+    local parent = elara.parent
+    local x = elara.x
+    local y = elara.y
+    local isVisible = elara.isVisible
+
+    if modelData and modelData.states and modelData.states[newState] then
         elara:removeSelf()
 
-        local newImage = display.newImageRect(
-            elara.parent,
-            elara.modelData.states[newState],
-            elara.modelData.width,
-            elara.modelData.height
+        local newImage = displayManager.newImageRect(
+            parent,
+            modelData.states[newState],
+            modelData.width,
+            modelData.height
         )
 
-        newImage.x = elara.x
-        newImage.y = elara.y
-        newImage.isVisible = elara.isVisible
-        newImage.modelData = elara.modelData
+        newImage.x = x
+        newImage.y = y
+        newImage.isVisible = isVisible
+        newImage.modelData = modelData
         newImage.modelData.currentState = newState
 
         return newImage

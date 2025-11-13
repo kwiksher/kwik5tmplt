@@ -3,11 +3,11 @@
 -- Accepts action parameter to specify which Elara action to execute
 -- Uses action_helper for common functionality
 
-local bt = require("btree")
+local bt = require("utils.btree")
 local actionHelper = require("utils.action_helper")
 
 -- Create action module with helper methods
-local M = actionHelper.new()
+local M = actionHelper.createModule()
 
 -- Register Elara-specific actions
 M.ACTIONS = {

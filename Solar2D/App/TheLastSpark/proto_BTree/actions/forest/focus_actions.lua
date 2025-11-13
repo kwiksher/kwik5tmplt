@@ -3,11 +3,11 @@
 -- Accepts action parameter to specify which focus action
 -- Uses action_helper for common functionality
 
-local bt = require("btree")
+local bt = require("utils.btree")
 local actionHelper = require("utils.action_helper")
 
 -- Create action module with helper methods
-local M = actionHelper.new()
+local M = actionHelper.createModule()
 
 -- Register Focus-specific actions
 M.ACTIONS = {

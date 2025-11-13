@@ -1,10 +1,12 @@
 -- Wolf Display View
 -- Display logic for wolf character
 
+local displayManager = require("views.display_manager")
+
 local M = {}
 
 function M.create(parentGroup, modelData)
-    local wolf = display.newImageRect(
+    local wolf = displayManager.newImageRect(
         parentGroup,
         modelData.states[modelData.currentState],
         modelData.width,
@@ -25,7 +27,7 @@ function M.changeState(wolf, newState)
     if wolf.modelData.states[newState] then
         wolf:removeSelf()
 
-        local newImage = display.newImageRect(
+        local newImage = displayManager.newImageRect(
             wolf.parent,
             wolf.modelData.states[newState],
             wolf.modelData.width,

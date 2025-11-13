@@ -906,21 +906,34 @@ function Sequence.prototype.____constructor(self, children)
     children = {}
   end
   Node.prototype.____constructor(self, "→", SEQUENCE, children)
+  self.currentChildIndex = 1  -- Track current child for RUNNING state
 end
 function Sequence.prototype.tick(self)
   -- print("tick Seq")
   self:setActive(true)
+
+  -- If we were RUNNING, resume from the current child
+  -- Otherwise start from beginning
+  if self:status() ~= RUNNING then
+    self.currentChildIndex = 1
+  end
+
   do
-    local i = 1
+    local i = self.currentChildIndex
     while i <= #self.children do
       local s = self.children[i]:tick()
       self:setStatus(s)
-      if s == RUNNING or s == FAILED then
+      if s == RUNNING then
+        self.currentChildIndex = i  -- Remember where we paused
+        return self:status()
+      elseif s == FAILED then
+        self.currentChildIndex = 1  -- Reset on failure
         return self:status()
       end
       i = i + 1
     end
   end
+  self.currentChildIndex = 1  -- Reset after success
   self:setStatus(SUCCESS)
   return self:status()
 end
@@ -1147,12 +1160,20 @@ function BehaviorTree.nodeFromJson(self, nodeAsJson)
   return node
 end
 function BehaviorTree.fromText(self, treeAsText)
-  return parse(nil, treeAsText)
+  -- Handle both class method call (bt.BehaviorTree.fromText(...))
+  -- and instance method call (bt.BehaviorTree:fromText(...))
+  if type(self) == "string" then
+    -- Called as class method: BehaviorTree.fromText(treeAsText)
+    return parse(nil, self)
+  else
+    -- Called as instance method: BehaviorTree:fromText(treeAsText)
+    return parse(nil, treeAsText)
+  end
 end
 function BehaviorTree.prototype.tick(self)
   -- print("tick 1")
   if self.root then
-    self.root:tick()
+    return self.root:tick()
   end
 end
 SAMPLE_TREE =

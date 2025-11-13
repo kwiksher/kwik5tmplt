@@ -3,10 +3,97 @@
 -- Creates audio action modules from models with audio and dialogue tables
 -------------------------------------------------------------------------------
 
-local bt = require("btree")
+local bt = require("utils.btree")
 local actionHelper = require("utils.action_helper")
 
 local M = {}
+
+-- Track active toasts for positioning
+local activeToasts = {}
+
+-- Helper function to show a toast notification
+local function showToast(message, duration)
+    duration = duration or 3000
+
+    -- Calculate Y position based on number of active toasts
+    local yOffset = 100 + (#activeToasts * 60)  -- Stack toasts 60 pixels apart
+
+    local toast = display.newText({
+        text = message,
+        x = display.contentCenterX,
+        y = display.contentHeight - yOffset,
+        font = native.systemFontBold,
+        fontSize = 18,
+        align = "center"
+    })
+    toast:setFillColor(1, 1, 1)
+
+    local background = display.newRoundedRect(
+        toast.x,
+        toast.y,
+        toast.width + 40,
+        toast.height + 20,
+        10
+    )
+    background:setFillColor(0, 0, 0, 0.8)
+    background:toBack()
+    toast:toFront()
+
+    -- Store background reference
+    toast.background = background
+
+    -- Add to active toasts list
+    table.insert(activeToasts, toast)
+
+    -- Fade in
+    toast.alpha = 0
+    background.alpha = 0
+    transition.to(toast, {alpha = 1, time = 200})
+    transition.to(background, {alpha = 1, time = 200})
+
+    -- Fade out and remove after duration
+    timer.performWithDelay(duration, function()
+        transition.to(toast, {
+            alpha = 0,
+            time = 300,
+            onComplete = function()
+                -- Remove from active toasts list
+                for i = #activeToasts, 1, -1 do
+                    if activeToasts[i] == toast then
+                        table.remove(activeToasts, i)
+                        break
+                    end
+                end
+                toast:removeSelf()
+            end
+        })
+        transition.to(background, {
+            alpha = 0,
+            time = 300,
+            onComplete = function()
+                background:removeSelf()
+            end
+        })
+    end)
+end
+
+-- Helper function to load audio with error handling
+local function loadAudioSafely(soundName, filePath, isStream)
+    local success, result = pcall(function()
+        if isStream then
+            return audio.loadStream(filePath)
+        else
+            return audio.loadSound(filePath)
+        end
+    end)
+
+    if success then
+        return result
+    else
+        print("Warning: Failed to load audio file: " .. filePath .. " - " .. tostring(result))
+        return nil
+    end
+end
 
 -- Create an audio actions module from a model
 -- modelPath: string path to the model (e.g., "models.forest_model")
@@ -51,10 +138,14 @@ function M.new(modelPath, logPrefix)
 
             -- Use loadStream for music and voice-over, loadSound for SFX
             local isStream = (soundType == "music" or soundType == "vo")
-            audioHandles[soundName] = audioModule.loadAudio(soundName, filePath, isStream)
+            audioHandles[soundName] = loadAudioSafely(soundName, filePath, isStream)
 
-            local loadType = isStream and "stream" or "sound"
-            print("  Loaded (" .. loadType .. "): " .. soundName .. " [" .. soundType .. "] -> " .. filePath)
+            if audioHandles[soundName] then
+                local loadType = isStream and "stream" or "sound"
+                print("  Loaded (" .. loadType .. "): " .. soundName .. " [" .. soundType .. "] -> " .. filePath)
+            else
+                print("  Skipped (file not found): " .. soundName .. " -> " .. filePath)
+            end
         end
 
         print(logPrefix .. ": All audio files preloaded")
@@ -71,10 +162,23 @@ function M.new(modelPath, logPrefix)
         if audioHandles[action] then
             print(logPrefix .. ": Playing " .. action)
             local channel = audioModule.getChannelForSound(action)
-            return audioModule.playAudio(audioHandles[action], { channel = channel })
+
+            -- Play audio directly using Solar2D audio library
+            local success, err = pcall(function()
+                audio.play(audioHandles[action], { channel = channel })
+            end)
+
+            if success then
+                return bt.SUCCESS
+            else
+                print("Error: Failed to play audio - " .. tostring(err))
+                return bt.FAILED
+            end
         else
-            print("Error: Unknown Audio action - " .. tostring(action))
-            return bt.FAILED
+            local fileName = audioPaths[action] or action
+            print("Warning: Audio file not loaded for action - " .. tostring(action))
+            showToast("Missing audio: " .. fileName)
+            return bt.SUCCESS  -- Return success to not block the tree execution
         end
     end
 

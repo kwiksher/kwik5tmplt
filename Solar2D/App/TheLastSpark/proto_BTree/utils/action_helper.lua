@@ -3,12 +3,12 @@
 -- Provides base functionality that all action modules can inherit
 -------------------------------------------------------------------------------
 
-local bt = require("btree")
+local bt = require("utils.btree")
 local M = {}
 
 -- Create a new action module with helper methods
--- Usage: local M = require("utils.action_helper").new()
-function M.new()
+-- Usage: local M = require("utils.action_helper").createModule()
+function M.createModule()
     local actionModule = {}
 
     -- Scene objects reference (to be set by initialize)
@@ -261,6 +261,12 @@ function M.loadActionModules(modules, objects)
     local loadedModules = {}
     local count = 0
 
+    -- Return empty table if modules is nil or not a table
+    if not modules or type(modules) ~= "table" then
+        print("No modules to load (modules is nil or not a table)")
+        return loadedModules
+    end
+
     for name, modulePath in pairs(modules) do
         local success, module = pcall(require, modulePath)
         if success then
@@ -292,9 +298,7 @@ function M.executeOnModule(module, actionName, moduleName)
     end
 
     return module.execute(actionName)
-end
-
--- Route action to appropriate module based on type mapping
+end-- Route action to appropriate module based on type mapping
 -- typeMapping: table of { actionType = module }
 -- Example: { show = actions.display, sfx = actions.audio }
 function M.routeActionByType(actionType, actionWhat, typeMapping)
@@ -312,6 +316,7 @@ end
 -- Example: { elara = actions.elara, wolf = actions.wolf }
 function M.routeActionByTarget(target, action, targetMapping)
     local module = targetMapping[target]
+
     if module then
         return M.executeOnModule(module, action, target)
     else
@@ -421,6 +426,12 @@ function M.createExecuteFunction(config)
     local complexRouting = config.complexRouting or {}
     local logPrefix = config.logPrefix or "Action Controller"
 
+    -- Debug: print what's in complexRouting
+    print(logPrefix .. ": createExecuteFunction - complexRouting keys:")
+    for key, _ in pairs(complexRouting) do
+        print(logPrefix .. ":   - " .. key)
+    end
+
     return function(actionName)
         -- Parse action name in various formats:
         -- 1. "type what" format from .tree file (e.g., "narration cabin_scene", "show luminseed")
@@ -443,6 +454,7 @@ function M.createExecuteFunction(config)
 
                 -- Handler is a target mapping table
                 if type(handler) == "table" then
+                    print(logPrefix .. ": Found complex routing for '" .. actionType .. "', routing target: " .. actionWhat)
                     return M.routeActionByTarget(actionWhat, actionWhat, handler)
                 end
 
@@ -589,8 +601,10 @@ function M.setupActionController(params)
         local showRouting = {}
         for target, moduleName in pairs(params.showMapping) do
             showRouting[target] = actions[moduleName]
+            print(logPrefix .. ": Show mapping: " .. target .. " -> " .. moduleName .. " (module: " .. tostring(actions[moduleName] ~= nil) .. ")")
         end
         complexRouting.show = showRouting
+        print(logPrefix .. ": Registered 'show' complex routing with " .. M.countModules(showRouting) .. " targets")
     end
 
     -- Merge additional complex routing
