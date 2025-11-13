@@ -1,19 +1,28 @@
 ->
-|    [narration cabin_scene]
-|    [show luminseed]
-|    [show elara]
-|    [sfx rustling]
-|    [sfx wind]
-|    [vo vo_elara_01]
-|    [scene forest]
-|    [sfx footsteps]
-|    [sfx caw]
-|    [narration forest_quiet]
-|    [sfx growl]
-|    [show wolf]
-|    [music tension]
-|    [emotion elara scared]
-|    [vo vo_elara_02]
+|    ->
+|    |    [narration cabin_scene]
+|    |    [show luminseed]
+|    |    [show elara]
+|    |    [sfx rustling]
+|    |    [sfx wind]
+|    |    [vo vo_elara_01]
+|    |    [wait for next]
+|    ->
+|    |    [scene forest]
+|    |    [sfx footsteps]
+|    |    [sfx caw]
+|    |    [wait for next]
+|    ->
+|    |    [narration forest_quiet]
+|    |    [wait for next]
+|    ->
+|    |    [sfx growl]
+|    |    [show wolf]
+|    |    [music tension]
+|    |    [emotion elara scared]
+|    |    [vo vo_elara_02]
+|    [ui show_choices]
+|    [wait for next]
 |    ?
 |    |    ->
 |    |    |    (player choice fight)

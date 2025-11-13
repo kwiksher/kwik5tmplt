@@ -63,6 +63,21 @@ function M.buildDisplayModel(template, layoutData, overrides)
     return modelData
 end
 
+-- Create a character/object display from model and layout data
+-- @param objectName: string - name of the object (e.g., "elara", "wolf")
+-- @param model: table - model data containing objects[objectName]
+-- @param layout: table - layout data containing objects[objectName]
+-- @param parentGroup: display group - parent display group to add the object to
+-- @param DisplayClass: table - display class with create() method (e.g., ElaraDisplay, WolfDisplay)
+-- @param overrides: table (optional) - additional overrides for the model data
+-- @return: created display object
+function M.createCharacter(objectName, model, layout, parentGroup, DisplayClass, overrides)
+    local template = (model.objects or {})[objectName] or {}
+    local layoutData = (layout.objects or {})[objectName] or {}
+    local modelData = M.buildDisplayModel(template, layoutData, overrides or { visible = false })
+    return DisplayClass.create(parentGroup, modelData)
+end
+
 -- Methods table for setmetatable __index usage. Each method expects self._env.
 M.methods = {}
 
@@ -488,8 +503,11 @@ end
 -- BTree Helper Functions
 -------------------------------------------------------------------------------
 
--- Load behavior tree from file
-function M.loadBehaviorTree(treeFileName)
+-- Load behavior tree from file and register action/condition handlers
+-- treeFileName: path to .tree file
+-- actionController: controller with execute function (optional, can be set later)
+-- conditionController: controller with evaluate function (optional, can be set later)
+function M.loadBehaviorTree(treeFileName, actionController, conditionController)
     local bt = require("utils.btree")
     local treeFilePath = system.pathForFile(treeFileName, system.ResourceDirectory)
 
@@ -510,11 +528,126 @@ function M.loadBehaviorTree(treeFileName)
     local tree = bt.BehaviorTree.fromText(treeText)
     if not tree then
         print("ERROR: Could not parse behavior tree")
-    else
-        print("Behavior tree loaded successfully from " .. treeFileName)
+        return nil
     end
 
+    print("Behavior tree loaded successfully from " .. treeFileName)
+
+    -- Register action handler if provided
+    if actionController and actionController.execute then
+        tree:onActionActivation(function(_, actionNode)
+            if actionNode and actionNode:active() then
+                local actionName = actionNode.name
+                print("BTree: Executing action [" .. actionName .. "]")
+                local result = actionController.execute(actionName)
+
+                -- Convert result to bt status
+                if result == bt.SUCCESS then
+                    actionNode:setStatus(bt.SUCCESS)
+                elseif result == bt.RUNNING then
+                    actionNode:setStatus(bt.RUNNING)
+                else
+                    actionNode:setStatus(bt.FAILED)
+                end
+            end
+        end)
+        print("Behavior tree: Action handler registered")
+    end
+
+    -- Conditions are handled via tree:setConditionStatus()
+    -- Called manually before each tick in the game loop
+    -- Example: tree:setConditionStatus("player choice fight", conditionController.evaluate("fight"))
+
     return tree
+end-- Create a manual behavior tree controller
+-- Returns a controller object with manual tick function and state tracking
+function M.createManualBehaviorTree(behaviorTree, conditionController)
+    local bt = require("utils.btree")
+
+    if not behaviorTree then
+        print("ERROR: Cannot create manual behavior tree - tree not provided")
+        return nil
+    end
+
+    local controller = {
+        tree = behaviorTree,
+        conditionController = conditionController,
+        failureCount = 0,
+        MAX_FAILURES = 10,
+        isComplete = false,
+        lastResult = nil
+    }
+
+    -- Update conditions before ticking
+    function controller:updateConditions()
+        if not self.conditionController or not self.conditionController.evaluate then
+            return
+        end
+
+        -- Get all conditions from the tree and evaluate them
+        local conditions = self.tree.conditions
+        if conditions then
+            conditions:forEach(function(_, conditionList)
+                for i = 1, #conditionList do
+                    local condition = conditionList[i]
+                    local conditionName = condition.name
+                    local result = self.conditionController.evaluate(conditionName)
+
+                    if result then
+                        self.tree:setConditionStatus(conditionName, bt.SUCCESS)
+                    else
+                        self.tree:setConditionStatus(conditionName, bt.FAILED)
+                    end
+                end
+            end)
+        end
+    end
+
+    -- Manual tick function - call this when button is pressed
+    function controller:tick()
+        if self.isComplete then
+            return self.lastResult
+        end
+
+        -- Update condition statuses before ticking
+        self:updateConditions()
+
+        local result = self.tree:tick()
+        self.lastResult = result
+
+        -- Check the result
+        if result == bt.SUCCESS then
+            self.failureCount = 0
+            self.isComplete = true
+            return result
+        elseif result == bt.FAILURE then
+            self.failureCount = self.failureCount + 1
+
+            if self.failureCount >= self.MAX_FAILURES then
+                print("ERROR: Behavior tree failed " .. self.MAX_FAILURES .. " times. Stopping execution.")
+                self.isComplete = true
+            end
+            return result
+        elseif result == bt.RUNNING then
+            -- Reset failure count when tree is running successfully
+            self.failureCount = 0
+            return result
+        end
+
+        return result
+    end
+
+    -- Reset the controller
+    function controller:reset()
+        self.failureCount = 0
+        self.isComplete = false
+        self.lastResult = nil
+    end
+
+    print("\n=== Manual Behavior Tree Created ===")
+    print("Call controller:tick() to advance the tree")
+
+    return controller
 end
 
 -- Start behavior tree with automatic ticking
@@ -528,6 +661,8 @@ function M.startBehaviorTree(behaviorTree, tickInterval)
     end
 
     tickInterval = tickInterval or 50 -- Default 50ms tick rate
+    local failureCount = 0
+    local MAX_FAILURES = 10
 
     print("\n=== Starting Behavior Tree ===")
 
@@ -538,16 +673,25 @@ function M.startBehaviorTree(behaviorTree, tickInterval)
         -- Check the result to determine if the tree has completed
         if result == bt.SUCCESS then
             print("Behavior tree completed successfully")
+            failureCount = 0  -- Reset failure count on success
             if tickTimer then
                 timer.cancel(tickTimer)
                 tickTimer = nil
             end
         elseif result == bt.FAILURE then
-            print("Behavior tree failed")
-            if tickTimer then
-                timer.cancel(tickTimer)
-                tickTimer = nil
+            failureCount = failureCount + 1
+            print("Behavior tree failed (failure " .. failureCount .. "/" .. MAX_FAILURES .. ")")
+
+            if failureCount >= MAX_FAILURES then
+                print("ERROR: Behavior tree failed " .. MAX_FAILURES .. " times. Stopping execution.")
+                if tickTimer then
+                    timer.cancel(tickTimer)
+                    tickTimer = nil
+                end
             end
+        elseif result == bt.RUNNING then
+            -- Reset failure count when tree is running successfully
+            failureCount = 0
         end
         -- RUNNING means the tree is still executing, so we continue ticking
     end, 0)  -- 0 means repeat indefinitely

@@ -4,7 +4,7 @@
 
 local M = {}
 
-M.CONDITION_NAME = "player_choice"
+M.CONDITION_NAME = "player choice"
 
 -- Condition types
 M.CONDITION_TYPES = {
@@ -72,7 +72,7 @@ function M.generateConditions()
     local conditionWrappers = {}
 
     for _, conditionType in pairs(M.CONDITION_TYPES) do
-        local conditionName = M.CONDITION_NAME .. "_" .. conditionType
+        local conditionName = M.CONDITION_NAME .. " " .. conditionType
         conditionWrappers[conditionName] = {
             initialize = M.initialize,
             evaluate = function()
