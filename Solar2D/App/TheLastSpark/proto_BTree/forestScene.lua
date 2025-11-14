@@ -85,8 +85,19 @@ function scene:create(event)
     -- Dialogue elements (text plus navigation)
     local uiElements = displayManager.createDialogueInterface(self.objs.uiGroup, {
         onRelease = function()
+            -- Hide button and stop blinking animation
+            if self.objs.nextButton then
+                self.objs.nextButton.isVisible = false
+                transition.cancel(self.objs.nextButton)
+                self.objs.nextButton.alpha = 1.0
+            end
+
             -- Clear the wait state and tick the behavior tree
             waitActionModule.clearWait()
+
+            -- Also clear choice action wait state
+            local choiceActionModule = require("actions.forest.choice_action")
+            choiceActionModule.clearWait()
 
             if treeController and not treeController.isComplete then
                 treeController:tick()
@@ -96,8 +107,10 @@ function scene:create(event)
     self.objs.dialogueText = uiElements.dialogueText
     self.objs.nextButton = uiElements.nextButton
 
-    -- Make button visible for manual control
+    -- Initially show button so user can manually tick the behavior tree
+    -- It will be hidden when narration starts and shown with blinking when narration completes
     self.objs.nextButton.isVisible = true
+    self.objs.nextButton.alpha = 1.0
 
     -- Create a separate group for choice buttons (on top of everything)
     self.objs.choiceGroup = display.newGroup()
@@ -137,8 +150,11 @@ function scene:create(event)
             self.objs.retreatButton.isVisible = false
             self.objs.retreatButton.label.isVisible = false
 
-            -- Clear wait and advance tree
-            waitActionModule.clearWait()
+            -- Notify show_choices action that choice was selected
+            local showChoicesAction = require("actions.forest.show_choices_action")
+            showChoicesAction.selectChoice()
+
+            -- Advance tree
             if treeController and not treeController.isComplete then
                 treeController:tick()
             end
@@ -147,10 +163,13 @@ function scene:create(event)
         return button
     end
 
-    -- Create three choice buttons
-    self.objs.fightButton = createChoiceButton("Fight", display.contentCenterX - 220, display.contentHeight - 150, "fight")
-    self.objs.calmButton = createChoiceButton("Calm", display.contentCenterX, display.contentHeight - 150, "calm")
-    self.objs.retreatButton = createChoiceButton("Retreat", display.contentCenterX + 220, display.contentHeight - 150, "retreat")
+    -- Create three choice buttons (positioned just below the dialogue box)
+    -- Dialogue box is at contentHeight - 120 with height 120, bottom edge is at contentHeight - 60
+    -- Button height is 60, so place center at contentHeight - 60 + 30 (half button) + 10 (margin)
+    local buttonY = display.contentHeight - 20  -- Place buttons below dialogue box bottom edge
+    self.objs.fightButton = createChoiceButton("Fight", display.contentCenterX - 220, buttonY, "fight")
+    self.objs.calmButton = createChoiceButton("Calm", display.contentCenterX, buttonY, "calm")
+    self.objs.retreatButton = createChoiceButton("Retreat", display.contentCenterX + 220, buttonY, "retreat")
 
     -- Helper function to show choice buttons
     function self.showChoiceButtons()
@@ -172,7 +191,12 @@ function scene:create(event)
 
     -- Helper function to hide choice buttons
     function self.hideChoiceButtons()
-        self.objs.nextButton.isVisible = true  -- Show Next button again
+        -- Reset the choices visible flag
+        local showChoicesAction = require("actions.forest.show_choices_action")
+        showChoicesAction.choicesAreVisible = false
+
+        -- Don't show Next button immediately - let narration/audio control it
+        self.objs.nextButton.isVisible = false
         self.objs.fightButton.isVisible = false
         self.objs.fightButton.label.isVisible = false
         self.objs.calmButton.isVisible = false

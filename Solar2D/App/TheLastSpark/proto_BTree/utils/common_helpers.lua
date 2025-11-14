@@ -94,6 +94,13 @@ function M.methods:executeSceneStep(index)
 
     if step.type == "narration" then
         self:showDialogue(step.text)
+        -- For simple narration without audio, show button blinking after text renders
+        -- Estimate reading time: ~50ms per character
+        local textLength = step.text and #step.text or 0
+        local readingTime = math.max(1000, textLength * 50)
+        timer.performWithDelay(readingTime, function()
+            self:showNextButtonBlinking()
+        end)
 
     elseif step.type == "show" then
         self:showObject(step.what)
@@ -114,6 +121,7 @@ function M.methods:executeSceneStep(index)
     elseif step.type == "vo" then
         self:showDialogue(step.text)
         self:playSFX(step.sound)
+        -- playSFX will handle showing the button when audio completes
 
     elseif step.type == "music" then
         if step.action == "play" and audioFiles then
@@ -170,7 +178,14 @@ function M.methods:advanceDialogue()
     local env = self._env or {}
     local state = env.state or { currentDialogueIndex = 0 }
     local nextButton = env.nextButton
-    if nextButton then nextButton.isVisible = false end
+    if nextButton then
+        nextButton.isVisible = false
+        -- Stop any existing blink animation
+        if state.blinkTransition then
+            transition.cancel(state.blinkTransition)
+            state.blinkTransition = nil
+        end
+    end
     self:executeSceneStep((state.currentDialogueIndex or 0) + 1)
 end
 
@@ -178,8 +193,58 @@ function M.methods:showDialogue(text)
     local env = self._env or {}
     local dialogueText = env.dialogueText
     local nextButton = env.nextButton
+    local state = env.state or {}
+
     if dialogueText then dialogueText.text = text or "" end
-    if nextButton then nextButton.isVisible = true end
+
+    if nextButton then
+        -- Hide button initially during narration
+        nextButton.isVisible = false
+        nextButton.alpha = 1.0
+
+        -- Stop any existing blink animation
+        if state.blinkTransition then
+            transition.cancel(state.blinkTransition)
+            state.blinkTransition = nil
+        end
+    end
+end
+
+-- Make the next button blink after narration/audio completes
+function M.methods:showNextButtonBlinking()
+    local env = self._env or {}
+    local nextButton = env.nextButton
+    local state = env.state or {}
+
+    if not nextButton then return end
+
+    -- Stop any existing blink animation
+    if state.blinkTransition then
+        transition.cancel(state.blinkTransition)
+    end
+
+    -- Make button visible and start blinking
+    nextButton.isVisible = true
+    nextButton.alpha = 1.0
+
+    -- Create infinite blinking effect
+    local function blinkCycle()
+        state.blinkTransition = transition.to(nextButton, {
+            alpha = 0.3,
+            time = 500,
+            onComplete = function()
+                if nextButton and nextButton.removeSelf then
+                    state.blinkTransition = transition.to(nextButton, {
+                        alpha = 1.0,
+                        time = 500,
+                        onComplete = blinkCycle
+                    })
+                end
+            end
+        })
+    end
+
+    blinkCycle()
 end
 
 function M.methods:changeBackground(imagePath)
@@ -207,7 +272,25 @@ function M.methods:playSFX(soundName, shouldLoop)
     local options = { channel = 2 }
     if shouldLoop then options.loops = -1 end
     local path = audioFiles and audioFiles[soundName]
-    if path then audio.play(audio.loadSound(path), options) end
+    if path then
+        local audioHandle = audio.loadSound(path)
+        audio.play(audioHandle, options)
+
+        -- If not looping, track audio duration and show button when done
+        if not shouldLoop then
+            local duration = audio.getDuration(audioHandle)
+            if duration and duration > 0 then
+                timer.performWithDelay(duration, function()
+                    self:showNextButtonBlinking()
+                end)
+            else
+                -- Fallback if duration can't be determined
+                timer.performWithDelay(1000, function()
+                    self:showNextButtonBlinking()
+                end)
+            end
+        end
+    end
 end
 
 -- Generic object visibility helper using the scene's objects registry
