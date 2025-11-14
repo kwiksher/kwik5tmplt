@@ -7,41 +7,81 @@ local actionHelper = require("utils.action_helper")
 -- Create action module with helper methods
 local M = actionHelper.createModule()
 
--- Wait state
-local waitCleared = false
-local shouldContinue = false  -- Flag to indicate we should return SUCCESS on next tick
+-- Wait state - tracks which wait instance is currently waiting
+local currentWaitId = 0
+local nextWaitId = 1
+local clearedWaitId = 0
 
 -- Override initialize
 function M.initialize(objects)
     M.sceneObjects = objects
-    waitCleared = false
-    shouldContinue = false
+    currentWaitId = 0
+    nextWaitId = 1
+    clearedWaitId = 0
 end
 
 -- Clear the wait state (call this when Next button is pressed)
 function M.clearWait()
-    waitCleared = true
+    -- Mark the current waiting instance as cleared
+    clearedWaitId = currentWaitId
+    print("Wait Action: Cleared wait ID " .. clearedWaitId)
+
+    -- Clear the voice text (VO toast) immediately
+    local audioHelper = require("utils.audio_helper")
+    audioHelper.clearVoToast()
+
+    -- Clear the narration text immediately
+    if M.sceneObjects and M.sceneObjects.dialogueText then
+        M.sceneObjects.dialogueText.text = ""
+        print("Wait Action: Cleared narration text")
+    end
 end
 
--- Reset wait state for next time
-function M.resetWait()
-    waitCleared = false
-    shouldContinue = false
-end
-
--- Execute wait action - returns RUNNING until cleared, then SUCCESS on next tick
+-- Execute wait action - returns RUNNING until cleared
 function M.executeWaitForNext()
-    if shouldContinue then
-        -- We were cleared on previous tick, now return SUCCESS
-        M.resetWait()
+    -- If this is a new wait (not the current one), assign it an ID
+    local isNewWait = (currentWaitId == 0)
+
+    if isNewWait then
+        -- Create a brand new wait instance
+        currentWaitId = nextWaitId
+        nextWaitId = nextWaitId + 1
+        print("Wait Action: Started new wait ID " .. currentWaitId)
+
+        -- Check if narration or VO is currently active
+        local narrationAction = require("actions.forest.narration_action")
+        local isNarrationActive = not narrationAction.isTypingComplete
+
+        -- Check if player choices are visible
+        local showChoicesAction = require("actions.forest.show_choices_action")
+        local areChoicesVisible = showChoicesAction.choicesAreVisible
+
+        -- Only show next button if no narration/VO/choices are in progress
+        if M.sceneObjects and M.sceneObjects.nextButton then
+            if areChoicesVisible then
+                -- Keep button hidden - choices are being shown
+                print("Wait Action: Player choices visible, keeping button hidden")
+            elseif isNarrationActive then
+                -- Keep button hidden - narration will show it when complete
+                print("Wait Action: Narration in progress, keeping button hidden")
+            else
+                -- Show button - no narration/VO/choices active
+                M.sceneObjects.nextButton.isVisible = true
+                M.sceneObjects.nextButton.alpha = 1.0
+                print("Wait Action: No narration/choices active, showing next button")
+            end
+        end
+
+        -- Always return RUNNING on first encounter - don't check if cleared
+        return bt.RUNNING
+    elseif clearedWaitId == currentWaitId then
+        -- This wait was cleared and needs to be recreated next time
+        print("Wait Action: Wait ID " .. currentWaitId .. " was cleared, returning SUCCESS")
+        currentWaitId = 0  -- Reset for next wait
         return bt.SUCCESS
-    elseif waitCleared then
-        -- Just cleared, set flag to return SUCCESS on next tick
-        shouldContinue = true
-        waitCleared = false
-        return bt.RUNNING  -- Still return RUNNING this tick
     else
-        return bt.RUNNING  -- Return running to pause the tree
+        -- Still waiting
+        return bt.RUNNING
     end
 end
 

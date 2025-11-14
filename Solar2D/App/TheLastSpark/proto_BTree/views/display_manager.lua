@@ -220,7 +220,7 @@ function M.createDialogueInterface(uiGroup, params)
         initialText = "",
         font = native.systemFont,
         fontSize = 24,
-        align = "center",
+        align = "left",
         textColor = {1, 1, 1, 1},
         buttonLabel = "Next",
         buttonShape = "roundedRect",
@@ -256,12 +256,18 @@ function M.createDialogueInterface(uiGroup, params)
         box:setStrokeColor(sr, sg, sb, sa)
     end
 
+    -- Calculate text x position for left alignment
+    -- For left-aligned text with width, the x position is the center of the text object
+    -- So we position it at the center of the available text area within the box
+    local textWidth = opts.textWidth or (boxWidth - 100)
+    local textX = opts.textX or (box.x - boxWidth/2 + textWidth/2 + 50)  -- 50px padding from left edge
+
     local text = display.newText({
         parent = uiGroup,
         text = opts.initialText,
-        x = opts.textX or box.x,
+        x = textX,
         y = opts.textY or box.y,
-        width = opts.textWidth or (boxWidth - 100),
+        width = textWidth,
         height = opts.textHeight or (boxHeight - 20),
         font = opts.font,
         fontSize = opts.fontSize,
