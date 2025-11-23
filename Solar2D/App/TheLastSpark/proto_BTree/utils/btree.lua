@@ -882,7 +882,6 @@ function Fallback.prototype.____constructor(self, children)
   Node.prototype.____constructor(self, "?", FALLBACK, children or ({}))
 end
 function Fallback.prototype.tick(self)
-  -- print("tick Fallback")
   self:setActive(true)
   do
     local i = 1
@@ -909,7 +908,6 @@ function Sequence.prototype.____constructor(self, children)
   self.currentChildIndex = 1  -- Track current child for RUNNING state
 end
 function Sequence.prototype.tick(self)
-  -- print("tick Seq")
   self:setActive(true)
 
   -- If we were RUNNING, resume from the current child

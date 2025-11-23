@@ -445,7 +445,13 @@ function M.createExecuteFunction(config)
 
             -- Check simple routing first (direct type -> module mapping)
             if simpleRouting[actionType] then
-                return M.executeOnModule(simpleRouting[actionType], actionWhat, actionType)
+                -- Special case: choice action needs the full action name for pattern matching
+                if actionType == "choice" then
+                    local fullActionName = actionType .. " " .. actionWhat
+                    return M.executeOnModule(simpleRouting[actionType], fullActionName, actionType)
+                else
+                    return M.executeOnModule(simpleRouting[actionType], actionWhat, actionType)
+                end
             end
 
             -- Check complex routing (target mapping or custom handler)

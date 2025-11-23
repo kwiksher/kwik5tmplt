@@ -12,13 +12,17 @@ local M = actionHelper.createModule()
 -- Register Lumin Seed-specific actions
 M.ACTIONS = {
     luminseed = function()
-        -- Show lumin seed - placeholder for actual implementation
-        if not M.checkObject("luminSeed") then
-            return bt.FAILED
-        end
-        print("Showing lumin seed")
-        return bt.SUCCESS
+        return M.showObject("luminSeed")
+    end,
+
+    glowing = function()
+        return M.changeToGlowing()
     end,
 }
+
+function M.changeToGlowing()
+    local luminSeedView = require("views.forest.lumin_seed_display")
+    return M.changeState("luminSeed", "glowing", luminSeedView)
+end
 
 return M

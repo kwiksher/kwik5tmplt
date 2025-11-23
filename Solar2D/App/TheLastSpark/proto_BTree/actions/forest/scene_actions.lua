@@ -5,6 +5,7 @@
 
 local bt = require("utils.btree")
 local actionHelper = require("utils.action_helper")
+local composer = require("composer")
 
 -- Create action module with helper methods
 local M = actionHelper.createModule()
@@ -40,6 +41,15 @@ function M.changeToForestScene()
     -- Change background to forest scene
     print("Changing to forest scene")
 
+    -- Hide objects from previous scene (cabin interior)
+    if sceneObjects.luminSeed then
+        sceneObjects.luminSeed.isVisible = false
+    end
+    if sceneObjects.elara then
+        sceneObjects.elara.isVisible = false
+    end
+
+    -- Change background
     if sceneObjects.changeBackground then
         sceneObjects.changeBackground("images/bg_forest.png")
         return bt.SUCCESS
@@ -50,42 +60,39 @@ function M.changeToForestScene()
 end
 
 function M.goToFightScene()
-    -- Transition to fight scene
+    -- Transition to fight scene using composer
     print("Going to fight scene")
 
-    if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_fight.png")
-        return bt.SUCCESS
-    else
-        print("Warning: changeBackground function not available")
-        return bt.FAILED
-    end
+    composer.gotoScene("fightScene", {
+        effect = "fade",
+        time = 500
+    })
+
+    return bt.SUCCESS
 end
 
 function M.goToCalmScene()
-    -- Transition to calm scene
+    -- Transition to calm scene using composer
     print("Going to calm scene")
 
-    if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_calm.png")
-        return bt.SUCCESS
-    else
-        print("Warning: changeBackground function not available")
-        return bt.FAILED
-    end
+    composer.gotoScene("calmScene", {
+        effect = "fade",
+        time = 500
+    })
+
+    return bt.SUCCESS
 end
 
 function M.goToRetreatScene()
-    -- Transition to retreat scene
+    -- Transition to retreat scene using composer
     print("Going to retreat scene")
 
-    if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_retreat.png")
-        return bt.SUCCESS
-    else
-        print("Warning: changeBackground function not available")
-        return bt.FAILED
-    end
+    composer.gotoScene("retreatScene", {
+        effect = "fade",
+        time = 500
+    })
+
+    return bt.SUCCESS
 end
 
 return M
