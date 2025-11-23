@@ -86,14 +86,9 @@ function M.showForestQuietNarration()
 end
 
 function M.showChoiceButtons()
-    -- Display the player choice buttons (Fight, Calm, Retreat)
-    print("Showing player choice buttons")
-    if M.sceneObjects and M.sceneObjects.showChoiceButtons then
-        M.sceneObjects.showChoiceButtons()
-    else
-        print("Warning: showChoiceButtons function not found")
-    end
-    return bt.SUCCESS
+    -- Delegate to the proper show_choices_action module which handles RUNNING state
+    local showChoicesModule = require("actions.forest.show_choices_action")
+    return showChoicesModule.execute()
 end
 
 function M.presentChoiceFight()

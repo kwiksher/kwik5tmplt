@@ -10,6 +10,7 @@ local displayManager = require("views.display_manager")
 local ElaraDisplay = require("views.forest.elara_display")
 local LuminSeedDisplay = require("views.forest.lumin_seed_display")
 local WolfDisplay = require("views.forest.wolf_display")
+local ChoiceDisplay = require("views.forest.choice_display")
 
 -- BTree components
 local bt = require("utils.btree")
@@ -47,6 +48,11 @@ local layout = {
             height = (model.objects.luminSeed or {}).height or 100,
             idleState = ((model.objects.luminSeed or {}).states or {}).normal or "images/item_lumin_seed.png",
         },
+    },
+    choices = {
+        {label = "Fight", x = display.contentCenterX - 220, y = display.contentHeight - 20, value = "fight"},
+        {label = "Calm", x = display.contentCenterX, y = display.contentHeight - 20, value = "calm"},
+        {label = "Retreat", x = display.contentCenterX + 220, y = display.contentHeight - 20, value = "retreat"}
     }
 }
 
@@ -112,97 +118,17 @@ function scene:create(event)
     self.objs.nextButton.isVisible = true
     self.objs.nextButton.alpha = 1.0
 
-    -- Create a separate group for choice buttons (on top of everything)
-    self.objs.choiceGroup = display.newGroup()
-    sceneGroup:insert(self.objs.choiceGroup)
-
-    -- Create player choice buttons (initially hidden)
-    local function createChoiceButton(label, x, y, choice)
-        local button = display.newRoundedRect(self.objs.choiceGroup, x, y, 200, 60, 12)
-        button.strokeWidth = 3
-        button:setFillColor(0.2, 0.3, 0.5)
-        button:setStrokeColor(0.8, 0.8, 0.8)
-
-        local buttonText = display.newText({
-            parent = self.objs.choiceGroup,
-            text = label,
-            x = x,
-            y = y,
-            font = native.systemFontBold,
-            fontSize = 24
-        })
-        buttonText:setFillColor(1, 1, 1)
-
-        button.isVisible = false
-        buttonText.isVisible = false
-
-        button.label = buttonText
-        button:addEventListener("tap", function()
-            -- Set the player choice
-            self.objs.playerChoice = choice
-            print("Player chose: " .. choice)
-
-            -- Hide all choice buttons
-            self.objs.fightButton.isVisible = false
-            self.objs.fightButton.label.isVisible = false
-            self.objs.calmButton.isVisible = false
-            self.objs.calmButton.label.isVisible = false
-            self.objs.retreatButton.isVisible = false
-            self.objs.retreatButton.label.isVisible = false
-
-            -- Notify show_choices action that choice was selected
-            local showChoicesAction = require("actions.forest.show_choices_action")
-            showChoicesAction.selectChoice()
-
-            -- Advance tree
-            if treeController and not treeController.isComplete then
-                treeController:tick()
-            end
-        end)
-
-        return button
-    end
-
-    -- Create three choice buttons (positioned just below the dialogue box)
-    -- Dialogue box is at contentHeight - 120 with height 120, bottom edge is at contentHeight - 60
-    -- Button height is 60, so place center at contentHeight - 60 + 30 (half button) + 10 (margin)
-    local buttonY = display.contentHeight - 20  -- Place buttons below dialogue box bottom edge
-    self.objs.fightButton = createChoiceButton("Fight", display.contentCenterX - 220, buttonY, "fight")
-    self.objs.calmButton = createChoiceButton("Calm", display.contentCenterX, buttonY, "calm")
-    self.objs.retreatButton = createChoiceButton("Retreat", display.contentCenterX + 220, buttonY, "retreat")
+    -- Initialize choice display system
+    self.objs.choiceGroup = ChoiceDisplay:initialize(sceneGroup, self.objs, nil, layout.choices)
 
     -- Helper function to show choice buttons
     function self.showChoiceButtons()
-        self.objs.nextButton.isVisible = false  -- Hide Next button when showing choices
-
-        -- Bring choice group to absolute front
-        if self.objs.choiceGroup then
-            self.objs.choiceGroup:toFront()
-        end
-
-        -- Show buttons
-        self.objs.fightButton.isVisible = true
-        self.objs.fightButton.label.isVisible = true
-        self.objs.calmButton.isVisible = true
-        self.objs.calmButton.label.isVisible = true
-        self.objs.retreatButton.isVisible = true
-        self.objs.retreatButton.label.isVisible = true
+        ChoiceDisplay:showChoiceButtons()
     end
 
     -- Helper function to hide choice buttons
     function self.hideChoiceButtons()
-        -- Reset the choices visible flag
-        local showChoicesAction = require("actions.forest.show_choices_action")
-        showChoicesAction.choicesAreVisible = false
-
-        -- Don't show Next button immediately - let narration/audio control it
-        self.objs.nextButton.isVisible = false
-        self.objs.fightButton.isVisible = false
-        self.objs.fightButton.label.isVisible = false
-        self.objs.calmButton.isVisible = false
-        self.objs.calmButton.label.isVisible = false
-        self.objs.retreatButton.isVisible = false
-        self.objs.retreatButton.label.isVisible = false
+        ChoiceDisplay:hideChoiceButtons()
     end
 
     -- Helper function to change background image
@@ -254,6 +180,10 @@ function scene:show(event)
     if event.phase == "will" then
         -- Create manual behavior tree controller instead of auto-ticking
         treeController = common.createManualBehaviorTree(behaviorTree, conditionController)
+
+        -- Update choice display with tree controller reference
+        ChoiceDisplay.treeController = treeController
+
         print("Use the Next button to advance through the story")
     elseif event.phase == "did" then
         -- Scene is fully shown
@@ -271,6 +201,9 @@ function scene:hide(event)
 end
 
 function scene:destroy(event)
+    -- Clean up choice display
+    ChoiceDisplay:cleanup()
+
     -- Clean up if needed
     treeController = nil
     behaviorTree = nil

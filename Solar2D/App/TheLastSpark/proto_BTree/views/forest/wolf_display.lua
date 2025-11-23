@@ -1,49 +1,49 @@
 -- Wolf Display View
--- Display logic for wolf character
+-- Display logic for obj character
 
 local displayManager = require("views.display_manager")
 
 local M = {}
 
 function M.create(parentGroup, modelData)
-    local wolf = displayManager.newImageRect(
+    local obj = displayManager.newImageRect(
         parentGroup,
         modelData.states[modelData.currentState],
         modelData.width,
         modelData.height
     )
 
-    wolf.x = modelData.x
-    wolf.y = modelData.y
-    wolf.isVisible = modelData.visible
+    obj.x = modelData.x
+    obj.y = modelData.y
+    obj.isVisible = modelData.visible
 
     -- Store reference to model data
-    wolf.modelData = modelData
+    obj.modelData = modelData
 
-    return wolf
+    return obj
 end
 
-function M.changeState(wolf, newState)
-    if wolf.modelData.states[newState] then
-        wolf:removeSelf()
+function M.changeState(obj, newState)
+    if obj.modelData.states[newState] then
+        obj:removeSelf()
 
         local newImage = displayManager.newImageRect(
-            wolf.parent,
-            wolf.modelData.states[newState],
-            wolf.modelData.width,
-            wolf.modelData.height
+            obj.parent,
+            obj.modelData.states[newState],
+            obj.modelData.width,
+            obj.modelData.height
         )
 
-        newImage.x = wolf.x
-        newImage.y = wolf.y
-        newImage.isVisible = wolf.isVisible
-        newImage.modelData = wolf.modelData
+        newImage.x = obj.x
+        newImage.y = obj.y
+        newImage.isVisible = obj.isVisible
+        newImage.modelData = obj.modelData
         newImage.modelData.currentState = newState
 
         return newImage
     end
 
-    return wolf
+    return obj
 end
 
 return M

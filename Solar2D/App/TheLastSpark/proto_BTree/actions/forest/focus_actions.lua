@@ -26,6 +26,13 @@ M.ACTIONS = {
 
 -- Helper function to focus on an object
 function M.focusOnObject(objectName)
+    -- Special case: cabin is the background, not a display object
+    if objectName == "cabin" then
+        print("Focusing on cabin (background)")
+        -- Could add camera pan/zoom effects here if needed
+        return bt.SUCCESS
+    end
+
     if not M.checkObject(objectName) then
         return bt.FAILED
     end

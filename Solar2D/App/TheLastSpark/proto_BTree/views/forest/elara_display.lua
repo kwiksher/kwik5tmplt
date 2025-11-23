@@ -6,33 +6,33 @@ local displayManager = require("views.display_manager")
 local M = {}
 
 function M.create(parentGroup, modelData)
-    local elara = displayManager.newImageRect(
+    local obj = displayManager.newImageRect(
         parentGroup,
         modelData.states[modelData.currentState],
         modelData.width,
         modelData.height
     )
 
-    elara.x = modelData.x
-    elara.y = modelData.y
-    elara.isVisible = modelData.visible
+    obj.x = modelData.x
+    obj.y = modelData.y
+    obj.isVisible = modelData.visible
 
     -- Store reference to model data
-    elara.modelData = modelData
+    obj.modelData = modelData
 
-    return elara
+    return obj
 end
 
-function M.changeState(elara, newState)
+function M.changeState(obj, newState)
     -- Store references before removing the object
-    local modelData = elara.modelData
-    local parent = elara.parent
-    local x = elara.x
-    local y = elara.y
-    local isVisible = elara.isVisible
+    local modelData = obj.modelData
+    local parent = obj.parent
+    local x = obj.x
+    local y = obj.y
+    local isVisible = obj.isVisible
 
     if modelData and modelData.states and modelData.states[newState] then
-        elara:removeSelf()
+        obj:removeSelf()
 
         local newImage = displayManager.newImageRect(
             parent,
@@ -50,7 +50,7 @@ function M.changeState(elara, newState)
         return newImage
     end
 
-    return elara
+    return obj
 end
 
 return M

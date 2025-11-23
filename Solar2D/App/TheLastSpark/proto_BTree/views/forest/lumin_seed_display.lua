@@ -1,44 +1,55 @@
 -- Lumin Seed Display View
 -- Handles display logic for the lumin seed
+local displayManager = require("views.display_manager")
 
 local M = {}
 
-function M.create(seedData)
-    -- Create lumin seed display object
-    local seedDisplay = {
-        x = seedData.x or display.contentCenterX,
-        y = seedData.y or display.contentCenterY,
-        width = seedData.width or 50,
-        height = seedData.height or 50,
-        state = seedData.state or "normal",
-        visible = seedData.visible or false
-    }
+function M.create(parentGroup, modelData)
+    local obj = displayManager.newImageRect(
+        parentGroup,
+        modelData.states[modelData.currentState],
+        modelData.width,
+        modelData.height
+    )
 
-    -- In a real implementation, this would create actual display objects
-    -- seedDisplay.object = display.newImage("images/lumin_seed.png")
-    -- seedDisplay.object.x = seedDisplay.x
-    -- seedDisplay.object.y = seedDisplay.y
+    obj.x = modelData.x
+    obj.y = modelData.y
+    obj.isVisible = modelData.visible
 
-    print("Created lumin seed display at: " .. seedDisplay.x .. ", " .. seedDisplay.y)
-    return seedDisplay
+    -- Store reference to model data
+    obj.modelData = modelData
+
+    return obj
 end
 
-function M.show(seedDisplay)
-    seedDisplay.visible = true
-    print("Showing lumin seed")
-    return seedDisplay
-end
+function M.changeState(obj, newState)
+    -- Store references before removing the object
+    local modelData = obj.modelData
+    local parent = obj.parent
+    local x = obj.x
+    local y = obj.y
+    local isVisible = obj.isVisible
 
-function M.hide(seedDisplay)
-    seedDisplay.visible = false
-    print("Hiding lumin seed")
-    return seedDisplay
-end
+    if modelData and modelData.states and modelData.states[newState] then
+        obj:removeSelf()
 
-function M.changeState(seedDisplay, newState)
-    seedDisplay.state = newState
-    print("Changed lumin seed state to: " .. newState)
-    return seedDisplay
+        local newImage = displayManager.newImageRect(
+            parent,
+            modelData.states[newState],
+            modelData.width,
+            modelData.height
+        )
+
+        newImage.x = x
+        newImage.y = y
+        newImage.isVisible = isVisible
+        newImage.modelData = modelData
+        newImage.modelData.currentState = newState
+
+        return newImage
+    end
+
+    return obj
 end
 
 return M
