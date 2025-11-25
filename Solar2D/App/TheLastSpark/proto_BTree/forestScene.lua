@@ -4,17 +4,16 @@
 local BaseScene = require("views.baseScene")
 local model = require("models.forest.forest_model")
 local common = require("utils.common_helpers")
-local displayManager = require("views.display_manager")
 local ChoiceDisplay = require("views.forest.choice_display")
-
--- Create scene inheriting from BaseScene
-local scene = BaseScene:new("forest")
 
 -- BTree components
 local bt = require("utils.btree")
 local actionController = require("actions.forest.forest_actions")
 local conditionController = require("conditions.forest.forest_conditions")
 local waitActionModule = require("actions.forest.wait_action")
+
+-- Create scene inheriting from BaseScene
+local scene = BaseScene:new("forest")
 
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
@@ -54,6 +53,12 @@ local layout = {
     }
 }
 
+-- Scene sequence and dialogue
+local sceneDialogue = model.dialogue
+
+-- Audio file mappings
+local audioFiles = model.audio
+
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -61,12 +66,10 @@ local layout = {
 function scene:create(event)
     local sceneGroup = self.view
 
-    -- Use BaseScene initialization for display
-    self:initializeDisplay(sceneGroup, {
-        background = layout.background,
-    })
+    -- Initialize display using base scene functionality
+    self:initializeDisplay(sceneGroup, layout)
 
-    -- Use BaseScene initialization for dialogue interface
+    -- Initialize dialogue interface with custom next button callback
     self:initializeDialogueInterface(function()
         -- Clear the wait state and tick the behavior tree
         waitActionModule.clearWait()
@@ -83,6 +86,9 @@ function scene:create(event)
     -- Initialize choice display system
     self.objs.choiceGroup = ChoiceDisplay:initialize(sceneGroup, self.objs, nil, layout.choices)
 
+    -- Store reference to ChoiceDisplay for baseScene cleanup
+    self.ChoiceDisplay = ChoiceDisplay
+
     -- Helper function to show choice buttons
     function self.showChoiceButtons()
         ChoiceDisplay:showChoiceButtons()
@@ -93,6 +99,11 @@ function scene:create(event)
         ChoiceDisplay:hideChoiceButtons()
     end
 
+    -- Helper function to change background image (using inherited method)
+    function self.changeBackground(imagePath)
+        return self:changeBackground(imagePath)
+    end
+
     -- Pre-load characters (but don't show them yet)
     self.objs.elara = common.createCharacter("elara", model, layout, self.objs.characterGroup)
     self.objs.luminSeed = common.createCharacter("luminSeed", model, layout, self.objs.characterGroup)
@@ -101,8 +112,7 @@ function scene:create(event)
     -- Store reference to scene for helper functions
     self.objs.showChoiceButtons = function() self.showChoiceButtons() end
     self.objs.hideChoiceButtons = function() self.hideChoiceButtons() end
-    -- Use BaseScene's changeBackground method
-    self.objs.changeBackground = function(imagePath) return self:changeBackground(imagePath) end
+    self.objs.changeBackground = function(imagePath) return self.changeBackground(imagePath) end
 
     -- Initialize action controller with scene objects
     actionController.initialize(self.objs)
@@ -110,33 +120,15 @@ function scene:create(event)
     -- Initialize condition controller with scene objects
     conditionController.initialize(self.objs)
 
-    -- Load behavior tree and register action/condition handlers
-    self.behaviorTree = common.loadBehaviorTree("forest_scene.tree", actionController, conditionController)
-
-    -- Store condition controller for use in BaseScene's onShow
+    -- Store condition controller for behavior tree
     self.conditionController = conditionController
 
-    -- Store ChoiceDisplay for BaseScene cleanup
-    self.ChoiceDisplay = ChoiceDisplay
-end
-
-function scene:show(event)
-    -- Call BaseScene's onShow to handle behavior tree initialization
-    self:onShow(event.phase)
-end
-
-function scene:hide(event)
-    -- Call BaseScene's onHide to handle cleanup
-    self:onHide(event.phase)
-end
-
-function scene:destroy(event)
-    -- Call BaseScene's onDestroy to handle cleanup
-    self:onDestroy()
+    -- Load behavior tree and register action/condition handlers
+    self.behaviorTree = common.loadBehaviorTree("forest_scene.tree", actionController, conditionController)
 end
 
 -- -----------------------------------------------------------------------------------
--- Scene event listeners - Use BaseScene's setupEventListeners
+-- Scene event listeners
 -- -----------------------------------------------------------------------------------
 scene:addEventListener("create", scene)
 scene:setupEventListeners()
