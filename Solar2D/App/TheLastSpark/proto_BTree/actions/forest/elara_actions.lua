@@ -33,8 +33,8 @@ function M.changeToScared()
     --    - Calls actions.elara.execute("scared")
     -- 4. This function receives "scared" and executes changeToScared()
 
-    local elaraView = require("views.forest.elara_display")
-    return M.changeState("elara", "scared", elaraView)
+    local DisplayBase = require("views.display_base")
+    return M.changeState("elara", "scared", DisplayBase)
 end
 
 return M

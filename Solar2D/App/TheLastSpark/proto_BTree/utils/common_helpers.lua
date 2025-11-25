@@ -64,18 +64,19 @@ function M.buildDisplayModel(template, layoutData, overrides)
 end
 
 -- Create a character/object display from model and layout data
+-- Uses DisplayBase as a static class for all display objects
 -- @param objectName: string - name of the object (e.g., "elara", "wolf")
 -- @param model: table - model data containing objects[objectName]
 -- @param layout: table - layout data containing objects[objectName]
 -- @param parentGroup: display group - parent display group to add the object to
--- @param DisplayClass: table - display class with create() method (e.g., ElaraDisplay, WolfDisplay)
 -- @param overrides: table (optional) - additional overrides for the model data
 -- @return: created display object
-function M.createCharacter(objectName, model, layout, parentGroup, DisplayClass, overrides)
+function M.createCharacter(objectName, model, layout, parentGroup, overrides)
+    local DisplayBase = require("views.display_base")
     local template = (model.objects or {})[objectName] or {}
     local layoutData = (layout.objects or {})[objectName] or {}
     local modelData = M.buildDisplayModel(template, layoutData, overrides or { visible = false })
-    return DisplayClass.create(parentGroup, modelData)
+    return DisplayBase:create(parentGroup, modelData)
 end
 
 -- Methods table for setmetatable __index usage. Each method expects self._env.

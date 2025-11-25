@@ -7,9 +7,6 @@ local scene = composer.newScene()
 local model = require("models.forest_model")
 local common = require("utils.common_helpers")
 local displayManager = require("views.display_manager")
-local ElaraDisplay = require("views.forest.elara_display")
-local LuminSeedDisplay = require("views.forest.lumin_seed_display")
-local WolfDisplay = require("views.forest.wolf_display")
 local ChoiceDisplay = require("views.forest.choice_display")
 
 -- BTree components
@@ -157,9 +154,9 @@ function scene:create(event)
     end
 
     -- Pre-load characters (but don't show them yet)
-    self.objs.elara = common.createCharacter("elara", model, layout, self.objs.characterGroup, ElaraDisplay)
-    self.objs.luminSeed = common.createCharacter("luminSeed", model, layout, self.objs.characterGroup, LuminSeedDisplay)
-    self.objs.wolf = common.createCharacter("wolf", model, layout, self.objs.characterGroup, WolfDisplay)
+    self.objs.elara = common.createCharacter("elara", model, layout, self.objs.characterGroup)
+    self.objs.luminSeed = common.createCharacter("luminSeed", model, layout, self.objs.characterGroup)
+    self.objs.wolf = common.createCharacter("wolf", model, layout, self.objs.characterGroup)
 
     -- Store reference to scene for helper functions
     self.objs.showChoiceButtons = function() self.showChoiceButtons() end

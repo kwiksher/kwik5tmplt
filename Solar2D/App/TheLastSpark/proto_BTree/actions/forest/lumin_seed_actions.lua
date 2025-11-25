@@ -21,8 +21,8 @@ M.ACTIONS = {
 }
 
 function M.changeToGlowing()
-    local luminSeedView = require("views.forest.lumin_seed_display")
-    return M.changeState("luminSeed", "glowing", luminSeedView)
+    local DisplayBase = require("views.display_base")
+    return M.changeState("luminSeed", "glowing", DisplayBase)
 end
 
 return M
