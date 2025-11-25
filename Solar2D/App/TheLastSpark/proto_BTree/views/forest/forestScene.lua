@@ -1,13 +1,14 @@
 -------------------------------------------------------------------------------
 -- Forest Scene View - BTree Implementation
 -------------------------------------------------------------------------------
-local composer = require("composer")
-
-local scene = composer.newScene()
+local BaseScene = require("views.baseScene")
 local model = require("models.forest_model")
 local common = require("utils.common_helpers")
 local displayManager = require("views.display_manager")
 local ChoiceDisplay = require("views.forest.choice_display")
+
+-- Create scene inheriting from BaseScene
+local scene = BaseScene:new("forest")
 
 -- BTree components
 local bt = require("utils.btree")
@@ -53,16 +54,6 @@ local layout = {
     }
 }
 
--- BTree state
-local behaviorTree
-local treeController  -- Manual controller instead of timer
-
--- Scene sequence and dialogue
-local sceneDialogue = model.dialogue
-
--- Audio file mappings
-local audioFiles = model.audio
-
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -70,50 +61,24 @@ local audioFiles = model.audio
 function scene:create(event)
     local sceneGroup = self.view
 
-    -- Initialize display objects container
-    self.objs = {}
-
-    -- Create display groups for organization
-    local layers = displayManager.createSceneLayers(sceneGroup)
-    self.objs.background = layers.background
-    self.objs.characterGroup = layers.characters
-    self.objs.uiGroup = layers.ui
-
-    -- Initial background (cabin interior)
-    local backgroundElements = displayManager.createBackgroundLayer(self.objs.background, {
-        image = layout.background,
+    -- Use BaseScene initialization for display
+    self:initializeDisplay(sceneGroup, {
+        background = layout.background,
     })
-    self.objs.vignette = backgroundElements.vignette
 
-    -- Dialogue elements (text plus navigation)
-    local uiElements = displayManager.createDialogueInterface(self.objs.uiGroup, {
-        onRelease = function()
-            -- Hide button and stop blinking animation
-            if self.objs.nextButton then
-                self.objs.nextButton.isVisible = false
-                transition.cancel(self.objs.nextButton)
-                self.objs.nextButton.alpha = 1.0
-            end
+    -- Use BaseScene initialization for dialogue interface
+    self:initializeDialogueInterface(function()
+        -- Clear the wait state and tick the behavior tree
+        waitActionModule.clearWait()
 
-            -- Clear the wait state and tick the behavior tree
-            waitActionModule.clearWait()
+        -- Also clear choice action wait state
+        local choiceActionModule = require("actions.forest.choice_action")
+        choiceActionModule.clearWait()
 
-            -- Also clear choice action wait state
-            local choiceActionModule = require("actions.forest.choice_action")
-            choiceActionModule.clearWait()
-
-            if treeController and not treeController.isComplete then
-                treeController:tick()
-            end
-        end,
-    })
-    self.objs.dialogueText = uiElements.dialogueText
-    self.objs.nextButton = uiElements.nextButton
-
-    -- Initially show button so user can manually tick the behavior tree
-    -- It will be hidden when narration starts and shown with blinking when narration completes
-    self.objs.nextButton.isVisible = true
-    self.objs.nextButton.alpha = 1.0
+        if self.treeController and not self.treeController.isComplete then
+            self.treeController:tick()
+        end
+    end)
 
     -- Initialize choice display system
     self.objs.choiceGroup = ChoiceDisplay:initialize(sceneGroup, self.objs, nil, layout.choices)
@@ -128,31 +93,6 @@ function scene:create(event)
         ChoiceDisplay:hideChoiceButtons()
     end
 
-    -- Helper function to change background image
-    function self.changeBackground(imagePath)
-        if not self.objs.background then
-            print("Warning: Background group not found")
-            return false
-        end
-
-        -- Remove existing background objects (children of the background group)
-        for i = self.objs.background.numChildren, 1, -1 do
-            local child = self.objs.background[i]
-            if child then
-                child:removeSelf()
-            end
-        end
-
-        -- Create new background with the same structure as original
-        local backgroundElements = displayManager.createBackgroundLayer(self.objs.background, {
-            image = imagePath,
-        })
-        self.objs.vignette = backgroundElements.vignette
-
-        print("Changed background to: " .. imagePath)
-        return true
-    end
-
     -- Pre-load characters (but don't show them yet)
     self.objs.elara = common.createCharacter("elara", model, layout, self.objs.characterGroup)
     self.objs.luminSeed = common.createCharacter("luminSeed", model, layout, self.objs.characterGroup)
@@ -161,7 +101,8 @@ function scene:create(event)
     -- Store reference to scene for helper functions
     self.objs.showChoiceButtons = function() self.showChoiceButtons() end
     self.objs.hideChoiceButtons = function() self.hideChoiceButtons() end
-    self.objs.changeBackground = function(imagePath) return self.changeBackground(imagePath) end
+    -- Use BaseScene's changeBackground method
+    self.objs.changeBackground = function(imagePath) return self:changeBackground(imagePath) end
 
     -- Initialize action controller with scene objects
     actionController.initialize(self.objs)
@@ -170,48 +111,34 @@ function scene:create(event)
     conditionController.initialize(self.objs)
 
     -- Load behavior tree and register action/condition handlers
-    behaviorTree = common.loadBehaviorTree("forest_scene.tree", actionController, conditionController)
+    self.behaviorTree = common.loadBehaviorTree("forest_scene.tree", actionController, conditionController)
+
+    -- Store condition controller for use in BaseScene's onShow
+    self.conditionController = conditionController
+
+    -- Store ChoiceDisplay for BaseScene cleanup
+    self.ChoiceDisplay = ChoiceDisplay
 end
 
 function scene:show(event)
-    if event.phase == "will" then
-        -- Create manual behavior tree controller instead of auto-ticking
-        treeController = common.createManualBehaviorTree(behaviorTree, conditionController)
-
-        -- Update choice display with tree controller reference
-        ChoiceDisplay.treeController = treeController
-
-        print("Use the Next button to advance through the story")
-    elseif event.phase == "did" then
-        -- Scene is fully shown
-    end
+    -- Call BaseScene's onShow to handle behavior tree initialization
+    self:onShow(event.phase)
 end
 
 function scene:hide(event)
-    if event.phase == "will" then
-        -- Clean up controller
-        treeController = nil
-
-        -- Clean up audio
-        audio.stop()  -- Stop all audio
-    end
+    -- Call BaseScene's onHide to handle cleanup
+    self:onHide(event.phase)
 end
 
 function scene:destroy(event)
-    -- Clean up choice display
-    ChoiceDisplay:cleanup()
-
-    -- Clean up if needed
-    treeController = nil
-    behaviorTree = nil
+    -- Call BaseScene's onDestroy to handle cleanup
+    self:onDestroy()
 end
 
 -- -----------------------------------------------------------------------------------
--- Scene event listeners
+-- Scene event listeners - Use BaseScene's setupEventListeners
 -- -----------------------------------------------------------------------------------
 scene:addEventListener("create", scene)
-scene:addEventListener("show", scene)
-scene:addEventListener("hide", scene)
-scene:addEventListener("destroy", scene)
+scene:setupEventListeners()
 
 return scene

@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------
 -- Calm Scene View - BTree Implementation
 -------------------------------------------------------------------------------
-local composer = require("composer")
+local BaseScene = require("views.baseScene")
 
-local scene = composer.newScene()
-local displayManager = require("views.display_manager")
+-- Create scene inheriting from BaseScene
+local scene = BaseScene:new("calm")
 
 -- Layout configuration
 local layout = {
@@ -18,41 +18,16 @@ local layout = {
 function scene:create(event)
     local sceneGroup = self.view
 
-    -- Initialize display objects container
-    self.objs = {}
-
-    -- Create display groups for organization
-    local layers = displayManager.createSceneLayers(sceneGroup)
-    self.objs.background = layers.background
-    self.objs.characterGroup = layers.characters
-    self.objs.uiGroup = layers.ui
-
-    -- Initial background
-    local backgroundElements = displayManager.createBackgroundLayer(self.objs.background, {
-        image = layout.background,
+    -- Use BaseScene initialization for display
+    self:initializeDisplay(sceneGroup, {
+        background = layout.background,
     })
-    self.objs.vignette = backgroundElements.vignette
 
-    -- Dialogue elements (text plus navigation)
-    local uiElements = displayManager.createDialogueInterface(self.objs.uiGroup, {
-        onRelease = function()
-            -- Hide button
-            if self.objs.nextButton then
-                self.objs.nextButton.isVisible = false
-                transition.cancel(self.objs.nextButton)
-                self.objs.nextButton.alpha = 1.0
-            end
-
-            -- TODO: Add behavior tree controller here
-            print("Calm scene: Next button pressed")
-        end,
-    })
-    self.objs.dialogueText = uiElements.dialogueText
-    self.objs.nextButton = uiElements.nextButton
-
-    -- Show button
-    self.objs.nextButton.isVisible = true
-    self.objs.nextButton.alpha = 1.0
+    -- Use BaseScene initialization for dialogue interface
+    self:initializeDialogueInterface(function()
+        -- TODO: Add behavior tree controller here
+        print("Calm scene: Next button pressed")
+    end)
 
     -- Display placeholder text
     if self.objs.dialogueText then
@@ -61,31 +36,24 @@ function scene:create(event)
 end
 
 function scene:show(event)
-    if event.phase == "will" then
-        print("Calm scene showing")
-    elseif event.phase == "did" then
-        print("Calm scene visible")
-    end
+    -- Call BaseScene's onShow
+    self:onShow(event.phase)
 end
 
 function scene:hide(event)
-    if event.phase == "will" then
-        print("Calm scene hiding")
-        -- Clean up audio
-        audio.stop()
-    end
+    -- Call BaseScene's onHide
+    self:onHide(event.phase)
 end
 
 function scene:destroy(event)
-    print("Calm scene destroyed")
+    -- Call BaseScene's onDestroy
+    self:onDestroy()
 end
 
 -- -----------------------------------------------------------------------------------
--- Scene event listeners
+-- Scene event listeners - Use BaseScene's setupEventListeners
 -- -----------------------------------------------------------------------------------
 scene:addEventListener("create", scene)
-scene:addEventListener("show", scene)
-scene:addEventListener("hide", scene)
-scene:addEventListener("destroy", scene)
+scene:setupEventListeners()
 
 return scene
