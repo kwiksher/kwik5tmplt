@@ -10,4 +10,4 @@ display.setStatusBar(display.HiddenStatusBar)
 local composer = require("composer")
 
 -- Start with the forest scene
-composer.gotoScene("forestScene")
+composer.gotoScene("views.forest.forestScene")
