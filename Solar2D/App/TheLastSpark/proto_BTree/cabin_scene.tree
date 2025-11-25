@@ -1,89 +1,101 @@
 ->
-|    [Show cabin exterior]
-|    [Elara approaches]
 |    ->
-|    |    [Try cabin door]
+|    |    [narration cabin_exterior]
+|    |    [wait for next]
+|    |    [show elara]
+|    |    [wait for next]
+|    ->
+|    |    [scene cabin_door]
+|    |    [wait for next]
 |    |    ?
 |    |    |    ->
 |    |    |    |    (has iron key)
-|    |    |    |    [Use iron key on door]
-|    |    |    |    [Play door creak SFX]
-|    |    |    |    [Open door]
+|    |    |    |    [sfx door_creak]
+|    |    |    |    [scene door_open]
+|    |    |    |    [wait for next]
 |    |    |    ->
 |    |    |    |    !(has iron key)
-|    |    |    |    [Play door rattle SFX]
+|    |    |    |    [sfx door_rattle]
+|    |    |    |    [wait for next]
 |    |    |    |    ?
 |    |    |    |    |    ->
 |    |    |    |    |    |    (key visible near doorstep)
-|    |    |    |    |    |    [Highlight iron key]
-|    |    |    |    |    |    [Find iron key]
-|    |    |    |    |    |    [Set has iron key]
+|    |    |    |    |    |    [show iron_key]
+|    |    |    |    |    |    [wait for next]
 |    |    |    |    |    ->
 |    |    |    |    |    |    !(key visible near doorstep)
-|    |    |    |    |    |    [Search near door]
-|    |    |    |    |    |    [Reveal iron key]
+|    |    |    |    |    |    [narration search_near_door]
+|    |    |    |    |    |    [show iron_key]
+|    |    |    |    |    |    [wait for next]
 |    ->
 |    |    (is door open)
-|    |    [Transition to cabin interior]
-|    |    [Play ambient cabin music]
-|    |    [Show lumin seed glowing]
-|    |    [Elara: "The Lumin Seed... I found it."]
+|    |    [scene cabin_interior]
+|    |    [music ambient_cabin]
+|    |    [show luminseed]
+|    |    [emotion elara happy]
+|    |    [vo vo_elara_seed_found]
+|    |    [wait for next]
 |    ->
-|    |    [Show chest in corner]
-|    |    [Try chest]
+|    |    [show chest]
+|    |    [wait for next]
 |    |    ?
 |    |    |    ->
 |    |    |    |    (has brass key)
-|    |    |    |    [Use brass key on chest]
-|    |    |    |    [Play lock click SFX]
-|    |    |    |    [Play chest creak SFX]
-|    |    |    |    [Open chest]
+|    |    |    |    [sfx lock_click]
+|    |    |    |    [sfx chest_creak]
+|    |    |    |    [scene chest_open]
+|    |    |    |    [wait for next]
 |    |    |    ->
 |    |    |    |    !(has brass key)
-|    |    |    |    [Elara: "There has to be a key somewhere around here..."]
+|    |    |    |    [vo vo_elara_need_key]
+|    |    |    |    [wait for next]
 |    |    |    |    ?
 |    |    |    |    |    ->
 |    |    |    |    |    |    (searched floorboard)
-|    |    |    |    |    |    [Highlight loose floorboard]
+|    |    |    |    |    |    [show loose_floorboard]
+|    |    |    |    |    |    [wait for next]
 |    |    |    |    |    ->
 |    |    |    |    |    |    !(searched floorboard)
-|    |    |    |    |    |    [Search room]
-|    |    |    |    |    |    [Find loose floorboard]
-|    |    |    |    |    |    [Reveal brass key]
-|    |    |    |    |    |    [Pick up brass key]
-|    |    |    |    |    |    [Set has brass key]
+|    |    |    |    |    |    [narration search_room]
+|    |    |    |    |    |    [show loose_floorboard]
+|    |    |    |    |    |    [show brass_key]
+|    |    |    |    |    |    [wait for next]
 |    ->
 |    |    (is chest open)
-|    |    [Reveal empty chest]
-|    |    [Elara change to shocked state]
-|    |    [Elara: "No... it can't be!"]
-|    |    [Elara: "Someone got here first."]
+|    |    [scene empty_chest]
+|    |    [emotion elara shocked]
+|    |    [vo vo_elara_shock_01]
+|    |    [wait for next]
+|    |    [vo vo_elara_shock_02]
+|    |    [wait for next]
 |    ->
-|    |    [Play door slam SFX]
-|    |    [Door slams shut]
-|    |    [Seal door]
-|    |    [Set is trapped]
-|    |    [Screen shake effect]
-|    |    [Play tension music]
-|    |    [Elara change to panicking state]
-|    |    [Elara: "What?! No!"]
+|    |    [sfx door_slam]
+|    |    [scene door_sealed]
+|    |    [sfx shake]
+|    |    [music tension]
+|    |    [emotion elara panicking]
+|    |    [vo vo_elara_panic]
+|    |    [wait for next]
 |    ->
-|    |    [Elara tries door]
-|    |    [Door won't open]
-|    |    [Elara surveys room]
-|    |    ?
-|    |    |    ->
-|    |    |    |    (player choice force door)
-|    |    |    |    [Focus on cabin door]
-|    |    |    |    [Present choice: "Try to force the door open"]
-|    |    |    |    [Go to force door scene]
-|    |    |    ->
-|    |    |    |    (player choice window)
-|    |    |    |    [Focus on boarded window]
-|    |    |    |    [Present choice: "Search for another way out"]
-|    |    |    |    [Go to window escape scene]
-|    |    |    ->
-|    |    |    |    (player choice markings)
-|    |    |    |    [Focus on arcane markings]
-|    |    |    |    [Present choice: "Investigate the strange markings"]
-|    |    |    |    [Go to arcane markings scene]
+|    |    [narration trapped_in_cabin]
+|    |    [wait for next]
+|    [ui show_choices]
+|    ?
+|    |    ->
+|    |    |    (player choice force_door)
+|    |    |    [focus cabin_door]
+|    |    |    [choice force_door]
+|    |    |    [wait for next]
+|    |    |    [scene force_door]
+|    |    ->
+|    |    |    (player choice window)
+|    |    |    [focus boarded_window]
+|    |    |    [choice window]
+|    |    |    [wait for next]
+|    |    |    [scene window_escape]
+|    |    ->
+|    |    |    (player choice markings)
+|    |    |    [focus arcane_markings]
+|    |    |    [choice markings]
+|    |    |    [wait for next]
+|    |    |    [scene arcane_markings]

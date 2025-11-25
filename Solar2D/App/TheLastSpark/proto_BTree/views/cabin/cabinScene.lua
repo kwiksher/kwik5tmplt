@@ -1,28 +1,35 @@
 -------------------------------------------------------------------------------
--- Forest Scene View - BTree Implementation
+-- Cabin Scene View - BTree Implementation
 -------------------------------------------------------------------------------
 local BaseScene = require("views.baseScene")
-local model = require("models.forest.forest_model")
+local model = require("models.cabin.cabin_model")
 local common = require("utils.common_helpers")
 local displayManager = require("views.display_manager")
-local ChoiceDisplay = require("views.forest.choice_display")
+local ChoiceDisplay = require("views.cabin.choice_display")
 
 -- Create scene inheriting from BaseScene
-local scene = BaseScene:new("forest")
+local scene = BaseScene:new("cabin")
 
 -- BTree components
 local bt = require("utils.btree")
-local actionController = require("actions.forest.forest_actions")
-local conditionController = require("conditions.forest.forest_conditions")
-local waitActionModule = require("actions.forest.wait_action")
+local actionController = require("actions.cabin.cabin_actions")
+local conditionController = require("conditions.cabin.cabin_conditions")
+local waitActionModule = require("actions.cabin.wait_action")
 
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
-    background = "images/bg_cabin.png",
+    background = "images/bg_cabin_exterior.png",
     notes = [[
-        [ luminSeed ]   → trail →   [ wolf ]
-                 |                       ↑
-              [ elara ]           (forest edge)
+        [ cabin_door ]
+             |
+        [ elara ]
+             |
+        [ iron_key ] (near door)
+
+        Interior:
+        [ luminSeed ] → [ chest ]
+             |              |
+        [ loose_floorboard ] [ brass_key ]
     ]],
     objects = {
         elara = {
@@ -32,25 +39,53 @@ local layout = {
             height = (model.objects.elara or {}).height or 500,
             neutralState = ((model.objects.elara or {}).states or {}).neutral or "images/elara_neutral.png",
         },
-        wolf = {
-            x = (model.objects.wolf or {}).x or 900,
-            y = (model.objects.wolf or {}).y or 450,
-            width = (model.objects.wolf or {}).width or 400,
-            height = (model.objects.wolf or {}).height or 300,
-            aggroState = ((model.objects.wolf or {}).states or {}).aggro or "images/corrupted_wolf_aggro.png",
+        cabin_door = {
+            x = (model.objects.cabin_door or {}).x or 900,
+            y = (model.objects.cabin_door or {}).y or 380,
+            width = (model.objects.cabin_door or {}).width or 220,
+            height = (model.objects.cabin_door or {}).height or 320,
+            closedState = ((model.objects.cabin_door or {}).states or {}).closed or "images/door_closed.png",
         },
         luminSeed = {
-            x = (model.objects.luminSeed or {}).x or display.contentCenterX,
+            x = (model.objects.luminSeed or {}).x or 640,
             y = (model.objects.luminSeed or {}).y or 400,
             width = (model.objects.luminSeed or {}).width or 100,
             height = (model.objects.luminSeed or {}).height or 100,
-            idleState = ((model.objects.luminSeed or {}).states or {}).normal or "images/item_lumin_seed.png",
+            glowingState = ((model.objects.luminSeed or {}).states or {}).glowing or "images/lumin_seed_glowing.png",
+        },
+        chest = {
+            x = (model.objects.chest or {}).x or 600,
+            y = (model.objects.chest or {}).y or 420,
+            width = (model.objects.chest or {}).width or 170,
+            height = (model.objects.chest or {}).height or 130,
+            lockedState = ((model.objects.chest or {}).states or {}).locked or "images/chest_locked.png",
+        },
+        iron_key = {
+            x = (model.objects.iron_key or {}).x or 850,
+            y = (model.objects.iron_key or {}).y or 550,
+            width = (model.objects.iron_key or {}).width or 50,
+            height = (model.objects.iron_key or {}).height or 80,
+            visibleState = ((model.objects.iron_key or {}).states or {}).visible or "images/iron_key.png",
+        },
+        brass_key = {
+            x = (model.objects.brass_key or {}).x or 450,
+            y = (model.objects.brass_key or {}).y or 620,
+            width = (model.objects.brass_key or {}).width or 50,
+            height = (model.objects.brass_key or {}).height or 80,
+            visibleState = ((model.objects.brass_key or {}).states or {}).visible or "images/brass_key.png",
+        },
+        loose_floorboard = {
+            x = (model.objects.loose_floorboard or {}).x or 450,
+            y = (model.objects.loose_floorboard or {}).y or 650,
+            width = (model.objects.loose_floorboard or {}).width or 120,
+            height = (model.objects.loose_floorboard or {}).height or 80,
+            normalState = ((model.objects.loose_floorboard or {}).states or {}).normal or "images/floorboard_normal.png",
         },
     },
     choices = {
-        {label = "Fight", x = display.contentCenterX - 220, y = display.contentHeight - 20, value = "fight"},
-        {label = "Calm", x = display.contentCenterX, y = display.contentHeight - 20, value = "calm"},
-        {label = "Retreat", x = display.contentCenterX + 220, y = display.contentHeight - 20, value = "retreat"}
+        {label = "Force Door", x = display.contentCenterX - 220, y = display.contentHeight - 20, value = "force_door"},
+        {label = "Window", x = display.contentCenterX, y = display.contentHeight - 20, value = "window"},
+        {label = "Markings", x = display.contentCenterX + 220, y = display.contentHeight - 20, value = "markings"}
     }
 }
 
@@ -72,7 +107,7 @@ function scene:create(event)
         waitActionModule.clearWait()
 
         -- Also clear choice action wait state
-        local choiceActionModule = require("actions.forest.choice_action")
+        local choiceActionModule = require("actions.cabin.choice_action")
         choiceActionModule.clearWait()
 
         if self.treeController and not self.treeController.isComplete then
@@ -93,10 +128,14 @@ function scene:create(event)
         ChoiceDisplay:hideChoiceButtons()
     end
 
-    -- Pre-load characters (but don't show them yet)
+    -- Pre-load characters and objects (but don't show them yet)
     self.objs.elara = common.createCharacter("elara", model, layout, self.objs.characterGroup)
     self.objs.luminSeed = common.createCharacter("luminSeed", model, layout, self.objs.characterGroup)
-    self.objs.wolf = common.createCharacter("wolf", model, layout, self.objs.characterGroup)
+    self.objs.cabin_door = common.createCharacter("cabin_door", model, layout, self.objs.characterGroup)
+    self.objs.chest = common.createCharacter("chest", model, layout, self.objs.characterGroup)
+    self.objs.iron_key = common.createCharacter("iron_key", model, layout, self.objs.characterGroup)
+    self.objs.brass_key = common.createCharacter("brass_key", model, layout, self.objs.characterGroup)
+    self.objs.loose_floorboard = common.createCharacter("loose_floorboard", model, layout, self.objs.characterGroup)
 
     -- Store reference to scene for helper functions
     self.objs.showChoiceButtons = function() self.showChoiceButtons() end
@@ -111,7 +150,7 @@ function scene:create(event)
     conditionController.initialize(self.objs)
 
     -- Load behavior tree and register action/condition handlers
-    self.behaviorTree = common.loadBehaviorTree("forest_scene.tree", actionController, conditionController)
+    self.behaviorTree = common.loadBehaviorTree("cabin_scene.tree", actionController, conditionController)
 
     -- Store condition controller for use in BaseScene's onShow
     self.conditionController = conditionController

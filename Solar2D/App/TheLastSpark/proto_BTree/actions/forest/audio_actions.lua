@@ -5,4 +5,4 @@
 local audioHelper = require("utils.audio_helper")
 
 -- Create audio module from forest model
-return audioHelper.new("models.forest_model", "Audio Actions")
+return audioHelper.new("models.forest.forest_model", "Audio Actions")

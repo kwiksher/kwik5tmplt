@@ -1,0 +1,12 @@
+
+- [narration ...] - Used for descriptive narrative text
+- [wait for next] - Added after each action/scene to control pacing
+- [show ...] - For displaying objects/characters
+- [sfx ...] - For sound effects (door_creak, door_rattle, lock_click, door_slam, shake)
+- [vo ...] - For voice-over dialogue (vo_elara_seed_found, vo_elara_need_key, etc.)
+- [music ...] - For background music
+- [emotion elara ...] - For character emotions (happy, shocked, panicking)
+- [scene ...] - For scene transitions
+- [focus ...] - For player choice focus
+- [choice ...] - For choice actions
+- [ui show_choices] - Added before the player choice section
