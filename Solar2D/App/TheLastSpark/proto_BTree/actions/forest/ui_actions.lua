@@ -1,97 +1,36 @@
 -- UI Actions
 -- Consolidated actions for UI-related elements
 -- Accepts action parameter to specify which UI action to execute
--- Uses action_helper for common functionality
+-- Uses BaseUIAction for common functionality
 
 local bt = require("utils.btree")
-local actionHelper = require("utils.action_helper")
+local BaseUIAction = require("actions.base_ui_action")
 
--- Create action module with helper methods
-local M = actionHelper.createModule()
+-- Create module using base class
+local M = BaseUIAction.new()
 
--- Override initialize to capture scene objects reference
-function M.initialize(objects)
-    -- Store reference to scene objects so we can set playerChoice
-    M.sceneObjects = objects
-end
-
--- Override execute to add logging
-function M.execute(actionName)
-    print("UI Actions: Received action name = '" .. tostring(actionName) .. "'")
-    print("UI Actions: Available actions = " .. table.concat(M.listActionNames(), ", "))
-
-    if not actionName then
-        print("UI Actions: Error - No action specified")
-        return bt.FAILED
-    end
-
-    -- Look up action in registry
-    if M.ACTIONS[actionName] then
-        print("UI Actions: Found action, executing...")
-        return M.ACTIONS[actionName]()
-    else
-        print("UI Actions: Error - Unknown action '" .. tostring(actionName) .. "'")
-        return bt.FAILED
-    end
-end
-
--- Helper to list all action names
-function M.listActionNames()
-    local names = {}
-    for name, _ in pairs(M.ACTIONS) do
-        table.insert(names, name)
-    end
-    return names
-end
-
--- Register UI-specific actions
-M.ACTIONS = {
-    cabin_scene = function()
-        return M.showCabinNarration()
-    end,
-
-    forest_quiet = function()
-        return M.showForestQuietNarration()
-    end,
-
-    show_choices = function()
-        return M.showChoiceButtons()
-    end,
-
-    fight = function()
-        return M.presentChoiceFight()
-    end,
-
-    calm = function()
-        return M.presentChoiceCalm()
-    end,
-
-    retreat = function()
-        return M.presentChoiceRetreat()
-    end,
-}
-
-function M.showCabinNarration()
+-- Helper functions for UI actions
+local function showCabinNarration()
     -- Display cabin scene narration text
     -- "A dusty sunbeam cuts through the broken window of a small, abandoned cabin. Dust motes dance in the light."
     print("Showing cabin scene narration")
     return bt.SUCCESS
 end
 
-function M.showForestQuietNarration()
+local function showForestQuietNarration()
     -- Display forest quiet narration text
     -- "The forest is unnervingly quiet. No birdsong, no rustle of creatures."
     print("Showing forest quiet narration")
     return bt.SUCCESS
 end
 
-function M.showChoiceButtons()
+local function showChoiceButtons()
     -- Delegate to the proper show_choices_action module which handles RUNNING state
     local showChoicesModule = require("actions.forest.show_choices_action")
     return showChoicesModule.execute()
 end
 
-function M.presentChoiceFight()
+local function presentChoiceFight()
     -- Present fight choice to player
     -- This would typically show fight option UI and wait for player input
     -- For now, automatically select this choice for testing
@@ -103,7 +42,7 @@ function M.presentChoiceFight()
     return bt.SUCCESS
 end
 
-function M.presentChoiceCalm()
+local function presentChoiceCalm()
     -- Present calm choice to player
     -- This would typically show calm option UI and wait for player input
     -- For now, automatically select this choice for testing
@@ -115,7 +54,7 @@ function M.presentChoiceCalm()
     return bt.SUCCESS
 end
 
-function M.presentChoiceRetreat()
+local function presentChoiceRetreat()
     -- Present retreat choice to player
     -- This would typically show retreat option UI and wait for player input
     -- For now, automatically select this choice for testing
@@ -126,5 +65,15 @@ function M.presentChoiceRetreat()
     end
     return bt.SUCCESS
 end
+
+-- Register UI-specific actions
+M.ACTIONS = {
+    cabin_scene = showCabinNarration,
+    forest_quiet = showForestQuietNarration,
+    show_choices = showChoiceButtons,
+    fight = presentChoiceFight,
+    calm = presentChoiceCalm,
+    retreat = presentChoiceRetreat,
+}
 
 return M
