@@ -63,7 +63,7 @@ function M.goToFightScene()
     -- Transition to fight scene using composer
     print("Going to fight scene")
 
-    composer.gotoScene("fightScene", {
+    composer.gotoScene("views.fight.fightScene", {
         effect = "fade",
         time = 500
     })
@@ -75,7 +75,7 @@ function M.goToCalmScene()
     -- Transition to calm scene using composer
     print("Going to calm scene")
 
-    composer.gotoScene("calmScene", {
+    composer.gotoScene("views.calm.calmScene", {
         effect = "fade",
         time = 500
     })
@@ -87,7 +87,7 @@ function M.goToRetreatScene()
     -- Transition to retreat scene using composer
     print("Going to retreat scene")
 
-    composer.gotoScene("retreatScene", {
+    composer.gotoScene("views.retreat.retreatScene", {
         effect = "fade",
         time = 500
     })
