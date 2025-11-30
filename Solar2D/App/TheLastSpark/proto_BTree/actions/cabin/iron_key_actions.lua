@@ -95,6 +95,14 @@ function M.enableTapInteraction()
             -- Disable further taps to prevent double-collection
             M.disableTapInteraction()
 
+            -- CRITICAL: Restart the behavior tree to prevent same-tick execution issues
+            -- When a condition changes (iron key collected), we need to restart the tree
+            -- from the beginning to properly evaluate the new game state
+            if M.sceneObjects and M.sceneObjects.restartTree then
+                print("Iron key collected - restarting behavior tree...")
+                M.sceneObjects.restartTree()
+            end
+
             return true
         end
     end
