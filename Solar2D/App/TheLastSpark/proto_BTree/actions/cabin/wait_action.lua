@@ -1,5 +1,8 @@
--- Wait Action (Cabin Scene)
--- Uses base wait action
+-- Wait Action
+-- Returns RUNNING to pause tree execution until clearWait is called
+-- Uses BaseWaitAction for common functionality
 
 local BaseWaitAction = require("actions.base_wait_action")
-return BaseWaitAction
+
+-- Create module using base class
+return BaseWaitAction.new()

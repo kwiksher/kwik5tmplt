@@ -1,5 +1,6 @@
 ->
 |    ->
+|    |    !(has iron key)
 |    |    [narration cabin_exterior]
 |    |    [wait for next]
 |    |    [show elara]

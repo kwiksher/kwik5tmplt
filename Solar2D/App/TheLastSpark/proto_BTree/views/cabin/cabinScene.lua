@@ -62,7 +62,7 @@ local layout = {
         },
         iron_key = {
             x = (model.objects.iron_key or {}).x or 850,
-            y = (model.objects.iron_key or {}).y or 550,
+            y = (model.objects.iron_key or {}).y or 300,
             width = (model.objects.iron_key or {}).width or 50,
             height = (model.objects.iron_key or {}).height or 80,
             visibleState = ((model.objects.iron_key or {}).states or {}).visible or "images/iron_key.png",

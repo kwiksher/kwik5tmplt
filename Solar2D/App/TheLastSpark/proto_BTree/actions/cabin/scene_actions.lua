@@ -75,12 +75,36 @@ end
 
 function M.changeToCabinDoor()
     print("Focusing on cabin door")
-    -- Could add zoom/pan to door
-    return bt.SUCCESS
+    if sceneObjects.changeBackground then
+        sceneObjects.changeBackground("images/bg_cabin_door.png")
+        return bt.SUCCESS
+    else
+        print("Warning: changeBackground function not available")
+        return bt.FAILED
+    end
 end
 
 function M.changeToDoorOpen()
     print("Door opening scene")
+
+    -- Change the background
+    if sceneObjects.changeBackground then
+        sceneObjects.changeBackground("images/bg_door_open.png")
+    else
+        print("Warning: changeBackground function not available")
+        return bt.FAILED
+    end
+
+    -- Change the door state to "open" so (is door open) condition becomes true
+    if sceneObjects.cabin_door then
+        local DisplayBase = require("views.display_base")
+        sceneObjects.cabin_door = DisplayBase:changeState(sceneObjects.cabin_door, "open")
+        print("Door state changed to 'open'")
+    else
+        print("Warning: cabin_door object not available")
+        return bt.FAILED
+    end
+
     return bt.SUCCESS
 end
 
@@ -97,21 +121,42 @@ end
 
 function M.changeToChestOpen()
     print("Chest opening scene")
-    return bt.SUCCESS
+    if sceneObjects.changeBackground then
+        sceneObjects.changeBackground("images/bg_chest_open.png")
+        return bt.SUCCESS
+    else
+        print("Warning: changeBackground function not available")
+        return bt.FAILED
+    end
 end
 
 function M.changeToEmptyChest()
     print("Empty chest revealed scene")
-    return bt.SUCCESS
+    if sceneObjects.changeBackground then
+        sceneObjects.changeBackground("images/bg_empty_chest.png")
+        return bt.SUCCESS
+    else
+        print("Warning: changeBackground function not available")
+        return bt.FAILED
+    end
 end
 
 function M.changeToDoorSealed()
     print("Door sealing scene")
-    return bt.SUCCESS
+    if sceneObjects.changeBackground then
+        sceneObjects.changeBackground("images/bg_door_sealed.png")
+        return bt.SUCCESS
+    else
+        print("Warning: changeBackground function not available")
+        return bt.FAILED
+    end
 end
 
 function M.goToForceDoorScene()
     print("Going to force door scene")
+    if sceneObjects.changeBackground then
+        sceneObjects.changeBackground("images/bg_force_door.png")
+    end
     composer.gotoScene("views.cabin.forceDoorScene", {
         effect = "fade",
         time = 500
@@ -121,6 +166,9 @@ end
 
 function M.goToWindowEscapeScene()
     print("Going to window escape scene")
+    if sceneObjects.changeBackground then
+        sceneObjects.changeBackground("images/bg_window_escape.png")
+    end
     composer.gotoScene("views.cabin.windowEscapeScene", {
         effect = "fade",
         time = 500
@@ -130,6 +178,9 @@ end
 
 function M.goToArcaneMarkingsScene()
     print("Going to arcane markings scene")
+    if sceneObjects.changeBackground then
+        sceneObjects.changeBackground("images/bg_arcane_markings.png")
+    end
     composer.gotoScene("views.cabin.arcaneMarkingsScene", {
         effect = "fade",
         time = 500

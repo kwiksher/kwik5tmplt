@@ -257,10 +257,12 @@ function M.createDialogueInterface(uiGroup, params)
     end
 
     -- Calculate text x position for left alignment
-    -- For left-aligned text with width, the x position is the center of the text object
-    -- So we position it at the center of the available text area within the box
-    local textWidth = opts.textWidth or (boxWidth - 100)
-    local textX = opts.textX or (box.x - boxWidth/2 + textWidth/2 + 50)  -- 50px padding from left edge
+    -- Reserve 160px on the right for the Next button (120px button + 40px padding)
+    -- Use 30px padding on the left edge for better readability
+    local buttonReservedSpace = 160
+    local leftPadding = 30
+    local textWidth = opts.textWidth or (boxWidth - buttonReservedSpace - leftPadding - 30)  -- 30px right padding
+    local textX = opts.textX or (box.x - boxWidth/2 + leftPadding + textWidth/2)
 
     local text = display.newText({
         parent = uiGroup,

@@ -80,7 +80,11 @@ function M.createModule()
         end
 
         local obj = actionModule.sceneObjects[objectName]
-        actionModule.sceneObjects[objectName] = viewModule.changeState(obj, stateName)
+        print("DEBUG changeState: Before - obj type: " .. type(obj))
+        local newObj = viewModule:changeState(obj, stateName)
+        print("DEBUG changeState: After changeState - newObj type: " .. type(newObj))
+        actionModule.sceneObjects[objectName] = newObj
+        print("DEBUG changeState: After assignment - sceneObjects[" .. objectName .. "] type: " .. type(actionModule.sceneObjects[objectName]))
 
         print("Changed " .. objectName .. " to " .. stateName)
         return bt.SUCCESS
