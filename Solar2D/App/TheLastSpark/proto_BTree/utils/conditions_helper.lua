@@ -25,8 +25,9 @@ function M.loadConditionModules(modulePaths, objects)
             end
         -- Otherwise, register the module directly if it has evaluate
         elseif module.evaluate then
-            local moduleName = modulePath:match("([^%.]+)$") -- Get last part of path
-            conditions[moduleName] = module
+            -- Use CONDITION_NAME if available, otherwise use module name
+            local conditionName = module.CONDITION_NAME or modulePath:match("([^%.]+)$")
+            conditions[conditionName] = module
             totalCount = totalCount + 1
         end
     end

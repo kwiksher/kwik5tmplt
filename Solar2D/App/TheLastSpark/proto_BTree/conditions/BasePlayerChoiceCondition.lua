@@ -53,17 +53,30 @@ end
 -- Factory function to create a customized player choice condition
 -- Usage: local myChoice = BasePlayerChoiceCondition.create("custom choice", {...})
 function M.create(conditionName, conditionTypes)
-    local instance = {}
-    for k, v in pairs(M) do
-        instance[k] = v
-    end
+    local instance = {
+        CONDITION_NAME = conditionName or M.CONDITION_NAME,
+        CONDITION_TYPES = conditionTypes or M.CONDITION_TYPES
+    }
 
-    if conditionName then
-        instance.CONDITION_NAME = conditionName
-    end
+    -- Copy the initialize and evaluate functions
+    instance.initialize = M.initialize
+    instance.evaluate = M.evaluate
 
-    if conditionTypes then
-        instance.CONDITION_TYPES = conditionTypes
+    -- Create a custom generateConditions function that uses the instance's values
+    instance.generateConditions = function()
+        local conditionWrappers = {}
+
+        for _, conditionType in pairs(instance.CONDITION_TYPES) do
+            local fullConditionName = instance.CONDITION_NAME .. " " .. conditionType
+            conditionWrappers[fullConditionName] = {
+                initialize = instance.initialize,
+                evaluate = function()
+                    return instance.evaluate(conditionType)
+                end
+            }
+        end
+
+        return conditionWrappers
     end
 
     return instance

@@ -11,7 +11,7 @@ function M.create()
             collected = "images/iron_key_collected.png",
         },
         x = 850,
-        y = 550,
+        y = 300,
         width = 50,
         height = 80,
         currentState = "hidden",

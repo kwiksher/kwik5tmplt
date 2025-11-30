@@ -149,6 +149,18 @@ function BaseNarrationAction.new(narrationTexts)
         end
     end
 
+    -- Override execute to handle narration actions
+    -- This is required by the action controller
+    function M.execute(actionName)
+        -- Check if this is a registered narration action
+        if M.ACTIONS[actionName] then
+            return M.ACTIONS[actionName]()
+        else
+            print("Narration Action: Unknown narration key - " .. tostring(actionName))
+            return bt.FAILED
+        end
+    end
+
     return M
 end
 
