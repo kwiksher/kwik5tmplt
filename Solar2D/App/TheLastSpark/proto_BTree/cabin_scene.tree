@@ -54,12 +54,12 @@
 |    |    |    |    |    ->
 |    |    |    |    |    |    (searched floorboard)
 |    |    |    |    |    |    [show loose_floorboard]
+|    |    |    |    |    |    [show brass_key]
 |    |    |    |    |    |    [wait for next]
 |    |    |    |    |    ->
 |    |    |    |    |    |    !(searched floorboard)
 |    |    |    |    |    |    [narration search_room]
 |    |    |    |    |    |    [show loose_floorboard]
-|    |    |    |    |    |    [show brass_key]
 |    |    |    |    |    |    [wait for next]
 |    ->
 |    |    (is chest open)

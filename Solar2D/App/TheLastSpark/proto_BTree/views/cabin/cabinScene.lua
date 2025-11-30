@@ -155,6 +155,26 @@ function scene:create(event)
     -- Store condition controller for use in BaseScene's onShow
     self.conditionController = conditionController
 
+    -- Store restart tree function for use when conditions change
+    self.objs.restartTree = function()
+        print("Restarting behavior tree...")
+
+        -- Reset wait action state before restarting tree
+        waitActionModule.reset()
+
+        -- Recreate the tree controller to restart from the beginning
+        if self.behaviorTree and self.conditionController then
+            self.treeController = common.createManualBehaviorTree(self.behaviorTree, self.conditionController)
+
+            -- Update ChoiceDisplay reference
+            if self.ChoiceDisplay then
+                self.ChoiceDisplay.treeController = self.treeController
+            end
+
+            print("Behavior tree restarted successfully")
+        end
+    end
+
     -- Store ChoiceDisplay for BaseScene cleanup
     self.ChoiceDisplay = ChoiceDisplay
 end

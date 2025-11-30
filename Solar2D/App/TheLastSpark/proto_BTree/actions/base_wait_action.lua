@@ -20,6 +20,7 @@ function BaseWaitAction.new()
     local currentWaitId = 0
     local nextWaitId = 1
     local clearedWaitId = 0
+    local lastSuccessId = -1
 
     -- Override initialize
     function M.initialize(objects)
@@ -27,6 +28,17 @@ function BaseWaitAction.new()
         currentWaitId = 0
         nextWaitId = 1
         clearedWaitId = 0
+        lastSuccessId = -1
+    end
+
+    -- Reset wait state (called when restarting behavior tree)
+    function M.reset()
+        print("Wait Action: Resetting all wait state...")
+        currentWaitId = 0
+        nextWaitId = 1
+        clearedWaitId = 0
+        lastSuccessId = -1
+        print("Wait Action: Wait state reset complete")
     end
 
     -- Clear the wait state (call this when Next button is pressed)

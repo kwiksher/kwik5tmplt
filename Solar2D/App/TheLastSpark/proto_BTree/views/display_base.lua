@@ -89,6 +89,25 @@ function DisplayBase:changeState(obj, newState)
         newImage.isVisible = shouldBeVisible
         newImage.modelData.visible = shouldBeVisible
 
+        -- Debug: Print detailed position and visibility info
+        print("=== OBJECT DISPLAY DEBUG ===")
+        print("Object state: " .. tostring(newState))
+        print("Position: x=" .. tostring(newImage.x) .. ", y=" .. tostring(newImage.y))
+        print("Dimensions: width=" .. tostring(newImage.width) .. ", height=" .. tostring(newImage.height))
+        print("isVisible: " .. tostring(newImage.isVisible))
+        print("alpha: " .. tostring(newImage.alpha))
+        print("Parent: " .. tostring(newImage.parent))
+        if newImage.parent then
+            print("Parent isVisible: " .. tostring(newImage.parent.isVisible))
+        end
+        print("=========================")
+
+        -- Bring to front to ensure visibility
+        if shouldBeVisible and newImage.toFront then
+            newImage:toFront()
+            print("DEBUG DisplayBase.changeState: Brought newImage to front")
+        end
+
         print("DEBUG DisplayBase.changeState: Returning newImage, type = " .. type(newImage))
         return newImage
     end

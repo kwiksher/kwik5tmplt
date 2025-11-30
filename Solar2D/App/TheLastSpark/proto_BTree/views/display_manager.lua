@@ -79,9 +79,9 @@ function M.newImageRect(...)
                 text = placeholderText,
                 x = 0,
                 y = 0,
-                width = width * 0.8,
-                height = height * 0.8,
-                font = native.systemFont,
+                width = width,
+                height = height,
+                font = native.systemFontBold,
                 fontSize = 16,
                 align = "center"
             })
@@ -90,14 +90,17 @@ function M.newImageRect(...)
                 text = placeholderText,
                 x = 0,
                 y = 0,
-                width = width * 0.8,
-                height = height * 0.8,
-                font = native.systemFont,
+                width = width,
+                height = height,
+                font = native.systemFontBold,
                 fontSize = 16,
                 align = "center"
             })
         end
-        img:setFillColor(0.7, 0.7, 0.7)
+        -- Make placeholder VERY visible with bright green color
+        img:setFillColor(0, 1, 0)
+        print("Created GREEN placeholder text at (0,0) with fontSize 32, will be positioned by caller")
+        print("Placeholder dimensions: width=" .. tostring(width) .. ", height=" .. tostring(height))
     end    return img
 end
 
