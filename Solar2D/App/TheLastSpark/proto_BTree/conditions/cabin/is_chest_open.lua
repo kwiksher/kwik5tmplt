@@ -12,7 +12,10 @@ function M.initialize(objects)
 end
 
 function M.evaluate()
-    local isOpen = sceneObjects.chest and sceneObjects.chest.currentState == "open"
+    -- Check modelData.currentState since chest is a display object with modelData
+    local isOpen = sceneObjects.chest and
+                   sceneObjects.chest.modelData and
+                   sceneObjects.chest.modelData.currentState == "open"
     print(M.CONDITION_NAME .. " condition: " .. tostring(isOpen))
     return isOpen
 end

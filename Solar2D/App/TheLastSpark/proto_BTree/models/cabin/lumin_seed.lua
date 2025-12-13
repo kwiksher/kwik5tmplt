@@ -7,6 +7,7 @@ function M.create()
             glowing = "images/lumin_seed_glowing.png",
             dim = "images/lumin_seed_dim.png",
             pulsing = "images/lumin_seed_pulsing.png",
+            collected = "images/lumin_seed_collected.png",
         },
         x = 640,
         y = 400,

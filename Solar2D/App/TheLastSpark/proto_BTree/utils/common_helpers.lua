@@ -690,19 +690,23 @@ function M.createManualBehaviorTree(behaviorTree, conditionController)
     -- Manual tick function - call this when button is pressed
     function controller:tick()
         if self.isComplete then
+            print("Controller: Tree already complete, skipping tick")
             return self.lastResult
         end
 
         -- Update condition statuses before ticking
         self:updateConditions()
 
+        print("Controller: Ticking tree...")
         local result = self.tree:tick()
         self.lastResult = result
+        print("Controller: Tree returned " .. tostring(result))
 
         -- Check the result
         if result == bt.SUCCESS then
             self.failureCount = 0
             self.isComplete = true
+            print("Controller: Tree completed with SUCCESS")
             return result
         elseif result == bt.FAILURE then
             self.failureCount = self.failureCount + 1
@@ -715,6 +719,7 @@ function M.createManualBehaviorTree(behaviorTree, conditionController)
         elseif result == bt.RUNNING then
             -- Reset failure count when tree is running successfully
             self.failureCount = 0
+            print("Controller: Tree is RUNNING")
             return result
         end
 
@@ -726,6 +731,33 @@ function M.createManualBehaviorTree(behaviorTree, conditionController)
         self.failureCount = 0
         self.isComplete = false
         self.lastResult = nil
+
+        -- Reset the tree nodes' internal state
+        if self.tree and self.tree.root then
+            self:resetNode(self.tree.root)
+        end
+    end
+
+    -- Recursively reset all nodes in the tree
+    function controller:resetNode(node)
+        if not node then return end
+
+        -- Reset Sequence/Fallback currentChildIndex
+        if node.currentChildIndex then
+            node.currentChildIndex = 1
+        end
+
+        -- Reset node status
+        if node.setStatus then
+            node:setStatus(nil)
+        end
+
+        -- Recursively reset children
+        if node.children then
+            for i = 1, #node.children do
+                self:resetNode(node.children[i])
+            end
+        end
     end
 
     print("\n=== Manual Behavior Tree Created ===")

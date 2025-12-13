@@ -95,12 +95,24 @@ function M.enableTapInteraction()
             -- Disable further taps to prevent double-collection
             M.disableTapInteraction()
 
-            -- CRITICAL: Restart the behavior tree to prevent same-tick execution issues
-            -- When a condition changes (iron key collected), we need to restart the tree
-            -- from the beginning to properly evaluate the new game state
-            if M.sceneObjects and M.sceneObjects.restartTree then
-                print("Iron key collected - restarting behavior tree...")
-                M.sceneObjects.restartTree()
+            -- Clear the current wait action and continue the tree
+            -- The tree will naturally proceed to the next sequence with has_iron_key = true
+            if M.sceneObjects and M.sceneObjects.treeController then
+                timer.performWithDelay(100, function()
+                    -- First, clear the wait action to unblock the tree
+                    local waitAction = require("actions.cabin.wait_action")
+                    if waitAction and waitAction.clearWait then
+                        waitAction.clearWait()
+                        print("Iron key: Cleared wait action")
+                    end
+
+                    -- Just tick to continue - don't reset
+                    -- The tree's Fallback node will move to the next branch when the current one completes
+                    if M.sceneObjects.treeController then
+                        M.sceneObjects.treeController:tick()
+                        print("Iron key: Ticked tree")
+                    end
+                end)
             end
 
             return true

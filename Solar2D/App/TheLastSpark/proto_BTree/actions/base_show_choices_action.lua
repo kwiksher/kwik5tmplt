@@ -59,6 +59,9 @@ function BaseShowChoicesAction.new()
             M.choiceCompleted = false
             M.choicesAreVisible = true
 
+            -- Set flag in sceneObjects so other actions know choices are visible
+            sceneObjects.choicesVisible = true
+
             -- Hide Next button when showing choices - user must click a choice button
             if sceneObjects.nextButton then
                 sceneObjects.nextButton.isVisible = false
@@ -87,6 +90,10 @@ function BaseShowChoicesAction.new()
             M.isWaitingForChoice = false
             M.choiceWasSelected = false
             M.choiceCompleted = false
+
+            -- Clear the choices visible flag
+            sceneObjects.choicesVisible = false
+
             print("=== SHOW CHOICES DEBUG END ===")
             return bt.SUCCESS
         end

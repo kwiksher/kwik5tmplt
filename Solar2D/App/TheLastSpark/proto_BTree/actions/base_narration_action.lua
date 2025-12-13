@@ -101,6 +101,12 @@ function BaseNarrationAction.new(narrationTexts)
                     if not result then
                         print("Narration: No VO waiting, will show button after 4 seconds reading time")
                         timer.performWithDelay(4000, function()
+                            -- Don't show next button if choices are currently visible
+                            if sceneObjects and sceneObjects.choicesVisible then
+                                print("Narration: Choices are visible, not showing next button")
+                                return
+                            end
+
                             if sceneObjects and sceneObjects.nextButton then
                                 print("Narration: Showing next button with blinking")
                                 sceneObjects.nextButton.isVisible = true

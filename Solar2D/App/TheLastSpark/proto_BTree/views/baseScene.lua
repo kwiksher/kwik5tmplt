@@ -146,6 +146,11 @@ function BaseScene:onShow(phase)
             local common = require("utils.common_helpers")
             self.treeController = common.createManualBehaviorTree(self.behaviorTree, self.conditionController)
 
+            -- Store treeController reference in objs for action modules to access
+            if self.objs then
+                self.objs.treeController = self.treeController
+            end
+
             -- Update choice display if it exists
             local ChoiceDisplay = self.ChoiceDisplay
             if ChoiceDisplay then

@@ -69,7 +69,7 @@ local layout = {
         },
         brass_key = {
             x = (model.objects.brass_key or {}).x or 450,
-            y = (model.objects.brass_key or {}).y or 620,
+            y = (model.objects.brass_key or {}).y or 200,
             width = (model.objects.brass_key or {}).width or 50,
             height = (model.objects.brass_key or {}).height or 80,
             visibleState = ((model.objects.brass_key or {}).states or {}).visible or "images/brass_key.png",
@@ -166,12 +166,39 @@ function scene:create(event)
         if self.behaviorTree and self.conditionController then
             self.treeController = common.createManualBehaviorTree(self.behaviorTree, self.conditionController)
 
+            -- Store treeController reference in objs for action modules to access
+            self.objs.treeController = self.treeController
+
             -- Update ChoiceDisplay reference
             if self.ChoiceDisplay then
                 self.ChoiceDisplay.treeController = self.treeController
             end
 
             print("Behavior tree restarted successfully")
+
+            -- Tick the tree once to start evaluating from the new state
+            -- This will execute actions until a wait is encountered
+            if self.treeController then
+                print("\n========== TICK AFTER RESTART ==========")
+                print("DEBUG: About to call tick() after restart")
+                local result = self.treeController:tick()
+                print("DEBUG: tick() returned: " .. tostring(result))
+                if result == 0 then
+                    print("DEBUG: tick() returned FAILED (0)")
+                elseif result == 1 then
+                    print("DEBUG: tick() returned SUCCESS (1)")
+                elseif result == 2 then
+                    print("DEBUG: tick() returned RUNNING (2)")
+                end
+                -- Execute any pending action queued before restart (e.g., 'scene chest_open')
+                if self.objs.pendingAction and actionController and actionController.execute then
+                    local actionName = self.objs.pendingAction
+                    print("Pending action detected after restart: " .. tostring(actionName))
+                    actionController.execute(actionName)
+                    self.objs.pendingAction = nil
+                end
+                print("========== END TICK AFTER RESTART ==========\n")
+            end
         end
     end
 
