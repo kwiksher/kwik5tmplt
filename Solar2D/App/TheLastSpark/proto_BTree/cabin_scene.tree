@@ -1,33 +1,28 @@
 ->
-|    ->
-|    |    !(has iron key)
-|    |    [narration cabin_exterior]
-|    |    [wait for next]
-|    |    [show elara]
-|    |    [wait for next]
-|    ->
-|    |    [scene cabin_door]
-|    |    [wait for next]
-|    |    ?
-|    |    |    ->
-|    |    |    |    (has iron key)
-|    |    |    |    [sfx door_creak]
-|    |    |    |    [scene door_open]
-|    |    |    |    [wait for next]
-|    |    |    ->
-|    |    |    |    !(has iron key)
-|    |    |    |    [sfx door_rattle]
-|    |    |    |    [wait for next]
-|    |    |    |    ?
-|    |    |    |    |    ->
-|    |    |    |    |    |    (key visible near doorstep)
-|    |    |    |    |    |    [show iron_key]
-|    |    |    |    |    |    [wait for next]
-|    |    |    |    |    ->
-|    |    |    |    |    |    !(key visible near doorstep)
-|    |    |    |    |    |    [narration search_near_door]
-|    |    |    |    |    |    [show iron_key]
-|    |    |    |    |    |    [wait for next]
+|    [scene cabin_door]
+|    ?
+|    |    ->
+|    |    |    !(has iron key)
+|    |    |    [narration cabin_exterior]
+|    |    |    [show elara]
+|    |    |    [wait for next]
+|    |    |    [sfx door_rattle]
+|    |    |    [wait for next]
+|    |    |    ?
+|    |    |    |    ->
+|    |    |    |    |    (key visible near doorstep)
+|    |    |    |    |    [show iron_key]
+|    |    |    |    |    [wait for next]
+|    |    |    |    ->
+|    |    |    |    |    !(key visible near doorstep)
+|    |    |    |    |    [narration search_near_door]
+|    |    |    |    |    [show iron_key]
+|    |    |    |    |    [wait for next]
+|    |    ->
+|    |    |    (has iron key)
+|    |    |    [sfx door_creak]
+|    |    |    [scene door_open]
+|    |    |    [wait for next]
 |    ->
 |    |    (is door open)
 |    |    [scene cabin_interior]
@@ -79,7 +74,6 @@
 |    |    [wait for next]
 |    ->
 |    |    [narration trapped_in_cabin]
-|    |    [wait for next]
 |    [ui show_choices]
 |    ?
 |    |    ->

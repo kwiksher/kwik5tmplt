@@ -11,12 +11,13 @@ function M.create()
             collected = "images/brass_key_collected.png",
         },
         x = 450,
-        y = 620,
+        y = 200,
         width = 50,
         height = 80,
         currentState = "hidden",
         visible = false,
-        collected = false
+        collected = false,
+        usedOnChest = false
     }
 end
 

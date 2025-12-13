@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
--- Cabin Scene Automated Test - Simplified
--- Auto-clicks Next button until iron_key appears, then taps it
+-- Cabin Scene Automated Test - Jump to Choices
+-- Sets all necessary conditions to jump directly to [ui show_choices]
 -------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -11,6 +11,8 @@ local M = {}
 local TEST_CONFIG = {
     AUTO_CLICK_DELAY = 500,  -- ms between auto-clicks
     ENABLE_DEBUG_LOGS = true,
+    JUMP_TO_CHOICES = true,  -- Skip to the choices immediately
+    AUTO_ADVANCE_TO_CHOICES = true,  -- Auto-click Next until choices appear
 }
 
 -- Test state
@@ -254,15 +256,124 @@ local function autoClickLoop()
     autoClickNext()
 end
 
+-- Check if choices UI is visible
+local function areChoicesVisible(scene)
+    if not scene or not scene.objs then
+        return false
+    end
+
+    -- Check if any choice buttons are visible
+    -- The choice buttons should be created by showChoiceButtons
+    if scene.objs.choicesVisible then
+        log("Choices are visible!")
+        return true
+    end
+
+    return false
+end
+
+-- Set conditions to jump to choices
+local function setupChoicesConditions()
+    local scene = composer.getScene(composer.getSceneName("current"))
+    if not scene or not scene.objs then
+        log("ERROR: Scene not ready")
+        return false
+    end
+
+    log("Setting up conditions to jump to [ui show_choices]...")
+
+    -- Set iron_key as collected
+    if scene.objs.iron_key then
+        scene.objs.iron_key.modelData.collected = true
+        log("✓ Set iron_key.modelData.collected = true")
+    end
+
+    -- Set door as open
+    if scene.objs.cabin_door then
+        scene.objs.cabin_door.modelData.currentState = "open"
+        log("✓ Set cabin_door.modelData.currentState = 'open'")
+    end
+
+    -- Set chest as open
+    if scene.objs.chest then
+        scene.objs.chest.modelData.currentState = "open"
+    log("All conditions set! Restarting behavior tree...")
+
+    -- Restart the behavior tree to re-evaluate from the beginning
+    if scene.objs.restartTree then
+        scene.objs.restartTree()
+        log("✓ Behavior tree restarted")
+    end
+
+    -- Start auto-clicking to advance through the sequence
+    if TEST_CONFIG.AUTO_ADVANCE_TO_CHOICES then
+        log("Starting auto-click to advance to choices...")
+        testState.autoClickTimer = timer.performWithDelay(
+            TEST_CONFIG.AUTO_CLICK_DELAY,
+            autoClickLoop,
+            0  -- Repeat indefinitely
+        )
+
+        testState.checkTimer = timer.performWithDelay(
+            100,  -- Check every 100ms
+            function()
+                local currentScene = composer.getScene(composer.getSceneName("current"))
+                if areChoicesVisible(currentScene) then
+                    log("✓ Reached [ui show_choices]!")
+                    M.stop()
+                end
+            end,
+            0  -- Repeat indefinitely
+        )
+    end
+
+    return true
+end
+    -- Set floorboard as searched
+    if scene.objs.loose_floorboard then
+        scene.objs.loose_floorboard.modelData.searched = true
+        log("✓ Set loose_floorboard.modelData.searched = true")
+    end
+
+    log("All conditions set! Restarting behavior tree...")
+
+    -- Restart the behavior tree to re-evaluate from the beginning
+    if scene.objs.restartTree then
+        scene.objs.restartTree()
+        log("✓ Behavior tree restarted")
+    end
+
+    return true
+end
+
 -- Start the test
 function M.start()
-    log("\n=== Starting Iron Key Test ===")
-    log("Will auto-click Next until iron_key appears")
-    log("==============================\n")
+    if TEST_CONFIG.JUMP_TO_CHOICES then
+        log("\n=== Starting Cabin Test - Jump to Choices ===")
+        log("Will set all conditions and jump to [ui show_choices]")
+        log("============================================\n")
+    else
+        log("\n=== Starting Iron Key Test ===")
+        log("Will auto-click Next until iron_key appears")
+        log("==============================\n")
+    end
 
     -- Reset state
     testState.ironKeyTapped = false
     testState.testComplete = false
+
+    -- If jumping to choices, set up conditions after scene is ready
+    if TEST_CONFIG.JUMP_TO_CHOICES then
+        timer.performWithDelay(500, function()
+            if setupChoicesConditions() then
+                log("\n✓ Ready for choices - behavior tree should show [ui show_choices]")
+                log("Press Next button to advance through the sequence\n")
+            else
+                log("✗ Failed to setup conditions")
+            end
+        end)
+        return
+    end
 
     log("DEBUG: Starting auto-click timer...")
     -- Start auto-click loop (clicks Next button)

@@ -12,7 +12,15 @@ function M.initialize(objects)
 end
 
 function M.evaluate()
-    local searched = sceneObjects.loose_floorboard and sceneObjects.loose_floorboard.currentState == "open"
+    -- Check modelData first (persistent), then fall back to object property
+    local searched = false
+    if sceneObjects.loose_floorboard then
+        if sceneObjects.loose_floorboard.modelData and sceneObjects.loose_floorboard.modelData.searched == true then
+            searched = true
+        elseif sceneObjects.loose_floorboard.searched == true then
+            searched = true
+        end
+    end
     print(M.CONDITION_NAME .. " condition: " .. tostring(searched))
     return searched
 end

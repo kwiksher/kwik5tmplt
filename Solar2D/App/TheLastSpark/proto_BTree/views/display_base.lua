@@ -84,8 +84,8 @@ function DisplayBase:changeState(obj, newState)
         newImage.modelData = modelData
         newImage.modelData.currentState = newState
 
-        -- Set visibility: visible/collected states should be visible, hidden state should not
-        local shouldBeVisible = (newState == "visible" or newState == "collected")
+        -- Set visibility: visible/collected/glowing/open states should be visible, hidden state should not
+        local shouldBeVisible = (newState == "visible" or newState == "collected" or newState == "glowing" or newState == "open")
         newImage.isVisible = shouldBeVisible
         newImage.modelData.visible = shouldBeVisible
 

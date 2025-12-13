@@ -99,6 +99,9 @@ function M.changeToDoorOpen()
     if sceneObjects.cabin_door then
         local DisplayBase = require("views.display_base")
         sceneObjects.cabin_door = DisplayBase:changeState(sceneObjects.cabin_door, "open")
+        if sceneObjects.cabin_door.modelData then
+            sceneObjects.cabin_door.modelData.currentState = "open"
+        end
         print("Door state changed to 'open'")
     else
         print("Warning: cabin_door object not available")
@@ -121,13 +124,30 @@ end
 
 function M.changeToChestOpen()
     print("Chest opening scene")
+
+    -- Change the background
     if sceneObjects.changeBackground then
         sceneObjects.changeBackground("images/bg_chest_open.png")
-        return bt.SUCCESS
     else
         print("Warning: changeBackground function not available")
         return bt.FAILED
     end
+
+    -- Change the chest state to "open" so (is chest open) condition becomes true
+    if sceneObjects.chest then
+        local DisplayBase = require("views.display_base")
+        sceneObjects.chest = DisplayBase:changeState(sceneObjects.chest, "open")
+        sceneObjects.chest.currentState = "open"
+        if sceneObjects.chest.modelData then
+            sceneObjects.chest.modelData.currentState = "open"
+        end
+        print("Chest state changed to 'open'")
+    else
+        print("Warning: chest object not available")
+        return bt.FAILED
+    end
+
+    return bt.SUCCESS
 end
 
 function M.changeToEmptyChest()
@@ -153,11 +173,11 @@ function M.changeToDoorSealed()
 end
 
 function M.goToForceDoorScene()
-    print("Going to force door scene")
+    print("Force door attempt scene")
     if sceneObjects.changeBackground then
         sceneObjects.changeBackground("images/bg_force_door.png")
     end
-    composer.gotoScene("views.cabin.forceDoorScene", {
+    composer.gotoScene("views.force_door.forceDoorScene", {
         effect = "fade",
         time = 500
     })
@@ -169,7 +189,7 @@ function M.goToWindowEscapeScene()
     if sceneObjects.changeBackground then
         sceneObjects.changeBackground("images/bg_window_escape.png")
     end
-    composer.gotoScene("views.cabin.windowEscapeScene", {
+    composer.gotoScene("views.window_escape.windowEscapeScene", {
         effect = "fade",
         time = 500
     })
@@ -181,7 +201,7 @@ function M.goToArcaneMarkingsScene()
     if sceneObjects.changeBackground then
         sceneObjects.changeBackground("images/bg_arcane_markings.png")
     end
-    composer.gotoScene("views.cabin.arcaneMarkingsScene", {
+    composer.gotoScene("views.arcane_markings.arcaneMarkingsScene", {
         effect = "fade",
         time = 500
     })

@@ -63,9 +63,13 @@ function M.changeToOpen()
     local DisplayBase = require("views.display_base")
     local result = M.changeState("loose_floorboard", "open", DisplayBase)
 
-    -- Mark as searched in object
+    -- Mark as searched in modelData (persists across state changes)
     if M.sceneObjects and M.sceneObjects.loose_floorboard then
         M.sceneObjects.loose_floorboard.searched = true
+        if M.sceneObjects.loose_floorboard.modelData then
+            M.sceneObjects.loose_floorboard.modelData.searched = true
+            print("DEBUG: Set loose_floorboard.modelData.searched = true")
+        end
     end
 
     return result
