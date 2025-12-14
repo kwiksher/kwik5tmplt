@@ -22,43 +22,43 @@ end
 -- Register Scene-specific actions
 M.ACTIONS = {
     cabin_exterior = function()
-        return M.changeToCabinExterior()
+        return M.executeOnce("cabin_exterior", M.changeToCabinExterior)
     end,
 
     cabin_door = function()
-        return M.changeToCabinDoor()
+        return M.executeOnce("cabin_door", M.changeToCabinDoor)
     end,
 
     door_open = function()
-        return M.changeToDoorOpen()
+        return M.executeOnce("door_open", M.changeToDoorOpen)
     end,
 
     cabin_interior = function()
-        return M.changeToCabinInterior()
+        return M.executeOnce("cabin_interior", M.changeToCabinInterior)
     end,
 
     chest_open = function()
-        return M.changeToChestOpen()
+        return M.executeOnce("chest_open", M.changeToChestOpen)
     end,
 
     empty_chest = function()
-        return M.changeToEmptyChest()
+        return M.executeOnce("empty_chest", M.changeToEmptyChest)
     end,
 
     door_sealed = function()
-        return M.changeToDoorSealed()
+        return M.executeOnce("door_sealed", M.changeToDoorSealed)
     end,
 
     force_door = function()
-        return M.goToForceDoorScene()
+        return M.executeOnce("force_door", M.goToForceDoorScene)
     end,
 
     window_escape = function()
-        return M.goToWindowEscapeScene()
+        return M.executeOnce("window_escape", M.goToWindowEscapeScene)
     end,
 
     arcane_markings = function()
-        return M.goToArcaneMarkingsScene()
+        return M.executeOnce("arcane_markings", M.goToArcaneMarkingsScene)
     end,
 }
 

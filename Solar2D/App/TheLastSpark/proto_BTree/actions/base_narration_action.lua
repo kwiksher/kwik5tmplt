@@ -32,9 +32,18 @@ function BaseNarrationAction.new(narrationTexts)
     -- Store narration texts
     local texts = narrationTexts or {}
 
+    -- Completion tracking: stores which narrations have already displayed this run
+    local _completedNarrations = {}
+
     -- Override initialize to store scene objects
     function M.initialize(objects)
         sceneObjects = objects
+    end
+
+    -- Reset completion tracking (call when tree restarts)
+    function M.reset()
+        _completedNarrations = {}
+        M._completedActions = {}
     end
 
     -- Cancel any active typing animation
@@ -47,6 +56,11 @@ function BaseNarrationAction.new(narrationTexts)
 
     -- Show narration with typing effect
     function M.showNarration(textKey)
+        -- Check if already displayed this run
+        if _completedNarrations[textKey] then
+            return bt.SUCCESS
+        end
+
         local text = texts[textKey]
 
         if not text then
@@ -89,6 +103,9 @@ function BaseNarrationAction.new(narrationTexts)
                     cancelTyping()
                     M.isTypingComplete = true
                     print("Narration: Typing complete, isTypingComplete set to true")
+
+                    -- Mark as completed
+                    _completedNarrations[textKey] = true
 
                     -- Dispatch completion event first (VO might be waiting for this)
                     print("Narration: Dispatching narrationComplete event")

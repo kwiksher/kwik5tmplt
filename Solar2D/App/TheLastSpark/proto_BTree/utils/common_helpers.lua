@@ -736,6 +736,12 @@ function M.createManualBehaviorTree(behaviorTree, conditionController)
         if self.tree and self.tree.root then
             self:resetNode(self.tree.root)
         end
+
+        -- Reset action controller completion tracking
+        if self.actionController and self.actionController.reset then
+            self.actionController.reset()
+            print("Controller: Reset action completion tracking")
+        end
     end
 
     -- Recursively reset all nodes in the tree

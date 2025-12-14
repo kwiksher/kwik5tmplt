@@ -327,6 +327,9 @@ function M.new(modelPath, logPrefix)
     -- Voice-over text mapping (from dialogue)
     local voTexts = {}
 
+    -- Completion tracking: stores which audio actions have already played this run
+    local _completedAudio = {}
+
     -- Override initialize to handle audio preloading
     function audioModule.initialize(objects)
         audioModule.sceneObjects = objects
@@ -369,11 +372,21 @@ function M.new(modelPath, logPrefix)
         print(logPrefix .. ": All audio files preloaded")
     end
 
+    -- Reset completion tracking (call when tree restarts)
+    function audioModule.reset()
+        _completedAudio = {}
+    end
+
     -- Override execute to handle audio playback
     function audioModule.execute(action)
         if not action then
             print("Error: No action specified for Audio")
             return bt.FAILED
+        end
+
+        -- Check if already played this run
+        if _completedAudio[action] then
+            return bt.SUCCESS
         end
 
         -- Check if audio handle exists for this action
@@ -393,6 +406,8 @@ function M.new(modelPath, logPrefix)
             end)
 
             if success then
+                -- Mark as completed
+                _completedAudio[action] = true
                 return bt.SUCCESS
             else
                 print("Error: Failed to play audio - " .. tostring(err))
@@ -409,6 +424,8 @@ function M.new(modelPath, logPrefix)
             end
 
             showToast("Missing audio: " .. fileName)
+            -- Mark as completed even if missing (to avoid repeated warnings)
+            _completedAudio[action] = true
             return bt.SUCCESS  -- Return success to not block the tree execution
         end
     end

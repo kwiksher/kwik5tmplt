@@ -14,7 +14,7 @@ local composer = require("composer")
 composer.gotoScene("views.cabin.cabinScene")
 
 
--- Start automated test after scene loads
+--Start automated test after scene loads
 timer.performWithDelay(1000, function()
     print("\n=== Starting Automated Cabin Test (Jump to Choices) ===\n")
     local cabinTest = require("tests.cabinSceneTest")

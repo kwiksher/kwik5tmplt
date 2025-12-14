@@ -12,23 +12,23 @@ local M = actionHelper.createModule()
 -- Register Lumin Seed-specific actions
 M.ACTIONS = {
     luminseed = function()
-        return M.changeToGlowing()
+        return M.executeOnce("luminseed_glowing", M.changeToGlowing)
     end,
 
     glowing = function()
-        return M.changeToGlowing()
+        return M.executeOnce("luminseed_glowing", M.changeToGlowing)
     end,
 
     collected = function()
-        return M.changeToCollected()
+        return M.executeOnce("luminseed_collected", M.changeToCollected)
     end,
 
     enable_tap_interaction = function()
-        return M.enableTapInteraction()
+        return M.executeOnce("luminseed_enable_tap", M.enableTapInteraction)
     end,
 
     disable_tap_interaction = function()
-        return M.disableTapInteraction()
+        return M.executeOnce("luminseed_disable_tap", M.disableTapInteraction)
     end,
 }
 
