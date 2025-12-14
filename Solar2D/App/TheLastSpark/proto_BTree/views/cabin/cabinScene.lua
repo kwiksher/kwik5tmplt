@@ -118,6 +118,9 @@ function scene:create(event)
     -- Initialize choice display system
     self.objs.choiceGroup = ChoiceDisplay:initialize(sceneGroup, self.objs, nil, layout.choices)
 
+    -- Initialize missing files UI layer (must be after sceneGroup creation)
+    displayManager.initMissingFilesUI(sceneGroup)
+
     -- Helper function to show choice buttons
     function self.showChoiceButtons()
         ChoiceDisplay:showChoiceButtons()

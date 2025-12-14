@@ -87,7 +87,11 @@ function M.goToRetreatScene()
     -- Transition to retreat scene using composer
     print("Going to retreat scene")
 
-    composer.gotoScene("views.retreat.retreatScene", {
+    -- composer.gotoScene("views.retreat.retreatScene", {
+    --     effect = "fade",
+    --     time = 500
+    -- })
+    composer.gotoScene("views.cabin.cabinScene", {
         effect = "fade",
         time = 500
     })
