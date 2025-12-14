@@ -7,6 +7,15 @@ local widget = require("widget")
 local M = {}
 
 -------------------------------------------------------------------------------
+-- Missing file tracking
+-------------------------------------------------------------------------------
+M.missingFiles = {}
+M.missingFileCount = 0
+M.missingFileTextObjects = {}
+M.missingFilesUIGroup = nil  -- Will hold the UI layer for missing files display
+M.missingFilesUpdateTimer = nil  -- Timer for updating visible missing files
+
+-------------------------------------------------------------------------------
 -- Utility functions
 -------------------------------------------------------------------------------
 
@@ -69,37 +78,48 @@ function M.newImageRect(...)
             print("Filename is nil or not a string, using 'missing'")
         end
 
+        -- Store missing file info (will be displayed separately)
+        M.missingFileCount = M.missingFileCount + 1
+        local fileIndex = M.missingFileCount
+        table.insert(M.missingFiles, placeholderText)
+
+        -- Create placeholder with index number
         -- Ensure width and height are valid numbers
         width = tonumber(width) or 100
         height = tonumber(height) or 100
 
+        -- Create a group to hold both the rectangle and index text
+        local placeholderGroup
         if parent then
-            img = display.newText({
-                parent = parent,
-                text = placeholderText,
-                x = 0,
-                y = 0,
-                width = width,
-                height = height,
-                font = native.systemFontBold,
-                fontSize = 16,
-                align = "center"
-            })
+            placeholderGroup = display.newGroup()
+            parent:insert(placeholderGroup)
         else
-            img = display.newText({
-                text = placeholderText,
-                x = 0,
-                y = 0,
-                width = width,
-                height = height,
-                font = native.systemFontBold,
-                fontSize = 16,
-                align = "center"
-            })
+            placeholderGroup = display.newGroup()
         end
-        -- Make placeholder VERY visible with bright green color
-        img:setFillColor(0, 1, 0)
-        print("Created GREEN placeholder text at (0,0) with fontSize 32, will be positioned by caller")
+
+        -- Create semi-transparent red rectangle
+        local rect = display.newRect(placeholderGroup, 0, 0, width, height)
+        rect:setFillColor(1, 0, 0, 0.3)
+        rect.alpha = 0.5
+
+        -- Add index number in center of placeholder
+        local indexText = display.newText({
+            parent = placeholderGroup,
+            text = tostring(fileIndex),
+            x = 0,
+            y = 0,
+            font = native.systemFontBold,
+            fontSize = 24
+        })
+        indexText:setFillColor(1, 1, 0)  -- Yellow text
+
+        -- Store the index on the group for later reference
+        placeholderGroup._missingFileIndex = fileIndex
+        placeholderGroup._missingFileName = placeholderText
+
+        img = placeholderGroup
+
+        print("Created placeholder #" .. fileIndex .. " for missing file: " .. placeholderText)
         print("Placeholder dimensions: width=" .. tostring(width) .. ", height=" .. tostring(height))
     end    return img
 end
@@ -215,7 +235,7 @@ function M.createDialogueInterface(uiGroup, params)
         width = 1000,
         height = 120,
         x = centerX,
-        y = contentHeight - 120,
+        y = contentHeight - 60,  -- Position so bottom aligns with screen edge
         cornerRadius = 10,
         fillColor = {0, 0, 0, 0.8},
         strokeWidth = 2,
@@ -301,6 +321,172 @@ function M.createDialogueInterface(uiGroup, params)
         dialogueText = text,
         nextButton = button,
     }
+end
+
+-------------------------------------------------------------------------------
+-- Missing files display utilities
+-------------------------------------------------------------------------------
+
+-- Update the UI column to show only currently visible missing files
+function M.updateMissingFilesUI()
+    if not M.missingFilesUIGroup then
+        return
+    end
+
+    -- Clear existing text objects
+    for _, textObj in ipairs(M.missingFileTextObjects) do
+        if textObj and textObj.removeSelf then
+            textObj:removeSelf()
+        end
+    end
+    M.missingFileTextObjects = {}
+
+    -- Find all visible placeholders with missing file info
+    local visibleMissing = {}
+    local function findVisiblePlaceholders(group)
+        if not group or group.numChildren == nil then
+            return
+        end
+
+        for i = 1, group.numChildren do
+            local child = group[i]
+            if child._missingFileIndex and child.isVisible then
+                -- Check if parent is also visible
+                local isParentVisible = true
+                local parent = child.parent
+                while parent do
+                    if parent.isVisible == false then
+                        isParentVisible = false
+                        break
+                    end
+                    parent = parent.parent
+                end
+
+                if isParentVisible then
+                    table.insert(visibleMissing, {
+                        index = child._missingFileIndex,
+                        filename = child._missingFileName
+                    })
+                end
+            end
+
+            -- Recursively check children
+            if child.numChildren then
+                findVisiblePlaceholders(child)
+            end
+        end
+    end
+
+    -- Search the entire display hierarchy
+    findVisiblePlaceholders(display.getCurrentStage())
+
+    -- Sort by index
+    table.sort(visibleMissing, function(a, b) return a.index < b.index end)
+
+    -- Add visible missing files to UI column
+    local leftMargin = 20
+    local topMargin = 50
+    local lineHeight = 25
+    local textWidth = 280
+
+    for i, item in ipairs(visibleMissing) do
+        local posY = topMargin + (i - 1) * lineHeight
+
+        local textObj = display.newText({
+            parent = M.missingFilesUIGroup,
+            text = item.index .. ". " .. item.filename,
+            x = leftMargin,
+            y = posY,
+            width = textWidth,
+            font = native.systemFontBold,
+            fontSize = 14,
+            align = "left"
+        })
+        textObj:setFillColor(0, 1, 0)  -- Bright green
+        textObj.anchorX = 0  -- Left align
+
+        table.insert(M.missingFileTextObjects, textObj)
+    end
+
+    -- Bring UI group to front after adding text
+    if M.missingFilesUIGroup then
+        M.missingFilesUIGroup:toFront()
+    end
+
+    print("Updated missing files UI: " .. #visibleMissing .. " visible missing files")
+end
+
+-- Initialize the UI group for missing files display
+function M.initMissingFilesUI(parentGroup)
+    if M.missingFilesUIGroup then
+        M.missingFilesUIGroup:removeSelf()
+    end
+
+    M.missingFilesUIGroup = display.newGroup()
+    if parentGroup then
+        parentGroup:insert(M.missingFilesUIGroup)
+    end
+
+    -- Bring to front to ensure it's always visible
+    M.missingFilesUIGroup:toFront()
+
+    print("Missing files UI layer initialized")
+
+    -- Set up a timer to periodically update the visible missing files
+    if M.missingFilesUpdateTimer then
+        timer.cancel(M.missingFilesUpdateTimer)
+    end
+
+    M.missingFilesUpdateTimer = timer.performWithDelay(500, function()
+        M.updateMissingFilesUI()
+    end, 0)  -- 0 means repeat indefinitely
+
+    -- Do an immediate update
+    M.updateMissingFilesUI()
+end
+
+-- Get list of all missing files
+function M.getMissingFiles()
+    return M.missingFiles
+end
+
+-- Get count of missing files
+function M.getMissingFileCount()
+    return M.missingFileCount
+end
+
+-- Clear missing files list (useful for resetting between scenes)
+function M.clearMissingFiles()
+    -- Cancel update timer
+    if M.missingFilesUpdateTimer then
+        timer.cancel(M.missingFilesUpdateTimer)
+        M.missingFilesUpdateTimer = nil
+    end
+
+    -- Remove text objects from display
+    for _, textObj in ipairs(M.missingFileTextObjects) do
+        if textObj and textObj.removeSelf then
+            textObj:removeSelf()
+        end
+    end
+
+    M.missingFiles = {}
+    M.missingFileCount = 0
+    M.missingFileTextObjects = {}
+end
+
+-- Print summary of missing files to console
+function M.printMissingFilesSummary()
+    if M.missingFileCount > 0 then
+        print("\n=== MISSING FILES SUMMARY ===")
+        print("Total missing files: " .. M.missingFileCount)
+        for i, filename in ipairs(M.missingFiles) do
+            print(i .. ". " .. filename)
+        end
+        print("=============================\n")
+    else
+        print("No missing files detected.")
+    end
 end
 
 return M

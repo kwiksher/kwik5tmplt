@@ -58,25 +58,18 @@ local function showVoToast(message, duration, sceneObjects)
         timer.performWithDelay(voDelay, function()
             print("VO Text: Now starting to render after delay")
 
-            -- Position on top of narration field (dialogue box is at contentHeight - 120)
-            -- Dialogue box top edge is at contentHeight - 180
-            -- Create text first to get its height, then position so bottom aligns with dialogue top edge
+            -- Position at the top of the screen with margin
+            local topMargin = 60
             local toast = display.newText({
                 text = "",  -- Start with empty text for typing effect
                 x = display.contentCenterX,
-                y = 0,  -- Temporary position
+                y = topMargin,
                 width = 900,  -- Wide toast for longer text
                 font = native.systemFont,
                 fontSize = 22,
                 align = "center"
             })
             toast:setFillColor(0.6, 0.8, 1)  -- Light blue color for voice-over
-
-            -- Position so the bottom of the vo text aligns with the top edge of narration field
-            -- Top edge of narration is at contentHeight - 180
-            -- Adjust for text height and background padding
-            local yPosition = display.contentHeight - 180 - (toast.height / 2) - 10 - 10  -- text half height + background padding
-            toast.y = yPosition
 
             local background = display.newRoundedRect(
                 toast.x,
@@ -135,10 +128,17 @@ local function showVoToast(message, duration, sceneObjects)
                                         end
 
                                         -- Show next button with blinking after VO completes
-                                        print("VO Toast: Fade complete, showing next button with blinking")
+                                        print("VO Toast: Fade complete, checking if should show next button")
                                         print("VO Toast: sceneObjects = " .. tostring(sceneObjects))
                                         if sceneObjects then
                                             print("VO Toast: sceneObjects.nextButton = " .. tostring(sceneObjects.nextButton))
+                                            print("VO Toast: sceneObjects.choicesVisible = " .. tostring(sceneObjects.choicesVisible))
+                                        end
+
+                                        -- Don't show next button if choices are currently visible
+                                        if sceneObjects and sceneObjects.choicesVisible then
+                                            print("VO Toast: Choices are visible, not showing next button")
+                                            return
                                         end
 
                                         if sceneObjects and sceneObjects.nextButton then
