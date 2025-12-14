@@ -81,6 +81,15 @@ function M_controller.initialize(objects)
         end,
         getActionCount = function()
             return actionHelper.countModules(actions)
+        end,
+        -- Reset all action completion tracking
+        reset = function()
+            for _, actionModule in pairs(actions) do
+                if actionModule.reset then
+                    actionModule.reset()
+                end
+            end
+            print("Cabin Action Controller: Reset all action completion tracking")
         end
     }
 end
@@ -99,6 +108,12 @@ end
 
 function M_controller.getActionCount()
     return controller and controller.getActionCount() or 0
+end
+
+function M_controller.reset()
+    if controller and controller.reset then
+        controller.reset()
+    end
 end
 
 return M_controller

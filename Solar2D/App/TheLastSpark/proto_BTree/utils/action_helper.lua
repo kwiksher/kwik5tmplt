@@ -17,9 +17,38 @@ function M.createModule()
     -- Action registry (to be populated by child module)
     actionModule.ACTIONS = {}
 
+    -- Completion tracking: stores which actions have already executed this run
+    actionModule._completedActions = {}
+
     -- Default initialize function
     function actionModule.initialize(objects)
         actionModule.sceneObjects = objects
+    end
+
+    -- Reset completion tracking (call when tree restarts)
+    function actionModule.reset()
+        actionModule._completedActions = {}
+    end
+
+    -- Execute an action only once per tree run
+    -- actionKey: unique identifier for this action execution (e.g., action name + parameters)
+    -- actionFunc: function to execute if not yet completed
+    -- Returns: bt.SUCCESS if already completed or after successful execution
+    function actionModule.executeOnce(actionKey, actionFunc)
+        -- Check if already completed
+        if actionModule._completedActions[actionKey] then
+            return bt.SUCCESS
+        end
+
+        -- Execute the action
+        local result = actionFunc()
+
+        -- Mark as completed only if successful
+        if result == bt.SUCCESS then
+            actionModule._completedActions[actionKey] = true
+        end
+
+        return result
     end
 
     -- Helper: Check if an object exists in sceneObjects

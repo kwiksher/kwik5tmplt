@@ -77,8 +77,18 @@ function BaseChoiceAction.new(choiceConfig)
             print("Choice Action: Wait was cleared, returning SUCCESS")
 
             -- Notify show_choices that the choice action is complete
-            local showChoicesModule = require("actions.forest.show_choices_action")
-            showChoicesModule.completeChoice()
+            -- Try cabin first, then forest (graceful fallback)
+            local showChoicesModule
+            local success, cabinShowChoices = pcall(require, "actions.cabin.show_choices_action")
+            if success and cabinShowChoices then
+                showChoicesModule = cabinShowChoices
+            else
+                success, showChoicesModule = pcall(require, "actions.forest.show_choices_action")
+            end
+
+            if showChoicesModule and showChoicesModule.completeChoice then
+                showChoicesModule.completeChoice()
+            end
 
             M.lastCompletedChoice = choiceType
             M.currentChoice = nil
@@ -100,8 +110,17 @@ function BaseChoiceAction.new(choiceConfig)
         -- Execute focus action first
         if choiceConfig.focus then
             print("Choice Action: Executing focus on " .. choiceConfig.focus)
-            local focusModule = require("actions.forest.focus_actions")
-            if focusModule.execute then
+            -- Determine which scene's focus module to use based on current choice config
+            -- Try cabin first, then forest (graceful fallback)
+            local focusModule
+            local success, cabinFocus = pcall(require, "actions.cabin.focus_actions")
+            if success and cabinFocus then
+                focusModule = cabinFocus
+            else
+                success, focusModule = pcall(require, "actions.forest.focus_actions")
+            end
+
+            if focusModule and focusModule.execute then
                 local result = focusModule.execute(choiceConfig.focus)
                 if result == bt.SUCCESS then
                     print("Choice Action: Focus executed successfully")
@@ -109,7 +128,7 @@ function BaseChoiceAction.new(choiceConfig)
                     print("ERROR: Focus execution failed for: " .. choiceConfig.focus)
                 end
             else
-                print("ERROR: Focus module has no execute function")
+                print("ERROR: Focus module not found or has no execute function")
             end
         end
 
@@ -233,7 +252,8 @@ function BaseChoiceAction.new(choiceConfig)
         end
 
         -- Handle specific choices like "choice fight", "choice calm", etc.
-        local choiceType = actionName:match("choice%s+(%w+)")
+        -- Updated to capture full choice name including underscores (e.g., "force_door")
+        local choiceType = actionName:match("choice%s+(.+)")
         if choiceType then
             return M.executeChoice(choiceType)
         else

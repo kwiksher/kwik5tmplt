@@ -74,23 +74,23 @@
 |    |    [wait for next]
 |    ->
 |    |    [narration trapped_in_cabin]
-|    [ui show_choices]
-|    ?
-|    |    ->
-|    |    |    (player choice force_door)
-|    |    |    [focus cabin_door]
-|    |    |    [choice force_door]
-|    |    |    [wait for next]
-|    |    |    [scene force_door]
-|    |    ->
-|    |    |    (player choice window)
-|    |    |    [focus boarded_window]
-|    |    |    [choice window]
-|    |    |    [wait for next]
-|    |    |    [scene window_escape]
-|    |    ->
-|    |    |    (player choice markings)
-|    |    |    [focus arcane_markings]
-|    |    |    [choice markings]
-|    |    |    [wait for next]
-|    |    |    [scene arcane_markings]
+|    |    [ui show_choices]
+|    |    ?
+|    |    |    ->
+|    |    |    |    (player choice force_door)
+|    |    |    |    [focus cabin_door]
+|    |    |    |    [choice force_door]
+|    |    |    |    [wait for next]
+|    |    |    |    [scene force_door]
+|    |    |    ->
+|    |    |    |    (player choice window)
+|    |    |    |    [focus boarded_window]
+|    |    |    |    [choice window]
+|    |    |    |    [wait for next]
+|    |    |    |    [scene window_escape]
+|    |    |    ->
+|    |    |    |    (player choice markings)
+|    |    |    |    [focus arcane_markings]
+|    |    |    |    [choice markings]
+|    |    |    |    [wait for next]
+|    |    |    |    [scene arcane_markings]
