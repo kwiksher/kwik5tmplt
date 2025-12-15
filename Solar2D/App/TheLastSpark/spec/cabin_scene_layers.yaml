@@ -24,6 +24,8 @@
   text_color: "#FFFFFF"
   visible: true
   opacity: 100
+
+# Elara sprites
 - name: elara_neutral
   type: character
   x: 500
@@ -37,7 +39,7 @@
   text_color: "#FFE4B5"
   visible: true
   opacity: 100
-- name: elara_focused
+- name: elara_scared
   type: character
   x: 500
   y: 300
@@ -45,7 +47,33 @@
   height: 600
   z_index: 10
   color: "#8B6F47"
-  text: "Elara (Focused)"
+  text: "Elara (Scared)"
+  font_size: 20
+  text_color: "#FFE4B5"
+  visible: false
+  opacity: 100
+- name: elara_determined
+  type: character
+  x: 500
+  y: 300
+  width: 400
+  height: 600
+  z_index: 10
+  color: "#8B6F47"
+  text: "Elara (Determined)"
+  font_size: 20
+  text_color: "#FFE4B5"
+  visible: false
+  opacity: 100
+- name: elara_happy
+  type: character
+  x: 500
+  y: 300
+  width: 400
+  height: 600
+  z_index: 10
+  color: "#8B6F47"
+  text: "Elara (Happy)"
   font_size: 20
   text_color: "#FFE4B5"
   visible: false
@@ -76,6 +104,21 @@
   text_color: "#FFE4B5"
   visible: false
   opacity: 100
+
+# Lumin Seed
+- name: lumin_seed_normal
+  type: prop
+  x: 960
+  y: 540
+  width: 100
+  height: 100
+  z_index: 15
+  color: "#FFD700"
+  text: "Lumin Seed (Normal)"
+  font_size: 12
+  text_color: "#8B4513"
+  visible: false
+  opacity: 100
 - name: lumin_seed_glowing
   type: prop
   x: 960
@@ -84,12 +127,53 @@
   height: 100
   z_index: 15
   color: "#FFD700"
-  text: "Lumin Seed"
+  text: "Lumin Seed (Glowing)"
   font_size: 12
   text_color: "#8B4513"
   visible: true
   opacity: 100
-- name: cabin_door_closed
+- name: lumin_seed_dim
+  type: prop
+  x: 960
+  y: 540
+  width: 100
+  height: 100
+  z_index: 15
+  color: "#FFD700"
+  text: "Lumin Seed (Dim)"
+  font_size: 12
+  text_color: "#8B4513"
+  visible: false
+  opacity: 100
+- name: lumin_seed_pulsing
+  type: prop
+  x: 960
+  y: 540
+  width: 100
+  height: 100
+  z_index: 15
+  color: "#FFD700"
+  text: "Lumin Seed (Pulsing)"
+  font_size: 12
+  text_color: "#8B4513"
+  visible: false
+  opacity: 100
+- name: lumin_seed_collected
+  type: prop
+  x: 960
+  y: 540
+  width: 100
+  height: 100
+  z_index: 15
+  color: "#FFD700"
+  text: "Lumin Seed (Collected)"
+  font_size: 12
+  text_color: "#8B4513"
+  visible: false
+  opacity: 100
+
+# Cabin Door
+- name: door_closed
   type: prop
   x: 1600
   y: 300
@@ -102,7 +186,7 @@
   text_color: "#D3D3D3"
   visible: true
   opacity: 100
-- name: cabin_door_open
+- name: door_open
   type: prop
   x: 1600
   y: 300
@@ -115,19 +199,34 @@
   text_color: "#D3D3D3"
   visible: false
   opacity: 100
-- name: key_iron
+- name: door_broken
   type: prop
-  x: 1700
-  y: 900
-  width: 50
-  height: 50
-  z_index: 12
-  color: "#696969"
-  text: "Iron Key"
-  font_size: 10
-  text_color: "#F0E68C"
-  visible: true
+  x: 1600
+  y: 300
+  width: 220
+  height: 320
+  z_index: 8
+  color: "#5D4E37"
+  text: "Door (Broken)"
+  font_size: 14
+  text_color: "#D3D3D3"
+  visible: false
   opacity: 100
+- name: door_sealed
+  type: prop
+  x: 1600
+  y: 300
+  width: 220
+  height: 320
+  z_index: 8
+  color: "#5D4E37"
+  text: "Door (Sealed)"
+  font_size: 14
+  text_color: "#D3D3D3"
+  visible: false
+  opacity: 100
+
+# Chest
 - name: chest_locked
   type: prop
   x: 200
@@ -167,7 +266,76 @@
   text_color: "#C0C0C0"
   visible: false
   opacity: 100
-- name: key_brass
+- name: chest_empty
+  type: prop
+  x: 200
+  y: 700
+  width: 170
+  height: 130
+  z_index: 9
+  color: "#654321"
+  text: "Chest (Empty)"
+  font_size: 12
+  text_color: "#C0C0C0"
+  visible: false
+  opacity: 100
+
+# Iron Key
+- name: iron_key_hidden
+  type: prop
+  x: 1700
+  y: 900
+  width: 50
+  height: 50
+  z_index: 12
+  color: "#696969"
+  text: "Iron Key (Hidden)"
+  font_size: 10
+  text_color: "#F0E68C"
+  visible: false
+  opacity: 100
+- name: iron_key
+  type: prop
+  x: 1700
+  y: 900
+  width: 50
+  height: 50
+  z_index: 12
+  color: "#696969"
+  text: "Iron Key"
+  font_size: 10
+  text_color: "#F0E68C"
+  visible: true
+  opacity: 100
+- name: iron_key_collected
+  type: prop
+  x: 1700
+  y: 900
+  width: 50
+  height: 50
+  z_index: 12
+  color: "#696969"
+  text: "Iron Key (Collected)"
+  font_size: 10
+  text_color: "#F0E68C"
+  visible: false
+  opacity: 100
+
+# Brass Key
+- name: brass_key_hidden
+  type: prop
+  x: 800
+  y: 850
+  width: 50
+  height: 50
+  z_index: 12
+  color: "#B8860B"
+  text: "Brass Key (Hidden)"
+  font_size: 10
+  text_color: "#2F4F4F"
+  visible: false
+  opacity: 100
+- name: brass_key
   type: prop
   x: 800
   y: 850
@@ -178,8 +346,64 @@
   text: "Brass Key"
   font_size: 10
   text_color: "#2F4F4F"
+  visible: true
+  opacity: 100
+- name: brass_key_collected
+  type: prop
+  x: 800
+  y: 850
+  width: 50
+  height: 50
+  z_index: 12
+  color: "#B8860B"
+  text: "Brass Key (Collected)"
+  font_size: 10
+  text_color: "#2F4F4F"
   visible: false
   opacity: 100
+
+# Floorboard
+- name: floorboard_normal
+  type: prop
+  x: 900
+  y: 650
+  width: 120
+  height: 80
+  z_index: 11
+  color: "#A0522D"
+  text: "Floorboard (Normal)"
+  font_size: 10
+  text_color: "#FFF8DC"
+  visible: true
+  opacity: 100
+- name: floorboard_highlighted
+  type: prop
+  x: 900
+  y: 650
+  width: 120
+  height: 80
+  z_index: 11
+  color: "#A0522D"
+  text: "Floorboard (Highlighted)"
+  font_size: 10
+  text_color: "#FFF8DC"
+  visible: false
+  opacity: 100
+- name: floorboard_open
+  type: prop
+  x: 900
+  y: 650
+  width: 120
+  height: 80
+  z_index: 11
+  color: "#A0522D"
+  text: "Floorboard (Open)"
+  font_size: 10
+  text_color: "#FFF8DC"
+  visible: false
+  opacity: 100
+
+# Window and Markings
 - name: window_boarded
   type: prop
   x: 1200
