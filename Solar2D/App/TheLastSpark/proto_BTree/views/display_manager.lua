@@ -413,7 +413,7 @@ function M.updateMissingFilesUI()
         M.missingFilesUIGroup:toFront()
     end
 
-    print("Updated missing files UI: " .. #visibleMissing .. " visible missing files")
+    -- print("Updated missing files UI: " .. #visibleMissing .. " visible missing files")
 end
 
 -- Initialize the UI group for missing files display
