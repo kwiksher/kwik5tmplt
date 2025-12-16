@@ -13,6 +13,10 @@ local M = actionHelper.createModule()
 -- Scene objects reference
 local sceneObjects = {}
 
+--local IMG_PATH = "images/"
+local IMG_PATH = "App/TheLastSpark/assets/images/forest/"
+
+
 -- Override initialize to store scene objects
 function M.initialize(objects)
     sceneObjects = objects
@@ -51,7 +55,7 @@ function M.changeToForestScene()
 
     -- Change background
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_forest.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_forest.png")
         return bt.SUCCESS
     else
         print("Warning: changeBackground function not available")

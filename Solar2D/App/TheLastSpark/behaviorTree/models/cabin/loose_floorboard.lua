@@ -6,10 +6,10 @@ local M = {}
 function M.create()
     return {
         states = {
-            normal = "images/floorboard_normal.png",
-            visible = "images/floorboard_normal.png",
-            highlighted = "images/floorboard_highlighted.png",
-            open = "images/floorboard_open.png",
+            normal = "App/TheLastSpark/assets/images/cabin/floorboard_normal.png",
+            visible = "App/TheLastSpark/assets/images/cabin/floorboard_normal.png",
+            highlighted = "App/TheLastSpark/assets/images/cabin/floorboard_highlighted.png",
+            open = "App/TheLastSpark/assets/images/cabin/floorboard_open.png",
         },
         x = 512,  -- Center of typical 1024 width screen
         y = 384,  -- Center of typical 768 height screen

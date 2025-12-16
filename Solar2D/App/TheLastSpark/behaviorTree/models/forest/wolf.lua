@@ -6,10 +6,10 @@ local M = {}
 function M.create()
     return {
         states = {
-            normal = "images/wolf_normal.png",
-            aggressive = "images/wolf_aggressive.png",
-            calm = "images/wolf_calm.png",
-            retreating = "images/wolf_retreating.png",
+            normal = "App/TheLastSpark/assets/images/forest/wolf_normal.png",
+            aggressive = "App/TheLastSpark/assets/images/forest/wolf_aggressive.png",
+            calm = "App/TheLastSpark/assets/images/forest/wolf_calm.png",
+            retreating = "App/TheLastSpark/assets/images/forest/wolf_retreating.png",
         },
         x = 800,
         y = 400,

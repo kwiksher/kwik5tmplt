@@ -9,7 +9,8 @@ local ChoiceDisplay = require("views.cabin.choice_display")
 
 -- Create scene inheriting from BaseScene
 local scene = BaseScene:new("cabin")
-
+common._env = {imagePath = "App/TheLastSpark/assets/images/cabin/"}
+---
 -- BTree components
 local bt = require("utils.btree")
 local actionController = require("actions.cabin.cabin_actions")
@@ -18,7 +19,7 @@ local waitActionModule = require("actions.cabin.wait_action")
 
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
-    background = "images/bg_cabin_exterior.png",
+    background = "App/TheLastSpark/assets/images/cabin/bg_cabin_exterior.png",
     notes = [[
         [ cabin_door ]
              |
@@ -37,49 +38,49 @@ local layout = {
             y = (model.objects.elara or {}).y or 500,
             width = (model.objects.elara or {}).width or 300,
             height = (model.objects.elara or {}).height or 500,
-            neutralState = ((model.objects.elara or {}).states or {}).neutral or "images/elara_neutral.png",
+            neutralState = ((model.objects.elara or {}).states or {}).neutral or "App/TheLastSpark/assets/images/cabin/elara_neutral.png",
         },
         cabin_door = {
             x = (model.objects.cabin_door or {}).x or 900,
             y = (model.objects.cabin_door or {}).y or 380,
             width = (model.objects.cabin_door or {}).width or 220,
             height = (model.objects.cabin_door or {}).height or 320,
-            closedState = ((model.objects.cabin_door or {}).states or {}).closed or "images/door_closed.png",
+            closedState = ((model.objects.cabin_door or {}).states or {}).closed or "App/TheLastSpark/assets/images/cabin/door_closed.png",
         },
         luminSeed = {
             x = (model.objects.luminSeed or {}).x or 640,
             y = (model.objects.luminSeed or {}).y or 400,
             width = (model.objects.luminSeed or {}).width or 100,
             height = (model.objects.luminSeed or {}).height or 100,
-            glowingState = ((model.objects.luminSeed or {}).states or {}).glowing or "images/lumin_seed_glowing.png",
+            glowingState = ((model.objects.luminSeed or {}).states or {}).glowing or "App/TheLastSpark/assets/images/cabin/lumin_seed_glowing.png",
         },
         chest = {
             x = (model.objects.chest or {}).x or 600,
             y = (model.objects.chest or {}).y or 420,
             width = (model.objects.chest or {}).width or 170,
             height = (model.objects.chest or {}).height or 130,
-            lockedState = ((model.objects.chest or {}).states or {}).locked or "images/chest_locked.png",
+            lockedState = ((model.objects.chest or {}).states or {}).locked or "App/TheLastSpark/assets/images/cabin/chest_locked.png",
         },
         iron_key = {
             x = (model.objects.iron_key or {}).x or 850,
             y = (model.objects.iron_key or {}).y or 300,
             width = (model.objects.iron_key or {}).width or 50,
             height = (model.objects.iron_key or {}).height or 80,
-            visibleState = ((model.objects.iron_key or {}).states or {}).visible or "images/iron_key.png",
+            visibleState = ((model.objects.iron_key or {}).states or {}).visible or "App/TheLastSpark/assets/images/cabin/iron_key.png",
         },
         brass_key = {
             x = (model.objects.brass_key or {}).x or 450,
             y = (model.objects.brass_key or {}).y or 200,
             width = (model.objects.brass_key or {}).width or 50,
             height = (model.objects.brass_key or {}).height or 80,
-            visibleState = ((model.objects.brass_key or {}).states or {}).visible or "images/brass_key.png",
+            visibleState = ((model.objects.brass_key or {}).states or {}).visible or "App/TheLastSpark/assets/images/cabin/brass_key.png",
         },
         loose_floorboard = {
             x = (model.objects.loose_floorboard or {}).x or 450,
             y = (model.objects.loose_floorboard or {}).y or 650,
             width = (model.objects.loose_floorboard or {}).width or 120,
             height = (model.objects.loose_floorboard or {}).height or 80,
-            normalState = ((model.objects.loose_floorboard or {}).states or {}).normal or "images/floorboard_normal.png",
+            normalState = ((model.objects.loose_floorboard or {}).states or {}).normal or "App/TheLastSpark/assets/images/cabin/floorboard_normal.png",
         },
     },
     choices = {
@@ -153,7 +154,7 @@ function scene:create(event)
     conditionController.initialize(self.objs)
 
     -- Load behavior tree and register action/condition handlers
-    self.behaviorTree = common.loadBehaviorTree("cabin_scene.tree", actionController, conditionController)
+    self.behaviorTree = common.loadBehaviorTree("App/TheLastSpark/behaviorTree/cabin_scene.tree", actionController, conditionController)
 
     -- Store condition controller for use in BaseScene's onShow
     self.conditionController = conditionController
@@ -210,6 +211,8 @@ function scene:create(event)
 end
 
 function scene:show(event)
+    common._env = {imagePath = "App/TheLastSpark/assets/images/cabin/"}
+
     -- Call BaseScene's onShow to handle behavior tree initialization
     self:onShow(event.phase)
 end

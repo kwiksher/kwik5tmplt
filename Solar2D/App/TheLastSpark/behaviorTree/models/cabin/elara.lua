@@ -3,12 +3,12 @@ local M = {}
 function M.create()
     return {
         states = {
-            neutral = "images/elara_neutral.png",
-            scared = "images/elara_scared.png",
-            determined = "images/elara_determined.png",
-            happy = "images/elara_happy.png",
-            shocked = "images/elara_shocked.png",
-            panicking = "images/elara_panicking.png",
+            neutral = "App/TheLastSpark/assets/images/cabin/elara_neutral.png",
+            scared = "App/TheLastSpark/assets/images/cabin/elara_scared.png",
+            determined = "App/TheLastSpark/assets/images/cabin/elara_determined.png",
+            happy = "App/TheLastSpark/assets/images/cabin/elara_happy.png",
+            shocked = "App/TheLastSpark/assets/images/cabin/elara_shocked.png",
+            panicking = "App/TheLastSpark/assets/images/cabin/elara_panicking.png",
         },
         x = 300,
         y = 500,
