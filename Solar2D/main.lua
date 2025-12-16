@@ -16,8 +16,8 @@ env.goPage = "forest"
 --
 --env.mode = "development"
 -- env.mode = "production"
--- env.mode = "debug" -- need kwik5-plugin src from kwiksher's repo
-env.mode = "behaviorTree"
+env.mode = "debug" -- need kwik5-plugin src from kwiksher's repo
+--env.mode = "behaviorTree"
 
 --
 if env.mode == "development" or env.mode == "debug" then
