@@ -3,10 +3,10 @@ local M = {}
 function M.create()
     return {
         states = {
-            open = "images/door_open.png",
-            closed = "images/door_closed.png",
-            broken = "images/door_broken.png",
-            sealed = "images/door_sealed.png",
+            open = "App/TheLastSpark/assets/images/cabin/door_open.png",
+            closed = "App/TheLastSpark/assets/images/cabin/door_closed.png",
+            broken = "App/TheLastSpark/assets/images/cabin/door_broken.png",
+            sealed = "App/TheLastSpark/assets/images/cabin/door_sealed.png",
         },
         x = 900,
         y = 380,

@@ -13,6 +13,9 @@ local M = actionHelper.createModule()
 -- Scene objects reference
 local sceneObjects = {}
 
+--local IMG_PATH = "images/"
+local IMG_PATH = "App/TheLastSpark/assets/images/cabin/"
+
 -- Override initialize to store scene objects
 function M.initialize(objects)
     sceneObjects = objects
@@ -65,7 +68,7 @@ M.ACTIONS = {
 function M.changeToCabinExterior()
     print("Changing to cabin exterior scene")
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_cabin_exterior.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_cabin_exterior.png")
         return bt.SUCCESS
     else
         print("Warning: changeBackground function not available")
@@ -76,7 +79,7 @@ end
 function M.changeToCabinDoor()
     print("Focusing on cabin door")
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_cabin_door.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_cabin_door.png")
         return bt.SUCCESS
     else
         print("Warning: changeBackground function not available")
@@ -89,7 +92,7 @@ function M.changeToDoorOpen()
 
     -- Change the background
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_door_open.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_door_open.png")
     else
         print("Warning: changeBackground function not available")
         return bt.FAILED
@@ -114,7 +117,7 @@ end
 function M.changeToCabinInterior()
     print("Changing to cabin interior scene")
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_cabin_interior.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_cabin_interior.png")
         return bt.SUCCESS
     else
         print("Warning: changeBackground function not available")
@@ -127,7 +130,7 @@ function M.changeToChestOpen()
 
     -- Change the background
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_chest_open.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_chest_open.png")
     else
         print("Warning: changeBackground function not available")
         return bt.FAILED
@@ -153,7 +156,7 @@ end
 function M.changeToEmptyChest()
     print("Empty chest revealed scene")
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_empty_chest.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_empty_chest.png")
         return bt.SUCCESS
     else
         print("Warning: changeBackground function not available")
@@ -164,7 +167,7 @@ end
 function M.changeToDoorSealed()
     print("Door sealing scene")
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_door_sealed.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_door_sealed.png")
         return bt.SUCCESS
     else
         print("Warning: changeBackground function not available")
@@ -175,7 +178,7 @@ end
 function M.goToForceDoorScene()
     print("Force door attempt scene")
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_force_door.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_force_door.png")
     end
     composer.gotoScene("views.force_door.forceDoorScene", {
         effect = "fade",
@@ -187,7 +190,7 @@ end
 function M.goToWindowEscapeScene()
     print("Going to window escape scene")
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_window_escape.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_window_escape.png")
     end
     composer.gotoScene("views.window_escape.windowEscapeScene", {
         effect = "fade",
@@ -199,7 +202,7 @@ end
 function M.goToArcaneMarkingsScene()
     print("Going to arcane markings scene")
     if sceneObjects.changeBackground then
-        sceneObjects.changeBackground("images/bg_arcane_markings.png")
+        sceneObjects.changeBackground(IMG_PATH.."bg_arcane_markings.png")
     end
     composer.gotoScene("views.arcane_markings.arcaneMarkingsScene", {
         effect = "fade",

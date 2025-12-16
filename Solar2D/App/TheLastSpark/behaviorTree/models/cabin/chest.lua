@@ -3,10 +3,10 @@ local M = {}
 function M.create()
     return {
         states = {
-            locked = "images/chest_locked.png",
-            unlocked = "images/chest_unlocked.png",
-            open = "images/chest_open.png",
-            empty = "images/chest_empty.png",
+            locked = "App/TheLastSpark/assets/images/cabin/chest_locked.png",
+            unlocked = "App/TheLastSpark/assets/images/cabin/chest_unlocked.png",
+            open = "App/TheLastSpark/assets/images/cabin/chest_open.png",
+            empty = "App/TheLastSpark/assets/images/cabin/chest_empty.png",
         },
         x = 600,
         y = 420,

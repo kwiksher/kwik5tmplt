@@ -18,7 +18,7 @@ local waitActionModule = require("actions.forest.wait_action")
 
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
-    background = "images/bg_cabin.png",
+    background = "App/TheLastSpark/assets/images/forest/bg_cabin.png",
     notes = [[
         [ luminSeed ]   → trail →   [ wolf ]
                  |                       ↑
@@ -30,21 +30,21 @@ local layout = {
             y = (model.objects.elara or {}).y or 500,
             width = (model.objects.elara or {}).width or 300,
             height = (model.objects.elara or {}).height or 500,
-            neutralState = ((model.objects.elara or {}).states or {}).neutral or "images/elara_neutral.png",
+            neutralState = ((model.objects.elara or {}).states or {}).neutral or "App/TheLastSpark/assets/images/forest/elara_neutral.png",
         },
         wolf = {
             x = (model.objects.wolf or {}).x or 900,
             y = (model.objects.wolf or {}).y or 450,
             width = (model.objects.wolf or {}).width or 400,
             height = (model.objects.wolf or {}).height or 300,
-            aggroState = ((model.objects.wolf or {}).states or {}).aggro or "images/corrupted_wolf_aggro.png",
+            aggroState = ((model.objects.wolf or {}).states or {}).aggro or "App/TheLastSpark/assets/images/forest/corrupted_wolf_aggro.png",
         },
         luminSeed = {
             x = (model.objects.luminSeed or {}).x or display.contentCenterX,
             y = (model.objects.luminSeed or {}).y or 400,
             width = (model.objects.luminSeed or {}).width or 100,
             height = (model.objects.luminSeed or {}).height or 100,
-            idleState = ((model.objects.luminSeed or {}).states or {}).normal or "images/item_lumin_seed.png",
+            idleState = ((model.objects.luminSeed or {}).states or {}).normal or "App/TheLastSpark/assets/images/forest/item_lumin_seed.png",
         },
     },
     choices = {
@@ -114,7 +114,7 @@ function scene:create(event)
     conditionController.initialize(self.objs)
 
     -- Load behavior tree and register action/condition handlers
-    self.behaviorTree = common.loadBehaviorTree("forest_scene.tree", actionController, conditionController)
+    self.behaviorTree = common.loadBehaviorTree("App/TheLastSpark/behaviorTree/forest_scene.tree", actionController, conditionController)
 
     -- Store condition controller for use in BaseScene's onShow
     self.conditionController = conditionController
@@ -124,6 +124,7 @@ function scene:create(event)
 end
 
 function scene:show(event)
+  common._env = {imagePath = "App/TheLastSpark/assets/images/forest/"}
     -- Call BaseScene's onShow to handle behavior tree initialization
     self:onShow(event.phase)
 end

@@ -6,8 +6,8 @@ local M = {}
 function M.create()
     return {
         states = {
-            exterior = "images/cabin_exterior.png",
-            interior = "images/cabin_interior.png",
+            exterior = "App/TheLastSpark/assets/images/forest/cabin_exterior.png",
+            interior = "App/TheLastSpark/assets/images/forest/cabin_interior.png",
         },
         x = 200,
         y = 200,

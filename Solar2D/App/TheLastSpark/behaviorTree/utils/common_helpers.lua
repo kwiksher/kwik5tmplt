@@ -86,6 +86,7 @@ function M.methods:executeSceneStep(index)
     local env = self._env or {}
     local dialogue = env.sceneDialogue or {}
     local audioFiles = env.audioFiles
+    local IMAGE_PATH = env.imagePath or "images/"
 
     local state = env.state or {}
     state.currentDialogueIndex = index
@@ -110,7 +111,7 @@ function M.methods:executeSceneStep(index)
         end)
 
     elseif step.type == "scene" then
-        self:changeBackground("images/" .. step.background .. ".png")
+        self:changeBackground(IMAGE_PATH .. step.background .. ".png")
         timer.performWithDelay(500, function()
             self:executeSceneStep(index + 1)
         end)

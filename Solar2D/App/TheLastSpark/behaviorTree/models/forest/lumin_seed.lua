@@ -6,8 +6,8 @@ local M = {}
 function M.create()
     return {
         states = {
-            normal = "images/lumin_seed.png",
-            glowing = "images/lumin_seed_glowing.png",
+            normal = "App/TheLastSpark/assets/images/forest/lumin_seed.png",
+            glowing = "App/TheLastSpark/assets/images/forest/lumin_seed_glowing.png",
         },
         x = 500,
         y = 300,

@@ -6,9 +6,9 @@ local M = {}
 function M.create()
     return {
         states = {
-            hidden = "images/iron_key_hidden.png",
-            visible = "images/iron_key.png",
-            collected = "images/iron_key_collected.png",
+            hidden = "App/TheLastSpark/assets/images/cabin/iron_key_hidden.png",
+            visible = "App/TheLastSpark/assets/images/cabin/iron_key.png",
+            collected = "App/TheLastSpark/assets/images/cabin/iron_key_collected.png",
         },
         x = 850,
         y = 300,

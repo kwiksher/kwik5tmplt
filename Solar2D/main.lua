@@ -2,12 +2,22 @@ local env = require("env")
 -- env.book = "book"
 -- env.goPage = "landscape"
 
-env.book = "LULU" -- "book"
-env.goPage = "LULU_Sitting_With_A_CAT_Refine"
+-- env.book = "interaction"
+-- env.goPage = "canvas"
+
+-- env.book = "LULU" -- "book"
+-- env.goPage = "LULU_Sitting_With_A_CAT_Refine"
+
+-- env.book = "snowMan"
+-- env.goPage = "page1"
+env.book = "TheLastSpark"
+env.goPage = "forest"
+
 --
 --env.mode = "development"
 -- env.mode = "production"
-env.mode = "debug" -- need kwik5-plugin src from kwiksher's repo
+-- env.mode = "debug" -- need kwik5-plugin src from kwiksher's repo
+env.mode = "behaviorTree"
 
 --
 if env.mode == "development" or env.mode == "debug" then
@@ -36,6 +46,26 @@ elseif env.mode == "production" then
     showPageName = false,
     turnOffNativeVideo = false
   }
+elseif env.mode == "behaviorTree" then
+
+  local resourcePath = system.pathForFile("", system.ResourceDirectory)
+  local appPath = "/App/TheLastSpark/behaviorTree"
+  package.path = resourcePath .. appPath.."/?.lua;" .. resourcePath .. appPath.."/?/?.lua;"..package.path
+
+    -- Require Composer for scene management
+  local composer = require("composer")
+
+  -- Start with the forest scene
+  composer.gotoScene("views.forest.forestScene")
+  --composer.gotoScene("views.cabin.cabinScene")
+
+  --Start automated test after scene loads
+  -- timer.performWithDelay(1000, function()
+  --     print("\n=== Starting Automated Cabin Test (Jump to Choices) ===\n")
+  --     local cabinTest = require("tests.cabinSceneTest")
+  --     cabinTest.start()
+  -- end)
+  return
 end
 --
 --

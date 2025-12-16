@@ -3,11 +3,11 @@ local M = {}
 function M.create()
     return {
         states = {
-            normal = "images/lumin_seed_normal.png",
-            glowing = "images/lumin_seed_glowing.png",
-            dim = "images/lumin_seed_dim.png",
-            pulsing = "images/lumin_seed_pulsing.png",
-            collected = "images/lumin_seed_collected.png",
+            normal = "App/TheLastSpark/assets/images/cabin/lumin_seed_normal.png",
+            glowing = "App/TheLastSpark/assets/images/cabin/lumin_seed_glowing.png",
+            dim = "App/TheLastSpark/assets/images/cabin/lumin_seed_dim.png",
+            pulsing = "App/TheLastSpark/assets/images/cabin/lumin_seed_pulsing.png",
+            collected = "App/TheLastSpark/assets/images/cabin/lumin_seed_collected.png",
         },
         x = 640,
         y = 400,
