@@ -121,7 +121,8 @@ function M.newImageRect(...)
 
         print("Created placeholder #" .. fileIndex .. " for missing file: " .. placeholderText)
         print("Placeholder dimensions: width=" .. tostring(width) .. ", height=" .. tostring(height))
-    end    return img
+    end
+    return img
 end
 
 local function deepCopy(value)

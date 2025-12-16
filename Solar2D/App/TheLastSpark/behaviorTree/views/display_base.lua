@@ -28,7 +28,7 @@ end
 function DisplayBase:create(parentGroup, modelData)
     local obj = displayManager.newImageRect(
         parentGroup,
-        modelData.states[modelData.currentState],
+        modelData.states[modelData.currentState], -- this is the image file path
         modelData.width,
         modelData.height
     )
