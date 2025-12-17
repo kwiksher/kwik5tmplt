@@ -55,6 +55,7 @@ function M.createModule()
     function actionModule.checkObject(objectName)
         if not actionModule.sceneObjects[objectName] then
             print("Error: " .. objectName .. " object not found")
+            -- for i, v in pairs(actionModule.sceneObjects) do print(i, v) end
             return false
         end
         return true

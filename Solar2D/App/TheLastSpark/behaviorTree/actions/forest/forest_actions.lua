@@ -28,10 +28,10 @@ local showMapping = {
 }
 
 -- Create controller with custom initialization
-local M_controller = {}
+local M = {}
 local controller
 
-function M_controller.initialize(objects)
+function M.initialize(objects)
     -- Load all modules
     local actions = actionHelper.loadActionModules(modulePaths, objects)
     print("Action Controller: Loaded " .. actionHelper.countModules(actions) .. " consolidated action modules")
@@ -78,20 +78,20 @@ function M_controller.initialize(objects)
     }
 end
 
-function M_controller.execute(actionName)
+function M.execute(actionName)
     return controller and controller.execute(actionName) or false
 end
 
-function M_controller.getAction(actionName)
+function M.getAction(actionName)
     return controller and controller.getAction(actionName) or nil
 end
 
-function M_controller.listActions()
+function M.listActions()
     return controller and controller.listActions() or {}
 end
 
-function M_controller.getActionCount()
+function M.getActionCount()
     return controller and controller.getActionCount() or 0
 end
 
-return M_controller
+return M
