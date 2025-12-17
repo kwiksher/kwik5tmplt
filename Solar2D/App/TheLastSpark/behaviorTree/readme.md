@@ -19,42 +19,42 @@
 
 1. models/forest/elara.lua
 
-  ```lua
-  local M = {}
+     ```lua
+     local M = {}
 
-  function M.create()
-      return {
-          states = {
-              neutral = "App/TheLastSpark/assets/images/forest/elara_neutral.png",
-              scared = "App/TheLastSpark/assets/images/forest/elara_scared.png",
-              determined = "App/TheLastSpark/assets/images/forest/elara_determined.png",
-              happy = "App/TheLastSpark/assets/images/forest/elara_happy.png",
-          },
-          x = 300,
-          y = 500,
-          width = 300,
-          height = 500,
-          currentState = "neutral",
-          visible = false
+     function M.create()
+         return {
+             states = {
+                 neutral = "App/TheLastSpark/assets/images/forest/elara_neutral.png",
+                 scared = "App/TheLastSpark/assets/images/forest/elara_scared.png",
+                 determined = "App/TheLastSpark/assets/images/forest/elara_determined.png",
+                 happy = "App/TheLastSpark/assets/images/forest/elara_happy.png",
+             },
+             x = 300,
+             y = 500,
+             width = 300,
+             height = 500,
+             currentState = "neutral",
+             visible = false
+         }
+     end
+
+     return M
+     ```
+
+2. models/forst/forest_model.lua
+
+     ```lua
+      M.objects = {
+          elara = forestElara.create(),
+          wolf = forestWolf.create(),
+          luminSeed = forestLuminSeed.create(),
       }
-  end
 
-  return M
-  ```
+      return M
+     ```
 
-1. models/forst/forest_model.lua
-
-  ```lua
-   M.objects = {
-       elara = forestElara.create(),
-       wolf = forestWolf.create(),
-       luminSeed = forestLuminSeed.create(),
-   }
-
-   return M
-  ```
-
-1. views/forest/forstScene.lua
+3. views/forest/forstScene.lua
 
    ```lua
    local layout = {

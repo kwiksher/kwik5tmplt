@@ -72,11 +72,29 @@ end
 -- @param overrides: table (optional) - additional overrides for the model data
 -- @return: created display object
 function M.createCharacter(objectName, model, layout, parentGroup, overrides)
-    local DisplayBase = require("views.display_base")
     local template = (model.objects or {})[objectName] or {}
     local layoutData = (layout.objects or {})[objectName] or {}
     local modelData = M.buildDisplayModel(template, layoutData, overrides or { visible = false })
-    return DisplayBase:create(parentGroup, modelData)
+    --
+    if M._env.UI then
+      -- print("Kwik Controller UI")
+      local obj = M._env.UI.sceneGroup[objectName.."_"..modelData.currentState]
+      if obj then
+        obj.x = modelData.x
+        obj.y = modelData.y
+        obj.isVisible = modelData.visible
+        -- Store reference to model data
+        obj.modelData = modelData
+        return obj
+      else
+        -- print("@@@@ missing obj",objectName, modelData.currentState )
+        local DisplayBase = require("views.display_base")
+        return DisplayBase:create(parentGroup, modelData)
+      end
+    else
+      local DisplayBase = require("views.display_base")
+      return DisplayBase:create(parentGroup, modelData)
+    end
 end
 
 -- Methods table for setmetatable __index usage. Each method expects self._env.

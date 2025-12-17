@@ -16,9 +16,11 @@ local actionController = require("actions.forest.forest_actions")
 local conditionController = require("conditions.forest.forest_conditions")
 local waitActionModule = require("actions.forest.wait_action")
 
+scene.imagePath = "App/TheLastSpark/assets/images/forest/"
+
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
-    background = "App/TheLastSpark/assets/images/forest/bg_cabin.png",
+    background = "App/TheLastSpark/assets/images/forest/bg_forest.png",
     notes = [[
         [ luminSeed ]   → trail →   [ wolf ]
                  |                       ↑
@@ -60,7 +62,8 @@ local layout = {
 
 function scene:create(event)
     local sceneGroup = self.view
-
+    common._env = {imagePath = self.imagePath, UI=self.UI}
+    -- print("@@@@ create() with self.UI", self.UI)
     -- Use BaseScene initialization for display
     self:initializeDisplay(sceneGroup, {
         background = layout.background,
@@ -124,7 +127,7 @@ function scene:create(event)
 end
 
 function scene:show(event)
-  common._env = {imagePath = "App/TheLastSpark/assets/images/forest/"}
+  -- common._env = {imagePath = self.imagePath, UI=self.UI}
     -- Call BaseScene's onShow to handle behavior tree initialization
     self:onShow(event.phase)
 end
