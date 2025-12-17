@@ -6,7 +6,7 @@ local M = {}
 
 M.dialogue = {
     { type = "narration", text = "A dusty sunbeam cuts through the broken window of a small, abandoned cabin. Dust motes dance in the light." },
-    { type = "show", what = "luminseed" },
+    { type = "show", what = "lumin_seed" },
     { type = "show", what = "elara" },
     { type = "sfx", sound = "rustling" },
     { type = "sfx", sound = "wind", loop = true },
@@ -41,7 +41,7 @@ M.audio = {
 M.objects = {
     elara = forestElara.create(),
     wolf = forestWolf.create(),
-    luminSeed = forestLuminSeed.create(),
+    lumin_seed = forestLuminSeed.create(),
 }
 
 return M

@@ -179,8 +179,8 @@ end
 
 -- Build a background image (optional) and vignette overlay
 function M.createBackgroundLayer(group, params)
-    local defaultWidth = display.actualContentWidth or display.contentWidth or 1280
-    local defaultHeight = display.actualContentHeight or display.contentHeight or 720
+    local defaultWidth = display.actualContentWidth or display.contentWidth or 320
+    local defaultHeight = display.actualContentHeight or display.contentHeight or 480
     local centerX = display.contentCenterX or (defaultWidth * 0.5)
     local centerY = display.contentCenterY or (defaultHeight * 0.5)
 
@@ -228,8 +228,8 @@ end
 
 -- Create the dialogue UI elements (box, text, and next button)
 function M.createDialogueInterface(uiGroup, params)
-    local contentWidth = display.actualContentWidth or display.contentWidth or 1280
-    local contentHeight = display.actualContentHeight or display.contentHeight or 720
+    local contentWidth = display.actualContentWidth or display.contentWidth or 320
+    local contentHeight = display.actualContentHeight or display.contentHeight or 480
     local centerX = display.contentCenterX or (contentWidth * 0.5)
 
     local defaults = {

@@ -1,6 +1,8 @@
 local M = {}
 
 function M.create()
+    -- Scale factor to convert @4x coordinates to @1x
+    local scale = 0.25
     return {
         states = {
             neutral = "App/TheLastSpark/assets/images/cabin/elara_neutral.png",
@@ -10,10 +12,10 @@ function M.create()
             shocked = "App/TheLastSpark/assets/images/cabin/elara_shocked.png",
             panicking = "App/TheLastSpark/assets/images/cabin/elara_panicking.png",
         },
-        x = 300,
-        y = 500,
-        width = 300,
-        height = 500,
+        x = 500 * scale,
+        y = 300 * scale,
+        width = 400 * scale,
+        height = 600 * scale,
         currentState = "neutral",
         visible = false
     }

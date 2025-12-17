@@ -9,14 +9,16 @@ local ChoiceDisplay = require("views.cabin.choice_display")
 
 -- Create scene inheriting from BaseScene
 local scene = BaseScene:new("cabin")
-common._env = {imagePath = "App/TheLastSpark/assets/images/cabin/"}
----
+
 -- BTree components
 local bt = require("utils.btree")
 local actionController = require("actions.cabin.cabin_actions")
 local conditionController = require("conditions.cabin.cabin_conditions")
 local waitActionModule = require("actions.cabin.wait_action")
 
+scene.imagePath = "App/TheLastSpark/assets/images/cabin/"
+
+local scale = 0.25
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
     background = "App/TheLastSpark/assets/images/cabin/bg_cabin_exterior.png",
@@ -28,7 +30,7 @@ local layout = {
         [ iron_key ] (near door)
 
         Interior:
-        [ luminSeed ] → [ chest ]
+        [ lumin_seed ] → [ chest ]
              |              |
         [ loose_floorboard ] [ brass_key ]
     ]],
@@ -47,12 +49,12 @@ local layout = {
             height = (model.objects.cabin_door or {}).height or 320,
             closedState = ((model.objects.cabin_door or {}).states or {}).closed or "App/TheLastSpark/assets/images/cabin/door_closed.png",
         },
-        luminSeed = {
-            x = (model.objects.luminSeed or {}).x or 640,
-            y = (model.objects.luminSeed or {}).y or 400,
-            width = (model.objects.luminSeed or {}).width or 100,
-            height = (model.objects.luminSeed or {}).height or 100,
-            glowingState = ((model.objects.luminSeed or {}).states or {}).glowing or "App/TheLastSpark/assets/images/cabin/lumin_seed_glowing.png",
+        lumin_seed = {
+            x = (model.objects.lumin_seed or {}).x or display.contentCenterX,
+            y = (model.objects.lumin_seed or {}).y or 400,
+            width = (model.objects.lumin_seed or {}).width or 100,
+            height = (model.objects.lumin_seed or {}).height or 100,
+            glowingState = ((model.objects.lumin_seed or {}).states or {}).glowing or "App/TheLastSpark/assets/images/cabin/lumin_seed_glowing.png",
         },
         chest = {
             x = (model.objects.chest or {}).x or 600,
@@ -97,6 +99,7 @@ local layout = {
 function scene:create(event)
     local sceneGroup = self.view
 
+    common._env = {imagePath = self.imagePath, UI=self.UI}
     -- Use BaseScene initialization for display
     self:initializeDisplay(sceneGroup, {
         background = layout.background,
@@ -134,7 +137,7 @@ function scene:create(event)
 
     -- Pre-load characters and objects (but don't show them yet)
     self.objs.elara = common.createCharacter("elara", model, layout, self.objs.characterGroup)
-    self.objs.luminSeed = common.createCharacter("luminSeed", model, layout, self.objs.characterGroup)
+    self.objs.lumin_seed = common.createCharacter("lumin_seed", model, layout, self.objs.characterGroup)
     self.objs.cabin_door = common.createCharacter("cabin_door", model, layout, self.objs.characterGroup)
     self.objs.chest = common.createCharacter("chest", model, layout, self.objs.characterGroup)
     self.objs.iron_key = common.createCharacter("iron_key", model, layout, self.objs.characterGroup)
@@ -211,8 +214,6 @@ function scene:create(event)
 end
 
 function scene:show(event)
-    common._env = {imagePath = "App/TheLastSpark/assets/images/cabin/"}
-
     -- Call BaseScene's onShow to handle behavior tree initialization
     self:onShow(event.phase)
 end

@@ -12,7 +12,7 @@ local M = actionHelper.createModule()
 -- Register Lumin Seed-specific actions
 M.ACTIONS = {
     luminseed = function()
-        return M.showObject("luminSeed")
+        return M.showObject("lumin_seed")
     end,
 
     glowing = function()
@@ -22,7 +22,7 @@ M.ACTIONS = {
 
 function M.changeToGlowing()
     local DisplayBase = require("views.display_base")
-    return M.changeState("luminSeed", "glowing", DisplayBase)
+    return M.changeState("lumin_seed", "glowing", DisplayBase)
 end
 
 return M

@@ -4,6 +4,8 @@
 local M = {}
 
 function M.create()
+    -- Scale factor to convert @4x coordinates to @1x
+    local scale = 0.25
     return {
         states = {
             normal = "App/TheLastSpark/assets/images/cabin/floorboard_normal.png",
@@ -11,10 +13,10 @@ function M.create()
             highlighted = "App/TheLastSpark/assets/images/cabin/floorboard_highlighted.png",
             open = "App/TheLastSpark/assets/images/cabin/floorboard_open.png",
         },
-        x = 512,  -- Center of typical 1024 width screen
-        y = 384,  -- Center of typical 768 height screen
-        width = 300,  -- Much larger for visibility
-        height = 200,  -- Much larger for visibility
+        x = 900 * scale,
+        y = 650 * scale,
+        width = 120 * scale,
+        height = 80 * scale,
         currentState = "normal",
         visible = false
     }

@@ -46,8 +46,8 @@ function M.changeToForestScene()
     print("Changing to forest scene")
 
     -- Hide objects from previous scene (cabin interior)
-    if sceneObjects.luminSeed then
-        sceneObjects.luminSeed.isVisible = false
+    if sceneObjects.lumin_seed then
+        sceneObjects.lumin_seed.isVisible = false
     end
     if sceneObjects.elara then
         sceneObjects.elara.isVisible = false
