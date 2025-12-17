@@ -69,6 +69,7 @@ function scene:create(event)
     local layers = displayManager.createSceneLayers(sceneGroup)
     background = layers.background
     characterGroup = layers.characters
+
     uiGroup = layers.ui
 
     -- Initial background (cabin interior)

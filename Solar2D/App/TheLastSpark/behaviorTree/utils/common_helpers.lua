@@ -76,24 +76,63 @@ function M.createCharacter(objectName, model, layout, parentGroup, overrides)
     local layoutData = (layout.objects or {})[objectName] or {}
     local modelData = M.buildDisplayModel(template, layoutData, overrides or { visible = false })
     --
+    print("DEBUG createCharacter: objectName=" .. objectName .. ", currentState=" .. tostring(modelData.currentState) .. ", visible=" .. tostring(modelData.visible))
     if M._env.UI then
-      -- print("Kwik Controller UI")
-      local obj = M._env.UI.sceneGroup[objectName.."_"..modelData.currentState]
+      print("DEBUG createCharacter: Using Kwik UI mode")
+      local lookupName = objectName.."_"..modelData.currentState
+      local obj = M._env.UI.sceneGroup[lookupName]
+      print("DEBUG createCharacter: Looking for '" .. lookupName .. "' in UI.sceneGroup: " .. tostring(obj ~= nil))
+
+      -- If not found with state suffix, try without it (for Kwik components without state)
+      if not obj then
+        obj = M._env.UI.sceneGroup[objectName]
+        print("DEBUG createCharacter: Looking for '" .. objectName .. "' in UI.sceneGroup: " .. tostring(obj ~= nil))
+      end
+
       if obj then
-        obj.x = modelData.x
-        obj.y = modelData.y
+        print("DEBUG createCharacter: Found existing object in UI.sceneGroup")
+        print("DEBUG createCharacter: UI object BEFORE - x=" .. tostring(obj.x) .. ", y=" .. tostring(obj.y) .. ", isVisible=" .. tostring(obj.isVisible) .. ", alpha=" .. tostring(obj.alpha))
+        print("DEBUG createCharacter: UI object width=" .. tostring(obj.width) .. ", height=" .. tostring(obj.height))
+        print("DEBUG createCharacter: UI object parent=" .. tostring(obj.parent) .. ", parent.isVisible=" .. tostring(obj.parent and obj.parent.isVisible))
+        print("DEBUG createCharacter: Target parentGroup=" .. tostring(parentGroup))
+
+        -- Remove from current parent and add to the behavior tree's parentGroup
+        if parentGroup and obj.parent ~= parentGroup then
+          print("DEBUG createCharacter: Reparenting object to characterGroup")
+          parentGroup:insert(obj)
+          print("DEBUG createCharacter: After reparenting - new parent=" .. tostring(obj.parent))
+        else
+          print("DEBUG createCharacter: No reparenting needed (already in correct parent or no parentGroup)")
+        end
+
+        print("@@@@@", display.contentWidth, display.contentHeight)
+        if M._env.UI.props.editing  then
+          obj.x = modelData.x + (display.contentWidth - 480)/2 + display.contentCenterX
+          obj.y = modelData.y + (display.contentHeight - 320)/2 + display.contentCenterY
+        end
         obj.isVisible = modelData.visible
         -- Store reference to model data
         obj.modelData = modelData
+        print("DEBUG createCharacter: Returning UI object, isVisible=" .. tostring(obj.isVisible) .. ", new position x=" .. tostring(obj.x) .. ", y=" .. tostring(obj.y))
         return obj
       else
-        -- print("@@@@ missing obj",objectName, modelData.currentState )
+        print("DEBUG createCharacter: Object not found, creating via DisplayBase")
         local DisplayBase = require("views.display_base")
-        return DisplayBase:create(parentGroup, modelData)
+        local newObj = DisplayBase:create(parentGroup, modelData)
+        print("DEBUG createCharacter: Created DisplayBase object, type=" .. type(newObj) .. ", isVisible=" .. tostring(newObj and newObj.isVisible))
+        if M._env.UI.props.editing  then
+          newObj.x = modelData.x + (display.contentWidth - 480)/2 + display.contentCenterX
+          newObj.y = modelData.y + (display.contentHeight - 320)/2 + display.contentCenterY
+        end
+        return newObj
       end
     else
+      print("DEBUG createCharacter: Using pure BehaviorTree mode (no UI)")
       local DisplayBase = require("views.display_base")
-      return DisplayBase:create(parentGroup, modelData)
+      local obj =  DisplayBase:create(parentGroup, modelData)
+          obj.x = modelData.x + (display.contentWidth - 480)/2
+          obj.y = modelData.y + (display.contentHeight - 320)/2
+      return obj
     end
 end
 
@@ -277,7 +316,7 @@ function M.methods:changeBackground(imagePath)
         if background.numChildren and background.numChildren > 0 then
             pcall(function() background:remove(1) end)
         end
-        local newBg = display.newImageRect(background, imagePath, 1280, 720)
+        local newBg = display.newImageRect(background, imagePath, display.actualContentWidth or 320, display.actualContentHeight or 480)
         newBg.x = display.contentCenterX
         newBg.y = display.contentCenterY
         newBg.alpha = 0

@@ -18,7 +18,7 @@ M.dialogue = {
     { type = "narration", text = "The door creaks open, revealing a dark interior." },
     { type = "scene", background = "cabin_interior" },
     { type = "music", sound = "ambient_cabin", action = "play", loop = true },
-    { type = "show", what = "luminseed" },
+    { type = "show", what = "lumin_seed" },
     { type = "emotion", character = "elara", state = "happy" },
     { type = "vo", sound = "vo_elara_seed_found", text = "The Lumin Seed... I found it." },
     { type = "show", what = "chest" },
@@ -61,7 +61,7 @@ M.audio = {
 M.objects = {
     elara = cabinElara.create(),
     cabin_door = cabinDoor.create(),
-    luminSeed = cabinLuminSeed.create(),
+    lumin_seed = cabinLuminSeed.create(),
     chest = cabinChest.create(),
     iron_key = ironKey.create(),
     brass_key = brassKey.create(),

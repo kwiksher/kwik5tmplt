@@ -70,10 +70,27 @@ function M.createModule()
         fadeTime = fadeTime or 1000
         local obj = actionModule.sceneObjects[objectName]
 
+        print("DEBUG showObject: BEFORE - " .. objectName .. " type=" .. type(obj) .. ", isVisible=" .. tostring(obj.isVisible) .. ", alpha=" .. tostring(obj.alpha))
+        print("DEBUG showObject: Position x=" .. tostring(obj.x) .. ", y=" .. tostring(obj.y))
+        print("DEBUG showObject: Parent=" .. tostring(obj.parent) .. ", parent.isVisible=" .. tostring(obj.parent and obj.parent.isVisible))
+        print("DEBUG showObject: width=" .. tostring(obj.width) .. ", height=" .. tostring(obj.height))
+        if obj.contentBounds then
+            print("DEBUG showObject: contentBounds xMin=" .. tostring(obj.contentBounds.xMin) .. ", yMin=" .. tostring(obj.contentBounds.yMin) .. ", xMax=" .. tostring(obj.contentBounds.xMax) .. ", yMax=" .. tostring(obj.contentBounds.yMax))
+        end
+
         obj.isVisible = true
         obj.alpha = 0
-        transition.fadeIn(obj, { time = fadeTime })
 
+        print("DEBUG showObject: Starting fadeIn transition...")
+        local transitionHandle = transition.fadeIn(obj, {
+            time = fadeTime,
+            onComplete = function()
+                print("DEBUG showObject: FadeIn completed for " .. objectName .. ", final isVisible=" .. tostring(obj.isVisible) .. ", final alpha=" .. tostring(obj.alpha))
+            end
+        })
+        print("DEBUG showObject: Transition handle=" .. tostring(transitionHandle))
+
+        print("DEBUG showObject: AFTER - " .. objectName .. " isVisible=" .. tostring(obj.isVisible) .. ", alpha=" .. tostring(obj.alpha) .. ", fadeTime=" .. fadeTime)
         print("Showing " .. objectName)
         return bt.SUCCESS
     end

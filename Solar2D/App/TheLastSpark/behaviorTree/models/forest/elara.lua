@@ -4,6 +4,8 @@
 local M = {}
 
 function M.create()
+    -- Scale factor to convert @4x coordinates to @1x
+    local scale = 0.25
     return {
         states = {
             neutral = "App/TheLastSpark/assets/images/forest/elara_neutral.png",
@@ -11,10 +13,10 @@ function M.create()
             determined = "App/TheLastSpark/assets/images/forest/elara_determined.png",
             happy = "App/TheLastSpark/assets/images/forest/elara_happy.png",
         },
-        x = 300,
-        y = 500,
-        width = 300,
-        height = 500,
+        x = 450 * scale,
+        y = 165 * scale,
+        width = 450 * scale,
+        height = 750 * scale,
         currentState = "neutral",
         visible = false
     }

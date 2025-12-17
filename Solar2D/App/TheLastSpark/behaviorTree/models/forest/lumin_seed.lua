@@ -4,15 +4,17 @@
 local M = {}
 
 function M.create()
+    -- Scale factor to convert @4x coordinates to @1x
+    local scale = 0.25
     return {
         states = {
             normal = "App/TheLastSpark/assets/images/forest/lumin_seed.png",
             glowing = "App/TheLastSpark/assets/images/forest/lumin_seed_glowing.png",
         },
-        x = 500,
-        y = 300,
-        width = 150,
-        height = 150,
+        x = 240*4 * scale,  -- 480 (center of 960 width screen)
+        y = 160*4 * scale,  -- 295 (center of 590 height screen)
+        width = 150 * scale,
+        height = 150 * scale,
         currentState = "normal",
         visible = false
     }

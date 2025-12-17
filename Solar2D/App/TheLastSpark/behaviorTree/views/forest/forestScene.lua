@@ -18,35 +18,36 @@ local waitActionModule = require("actions.forest.wait_action")
 
 scene.imagePath = "App/TheLastSpark/assets/images/forest/"
 
+local scale = 0.25
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
     background = "App/TheLastSpark/assets/images/forest/bg_forest.png",
     notes = [[
-        [ luminSeed ]   → trail →   [ wolf ]
+        [ lumin_seed ]   → trail →   [ wolf ]
                  |                       ↑
               [ elara ]           (forest edge)
     ]],
     objects = {
         elara = {
-            x = (model.objects.elara or {}).x or 300,
-            y = (model.objects.elara or {}).y or 500,
-            width = (model.objects.elara or {}).width or 300,
-            height = (model.objects.elara or {}).height or 500,
+            x = (model.objects.elara or {}).x or 300*scale,
+            y = (model.objects.elara or {}).y or 500*scale,
+            width = (model.objects.elara or {}).width or 300*scale,
+            height = (model.objects.elara or {}).height or 500*scale,
             neutralState = ((model.objects.elara or {}).states or {}).neutral or "App/TheLastSpark/assets/images/forest/elara_neutral.png",
         },
         wolf = {
-            x = (model.objects.wolf or {}).x or 900,
-            y = (model.objects.wolf or {}).y or 450,
-            width = (model.objects.wolf or {}).width or 400,
-            height = (model.objects.wolf or {}).height or 300,
+            x = (model.objects.wolf or {}).x or 900*scale,
+            y = (model.objects.wolf or {}).y or 450*scale,
+            width = (model.objects.wolf or {}).width or 400*scale,
+            height = (model.objects.wolf or {}).height or 300*scale,
             aggroState = ((model.objects.wolf or {}).states or {}).aggro or "App/TheLastSpark/assets/images/forest/corrupted_wolf_aggro.png",
         },
-        luminSeed = {
-            x = (model.objects.luminSeed or {}).x or display.contentCenterX,
-            y = (model.objects.luminSeed or {}).y or 400,
-            width = (model.objects.luminSeed or {}).width or 100,
-            height = (model.objects.luminSeed or {}).height or 100,
-            idleState = ((model.objects.luminSeed or {}).states or {}).normal or "App/TheLastSpark/assets/images/forest/item_lumin_seed.png",
+        lumin_seed = {
+            x = (model.objects.lumin_seed or {}).x or display.contentCenterX,
+            y = (model.objects.lumin_seed or {}).y or 400*scale,
+            width = (model.objects.lumin_seed or {}).width or 100*scale,
+            height = (model.objects.lumin_seed or {}).height or 100*scale,
+            idleState = ((model.objects.lumin_seed or {}).states or {}).normal or "App/TheLastSpark/assets/images/forest/item_lumin_seed.png",
         },
     },
     choices = {
@@ -62,6 +63,7 @@ local layout = {
 
 function scene:create(event)
     local sceneGroup = self.view
+
     common._env = {imagePath = self.imagePath, UI=self.UI}
     -- print("@@@@ create() with self.UI", self.UI)
     -- Use BaseScene initialization for display
@@ -101,7 +103,7 @@ function scene:create(event)
 
     -- Pre-load characters (but don't show them yet)
     self.objs.elara = common.createCharacter("elara", model, layout, self.objs.characterGroup)
-    self.objs.luminSeed = common.createCharacter("luminSeed", model, layout, self.objs.characterGroup)
+    self.objs.lumin_seed = common.createCharacter("lumin_seed", model, layout, self.objs.characterGroup)
     self.objs.wolf = common.createCharacter("wolf", model, layout, self.objs.characterGroup)
 
     -- Store reference to scene for helper functions

@@ -1,6 +1,8 @@
 local M = {}
 
 function M.create()
+    -- Scale factor to convert @4x coordinates to @1x
+    local scale = 0.25
     return {
         states = {
             normal = "App/TheLastSpark/assets/images/cabin/lumin_seed_normal.png",
@@ -9,10 +11,10 @@ function M.create()
             pulsing = "App/TheLastSpark/assets/images/cabin/lumin_seed_pulsing.png",
             collected = "App/TheLastSpark/assets/images/cabin/lumin_seed_collected.png",
         },
-        x = 640,
-        y = 400,
-        width = 100,
-        height = 100,
+        x = 960 * scale,
+        y = 540 * scale,
+        width = 100 * scale,
+        height = 100 * scale,
         currentState = "glowing",
         visible = false
     }

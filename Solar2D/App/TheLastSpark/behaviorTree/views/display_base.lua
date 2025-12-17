@@ -26,6 +26,12 @@ end
 -- @return Display object with modelData reference
 -------------------------------------------------------------------------------
 function DisplayBase:create(parentGroup, modelData)
+    print("DEBUG DisplayBase:create - Creating object with state=" .. tostring(modelData.currentState))
+    print("DEBUG DisplayBase:create - Image path=" .. tostring(modelData.states[modelData.currentState]))
+    print("DEBUG DisplayBase:create - Position x=" .. tostring(modelData.x) .. ", y=" .. tostring(modelData.y))
+    print("DEBUG DisplayBase:create - Size width=" .. tostring(modelData.width) .. ", height=" .. tostring(modelData.height))
+    print("DEBUG DisplayBase:create - visible=" .. tostring(modelData.visible))
+
     local obj = displayManager.newImageRect(
         parentGroup,
         modelData.states[modelData.currentState], -- this is the image file path
@@ -39,6 +45,9 @@ function DisplayBase:create(parentGroup, modelData)
 
     -- Store reference to model data
     obj.modelData = modelData
+
+    print("DEBUG DisplayBase:create - Created object type=" .. type(obj) .. ", isVisible=" .. tostring(obj.isVisible))
+    print("DEBUG DisplayBase:create - Object bounds: " .. tostring(obj.contentBounds and obj.contentBounds.xMin) .. "," .. tostring(obj.contentBounds and obj.contentBounds.yMin))
 
     return obj
 end
