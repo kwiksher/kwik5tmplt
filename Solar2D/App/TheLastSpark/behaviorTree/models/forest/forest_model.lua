@@ -4,6 +4,8 @@ local forestLuminSeed = require("models.forest.lumin_seed")
 
 local M = {}
 
+local scale = 0.25
+
 M.dialogue = {
     { type = "narration", text = "A dusty sunbeam cuts through the broken window of a small, abandoned cabin. Dust motes dance in the light." },
     { type = "show", what = "lumin_seed" },
@@ -39,9 +41,9 @@ M.audio = {
 }
 
 M.objects = {
-    elara = forestElara.create(),
-    wolf = forestWolf.create(),
-    lumin_seed = forestLuminSeed.create(),
+    elara = forestElara.create(scale),
+    wolf = forestWolf.create(scale),
+    lumin_seed = forestLuminSeed.create(scale),
 }
 
 return M
