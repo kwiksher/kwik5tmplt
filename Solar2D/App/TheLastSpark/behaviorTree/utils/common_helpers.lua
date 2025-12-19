@@ -106,26 +106,22 @@ function M.createCharacter(objectName, model, layout, parentGroup, overrides)
         end
 
         print("@@@@@", display.contentWidth, display.contentHeight)
-        if M._env.UI.props.editing  then
-          obj.x = modelData.x + (display.contentWidth - 480)/2 + display.contentCenterX
-          obj.y = modelData.y + (display.contentHeight - 320)/2 + display.contentCenterY
-        end
         obj.isVisible = modelData.visible
         -- Store reference to model data
         obj.modelData = modelData
         print("DEBUG createCharacter: Returning UI object, isVisible=" .. tostring(obj.isVisible) .. ", new position x=" .. tostring(obj.x) .. ", y=" .. tostring(obj.y))
-        return obj
       else
         print("DEBUG createCharacter: Object not found, creating via DisplayBase")
         local DisplayBase = require("views.display_base")
-        local newObj = DisplayBase:create(parentGroup, modelData)
-        print("DEBUG createCharacter: Created DisplayBase object, type=" .. type(newObj) .. ", isVisible=" .. tostring(newObj and newObj.isVisible))
-        if M._env.UI.props.editing  then
-          newObj.x = modelData.x + (display.contentWidth - 480)/2 + display.contentCenterX
-          newObj.y = modelData.y + (display.contentHeight - 320)/2 + display.contentCenterY
-        end
-        return newObj
+        obj = DisplayBase:create(parentGroup, modelData)
+        print("DEBUG createCharacter: Created DisplayBase object, type=" .. type(obj) .. ", isVisible=" .. tostring(obj and obj.isVisible))
       end
+      -- if M._env.UI.props.editor  then
+      --     obj.x = modelData.x + (display.contentWidth - 480)/2 + display.contentCenterX
+      --     obj.y = modelData.y + (display.contentHeight - 320)/2 + display.contentCenterY
+      -- end
+
+      return obj
     else
       print("DEBUG createCharacter: Using pure BehaviorTree mode (no UI)")
       local DisplayBase = require("views.display_base")

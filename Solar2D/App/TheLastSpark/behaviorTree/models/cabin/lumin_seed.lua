@@ -1,8 +1,8 @@
 local M = {}
 
-function M.create()
+function M.create(scale)
     -- Scale factor to convert @4x coordinates to @1x
-    local scale = 0.25
+    scale = scale or 0.25
     return {
         states = {
             normal = "App/TheLastSpark/assets/images/cabin/lumin_seed_normal.png",

@@ -8,6 +8,8 @@ local looseFloorboard = require("models.cabin.loose_floorboard")
 
 local M = {}
 
+local scale = 0.25
+
 M.dialogue = {
     { type = "narration", text = "You stand before an old cabin in the woods." },
     { type = "show", what = "elara" },
@@ -59,13 +61,13 @@ M.audio = {
 }
 
 M.objects = {
-    elara = cabinElara.create(),
-    cabin_door = cabinDoor.create(),
-    lumin_seed = cabinLuminSeed.create(),
-    chest = cabinChest.create(),
-    iron_key = ironKey.create(),
-    brass_key = brassKey.create(),
-    loose_floorboard = looseFloorboard.create(),
+    elara = cabinElara.create(scale),
+    cabin_door = cabinDoor.create(scale),
+    lumin_seed = cabinLuminSeed.create(scale),
+    chest = cabinChest.create(scale),
+    iron_key = ironKey.create(scale),
+    brass_key = brassKey.create(scale),
+    loose_floorboard = looseFloorboard.create(scale),
 }
 
 return M

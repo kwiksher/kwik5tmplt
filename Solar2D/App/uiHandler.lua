@@ -37,6 +37,7 @@ function M:init(UI)
   if fullPath and util.isFile(fullPath) then
     UI.behaviorTree = require("App."..props.appName..".behaviorTree.views."..UI.page.."."..UI.page.."Scene")
     UI.behaviorTree.view = UI.sceneGroup
+    UI.behaviorTree.UI = UI
   else
     print("behavitor tree is not found", path)
   end
@@ -52,25 +53,25 @@ end
 
 function M:willShow(UI)
   if UI.behaviorTree then
-    UI.behaviorTree:show({phase = "willShow"})
+    UI.behaviorTree:show({phase = "will"})
   end
 end
 
 function M:didShow(UI)
   if UI.behaviorTree then
-    UI.behaviorTree:show({phase = "didShow"})
+    UI.behaviorTree:show({phase = "did"})
   end
 end
 
 function M:willHide(UI)
     if UI.behaviorTree then
-    UI.behaviorTree:show({phase = "willHide"})
+    UI.behaviorTree:show({phase = "will"})
   end
 end
 
 function M:didHide(UI)
   if UI.behaviorTree then
-    UI.behaviorTree:show({phase = "didHide"})
+    UI.behaviorTree:show({phase = "did"})
   end
 end
 
@@ -82,5 +83,6 @@ end
 
 function M:resume(UI)
 end
+
 
 return M
