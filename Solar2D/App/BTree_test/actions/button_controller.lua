@@ -1,0 +1,41 @@
+-------------------------------------------------------------------------------
+-- Button Action Controller
+-- Manages all action modules for the button scene BTree
+-------------------------------------------------------------------------------
+local actionHelper = require("utils.action_helper")
+
+-- Module paths
+local modulePaths = {
+    button = "actions.button_actions",
+}
+
+-- Create controller
+local M = {}
+local controller
+
+function M.initialize(objects)
+    -- Load all modules
+    local actions = actionHelper.loadActionModules(modulePaths, objects)
+    print("Button Action Controller: Loaded " .. actionHelper.countModules(actions) .. " action modules")
+
+    -- Create default config
+    local config = actionHelper.createDefaultConfig({
+        simpleRouting = actions,
+    })
+
+    -- Create controller with config
+    controller = actionHelper.createController(config)
+
+    print("Button Action Controller: Initialized successfully")
+end
+
+-- Execute function delegates to controller
+function M.execute(actionName)
+    if not controller then
+        print("Error: Button Action Controller not initialized!")
+        return require("utils.btree").FAILED
+    end
+    return controller.execute(actionName)
+end
+
+return M

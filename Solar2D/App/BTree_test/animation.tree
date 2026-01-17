@@ -1,0 +1,4 @@
+->
+|    [animate star]
+|    [wait for animation]
+|    [goto button scene]
