@@ -1,0 +1,41 @@
+-------------------------------------------------------------------------------
+-- Animation Action Controller
+-- Manages all action modules for the animation scene BTree
+-------------------------------------------------------------------------------
+local actionHelper = require("utils.action_helper")
+
+-- Module paths
+local modulePaths = {
+    animation = "actions.animation_actions",
+}
+
+-- Create controller
+local M = {}
+local controller
+
+function M.initialize(objects)
+    -- Load all modules
+    local actions = actionHelper.loadActionModules(modulePaths, objects)
+    print("Animation Action Controller: Loaded " .. actionHelper.countModules(actions) .. " action modules")
+
+    -- Create default config
+    local config = actionHelper.createDefaultConfig({
+        simpleRouting = actions,
+    })
+
+    -- Create controller with config
+    controller = actionHelper.createController(config)
+
+    print("Animation Action Controller: Initialized successfully")
+end
+
+-- Execute function delegates to controller
+function M.execute(actionName)
+    if not controller then
+        print("Error: Animation Action Controller not initialized!")
+        return require("utils.btree").FAILED
+    end
+    return controller.execute(actionName)
+end
+
+return M
