@@ -11,7 +11,8 @@ local scene = BaseScene:new("animation")
 
 -- BTree components
 local bt = require("utils.btree")
-local actionController = require("actions.animation_controller")
+local actionController = require("actions.animation.animation_controller")
+local conditionController = require("conditions.animation.animation_condition_controller")
 
 -- Layout configuration
 local layout = {
@@ -50,11 +51,26 @@ function scene:create(event)
     self.objs.star = star
     print("Star created at position:", star.x, star.y)
 
+    -- Create counter text display
+    local counterText = display.newText({
+        parent = self.objs.uiGroup,
+        text = "Scene Count: 0",
+        x = display.contentCenterX,
+        y = 30,
+        font = native.systemFontBold,
+        fontSize = 20
+    })
+    counterText:setFillColor(1, 1, 1) -- White
+    self.objs.counterText = counterText
+
     -- Initialize action controller with scene objects
     actionController.initialize(self.objs)
 
+    -- Initialize condition controller with scene objects
+    conditionController.initialize(self.objs)
+
     -- Load behavior tree and register action handler
-    self.behaviorTree = common.loadBehaviorTree("App/BTree_test/animation.tree", actionController, nil)
+    self.behaviorTree = common.loadBehaviorTree("animation.tree", actionController, nil)
 
     print("Animation Scene: Created successfully")
 end
@@ -62,8 +78,25 @@ end
 function scene:show(event)
     if event.phase == "will" then
         print("Animation Scene: Will show")
+
+        -- Reset first tick flag for this scene display
+        self.objs.sceneFirstTickDone = false
+
+        -- Initialize star position and animation status
+        if self.objs.star then
+            self.objs.star.x = display.contentCenterX - 200
+            self.objs.star.y = display.contentCenterY
+            print("Star position initialized to start")
+        end
     elseif event.phase == "did" then
         print("Animation Scene: Did show - Starting behavior tree")
+
+
+        -- Clear animation completion status
+        self.objs.animationComplete = self.objs.animationComplete or {}
+        self.objs.animationComplete.star = false
+        self.objs.animationInProgress = false
+        print("Animation status cleared")
 
         -- Create manual tree controller
         if self.behaviorTree then
@@ -73,12 +106,30 @@ function scene:show(event)
                 tick = function(self)
                     if not self.isComplete then
                         print("\n=== BTree Tick ===")
+
+                        -- Update condition status before ticking
+                        local sceneFirstTickStatus = conditionController.evaluate("scene first tick")
+                        print("[DEBUG] scene first tick status: " .. tostring(sceneFirstTickStatus))
+                        self.tree:setConditionStatus("scene first tick", sceneFirstTickStatus)
+
+                        local animationCompletedStatus = conditionController.evaluate("star animation completed")
+                        print("[DEBUG] animation completed status: " .. tostring(animationCompletedStatus))
+                        self.tree:setConditionStatus("star animation completed", animationCompletedStatus)
+
                         local status = self.tree:tick()
                         print("Tree status: " .. tostring(status))
 
-                        if status == bt.SUCCESS or status == bt.FAILED then
-                            print("Behavior tree completed with status: " .. tostring(status))
+                        if status == bt.SUCCESS then
+                            print("Behavior tree completed with status: SUCCESS")
                             self.isComplete = true
+                        elseif status == bt.FAILED then
+                            -- Tree failed (animation not complete yet), keep ticking
+                            print("Tree tick failed (animation not complete yet), will tick again")
+                            timer.performWithDelay(100, function()
+                                if not self.isComplete then
+                                    self:tick()
+                                end
+                            end)
                         elseif status == bt.RUNNING then
                             -- Tree is still running, schedule next tick
                             timer.performWithDelay(100, function()
@@ -90,6 +141,9 @@ function scene:show(event)
                     end
                 end
             }
+
+            -- Store tree controller reference in objs for animation action to access
+            self.objs.treeController = self.treeController
 
             -- Start the behavior tree
             self.treeController:tick()

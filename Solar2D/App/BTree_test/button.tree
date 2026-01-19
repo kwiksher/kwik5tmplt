@@ -1,4 +1,3 @@
 ->
-|    ?
-|    |    (button clicked)
-|    |    [goto animation scene]
+|    (button clicked)
+|    [goto animationScene]

@@ -1,53 +1,256 @@
-# BTree Test - Simplified Behavior Tree Sample
+# BTree Test - Behavior Tree Sample
 
-This is a simplified behavior tree test application based on TheLastSpark sample. It demonstrates basic behavior tree concepts with two simple scenes.
+A simplified Solar2D/Corona SDK project demonstrating behavior tree implementation with two interactive scenes.
 
-## Structure
+## Overview
+
+This project demonstrates a behavior tree system with:
+- **Animation Scene**: Displays a counter and animates a yellow star moving from left to right
+- **Button Scene**: Shows a button that returns to the animation scene when clicked
+
+The scenes transition between each other using behavior trees defined in `.tree` files.
+
+## Behavior Tree Files
+
+### animation.tree
+
+Controls the animation scene flow:
+
+```tree
+->
+|    ?
+|    |    ->
+|    |    |    (scene first tick)
+|    |    |    [increment counter]
+|    |    ->
+|    [animate star]
+|    (star animation completed)
+|    [goto buttonScene]
+```
+
+**Flow:**
+1. **Optional counter increment**: Uses a fallback to increment scene display counter only on first tick
+2. **Animate star**: Starts the star animation (skips if already in progress)
+3. **Wait for completion**: Checks if star animation is complete
+4. **Transition**: Goes to button scene when animation finishes
+
+### button.tree
+
+Controls the button scene flow:
+
+```tree
+->
+|    (button clicked)
+|    [goto animationScene]
+```
+
+**Flow:**
+1. **Check button click**: Evaluates if button was pressed
+2. **Transition**: Returns to animation scene when button is clicked
+
+The tree continuously ticks until the button is clicked, creating a wait-for-input behavior.
+
+## Behavior Tree Node Types
+
+### Sequence Node (`->`)
+
+A **sequence** node executes its children in order and requires **ALL** children to succeed.
+
+- **Success**: When all children return SUCCESS
+- **Failure**: When any child returns FAILED (stops execution)
+- **Behavior**: Executes children left-to-right until one fails or all succeed
+
+**Example from animation.tree:**
+```tree
+->
+|    [animate star]
+|    (star animation completed)
+|    [goto buttonScene]
+```
+This sequence ensures: star animates → waits for completion → then transitions.
+
+### Fallback/Selector Node (`?`)
+
+A **fallback** (or selector) node tries children in order until one succeeds.
+
+- **Success**: When any child returns SUCCESS (stops trying remaining children)
+- **Failure**: When all children return FAILED
+- **Behavior**: Tries children left-to-right until one succeeds
+
+**Example from animation.tree:**
+```tree
+?
+|    ->
+|    |    (scene first tick)
+|    |    [increment counter]
+|    ->
+```
+This fallback provides optional behavior:
+- First tick: Inner sequence succeeds → counter increments → fallback succeeds
+- Later ticks: Inner sequence fails → empty sequence succeeds → fallback succeeds
+
+The empty sequence (`->` with no children) always succeeds, making the fallback always succeed.
+
+### Action Node (`[action name]`)
+
+An **action** node executes a specific action and returns its result.
+
+**Format:** `[action type what]` or `[action name]`
+
+**Examples:**
+- `[increment counter]` - Parsed as type="increment", what="counter"
+- `[animate star]` - Parsed as type="animate", what="star"
+- `[goto buttonScene]` - Parsed as type="goto", what="buttonScene"
+
+**Routing:**
+Actions are routed to appropriate modules via `simpleRouting` configuration:
+- `increment` → animation module → executes "counter" action
+- `animate` → animation module → executes "star" action
+- `goto` → scene module → executes scene transition
+
+### Condition Node (`(condition name)`)
+
+A **condition** node evaluates a state and returns SUCCESS or FAILED (never RUNNING).
+
+**Examples:**
+- `(scene first tick)` - Returns SUCCESS only on first tree tick after scene shows
+- `(star animation completed)` - Returns SUCCESS when star animation finishes
+- `(button clicked)` - Returns SUCCESS when button is pressed
+
+**Evaluation:**
+Conditions are evaluated before each tree tick via `conditionController.evaluate()` and their status is set with `tree:setConditionStatus()`.
+
+## Key Implementation Details
+
+### Scene Display Counter
+
+The counter increment demonstrates a "once per scene" action using behavior tree logic:
+
+1. Scene "will" phase sets `sceneFirstTickDone = false`
+2. Condition `(scene first tick)` checks this flag
+3. First tick: condition succeeds → counter increments → flag set to true
+4. Subsequent ticks: condition fails → inner sequence fails → empty fallback child succeeds
+
+This is cleaner than checking the flag in action code - the tree structure handles the logic.
+
+### Animation State Management
+
+To prevent animation restart on every tick:
+
+1. Scene "did" phase sets `animationInProgress = false`
+2. `[animate star]` action checks this flag
+3. If false: starts animation, sets flag to true
+4. If true: returns SUCCESS immediately without restarting
+
+The `animationComplete.star` flag is set in the animation's `onComplete` callback, which also triggers an immediate tree tick.
+
+### Button State Management
+
+Button pressed flag is cleared in scene "did" phase:
+
+1. `buttonPressed = false` on scene show
+2. Button click sets `buttonPressed = true` and ticks tree
+3. Condition `(button clicked)` checks flag
+4. Tree succeeds → transitions to animation scene
+
+## Project File Structure
 
 ```
 BTree_test/
-├── main.lua                    # Entry point - starts with animation scene
-├── config.lua                  # Solar2D configuration
-├── build.settings              # Solar2D build settings
-├── animation.tree              # Behavior tree for animation scene
-├── button.tree                 # Behavior tree for button scene
+├── main.lua                          # Entry point
+├── config.lua                        # Solar2D configuration
+├── build.settings                    # Solar2D build settings
+├── animation.tree                    # Animation scene behavior tree
+├── button.tree                       # Button scene behavior tree
 ├── actions/
-│   ├── animation_actions.lua   # Animation action implementations
-│   ├── animation_controller.lua# Animation action controller
-│   ├── button_actions.lua      # Button action implementations
-│   ├── button_controller.lua   # Button action controller
-│   └── base_wait_action.lua    # Base wait action (from TheLastSpark)
+│   ├── animation/
+│   │   ├── animation_actions.lua     # Star animation & counter actions
+│   │   └── animation_controller.lua  # Action routing & execution
+│   ├── button/
+│   │   ├── button_actions.lua        # Button actions (currently minimal)
+│   │   └── button_controller.lua     # Button action controller
+│   └── scene/
+│       ├── scene_actions.lua         # Scene transition (goto) action
+│       └── scene_controller.lua      # Scene action controller
+├── conditions/
+│   ├── animation/
+│   │   └── animation_conditions.lua  # Animation conditions (first tick, completed)
+│   └── button/
+│       └── button_conditions.lua     # Button conditions (clicked)
 ├── utils/
-│   ├── btree.lua              # Behavior tree processor (from TheLastSpark)
-│   ├── common_helpers.lua     # Common helper functions (from TheLastSpark)
-│   └── action_helper.lua      # Action helper utilities (from TheLastSpark)
+│   ├── btree.lua                     # Behavior tree processor
+│   ├── common_helpers.lua            # Common helper functions
+│   └── action_helper.lua             # Action parsing utilities
 └── views/
-    ├── animationScene.lua     # Animation scene implementation
-    ├── buttonScene.lua        # Button scene implementation
-    ├── baseScene.lua          # Base scene class (from TheLastSpark)
-    ├── display_manager.lua    # Display management (from TheLastSpark)
-    └── display_base.lua       # Display base class (from TheLastSpark)
+    ├── animationScene.lua            # Animation scene with tree controller
+    ├── buttonScene.lua               # Button scene with tree controller
+    ├── baseScene.lua                 # Base scene class
+    ├── display_manager.lua           # Display management
+    └── display_base.lua              # Display base class
 ```
 
-## Scenes
+## Node Type Reference
 
-### Animation Scene (animation.tree)
+| Node Type | Symbol | Purpose | Success | Failure | Use Case |
+|-----------|--------|---------|---------|---------|----------|
+| **Sequence** | `->` | All children must succeed in order | All children succeed | Any child fails | Sequential actions |
+| **Fallback** | `?` | Try until one succeeds | Any child succeeds | All children fail | Optional/fallback behavior |
+| **Action** | `[name]` | Execute an action | Action returns SUCCESS | Action returns FAILED | Do something |
+| **Condition** | `(name)` | Check state | Condition is true | Condition is false | Gate execution |
 
-**Behavior Tree:**
-```
-->
-|    [animate star]
-|    [wait for animation]
-|    [goto button scene]
-```
+## Status Codes
 
-**What it does:**
-1. **Star is created in the scene module** (views/animationScene.lua)
-2. Animates the star moving linearly to the right side (2 seconds)
-3. Waits for the animation to complete
-4. Transitions to the button scene
+Behavior tree nodes return one of three status codes:
 
-### Button Scene (button.tree)
+- `bt.FAILED (0)` - Node failed, stop sequence or try next fallback child
+- `bt.SUCCESS (1)` - Node succeeded, continue sequence or complete fallback
+- `bt.RUNNING (2)` - Node still in progress, tick again (actions only)
+
+Conditions always return SUCCESS or FAILED (never RUNNING).
+
+## Running the Sample
+
+1. Open in Solar2D Simulator
+2. Animation scene shows with counter = 0 and animates the star
+3. After animation completes, transitions to button scene
+4. Click "Back to Animation" button
+5. Returns to animation scene, counter = 1
+6. Cycle repeats, counter increments each time
+
+## Learning Points
+
+This sample demonstrates:
+
+1. **Tree Syntax**: How to structure sequences, fallbacks, actions, and conditions
+2. **Action Routing**: Using `simpleRouting` to map action types to modules
+3. **Condition-Based Logic**: Using tree structure for conditional behavior (counter increment)
+4. **State Management**: Managing animation/button states across scene lifecycle
+5. **Scene Integration**: How behavior trees control Solar2D Composer scenes
+
+## Differences from TheLastSpark
+
+This is a simplified version focusing on core concepts:
+
+- **Simpler trees**: Two basic trees vs. complex multi-level trees
+- **Basic actions**: Animation and scene transitions only
+- **Condition gating**: Demonstrates using conditions to control action execution
+- **State flags**: Simple boolean flags vs. complex state management
+- **Direct implementation**: Less abstraction for easier learning
+
+## Further Exploration
+
+To extend this sample:
+
+1. Add more complex animations with multiple objects
+2. Implement parallel node (`||`) for simultaneous actions
+3. Add decorators (repeat, invert, timeout)
+4. Create more complex condition logic
+5. Implement action interruption/cancellation
+6. Add visual debugging of tree execution
+
+---
+
+Created as a learning resource for Solar2D behavior tree implementation.
 
 **Behavior Tree:**
 ```

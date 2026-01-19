@@ -6,7 +6,7 @@ local bt = require("utils.btree")
 
 -- Module paths
 local modulePaths = {
-    button = "conditions.button_conditions",
+    button = "conditions.button.button_conditions",
 }
 
 -- Create controller

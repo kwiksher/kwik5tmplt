@@ -12,8 +12,8 @@ local scene = BaseScene:new("button")
 
 -- BTree components
 local bt = require("utils.btree")
-local actionController = require("actions.button_controller")
-local conditionController = require("conditions.button_condition_controller")
+local actionController = require("actions.button.button_controller")
+local conditionController = require("conditions.button.button_condition_controller")
 
 -- Layout configuration
 local layout = {
@@ -48,7 +48,7 @@ function scene:create(event)
     conditionController.initialize(self.objs)
 
     -- Load behavior tree and register handlers
-    self.behaviorTree = common.loadBehaviorTree("App/BTree_test/button.tree", actionController, nil)
+    self.behaviorTree = common.loadBehaviorTree("button.tree", actionController, nil)
 
     -- Store reference for button creation after tree controller is set up
     self.createButton = function()
@@ -87,6 +87,10 @@ function scene:show(event)
     elseif event.phase == "did" then
         print("Button Scene: Did show - Starting behavior tree")
 
+        -- Clear button pressed flag
+        self.objs.buttonPressed = false
+        print("Button pressed flag cleared")
+
         -- Create manual tree controller
         if self.behaviorTree then
             self.treeController = {
@@ -103,9 +107,17 @@ function scene:show(event)
                         local status = self.tree:tick()
                         print("Tree status: " .. tostring(status))
 
-                        if status == bt.SUCCESS or status == bt.FAILED then
-                            print("Behavior tree completed with status: " .. tostring(status))
+                        if status == bt.SUCCESS then
+                            print("Behavior tree completed with status: SUCCESS")
                             self.isComplete = true
+                        elseif status == bt.FAILED then
+                            -- Tree failed (button not clicked), keep ticking
+                            print("Tree tick failed (button not clicked yet), will tick again")
+                            timer.performWithDelay(100, function()
+                                if not self.isComplete then
+                                    self:tick()
+                                end
+                            end)
                         elseif status == bt.RUNNING then
                             -- Tree is still running, schedule next tick
                             timer.performWithDelay(100, function()

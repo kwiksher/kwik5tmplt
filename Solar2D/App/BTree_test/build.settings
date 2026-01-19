@@ -7,7 +7,7 @@ settings =
 {
     orientation =
     {
-        default = "portrait",
+        default = "landscape",
         supported = { "portrait", "portraitUpsideDown" }
     },
 
