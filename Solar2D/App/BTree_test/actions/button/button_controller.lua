@@ -6,7 +6,7 @@ local actionHelper = require("utils.action_helper")
 
 -- Module paths
 local modulePaths = {
-    button = "actions.button_actions",
+    button = "actions.button.button_actions",
     scene = "actions.scene_actions",
 }
 
@@ -19,11 +19,14 @@ function M.initialize(objects)
     local actions = actionHelper.loadActionModules(modulePaths, objects)
     print("Button Action Controller: Loaded " .. actionHelper.countModules(actions) .. " action modules")
 
-    -- Create default config
-    local config = actionHelper.createDefaultConfig({
+    -- Create config with routing
+    local config = {
         modules = actions,
         logPrefix = "Button Action Controller",
-    })
+        simpleRouting = {
+            goto = actions.scene,
+        }
+    }
 
     -- Create execute function
     local executeFunc = actionHelper.createExecuteFunction(config)

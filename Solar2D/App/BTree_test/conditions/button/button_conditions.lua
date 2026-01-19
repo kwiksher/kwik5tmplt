@@ -2,6 +2,7 @@
 -- Button Conditions
 -- Conditions for checking button state
 -------------------------------------------------------------------------------
+local bt = require("utils.btree")
 local actionHelper = require("utils.action_helper")
 
 -- Create condition module
@@ -27,7 +28,7 @@ M.CONDITIONS = {
 function M.checkButtonClicked()
     local clicked = sceneObjects.buttonPressed == true
     print("[CONDITION] button clicked: " .. tostring(clicked))
-    return clicked
+    return clicked and bt.SUCCESS or bt.FAILED
 end
 
 -- Evaluate function for condition controller

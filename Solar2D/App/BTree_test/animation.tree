@@ -1,4 +1,9 @@
 ->
+|    ?
+|    |    ->
+|    |    |    (scene first tick)
+|    |    |    [increment counter]
+|    |    ->
 |    [animate star]
-|    [wait for animation]
-|    [goto button scene]
+|    (star animation completed)
+|    [goto buttonScene]

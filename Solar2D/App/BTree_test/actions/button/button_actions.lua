@@ -24,29 +24,8 @@ end
 
 -- Register button-specific actions
 M.ACTIONS = {
-    ["goto animation scene"] = function()
-        return M.gotoAnimationScene()
-    end,
+    -- No button-specific actions currently, only generic scene transitions
 }
-
--- Go to animation scene
-function M.gotoAnimationScene()
-    print("[ACTION] goto animation scene")
-
-    -- Reset button pressed flag
-    sceneObjects.buttonPressed = false
-
-    if M.DEBUG_ENABLED then
-        composer.gotoScene("views.animationScene", {
-            effect = "fade",
-            time = 500
-        })
-    else
-        print("DEBUG: Would transition to animation scene with fade effect")
-    end
-
-    return bt.SUCCESS
-end
 
 -- Execute function for action controller
 function M.execute(actionName)

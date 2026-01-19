@@ -2,11 +2,12 @@
 -- Animation Action Controller
 -- Manages all action modules for the animation scene BTree
 -------------------------------------------------------------------------------
+print("[CONTROLLER LOAD] Loading animation_controller.lua v2")
 local actionHelper = require("utils.action_helper")
 
 -- Module paths
 local modulePaths = {
-    animation = "actions.animation_actions",
+    animation = "actions.animation.animation_actions",
     scene = "actions.scene_actions",
 }
 
@@ -19,11 +20,36 @@ function M.initialize(objects)
     local actions = actionHelper.loadActionModules(modulePaths, objects)
     print("Animation Action Controller: Loaded " .. actionHelper.countModules(actions) .. " action modules")
 
-    -- Create default config
-    local config = actionHelper.createDefaultConfig({
+    -- Debug: check what's in actions
+    print("[DEBUG] Loaded action modules:")
+    for name, module in pairs(actions) do
+        print("[DEBUG]   - " .. name)
+        if module.ACTIONS then
+            print("[DEBUG]     ACTIONS table:")
+            for actionName, _ in pairs(module.ACTIONS) do
+                print("[DEBUG]       * " .. actionName)
+            end
+        end
+        if module.execute then
+            print("[DEBUG]     has execute function")
+        end
+    end
+
+    -- Create config with routing
+    local config = {
         modules = actions,
         logPrefix = "Animation Action Controller",
-    })
+        simpleRouting = {
+            increment = actions.animation,
+            animate = actions.animation,
+            goto = actions.scene,
+        }
+    }
+
+    print("[DEBUG] simpleRouting configured:")
+    for key, mod in pairs(config.simpleRouting) do
+        print("[DEBUG]   " .. key .. " -> " .. tostring(mod))
+    end
 
     -- Create execute function
     local executeFunc = actionHelper.createExecuteFunction(config)
