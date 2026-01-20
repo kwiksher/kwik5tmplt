@@ -1,0 +1,27 @@
+- name: background_dark_red
+  type: background
+  x: 0
+  y: 0
+  width: 1920
+  height: 1080
+  z_index: 0
+  color: "#331A1A"
+  text: ""
+  font_size: 16
+  text_color: "#FFFFFF"
+  visible: true
+  opacity: 100
+
+- name: button_go_to_animation
+  type: prop
+  x: 960
+  y: 540
+  width: 200
+  height: 50
+  z_index: 10
+  color: "#3380FF"
+  text: "Go to Animation"
+  font_size: 16
+  text_color: "#FFFFFF"
+  visible: true
+  opacity: 100
