@@ -1,21 +1,35 @@
 local env = require("env")
+
+env.book = "BTree_test"
+env.goPage = "animation"
+
+
 -- env.book = "book"
 -- env.goPage = "landscape"
 
+--env.book = "animation"
+--env.goPage = "linear"
+
 -- env.book = "interaction"
 -- env.goPage = "canvas"
+
+-- env.book = "particles"
+-- env.goPage = "air_stars"
 
 -- env.book = "LULU" -- "book"
 -- env.goPage = "LULU_Sitting_With_A_CAT_Refine"
 
 -- env.book = "snowMan"
 -- env.goPage = "page1"
-env.book = "TheLastSpark"
-env.goPage = "forest"
+
+--env.book = "TheLastSpark"
+-- env.goPage = "forest"
+--env.goPage = "cabin"
 
 --
 --env.mode = "development"
 -- env.mode = "production"
+
 env.mode = "debug" -- need kwik5-plugin src from kwiksher's repo
 --env.mode = "behaviorTree"
 
@@ -28,8 +42,9 @@ if env.mode == "development" or env.mode == "debug" then
     language = "", -- empty string "" is for a single language project
     position = {x = 0, y = 0},
     gotoLastBook = true,
-    unitTest = true,
+    unitTest = false,
     httpServer = false,
+    scale      = 0.25,
     showPageName = true,
     turnOffNativeVideo = true
   }
@@ -48,6 +63,8 @@ elseif env.mode == "production" then
   }
 elseif env.mode == "behaviorTree" then
 
+  require("custom.components.myComponent")
+
   local resourcePath = system.pathForFile("", system.ResourceDirectory)
   local appPath = "/App/TheLastSpark/behaviorTree"
   package.path = resourcePath .. appPath.."/?.lua;" .. resourcePath .. appPath.."/?/?.lua;"..package.path
@@ -56,8 +73,8 @@ elseif env.mode == "behaviorTree" then
   local composer = require("composer")
 
   -- Start with the forest scene
-  composer.gotoScene("views.forest.forestScene")
-  --composer.gotoScene("views.cabin.cabinScene")
+  -- composer.gotoScene("views.forest.forestScene")
+  composer.gotoScene("views.cabin.cabinScene")
 
   --Start automated test after scene loads
   -- timer.performWithDelay(1000, function()

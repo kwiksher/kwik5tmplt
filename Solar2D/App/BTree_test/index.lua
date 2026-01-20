@@ -1,4 +1,5 @@
 local scenes = {
-'animation', 'button', 
+    "animation",
+    "button",
 }
 return scenes

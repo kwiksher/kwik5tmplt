@@ -1,4 +1,4 @@
-- name: background_dark_blue
+- name: background
   type: background
   x: 0
   y: 0
@@ -12,7 +12,7 @@
   visible: true
   opacity: 100
 
-- name: star_yellow
+- name: star
   type: character
   x: 760
   y: 540
@@ -26,7 +26,7 @@
   visible: true
   opacity: 100
 
-- name: counter_text
+- name: counter
   type: prop
   x: 960
   y: 30

@@ -3,6 +3,8 @@ local util = require(kwikGlobal.ROOT.."lib.util")
 --
 -- TODO extlib table in kwik editor and template/uiHandler.lua
 --
+local enableBehaviorTree = true
+
 M.libs = {
 }
 
@@ -34,7 +36,7 @@ function M:init(UI)
   --
   local path = "App/"..props.appName.."/behaviorTree/"..UI.page.."_scene.tree"
   local fullPath = system.pathForFile(path, system.ResourceDirectory)
-  if fullPath and util.isFile(fullPath) then
+  if enableBehaviorTree and fullPath and util.isFile(fullPath) then
     UI.behaviorTree = require("App."..props.appName..".behaviorTree.views."..UI.page.."."..UI.page.."Scene")
     UI.behaviorTree.view = UI.sceneGroup
     UI.behaviorTree.UI = UI
