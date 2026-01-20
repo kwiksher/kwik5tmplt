@@ -1,4 +1,4 @@
-- name: background_dark_red
+- name: background
   type: background
   x: 0
   y: 0
@@ -12,7 +12,7 @@
   visible: true
   opacity: 100
 
-- name: button_go_to_animation
+- name: button
   type: prop
   x: 960
   y: 540

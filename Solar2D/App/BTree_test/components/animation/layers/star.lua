@@ -1,4 +1,4 @@
--- $weight=2
+-- $weight=1
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
@@ -6,13 +6,13 @@ local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
-  height    =  1180 - 100,
-  width     = 1920 - 0 ,
+  height    =  740 - 640,
+  width     = 860 - 760 ,
   kind      = pixel,
-  name      = "background",
+  name      = "star",
   type      = "png",
-  x         = 1920 + (0 -1920)/2,
-  y         = 100 + (1180 - 100)/2,
+  x         = 860 + (760 -860)/2,
+  y         = 640 + (740 - 640)/2,
   -- x         = bounds.right + bounds.left - bounds.right)/2,
   -- y         = bounds.top + bounds.bottom - bounds.top)/2,
   alpha     = 100/100,
@@ -43,7 +43,7 @@ M:setProps(layerProps)
 -- Set isSharedAsset = true, and then set a common module. See kwikTheCatCommon.lua
 --
 M.isSharedAsset = nil
-M.imagePath   = "animation/background.png"
+M.imagePath   = "animation/star.png"
 
 function M:init(UI)
   --local sceneGroup = UI.scene.view
