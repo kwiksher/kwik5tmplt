@@ -41,15 +41,31 @@ function scene:create(event)
     bg:setFillColor(layout.background.r, layout.background.g, layout.background.b)
 
     -- Create star shape
-    local star = display.newPolygon(
-        self.objs.characterGroup,
-        display.contentCenterX - 200,
-        display.contentCenterY,
-        {0,-50, 15,-15, 50,-10, 20,10, 30,40, 0,20, -30,40, -20,10, -50,-10, -15,-15}
-    )
-    star:setFillColor(1, 1, 0) -- Yellow
-    self.objs.star = star
-    print("Star created at position:", star.x, star.y)
+    -- Check if uiHandler has enableBehaviorTree to use common.createCharacter
+    local uiHandler = self.UI and require("App.uiHandler")
+    if uiHandler and uiHandler.enableBehaviorTree and self.UI then
+        -- Use common.createCharacter to get object from UI.sceneGroup
+        print("Using common.createCharacter to get star from UI.sceneGroup")
+        common._env = { UI = self.UI }
+        local model = { objects = { star = {} } }
+        local starLayout = { objects = { star = {} } }
+        self.objs.star = common.createCharacter("star", model, starLayout, self.objs.characterGroup, {
+            visible = true,
+            -- x = display.contentCenterX - 200,
+            -- y = display.contentCenterY
+        })
+    else
+        -- Create star shape directly
+        local star = display.newPolygon(
+            self.objs.characterGroup,
+            display.contentCenterX - 200,
+            display.contentCenterY,
+            {0,-50, 15,-15, 50,-10, 20,10, 30,40, 0,20, -30,40, -20,10, -50,-10, -15,-15}
+        )
+        star:setFillColor(1, 1, 0) -- Yellow
+        self.objs.star = star
+    end
+    print("Star created at position:", self.objs.star.x, self.objs.star.y)
 
     -- Create counter text display
     local counterText = display.newText({
@@ -70,7 +86,7 @@ function scene:create(event)
     conditionController.initialize(self.objs)
 
     -- Load behavior tree and register action handler
-    self.behaviorTree = common.loadBehaviorTree("animation.tree", actionController, nil)
+    self.behaviorTree = common.loadBehaviorTree("App/BTree_test/behaviorTree/animation_scene.tree", actionController, nil)
 
     print("Animation Scene: Created successfully")
 end
@@ -82,8 +98,9 @@ function scene:show(event)
         -- Reset first tick flag for this scene display
         self.objs.sceneFirstTickDone = false
 
-        -- Initialize star position and animation status
-        if self.objs.star then
+        -- Initialize star position and animation status (only when not using UI mode)
+        local uiHandler = self.UI and require("App.uiHandler")
+        if self.objs.star and not (uiHandler and uiHandler.enableBehaviorTree and self.UI) then
             self.objs.star.x = display.contentCenterX - 200
             self.objs.star.y = display.contentCenterY
             print("Star position initialized to start")
