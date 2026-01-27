@@ -27,7 +27,7 @@ M.CONDITIONS = {
 -- Check if button was clicked
 function M.checkButtonClicked()
     local clicked = sceneObjects.buttonPressed == true
-    print("[CONDITION] button clicked: " .. tostring(clicked))
+    --print("[CONDITION] button clicked: " .. tostring(clicked))
     return clicked and bt.SUCCESS or bt.FAILED
 end
 

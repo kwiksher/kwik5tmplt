@@ -48,33 +48,72 @@ function scene:create(event)
     conditionController.initialize(self.objs)
 
     -- Load behavior tree and register handlers
-    self.behaviorTree = common.loadBehaviorTree("button_scene.tree", actionController, nil)
+    self.behaviorTree = common.loadBehaviorTree("App/BTree_test/behaviorTree/button_scene.tree", actionController, nil)
 
     -- Store reference for button creation after tree controller is set up
     self.createButton = function()
-        -- Create button with immediate tree tick on click
-        local button = widget.newButton({
-            label = "Go to Animation",
-            onRelease = function()
-                print("Button pressed!")
-                self.objs.buttonPressed = true
-                -- Immediately tick the behavior tree when button is clicked
-                if self.treeController and not self.treeController.isComplete then
-                    self.treeController:tick()
-                end
-            end,
-            emboss = false,
-            shape = "roundedRect",
-            width = 200,
-            height = 50,
-            cornerRadius = 10,
-            fillColor = { default={0.2,0.5,1}, over={0.3,0.6,1} },
-            labelColor = { default={1,1,1}, over={0.9,0.9,0.9} }
-        })
-        button.x = display.contentCenterX
-        button.y = display.contentCenterY
-        self.objs.uiGroup:insert(button)
-        self.objs.button = button
+        -- Check if uiHandler has enableBehaviorTree to use common.createCharacter
+        local uiHandler = self.UI and require("App.uiHandler")
+        if uiHandler and uiHandler.enableBehaviorTree and self.UI then
+            -- Use common.createCharacter to get button from UI.sceneGroup
+            print("Using common.createCharacter to get button from UI.sceneGroup")
+            common._env = { UI = self.UI }
+            local model = { objects = { button = {} } }
+            local buttonLayout = { objects = { button = {} } }
+            self.objs.button = common.createCharacter("button", model, buttonLayout, self.objs.uiGroup, {
+                visible = true,
+            })
+
+            -- Set up tap handler for the button
+            if self.objs.button then
+                print("DEBUG: Setting up tap listener for button")
+                self.objs.button:addEventListener("tap", function(event)
+                    -- Prevent multiple clicks
+                    if self.objs.buttonPressed then
+                        print("Button already pressed, ignoring")
+                        return true
+                    end
+
+                    print("Button pressed!")
+                    self.objs.buttonPressed = true
+                    -- Immediately tick the behavior tree when button is clicked
+                    if self.treeController and not self.treeController.isComplete then
+                        self.treeController:tick()
+                    end
+                    return true
+                end)
+            end
+        else
+            -- Create button directly with widget
+            local button = widget.newButton({
+                label = "Go to Animation",
+                onRelease = function()
+                    -- Prevent multiple clicks
+                    if self.objs.buttonPressed then
+                        print("Button already pressed, ignoring")
+                        return
+                    end
+
+                    print("Button pressed!")
+                    self.objs.buttonPressed = true
+                    -- Immediately tick the behavior tree when button is clicked
+                    if self.treeController and not self.treeController.isComplete then
+                        self.treeController:tick()
+                    end
+                end,
+                emboss = false,
+                shape = "roundedRect",
+                width = 200,
+                height = 50,
+                cornerRadius = 10,
+                fillColor = { default={0.2,0.5,1}, over={0.3,0.6,1} },
+                labelColor = { default={1,1,1}, over={0.9,0.9,0.9} }
+            })
+            button.x = display.contentCenterX
+            button.y = display.contentCenterY
+            self.objs.uiGroup:insert(button)
+            self.objs.button = button
+        end
         print("Button created at center of screen")
     end
 
@@ -84,45 +123,61 @@ end
 function scene:show(event)
     if event.phase == "will" then
         print("Button Scene: Will show")
+
+        -- Reset tree controller so it can restart
+        if self.treeController then
+            self.treeController.isComplete = false
+            if self.treeController.timerId then
+                timer.cancel(self.treeController.timerId)
+                self.treeController.timerId = nil
+            end
+        end
+
+        -- Clear button pressed flag early
+        self.objs.buttonPressed = false
+        print("Button pressed flag cleared (will phase)")
     elseif event.phase == "did" then
         print("Button Scene: Did show - Starting behavior tree")
 
-        -- Clear button pressed flag
-        self.objs.buttonPressed = false
-        print("Button pressed flag cleared")
+        -- Guard against spurious show events - if tree controller exists and is complete, skip
+        if self.treeController and self.treeController.isComplete then
+            print("Button Scene: Spurious show event detected (tree already complete), ignoring")
+            return
+        end
 
-        -- Create manual tree controller
-        if self.behaviorTree then
+        -- Create manual tree controller if it doesn't exist
+        if self.behaviorTree and not self.treeController then
             self.treeController = {
                 tree = self.behaviorTree,
                 isComplete = false,
+                timerId = nil,
                 tick = function(self)
                     if not self.isComplete then
-                        print("\n=== BTree Tick ===")
-
                         -- Update condition status before ticking
                         local buttonClickedStatus = conditionController.evaluate("button clicked")
                         self.tree:setConditionStatus("button clicked", buttonClickedStatus)
 
                         local status = self.tree:tick()
-                        print("Tree status: " .. tostring(status))
 
                         if status == bt.SUCCESS then
-                            print("Behavior tree completed with status: SUCCESS")
                             self.isComplete = true
+                            -- Cancel any pending timer
+                            if self.timerId then
+                                timer.cancel(self.timerId)
+                                self.timerId = nil
+                            end
                         elseif status == bt.FAILED then
                             -- Tree failed (button not clicked), keep ticking
-                            print("Tree tick failed (button not clicked yet), will tick again")
-                            timer.performWithDelay(100, function()
+                            self.timerId = timer.performWithDelay(100, function()
                                 if not self.isComplete then
                                     self:tick()
                                 end
                             end)
                         elseif status == bt.RUNNING then
                             -- Tree is still running, schedule next tick
-                            timer.performWithDelay(100, function()
+                            self.timerId = timer.performWithDelay(100, function()
                                 if not self.isComplete then
-                                    self:tick()
+                                   self:tick()
                                 end
                             end)
                         end
@@ -143,9 +198,13 @@ function scene:hide(event)
     if event.phase == "will" then
         print("Button Scene: Will hide")
 
-        -- Stop behavior tree
+        -- Stop behavior tree and cancel pending timers
         if self.treeController then
             self.treeController.isComplete = true
+            if self.treeController.timerId then
+                timer.cancel(self.treeController.timerId)
+                self.treeController.timerId = nil
+            end
         end
     elseif event.phase == "did" then
         print("Button Scene: Did hide")

@@ -95,61 +95,97 @@ function scene:show(event)
     if event.phase == "will" then
         print("Animation Scene: Will show")
 
-        -- Reset first tick flag for this scene display
-        self.objs.sceneFirstTickDone = false
+        -- Clear the transitioning flag - we're legitimately entering the scene now
+        self.objs.isTransitioning = false
 
-        -- Initialize star position and animation status (only when not using UI mode)
-        local uiHandler = self.UI and require("App.uiHandler")
-        if self.objs.star and not (uiHandler and uiHandler.enableBehaviorTree and self.UI) then
-            self.objs.star.x = display.contentCenterX - 200
-            self.objs.star.y = display.contentCenterY
-            print("Star position initialized to start")
+        -- Reset tree controller so it can restart
+        if self.treeController then
+            self.treeController.isComplete = false
+            if self.treeController.timerId then
+                timer.cancel(self.treeController.timerId)
+                self.treeController.timerId = nil
+            end
+        end
+
+        -- Always reset first tick flag when showing the scene
+        -- This ensures animation starts properly regardless of how we got here
+        self.objs.sceneFirstTickDone = false
+        local composer = require("composer")
+        local previousScene = composer.getSceneName("previous")
+        print("Resetting first tick flag - transitioning from: " .. tostring(previousScene))
+
+        -- Clear animation completion status early to prevent race conditions
+        self.objs.animationComplete = self.objs.animationComplete or {}
+        self.objs.animationComplete.star = false
+        self.objs.animationInProgress = false
+        print("Animation status cleared (will phase)")
+
+        -- Initialize star position and animation status
+        if self.objs.star then
+            local uiHandler = self.UI and require("App.uiHandler")
+            if uiHandler and uiHandler.enableBehaviorTree and self.UI then
+                -- Reset to original position from Kwik editor using oriX/oriY
+                if self.objs.star.oriX and self.objs.star.oriY then
+                    self.objs.star.x = self.objs.star.oriX
+                    self.objs.star.y = self.objs.star.oriY
+                    print("Star position reset to oriX:", self.objs.star.oriX, "oriY:", self.objs.star.oriY)
+                end
+            else
+                -- Reset to hardcoded position when not using UI mode
+                self.objs.star.x = display.contentCenterX - 200
+                self.objs.star.y = display.contentCenterY
+                print("Star position initialized to start")
+            end
         end
     elseif event.phase == "did" then
         print("Animation Scene: Did show - Starting behavior tree")
 
+        -- Guard against spurious show events - if tree controller exists and is complete, skip
+        if self.treeController and self.treeController.isComplete then
+            print("Animation Scene: Spurious show event detected (tree already complete), ignoring")
+            return
+        end
 
-        -- Clear animation completion status
+        -- Clear animation completion status (again, for safety)
         self.objs.animationComplete = self.objs.animationComplete or {}
         self.objs.animationComplete.star = false
         self.objs.animationInProgress = false
-        print("Animation status cleared")
+        print("Animation status cleared (did phase)")
 
         -- Create manual tree controller
         if self.behaviorTree then
             self.treeController = {
                 tree = self.behaviorTree,
                 isComplete = false,
+                timerId = nil,
                 tick = function(self)
                     if not self.isComplete then
-                        print("\n=== BTree Tick ===")
-
                         -- Update condition status before ticking
                         local sceneFirstTickStatus = conditionController.evaluate("scene first tick")
-                        print("[DEBUG] scene first tick status: " .. tostring(sceneFirstTickStatus))
                         self.tree:setConditionStatus("scene first tick", sceneFirstTickStatus)
 
                         local animationCompletedStatus = conditionController.evaluate("star animation completed")
-                        print("[DEBUG] animation completed status: " .. tostring(animationCompletedStatus))
                         self.tree:setConditionStatus("star animation completed", animationCompletedStatus)
 
                         local status = self.tree:tick()
-                        print("Tree status: " .. tostring(status))
 
                         if status == bt.SUCCESS then
-                            print("Behavior tree completed with status: SUCCESS")
                             self.isComplete = true
+                            -- Cancel any pending timer
+                            if self.timerId then
+                                timer.cancel(self.timerId)
+                                self.timerId = nil
+                            end
                         elseif status == bt.FAILED then
                             -- Tree failed (animation not complete yet), keep ticking
-                            print("Tree tick failed (animation not complete yet), will tick again")
-                            timer.performWithDelay(100, function()
+                            self.timerId = timer.performWithDelay(100, function()
                                 if not self.isComplete then
                                     self:tick()
                                 end
                             end)
                         elseif status == bt.RUNNING then
                             -- Tree is still running, schedule next tick
-                            timer.performWithDelay(100, function()
+                            self.timerId = timer.performWithDelay(100, function()
                                 if not self.isComplete then
                                     self:tick()
                                 end
@@ -172,13 +208,19 @@ function scene:hide(event)
     if event.phase == "will" then
         print("Animation Scene: Will hide")
 
-        -- Stop behavior tree
+        -- Stop behavior tree and cancel pending timers
         if self.treeController then
             self.treeController.isComplete = true
+            if self.treeController.timerId then
+                timer.cancel(self.treeController.timerId)
+                self.treeController.timerId = nil
+            end
         end
 
-        -- Clean up transitions
-        transition.cancel()
+        -- Cancel only star transitions, not all transitions globally
+        if self.objs.star then
+            transition.cancel(self.objs.star)
+        end
     elseif event.phase == "did" then
         print("Animation Scene: Did hide")
     end
