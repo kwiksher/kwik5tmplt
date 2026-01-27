@@ -79,7 +79,7 @@ function M.createCharacter(objectName, model, layout, parentGroup, overrides)
     print("DEBUG createCharacter: objectName=" .. objectName .. ", currentState=" .. tostring(modelData.currentState) .. ", visible=" .. tostring(modelData.visible))
     if M._env.UI then
       print("DEBUG createCharacter: Using Kwik UI mode")
-      local lookupName = objectName.."_"..modelData.currentState
+      local lookupName = modelData.currentState and (objectName.."_"..modelData.currentState) or objectName
       local obj = M._env.UI.sceneGroup[lookupName]
       print("DEBUG createCharacter: Looking for '" .. lookupName .. "' in UI.sceneGroup: " .. tostring(obj ~= nil))
 
@@ -107,6 +107,9 @@ function M.createCharacter(objectName, model, layout, parentGroup, overrides)
 
         print("@@@@@", display.contentWidth, display.contentHeight)
         obj.isVisible = modelData.visible
+        -- Apply position from modelData if provided
+        if modelData.x then obj.x = modelData.x end
+        if modelData.y then obj.y = modelData.y end
         -- Store reference to model data
         obj.modelData = modelData
         print("DEBUG createCharacter: Returning UI object, isVisible=" .. tostring(obj.isVisible) .. ", new position x=" .. tostring(obj.x) .. ", y=" .. tostring(obj.y))

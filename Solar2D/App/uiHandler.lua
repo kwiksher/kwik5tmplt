@@ -4,6 +4,7 @@ local util = require(kwikGlobal.ROOT.."lib.util")
 -- TODO extlib table in kwik editor and template/uiHandler.lua
 --
 local enableBehaviorTree = true
+M.enableBehaviorTree = enableBehaviorTree
 
 M.libs = {
 }
@@ -19,7 +20,10 @@ if keyboardPath then
 end
 
 local resourcePath = system.pathForFile("", system.ResourceDirectory)
-local appPath = "/App/TheLastSpark/behaviorTree"
+--
+--local appPath = "/App/TheLastSpark/behaviorTree"
+local appPath = "/App/BTree_test/behaviorTree"
+
 package.path = resourcePath .. appPath.."/?.lua;" .. resourcePath .. appPath.."/?/?.lua;"..package.path
 
 
