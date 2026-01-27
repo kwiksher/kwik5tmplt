@@ -79,6 +79,15 @@ function M.createCharacter(objectName, model, layout, parentGroup, overrides)
     print("DEBUG createCharacter: objectName=" .. objectName .. ", currentState=" .. tostring(modelData.currentState) .. ", visible=" .. tostring(modelData.visible))
     if M._env.UI then
       print("DEBUG createCharacter: Using Kwik UI mode")
+
+      -- Debug: List all available objects in UI.sceneGroup
+      print("DEBUG createCharacter: Available objects in UI.sceneGroup:")
+      for k, v in pairs(M._env.UI.sceneGroup) do
+        if type(k) == "string" then
+          print("  - " .. k .. " = " .. tostring(v))
+        end
+      end
+
       local lookupName = modelData.currentState and (objectName.."_"..modelData.currentState) or objectName
       local obj = M._env.UI.sceneGroup[lookupName]
       print("DEBUG createCharacter: Looking for '" .. lookupName .. "' in UI.sceneGroup: " .. tostring(obj ~= nil))
@@ -679,7 +688,7 @@ function M.loadBehaviorTree(treeFileName, actionController, conditionController)
         tree:onActionActivation(function(_, actionNode)
             if actionNode and actionNode:active() then
                 local actionName = actionNode.name
-                print("BTree: Executing action [" .. actionName .. "]")
+                -- print("BTree: Executing action [" .. actionName .. "]")
                 local result = actionController.execute(actionName)
 
                 -- Convert result to bt status

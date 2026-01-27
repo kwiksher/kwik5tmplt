@@ -23,10 +23,29 @@ end
 
 local _print = print
 
+-- Paths to filter out from print output
+local printFilters = {
+  -- "behaviorTree",
+  -- Add more filter patterns here as needed
+}
+
 print = function(...)
   local t = debug.traceback()
 
+  -- Check if full traceback contains filter before processing
+  for _, filter in ipairs(printFilters) do
+    if t and t:find(filter) then
+      return
+    end
+  end
+
   local stacks = t:mySplit("[^\r\n]+")
+
+  if not stacks[3] then
+    _print(...)
+    return
+  end
+
   local lines = stacks[3]:mySplit("[^/]+")
   local line = lines[#lines]
   local file = line:mySplit("[^:]+")

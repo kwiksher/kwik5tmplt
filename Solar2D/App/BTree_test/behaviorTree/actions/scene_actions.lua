@@ -51,12 +51,39 @@ function M.gotoScene(actionName)
     print("[ACTION] goto - going to: " .. sceneName)
 
     -- Map scene names to their full paths
-    local scenePathMap = {
-        buttonScene = "views.button.buttonScene",
-        animationScene = "views.animation.animationScene",
-    }
+    -- Check if uiHandler has enableBehaviorTree for component-based paths
+    local uiHandler = pcall(require, "App.uiHandler") and require("App.uiHandler")
+    local useComponentPaths = uiHandler and uiHandler.enableBehaviorTree
+
+    local scenePathMap
+    if useComponentPaths then
+        scenePathMap = {
+            buttonScene = "App.BTree_test.components.button.index",
+            animationScene = "App.BTree_test.components.animation.index",
+        }
+    else
+        scenePathMap = {
+            buttonScene = "views.button.buttonScene",
+            animationScene = "views.animation.animationScene",
+        }
+    end
 
     local fullScenePath = scenePathMap[sceneName] or ("views." .. sceneName)
+
+    print("[ACTION] goto - Using path: " .. fullScenePath .. " (useComponentPaths=" .. tostring(useComponentPaths) .. ")")
+
+    -- Check if we're already on the target scene
+    local currentScene = composer.getSceneName("current")
+    if currentScene == fullScenePath then
+        print("[ACTION] goto - Already on scene " .. fullScenePath .. ", skipping transition")
+        return bt.SUCCESS
+    end
+
+    -- Mark the current scene as transitioning to prevent spurious show events
+    if sceneObjects then
+        sceneObjects.isTransitioning = true
+        print("[ACTION] goto - Set transitioning flag to prevent spurious show events")
+    end
 
     if M.DEBUG_ENABLED then
         composer.gotoScene(fullScenePath, {

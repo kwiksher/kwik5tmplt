@@ -97,12 +97,6 @@ end
 
 -- Execute function for action controller
 function M.execute(actionName)
-    print("[DEBUG] animation_actions.execute called with: '" .. tostring(actionName) .. "'")
-    print("[DEBUG] Available actions in ACTIONS table:")
-    for key, _ in pairs(M.ACTIONS) do
-        print("[DEBUG]   - '" .. key .. "'")
-    end
-
     local action = M.ACTIONS[actionName]
     if action then
         return action()

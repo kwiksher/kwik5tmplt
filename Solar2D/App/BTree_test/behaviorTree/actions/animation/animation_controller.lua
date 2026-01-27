@@ -20,20 +20,6 @@ function M.initialize(objects)
     local actions = actionHelper.loadActionModules(modulePaths, objects)
     print("Animation Action Controller: Loaded " .. actionHelper.countModules(actions) .. " action modules")
 
-    -- Debug: check what's in actions
-    print("[DEBUG] Loaded action modules:")
-    for name, module in pairs(actions) do
-        print("[DEBUG]   - " .. name)
-        if module.ACTIONS then
-            print("[DEBUG]     ACTIONS table:")
-            for actionName, _ in pairs(module.ACTIONS) do
-                print("[DEBUG]       * " .. actionName)
-            end
-        end
-        if module.execute then
-            print("[DEBUG]     has execute function")
-        end
-    end
 
     -- Create config with routing
     local config = {
