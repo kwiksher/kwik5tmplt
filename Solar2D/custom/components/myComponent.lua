@@ -25,7 +25,8 @@ local _print = print
 
 -- Paths to filter out from print output
 local printFilters = {
-  -- "behaviorTree",
+  "behaviorTree",
+  "editor/tests/index.lua",
   -- Add more filter patterns here as needed
 }
 
@@ -50,25 +51,21 @@ print = function(...)
   local line = lines[#lines]
   local file = line:mySplit("[^:]+")
 
-  if #file > 2 then
-    local name = file[#file-2]
-    if name == 'index.lua' then
-      local parent1 = lines[#lines-2]
-      local parent2 = lines[#lines-1]
-      line = parent1.."/"..parent2.."/index.lua:".. file[#file-1]
-      -- _print(parent1.."/"..parent2.."/index.lua:".. file[#file-1], ...)
-    else
-      line = file[#file-2]..":".. file[#file-1]
-      -- _print(file[#file-2]..":".. file[#file-1], ...)
-    end
-    if line:find("editor/tests/index.lua") then
-      _print(...)
-    else
-      _print(line, ...)
-    end
-  else
+  if #file <= 2 then
     _print("", line, ...)
+    return
   end
+
+  local name = file[#file-2]
+  if name == 'index.lua' then
+    local parent1 = lines[#lines-2]
+    local parent2 = lines[#lines-1]
+    line = parent1.."/"..parent2.."/index.lua:".. file[#file-1]
+  else
+    line = file[#file-2]..":".. file[#file-1]
+  end
+
+  _print(line, ...)
 end
 
 printKeys = function(tbl)

@@ -387,3 +387,73 @@ To add new behaviors:
 2. Register them in the `ACTIONS` table
 3. Add new action nodes to the `.tree` files
 4. Implement the logic with proper status returns (SUCCESS/RUNNING/FAILED)
+
+-----
+
+## tree:tick() and states
+
+Key Differences from Stateless:
+- Fallback: Stateless - always iterates from first child
+- Parallel: Stateless - always checks all children
+- Sequence: Stateful - resumes from currentChildIndex on RUNNING
+- Action/Condition: Stateful - external status changes persist
+
+Bottom line: Sequence is the main concern for RUNNING state, but wasActive flag and external status modifications also create state dependencies across all node types.
+
+```lua
+function BehaviorTree.prototype.findRunningSequences(self, node)
+  if not node then node = self.root end
+  local running = {}
+
+  if node.kind == SEQUENCE and node:status() == RUNNING then
+    table.insert(running, {
+      node = node,
+      name = node.name or "unnamed sequence",
+      childIndex = node.currentChildIndex,
+      childName = node.children[node.currentChildIndex] and node.children[node.currentChildIndex].name or "unknown"
+    })
+  end
+
+  if node.children then
+    for i = 1, #node.children do
+      local childResults = self:findRunningSequences(node.children[i])
+      for j = 1, #childResults do
+        table.insert(running, childResults[j])
+      end
+    end
+  end
+
+  return running
+end
+```
+
+Event
+
+```lua
+if self.viewObj then
+  self.viewObj:dispatchEvent {name = "tick", node=self.name, isActive = isActive, wasActive = self.wasActive, status = self:status()}
+end
+```
+
+wasActive is most useful for:
+
+- Visual debugging (showing node history)
+- Event handling (detecting deactivation transitions)
+- Cleanup triggers (releasing resources when nodes complete)
+- Rate limiting (preventing rapid re-execution)
+
+----
+
+## Conditions
+
+- (scene first tick)
+
+  self.obj.asceneFirstTickDone
+
+- (star animation completed)
+
+  self.objs.animationComplete.star
+
+- (button clicked)
+
+  self.objs.buttonPressed

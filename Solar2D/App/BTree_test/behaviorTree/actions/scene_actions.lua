@@ -79,12 +79,6 @@ function M.gotoScene(actionName)
         return bt.SUCCESS
     end
 
-    -- Mark the current scene as transitioning to prevent spurious show events
-    if sceneObjects then
-        sceneObjects.isTransitioning = true
-        print("[ACTION] goto - Set transitioning flag to prevent spurious show events")
-    end
-
     if M.DEBUG_ENABLED then
         composer.gotoScene(fullScenePath, {
             effect = "fade",

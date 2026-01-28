@@ -2,6 +2,7 @@
 -- Animation Scene View - BTree Implementation
 -- Shows a star performing linear animation
 -------------------------------------------------------------------------------
+local composer = require("composer")
 local BaseScene = require("views.baseScene")
 local common = require("utils.common_helpers")
 local displayManager = require("views.display_manager")
@@ -13,6 +14,7 @@ local scene = BaseScene:new("animation")
 local bt = require("utils.btree")
 local actionController = require("actions.animation.animation_controller")
 local conditionController = require("conditions.animation.animation_condition_controller")
+local starActions = require("actions.animation.star_actions")
 
 -- Layout configuration
 local layout = {
@@ -95,29 +97,17 @@ function scene:show(event)
     if event.phase == "will" then
         print("Animation Scene: Will show")
 
-        -- Clear the transitioning flag - we're legitimately entering the scene now
-        self.objs.isTransitioning = false
-
         -- Reset tree controller so it can restart
-        if self.treeController then
-            self.treeController.isComplete = false
-            if self.treeController.timerId then
-                timer.cancel(self.treeController.timerId)
-                self.treeController.timerId = nil
-            end
-        end
+        common.resetTreeController(self.treeController)
 
         -- Always reset first tick flag when showing the scene
         -- This ensures animation starts properly regardless of how we got here
         self.objs.sceneFirstTickDone = false
-        local composer = require("composer")
         local previousScene = composer.getSceneName("previous")
         print("Resetting first tick flag - transitioning from: " .. tostring(previousScene))
 
         -- Clear animation completion status early to prevent race conditions
-        self.objs.animationComplete = self.objs.animationComplete or {}
-        self.objs.animationComplete.star = false
-        self.objs.animationInProgress = false
+        starActions.clearAnimationStatus()
         print("Animation status cleared (will phase)")
 
         -- Initialize star position and animation status
@@ -147,9 +137,7 @@ function scene:show(event)
         end
 
         -- Clear animation completion status (again, for safety)
-        self.objs.animationComplete = self.objs.animationComplete or {}
-        self.objs.animationComplete.star = false
-        self.objs.animationInProgress = false
+        starActions.clearAnimationStatus()
         print("Animation status cleared (did phase)")
 
         -- Create manual tree controller
@@ -169,28 +157,7 @@ function scene:show(event)
 
                         local status = self.tree:tick()
 
-                        if status == bt.SUCCESS then
-                            self.isComplete = true
-                            -- Cancel any pending timer
-                            if self.timerId then
-                                timer.cancel(self.timerId)
-                                self.timerId = nil
-                            end
-                        elseif status == bt.FAILED then
-                            -- Tree failed (animation not complete yet), keep ticking
-                            self.timerId = timer.performWithDelay(100, function()
-                                if not self.isComplete then
-                                    self:tick()
-                                end
-                            end)
-                        elseif status == bt.RUNNING then
-                            -- Tree is still running, schedule next tick
-                            self.timerId = timer.performWithDelay(100, function()
-                                if not self.isComplete then
-                                    self:tick()
-                                end
-                            end)
-                        end
+                        common.handleTreeTickResult(self, status)
                     end
                 end
             }
@@ -209,18 +176,10 @@ function scene:hide(event)
         print("Animation Scene: Will hide")
 
         -- Stop behavior tree and cancel pending timers
-        if self.treeController then
-            self.treeController.isComplete = true
-            if self.treeController.timerId then
-                timer.cancel(self.treeController.timerId)
-                self.treeController.timerId = nil
-            end
-        end
+        common.stopTreeController(self.treeController)
 
-        -- Cancel only star transitions, not all transitions globally
-        if self.objs.star then
-            transition.cancel(self.objs.star)
-        end
+        -- Cancel star animation
+        starActions.animateStarCancel()
     elseif event.phase == "did" then
         print("Animation Scene: Did hide")
     end
