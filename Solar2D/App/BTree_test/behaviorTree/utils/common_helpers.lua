@@ -709,7 +709,9 @@ function M.loadBehaviorTree(treeFileName, actionController, conditionController)
     -- Example: tree:setConditionStatus("player choice fight", conditionController.evaluate("fight"))
 
     return tree
-end-- Create a manual behavior tree controller
+end
+
+-- Create a manual behavior tree controller
 -- Returns a controller object with manual tick function and state tracking
 function M.createManualBehaviorTree(behaviorTree, conditionController)
     local bt = require("utils.btree")
@@ -836,6 +838,55 @@ function M.createManualBehaviorTree(behaviorTree, conditionController)
     print("Call controller:tick() to advance the tree")
 
     return controller
+end
+
+-- Reset tree controller state and cancel any pending timers
+-- @param treeController: table - the tree controller object with isComplete and timerId
+function M.resetTreeController(treeController)
+    if treeController then
+        treeController.isComplete = false
+        if treeController.timerId then
+            timer.cancel(treeController.timerId)
+            treeController.timerId = nil
+        end
+    end
+end
+
+-- Stop tree controller and cancel any pending timers
+-- @param treeController: table - the tree controller object with isComplete and timerId
+function M.stopTreeController(treeController)
+    if treeController then
+        treeController.isComplete = true
+        if treeController.timerId then
+            timer.cancel(treeController.timerId)
+            treeController.timerId = nil
+        end
+    end
+end
+
+-- Handle behavior tree tick result and schedule next tick if needed
+-- @param treeController: table - the tree controller object with tree, isComplete, and timerId
+-- @param status: number - the status returned by tree:tick() (bt.SUCCESS, bt.FAILED, or bt.RUNNING)
+-- @param tickDelay: number - delay in milliseconds before next tick (default: 100)
+function M.handleTreeTickResult(treeController, status, tickDelay)
+    local bt = require("utils.btree")
+    tickDelay = tickDelay or 100
+
+    if status == bt.SUCCESS then
+        treeController.isComplete = true
+        -- Cancel any pending timer
+        if treeController.timerId then
+            timer.cancel(treeController.timerId)
+            treeController.timerId = nil
+        end
+    elseif status == bt.FAILED or status == bt.RUNNING then
+        -- Tree failed or still running, schedule next tick
+        treeController.timerId = timer.performWithDelay(tickDelay, function()
+            if not treeController.isComplete then
+                treeController:tick()
+            end
+        end)
+    end
 end
 
 -- Start behavior tree with automatic ticking

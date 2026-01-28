@@ -848,11 +848,21 @@ end
 function Node.prototype.setActive(self, isActive)
   local previouslyActive = self._active
   self._active = isActive
+
   if previouslyActive and not isActive then
-    self.wasActive = true
+    self.wasActive = true  -- Mark as was active
+  elseif isActive then
+    self.wasActive = false  -- ✅ Reset when reactivating
   end
+
   if self.viewObj then
-    self.viewObj:dispatchEvent {name = "tick", node=self.name, isActive = isActive, wasActive = self.wasActive, status = self:status()}
+    self.viewObj:dispatchEvent {
+      name = "tick",
+      node = self.name,
+      isActive = isActive,
+      wasActive = self.wasActive,
+      status = self:status()
+    }
   end
 end
 function Node.prototype.tick(self)

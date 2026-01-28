@@ -340,16 +340,18 @@ end
 function M.executeOnModule(module, actionName, moduleName)
     if not module then
         print("Error: Module '" .. (moduleName or "unknown") .. "' not found")
-        return false
+        return bt.FAILED
     end
 
     if not module.execute then
         print("Error: Module '" .. (moduleName or "unknown") .. "' has no execute function")
-        return false
+        return bt.FAILED
     end
 
     return module.execute(actionName)
-end-- Route action to appropriate module based on type mapping
+end
+
+-- Route action to appropriate module based on type mapping
 -- typeMapping: table of { actionType = module }
 -- Example: { show = actions.display, sfx = actions.audio }
 function M.routeActionByType(actionType, actionWhat, typeMapping)
@@ -358,7 +360,7 @@ function M.routeActionByType(actionType, actionWhat, typeMapping)
         return M.executeOnModule(module, actionWhat, actionType)
     else
         print("Error: Unknown action type - " .. tostring(actionType))
-        return false
+        return bt.FAILED
     end
 end
 
@@ -372,7 +374,7 @@ function M.routeActionByTarget(target, action, targetMapping)
         return M.executeOnModule(module, action, target)
     else
         print("Error: Unknown target - " .. tostring(target))
-        return false
+        return bt.FAILED
     end
 end
 
@@ -522,7 +524,7 @@ function M.createExecuteFunction(config)
             end
 
             print(logPrefix .. ": Unknown action type - " .. actionType)
-            return false
+            return bt.FAILED
         end
 
         -- Try module.action format
@@ -534,7 +536,7 @@ function M.createExecuteFunction(config)
         end
 
         print(logPrefix .. ": Unknown action format - " .. actionName)
-        return false
+        return bt.FAILED
     end
 end
 

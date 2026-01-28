@@ -125,13 +125,7 @@ function scene:show(event)
         print("Button Scene: Will show")
 
         -- Reset tree controller so it can restart
-        if self.treeController then
-            self.treeController.isComplete = false
-            if self.treeController.timerId then
-                timer.cancel(self.treeController.timerId)
-                self.treeController.timerId = nil
-            end
-        end
+        common.resetTreeController(self.treeController)
 
         -- Clear button pressed flag early
         self.objs.buttonPressed = false
@@ -159,28 +153,7 @@ function scene:show(event)
 
                         local status = self.tree:tick()
 
-                        if status == bt.SUCCESS then
-                            self.isComplete = true
-                            -- Cancel any pending timer
-                            if self.timerId then
-                                timer.cancel(self.timerId)
-                                self.timerId = nil
-                            end
-                        elseif status == bt.FAILED then
-                            -- Tree failed (button not clicked), keep ticking
-                            self.timerId = timer.performWithDelay(100, function()
-                                if not self.isComplete then
-                                    self:tick()
-                                end
-                            end)
-                        elseif status == bt.RUNNING then
-                            -- Tree is still running, schedule next tick
-                            self.timerId = timer.performWithDelay(100, function()
-                                if not self.isComplete then
-                                   self:tick()
-                                end
-                            end)
-                        end
+                        common.handleTreeTickResult(self, status)
                     end
                 end
             }
@@ -199,13 +172,7 @@ function scene:hide(event)
         print("Button Scene: Will hide")
 
         -- Stop behavior tree and cancel pending timers
-        if self.treeController then
-            self.treeController.isComplete = true
-            if self.treeController.timerId then
-                timer.cancel(self.treeController.timerId)
-                self.treeController.timerId = nil
-            end
-        end
+        common.stopTreeController(self.treeController)
     elseif event.phase == "did" then
         print("Button Scene: Did hide")
     end

@@ -8,6 +8,7 @@ local actionHelper = require("utils.action_helper")
 -- Module paths
 local modulePaths = {
     animation = "actions.animation.animation_actions",
+    star = "actions.animation.star_actions",
     scene = "actions.scene_actions",
 }
 
@@ -27,7 +28,7 @@ function M.initialize(objects)
         logPrefix = "Animation Action Controller",
         simpleRouting = {
             increment = actions.animation,
-            animate = actions.animation,
+            animate = actions.star,
             goto = actions.scene,
         }
     }
