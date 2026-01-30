@@ -1,0 +1,16 @@
+->
+|    ->
+|    |    [narration cabin_scene]
+|    |    [wait for next]
+|    ->
+|    |    [narration forest_quiet]
+|    |    [wait for next]
+|    |
+|    [show choices]
+|    ?
+|    |    ->
+|    |    |    (player choice reload)
+|    |    |    [scene reload]
+|    |    ->
+|    |    |    (player choice continue)
+|    |    |    [scene next]

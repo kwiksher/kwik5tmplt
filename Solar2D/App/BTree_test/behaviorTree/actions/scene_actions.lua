@@ -48,61 +48,57 @@ function M.gotoScene(actionName)
         return bt.FAILED
     end
 
-    print("[ACTION] goto - going to: " .. sceneName)
-
-    -- Map scene names to their full paths
-    -- Check if uiHandler has enableBehaviorTree for component-based paths
-    local uiHandler = pcall(require, "App.uiHandler") and require("App.uiHandler")
-    local useComponentPaths = uiHandler and uiHandler.enableBehaviorTree
-
-    local scenePathMap
-    if useComponentPaths then
-        scenePathMap = {
-            buttonScene = "App.BTree_test.components.button.index",
-            animationScene = "App.BTree_test.components.animation.index",
-        }
-    else
-        scenePathMap = {
-            buttonScene = "views.button.buttonScene",
-            animationScene = "views.animation.animationScene",
-        }
-    end
-
-    local fullScenePath = scenePathMap[sceneName] or ("views." .. sceneName)
-
-    print("[ACTION] goto - Using path: " .. fullScenePath .. " (useComponentPaths=" .. tostring(useComponentPaths) .. ")")
-
-    -- Check if we're already on the target scene
-    local currentScene = composer.getSceneName("current")
-    if currentScene == fullScenePath then
-        print("[ACTION] goto - Already on scene " .. fullScenePath .. ", skipping transition")
-        return bt.SUCCESS
-    end
-
-    if M.DEBUG_ENABLED then
-        composer.gotoScene(fullScenePath, {
-            effect = "fade",
-            time = 500
-        })
-    else
-        print("DEBUG: Would transition to " .. fullScenePath .. " with fade effect")
-    end
-
+    print("[ACTION] goto " .. sceneName)
+    composer.gotoScene(sceneName, {
+        effect = "fade",
+        time = 300
+    })
     return bt.SUCCESS
 end
 
--- Execute function for action controller
-function M.execute(actionName)
-    -- When using simpleRouting, we receive just the scene name (e.g., "buttonScene")
-    -- When not using routing, we receive full action (e.g., "goto buttonScene")
-
-    -- Check if this is a goto action with prefix
-    if actionName:match("^goto%s+") then
-        return M.gotoScene(actionName)
+-- Handle reload action
+function M.reload()
+    print("[ACTION] scene reload")
+    local currentScene = composer.getSceneName("current")
+    if currentScene then
+        composer.gotoScene(currentScene, {
+            effect = "fade",
+            time = 300
+        })
+        return bt.SUCCESS
     else
-        -- Assume it's just the scene name, construct the full action
-        local fullAction = "goto " .. actionName
-        return M.gotoScene(fullAction)
+        print("[ACTION] scene reload - ERROR: No current scene")
+        return bt.FAILED
+    end
+end
+
+-- Handle next action (go to empty scene)
+function M.next()
+    print("[ACTION] scene next")
+    composer.gotoScene("App.BTree_test.behaviorTree.views.emptyScene", {
+        effect = "slideLeft",
+        time = 300
+    })
+    return bt.SUCCESS
+end
+
+-- Main execute function
+function M.execute(actionTarget)
+    if not actionTarget then
+        print("[ACTION] scene - ERROR: No action target specified")
+        return bt.FAILED
+    end
+
+    -- Handle specific scene actions
+    if actionTarget == "reload" then
+        return M.reload()
+    elseif actionTarget == "next" then
+        return M.next()
+    elseif actionTarget:match("^goto%s+") then
+        return M.gotoScene(actionTarget)
+    else
+        print("[ACTION] scene - Unknown action: " .. tostring(actionTarget))
+        return bt.FAILED
     end
 end
 
