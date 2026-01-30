@@ -251,3 +251,42 @@
      - [ ] play the animation in BehaviorTree with an animation (rotation) in Kwik
 
       - [ ] receive button clicked event and play a kwik action
+
+----
+
+A kwik empty page and .tree for narrtions only
+
+1.   - [ ] run create_book script with book name with pages
+
+     ```
+     bash Scripts/create_book.command Solar2D BTree_test "narration"
+     ```
+
+1.  -  [ ] ediit main.lua to change the default book & page
+
+     ```lua
+     env.book = "BTree_test"
+     env.goPage = "narration"
+
+1. - [ ] create narration_scene.tree
+
+
+  Run from the repo root (matches usage in [Scripts/create_btree_scene.command](Scripts/create_btree_scene.command)):
+
+  ```
+  bash Scripts/create_btree_scene.command Solar2D BTree_test narration_scene.tree
+  ```
+
+  You can also pass the full tree path:
+
+  ```
+  bash Scripts/create_btree_scene.command Solar2D BTree_test Solar2D/App/BTree_test/behaviorTree/narration_scene.tree
+  ```
+
+  Or pass a scene name to create an empty tree:
+
+  ```
+  bash Scripts/create_btree_scene.command Solar2D BTree_test narration
+  ```
+
+

@@ -494,7 +494,7 @@ function M.createExecuteFunction(config)
         local actionType, actionWhat = M.parseTreeAction(actionName)
 
         if actionType and actionWhat then
-            print(logPrefix .. ": Executing tree action [" .. actionType .. " " .. actionWhat .. "]")
+            --print(logPrefix .. ": Executing tree action [" .. actionType .. " " .. actionWhat .. "]")
 
             -- Check simple routing first (direct type -> module mapping)
             if simpleRouting[actionType] then

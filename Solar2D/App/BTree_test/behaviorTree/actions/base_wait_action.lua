@@ -70,11 +70,11 @@ function BaseWaitAction.new()
             print("Wait Action: Started new wait ID " .. currentWaitId)
 
             -- Check if narration or VO is currently active
-            local narrationAction = require("actions.cabin.narration_action")
+            local narrationAction = require("actions.narration.narration_actions")
             local isNarrationActive = not narrationAction.isTypingComplete
 
             -- Check if player choices are visible
-            local showChoicesAction = require("actions.cabin.show_choices_action")
+            local showChoicesAction = require("actions.narration.show_choices_action")
             local areChoicesVisible = showChoicesAction.choicesAreVisible
 
             -- Only show next button if no narration/VO/choices are in progress
