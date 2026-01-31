@@ -114,42 +114,40 @@ function BaseNarrationAction.new(narrationTexts)
                     local result = M.eventDispatcher:dispatchEvent(event)
                     print("Narration: dispatchEvent returned: " .. tostring(result))
 
-                    -- If no VO listener handled the event (result = false), show button after delay
+                    -- If no VO listener handled the event (result = false), show button immediately
                     if not result then
-                        print("Narration: No VO waiting, will show button after 4 seconds reading time")
-                        timer.performWithDelay(4000, function()
-                            -- Don't show next button if choices are currently visible
-                            if sceneObjects and sceneObjects.choicesVisible then
-                                print("Narration: Choices are visible, not showing next button")
-                                return
-                            end
+                        print("Narration: No VO waiting, showing button immediately after typing completes")
+                        -- Don't show next button if choices are currently visible
+                        if sceneObjects and sceneObjects.choicesVisible then
+                            print("Narration: Choices are visible, not showing next button")
+                            return
+                        end
 
-                            if sceneObjects and sceneObjects.nextButton then
-                                print("Narration: Showing next button with blinking")
-                                sceneObjects.nextButton.isVisible = true
-                                sceneObjects.nextButton.alpha = 1.0
+                        if sceneObjects and sceneObjects.nextButton then
+                            print("Narration: Showing next button with blinking")
+                            sceneObjects.nextButton.isVisible = true
+                            sceneObjects.nextButton.alpha = 1.0
 
-                                -- Create blinking animation
-                                local function blinkCycle()
-                                    if sceneObjects.nextButton and sceneObjects.nextButton.removeSelf then
-                                        transition.to(sceneObjects.nextButton, {
-                                            alpha = 0.3,
-                                            time = 500,
-                                            onComplete = function()
-                                                if sceneObjects.nextButton and sceneObjects.nextButton.removeSelf then
-                                                    transition.to(sceneObjects.nextButton, {
-                                                        alpha = 1.0,
-                                                        time = 500,
-                                                        onComplete = blinkCycle
-                                                    })
-                                                end
+                            -- Create blinking animation
+                            local function blinkCycle()
+                                if sceneObjects.nextButton and sceneObjects.nextButton.removeSelf then
+                                    transition.to(sceneObjects.nextButton, {
+                                        alpha = 0.3,
+                                        time = 500,
+                                        onComplete = function()
+                                            if sceneObjects.nextButton and sceneObjects.nextButton.removeSelf then
+                                                transition.to(sceneObjects.nextButton, {
+                                                    alpha = 1.0,
+                                                    time = 500,
+                                                    onComplete = blinkCycle
+                                                })
                                             end
-                                        })
-                                    end
+                                        end
+                                    })
                                 end
-                                blinkCycle()
                             end
-                        end)
+                            blinkCycle()
+                        end
                     else
                         print("Narration: VO listener handled event, VO will control button")
                     end

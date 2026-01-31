@@ -15,6 +15,7 @@ local CHOICE_CONFIG = {
             -- Reload current scene
             local currentScene = composer.getSceneName("current")
             if currentScene then
+                composer.removeScene(currentScene)
                 composer.gotoScene(currentScene, {
                     effect = "fade",
                     time = 300

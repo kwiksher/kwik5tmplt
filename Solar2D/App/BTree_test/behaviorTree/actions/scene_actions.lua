@@ -61,9 +61,13 @@ function M.reload()
     print("[ACTION] scene reload")
     local currentScene = composer.getSceneName("current")
     if currentScene then
+        -- Use recycleOnSceneChange to force scene recreation without removing
+        -- This avoids the kwik framework cleanup that expects appName
+        composer.recycleOnSceneChange = true
         composer.gotoScene(currentScene, {
             effect = "fade",
-            time = 300
+            time = 300,
+            params = { reload = true }
         })
         return bt.SUCCESS
     else
@@ -75,10 +79,33 @@ end
 -- Handle next action (go to empty scene)
 function M.next()
     print("[ACTION] scene next")
+
+    -- Get current scene to copy props if available
+    local currentSceneName = composer.getSceneName("current")
+    local currentScene = composer.getScene(currentSceneName)
+    local params = {}
+
+    -- Store the current scene name (Kwik component scene is fine)
+    params.returnToScene = currentSceneName
+    print("[scene_actions] Setting returnToScene to: " .. tostring(currentSceneName))
+
+    -- If current scene has UI props, pass them to the next scene
+    if currentScene and currentScene.UI and currentScene.UI.props then
+        params.sceneProps = {
+            UI = currentScene.UI,
+            model = currentScene.model,
+            getCommands = currentScene.getCommands,
+            app = currentScene.app,
+            classType = currentScene.classType
+        }
+    end
+
     composer.gotoScene("App.BTree_test.behaviorTree.views.emptyScene", {
         effect = "slideLeft",
-        time = 300
+        time = 300,
+        params = params
     })
+
     return bt.SUCCESS
 end
 
