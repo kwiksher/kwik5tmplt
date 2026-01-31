@@ -108,6 +108,33 @@ function scene:create(event)
     print("narration Scene: Created successfully")
 end
 
+-- Reset action modules (called by BaseScene on show)
+function scene:resetActionModules()
+    -- Reset narration actions
+    local narrationActions = require("actions.narration.narration_actions")
+    if narrationActions.reset then
+        narrationActions.reset()
+    end
+
+    -- Reset wait action
+    local waitAction = require("actions.narration.wait_action")
+    if waitAction.reset then
+        waitAction.reset()
+    end
+
+    -- Reinitialize show choices action
+    local showChoicesAction = require("actions.narration.show_choices_action")
+    if showChoicesAction.initialize then
+        showChoicesAction.initialize(self.objs)
+    end
+
+    -- Reinitialize choice action
+    local choiceAction = require("actions.narration.choice_action")
+    if choiceAction.initialize then
+        choiceAction.initialize(self.objs)
+    end
+end
+
 function scene:show(event)
     -- Call BaseScene's onShow to handle behavior tree initialization
     self:onShow(event.phase)

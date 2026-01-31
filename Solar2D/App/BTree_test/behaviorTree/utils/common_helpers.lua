@@ -160,12 +160,8 @@ function M.methods:executeSceneStep(index)
     local step = dialogue[index]
 
     if step.type == "narration" then
-        self:showDialogue(step.text)
-        -- For simple narration without audio, show button blinking after text renders
-        -- Estimate reading time: ~50ms per character
-        local textLength = step.text and #step.text or 0
-        local readingTime = math.max(1000, textLength * 50)
-        timer.performWithDelay(readingTime, function()
+        -- Show dialogue with typing effect and call showNextButtonBlinking when done
+        self:showDialogue(step.text, function()
             self:showNextButtonBlinking()
         end)
 
@@ -186,7 +182,8 @@ function M.methods:executeSceneStep(index)
         self:executeSceneStep(index + 1)
 
     elseif step.type == "vo" then
-        self:showDialogue(step.text)
+        -- Show dialogue with typing effect, audio will handle button timing
+        self:showDialogue(step.text, nil)
         self:playSFX(step.sound)
         -- playSFX will handle showing the button when audio completes
 
@@ -256,13 +253,17 @@ function M.methods:advanceDialogue()
     self:executeSceneStep((state.currentDialogueIndex or 0) + 1)
 end
 
-function M.methods:showDialogue(text)
+function M.methods:showDialogue(text, onTypingComplete)
     local env = self._env or {}
     local dialogueText = env.dialogueText
     local nextButton = env.nextButton
     local state = env.state or {}
 
-    if dialogueText then dialogueText.text = text or "" end
+    -- Cancel any existing typing timer
+    if state.typingTimer then
+        timer.cancel(state.typingTimer)
+        state.typingTimer = nil
+    end
 
     if nextButton then
         -- Hide button initially during narration
@@ -275,6 +276,36 @@ function M.methods:showDialogue(text)
             state.blinkTransition = nil
         end
     end
+
+    if not dialogueText or not text then return end
+
+    -- Start typing effect
+    local currentIndex = 0
+    local typingSpeed = 30  -- milliseconds per character
+    local textLength = #text
+
+    -- Clear the text initially
+    dialogueText.text = ""
+
+    state.typingTimer = timer.performWithDelay(typingSpeed, function()
+        currentIndex = currentIndex + 1
+
+        if currentIndex <= textLength then
+            -- Add one more character
+            dialogueText.text = string.sub(text, 1, currentIndex)
+        else
+            -- Typing complete
+            if state.typingTimer then
+                timer.cancel(state.typingTimer)
+                state.typingTimer = nil
+            end
+
+            -- Call completion callback if provided
+            if onTypingComplete then
+                onTypingComplete()
+            end
+        end
+    end, textLength)
 end
 
 -- Make the next button blink after narration/audio completes

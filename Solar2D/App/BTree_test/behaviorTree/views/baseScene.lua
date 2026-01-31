@@ -83,17 +83,27 @@ function BaseScene:initializeDialogueInterface(onNextCallback, layoutParams)
     -- Merge layout parameters with onRelease callback
     local params = layoutParams or {}
     params.onRelease = function()
-        -- Hide button and stop blinking animation
+        print("========== BUTTON ONRELEASE FIRED ==========")
+
+        -- Cancel all transitions first to ensure button responds immediately
+        transition.cancel("buttonBlink")
+
+        -- Hide button and reset state
         if self.objs.nextButton then
-            self.objs.nextButton.isVisible = false
             transition.cancel(self.objs.nextButton)
             self.objs.nextButton.alpha = 1.0
+            self.objs.nextButton.isVisible = false
+            print("Button hidden and transitions cancelled")
         end
 
         -- Call custom callback if provided
         if onNextCallback then
+            print("Calling onNextCallback")
             onNextCallback()
+        else
+            print("WARNING: No onNextCallback provided")
         end
+        print("========== BUTTON ONRELEASE COMPLETE ==========")
     end
 
     -- Create dialogue elements (text plus navigation)
@@ -144,6 +154,53 @@ function BaseScene:onShow(phase)
     if phase == "will" then
         print(self.sceneType .. " scene showing")
 
+        -- Check if we're returning from another scene
+        local previousScene = composer.getSceneName("previous")
+        self._returningFromScene = (previousScene == "App.BTree_test.behaviorTree.views.emptyScene")
+        if self._returningFromScene then
+            print("BaseScene: Detected return from emptyScene - will not auto-tick tree")
+        end
+
+        -- Make sure scene group is visible
+        if self.view then
+            self.view.isVisible = true
+            self.view.alpha = 1
+        end
+
+        -- Ensure all UI elements are visible
+        if self.objs then
+            -- Make dialogue box visible
+            if self.objs.dialogBox then
+                self.objs.dialogBox.isVisible = true
+                self.objs.dialogBox.alpha = 1
+            end
+
+            -- Make dialogue text visible
+            if self.objs.dialogueText then
+                self.objs.dialogueText.isVisible = true
+                self.objs.dialogueText.alpha = 1
+            end
+
+            -- Reset next button (will be shown by actions as needed)
+            if self.objs.nextButton then
+                self.objs.nextButton.isVisible = false
+                self.objs.nextButton.alpha = 1
+            end
+        end
+
+        -- Reset player choice state (important for scene reloads)
+        if self.objs then
+            self.objs.playerChoice = nil
+        end
+
+        -- Reset tree started flag for scene reload
+        self._treeStarted = false
+
+        -- Call scene-specific reset if defined (for resetting action modules)
+        if self.resetActionModules then
+            self:resetActionModules()
+        end
+
         -- Initialize behavior tree controller if behavior tree exists
         if self.behaviorTree then
             local common = require("utils.common_helpers")
@@ -164,6 +221,29 @@ function BaseScene:onShow(phase)
         end
     elseif phase == "did" then
         print(self.sceneType .. " scene visible")
+
+        -- Cancel all pending timers to prevent unwanted scene transitions
+        timer.cancel("behaviorTreeTick")
+
+        -- Start the behavior tree on first display (after scene is fully shown)
+        -- Auto-tick to initialize tree state (whether first load or returning from scene)
+        if self.treeController and not self.treeController.isComplete and not self._treeStarted then
+            self._treeStarted = true
+            -- Use a tagged timer so we can cancel it if needed
+            timer.performWithDelay(100, function()
+                if self.treeController and not self.treeController.isComplete then
+                    print("BaseScene: Auto-ticking tree after scene visible")
+                    self.treeController:tick()
+                end
+            end, 1, "behaviorTreeTick")
+
+            -- Reset the returning flag after setting up the tick
+            if self._returningFromScene then
+                self._returningFromScene = false
+            end
+        else
+            print("BaseScene: Skipping auto-tick (treeStarted=" .. tostring(self._treeStarted) .. ", isComplete=" .. tostring(self.treeController and self.treeController.isComplete) .. ")")
+        end
     end
 end
 
