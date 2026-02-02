@@ -85,6 +85,15 @@ function BaseChoiceAction.new(choiceConfig)
             M.lastCompletedChoice = choiceType
             M.currentChoice = nil
             M.isTypingComplete = true
+
+            -- Execute callback if available
+            local choiceConfig = config[choiceType]
+            if choiceConfig and choiceConfig.callback then
+                timer.performWithDelay(1000, function()
+                    choiceConfig.callback()
+                end)
+            end
+
             return bt.SUCCESS
         end
 

@@ -22,7 +22,7 @@ end
 
 -- Register animation-specific actions
 M.ACTIONS = {
-    ["counter"] = function()
+    counter = function()
         return M.incrementCounter()
     end,
 }
@@ -43,17 +43,6 @@ function M.incrementCounter()
     end
 
     return bt.SUCCESS
-end
-
--- Execute function for action controller
-function M.execute(actionName)
-    local action = M.ACTIONS[actionName]
-    if action then
-        return action()
-    else
-        print("Warning: Unknown action: " .. tostring(actionName))
-        return bt.FAILED
-    end
 end
 
 return M

@@ -4,52 +4,41 @@
 -- Parses scene name from action and transitions using composer
 -------------------------------------------------------------------------------
 local bt = require("utils.btree")
-local actionHelper = require("utils.action_helper")
+local BaseSceneAction = require("actions.base_scene_action")
 local composer = require("composer")
-
--- Create action module with helper methods
-local M = actionHelper.createModule()
-
--- Debug flag - set to false to only show debug logs
-M.DEBUG_ENABLED = true
 
 -- Scene objects reference
 local sceneObjects = {}
 
--- Override initialize to store scene objects
-function M.initialize(objects)
-    sceneObjects = objects
-    M.sceneObjects = objects
-end
-
--- Parse scene name from action string
--- Example: "goto buttonScene" -> "buttonScene"
---          "goto button" -> "buttonScene"
---          "goto animationScene" -> "animationScene"
-local function parseSceneName(actionName)
-    -- Extract the scene name after "goto "
-    local sceneName = actionName:match("^goto%s+(.+)$")
-    if sceneName then
-        -- Only add "Scene" suffix if not already present
-        if not sceneName:match("Scene$") then
-            sceneName = sceneName .. "Scene"
-        end
-        return sceneName
-    end
-    return nil
-end
-
 -- Generic scene transition
-function M.gotoScene(actionName)
-    local sceneName = parseSceneName(actionName)
-
+local function gotoScene(sceneName)
     if not sceneName then
-        print("[ACTION] goto - ERROR: Could not parse scene name from: " .. tostring(actionName))
+        print("[ACTION] goto - ERROR: Could not parse scene name")
         return bt.FAILED
     end
 
-    print("[ACTION] goto " .. sceneName)
-    composer.gotoScene(sceneName, {
+    -- Map scene names to their full paths
+    -- Check if uiHandler has enableBehaviorTree for component-based paths
+    local uiHandler = pcall(require, "App.uiHandler") and require("App.uiHandler")
+    local useComponentPaths = uiHandler and uiHandler.enableBehaviorTree
+
+    local scenePathMap
+    if useComponentPaths then
+        scenePathMap = {
+            buttonScene = "App.BTree_test.components.button.index",
+            animationScene = "App.BTree_test.components.animation.index",
+        }
+    else
+        scenePathMap = {
+            buttonScene = "views.button.buttonScene",
+            animationScene = "views.animation.animationScene",
+        }
+    end
+
+    local targetScene = scenePathMap[sceneName] or sceneName
+
+    print("[ACTION] goto " .. targetScene)
+    composer.gotoScene(targetScene, {
         effect = "fade",
         time = 300
     })
@@ -57,7 +46,7 @@ function M.gotoScene(actionName)
 end
 
 -- Handle reload action
-function M.reload()
+local function reloadScene()
     print("[ACTION] scene reload")
     local currentScene = composer.getSceneName("current")
     if currentScene then
@@ -77,7 +66,7 @@ function M.reload()
 end
 
 -- Handle next action (go to empty scene)
-function M.next()
+local function nextScene()
     print("[ACTION] scene next")
 
     -- Get current scene to copy props if available
@@ -109,24 +98,20 @@ function M.next()
     return bt.SUCCESS
 end
 
--- Main execute function
-function M.execute(actionTarget)
-    if not actionTarget then
-        print("[ACTION] scene - ERROR: No action target specified")
-        return bt.FAILED
-    end
+-- Create module using base class
+local M = BaseSceneAction.new({
+    reload = reloadScene,
+    next = nextScene,
+    gotoScene = gotoScene,
+})
 
-    -- Handle specific scene actions
-    if actionTarget == "reload" then
-        return M.reload()
-    elseif actionTarget == "next" then
-        return M.next()
-    elseif actionTarget:match("^goto%s+") then
-        return M.gotoScene(actionTarget)
-    else
-        print("[ACTION] scene - Unknown action: " .. tostring(actionTarget))
-        return bt.FAILED
-    end
+-- Debug flag - set to false to only show debug logs
+M.DEBUG_ENABLED = true
+
+-- Override initialize to store scene objects
+function M.initialize(objects)
+    sceneObjects = objects
+    M.sceneObjects = objects
 end
 
 return M
