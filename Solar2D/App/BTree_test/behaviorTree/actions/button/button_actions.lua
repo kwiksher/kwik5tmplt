@@ -13,29 +13,9 @@ local M = actionHelper.createModule()
 -- Debug flag - set to false to only show debug logs
 M.DEBUG_ENABLED = false
 
--- Scene objects reference
-local sceneObjects = {}
-
--- Override initialize to store scene objects
-function M.initialize(objects)
-    sceneObjects = objects
-    M.sceneObjects = objects
-end
-
 -- Register button-specific actions
 M.ACTIONS = {
     -- No button-specific actions currently, only generic scene transitions
 }
-
--- Execute function for action controller
-function M.execute(actionName)
-    local action = M.ACTIONS[actionName]
-    if action then
-        return action()
-    else
-        print("Warning: Unknown action: " .. tostring(actionName))
-        return bt.FAILED
-    end
-end
 
 return M

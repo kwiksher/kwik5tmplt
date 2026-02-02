@@ -11,8 +11,8 @@ local M = {}
 function M.createModule()
     local actionModule = {}
 
-    -- Scene objects reference (to be set by initialize)
-    actionModule.sceneObjects = {}
+    -- Objects reference (to be set by initialize)
+    actionModule.objects = {}
 
     -- Action registry (to be populated by child module)
     actionModule.ACTIONS = {}
@@ -22,7 +22,7 @@ function M.createModule()
 
     -- Default initialize function
     function actionModule.initialize(objects)
-        actionModule.sceneObjects = objects
+        actionModule.objects = objects
     end
 
     -- Reset completion tracking (call when tree restarts)
@@ -53,9 +53,9 @@ function M.createModule()
 
     -- Helper: Check if an object exists in sceneObjects
     function actionModule.checkObject(objectName)
-        if not actionModule.sceneObjects[objectName] then
+        if not actionModule.objects[objectName] then
             print("Error: " .. objectName .. " object not found")
-            -- for i, v in pairs(actionModule.sceneObjects) do print(i, v) end
+            -- for i, v in pairs(actionModule.objects) do print(i, v) end
             return false
         end
         return true
@@ -68,7 +68,7 @@ function M.createModule()
         end
 
         fadeTime = fadeTime or 1000
-        local obj = actionModule.sceneObjects[objectName]
+        local obj = actionModule.objects[objectName]
 
         print("DEBUG showObject: BEFORE - " .. objectName .. " type=" .. type(obj) .. ", isVisible=" .. tostring(obj.isVisible) .. ", alpha=" .. tostring(obj.alpha))
         print("DEBUG showObject: Position x=" .. tostring(obj.x) .. ", y=" .. tostring(obj.y))
@@ -102,7 +102,7 @@ function M.createModule()
         end
 
         fadeTime = fadeTime or 1000
-        local obj = actionModule.sceneObjects[objectName]
+        local obj = actionModule.objects[objectName]
 
         transition.fadeOut(obj, {
             time = fadeTime,
@@ -126,12 +126,12 @@ function M.createModule()
             return bt.FAILED
         end
 
-        local obj = actionModule.sceneObjects[objectName]
+        local obj = actionModule.objects[objectName]
         print("DEBUG changeState: Before - obj type: " .. type(obj))
         local newObj = viewModule:changeState(obj, stateName)
         print("DEBUG changeState: After changeState - newObj type: " .. type(newObj))
-        actionModule.sceneObjects[objectName] = newObj
-        print("DEBUG changeState: After assignment - sceneObjects[" .. objectName .. "] type: " .. type(actionModule.sceneObjects[objectName]))
+        actionModule.objects[objectName] = newObj
+        print("DEBUG changeState: After assignment - objects[" .. objectName .. "] type: " .. type(actionModule.objects[objectName]))
 
         print("Changed " .. objectName .. " to " .. stateName)
         return bt.SUCCESS
@@ -143,7 +143,7 @@ function M.createModule()
             return bt.FAILED
         end
 
-        actionModule.sceneObjects[objectName].isVisible = visible
+        actionModule.objects[objectName].isVisible = visible
         print("Set " .. objectName .. " visibility to " .. tostring(visible))
         return bt.SUCCESS
     end
@@ -155,7 +155,7 @@ function M.createModule()
         end
 
         time = time or 500
-        local obj = actionModule.sceneObjects[objectName]
+        local obj = actionModule.objects[objectName]
 
         transition.to(obj, {
             x = x,
@@ -175,7 +175,7 @@ function M.createModule()
 
         time = time or 500
         yScale = yScale or xScale
-        local obj = actionModule.sceneObjects[objectName]
+        local obj = actionModule.objects[objectName]
 
         transition.to(obj, {
             xScale = xScale,
@@ -194,7 +194,7 @@ function M.createModule()
         end
 
         time = time or 500
-        local obj = actionModule.sceneObjects[objectName]
+        local obj = actionModule.objects[objectName]
 
         transition.to(obj, {
             rotation = rotation,
@@ -702,21 +702,69 @@ end
 
 -- Create a simple action controller from module paths
 -- modulePaths: table of { name = "path.to.module" }
--- showMapping: table of { target = moduleName } (optional)
--- logPrefix: optional log prefix (default: "Action Controller")
+-- options: table with optional configuration:
+--   showMapping: table of { target = moduleName } (optional)
+--   simpleRouting: table of { actionType = moduleName } (optional)
+--   logPrefix: optional log prefix (default: "Action Controller")
 -- Returns: a controller module with initialize, execute, getAction, listActions, getActionCount
-function M.new(modulePaths, showMapping, logPrefix)
+function M.new(modulePaths, options, logPrefix)
+    -- Handle backward compatibility: if options is a string, treat it as logPrefix
+    if type(options) == "string" then
+        logPrefix = options
+        options = {}
+    end
+
+    options = options or {}
     local controller
 
     local M_controller = {}
 
     function M_controller.initialize(objects)
-        controller = M.setupActionController({
-            modulePaths = modulePaths,
-            objects = objects,
+        -- Load all modules
+        local actions = M.loadActionModules(modulePaths, objects)
+        print((logPrefix or "Action Controller") .. ": Loaded " .. M.countModules(actions) .. " action modules")
+
+        -- Build simple routing from options
+        local simpleRouting = {}
+        if options.simpleRouting then
+            for actionType, moduleName in pairs(options.simpleRouting) do
+                simpleRouting[actionType] = actions[moduleName]
+            end
+        end
+
+        -- Create config
+        local config = {
+            modules = actions,
             logPrefix = logPrefix or "Action Controller",
-            showMapping = showMapping
-        })
+            simpleRouting = simpleRouting,
+            complexRouting = {}
+        }
+
+        -- Add show mapping if provided
+        if options.showMapping then
+            local showRouting = {}
+            for target, moduleName in pairs(options.showMapping) do
+                showRouting[target] = actions[moduleName]
+            end
+            config.complexRouting.show = showRouting
+        end
+
+        -- Create execute function
+        local executeFunc = M.createExecuteFunction(config)
+
+        controller = {
+            actions = actions,
+            execute = executeFunc,
+            getAction = function(actionName)
+                return actions[actionName]
+            end,
+            listActions = function()
+                return M.buildActionList(actions)
+            end,
+            getActionCount = function()
+                return M.countModules(actions)
+            end,
+        }
     end
 
     function M_controller.execute(actionName)

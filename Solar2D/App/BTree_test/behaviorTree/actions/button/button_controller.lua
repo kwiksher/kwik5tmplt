@@ -10,42 +10,15 @@ local modulePaths = {
     scene = "actions.scene_actions",
 }
 
--- Create controller
-local M = {}
-local controller
-
-function M.initialize(objects)
-    -- Load all modules
-    local actions = actionHelper.loadActionModules(modulePaths, objects)
-    print("Button Action Controller: Loaded " .. actionHelper.countModules(actions) .. " action modules")
-
-    -- Create config with routing
-    local config = {
-        modules = actions,
-        logPrefix = "Button Action Controller",
+-- Create controller using action_helper.new with custom routing
+local M = actionHelper.new(
+    modulePaths,
+    {
         simpleRouting = {
-            goto = actions.scene,
+            goto = "scene",
         }
-    }
-
-    -- Create execute function
-    local executeFunc = actionHelper.createExecuteFunction(config)
-
-    controller = {
-        actions = actions,
-        execute = executeFunc,
-    }
-
-    print("Button Action Controller: Initialized successfully")
-end
-
--- Execute function delegates to controller
-function M.execute(actionName)
-    if not controller then
-        print("Error: Button Action Controller not initialized!")
-        return require("utils.btree").FAILED
-    end
-    return controller.execute(actionName)
-end
+    },
+    "Button Action Controller"
+)
 
 return M

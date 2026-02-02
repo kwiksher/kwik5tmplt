@@ -39,23 +39,4 @@ local CHOICE_CONFIG = {
 -- Create module using base class
 local M = BaseChoiceAction.new(CHOICE_CONFIG)
 
--- Override execute to handle callbacks after narration completes
-local originalExecute = M.execute
-function M.execute(choiceType)
-    local result = originalExecute(choiceType)
-
-    -- If action just completed (returning SUCCESS and has callback)
-    if result == require("utils.btree").SUCCESS and M.lastCompletedChoice == choiceType then
-        local config = CHOICE_CONFIG[choiceType]
-        if config and config.callback then
-            -- Small delay to let the narration be visible
-            timer.performWithDelay(1000, function()
-                config.callback()
-            end)
-        end
-    end
-
-    return result
-end
-
 return M

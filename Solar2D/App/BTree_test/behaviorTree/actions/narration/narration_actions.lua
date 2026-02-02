@@ -16,32 +16,9 @@ local narrationTexts = {
 local M = BaseNarrationAction.new(narrationTexts)
 local waitAction = BaseWaitAction.new()
 
-function M.action_cabin_scene()
-    return M.showNarration("cabin_scene")
-end
-
-function M.action_for_next()
+-- Register additional special actions
+M.ACTIONS["for next"] = function()
     return waitAction.executeWaitForNext()
-end
-
-function M.action_forest_quiet()
-    return M.showNarration("forest_quiet")
-end
-
-M.ACTIONS = {
-    ["cabin_scene"] = function() return M.action_cabin_scene() end,
-    ["for next"] = function() return M.action_for_next() end,
-    ["forest_quiet"] = function() return M.action_forest_quiet() end,
-}
-
-function M.execute(actionName)
-    local action = M.ACTIONS[actionName]
-    if action then
-        return action()
-    else
-        print("Warning: Unknown action: " .. tostring(actionName))
-        return bt.FAILED
-    end
 end
 
 return M
