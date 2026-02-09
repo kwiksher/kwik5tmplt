@@ -8,14 +8,14 @@ local M = {}
 
 -- Default style configuration for choice buttons
 M.defaultStyle = {
-    width = 100,
-    height = 30,
-    cornerRadius = 8,
+    width = 25,
+    height = 8,
+    cornerRadius = 4,
     fillColor = {0.2, 0.3, 0.5},
     strokeColor = {0.8, 0.8, 0.8},
-    strokeWidth = 3,
+    strokeWidth = 2,
     font = native.systemFontBold,
-    fontSize = 18,
+    fontSize = 10,
     textColor = {1, 1, 1}
 }
 
