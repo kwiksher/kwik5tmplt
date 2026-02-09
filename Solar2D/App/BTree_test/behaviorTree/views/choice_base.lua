@@ -16,7 +16,9 @@ M.defaultStyle = {
     strokeWidth = 2,
     font = native.systemFontBold,
     fontSize = 10,
-    textColor = {1, 1, 1}
+    textColor = {1, 1, 1},
+    paddingHorizontal = 12,
+    paddingVertical = 6
 }
 
 -------------------------------------------------------------------------------
@@ -43,7 +45,9 @@ function M.createChoiceButton(parentGroup, label, x, y, choiceValue, onChoiceSel
         strokeWidth = style.strokeWidth or M.defaultStyle.strokeWidth,
         font = style.font or M.defaultStyle.font,
         fontSize = style.fontSize or M.defaultStyle.fontSize,
-        textColor = style.textColor or M.defaultStyle.textColor
+        textColor = style.textColor or M.defaultStyle.textColor,
+        paddingHorizontal = style.paddingHorizontal or M.defaultStyle.paddingHorizontal,
+        paddingVertical = style.paddingVertical or M.defaultStyle.paddingVertical
     }
 
     -- Create button background
@@ -51,8 +55,8 @@ function M.createChoiceButton(parentGroup, label, x, y, choiceValue, onChoiceSel
         parentGroup,
         x,
         y,
-        buttonStyle.width,
-        buttonStyle.height,
+        buttonStyle.width + buttonStyle.paddingHorizontal * 2,
+        buttonStyle.height + buttonStyle.paddingVertical * 2,
         buttonStyle.cornerRadius
     )
     button.strokeWidth = buttonStyle.strokeWidth
@@ -68,6 +72,8 @@ function M.createChoiceButton(parentGroup, label, x, y, choiceValue, onChoiceSel
         font = buttonStyle.font,
         fontSize = buttonStyle.fontSize
     })
+    buttonText.x = x
+    buttonText.y = y
     buttonText:setFillColor(unpack(buttonStyle.textColor))
 
     -- Initially hide button
