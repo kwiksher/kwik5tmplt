@@ -248,11 +248,12 @@ function M.createDialogueInterface(uiGroup, params)
         textColor = {1, 1, 1, 1},
         buttonLabel = "Next",
         buttonShape = "roundedRect",
-        buttonWidth = 120,
+        buttonWidth = nil,
         buttonHeight = 50,
         buttonCornerRadius = 10,
         buttonFillColor = { default = {0.2, 0.5, 0.2, 1}, over = {0.3, 0.6, 0.3, 1} },
         buttonLabelColor = { default = {1, 1, 1}, over = {0.8, 0.8, 0.8} },
+        buttonPadding = 22,
         onRelease = function() end,
         buttonX = contentWidth - 100,
         buttonY = contentHeight - 60,
@@ -282,7 +283,18 @@ function M.createDialogueInterface(uiGroup, params)
 
     local labelFontSize = opts.buttonFontSize or math.max(opts.buttonHeight * 0.5, 14)
     local buttonLabelText = opts.buttonLabel or ""
-    local resolvedButtonWidth = opts.buttonWidth or math.ceil(labelFontSize * #buttonLabelText * 0.65) + 12
+    local buttonFontName = opts.buttonFont or opts.font or native.systemFontBold
+    local measuredButtonLabelSize = display.newText({
+        text = buttonLabelText,
+        font = buttonFontName,
+        fontSize = labelFontSize
+    })
+    local buttonLabelWidth = measuredButtonLabelSize and measuredButtonLabelSize.width or 0
+    if measuredButtonLabelSize then
+        measuredButtonLabelSize:removeSelf()
+    end
+    local buttonPadding = opts.buttonPadding or 22
+    local resolvedButtonWidth = opts.buttonWidth or math.ceil(buttonLabelWidth + buttonPadding)
 
     -- Calculate text layout with room for the Next button + padding
     local buttonReservedSpace = resolvedButtonWidth + 40
