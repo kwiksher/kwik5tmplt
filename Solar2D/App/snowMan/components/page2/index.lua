@@ -6,7 +6,7 @@ local model = {
     layers = {
       {
         Layer_1 = {
-        }
+          class={ "properties", }  }
       },
       {
         ground = {
