@@ -1,7 +1,10 @@
 local env = require("env")
 
+
 env.book = "BTree_test"
-env.goPage = "animation"
+--env.goPage = "animation"
+--env.goPage = "button"
+env.goPage = "narration"
 
 
 -- env.book = "book"
@@ -66,7 +69,10 @@ elseif env.mode == "behaviorTree" then
   require("custom.components.myComponent")
 
   local resourcePath = system.pathForFile("", system.ResourceDirectory)
-  local appPath = "/App/TheLastSpark/behaviorTree"
+
+--  local appPath = "/App/TheLastSpark/behaviorTree"
+  local appPath = "/App/BTree_test/behaviorTree"
+
   package.path = resourcePath .. appPath.."/?.lua;" .. resourcePath .. appPath.."/?/?.lua;"..package.path
 
     -- Require Composer for scene management
@@ -74,7 +80,9 @@ elseif env.mode == "behaviorTree" then
 
   -- Start with the forest scene
   -- composer.gotoScene("views.forest.forestScene")
-  composer.gotoScene("views.cabin.cabinScene")
+  -- composer.gotoScene("views.cabin.cabinScene")
+  composer.gotoScene("views.animation.animationScene")
+
 
   --Start automated test after scene loads
   -- timer.performWithDelay(1000, function()
