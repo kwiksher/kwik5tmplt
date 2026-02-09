@@ -31,7 +31,7 @@ local dialogY = safeBottomY - dialogHeight * 0.5
 local nextButtonY = safeBottomY - buttonHeight * 0.5
 local dialogWidth = math.max(safeWidth - 48, 280)
 local buttonX = safeOriginX + safeWidth - buttonWidth * 0.5 - dialogMargin
-local choiceY = nextButtonY - buttonHeight - 8
+local choiceY = dialogY
 local choiceOffset = 90
 
 local layout = {
