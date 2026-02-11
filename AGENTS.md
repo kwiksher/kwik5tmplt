@@ -67,6 +67,10 @@ cd Solar2D
 - `env.mode` toggles behavior (development/debug/production/behaviorTree) in `Solar2D/main.lua`.
 - Some workflows expect `UXP/copy_solar2d.command` and `UXP/copy_photoshop.command` to exist and be executable.
 
+## GitButler MCP
+
+- **Instruction**: "Whenever you modify files or create new code, you MUST immediately call the GitButler MCP 'update-virtual-branches' tool. Do not wait for me to ask. Ensure all changes are correctly categorized into their respective virtual lanes. Report what files are notified to GitButtler"
+
 ## File Locking Protocol
 To prevent write conflicts and ensure atomic edits in this environment:
 
