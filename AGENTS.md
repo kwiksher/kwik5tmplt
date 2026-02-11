@@ -66,3 +66,17 @@ cd Solar2D
 - Multiple entrypoints (`Solar2D/main.lua` and `Solar2D/App/main.lua`) exist; ensure changes target the right one for your workflow.
 - `env.mode` toggles behavior (development/debug/production/behaviorTree) in `Solar2D/main.lua`.
 - Some workflows expect `UXP/copy_solar2d.command` and `UXP/copy_photoshop.command` to exist and be executable.
+
+## File Locking Protocol
+To prevent write conflicts and ensure atomic edits in this environment:
+
+1. **Check for Lock**: Before editing any file, check for a lock file named `[filename].lock`.
+2. **Wait/Retry**: If a `.lock` file exists, wait 2 seconds and retry. Do not attempt to write while the lock is active.
+3. **Acquire Lock**:
+   - Before writing, create the `.lock` file: `touch path/to/file.ts.lock`.
+   - If using Linux/macOS, prefer using `flock` for execution: `flock path/to/file.ts.lock -c "your_write_command"`.
+4. **Release Lock**: Delete the `.lock` file immediately after the write operation is confirmed.
+5. **GitButler Awareness**: You are working in a GitButler Virtual Branch environment. Ensure your edits are surgical (limit changes to relevant hunks) so GitButler can automatically categorize them into separate virtual lanes.
+
+### Critical Safety
+- Never delete a `.lock` file that you did not create unless it is older than 5 minutes (stale lock).
