@@ -25,7 +25,7 @@ local _print = print
 
 -- Paths to filter out from print output
 local printFilters = {
-  "behaviorTree",
+  -- "behaviorTree",
   "editor/tests/index.lua",
   -- Add more filter patterns here as needed
 }
