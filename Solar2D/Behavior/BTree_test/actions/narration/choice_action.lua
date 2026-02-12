@@ -28,7 +28,7 @@ local CHOICE_CONFIG = {
         scene = "continue",
         callback = function()
             -- Go to empty scene
-            composer.gotoScene("App.BTree_test.behaviorTree.views.emptyScene", {
+            composer.gotoScene("Behavior.BTree_test.views.emptyScene", {
                 effect = "slideLeft",
                 time = 300
             })

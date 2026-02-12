@@ -89,7 +89,7 @@ local function nextScene()
         }
     end
 
-    composer.gotoScene("App.BTree_test.behaviorTree.views.emptyScene", {
+    composer.gotoScene("Behavior.BTree_test.views.emptyScene", {
         effect = "slideLeft",
         time = 300,
         params = params
