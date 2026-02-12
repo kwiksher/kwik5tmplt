@@ -1,5 +1,6 @@
 local env = require("env")
 
+<<<<<<< ours
 
 env.book = "BTree_test"
 <<<<<<< ours
@@ -11,6 +12,15 @@ env.goPage = "animation"
 =======
 env.goPage = "narration"
 --env.goPage = "animation"
+>>>>>>> theirs
+||||||| ancestor
+env.book = "BTree_test"
+env.goPage = "narration"
+--env.goPage = "animation"
+=======
+env.book = "TheLastSpark"
+env.goPage = "forest"
+--env.goPage = "cabin"
 >>>>>>> theirs
 
 
@@ -76,10 +86,16 @@ elseif env.mode == "behaviorTree" then
   require("custom.components.myComponent")
 
   local resourcePath = system.pathForFile("", system.ResourceDirectory)
+<<<<<<< ours
 
 --  local appPath = "/App/TheLastSpark/behaviorTree"
   local appPath = "/App/BTree_test/behaviorTree"
 
+||||||| ancestor
+  local appPath = "/App/TheLastSpark/behaviorTree"
+=======
+  local appPath = "/Behavior/TheLastSpark"
+>>>>>>> theirs
   package.path = resourcePath .. appPath.."/?.lua;" .. resourcePath .. appPath.."/?/?.lua;"..package.path
 
     -- Require Composer for scene management

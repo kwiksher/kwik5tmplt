@@ -1,0 +1,96 @@
+->
+|    [scene cabin_door]
+|    ?
+|    |    ->
+|    |    |    !(has iron key)
+|    |    |    [narration cabin_exterior]
+|    |    |    [show elara]
+|    |    |    [wait for next]
+|    |    |    [sfx door_rattle]
+|    |    |    [wait for next]
+|    |    |    ?
+|    |    |    |    ->
+|    |    |    |    |    (key visible near doorstep)
+|    |    |    |    |    [show iron_key]
+|    |    |    |    |    [wait for next]
+|    |    |    |    ->
+|    |    |    |    |    !(key visible near doorstep)
+|    |    |    |    |    [narration search_near_door]
+|    |    |    |    |    [show iron_key]
+|    |    |    |    |    [wait for next]
+|    |    ->
+|    |    |    (has iron key)
+|    |    |    [sfx door_creak]
+|    |    |    [scene door_open]
+|    |    |    [wait for next]
+|    ->
+|    |    (is door open)
+|    |    [scene cabin_interior]
+|    |    [music ambient_cabin]
+|    |    [show luminseed]
+|    |    [emotion elara happy]
+|    |    [vo vo_elara_seed_found]
+|    |    [wait for next]
+|    ->
+|    |    [show chest]
+|    |    [wait for next]
+|    |    ?
+|    |    |    ->
+|    |    |    |    (has brass key)
+|    |    |    |    [sfx lock_click]
+|    |    |    |    [sfx chest_creak]
+|    |    |    |    [scene chest_open]
+|    |    |    |    [wait for next]
+|    |    |    ->
+|    |    |    |    !(has brass key)
+|    |    |    |    [vo vo_elara_need_key]
+|    |    |    |    [wait for next]
+|    |    |    |    ?
+|    |    |    |    |    ->
+|    |    |    |    |    |    (searched floorboard)
+|    |    |    |    |    |    [show loose_floorboard]
+|    |    |    |    |    |    [show brass_key]
+|    |    |    |    |    |    [wait for next]
+|    |    |    |    |    ->
+|    |    |    |    |    |    !(searched floorboard)
+|    |    |    |    |    |    [narration search_room]
+|    |    |    |    |    |    [show loose_floorboard]
+|    |    |    |    |    |    [wait for next]
+|    ->
+|    |    (is chest open)
+|    |    [scene empty_chest]
+|    |    [emotion elara shocked]
+|    |    [vo vo_elara_shock_01]
+|    |    [wait for next]
+|    |    [vo vo_elara_shock_02]
+|    |    [wait for next]
+|    ->
+|    |    [sfx door_slam]
+|    |    [scene door_sealed]
+|    |    [sfx shake]
+|    |    [music tension]
+|    |    [emotion elara panicking]
+|    |    [vo vo_elara_panic]
+|    |    [wait for next]
+|    ->
+|    |    [narration trapped_in_cabin]
+|    |    [ui show_choices]
+|    |    ?
+|    |    |    ->
+|    |    |    |    (player choice force_door)
+|    |    |    |    [focus cabin_door]
+|    |    |    |    [choice force_door]
+|    |    |    |    [wait for next]
+|    |    |    |    [scene force_door]
+|    |    |    ->
+|    |    |    |    (player choice window)
+|    |    |    |    [focus boarded_window]
+|    |    |    |    [choice window]
+|    |    |    |    [wait for next]
+|    |    |    |    [scene window_escape]
+|    |    |    ->
+|    |    |    |    (player choice markings)
+|    |    |    |    [focus arcane_markings]
+|    |    |    |    [choice markings]
+|    |    |    |    [wait for next]
+|    |    |    |    [scene arcane_markings]
