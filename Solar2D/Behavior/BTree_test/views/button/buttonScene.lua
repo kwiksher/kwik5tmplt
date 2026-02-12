@@ -48,7 +48,7 @@ function scene:create(event)
     conditionController.initialize(self.objs)
 
     -- Load behavior tree and register handlers
-    self.behaviorTree = common.loadBehaviorTree("App/BTree_test/behaviorTree/button_scene.tree", actionController, nil)
+    self.behaviorTree = common.loadBehaviorTree("Behavior/BTree_test/button_scene.tree", actionController, nil)
 
     -- Store reference for button creation after tree controller is set up
     self.createButton = function()

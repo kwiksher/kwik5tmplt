@@ -97,7 +97,7 @@ function scene:create(event)
     actionController.initialize(self.objs)
     conditionController.initialize(self.objs)
 
-    self.behaviorTree = common.loadBehaviorTree("App/BTree_test/behaviorTree/narration_scene.tree", actionController, nil)
+    self.behaviorTree = common.loadBehaviorTree("Behavior/BTree_test/narration_scene.tree", actionController, nil)
 
     -- Store condition controller for use in BaseScene's onShow
     self.conditionController = conditionController
