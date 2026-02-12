@@ -88,7 +88,7 @@ function scene:create(event)
     conditionController.initialize(self.objs)
 
     -- Load behavior tree and register action handler
-    self.behaviorTree = common.loadBehaviorTree("App/BTree_test/behaviorTree/animation_scene.tree", actionController, nil)
+    self.behaviorTree = common.loadBehaviorTree("Behavior/BTree_test/animation_scene.tree", actionController, nil)
 
     print("Animation Scene: Created successfully")
 end
