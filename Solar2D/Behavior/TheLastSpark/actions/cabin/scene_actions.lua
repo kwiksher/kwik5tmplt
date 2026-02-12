@@ -3,8 +3,8 @@
 -- Accepts action parameter to specify which scene transition
 -- Uses action_helper for common functionality
 
-local bt = require("utils.btree")
-local actionHelper = require("utils.action_helper")
+local bt = require("behaivor.btree")
+local actionHelper = require("behaivor.action_helper")
 local composer = require("composer")
 
 -- Create action module with helper methods

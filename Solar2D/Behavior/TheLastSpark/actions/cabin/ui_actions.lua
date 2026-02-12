@@ -1,7 +1,7 @@
 -- UI Actions (Cabin Scene)
 -- Uses base UI action
 
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 local BaseUIAction = require("actions.base_ui_action")
 
 -- Create module using base class
