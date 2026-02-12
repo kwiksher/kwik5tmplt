@@ -22,7 +22,7 @@ end
 local resourcePath = system.pathForFile("", system.ResourceDirectory)
 --
 --local appPath = "/App/TheLastSpark/behaviorTree"
-local appPath = "/App/BTree_test/behaviorTree"
+local appPath = "/Behavior/BTree_test"
 
 package.path = resourcePath .. appPath.."/?.lua;" .. resourcePath .. appPath.."/?/?.lua;"..package.path
 
@@ -38,10 +38,10 @@ function M:init(UI)
   --
   --  behaviorTree
   --
-  local path = "App/"..props.appName.."/behaviorTree/"..UI.page.."_scene.tree"
+  local path = "Behavior/"..props.appName.."/"..UI.page.."_scene.tree"
   local fullPath = system.pathForFile(path, system.ResourceDirectory)
   if enableBehaviorTree and fullPath and util.isFile(fullPath) then
-    UI.behaviorTree = require("App."..props.appName..".behaviorTree.views."..UI.page.."."..UI.page.."Scene")
+    UI.behaviorTree = require("Behavior."..props.appName..".views."..UI.page.."."..UI.page.."Scene")
     UI.behaviorTree.view = UI.sceneGroup
     UI.behaviorTree.UI = UI
   else
