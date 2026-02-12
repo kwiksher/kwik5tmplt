@@ -2,9 +2,16 @@ local env = require("env")
 
 
 env.book = "BTree_test"
+<<<<<<< ours
 --env.goPage = "animation"
 --env.goPage = "button"
 env.goPage = "narration"
+||||||| ancestor
+env.goPage = "animation"
+=======
+env.goPage = "narration"
+--env.goPage = "animation"
+>>>>>>> theirs
 
 
 -- env.book = "book"
