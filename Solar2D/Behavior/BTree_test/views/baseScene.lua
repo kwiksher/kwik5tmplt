@@ -156,7 +156,7 @@ function BaseScene:onShow(phase)
 
         -- Check if we're returning from another scene
         local previousScene = composer.getSceneName("previous")
-        self._returningFromScene = (previousScene == "App.BTree_test.behaviorTree.views.emptyScene")
+        self._returningFromScene = (previousScene == "Behavior.BTree_test.views.emptyScene")
         if self._returningFromScene then
             print("BaseScene: Detected return from emptyScene - will not auto-tick tree")
         end
