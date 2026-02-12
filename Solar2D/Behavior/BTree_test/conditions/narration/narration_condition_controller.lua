@@ -2,7 +2,7 @@
 -- narration Condition Controller
 -- Auto-generated scaffold
 -------------------------------------------------------------------------------
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 
 -- Module paths
 local modulePaths = {

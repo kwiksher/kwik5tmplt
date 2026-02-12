@@ -3,7 +3,7 @@
 -- Base class for choice actions that handle player choices with narration
 -- Manages typing animation and button visibility
 -------------------------------------------------------------------------------
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 
 local BaseChoiceAction = {}
 

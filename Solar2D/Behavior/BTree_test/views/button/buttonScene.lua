@@ -3,7 +3,7 @@
 -- Shows a button that returns to animation scene
 -------------------------------------------------------------------------------
 local BaseScene = require("views.baseScene")
-local common = require("utils.common_helpers")
+local common = require("behaivor.common_helpers")
 local displayManager = require("views.display_manager")
 local widget = require("widget")
 
@@ -11,7 +11,7 @@ local widget = require("widget")
 local scene = BaseScene:new("button")
 
 -- BTree components
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 local actionController = require("actions.button.button_controller")
 local conditionController = require("conditions.button.button_condition_controller")
 

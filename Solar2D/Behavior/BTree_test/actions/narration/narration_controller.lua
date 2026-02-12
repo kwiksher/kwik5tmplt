@@ -2,8 +2,8 @@
 -- narration Action Controller
 -- Auto-generated scaffold
 -------------------------------------------------------------------------------
-local actionHelper = require("utils.action_helper")
-local bt = require("utils.btree")
+local actionHelper = require("behaivor.action_helper")
+local bt = require("behaivor.btree")
 
 -- Module paths
 local modulePaths = {

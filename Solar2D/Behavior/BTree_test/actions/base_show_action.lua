@@ -3,7 +3,7 @@
 -- Base class for show actions that display various UI elements
 -- Manages action registration and execution
 -------------------------------------------------------------------------------
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 
 local BaseShowAction = {}
 

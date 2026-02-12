@@ -2,8 +2,8 @@
 -- Button Actions
 -- Actions for creating and handling button interactions
 -------------------------------------------------------------------------------
-local bt = require("utils.btree")
-local actionHelper = require("utils.action_helper")
+local bt = require("behaivor.btree")
+local actionHelper = require("behaivor.action_helper")
 local composer = require("composer")
 local widget = require("widget")
 

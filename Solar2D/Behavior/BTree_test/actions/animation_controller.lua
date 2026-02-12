@@ -2,7 +2,7 @@
 -- Animation Action Controller
 -- Manages all action modules for the animation scene BTree
 -------------------------------------------------------------------------------
-local actionHelper = require("utils.action_helper")
+local actionHelper = require("behaivor.action_helper")
 
 -- Module paths
 local modulePaths = {
@@ -40,7 +40,7 @@ end
 function M.execute(actionName)
     if not controller then
         print("Error: Animation Action Controller not initialized!")
-        return require("utils.btree").FAILED
+        return require("behaivor.btree").FAILED
     end
     return controller.execute(actionName)
 end

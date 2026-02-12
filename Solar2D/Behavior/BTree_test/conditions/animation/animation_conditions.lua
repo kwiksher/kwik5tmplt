@@ -2,8 +2,8 @@
 -- Animation Conditions
 -- Conditions for checking animation state
 -------------------------------------------------------------------------------
-local bt = require("utils.btree")
-local actionHelper = require("utils.action_helper")
+local bt = require("behaivor.btree")
+local actionHelper = require("behaivor.action_helper")
 
 -- Create condition module
 local M = actionHelper.createModule()
