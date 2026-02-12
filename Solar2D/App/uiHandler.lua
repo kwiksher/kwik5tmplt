@@ -35,6 +35,14 @@ function M:init(UI)
   local App = require(kwikGlobal.ROOT.."controller.Application")
   local props = App.getProps()
   print(props.appName)
+
+  local appPath = "/Behavior/"..props.appName
+  local appLuaPath1 = resourcePath .. appPath.."/?.lua"
+  local appLuaPath2 = resourcePath .. appPath.."/?/?.lua"
+  if not string.find(package.path, appLuaPath1, 1, true) then
+    package.path = appLuaPath1..";" .. appLuaPath2..";"..package.path
+  end
+
   --
   --  behaviorTree
   --

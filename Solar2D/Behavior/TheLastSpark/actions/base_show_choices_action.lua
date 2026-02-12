@@ -3,7 +3,7 @@
 -- Base class for displaying player choice buttons
 -- Returns RUNNING until user selects a choice AND the choice action completes
 -------------------------------------------------------------------------------
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 
 local BaseShowChoicesAction = {}
 

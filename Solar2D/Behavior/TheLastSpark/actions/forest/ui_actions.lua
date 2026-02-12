@@ -3,7 +3,7 @@
 -- Accepts action parameter to specify which UI action to execute
 -- Uses BaseUIAction for common functionality
 
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 local BaseUIAction = require("actions.base_ui_action")
 
 -- Create module using base class

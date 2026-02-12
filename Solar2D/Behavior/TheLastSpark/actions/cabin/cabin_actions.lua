@@ -2,7 +2,7 @@
 -- Manages all action modules for the Cabin BTree
 -- Uses action_helper to create controller
 
-local actionHelper = require("utils.action_helper")
+local actionHelper = require("behaivor.action_helper")
 
 -- Module paths
 local modulePaths = {

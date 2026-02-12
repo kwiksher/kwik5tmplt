@@ -3,8 +3,8 @@
 -- Base class for wait actions that pause tree execution
 -- Returns RUNNING until clearWait is called
 -------------------------------------------------------------------------------
-local bt = require("utils.btree")
-local actionHelper = require("utils.action_helper")
+local bt = require("behaivor.btree")
+local actionHelper = require("behaivor.action_helper")
 
 local BaseWaitAction = {}
 
@@ -48,7 +48,7 @@ function BaseWaitAction.new()
         print("Wait Action: Cleared wait ID " .. clearedWaitId)
 
         -- Clear the voice text (VO toast) immediately
-        local audioHelper = require("utils.audio_helper")
+        local audioHelper = require("behaivor.audio_helper")
         audioHelper.clearVoToast()
 
         -- Clear the narration text immediately
