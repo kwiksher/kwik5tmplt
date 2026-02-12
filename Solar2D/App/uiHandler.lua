@@ -20,11 +20,7 @@ if keyboardPath then
 end
 
 local resourcePath = system.pathForFile("", system.ResourceDirectory)
---
---local appPath = "/App/TheLastSpark/behaviorTree"
-local appPath = "/Behavior/BTree_test"
 
-package.path = resourcePath .. appPath.."/?.lua;" .. resourcePath .. appPath.."/?/?.lua;"..package.path
 
 
 function M:init(UI)
