@@ -30,7 +30,7 @@ env.goPage = "animation"
 --env.mode = "development"
 -- env.mode = "production"
 
-env.mode = "debug" -- need kwik5-plugin src from kwiksher's repo
+env.mode = "production" -- need kwik5-plugin src from kwiksher's repo
 --env.mode = "behaviorTree"
 
 --

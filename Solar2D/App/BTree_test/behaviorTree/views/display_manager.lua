@@ -248,11 +248,12 @@ function M.createDialogueInterface(uiGroup, params)
         textColor = {1, 1, 1, 1},
         buttonLabel = "Next",
         buttonShape = "roundedRect",
-        buttonWidth = 120,
+        buttonWidth = nil,
         buttonHeight = 50,
         buttonCornerRadius = 10,
         buttonFillColor = { default = {0.2, 0.5, 0.2, 1}, over = {0.3, 0.6, 0.3, 1} },
         buttonLabelColor = { default = {1, 1, 1}, over = {0.8, 0.8, 0.8} },
+        buttonPadding = 22,
         onRelease = function() end,
         buttonX = contentWidth - 100,
         buttonY = contentHeight - 60,
@@ -280,23 +281,39 @@ function M.createDialogueInterface(uiGroup, params)
         box:setStrokeColor(sr, sg, sb, sa)
     end
 
-    -- Calculate text x position for left alignment
-    -- Reserve 160px on the right for the Next button (120px button + 40px padding)
-    -- Use 30px padding on the left edge for better readability
-    local buttonReservedSpace = 160
-    local leftPadding = 30
-    local textWidth = opts.textWidth or (boxWidth - buttonReservedSpace - leftPadding - 30)  -- 30px right padding
-    local textX = opts.textX or (box.x - boxWidth/2 + leftPadding + textWidth/2)
+    local labelFontSize = opts.buttonFontSize or math.max(opts.buttonHeight * 0.5, 14)
+    local buttonLabelText = opts.buttonLabel or ""
+    local buttonFontName = opts.buttonFont or opts.font or native.systemFontBold
+    local measuredButtonLabelSize = display.newText({
+        text = buttonLabelText,
+        font = buttonFontName,
+        fontSize = labelFontSize
+    })
+    local buttonLabelWidth = measuredButtonLabelSize and measuredButtonLabelSize.width or 0
+    if measuredButtonLabelSize then
+        measuredButtonLabelSize:removeSelf()
+    end
+    local buttonPadding = opts.buttonPadding or 22
+    local resolvedButtonWidth = opts.buttonWidth or math.ceil(buttonLabelWidth + buttonPadding)
 
+    -- Calculate text layout with room for the Next button + padding
+    local buttonReservedSpace = resolvedButtonWidth + 40
+    local leftPadding = 30
+    local availableWidth = boxWidth - buttonReservedSpace - leftPadding - 30
+    local textWidth = opts.textWidth or math.max(availableWidth, 150)
+    local textX = opts.textX or (box.x - boxWidth / 2 + leftPadding + textWidth / 2)
+
+    local resolvedTextHeight = opts.textHeight or math.max(boxHeight - 12, boxHeight * 0.85)
+    local resolvedTextY = opts.textY or box.y
     local text = display.newText({
         parent = uiGroup,
         text = opts.initialText,
         x = textX,
-        y = opts.textY or box.y,
+        y = resolvedTextY,
         width = textWidth,
-        height = opts.textHeight or (boxHeight - 20),
+        height = resolvedTextHeight,
         font = opts.font,
-        fontSize = opts.fontSize,
+        fontSize = opts.fontSize * 0.5,
         align = opts.align,
     })
     local tr, tg, tb, ta = ensureColorComponents(opts.textColor, defaults.textColor)
@@ -305,11 +322,12 @@ function M.createDialogueInterface(uiGroup, params)
     local button = widget.newButton({
         label = opts.buttonLabel,
         shape = opts.buttonShape,
-        width = opts.buttonWidth,
+        width = resolvedButtonWidth,
         height = opts.buttonHeight,
         cornerRadius = opts.buttonCornerRadius,
         fillColor = opts.buttonFillColor,
         labelColor = opts.buttonLabelColor,
+        fontSize = labelFontSize,
         onRelease = opts.onRelease,
     })
     button.x = opts.buttonX
