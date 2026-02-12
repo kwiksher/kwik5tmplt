@@ -2,8 +2,8 @@
 -- Star Actions
 -- Actions for animating the star shape
 -------------------------------------------------------------------------------
-local bt = require("utils.btree")
-local actionHelper = require("utils.action_helper")
+local bt = require("behaivor.btree")
+local actionHelper = require("behaivor.action_helper")
 
 -- Create action module with helper methods
 local M = actionHelper.createModule()

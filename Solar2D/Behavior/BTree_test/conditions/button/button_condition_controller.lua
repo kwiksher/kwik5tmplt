@@ -2,7 +2,7 @@
 -- Button Condition Controller
 -- Manages all condition modules for the button scene BTree
 -------------------------------------------------------------------------------
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 
 -- Module paths
 local modulePaths = {

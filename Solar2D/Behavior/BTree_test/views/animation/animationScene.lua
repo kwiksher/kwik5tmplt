@@ -4,14 +4,14 @@
 -------------------------------------------------------------------------------
 local composer = require("composer")
 local BaseScene = require("views.baseScene")
-local common = require("utils.common_helpers")
+local common = require("behaivor.common_helpers")
 local displayManager = require("views.display_manager")
 
 -- Create scene inheriting from BaseScene
 local scene = BaseScene:new("animation")
 
 -- BTree components
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 local actionController = require("actions.animation.animation_controller")
 local conditionController = require("conditions.animation.animation_condition_controller")
 local starActions = require("actions.animation.star_actions")

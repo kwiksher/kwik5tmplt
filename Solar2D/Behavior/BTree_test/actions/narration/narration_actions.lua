@@ -2,7 +2,7 @@
 -- Narration Actions
 -- Uses BaseNarrationAction for shared narration display
 -------------------------------------------------------------------------------
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 local BaseNarrationAction = require("actions.base_narration_action")
 local BaseWaitAction = require("actions.base_wait_action")
 

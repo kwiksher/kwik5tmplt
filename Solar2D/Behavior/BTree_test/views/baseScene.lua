@@ -203,7 +203,7 @@ function BaseScene:onShow(phase)
 
         -- Initialize behavior tree controller if behavior tree exists
         if self.behaviorTree then
-            local common = require("utils.common_helpers")
+            local common = require("behaivor.common_helpers")
             self.treeController = common.createManualBehaviorTree(self.behaviorTree, self.conditionController)
 
             -- Store treeController reference in objs for action modules to access

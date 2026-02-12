@@ -2,7 +2,7 @@
 -- Button Action Controller
 -- Manages all action modules for the button scene BTree
 -------------------------------------------------------------------------------
-local actionHelper = require("utils.action_helper")
+local actionHelper = require("behaivor.action_helper")
 
 -- Module paths
 local modulePaths = {

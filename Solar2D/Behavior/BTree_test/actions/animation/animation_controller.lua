@@ -3,7 +3,7 @@
 -- Manages all action modules for the animation scene BTree
 -------------------------------------------------------------------------------
 print("[CONTROLLER LOAD] Loading animation_controller.lua v2")
-local actionHelper = require("utils.action_helper")
+local actionHelper = require("behaivor.action_helper")
 
 -- Module paths
 local modulePaths = {
