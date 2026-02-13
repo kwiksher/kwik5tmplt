@@ -3,7 +3,7 @@
 -------------------------------------------------------------------------------
 local BaseScene = require("views.baseScene")
 local model = require("models.forest.forest_model")
-local common = require("utils.common_helpers")
+local common = require("behaivor.common_helpers")
 local displayManager = require("views.display_manager")
 local ChoiceDisplay = require("views.forest.choice_display")
 
@@ -11,7 +11,7 @@ local ChoiceDisplay = require("views.forest.choice_display")
 local scene = BaseScene:new("forest")
 
 -- BTree components
-local bt = require("utils.btree")
+local bt = require("behaivor.btree")
 local actionController = require("actions.forest.forest_actions")
 local conditionController = require("conditions.forest.forest_conditions")
 local waitActionModule = require("actions.forest.wait_action")
@@ -119,7 +119,7 @@ function scene:create(event)
     conditionController.initialize(self.objs)
 
     -- Load behavior tree and register action/condition handlers
-    self.behaviorTree = common.loadBehaviorTree("App/TheLastSpark/behaviorTree/forest_scene.tree", actionController, conditionController)
+    self.behaviorTree = common.loadBehaviorTree("Behavior/TheLastSpark/forest_scene.tree", actionController, conditionController)
 
     -- Store condition controller for use in BaseScene's onShow
     self.conditionController = conditionController
