@@ -1,12 +1,12 @@
 local sceneName = ...
 --
-local scene = require('controller.scene').new(sceneName, {
+local model = {
   --name = "",
   components = {
     layers = {
       {
-        bg12 = {
-          class={ "button", }  }
+        bg = {
+        }
       },
     },
     audios = {
@@ -20,6 +20,7 @@ local scene = require('controller.scene').new(sceneName, {
   },
   commands = {  },
   onInit = function(scene) print("onInit") end
-})
+}
+local scene = require('controller.scene').new(sceneName, model)
 --
 return scene
