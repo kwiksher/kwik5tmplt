@@ -72,29 +72,29 @@ end
 -------------------------------------------------------------------------------
 -- Common dialogue interface setup
 -- @param onNextCallback function - Callback for next button press
+-- @param layoutParams table - Optional layout parameters (x, y, width, height, buttonLabel, buttonX, buttonY, etc.)
 -------------------------------------------------------------------------------
-function BaseScene:initializeDialogueInterface(onNextCallback)
+function BaseScene:initializeDialogueInterface(onNextCallback, layoutParams)
     if not self.objs or not self.objs.uiGroup then
         print("Warning: UI group not initialized. Call initializeDisplay first.")
         return
     end
 
-    -- Create dialogue elements (text plus navigation)
-    local uiElements = displayManager.createDialogueInterface(self.objs.uiGroup, {
-        onRelease = function()
-            -- Hide button and stop blinking animation
-            if self.objs.nextButton then
-                self.objs.nextButton.isVisible = false
-                transition.cancel(self.objs.nextButton)
-                self.objs.nextButton.alpha = 1.0
-            end
+    local params = layoutParams or {}
+    params.onRelease = function()
+        if self.objs.nextButton then
+            self.objs.nextButton.isVisible = false
+            transition.cancel(self.objs.nextButton)
+            self.objs.nextButton.alpha = 1.0
+        end
 
-            -- Call custom callback if provided
-            if onNextCallback then
-                onNextCallback()
-            end
-        end,
-    })
+        if onNextCallback then
+            onNextCallback()
+        end
+    end
+
+    -- Create dialogue elements (text plus navigation)
+    local uiElements = displayManager.createDialogueInterface(self.objs.uiGroup, params)
 
     self.objs.dialogueText = uiElements.dialogueText
     self.objs.nextButton = uiElements.nextButton
