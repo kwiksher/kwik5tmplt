@@ -311,7 +311,7 @@ function M.createDialogueInterface(uiGroup, params)
         width = textWidth,
         height = opts.textHeight or (boxHeight - 20),
         font = opts.font,
-        fontSize = opts.fontSize,
+        fontSize = opts.fontSize * 0.5,
         align = opts.align,
     })
     local tr, tg, tb, ta = ensureColorComponents(opts.textColor, defaults.textColor)
