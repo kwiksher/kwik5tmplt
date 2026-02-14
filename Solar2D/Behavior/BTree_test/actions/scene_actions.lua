@@ -37,6 +37,20 @@ local function gotoScene(sceneName)
 
     local targetScene = scenePathMap[sceneName] or sceneName
 
+    -- Fallback: when component paths are enabled but target module is missing,
+    -- use Behavior view scenes so BTree_test navigation keeps working.
+    if useComponentPaths and targetScene == "App.BTree_test.components.button.index" then
+        local loaded = pcall(require, targetScene)
+        if not loaded then
+            targetScene = "views.button.buttonScene"
+        end
+    elseif useComponentPaths and targetScene == "App.BTree_test.components.animation.index" then
+        local loaded = pcall(require, targetScene)
+        if not loaded then
+            targetScene = "views.animation.animationScene"
+        end
+    end
+
     print("[ACTION] goto " .. targetScene)
     composer.gotoScene(targetScene, {
         effect = "fade",
