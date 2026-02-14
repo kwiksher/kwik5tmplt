@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
 -- Base Scene - Common scene functionality for inheritance
 -------------------------------------------------------------------------------
-local BaseSceneCommon = require("behaivor.base_scene_common")
+local BaseSceneFactory = require("Behavior.baseScene")
 
-return BaseSceneCommon.new({
+return BaseSceneFactory.new({
     resetUiOnShow = false,
     resetPlayerChoice = false,
     resetTreeStarted = false,

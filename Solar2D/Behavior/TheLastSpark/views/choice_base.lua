@@ -3,10 +3,9 @@
 -- TheLastSpark wrapper for shared choice base implementation
 -------------------------------------------------------------------------------
 
-local ChoiceBaseCommon = require("behaivor.choice_base_common")
+local ChoiceBaseFactory = require("Behavior.choice_base")
 
-return ChoiceBaseCommon:new({
-    defaultStyle = {
+return ChoiceBaseFactory.new({
         width = 200,
         height = 60,
         cornerRadius = 12,
@@ -16,5 +15,4 @@ return ChoiceBaseCommon:new({
         font = native.systemFontBold,
         fontSize = 24,
         textColor = {1, 1, 1},
-    }
 })

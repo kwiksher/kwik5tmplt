@@ -4,6 +4,7 @@
 local BaseScene = require("views.baseScene")
 local model = require("models.cabin.cabin_model")
 local common = require("behaivor.common_helpers")
+local behaviorConfig = require("Behavior.config")
 local displayManager = require("views.display_manager")
 local ChoiceDisplay = require("views.cabin.choice_display")
 
@@ -18,21 +19,7 @@ local waitActionModule = require("actions.cabin.wait_action")
 
 scene.imagePath = "App/TheLastSpark/assets/images/cabin/"
 
-local scale = 0.25
-local safeOriginX = display.safeScreenOriginX or display.screenOriginX or 0
-local safeOriginY = display.safeScreenOriginY or display.screenOriginY or 0
-local safeWidth = display.safeActualContentWidth or display.actualContentWidth or display.contentWidth or 320
-local safeHeight = display.safeActualContentHeight or display.actualContentHeight or display.contentHeight or 480
-local safeCenterX = safeOriginX + safeWidth * 0.5
-local safeBottomY = safeOriginY + safeHeight
-local dialogMargin = 16
-local dialogHeight = 55
-local buttonHeight = 23
-local buttonWidth = 72
-local dialogY = safeBottomY - dialogHeight * 0.5
-local nextButtonY = dialogY
-local dialogWidth = math.max(safeWidth - 48, 280)
-local buttonX = safeOriginX + safeWidth - (buttonWidth * 0.5) - dialogMargin
+local uiLayout = behaviorConfig.getDialogueLayout()
 
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
@@ -133,15 +120,15 @@ function scene:create(event)
             self.treeController:tick()
         end
     end, {
-        x = safeCenterX,
-        y = dialogY,
-        width = dialogWidth,
-        height = dialogHeight,
+        x = uiLayout.safeCenterX,
+        y = uiLayout.dialogY,
+        width = uiLayout.dialogWidth,
+        height = uiLayout.dialogHeight,
         buttonLabel = "Next",
-        buttonX = buttonX,
-        buttonY = nextButtonY,
-        buttonHeight = buttonHeight,
-        buttonWidth = buttonWidth
+        buttonX = uiLayout.buttonX,
+        buttonY = uiLayout.nextButtonY,
+        buttonHeight = uiLayout.buttonHeight,
+        buttonWidth = uiLayout.buttonWidth
     })
 
     -- Initialize choice display system

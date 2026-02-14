@@ -3,10 +3,9 @@
 -- BTree_test wrapper for shared choice base implementation
 -------------------------------------------------------------------------------
 
-local ChoiceBaseCommon = require("behaivor.choice_base_common")
+local ChoiceBaseFactory = require("Behavior.choice_base")
 
-return ChoiceBaseCommon:new({
-    defaultStyle = {
+return ChoiceBaseFactory.new({
         width = 25,
         height = 8,
         cornerRadius = 4,
@@ -18,5 +17,4 @@ return ChoiceBaseCommon:new({
         textColor = {1, 1, 1},
         paddingHorizontal = 12,
         paddingVertical = 6,
-    }
 })

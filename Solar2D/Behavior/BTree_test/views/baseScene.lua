@@ -1,6 +1,6 @@
-local BaseSceneCommon = require("behaivor.base_scene_common")
+local BaseSceneFactory = require("Behavior.baseScene")
 
-return BaseSceneCommon.new({
+return BaseSceneFactory.new({
     returningSceneName = "Behavior.BTree_test.views.emptyScene",
     resetUiOnShow = true,
     resetPlayerChoice = true,
