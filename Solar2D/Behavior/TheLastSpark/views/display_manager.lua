@@ -2,10 +2,9 @@
 -- Display Manager for TheLastSpark scenes
 -- Uses shared implementation from lua_modules/kwiksher/kwik/behaivor
 -------------------------------------------------------------------------------
-local DisplayManagerCommon = require("behaivor.display_manager_common")
+local DisplayManagerFactory = require("Behavior.display_manager")
 
-return DisplayManagerCommon.new({
-    dialogue = {
+return DisplayManagerFactory.new({
         fontMultiplier = 0.5,
         autoButtonWidth = true,
         defaultButtonWidth = nil,
@@ -15,5 +14,4 @@ return DisplayManagerCommon.new({
         leftPadding = 30,
         rightPadding = 30,
         minTextWidth = 150,
-    }
 })
