@@ -17,23 +17,38 @@ local conditionNames = {
     "player choice continue",
 }
 
+local safeOriginX = display.safeScreenOriginX or display.screenOriginX or 0
+local safeOriginY = display.safeScreenOriginY or display.screenOriginY or 0
+local safeWidth = display.safeActualContentWidth or display.actualContentWidth or display.contentWidth or 320
+local safeHeight = display.safeActualContentHeight or display.actualContentHeight or display.contentHeight or 480
+local safeCenterX = safeOriginX + safeWidth * 0.5
+local safeBottomY = safeOriginY + safeHeight
+local dialogMargin = 16
+local dialogHeight = 55
+local buttonWidth = 110
+local buttonHeight = 23
+local dialogY = safeBottomY - dialogHeight * 0.5
+local nextButtonY = dialogY
+local dialogWidth = math.max(safeWidth - 48, 280)
+local buttonX = safeOriginX + safeWidth - buttonWidth * 0.5 - dialogMargin
+local choiceY = dialogY
+
 local layout = {
     dialogBox = {
-        x = display.contentCenterX,
-        y = display.contentHeight - 60,
-        width = 1000,
-        height = 120
+        x = safeCenterX,
+        y = dialogY,
+        width = dialogWidth,
+        height = dialogHeight
     },
     nextButton = {
         label = "Next",
-        x = display.contentWidth - 100,
-        y = display.contentHeight - 60,
-        width = 120,
-        height = 50
+        x = buttonX,
+        y = nextButtonY,
+        height = buttonHeight
     },
     choices = {
-        {label = "Reload", x = display.contentCenterX - 130, y = display.contentHeight - 20, value = "reload"},
-        {label = "Continue", x = display.contentCenterX + 130, y = display.contentHeight - 20, value = "continue"}
+        {label = "Reload", x = safeOriginX + safeWidth * 0.25, y = choiceY, value = "reload"},
+        {label = "Continue", x = safeOriginX + safeWidth * 0.75, y = choiceY, value = "continue"}
     }
 }
 

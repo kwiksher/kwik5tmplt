@@ -8,15 +8,17 @@ local M = {}
 
 -- Default style configuration for choice buttons
 M.defaultStyle = {
-    width = 200,
-    height = 60,
-    cornerRadius = 12,
+    width = 25,
+    height = 8,
+    cornerRadius = 4,
     fillColor = {0.2, 0.3, 0.5},
     strokeColor = {0.8, 0.8, 0.8},
-    strokeWidth = 3,
+    strokeWidth = 2,
     font = native.systemFontBold,
-    fontSize = 24,
-    textColor = {1, 1, 1}
+    fontSize = 10,
+    textColor = {1, 1, 1},
+    paddingHorizontal = 12,
+    paddingVertical = 6
 }
 
 -------------------------------------------------------------------------------
@@ -43,7 +45,9 @@ function M.createChoiceButton(parentGroup, label, x, y, choiceValue, onChoiceSel
         strokeWidth = style.strokeWidth or M.defaultStyle.strokeWidth,
         font = style.font or M.defaultStyle.font,
         fontSize = style.fontSize or M.defaultStyle.fontSize,
-        textColor = style.textColor or M.defaultStyle.textColor
+        textColor = style.textColor or M.defaultStyle.textColor,
+        paddingHorizontal = style.paddingHorizontal or M.defaultStyle.paddingHorizontal,
+        paddingVertical = style.paddingVertical or M.defaultStyle.paddingVertical
     }
 
     -- Create button background
@@ -51,8 +55,8 @@ function M.createChoiceButton(parentGroup, label, x, y, choiceValue, onChoiceSel
         parentGroup,
         x,
         y,
-        buttonStyle.width,
-        buttonStyle.height,
+        buttonStyle.width + buttonStyle.paddingHorizontal * 2,
+        buttonStyle.height + buttonStyle.paddingVertical * 2,
         buttonStyle.cornerRadius
     )
     button.strokeWidth = buttonStyle.strokeWidth
