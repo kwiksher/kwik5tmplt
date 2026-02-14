@@ -4,8 +4,8 @@ application = {
 		fps = 60,
 		width = 320,
 		height = 480,
-		scale = "letterbox",
 		--scale = "letterbox",
+		scale = "adaptive",
 		xAlign = "center",
 		yAlign = "center",
 

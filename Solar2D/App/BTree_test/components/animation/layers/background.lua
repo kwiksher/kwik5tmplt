@@ -8,7 +8,7 @@ local layerProps = {
   blendMode = "normal",
   height    =  1180 - 100,
   width     = 1920 - 0 ,
-  kind      = pixel,
+  kind      = "pixel",
   name      = "background",
   type      = "png",
   x         = 1920 + (0 -1920)/2,
@@ -24,9 +24,10 @@ local layerProps = {
   fontSize =  nil,
   alignment =  "",
   orientation = "",
+  psdPage     = "animation"
 }
 
-M.align       = ""
+M.attachToEdge      = ""
 M.randXStart  = nil
 M.randXEnd    = nil
 M.randYStart  = nil
