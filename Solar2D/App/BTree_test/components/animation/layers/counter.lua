@@ -8,7 +8,7 @@ local layerProps = {
   blendMode = "normal",
   height    =  170 - 130,
   width     = 1160 - 960 ,
-  kind      = pixel,
+  kind      = "pixel",
   name      = "counter",
   type      = "png",
   x         = 1160 + (960 -1160)/2,
@@ -24,9 +24,10 @@ local layerProps = {
   fontSize =  nil,
   alignment =  "",
   orientation = "",
+  psdPage     = "animation"
 }
 
-M.align       = ""
+M.attachToEdge      = ""
 M.randXStart  = nil
 M.randXEnd    = nil
 M.randYStart  = nil

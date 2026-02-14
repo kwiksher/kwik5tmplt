@@ -37,16 +37,8 @@ settings = {
         -- }
     },
     orientation = {
-<<<<<<< ours
     -- default = "portrait",
     default = "landscapeRight",
-||||||| ancestor
-   default = "portrait",
-    -- default = "landscapeRight",
-=======
-   --default = "portrait",
-    default = "landscapeRight",
->>>>>>> theirs
       supported = {
        "portrait", "portraitUpsideDown",
       --  "landscapeLeft", "landscapeRight"
