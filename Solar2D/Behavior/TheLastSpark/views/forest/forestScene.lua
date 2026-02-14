@@ -19,6 +19,20 @@ local waitActionModule = require("actions.forest.wait_action")
 scene.imagePath = "App/TheLastSpark/assets/images/forest/"
 
 local scale = 0.25
+local safeOriginX = display.safeScreenOriginX or display.screenOriginX or 0
+local safeOriginY = display.safeScreenOriginY or display.screenOriginY or 0
+local safeWidth = display.safeActualContentWidth or display.actualContentWidth or display.contentWidth or 320
+local safeHeight = display.safeActualContentHeight or display.actualContentHeight or display.contentHeight or 480
+local safeCenterX = safeOriginX + safeWidth * 0.5
+local safeBottomY = safeOriginY + safeHeight
+local dialogMargin = 16
+local dialogHeight = 55
+local buttonHeight = 23
+local buttonWidth = 72
+local dialogY = safeBottomY - dialogHeight * 0.5
+local nextButtonY = dialogY
+local dialogWidth = math.max(safeWidth - 48, 280)
+local buttonX = safeOriginX + safeWidth - (buttonWidth * 0.5) - dialogMargin
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
     background = "App/TheLastSpark/assets/images/forest/bg_forest.png",
@@ -83,7 +97,17 @@ function scene:create(event)
         if self.treeController and not self.treeController.isComplete then
             self.treeController:tick()
         end
-    end)
+    end, {
+        x = safeCenterX,
+        y = dialogY,
+        width = dialogWidth,
+        height = dialogHeight,
+        buttonLabel = "Next",
+        buttonX = buttonX,
+        buttonY = nextButtonY,
+        buttonHeight = buttonHeight,
+        buttonWidth = buttonWidth
+    })
 
     -- Initialize choice display system
     self.objs.choiceGroup = ChoiceDisplay:initialize(sceneGroup, self.objs, nil, layout.choices)
