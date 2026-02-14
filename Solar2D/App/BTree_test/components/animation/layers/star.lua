@@ -8,7 +8,7 @@ local layerProps = {
   blendMode = "normal",
   height    =  740 - 640,
   width     = 860 - 760 ,
-  kind      = pixel,
+  kind      = "pixel",
   name      = "star",
   type      = "png",
   x         = 860 + (760 -860)/2,
@@ -24,9 +24,10 @@ local layerProps = {
   fontSize =  nil,
   alignment =  "",
   orientation = "",
+  psdPage     = "animation"
 }
 
-M.align       = ""
+M.attachToEdge      = ""
 M.randXStart  = nil
 M.randXEnd    = nil
 M.randYStart  = nil
