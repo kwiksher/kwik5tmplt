@@ -25,7 +25,7 @@ local safeCenterX = safeOriginX + safeWidth * 0.5
 local safeBottomY = safeOriginY + safeHeight
 local dialogMargin = 16
 local dialogHeight = 55
-local buttonWidth = 110
+local buttonWidth = 72
 local buttonHeight = 23
 local dialogY = safeBottomY - dialogHeight * 0.5
 local nextButtonY = dialogY
@@ -44,6 +44,7 @@ local layout = {
         label = "Next",
         x = buttonX,
         y = nextButtonY,
+        width = buttonWidth,
         height = buttonHeight
     },
     choices = {
