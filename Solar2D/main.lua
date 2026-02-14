@@ -7,6 +7,11 @@ env.book = "BTree_test"
 env.goPage = "narration"
 
 
+--env.book = "TheLastSpark"
+--env.goPage = "forest"
+--env.goPage = "cabin"
+
+
 -- env.book = "book"
 -- env.goPage = "landscape"
 
@@ -30,10 +35,10 @@ env.goPage = "narration"
 --env.goPage = "cabin"
 
 --
---env.mode = "development"
+env.mode = "development"
 -- env.mode = "production"
 
-env.mode = "production" -- need kwik5-plugin src from kwiksher's repo
+-- env.mode = "production" -- need kwik5-plugin src from kwiksher's repo
 --env.mode = "behaviorTree"
 
 --
