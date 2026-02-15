@@ -2,9 +2,9 @@
 -- Button Scene View - BTree Implementation
 -- Shows a button that returns to animation scene
 -------------------------------------------------------------------------------
-local BaseScene = require("views.baseScene")
+local BaseScene = require("Behavior.baseScene")
 local common = require("behaivor.common_helpers")
-local displayManager = require("views.display_manager")
+local displayManager = require("Behavior.display_manager")
 local widget = require("widget")
 
 -- Create scene inheriting from BaseScene

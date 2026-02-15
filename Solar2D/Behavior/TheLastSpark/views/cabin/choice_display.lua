@@ -4,7 +4,7 @@
 -- Inherits from choice_base.lua using metatable
 -------------------------------------------------------------------------------
 
-local choiceBase = require("views.choice_base")
+local choiceBase = require("Behavior.choice_base")
 local showChoicesAction = require("actions.cabin.show_choices_action")
 
 -- Create a new instance that inherits from choiceBase
