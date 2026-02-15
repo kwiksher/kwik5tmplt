@@ -30,8 +30,13 @@ function BaseNarrationAction.new(narrationTexts)
     end
 
     function M.reset()
+        local completedCount = 0
+        for _ in pairs(_completedNarrations) do
+            completedCount = completedCount + 1
+        end
         _completedNarrations = {}
         M._completedActions = {}
+        print("Narration reset: cleared completed narrations = " .. tostring(completedCount))
     end
 
     local function cancelTyping()
@@ -42,7 +47,9 @@ function BaseNarrationAction.new(narrationTexts)
     end
 
     function M.showNarration(textKey)
+        print("Narration begin: " .. tostring(textKey))
         if _completedNarrations[textKey] then
+            print("Narration skip: '" .. tostring(textKey) .. "' already completed in this module instance")
             return bt.SUCCESS
         end
 
@@ -87,14 +94,19 @@ function BaseNarrationAction.new(narrationTexts)
             local result = M.eventDispatcher:dispatchEvent(event)
 
             if not result then
-                timer.performWithDelay(4000, function()
+                timer.performWithDelay(120, function()
                     if sceneObjects and sceneObjects.choicesVisible then
+                        print("Narration: Choices are visible, keeping next button hidden")
                         return
                     end
 
                     if sceneObjects and sceneObjects.nextButton then
                         sceneObjects.nextButton.isVisible = true
                         sceneObjects.nextButton.alpha = 1.0
+                        if sceneObjects.nextButton.toFront then
+                            sceneObjects.nextButton:toFront()
+                        end
+                        print("Narration: Showing next button after typing complete")
 
                         local function blinkCycle()
                             if sceneObjects.nextButton and sceneObjects.nextButton.removeSelf then

@@ -65,9 +65,9 @@ function BaseWaitAction.new()
             nextWaitId = nextWaitId + 1
 
             local narrationAction = requireFirst({
-                "Behavior.BTree_test.actions.narration.narration_actions",
                 "Behavior.TheLastSpark.actions.cabin.narration_action",
                 "Behavior.TheLastSpark.actions.forest.narration_action",
+                "Behavior.BTree_test.actions.narration.narration_actions",
                 "actions.narration.narration_actions",
                 "actions.cabin.narration_action",
                 "actions.forest.narration_action"
@@ -75,9 +75,9 @@ function BaseWaitAction.new()
             local isNarrationActive = narrationAction and (not narrationAction.isTypingComplete) or false
 
             local showChoicesAction = requireFirst({
-                "Behavior.BTree_test.actions.narration.show_choices_action",
                 "Behavior.TheLastSpark.actions.cabin.show_choices_action",
                 "Behavior.TheLastSpark.actions.forest.show_choices_action",
+                "Behavior.BTree_test.actions.narration.show_choices_action",
                 "actions.narration.show_choices_action",
                 "actions.cabin.show_choices_action",
                 "actions.forest.show_choices_action"
@@ -90,8 +90,22 @@ function BaseWaitAction.new()
                 elseif isNarrationActive then
                     print("Wait Action: Narration in progress, keeping button hidden")
                 else
+                    transition.cancel(M.sceneObjects.nextButton)
                     M.sceneObjects.nextButton.isVisible = true
                     M.sceneObjects.nextButton.alpha = 1.0
+                    if M.sceneObjects.nextButton.setEnabled then
+                        M.sceneObjects.nextButton:setEnabled(true)
+                    end
+                    if M.sceneObjects.uiGroup and M.sceneObjects.uiGroup.toFront then
+                        M.sceneObjects.uiGroup:toFront()
+                    end
+                    if M.sceneObjects.nextButton.toFront then
+                        M.sceneObjects.nextButton:toFront()
+                    end
+                    print("Wait Action: No narration/choices active, showing next button" ..
+                        " (x=" .. tostring(M.sceneObjects.nextButton.x) ..
+                        ", y=" .. tostring(M.sceneObjects.nextButton.y) ..
+                        ", alpha=" .. tostring(M.sceneObjects.nextButton.alpha) .. ")")
                 end
             end
 
