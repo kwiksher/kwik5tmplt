@@ -142,6 +142,8 @@ function scene:create(event)
         buttonLabel = "Next",
         buttonX = uiLayout.buttonX,
         buttonY = uiLayout.nextButtonY,
+        textWidth = uiLayout.dialogTextWidth,
+            textHeight = uiLayout.dialogTextHeight,
         fontSize = uiLayout.dialogueFontSize,
         buttonHeight = uiLayout.buttonHeight,
         buttonWidth = uiLayout.buttonWidth
