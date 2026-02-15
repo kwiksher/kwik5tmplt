@@ -13,9 +13,9 @@ local scene = BaseScene:new("cabin")
 
 -- BTree components
 local bt = require("behaivor.btree")
-local actionController = require("actions.cabin.cabin_actions")
-local conditionController = require("conditions.cabin.cabin_conditions")
-local waitActionModule = require("actions.cabin.wait_action")
+local actionController = require("Behavior.TheLastSpark.actions.cabin.cabin_actions")
+local conditionController = require("Behavior.TheLastSpark.conditions.cabin.cabin_conditions")
+local waitActionModule = require("Behavior.TheLastSpark.actions.cabin.wait_action")
 
 scene.imagePath = "App/TheLastSpark/assets/images/cabin/"
 
@@ -113,7 +113,7 @@ function scene:create(event)
         waitActionModule.clearWait()
 
         -- Also clear choice action wait state
-        local choiceActionModule = require("actions.cabin.choice_action")
+        local choiceActionModule = require("Behavior.TheLastSpark.actions.cabin.choice_action")
         choiceActionModule.clearWait()
 
         if self.treeController and not self.treeController.isComplete then
