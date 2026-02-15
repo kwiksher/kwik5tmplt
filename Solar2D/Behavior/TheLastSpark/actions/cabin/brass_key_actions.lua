@@ -47,6 +47,7 @@ function M.changeToVisible()
     if result == bt.SUCCESS then
         print("Brass key shown, automatically enabling tap interaction...")
         M.enableTapInteraction()
+        M.enableDragInteraction()
     end
 
     return result
@@ -76,15 +77,10 @@ function M.enableDragInteraction()
     end
 
     local brassKey = M.sceneObjects.brass_key
-    local chest = M.sceneObjects.chest
+    local hitThreshold = 100
 
     if not brassKey then
         print("ERROR: enableDragInteraction - brass_key object not found")
-        return bt.FAILED
-    end
-
-    if not chest then
-        print("ERROR: enableDragInteraction - chest object not found")
         return bt.FAILED
     end
 
@@ -96,17 +92,38 @@ function M.enableDragInteraction()
             local phase = event.phase
 
             if phase == "began" then
+                local chest = M.sceneObjects and M.sceneObjects.chest
+                if not chest then
+                    print("ERROR: brass_key.drag began - chest object not found")
+                    return true
+                end
                 display.getCurrentStage():setFocus(brassKey)
                 brassKey.isFocus = true
                 startX = brassKey.x
                 startY = brassKey.y
 
+                -- Allow drag even before tap-to-collect; dragging implies pickup intent.
+                if brassKey.modelData then
+                    brassKey.modelData.collected = true
+                end
+                print("[TRACE brass_key.drag] began x=" .. tostring(startX) .. ", y=" .. tostring(startY) ..
+                    ", chestX=" .. tostring(chest and chest.x) .. ", chestY=" .. tostring(chest and chest.y) ..
+                    ", threshold=" .. tostring(hitThreshold))
+
             elseif brassKey.isFocus then
                 if phase == "moved" then
                     brassKey.x = event.x
                     brassKey.y = event.y
+                    print("[TRACE brass_key.drag] moved x=" .. tostring(brassKey.x) .. ", y=" .. tostring(brassKey.y))
 
                 elseif phase == "ended" or phase == "cancelled" then
+                    local chest = M.sceneObjects and M.sceneObjects.chest
+                    if not chest then
+                        print("ERROR: brass_key.drag " .. tostring(phase) .. " - chest object not found")
+                        display.getCurrentStage():setFocus(nil)
+                        brassKey.isFocus = false
+                        return true
+                    end
                     display.getCurrentStage():setFocus(nil)
                     brassKey.isFocus = false
 
@@ -114,23 +131,31 @@ function M.enableDragInteraction()
                     local dx = brassKey.x - chest.x
                     local dy = brassKey.y - chest.y
                     local distance = math.sqrt(dx*dx + dy*dy)
+                    print("[TRACE brass_key.drag] " .. tostring(phase) ..
+                        " dropX=" .. tostring(brassKey.x) .. ", dropY=" .. tostring(brassKey.y) ..
+                        ", chestX=" .. tostring(chest.x) .. ", chestY=" .. tostring(chest.y) ..
+                        ", distance=" .. string.format("%.2f", distance) ..
+                        ", threshold=" .. tostring(hitThreshold))
 
                     -- If brass key is close enough to chest (within 100 pixels)
-                    if distance < 100 then
+                    if distance < hitThreshold then
                         print("Brass key hit the chest! Unlocking...")
+                        print("[TRACE brass_key.drag] hit chest -> applying model flags and restarting tree")
 
                         -- Mark brass key as used in modelData (persists across state changes)
                         if brassKey.modelData then
                             brassKey.modelData.collected = true
                             brassKey.modelData.usedOnChest = true
-                            print("DEBUG: Set brass_key.modelData.usedOnChest = true")
+                            print("[TRACE brass_key.drag] brassKey.modelData.collected=" .. tostring(brassKey.modelData.collected) ..
+                                ", usedOnChest=" .. tostring(brassKey.modelData.usedOnChest))
                         end
 
                         -- Also set on sceneObjects reference
                         if M.sceneObjects.brass_key then
                             if M.sceneObjects.brass_key.modelData then
                                 M.sceneObjects.brass_key.modelData.usedOnChest = true
-                                print("DEBUG: Set sceneObjects.brass_key.modelData.usedOnChest = true")
+                                print("[TRACE brass_key.drag] sceneObjects.brass_key.modelData.usedOnChest=" ..
+                                    tostring(M.sceneObjects.brass_key.modelData.usedOnChest))
                             end
                         end
 
@@ -138,7 +163,8 @@ function M.enableDragInteraction()
                         if M.sceneObjects.iron_key then
                             if M.sceneObjects.iron_key.modelData then
                                 M.sceneObjects.iron_key.modelData.collected = true
-                                print("DEBUG: Set iron_key.modelData.collected = true")
+                                print("[TRACE brass_key.drag] iron_key.modelData.collected=" ..
+                                    tostring(M.sceneObjects.iron_key.modelData.collected))
                             end
                         end
 
@@ -152,6 +178,7 @@ function M.enableDragInteraction()
                         -- Queue chest_open to run right after restart (without modifying the tree)
                         if M.sceneObjects then
                             M.sceneObjects.pendingAction = "scene chest_open"
+                            print("[TRACE brass_key.drag] queued pendingAction=" .. tostring(M.sceneObjects.pendingAction))
                         end
 
                         -- Restart the tree so it can re-evaluate conditions with the new brass key state
@@ -161,6 +188,8 @@ function M.enableDragInteraction()
                         end
                     else
                         -- Return to start position if not near chest
+                        print("[TRACE brass_key.drag] miss chest -> returning to start x=" .. tostring(startX) ..
+                            ", y=" .. tostring(startY))
                         transition.to(brassKey, {
                             x = startX,
                             y = startY,
@@ -174,8 +203,14 @@ function M.enableDragInteraction()
         end
     end
 
-    -- Add touch listener for dragging
+    brassKey.isHitTestable = true
+
+    -- Add touch listener for dragging (avoid duplicate registration)
+    if brassKey._dragEnabled then
+        brassKey:removeEventListener("touch", brassKey.dragHandler)
+    end
     brassKey:addEventListener("touch", brassKey.dragHandler)
+    brassKey._dragEnabled = true
     print("Drag interaction enabled for brass_key")
     return bt.SUCCESS
 end
@@ -196,6 +231,7 @@ function M.disableDragInteraction()
     -- Remove touch listener
     if brassKey.dragHandler then
         brassKey:removeEventListener("touch", brassKey.dragHandler)
+        brassKey._dragEnabled = false
         print("Drag interaction disabled for brass_key")
     end
 
@@ -228,9 +264,16 @@ function M.enableTapInteraction()
     if not brassKey.tapHandler then
         brassKey.tapHandler = function(event)
             print("Brass key tapped! Collecting...")
+            print("[TRACE brass_key.tap] before collect modelData.collected=" ..
+                tostring(brassKey.modelData and brassKey.modelData.collected) ..
+                ", modelData.usedOnChest=" .. tostring(brassKey.modelData and brassKey.modelData.usedOnChest))
 
             -- Call the collected action to change state and enable dragging
             M.changeToCollected()
+
+            print("[TRACE brass_key.tap] after collect modelData.collected=" ..
+                tostring(brassKey.modelData and brassKey.modelData.collected) ..
+                ", modelData.usedOnChest=" .. tostring(brassKey.modelData and brassKey.modelData.usedOnChest))
 
             -- Disable tap interaction (we'll use drag instead)
             M.disableTapInteraction()

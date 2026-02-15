@@ -1,10 +1,11 @@
 -------------------------------------------------------------------------------
 -- Forest Scene View - BTree Implementation
 -------------------------------------------------------------------------------
-local BaseScene = require("views.baseScene")
+local BaseScene = require("Behavior.baseScene")
 local model = require("models.forest.forest_model")
 local common = require("behaivor.common_helpers")
-local displayManager = require("views.display_manager")
+local behaviorConfig = require("Behavior.config")
+local displayManager = require("Behavior.display_manager")
 local ChoiceDisplay = require("views.forest.choice_display")
 
 -- Create scene inheriting from BaseScene
@@ -12,13 +13,14 @@ local scene = BaseScene:new("forest")
 
 -- BTree components
 local bt = require("behaivor.btree")
-local actionController = require("actions.forest.forest_actions")
-local conditionController = require("conditions.forest.forest_conditions")
-local waitActionModule = require("actions.forest.wait_action")
+local actionController = require("Behavior.TheLastSpark.actions.forest.forest_actions")
+local conditionController = require("Behavior.TheLastSpark.conditions.forest.forest_conditions")
+local waitActionModule = require("Behavior.TheLastSpark.actions.forest.wait_action")
 
 scene.imagePath = "App/TheLastSpark/assets/images/forest/"
 
-local scale = 0.25
+local uiLayout = behaviorConfig.getDialogueLayout()
+local scale = uiLayout.scale
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
     background = "App/TheLastSpark/assets/images/forest/bg_forest.png",
@@ -51,9 +53,9 @@ local layout = {
         },
     },
     choices = {
-        {label = "Fight", x = display.contentCenterX - 220, y = display.contentHeight - 20, value = "fight"},
-        {label = "Calm", x = display.contentCenterX, y = display.contentHeight - 20, value = "calm"},
-        {label = "Retreat", x = display.contentCenterX + 220, y = display.contentHeight - 20, value = "retreat"}
+        {label = "Fight", x = uiLayout.safeCenterX - uiLayout.choiceGapX, y = uiLayout.choiceY, value = "fight"},
+        {label = "Calm", x = uiLayout.safeCenterX, y = uiLayout.choiceY, value = "calm"},
+        {label = "Retreat", x = uiLayout.safeCenterX + uiLayout.choiceGapX, y = uiLayout.choiceY, value = "retreat"}
     }
 }
 
@@ -77,13 +79,26 @@ function scene:create(event)
         waitActionModule.clearWait()
 
         -- Also clear choice action wait state
-        local choiceActionModule = require("actions.forest.choice_action")
+        local choiceActionModule = require("Behavior.TheLastSpark.actions.forest.choice_action")
         choiceActionModule.clearWait()
 
         if self.treeController and not self.treeController.isComplete then
             self.treeController:tick()
         end
-    end)
+    end, {
+        x = uiLayout.safeCenterX,
+        y = uiLayout.dialogY,
+        width = uiLayout.dialogWidth,
+        height = uiLayout.dialogHeight,
+        buttonLabel = "Next",
+        buttonX = uiLayout.buttonX,
+        buttonY = uiLayout.nextButtonY,
+        textWidth = uiLayout.dialogTextWidth,
+        textHeight = uiLayout.dialogTextHeight,
+        fontSize = uiLayout.dialogueFontSize,
+        buttonHeight = uiLayout.buttonHeight,
+        buttonWidth = uiLayout.buttonWidth
+    })
 
     -- Initialize choice display system
     self.objs.choiceGroup = ChoiceDisplay:initialize(sceneGroup, self.objs, nil, layout.choices)

@@ -4,11 +4,14 @@
 -- Inherits from choice_base.lua using metatable
 -------------------------------------------------------------------------------
 
-local choiceBase = require("views.choice_base")
-local showChoicesAction = require("actions.cabin.show_choices_action")
+local choiceBase = require("Behavior.choice_base")
+local behaviorConfig = require("Behavior.config")
+local showChoicesAction = require("Behavior.TheLastSpark.actions.cabin.show_choices_action")
 
 -- Create a new instance that inherits from choiceBase
 local M = choiceBase:new()
+
+M.defaultStyle = behaviorConfig.getChoiceButtonStyle()
 
 -------------------------------------------------------------------------------
 -- Override: Callback when a choice is selected (cabin-specific)
@@ -16,7 +19,7 @@ local M = choiceBase:new()
 -- @param button The button object that was tapped
 -------------------------------------------------------------------------------
 function M:onChoiceSelected(choice, button)
-    self:_onChoiceSelected(choice, buttons, function()
+    self:_onChoiceSelected(choice, button, function()
       showChoicesAction.selectChoice()
     end)
 end

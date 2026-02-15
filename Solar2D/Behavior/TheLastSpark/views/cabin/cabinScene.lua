@@ -1,10 +1,11 @@
 -------------------------------------------------------------------------------
 -- Cabin Scene View - BTree Implementation
 -------------------------------------------------------------------------------
-local BaseScene = require("views.baseScene")
+local BaseScene = require("Behavior.baseScene")
 local model = require("models.cabin.cabin_model")
 local common = require("behaivor.common_helpers")
-local displayManager = require("views.display_manager")
+local behaviorConfig = require("Behavior.config")
+local displayManager = require("Behavior.display_manager")
 local ChoiceDisplay = require("views.cabin.choice_display")
 
 -- Create scene inheriting from BaseScene
@@ -12,13 +13,27 @@ local scene = BaseScene:new("cabin")
 
 -- BTree components
 local bt = require("behaivor.btree")
-local actionController = require("actions.cabin.cabin_actions")
-local conditionController = require("conditions.cabin.cabin_conditions")
-local waitActionModule = require("actions.cabin.wait_action")
+local actionController = require("Behavior.TheLastSpark.actions.cabin.cabin_actions")
+local conditionController = require("Behavior.TheLastSpark.conditions.cabin.cabin_conditions")
+local waitActionModule = require("Behavior.TheLastSpark.actions.cabin.wait_action")
+
+local debugCreateCount = 0
+
+local function statusName(status)
+    if status == bt.SUCCESS then
+        return "SUCCESS"
+    elseif status == bt.RUNNING then
+        return "RUNNING"
+    elseif status == bt.FAILED or status == bt.FAILURE then
+        return "FAILED"
+    end
+    return "UNKNOWN"
+end
 
 scene.imagePath = "App/TheLastSpark/assets/images/cabin/"
 
-local scale = 0.25
+local uiLayout = behaviorConfig.getDialogueLayout()
+
 -- Layout diagram (keeps object placement explicit, similar to BT test scene)
 local layout = {
     background = "App/TheLastSpark/assets/images/cabin/bg_cabin_exterior.png",
@@ -86,9 +101,9 @@ local layout = {
         },
     },
     choices = {
-        {label = "Force Door", x = display.contentCenterX - 220, y = display.contentHeight - 20, value = "force_door"},
-        {label = "Window", x = display.contentCenterX, y = display.contentHeight - 20, value = "window"},
-        {label = "Markings", x = display.contentCenterX + 220, y = display.contentHeight - 20, value = "markings"}
+        {label = "Force Door", x = uiLayout.safeCenterX - uiLayout.choiceGapX, y = uiLayout.choiceY, value = "force_door"},
+        {label = "Window", x = uiLayout.safeCenterX, y = uiLayout.choiceY, value = "window"},
+        {label = "Markings", x = uiLayout.safeCenterX + uiLayout.choiceGapX, y = uiLayout.choiceY, value = "markings"}
     }
 }
 
@@ -98,6 +113,8 @@ local layout = {
 
 function scene:create(event)
     local sceneGroup = self.view
+    debugCreateCount = debugCreateCount + 1
+    print("\n=== CABIN DEBUG: scene:create #" .. tostring(debugCreateCount) .. " ===")
 
     common._env = {imagePath = self.imagePath, UI=self.UI}
     -- Use BaseScene initialization for display
@@ -111,13 +128,26 @@ function scene:create(event)
         waitActionModule.clearWait()
 
         -- Also clear choice action wait state
-        local choiceActionModule = require("actions.cabin.choice_action")
+        local choiceActionModule = require("Behavior.TheLastSpark.actions.cabin.choice_action")
         choiceActionModule.clearWait()
 
         if self.treeController and not self.treeController.isComplete then
             self.treeController:tick()
         end
-    end)
+    end, {
+        x = uiLayout.safeCenterX,
+        y = uiLayout.dialogY,
+        width = uiLayout.dialogWidth,
+        height = uiLayout.dialogHeight,
+        buttonLabel = "Next",
+        buttonX = uiLayout.buttonX,
+        buttonY = uiLayout.nextButtonY,
+        textWidth = uiLayout.dialogTextWidth,
+            textHeight = uiLayout.dialogTextHeight,
+        fontSize = uiLayout.dialogueFontSize,
+        buttonHeight = uiLayout.buttonHeight,
+        buttonWidth = uiLayout.buttonWidth
+    })
 
     -- Initialize choice display system
     self.objs.choiceGroup = ChoiceDisplay:initialize(sceneGroup, self.objs, nil, layout.choices)
@@ -144,6 +174,12 @@ function scene:create(event)
     self.objs.brass_key = common.createCharacter("brass_key", model, layout, self.objs.characterGroup)
     self.objs.loose_floorboard = common.createCharacter("loose_floorboard", model, layout, self.objs.characterGroup)
 
+    local initialHasIronKey = self.objs.iron_key and self.objs.iron_key.collected == true
+    local initialDoorState = self.objs.cabin_door and self.objs.cabin_door.modelData and self.objs.cabin_door.modelData.currentState or "nil"
+    print("CABIN DEBUG: initial iron_key.collected=" .. tostring(initialHasIronKey))
+    print("CABIN DEBUG: initial cabin_door.modelData.currentState=" .. tostring(initialDoorState))
+    print("CABIN DEBUG: expected first branch = " .. (initialHasIronKey and "(has iron key) -> scene door_open" or "!(has iron key) -> narration cabin_exterior"))
+
     -- Store reference to scene for helper functions
     self.objs.showChoiceButtons = function() self.showChoiceButtons() end
     self.objs.hideChoiceButtons = function() self.hideChoiceButtons() end
@@ -152,9 +188,38 @@ function scene:create(event)
 
     -- Initialize action controller with scene objects
     actionController.initialize(self.objs)
+    if actionController.reset then
+        actionController.reset()
+    end
+
+    if not actionController._traceWrapped and actionController.execute then
+        local executeBase = actionController.execute
+        actionController.execute = function(actionName)
+            print("[TRACE cabin.action] executing [" .. tostring(actionName) .. "]")
+            local result = executeBase(actionName)
+            print("[TRACE cabin.action] result [" .. tostring(actionName) .. "] = " .. statusName(result) .. " (" .. tostring(result) .. ")")
+            if result == bt.RUNNING then
+                print("[TRACE cabin.running] node [" .. tostring(actionName) .. "] returned RUNNING")
+            end
+            return result
+        end
+        actionController._traceWrapped = true
+    end
 
     -- Initialize condition controller with scene objects
     conditionController.initialize(self.objs)
+
+    if not conditionController._traceWrapped and conditionController.evaluate then
+        local evaluateBase = conditionController.evaluate
+        conditionController.evaluate = function(conditionName)
+            local result = evaluateBase(conditionName)
+            if conditionName == "searched floorboard" then
+                print("[TRACE cabin.condition] [" .. tostring(conditionName) .. "] = " .. tostring(result))
+            end
+            return result
+        end
+        conditionController._traceWrapped = true
+    end
 
     -- Load behavior tree and register action/condition handlers
     self.behaviorTree = common.loadBehaviorTree("Behavior/TheLastSpark/cabin_scene.tree", actionController, conditionController)
@@ -211,6 +276,7 @@ function scene:create(event)
 
     -- Store ChoiceDisplay for BaseScene cleanup
     self.ChoiceDisplay = ChoiceDisplay
+    print("=== CABIN DEBUG: scene:create complete ===\n")
 end
 
 function scene:show(event)

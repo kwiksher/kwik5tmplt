@@ -45,6 +45,20 @@ function M:init(UI)
   local path = "Behavior/"..props.appName.."/"..UI.page.."_scene.tree"
   local fullPath = system.pathForFile(path, system.ResourceDirectory)
   if enableBehaviorTree and fullPath and util.isFile(fullPath) then
+    local function clearModule(modName)
+      if package.loaded[modName] then
+        package.loaded[modName] = nil
+      end
+    end
+
+    -- Avoid cross-app and stale module cache collisions caused by generic names like `views.display_manager`.
+    clearModule("views.display_manager")
+    clearModule("views.baseScene")
+    clearModule("views.common_scene")
+    clearModule("views."..UI.page.."."..UI.page.."Scene")
+    clearModule("lua_modules.kwiksher.kwik.behaivor.display_manager_common")
+    clearModule("kwiksher.kwik.behaivor.display_manager_common")
+
     UI.behaviorTree = require("Behavior."..props.appName..".views."..UI.page.."."..UI.page.."Scene")
     UI.behaviorTree.view = UI.sceneGroup
     UI.behaviorTree.UI = UI

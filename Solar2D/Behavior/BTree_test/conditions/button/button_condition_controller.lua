@@ -6,7 +6,7 @@ local bt = require("behaivor.btree")
 
 -- Module paths
 local modulePaths = {
-    button = "conditions.button.button_conditions",
+    button = "Behavior.BTree_test.conditions.button.button_conditions",
 }
 
 -- Create controller
