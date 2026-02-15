@@ -6,7 +6,7 @@ The iron key object now supports tap interaction, allowing players to collect it
 ## Implementation Details
 
 ### Files Modified
-- `actions/cabin/iron_key_actions.lua` - Added tap handler functions
+- `Behavior/TheLastSpark/actions/cabin/iron_key_actions.lua` - Added tap handler functions
 
 ### New Actions Available
 1. **`enable_tap_interaction`** - Makes the iron key tappable
@@ -112,8 +112,8 @@ selector
 
 ## Related Files
 
-- **Action Module**: `actions/cabin/iron_key_actions.lua`
-- **Condition Module**: `conditions/cabin/has_iron_key.lua`
+- **Action Module**: `Behavior/TheLastSpark/actions/cabin/iron_key_actions.lua`
+- **Condition Module**: `Behavior/TheLastSpark/conditions/cabin/has_iron_key.lua`
 - **Model**: `models/cabin/iron_key.lua`
-- **Scene**: `views/cabin/cabinScene.lua`
-- **Behavior Tree**: `cabin_scene.tree`
+- **Scene**: `Behavior/TheLastSpark/views/cabin/cabinScene.lua`
+- **Behavior Tree**: `Behavior/TheLastSpark/cabin_scene.tree`
