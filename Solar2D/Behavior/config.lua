@@ -9,13 +9,15 @@ function M.getDialogueLayout()
     local safeCenterX = safeOriginX + safeWidth * 0.5
     local safeBottomY = safeOriginY + safeHeight
     local dialogMargin = 16
-    local dialogHeight = 55
+    local dialogHeight = 48
     local dialogueFontSize = 12
     local buttonHeight = 23
     local buttonWidth = 72
     local dialogY = safeBottomY - dialogHeight * 0.5
     local nextButtonY = dialogY
     local dialogWidth = math.max(safeWidth - 48, 280)
+    local dialogTextWidth = math.max(dialogWidth - buttonWidth-30, 150)
+    local dialogTextHeight = math.max(dialogHeight - 20, 20)
     local buttonX = safeOriginX + safeWidth - (buttonWidth * 0.5) - dialogMargin
 
     return {
@@ -34,6 +36,8 @@ function M.getDialogueLayout()
         dialogY = dialogY,
         nextButtonY = nextButtonY,
         dialogWidth = dialogWidth,
+        dialogTextWidth = dialogTextWidth,
+            dialogTextHeight = dialogTextHeight,
         buttonX = buttonX,
     }
 end
