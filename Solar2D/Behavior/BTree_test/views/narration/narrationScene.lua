@@ -41,6 +41,46 @@ local layout = {
     }
 }
 
+local function traceUiState(self, tag)
+    local objs = self and self.objs
+    local btn = objs and objs.nextButton
+    local dialogue = objs and objs.dialogueText
+    local uiGroup = objs and objs.uiGroup
+    local tree = self and self.treeController
+    local timerNow = system.getTimer() or 0
+
+    if not objs then
+        print("[TRACE narration.ui] " .. tostring(tag) .. " objs=nil")
+        return
+    end
+
+    local enabledState = "n/a"
+    if btn then
+        if btn._view and btn._view._isEnabled ~= nil then
+            enabledState = tostring(btn._view._isEnabled)
+        elseif btn.isEnabled ~= nil then
+            enabledState = tostring(btn.isEnabled)
+        elseif btn.setEnabled then
+            enabledState = "unknown(has setEnabled)"
+        end
+    end
+
+    print("[TRACE narration.ui] " .. tostring(tag)
+        .. " timer=" .. tostring(timerNow)
+        .. " btn=" .. tostring(btn ~= nil)
+        .. " visible=" .. tostring(btn and btn.isVisible)
+        .. " alpha=" .. tostring(btn and btn.alpha)
+        .. " enabled=" .. enabledState
+        .. " x=" .. tostring(btn and btn.x)
+        .. " y=" .. tostring(btn and btn.y)
+        .. " uiVisible=" .. tostring(uiGroup and uiGroup.isVisible)
+        .. " dialogueVisible=" .. tostring(dialogue and dialogue.isVisible)
+        .. " playerChoice=" .. tostring(objs.playerChoice)
+        .. " suppressUntil=" .. tostring(objs._suppressChoiceTapUntil)
+        .. " treeComplete=" .. tostring(tree and tree.isComplete)
+    )
+end
+
 function scene:create(event)
     local sceneGroup = self.view
     if not sceneGroup then
@@ -63,17 +103,22 @@ function scene:create(event)
 
     -- Use BaseScene initialization for dialogue interface
     self:initializeDialogueInterface(function()
+        traceUiState(self, "onRelease.beforeClear")
+
         -- Clear the wait state and tick the behavior tree
         waitActionModule.clearWait()
+        traceUiState(self, "onRelease.afterWaitClear")
 
         -- Also clear choice action wait state if exists
         local choiceActionModule = require("actions.narration.choice_action")
         if choiceActionModule and choiceActionModule.clearWait then
             choiceActionModule.clearWait()
+            traceUiState(self, "onRelease.afterChoiceClear")
         end
 
         if self.treeController and not self.treeController.isComplete then
             self.treeController:tick()
+            traceUiState(self, "onRelease.afterTreeTick")
         end
     end, {
         -- Dialog box parameters
@@ -89,6 +134,7 @@ function scene:create(event)
         buttonWidth = layout.nextButton.width,
         buttonHeight = layout.nextButton.height
     })
+    traceUiState(self, "create.afterInitDialogue")
 
     -- Initialize choice display system
     local okChoiceInit, choiceResult = pcall(function()
@@ -156,19 +202,73 @@ function scene:resetActionModules()
     end
 end
 
-function scene:show(event)
-    -- Call BaseScene's onShow to handle behavior tree initialization
-    self:onShow(event.phase)
+function scene:onShow(phase)
+    traceUiState(self, "show." .. tostring(phase) .. ".beforeOnShow")
+    BaseScene.onShow(self, phase)
+    traceUiState(self, "show." .. tostring(phase) .. ".afterOnShow")
+
+    if phase == "will" and self.objs then
+        if self.treeController and self.treeController.reset then
+            self.treeController:reset()
+            self.treeController.isComplete = false
+        end
+
+        self.objs.playerChoice = nil
+
+        local showChoicesAction = require("actions.narration.show_choices_action")
+        if showChoicesAction and showChoicesAction.initialize then
+            showChoicesAction.initialize(self.objs)
+        end
+
+        if self.hideChoiceButtons then
+            self:hideChoiceButtons()
+        end
+
+        if self.objs.uiGroup then
+            self.objs.uiGroup.isVisible = true
+            self.objs.uiGroup.alpha = 1
+        end
+
+        if self.objs.dialogueText then
+            self.objs.dialogueText.isVisible = true
+            self.objs.dialogueText.alpha = 1
+        end
+
+        if self.objs.nextButton then
+            transition.cancel("buttonBlink")
+            transition.cancel(self.objs.nextButton)
+            self.objs.nextButton.alpha = 1
+            self.objs.nextButton.isVisible = true
+            if self.objs.nextButton.setEnabled then
+                self.objs.nextButton:setEnabled(true)
+            end
+            self.objs.nextButton:toFront()
+        end
+        traceUiState(self, "show.will.afterRestore")
+    elseif phase == "did" and self.objs and self.objs.nextButton then
+        self.objs.nextButton.isVisible = true
+        self.objs.nextButton.alpha = 1
+        if self.objs.nextButton.setEnabled then
+            self.objs.nextButton:setEnabled(true)
+        end
+        self.objs.nextButton:toFront()
+        traceUiState(self, "show.did.afterRestore")
+        timer.performWithDelay(100, function()
+            if self and self.objs then
+                traceUiState(self, "show.did.plus100ms")
+            end
+        end)
+    end
 end
 
-function scene:hide(event)
-    -- Call BaseScene's onHide to handle cleanup
-    self:onHide(event.phase)
+function scene:onHide(phase)
+    traceUiState(self, "hide." .. tostring(phase) .. ".beforeOnHide")
+    BaseScene.onHide(self, phase)
+    traceUiState(self, "hide." .. tostring(phase) .. ".afterOnHide")
 end
 
-function scene:destroy(event)
-    -- Call BaseScene's onDestroy to handle cleanup
-    self:onDestroy()
+function scene:onDestroy()
+    BaseScene.onDestroy(self)
 end
 
 -- -----------------------------------------------------------------------------------
