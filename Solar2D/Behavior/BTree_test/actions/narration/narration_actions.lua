@@ -3,8 +3,8 @@
 -- Uses BaseNarrationAction for shared narration display
 -------------------------------------------------------------------------------
 local bt = require("behaivor.btree")
-local BaseNarrationAction = require("actions.base_narration_action")
-local BaseWaitAction = require("actions.base_wait_action")
+local BaseNarrationAction = require("Behavior.base_narration_action")
+local BaseWaitAction = require("Behavior.base_wait_action")
 
 -- Narration text content
 local narrationTexts = {

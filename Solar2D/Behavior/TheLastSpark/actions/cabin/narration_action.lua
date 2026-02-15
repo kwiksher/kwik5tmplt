@@ -1,7 +1,7 @@
 -- Narration Action (Cabin Scene)
 -- Uses base narration action with cabin-specific texts
 
-local BaseNarrationAction = require("actions.base_narration_action")
+local BaseNarrationAction = require("Behavior.base_narration_action")
 
 -- Narration text content for cabin scene
 local narrationTexts = {
