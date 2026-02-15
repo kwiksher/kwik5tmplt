@@ -12,8 +12,8 @@ local scene = BaseScene:new("button")
 
 -- BTree components
 local bt = require("behaivor.btree")
-local actionController = require("actions.button.button_controller")
-local conditionController = require("conditions.button.button_condition_controller")
+local actionController = require("Behavior.BTree_test.actions.button.button_controller")
+local conditionController = require("Behavior.BTree_test.conditions.button.button_condition_controller")
 
 -- Layout configuration
 local layout = {

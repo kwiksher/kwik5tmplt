@@ -30,8 +30,8 @@ local function gotoScene(sceneName)
         }
     else
         scenePathMap = {
-            buttonScene = "views.button.buttonScene",
-            animationScene = "views.animation.animationScene",
+            buttonScene = "Behavior.BTree_test.views.button.buttonScene",
+            animationScene = "Behavior.BTree_test.views.animation.animationScene",
         }
     end
 
@@ -42,12 +42,12 @@ local function gotoScene(sceneName)
     if useComponentPaths and targetScene == "App.BTree_test.components.button.index" then
         local loaded = pcall(require, targetScene)
         if not loaded then
-            targetScene = "views.button.buttonScene"
+            targetScene = "Behavior.BTree_test.views.button.buttonScene"
         end
     elseif useComponentPaths and targetScene == "App.BTree_test.components.animation.index" then
         local loaded = pcall(require, targetScene)
         if not loaded then
-            targetScene = "views.animation.animationScene"
+            targetScene = "Behavior.BTree_test.views.animation.animationScene"
         end
     end
 
