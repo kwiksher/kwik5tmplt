@@ -85,6 +85,7 @@ function scene:create(event)
         buttonLabel = layout.nextButton.label,
         buttonX = layout.nextButton.x,
         buttonY = layout.nextButton.y,
+        fontSize = uiLayout.dialogueFontSize,
         buttonWidth = layout.nextButton.width,
         buttonHeight = layout.nextButton.height
     })
