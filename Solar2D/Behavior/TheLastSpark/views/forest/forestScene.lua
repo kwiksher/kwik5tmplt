@@ -53,9 +53,9 @@ local layout = {
         },
     },
     choices = {
-        {label = "Fight", x = display.contentCenterX - 220, y = display.contentHeight - 20, value = "fight"},
-        {label = "Calm", x = display.contentCenterX, y = display.contentHeight - 20, value = "calm"},
-        {label = "Retreat", x = display.contentCenterX + 220, y = display.contentHeight - 20, value = "retreat"}
+        {label = "Fight", x = uiLayout.safeCenterX - uiLayout.choiceGapX, y = uiLayout.choiceY, value = "fight"},
+        {label = "Calm", x = uiLayout.safeCenterX, y = uiLayout.choiceY, value = "calm"},
+        {label = "Retreat", x = uiLayout.safeCenterX + uiLayout.choiceGapX, y = uiLayout.choiceY, value = "retreat"}
     }
 }
 

@@ -5,24 +5,13 @@
 -------------------------------------------------------------------------------
 
 local choiceBase = require("Behavior.choice_base")
+local behaviorConfig = require("Behavior.config")
 local showChoicesAction = require("Behavior.TheLastSpark.actions.cabin.show_choices_action")
 
 -- Create a new instance that inherits from choiceBase
 local M = choiceBase:new()
 
-M.defaultStyle = {
-  width = 160,
-  height = 44,
-  cornerRadius = 10,
-  fillColor = {0.2, 0.3, 0.5},
-  strokeColor = {0.8, 0.8, 0.8},
-  strokeWidth = 2,
-  font = native.systemFontBold,
-  fontSize = 18,
-  textColor = {1, 1, 1},
-  paddingHorizontal = 16,
-  paddingVertical = 10,
-}
+M.defaultStyle = behaviorConfig.getChoiceButtonStyle()
 
 -------------------------------------------------------------------------------
 -- Override: Callback when a choice is selected (cabin-specific)

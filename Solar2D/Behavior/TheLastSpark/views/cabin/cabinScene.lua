@@ -101,9 +101,9 @@ local layout = {
         },
     },
     choices = {
-        {label = "Force Door", x = display.contentCenterX - 220, y = display.contentHeight - 20, value = "force_door"},
-        {label = "Window", x = display.contentCenterX, y = display.contentHeight - 20, value = "window"},
-        {label = "Markings", x = display.contentCenterX + 220, y = display.contentHeight - 20, value = "markings"}
+        {label = "Force Door", x = uiLayout.safeCenterX - uiLayout.choiceGapX, y = uiLayout.choiceY, value = "force_door"},
+        {label = "Window", x = uiLayout.safeCenterX, y = uiLayout.choiceY, value = "window"},
+        {label = "Markings", x = uiLayout.safeCenterX + uiLayout.choiceGapX, y = uiLayout.choiceY, value = "markings"}
     }
 }
 
