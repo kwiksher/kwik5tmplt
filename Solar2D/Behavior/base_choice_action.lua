@@ -169,6 +169,9 @@ function BaseChoiceAction.new(choiceConfig)
             if sceneObjects.nextButton then
                 sceneObjects.nextButton.isVisible = false
                 sceneObjects.nextButton.alpha = 1.0
+                if sceneObjects.nextButton.setEnabled then
+                    sceneObjects.nextButton:setEnabled(false)
+                end
                 print("Choice Action: Next button hidden")
             else
                 print("ERROR: nextButton not found in sceneObjects")
@@ -194,9 +197,13 @@ function BaseChoiceAction.new(choiceConfig)
                     -- Show button after delay for reading time
                     timer.performWithDelay(4000, function()
                         if sceneObjects and sceneObjects.nextButton then
+                            if sceneObjects.nextButton.setEnabled then
+                                sceneObjects.nextButton:setEnabled(true)
+                            end
                             sceneObjects.nextButton.isVisible = true
                             sceneObjects.nextButton.alpha = 1.0
                             M.isWaitingForButton = true
+                            print("Choice Action: Next button shown and enabled; waiting for click")
 
                             local function blinkCycle()
                                 if sceneObjects.nextButton and sceneObjects.nextButton.removeSelf then

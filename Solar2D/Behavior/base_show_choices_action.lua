@@ -22,6 +22,21 @@ function BaseShowChoicesAction.new()
 
     local sceneObjects = {}
 
+    local function hideNextButton()
+        local nextButton = sceneObjects and sceneObjects.nextButton
+        if not nextButton then
+            return
+        end
+
+        transition.cancel(nextButton)
+        nextButton.isVisible = false
+        nextButton.alpha = 0
+
+        if nextButton.setEnabled then
+            nextButton:setEnabled(false)
+        end
+    end
+
     function M.initialize(objects)
         sceneObjects = objects
         M.choicesAreVisible = false
@@ -50,12 +65,12 @@ function BaseShowChoicesAction.new()
             M.choicesAreVisible = true
 
             sceneObjects.choicesVisible = true
-
-            if sceneObjects.nextButton then
-                sceneObjects.nextButton.isVisible = false
-                transition.cancel(sceneObjects.nextButton)
-                sceneObjects.nextButton.alpha = 1.0
-            end
+            local now = system.getTimer() or 0
+            local suppressUntil = now + 500
+            local currentSuppressUntil = sceneObjects._suppressChoiceTapUntil or 0
+            sceneObjects._suppressChoiceTapUntil = math.max(currentSuppressUntil, suppressUntil)
+            print("Show Choices: suppressing choice taps until=" .. tostring(sceneObjects._suppressChoiceTapUntil))
+            hideNextButton()
 
             if sceneObjects.showChoiceButtons then
                 sceneObjects.showChoiceButtons()
@@ -71,6 +86,9 @@ function BaseShowChoicesAction.new()
             M.choiceWasSelected = false
             M.choiceCompleted = false
             sceneObjects.choicesVisible = false
+            if sceneObjects.nextButton and sceneObjects.nextButton.setEnabled then
+                sceneObjects.nextButton:setEnabled(true)
+            end
             return bt.SUCCESS
         end
 
