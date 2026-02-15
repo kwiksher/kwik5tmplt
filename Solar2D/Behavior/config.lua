@@ -19,7 +19,7 @@ function M.getDialogueLayout()
     local dialogTextWidth = math.max(dialogWidth - buttonWidth-30, 150)
     local dialogTextHeight = math.max(dialogHeight - 20, 20)
     local buttonX = safeOriginX + safeWidth - (buttonWidth * 0.5) - dialogMargin
-    local choiceGapX = 220
+    local choiceGapX = 120
     local choiceY = display.contentHeight - 20
 
     return {

@@ -1,7 +1,6 @@
 -------------------------------------------------------------------------------
--- Cabin Scene Automated Test - Jump to Choices
--- Sets necessary conditions, restarts the tree, and auto-presses Next
--- using touch/tap style input (matching current button implementation).
+-- Forest Scene Automated Test - Reach Choices
+-- Auto-presses Next using touch/tap style input until [ui show_choices].
 -------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -11,9 +10,8 @@ local M = {}
 local TEST_CONFIG = {
     AUTO_CLICK_DELAY = 400,
     CHECK_DELAY = 120,
-    START_DELAY = 600,
+    START_DELAY = 700,
     ENABLE_DEBUG_LOGS = true,
-    AUTO_ADVANCE_TO_CHOICES = true,
 }
 
 local testState = {
@@ -24,7 +22,7 @@ local testState = {
 
 local function log(message)
     if TEST_CONFIG.ENABLE_DEBUG_LOGS then
-        print("[CABIN_TEST] " .. message)
+        print("[FOREST_TEST] " .. message)
     end
 end
 
@@ -123,54 +121,6 @@ local function choicesAreVisible(scene)
     return false
 end
 
-local function setupChoicesConditions()
-    local scene = getCurrentScene()
-    if not scene or not scene.objs then
-        log("ERROR: scene not ready")
-        return false
-    end
-
-    log("Setting conditions to jump to [ui show_choices]...")
-
-    local ironKey = scene.objs.iron_key
-    if ironKey then
-        ironKey.collected = true
-        if ironKey.modelData then
-            ironKey.modelData.collected = true
-            ironKey.modelData.currentState = "collected"
-        end
-        log("✓ iron_key marked collected")
-    end
-
-    local door = scene.objs.cabin_door
-    if door and door.modelData then
-        door.modelData.currentState = "open"
-        log("✓ cabin_door set open")
-    end
-
-    local chest = scene.objs.chest
-    if chest and chest.modelData then
-        chest.modelData.currentState = "open"
-        log("✓ chest set open")
-    end
-
-    local floorboard = scene.objs.loose_floorboard
-    if floorboard and floorboard.modelData then
-        floorboard.modelData.searched = true
-        log("✓ loose_floorboard marked searched")
-    end
-
-    if scene.objs.restartTree then
-        scene.objs.restartTree()
-        log("✓ behavior tree restarted")
-    else
-        log("ERROR: restartTree not available")
-        return false
-    end
-
-    return true
-end
-
 local function autoClickLoop()
     if testState.testComplete then
         return
@@ -179,28 +129,20 @@ local function autoClickLoop()
 end
 
 function M.start()
-    log("\n=== Starting Cabin Choice Jump Test ===")
+    log("\n=== Starting Forest Reach Choices Test ===")
 
     testState.testComplete = false
     stopTimers()
 
     timer.performWithDelay(TEST_CONFIG.START_DELAY, function()
-        if not setupChoicesConditions() then
-            log("✗ Failed to set conditions")
-            testState.testComplete = true
-            return
-        end
-
-        if TEST_CONFIG.AUTO_ADVANCE_TO_CHOICES then
-            testState.autoClickTimer = timer.performWithDelay(TEST_CONFIG.AUTO_CLICK_DELAY, autoClickLoop, 0)
-            testState.checkTimer = timer.performWithDelay(TEST_CONFIG.CHECK_DELAY, function()
-                local scene = getCurrentScene()
-                if choicesAreVisible(scene) then
-                    log("✓ Reached [ui show_choices]")
-                    M.stop()
-                end
-            end, 0)
-        end
+        testState.autoClickTimer = timer.performWithDelay(TEST_CONFIG.AUTO_CLICK_DELAY, autoClickLoop, 0)
+        testState.checkTimer = timer.performWithDelay(TEST_CONFIG.CHECK_DELAY, function()
+            local scene = getCurrentScene()
+            if choicesAreVisible(scene) then
+                log("✓ Reached [ui show_choices]")
+                M.stop()
+            end
+        end, 0)
     end)
 end
 
