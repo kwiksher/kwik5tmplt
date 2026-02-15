@@ -5,7 +5,7 @@
 -------------------------------------------------------------------------------
 
 local choiceBase = require("Behavior.choice_base")
-local showChoicesAction = require("actions.forest.show_choices_action")
+local showChoicesAction = require("Behavior.TheLastSpark.actions.forest.show_choices_action")
 
 -- Create a new instance that inherits from choiceBase
 local M = choiceBase:new()

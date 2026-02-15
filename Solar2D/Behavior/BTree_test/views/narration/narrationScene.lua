@@ -43,13 +43,21 @@ local layout = {
 
 function scene:create(event)
     local sceneGroup = self.view
+    if not sceneGroup then
+        sceneGroup = display.newGroup()
+        self.view = sceneGroup
+    end
 
     self.objs = self.objs or {}
 
-    local layers = displayManager.createSceneLayers(sceneGroup)
-    self.objs.background = layers.background
-    self.objs.characterGroup = layers.characters
-    self.objs.uiGroup = layers.ui
+    if displayManager and displayManager.createSceneLayers then
+        local layers = displayManager.createSceneLayers(sceneGroup)
+        self.objs.background = layers.background
+        self.objs.characterGroup = layers.characters
+        self.objs.uiGroup = layers.ui
+    else
+        self:initializeDisplay(sceneGroup, {})
+    end
 
     -- TODO: add display objects
 
@@ -82,7 +90,15 @@ function scene:create(event)
     })
 
     -- Initialize choice display system
-    self.objs.choiceGroup = ChoiceDisplay:initialize(sceneGroup, self.objs, nil, layout.choices)
+    local okChoiceInit, choiceResult = pcall(function()
+        return ChoiceDisplay:initialize(sceneGroup, self.objs, nil, layout.choices)
+    end)
+    if okChoiceInit then
+        self.objs.choiceGroup = choiceResult
+    else
+        print("ChoiceDisplay initialize error:", choiceResult)
+        self.objs.choiceGroup = nil
+    end
 
     -- Helper function to show choice buttons
     function self.showChoiceButtons()

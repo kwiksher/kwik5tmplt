@@ -4,7 +4,7 @@
 -- Uses BaseUIAction for common functionality
 
 local bt = require("behaivor.btree")
-local BaseUIAction = require("actions.base_ui_action")
+local BaseUIAction = require("Behavior.base_ui_action")
 
 -- Create module using base class
 local M = BaseUIAction.new()
@@ -26,7 +26,7 @@ end
 
 local function showChoiceButtons()
     -- Delegate to the proper show_choices_action module which handles RUNNING state
-    local showChoicesModule = require("actions.forest.show_choices_action")
+    local showChoicesModule = require("Behavior.TheLastSpark.actions.forest.show_choices_action")
     return showChoicesModule.execute()
 end
 
