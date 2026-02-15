@@ -3,7 +3,7 @@
 -- Returns RUNNING while typing, SUCCESS when complete
 -- Uses BaseChoiceAction for common functionality
 
-local BaseChoiceAction = require("actions.base_choice_action")
+local BaseChoiceAction = require("Behavior.base_choice_action")
 local composer = require("composer")
 
 -- Choice configuration: narration and scene

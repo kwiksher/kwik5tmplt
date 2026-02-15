@@ -2,7 +2,7 @@
 -- Displays narrative text in the dialogue text area
 -- Uses BaseNarrationAction for common functionality
 
-local BaseNarrationAction = require("actions.base_narration_action")
+local BaseNarrationAction = require("Behavior.base_narration_action")
 
 -- Narration text content
 local narrationTexts = {

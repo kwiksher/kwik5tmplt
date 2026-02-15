@@ -4,7 +4,7 @@
 -- Parses scene name from action and transitions using composer
 -------------------------------------------------------------------------------
 local bt = require("behaivor.btree")
-local BaseSceneAction = require("actions.base_scene_action")
+local BaseSceneAction = require("Behavior.base_scene_action")
 local composer = require("composer")
 
 -- Scene objects reference

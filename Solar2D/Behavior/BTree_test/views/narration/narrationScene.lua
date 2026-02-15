@@ -4,7 +4,7 @@
 local BaseScene = require("views.baseScene")
 local common = require("behaivor.common_helpers")
 local behaviorConfig = require("Behavior.config")
-local displayManager = require("views.display_manager")
+local displayManager = require("Behavior.display_manager")
 local ChoiceDisplay = require("views.narration.choice_display")
 
 local scene = BaseScene:new("narration")

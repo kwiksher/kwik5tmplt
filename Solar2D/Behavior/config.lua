@@ -1,25 +1,5 @@
 local M = {}
 
-application = {
-    content = {
-        fps = 60,
-        width = 320,
-        height = 480,
-        scale = "adaptive",
-        xAlign = "center",
-        yAlign = "center",
-        imageSuffix = {
-            ["@2x"] = 2.000,
-            ["@4x"] = 4.000,
-        },
-        license = {
-            google = {
-                key = "Please set your google license key",
-            },
-        },
-    },
-}
-
 function M.getDialogueLayout()
     local scale = 0.25
     local safeOriginX = display.safeScreenOriginX or display.screenOriginX or 0
