@@ -100,7 +100,7 @@ function M.enableTapInteraction()
             if M.sceneObjects and M.sceneObjects.treeController then
                 timer.performWithDelay(100, function()
                     -- First, clear the wait action to unblock the tree
-                    local waitAction = require("actions.cabin.wait_action")
+                    local waitAction = require("Behavior.TheLastSpark.actions.cabin.wait_action")
                     if waitAction and waitAction.clearWait then
                         waitAction.clearWait()
                         print("Iron key: Cleared wait action")

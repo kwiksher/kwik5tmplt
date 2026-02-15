@@ -3,18 +3,18 @@
 -- Shows a star performing linear animation
 -------------------------------------------------------------------------------
 local composer = require("composer")
-local BaseScene = require("views.baseScene")
+local BaseScene = require("Behavior.baseScene")
 local common = require("behaivor.common_helpers")
-local displayManager = require("views.display_manager")
+local displayManager = require("Behavior.display_manager")
 
 -- Create scene inheriting from BaseScene
 local scene = BaseScene:new("animation")
 
 -- BTree components
 local bt = require("behaivor.btree")
-local actionController = require("actions.animation.animation_controller")
-local conditionController = require("conditions.animation.animation_condition_controller")
-local starActions = require("actions.animation.star_actions")
+local actionController = require("Behavior.BTree_test.actions.animation.animation_controller")
+local conditionController = require("Behavior.BTree_test.conditions.animation.animation_condition_controller")
+local starActions = require("Behavior.BTree_test.actions.animation.star_actions")
 
 -- Layout configuration
 local layout = {

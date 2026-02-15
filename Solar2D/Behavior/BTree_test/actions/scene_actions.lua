@@ -4,7 +4,7 @@
 -- Parses scene name from action and transitions using composer
 -------------------------------------------------------------------------------
 local bt = require("behaivor.btree")
-local BaseSceneAction = require("actions.base_scene_action")
+local BaseSceneAction = require("Behavior.base_scene_action")
 local composer = require("composer")
 
 -- Scene objects reference
@@ -30,12 +30,26 @@ local function gotoScene(sceneName)
         }
     else
         scenePathMap = {
-            buttonScene = "views.button.buttonScene",
-            animationScene = "views.animation.animationScene",
+            buttonScene = "Behavior.BTree_test.views.button.buttonScene",
+            animationScene = "Behavior.BTree_test.views.animation.animationScene",
         }
     end
 
     local targetScene = scenePathMap[sceneName] or sceneName
+
+    -- Fallback: when component paths are enabled but target module is missing,
+    -- use Behavior view scenes so BTree_test navigation keeps working.
+    if useComponentPaths and targetScene == "App.BTree_test.components.button.index" then
+        local loaded = pcall(require, targetScene)
+        if not loaded then
+            targetScene = "Behavior.BTree_test.views.button.buttonScene"
+        end
+    elseif useComponentPaths and targetScene == "App.BTree_test.components.animation.index" then
+        local loaded = pcall(require, targetScene)
+        if not loaded then
+            targetScene = "Behavior.BTree_test.views.animation.animationScene"
+        end
+    end
 
     print("[ACTION] goto " .. targetScene)
     composer.gotoScene(targetScene, {

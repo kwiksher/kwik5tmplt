@@ -6,18 +6,18 @@ local actionHelper = require("behaivor.action_helper")
 
 -- Module paths
 local modulePaths = {
-    elara = "actions.forest.elara_actions",
-    wolf = "actions.forest.wolf_actions",
-    cabin = "actions.forest.cabin_actions",
-    lumin_seed = "actions.forest.lumin_seed_actions",
-    audio = "actions.forest.audio_actions",
-    scene = "actions.forest.scene_actions",
-    ui = "actions.forest.ui_actions",
-    focus = "actions.forest.focus_actions",
-    wait = "actions.forest.wait_action",
-    show_choices = "actions.forest.show_choices_action",
-    choice = "actions.forest.choice_action",
-    narration = "actions.forest.narration_action",
+    elara = "Behavior.TheLastSpark.actions.forest.elara_actions",
+    wolf = "Behavior.TheLastSpark.actions.forest.wolf_actions",
+    cabin = "Behavior.TheLastSpark.actions.forest.cabin_actions",
+    lumin_seed = "Behavior.TheLastSpark.actions.forest.lumin_seed_actions",
+    audio = "Behavior.TheLastSpark.actions.forest.audio_actions",
+    scene = "Behavior.TheLastSpark.actions.forest.scene_actions",
+    ui = "Behavior.TheLastSpark.actions.forest.ui_actions",
+    focus = "Behavior.TheLastSpark.actions.forest.focus_actions",
+    wait = "Behavior.TheLastSpark.actions.forest.wait_action",
+    show_choices = "Behavior.TheLastSpark.actions.forest.show_choices_action",
+    choice = "Behavior.TheLastSpark.actions.forest.choice_action",
+    narration = "Behavior.TheLastSpark.actions.forest.narration_action",
 }
 
 -- Show mapping

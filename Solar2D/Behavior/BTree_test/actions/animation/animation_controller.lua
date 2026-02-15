@@ -7,9 +7,9 @@ local actionHelper = require("behaivor.action_helper")
 
 -- Module paths
 local modulePaths = {
-    animation = "actions.animation.animation_actions",
-    star = "actions.animation.star_actions",
-    scene = "actions.scene_actions",
+    animation = "Behavior.BTree_test.actions.animation.animation_actions",
+    star = "Behavior.BTree_test.actions.animation.star_actions",
+    scene = "Behavior.BTree_test.actions.scene_actions",
 }
 
 -- Create controller using action_helper.new with custom routing

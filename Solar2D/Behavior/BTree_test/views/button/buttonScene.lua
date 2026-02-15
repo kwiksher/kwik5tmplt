@@ -2,9 +2,9 @@
 -- Button Scene View - BTree Implementation
 -- Shows a button that returns to animation scene
 -------------------------------------------------------------------------------
-local BaseScene = require("views.baseScene")
+local BaseScene = require("Behavior.baseScene")
 local common = require("behaivor.common_helpers")
-local displayManager = require("views.display_manager")
+local displayManager = require("Behavior.display_manager")
 local widget = require("widget")
 
 -- Create scene inheriting from BaseScene
@@ -12,8 +12,8 @@ local scene = BaseScene:new("button")
 
 -- BTree components
 local bt = require("behaivor.btree")
-local actionController = require("actions.button.button_controller")
-local conditionController = require("conditions.button.button_condition_controller")
+local actionController = require("Behavior.BTree_test.actions.button.button_controller")
+local conditionController = require("Behavior.BTree_test.conditions.button.button_condition_controller")
 
 -- Layout configuration
 local layout = {

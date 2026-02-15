@@ -7,6 +7,16 @@ local bt = require("behaivor.btree")
 
 local BaseChoiceAction = {}
 
+local function requireFirst(candidates)
+    for i = 1, #candidates do
+        local ok, mod = pcall(require, candidates[i])
+        if ok and mod then
+            return mod
+        end
+    end
+    return nil
+end
+
 -------------------------------------------------------------------------------
 -- Creates a new choice action module
 -- @param choiceConfig table - Map of choice types to config (narration, scene, focus)
@@ -72,20 +82,18 @@ function BaseChoiceAction.new(choiceConfig)
             return bt.RUNNING
         end
 
-        -- If this is a new choice or we were waiting and button was clicked
+        -- If this is a resumed choice and wait was cleared
         if M.currentChoice == choiceType and not M.isWaitingForButton then
             print("Choice Action: Wait was cleared, returning SUCCESS")
 
-            -- Notify show_choices that the choice action is complete
-            -- Try cabin first, then forest (graceful fallback)
-            local showChoicesModule
-            local success, cabinShowChoices = pcall(require, "actions.cabin.show_choices_action")
-            if success and cabinShowChoices then
-                showChoicesModule = cabinShowChoices
-            else
-                success, showChoicesModule = pcall(require, "actions.forest.show_choices_action")
-            end
-
+            local showChoicesModule = requireFirst({
+                "Behavior.BTree_test.actions.narration.show_choices_action",
+                "Behavior.TheLastSpark.actions.cabin.show_choices_action",
+                "Behavior.TheLastSpark.actions.forest.show_choices_action",
+                "actions.narration.show_choices_action",
+                "actions.cabin.show_choices_action",
+                "actions.forest.show_choices_action"
+            })
             if showChoicesModule and showChoicesModule.completeChoice then
                 showChoicesModule.completeChoice()
             end
@@ -93,39 +101,45 @@ function BaseChoiceAction.new(choiceConfig)
             M.lastCompletedChoice = choiceType
             M.currentChoice = nil
             M.isTypingComplete = true
+
+            -- Execute callback if available (used by BTree_test)
+            local mergedChoiceConfig = config[choiceType]
+            if mergedChoiceConfig and mergedChoiceConfig.callback then
+                timer.performWithDelay(1000, function()
+                    mergedChoiceConfig.callback()
+                end)
+            end
+
             return bt.SUCCESS
         end
 
         print("Action: Player chose " .. choiceType .. " - Starting new choice execution")
         M.currentChoice = choiceType
 
-        local choiceConfig = config[choiceType]
-        if not choiceConfig then
-            print("ERROR: Unknown choice type - " .. choiceType)
+        local selectedChoiceConfig = config[choiceType]
+        if not selectedChoiceConfig then
+            print("ERROR: Unknown choice type - " .. tostring(choiceType))
             return bt.FAILED
         end
 
-        print("Choice Action: Config found - narration: " .. choiceConfig.narration)
+        print("Choice Action: Config found - narration: " .. selectedChoiceConfig.narration)
 
         -- Execute focus action first
-        if choiceConfig.focus then
-            print("Choice Action: Executing focus on " .. choiceConfig.focus)
-            -- Determine which scene's focus module to use based on current choice config
-            -- Try cabin first, then forest (graceful fallback)
-            local focusModule
-            local success, cabinFocus = pcall(require, "actions.cabin.focus_actions")
-            if success and cabinFocus then
-                focusModule = cabinFocus
-            else
-                success, focusModule = pcall(require, "actions.forest.focus_actions")
-            end
+        if selectedChoiceConfig.focus then
+            print("Choice Action: Executing focus on " .. selectedChoiceConfig.focus)
+            local focusModule = requireFirst({
+                "Behavior.TheLastSpark.actions.cabin.focus_actions",
+                "Behavior.TheLastSpark.actions.forest.focus_actions",
+                "actions.cabin.focus_actions",
+                "actions.forest.focus_actions"
+            })
 
             if focusModule and focusModule.execute then
-                local result = focusModule.execute(choiceConfig.focus)
+                local result = focusModule.execute(selectedChoiceConfig.focus)
                 if result == bt.SUCCESS then
                     print("Choice Action: Focus executed successfully")
                 else
-                    print("ERROR: Focus execution failed for: " .. choiceConfig.focus)
+                    print("ERROR: Focus execution failed for: " .. selectedChoiceConfig.focus)
                 end
             else
                 print("ERROR: Focus module not found or has no execute function")
@@ -155,6 +169,9 @@ function BaseChoiceAction.new(choiceConfig)
             if sceneObjects.nextButton then
                 sceneObjects.nextButton.isVisible = false
                 sceneObjects.nextButton.alpha = 1.0
+                if sceneObjects.nextButton.setEnabled then
+                    sceneObjects.nextButton:setEnabled(false)
+                end
                 print("Choice Action: Next button hidden")
             else
                 print("ERROR: nextButton not found in sceneObjects")
@@ -163,44 +180,31 @@ function BaseChoiceAction.new(choiceConfig)
             -- Start typing effect
             local currentIndex = 0
             local typingSpeed = 30
-            local textLength = #choiceConfig.narration
+            local textLength = #selectedChoiceConfig.narration
 
-            print("Choice: Text length = " .. textLength .. ", typing speed = " .. typingSpeed .. "ms")
-            print("Choice: Full narration text: " .. choiceConfig.narration)
-
-            -- Clear the text initially
             sceneObjects.dialogueText.text = ""
-            print("Choice Action: dialogueText.text cleared, starting timer")
 
             typingTimer = timer.performWithDelay(typingSpeed, function()
                 currentIndex = currentIndex + 1
 
-                if currentIndex == 1 then
-                    print("Choice Action: Timer fired - first character")
-                end
-
                 if currentIndex <= textLength then
-                    -- Add one more character
-                    sceneObjects.dialogueText.text = string.sub(choiceConfig.narration, 1, currentIndex)
-                    if currentIndex % 10 == 0 then
-                        print("Choice Action: Typing progress - " .. currentIndex .. "/" .. textLength)
-                    end
+                    sceneObjects.dialogueText.text = string.sub(selectedChoiceConfig.narration, 1, currentIndex)
                 else
                     -- Typing complete
-                    print("Choice Action: Typing animation complete")
                     cancelTyping()
                     M.isTypingComplete = true
-                    print("Choice: Typing complete, isTypingComplete set to true")
 
                     -- Show button after delay for reading time
                     timer.performWithDelay(4000, function()
                         if sceneObjects and sceneObjects.nextButton then
-                            print("Choice: Showing next button with blinking")
+                            if sceneObjects.nextButton.setEnabled then
+                                sceneObjects.nextButton:setEnabled(true)
+                            end
                             sceneObjects.nextButton.isVisible = true
                             sceneObjects.nextButton.alpha = 1.0
                             M.isWaitingForButton = true
+                            print("Choice Action: Next button shown and enabled; waiting for click")
 
-                            -- Create blinking animation
                             local function blinkCycle()
                                 if sceneObjects.nextButton and sceneObjects.nextButton.removeSelf then
                                     transition.to(sceneObjects.nextButton, {
@@ -223,19 +227,22 @@ function BaseChoiceAction.new(choiceConfig)
                     end)
                 end
             end, textLength + 1)
-
-            print("Choice (typing): Timer created with " .. (textLength + 1) .. " iterations")
         else
             print("ERROR: dialogueText not found in sceneObjects")
+            return bt.FAILED
         end
 
-        -- Return RUNNING to pause tree execution until typing and reading time complete
         print("Choice Action: Returning RUNNING to pause tree")
         print("=== CHOICE ACTION DEBUG END ===")
         return bt.RUNNING
     end
 
     function M.execute(actionName)
+        -- Compatibility: direct choice key (BTree_test style)
+        if config[actionName] then
+            return M.executeChoice(actionName)
+        end
+
         -- Handle "choice dynamic" - check playerState for which choice was made
         if actionName == "choice dynamic" then
             print("Choice Action: Dynamic handler - checking playerState")
@@ -252,14 +259,13 @@ function BaseChoiceAction.new(choiceConfig)
         end
 
         -- Handle specific choices like "choice fight", "choice calm", etc.
-        -- Updated to capture full choice name including underscores (e.g., "force_door")
-        local choiceType = actionName:match("choice%s+(.+)")
+        local choiceType = actionName and actionName:match("choice%s+(.+)")
         if choiceType then
             return M.executeChoice(choiceType)
-        else
-            print("Warning: Unknown choice action - " .. tostring(actionName))
-            return bt.FAILED
         end
+
+        print("Warning: Unknown choice action - " .. tostring(actionName))
+        return bt.FAILED
     end
 
     return M
