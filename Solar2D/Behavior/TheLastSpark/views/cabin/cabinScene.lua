@@ -17,6 +17,19 @@ local actionController = require("Behavior.TheLastSpark.actions.cabin.cabin_acti
 local conditionController = require("Behavior.TheLastSpark.conditions.cabin.cabin_conditions")
 local waitActionModule = require("Behavior.TheLastSpark.actions.cabin.wait_action")
 
+local debugCreateCount = 0
+
+local function statusName(status)
+    if status == bt.SUCCESS then
+        return "SUCCESS"
+    elseif status == bt.RUNNING then
+        return "RUNNING"
+    elseif status == bt.FAILED or status == bt.FAILURE then
+        return "FAILED"
+    end
+    return "UNKNOWN"
+end
+
 scene.imagePath = "App/TheLastSpark/assets/images/cabin/"
 
 local uiLayout = behaviorConfig.getDialogueLayout()
@@ -100,6 +113,8 @@ local layout = {
 
 function scene:create(event)
     local sceneGroup = self.view
+    debugCreateCount = debugCreateCount + 1
+    print("\n=== CABIN DEBUG: scene:create #" .. tostring(debugCreateCount) .. " ===")
 
     common._env = {imagePath = self.imagePath, UI=self.UI}
     -- Use BaseScene initialization for display
@@ -156,6 +171,12 @@ function scene:create(event)
     self.objs.brass_key = common.createCharacter("brass_key", model, layout, self.objs.characterGroup)
     self.objs.loose_floorboard = common.createCharacter("loose_floorboard", model, layout, self.objs.characterGroup)
 
+    local initialHasIronKey = self.objs.iron_key and self.objs.iron_key.collected == true
+    local initialDoorState = self.objs.cabin_door and self.objs.cabin_door.modelData and self.objs.cabin_door.modelData.currentState or "nil"
+    print("CABIN DEBUG: initial iron_key.collected=" .. tostring(initialHasIronKey))
+    print("CABIN DEBUG: initial cabin_door.modelData.currentState=" .. tostring(initialDoorState))
+    print("CABIN DEBUG: expected first branch = " .. (initialHasIronKey and "(has iron key) -> scene door_open" or "!(has iron key) -> narration cabin_exterior"))
+
     -- Store reference to scene for helper functions
     self.objs.showChoiceButtons = function() self.showChoiceButtons() end
     self.objs.hideChoiceButtons = function() self.hideChoiceButtons() end
@@ -164,9 +185,38 @@ function scene:create(event)
 
     -- Initialize action controller with scene objects
     actionController.initialize(self.objs)
+    if actionController.reset then
+        actionController.reset()
+    end
+
+    if not actionController._traceWrapped and actionController.execute then
+        local executeBase = actionController.execute
+        actionController.execute = function(actionName)
+            print("[TRACE cabin.action] executing [" .. tostring(actionName) .. "]")
+            local result = executeBase(actionName)
+            print("[TRACE cabin.action] result [" .. tostring(actionName) .. "] = " .. statusName(result) .. " (" .. tostring(result) .. ")")
+            if result == bt.RUNNING then
+                print("[TRACE cabin.running] node [" .. tostring(actionName) .. "] returned RUNNING")
+            end
+            return result
+        end
+        actionController._traceWrapped = true
+    end
 
     -- Initialize condition controller with scene objects
     conditionController.initialize(self.objs)
+
+    if not conditionController._traceWrapped and conditionController.evaluate then
+        local evaluateBase = conditionController.evaluate
+        conditionController.evaluate = function(conditionName)
+            local result = evaluateBase(conditionName)
+            if conditionName == "searched floorboard" then
+                print("[TRACE cabin.condition] [" .. tostring(conditionName) .. "] = " .. tostring(result))
+            end
+            return result
+        end
+        conditionController._traceWrapped = true
+    end
 
     -- Load behavior tree and register action/condition handlers
     self.behaviorTree = common.loadBehaviorTree("Behavior/TheLastSpark/cabin_scene.tree", actionController, conditionController)
@@ -223,6 +273,7 @@ function scene:create(event)
 
     -- Store ChoiceDisplay for BaseScene cleanup
     self.ChoiceDisplay = ChoiceDisplay
+    print("=== CABIN DEBUG: scene:create complete ===\n")
 end
 
 function scene:show(event)

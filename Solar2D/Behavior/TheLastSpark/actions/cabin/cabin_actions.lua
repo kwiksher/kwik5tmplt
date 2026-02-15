@@ -6,21 +6,21 @@ local actionHelper = require("behaivor.action_helper")
 
 -- Module paths
 local modulePaths = {
-    elara = "actions.cabin.elara_actions",
-    cabin_door = "actions.cabin.cabin_door_actions",
-    chest = "actions.cabin.chest_actions",
-    iron_key = "actions.cabin.iron_key_actions",
-    brass_key = "actions.cabin.brass_key_actions",
-    loose_floorboard = "actions.cabin.loose_floorboard_actions",
-    lumin_seed = "actions.cabin.lumin_seed_actions",
-    audio = "actions.cabin.audio_actions",
-    scene = "actions.cabin.scene_actions",
-    ui = "actions.cabin.ui_actions",
-    focus = "actions.cabin.focus_actions",
-    wait = "actions.cabin.wait_action",
-    show_choices = "actions.cabin.show_choices_action",
-    choice = "actions.cabin.choice_action",
-    narration = "actions.cabin.narration_action",
+    elara = "Behavior.TheLastSpark.actions.cabin.elara_actions",
+    cabin_door = "Behavior.TheLastSpark.actions.cabin.cabin_door_actions",
+    chest = "Behavior.TheLastSpark.actions.cabin.chest_actions",
+    iron_key = "Behavior.TheLastSpark.actions.cabin.iron_key_actions",
+    brass_key = "Behavior.TheLastSpark.actions.cabin.brass_key_actions",
+    loose_floorboard = "Behavior.TheLastSpark.actions.cabin.loose_floorboard_actions",
+    lumin_seed = "Behavior.TheLastSpark.actions.cabin.lumin_seed_actions",
+    audio = "Behavior.TheLastSpark.actions.cabin.audio_actions",
+    scene = "Behavior.TheLastSpark.actions.cabin.scene_actions",
+    ui = "Behavior.TheLastSpark.actions.cabin.ui_actions",
+    focus = "Behavior.TheLastSpark.actions.cabin.focus_actions",
+    wait = "Behavior.TheLastSpark.actions.cabin.wait_action",
+    show_choices = "Behavior.TheLastSpark.actions.cabin.show_choices_action",
+    choice = "Behavior.TheLastSpark.actions.cabin.choice_action",
+    narration = "Behavior.TheLastSpark.actions.cabin.narration_action",
 }
 
 -- Show mapping
