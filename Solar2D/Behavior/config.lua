@@ -10,7 +10,7 @@ function M.getDialogueLayout()
     local safeBottomY = safeOriginY + safeHeight
     local dialogMargin = 16
     local dialogHeight = 55
-    local dialogueFontSize = 16
+    local dialogueFontSize = 12
     local buttonHeight = 23
     local buttonWidth = 72
     local dialogY = safeBottomY - dialogHeight * 0.5
