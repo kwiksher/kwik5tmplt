@@ -2,6 +2,7 @@
 -- Arcane Markings Scene View - BTree Implementation
 -------------------------------------------------------------------------------
 local BaseScene = require("Behavior.baseScene")
+local behaviorConfig = require("Behavior.config")
 
 -- Create scene inheriting from BaseScene
 local scene = BaseScene:new("arcane_markings")
@@ -10,6 +11,8 @@ local scene = BaseScene:new("arcane_markings")
 local layout = {
     background = "images/bg_arcane_markings.png",
 }
+
+local uiLayout = behaviorConfig.getDialogueLayout()
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -27,7 +30,17 @@ function scene:create(event)
     self:initializeDialogueInterface(function()
         -- TODO: Add behavior tree controller here
         print("Arcane Markings scene: Next button pressed")
-    end)
+    end, {
+        x = uiLayout.safeCenterX,
+        y = uiLayout.dialogY,
+        width = uiLayout.dialogWidth,
+        height = uiLayout.dialogHeight,
+        buttonLabel = "Next",
+        buttonX = uiLayout.buttonX,
+        buttonY = uiLayout.nextButtonY,
+        buttonHeight = uiLayout.buttonHeight,
+        buttonWidth = uiLayout.buttonWidth
+    })
 
     -- Display placeholder text
     if self.objs.dialogueText then
