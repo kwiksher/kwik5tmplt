@@ -30,16 +30,12 @@ env.goPage = "narration"
 -- env.book = "snowMan"
 -- env.goPage = "page1"
 
---env.book = "TheLastSpark"
--- env.goPage = "forest"
---env.goPage = "cabin"
-
 --
-env.mode = "development"
--- env.mode = "production"
 
+-- env.mode  = "development"
+-- env.mode  = "debug"
 -- env.mode = "production" -- need kwik5-plugin src from kwiksher's repo
---env.mode = "behaviorTree"
+env.mode = "behaviorTree"
 
 --
 if env.mode == "development" or env.mode == "debug" then
@@ -74,26 +70,33 @@ elseif env.mode == "behaviorTree" then
   require("custom.components.myComponent")
 
   local resourcePath = system.pathForFile("", system.ResourceDirectory)
-
---  local appPath = "/App/TheLastSpark/behaviorTree"
-  local appPath = "/App/BTree_test/behaviorTree"
-
-  package.path = resourcePath .. appPath.."/?.lua;" .. resourcePath .. appPath.."/?/?.lua;"..package.path
+  local appPath = "/Behavior/" .. env.book
+  local kwikPath = "/lua_modules/kwiksher/kwik"
+  package.path = resourcePath .. appPath .. "/?.lua;" ..
+                 resourcePath .. appPath .. "/?/?.lua;" ..
+                 resourcePath .. kwikPath .. "/?.lua;" ..
+                 resourcePath .. kwikPath .. "/?/?.lua;" ..
+                 package.path
 
     -- Require Composer for scene management
   local composer = require("composer")
 
-  -- Start with the forest scene
-  -- composer.gotoScene("views.forest.forestScene")
-  -- composer.gotoScene("views.cabin.cabinScene")
-  composer.gotoScene("views.animation.animationScene")
+  -- Start with the selected behavior-tree scene
+  local sceneModule = "Behavior."..env.book..".views."..env.goPage.."."..env.goPage.."Scene"
+  local okScene, sceneOrErr = pcall(require, sceneModule)
+  if not okScene then
+    print("Failed to load scene module:", sceneModule)
+    print(sceneOrErr)
+    return
+  end
 
+  composer.gotoScene(sceneModule)
 
   --Start automated test after scene loads
   -- timer.performWithDelay(1000, function()
-  --     print("\n=== Starting Automated Cabin Test (Jump to Choices) ===\n")
-  --     local cabinTest = require("tests.cabinSceneTest")
-  --     cabinTest.start()
+  --     print("\n=== Starting Automated Test (Jump to Choices) ===\n")
+  --     local sceneTest = require("tests."..env.goPage.."SceneTest")
+  --     sceneTest.start()
   -- end)
   return
 end
