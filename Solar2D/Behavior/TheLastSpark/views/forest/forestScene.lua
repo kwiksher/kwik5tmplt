@@ -1,11 +1,11 @@
 -------------------------------------------------------------------------------
 -- Forest Scene View - BTree Implementation
 -------------------------------------------------------------------------------
-local BaseScene = require("views.baseScene")
+local BaseScene = require("Behavior.baseScene")
 local model = require("models.forest.forest_model")
 local common = require("behaivor.common_helpers")
 local behaviorConfig = require("Behavior.config")
-local displayManager = require("views.display_manager")
+local displayManager = require("Behavior.display_manager")
 local ChoiceDisplay = require("views.forest.choice_display")
 
 -- Create scene inheriting from BaseScene

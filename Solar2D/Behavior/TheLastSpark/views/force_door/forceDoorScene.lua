@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Force Door Scene View - BTree Implementation
 -------------------------------------------------------------------------------
-local BaseScene = require("views.baseScene")
+local BaseScene = require("Behavior.baseScene")
 
 -- Create scene inheriting from BaseScene
 local scene = BaseScene:new("force_door")

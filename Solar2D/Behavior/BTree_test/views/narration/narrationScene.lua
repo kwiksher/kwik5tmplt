@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- narration Scene View - BTree Scaffold
 -------------------------------------------------------------------------------
-local BaseScene = require("views.baseScene")
+local BaseScene = require("Behavior.baseScene")
 local common = require("behaivor.common_helpers")
 local behaviorConfig = require("Behavior.config")
 local displayManager = require("Behavior.display_manager")
