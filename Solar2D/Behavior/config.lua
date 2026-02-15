@@ -19,6 +19,8 @@ function M.getDialogueLayout()
     local dialogTextWidth = math.max(dialogWidth - buttonWidth-30, 150)
     local dialogTextHeight = math.max(dialogHeight - 20, 20)
     local buttonX = safeOriginX + safeWidth - (buttonWidth * 0.5) - dialogMargin
+    local choiceGapX = 220
+    local choiceY = display.contentHeight - 20
 
     return {
         scale = scale,
@@ -37,8 +39,26 @@ function M.getDialogueLayout()
         nextButtonY = nextButtonY,
         dialogWidth = dialogWidth,
         dialogTextWidth = dialogTextWidth,
-            dialogTextHeight = dialogTextHeight,
+        dialogTextHeight = dialogTextHeight,
         buttonX = buttonX,
+        choiceGapX = choiceGapX,
+        choiceY = choiceY,
+    }
+end
+
+function M.getChoiceButtonStyle()
+    return {
+        width = 25,
+        height = 8,
+        cornerRadius = 4,
+        fillColor = {0.2, 0.3, 0.5},
+        strokeColor = {0.8, 0.8, 0.8},
+        strokeWidth = 2,
+        font = native.systemFontBold,
+        fontSize = 10,
+        textColor = {1, 1, 1},
+        paddingHorizontal = 12,
+        paddingVertical = 6,
     }
 end
 
