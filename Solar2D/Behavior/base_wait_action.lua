@@ -58,12 +58,7 @@ function BaseWaitAction.new()
     end
 
     function M.executeWaitForNext()
-        local isNewWait = (currentWaitId == 0)
-
-        if isNewWait then
-            currentWaitId = nextWaitId
-            nextWaitId = nextWaitId + 1
-
+        local function isNarrationOrChoicesActive()
             local narrationAction = requireFirst({
                 "Behavior.TheLastSpark.actions.cabin.narration_action",
                 "Behavior.TheLastSpark.actions.forest.narration_action",
@@ -84,6 +79,12 @@ function BaseWaitAction.new()
             })
             local areChoicesVisible = showChoicesAction and showChoicesAction.choicesAreVisible or false
 
+            return isNarrationActive, areChoicesVisible
+        end
+
+        local function ensureNextVisibleIfAllowed(tag)
+            local isNarrationActive, areChoicesVisible = isNarrationOrChoicesActive()
+
             if M.sceneObjects and M.sceneObjects.nextButton then
                 if areChoicesVisible then
                     print("Wait Action: Player choices visible, keeping button hidden")
@@ -102,18 +103,28 @@ function BaseWaitAction.new()
                     if M.sceneObjects.nextButton.toFront then
                         M.sceneObjects.nextButton:toFront()
                     end
-                    print("Wait Action: No narration/choices active, showing next button" ..
+                    print("Wait Action: " .. tag .. " showing next button" ..
                         " (x=" .. tostring(M.sceneObjects.nextButton.x) ..
                         ", y=" .. tostring(M.sceneObjects.nextButton.y) ..
                         ", alpha=" .. tostring(M.sceneObjects.nextButton.alpha) .. ")")
                 end
             end
+        end
+
+        local isNewWait = (currentWaitId == 0)
+
+        if isNewWait then
+            currentWaitId = nextWaitId
+            nextWaitId = nextWaitId + 1
+
+            ensureNextVisibleIfAllowed("No narration/choices active,")
 
             return bt.RUNNING
         elseif clearedWaitId == currentWaitId then
             currentWaitId = 0
             return bt.SUCCESS
         else
+            ensureNextVisibleIfAllowed("Wait still active,")
             return bt.RUNNING
         end
     end
