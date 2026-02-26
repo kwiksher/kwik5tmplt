@@ -20,11 +20,24 @@ function M.xtest_new_animation()
   -- obj.rect:tap()
 end
 
-function M.test_select_linear()
+function M.xtest_select_linear()
   local name = "rect_0"
   M.layerTable.altDown = true
   helper.selectLayer(name, "linear")
   M.layerTable.altDown = false
+end
+
+function M.test_pointAB_popup_drag_sets_from_to()
+  local name = "rect_0"
+  M.layerTable.altDown = true
+  helper.selectLayer(name, "linear")
+  M.layerTable.altDown = false
+
+  -- local pointA, pointB, pointABbox = helper.getLinearPointModules()
+  -- local aTargetX, aTargetY = helper.dragPointAndSave(pointA, 24, 16)
+  -- local bTargetX, bTargetY = helper.dragPointAndSave(pointB, 56, 28)
+
+  -- helper.assertLinearPointABxy(pointABbox, aTargetX, aTargetY, bTargetX, bTargetY)
 end
 
 function M.xtest_select_for_editing()

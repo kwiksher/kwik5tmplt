@@ -218,13 +218,6 @@ function exports.selectLayer(name, class, isRightClick)
   print("=======", UI.editor.currentLayer)
 end
 
-function exports.selectLayerProps(name, class)
-  layerTable.altDown = true
-  exports.selectLayer(name, class)
-  layerTable.altDown = false
-end
-
-
 function exports.selectTool(args)
   UI.scene.app:dispatchEvent(
     {
@@ -445,6 +438,71 @@ function exports.getFillColor(object)
       local fill = decoded.fill
       print( fill.r, fill.g, fill.b, fill.a )
       return fill
+  end
+end
+
+local function getEditorOffsets()
+  local designWidth, designHeight = 480, 320
+  if display.contentHeight > display.contentWidth then
+    designWidth, designHeight = 320, 480
+  end
+  return (display.contentWidth - designWidth) * 0.5,
+         (display.contentHeight - designHeight) * 0.5
+end
+
+local function closeEnough(a, b)
+  return math.abs(a - b) < 0.001
+end
+
+function exports.getLinearPointModules()
+  local pointA = require("editor.animation.pointA")
+  local pointB = require("editor.animation.pointB")
+  local pointABbox = require("editor.animation.pointABbox")
+
+  if not (pointA.group and pointA.group.ptA and pointB.group and pointB.group.ptA) then
+    error("pointA/pointB dragger is not ready")
+  end
+
+  pointA:setActiveEntryObjs(pointABbox.objs.A[1], pointABbox.objs.A[2])
+  pointB:setActiveEntryObjs(pointABbox.objs.B[1], pointABbox.objs.B[2])
+
+  return pointA, pointB, pointABbox
+end
+
+function exports.dragPointAndSave(point, dx, dy)
+  local dragger = point.group.ptA
+  local startX, startY = point.group.x, point.group.y
+  local targetX, targetY = startX + dx, startY + dy
+
+  dragger:onDown({x = startX, y = startY})
+  dragger:onMove({x = targetX, y = targetY})
+  point.popup:tap({name = "tap"}, {eventName = "popup.save"})
+
+  return targetX, targetY
+end
+
+function exports.assertLinearPointABxy(pointABbox, aTargetX, aTargetY, bTargetX, bTargetY)
+  local editorWidth, editorHeight = getEditorOffsets()
+  local expectedAX = aTargetX - editorWidth
+  local expectedAY = aTargetY - editorHeight
+  local expectedBX = bTargetX - editorWidth
+  local expectedBY = bTargetY - editorHeight
+
+  local ax = tonumber(pointABbox.objs.A[1].text)
+  local ay = tonumber(pointABbox.objs.A[2].text)
+  local bx = tonumber(pointABbox.objs.B[1].text)
+  local by = tonumber(pointABbox.objs.B[2].text)
+
+  if not (ax and ay and bx and by) then
+    error("pointABbox values are not numeric after popup.save")
+  end
+
+  if not (closeEnough(ax, expectedAX) and closeEnough(ay, expectedAY)) then
+    error("pointA popup save did not update From(A) x/y as expected")
+  end
+
+  if not (closeEnough(bx, expectedBX) and closeEnough(by, expectedBY)) then
+    error("pointB popup save did not update To(B) x/y as expected")
   end
 end
 
