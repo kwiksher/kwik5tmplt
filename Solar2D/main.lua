@@ -30,12 +30,29 @@ env.goPage = "narration"
 -- env.book = "snowMan"
 -- env.goPage = "page1"
 
+--env.book = "shape"
+--env.goPage = "ellipse"
+
+
+env.book = "physics"
+-- env.goPage = "basic"
+-- env.goPage = "distance"
+-- env.goPage = "friction"
+-- env.goPage = "gear"
+-- env.goPage = "piston"
+-- env.goPage = "pivot"
+-- env.goPage = "pulley"
+-- env.goPage = "rope"
+-- env.goPage = "touch"
+-- env.goPage = "weld"
+env.goPage = "wheel"
+
 --
 
--- env.mode  = "development"
+env.mode  = "development"
 -- env.mode  = "debug"
 -- env.mode = "production" -- need kwik5-plugin src from kwiksher's repo
-env.mode = "behaviorTree"
+-- env.mode = "behaviorTree"
 
 --
 if env.mode == "development" or env.mode == "debug" then
@@ -46,9 +63,9 @@ if env.mode == "development" or env.mode == "debug" then
     language = "", -- empty string "" is for a single language project
     position = {x = 0, y = 0},
     gotoLastBook = true,
-    unitTest = false,
+    unitTest = true,
     httpServer = false,
-    scale      = 0.25,
+    scale      = 1,
     showPageName = true,
     turnOffNativeVideo = true
   }
@@ -106,6 +123,17 @@ system.setTapDelay(0.2)
 --
 --
 if env.setPlugin(env.mode)  then
+  if env.mode == "development" or env.mode == "debug" then
+    local forceReloadModules = {
+      "kwiksher.kwik.controller.ApplicationUI",
+      "kwiksher.kwik.controller.scene",
+      "kwiksher.kwik.controller.Application",
+      "kwiksher.kwik.components.kwik.layer_image"
+    }
+    for i = 1, #forceReloadModules do
+      package.loaded[forceReloadModules[i]] = nil
+    end
+  end
   local kwik = require("kwiksher.kwik")
   --
   --display.setDefault( "background", 0.2, 0.2, 0.2, 0.1 )
