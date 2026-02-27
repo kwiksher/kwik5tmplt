@@ -8,11 +8,11 @@ function M:create(UI)
     bodyA = "rect_0",
     bodyB = "rect_1",
     type = "rope", --pistoin, distance, pulle, + defaultSet
-    offsetA_x= 25,
-    offsetA_y= 25,
-    offsetB_x = 25,
-    offsetB_y = 25,
-    maxLength = 200
+    offsetA_x= 25 * kwikGlobal.scale,
+    offsetA_y= 25 * kwikGlobal.scale,
+    offsetB_x = 25 * kwikGlobal.scale,
+    offsetB_y = 25 * kwikGlobal.scale,
+    maxLength = 200* kwikGlobal.scale
   }
   self:_create(UI)
   --[[

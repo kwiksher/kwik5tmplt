@@ -8,8 +8,8 @@ function M:create(UI)
     bodyA = "rect_0",
     bodyB = "ellipse_1",
     type = "wheel", --pistoin, distance, pulle, + defaultSet
-    anchor_x = ellipse_1.x + ellipse_1.width/2 ,
-    anchor_y = ellipse_1.y + ellipse_1.height/2,
+    anchor_x = ellipse_1.x, -- + ellipse_1.width* kwikGlobal.scale * 0.5,
+    anchor_y = ellipse_1.y, -- + ellipse_1.height* kwikGlobal.scale * 0.5,
     axisX = 0,
     axisY = 1,
     springFrequency = 10,
