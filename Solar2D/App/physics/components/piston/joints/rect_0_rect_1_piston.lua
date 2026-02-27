@@ -8,8 +8,8 @@ function M:create(UI)
     bodyA = "rect_0",
     bodyB = "rect_1",
     type = "piston", --pistoin, distance, pulle, + defaultSet
-    anchor_x = rect_1.x+rect_1.width/2,
-    anchor_y = rect_1.y+rect_1.height/2,
+    anchor_x = rect_1.x+rect_1.width  * kwikGlobal.scale * 0.5,
+    anchor_y = rect_1.y+rect_1.height * kwikGlobal.scale * 0.5,
     isMotorEnabled= true,
     maxMotorForce = 1000,
     -- motorForce = 10,
