@@ -321,6 +321,10 @@ function exports.selectComponentIcon(name)
   end
 end
 
+function exports.selectComponent(name, isRightClick)
+  _selectComponent(name, isRightClick, selectors.componentSelector)
+end
+
 function exports.selectBook(name, isRightClick)
   for i, v in next, bookTable.objs do
     if v.text == name then
