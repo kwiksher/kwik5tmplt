@@ -13,27 +13,6 @@ function helper.selectLayer(name)
   end
 end
 
-function selectTool(args)
-  M.UI.scene.app:dispatchEvent(
-    {
-      name = "editor.selector.selectTool",
-      UI = M.UI,
-      class = args.class, -- obj.class,
-      -- toolbar = self,
-      isNew = args.isNew
-    }
-  )
-end
-
-function selectComponent(name)
-  for i, v in next, M.selectors.componentSelector.objs do
-    if v.text == name then
-      v:dispatchEvent{name="tap", target=v}
-      return
-    end
-  end
-end
-
 function M.xtest_select()
   local name = "title"
   helper.selectLayer(name)

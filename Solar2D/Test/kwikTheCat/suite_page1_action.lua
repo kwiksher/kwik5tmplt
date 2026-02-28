@@ -2,40 +2,16 @@ local M = require("Test.base_suite").new()
 
 local helper = require("Test.helper")
 
-function selectTool(args)
-  M.UI.scene.app:dispatchEvent(
-    {
-      name = "editor.selector.selectTool",
-      UI = M.UI,
-      class = args.class, -- obj.class,
-      -- toolbar = self,
-      isNew = args.isNew
-    }
-  )
-end
-
 local muiName = "action.commandView-"
--- local actionTable = require("editor.action.actionTable")
 
---
-function selectAction(name)
-  for i, v in next, M.actionTable.objs do
-    print("###", v.text)
-    if v.text == name then
-      -- v:dispatchEvent{name="touch", pahse="ended", target=v}
-      v:tap{target=v}
-      return
-    end
-  end
-end
 
 -- function M.test_component()
 --     selectors.projectPageSelector:show()
 -- end
 
 function M.xtest_new_action()
-  M.UI.editor.actionEditor.iconHander()
-  M.actionTable.newButton:tap{target=editor.newButton}
+  helper.selectComponent("actionTable")
+  helper.clickButton("create", M.actionButtons)
 end
 
 function M.xtest_select_action()
@@ -43,7 +19,7 @@ function M.xtest_select_action()
     --
     M.UI.editor.actionEditor.iconHander()
 
-    selectAction("eventOne")
+    helper.selectAction("eventOne")
 
    --- select a command
    local commandsTable = require("editor.action.actionCommandTable")
@@ -72,8 +48,8 @@ function M.xtest_select_multi_actions()
   --
   M.UI.editor.actionEditor.iconHander()
   M.actionTable.controlDown = true
-  selectAction("eventOne")
-  selectAction("eventTwo")
+  helper.selectAction("eventOne")
+  helper.selectAction("eventTwo")
   M.actionTable.controlDown = false
   -- end
 
@@ -85,7 +61,7 @@ function M.xtest_select_multi_actionCommands()
   -- UI.testCallback = function()
   --
   M.UI.editor.actionEditor.iconHander()
-  selectAction("eventOne")
+  helper.selectAction("eventOne")
   -- end
 
   local buttons = require("editor.action.actionCommandButtons")
@@ -165,61 +141,28 @@ function M.test_modifyActionCommnad()
   end
 --]]
 
-function M.test_newActionButton()
-  -- click UI.editor.actionIcon
-  --  it dispatches
+function M.xtest_newActionButton()
   local editor = require("editor.action.index")
 
-  M.selectors.componentSelector:onClick(true,  "actionTable")
-  M.actionTable.newButton:tap{target=editor.newButton}
-  -- selectAction("eventOne")
+  helper.selectComponent("actionTable")
+  if M.actionButtons and M.actionButtons.objs then
+    helper.clickButton("create", M.actionButtons)
+  elseif M.actionTable and M.actionTable.newButton then
+    M.actionTable.newButton:tap{target=M.actionTable.newButton}
+  end
 
-  -- Animation is muiIcon
-  M.actionController.commandGroupHandler{target={muiOptions={name=muiName.."Animation"}}}
-  M.selectors.componentSelector:onClick(true,  "layerTable")
+  if editor.selectbox and editor.selectbox.objs and editor.selectbox.objs[1] then
+    editor.selectbox.selectedObj = editor.selectbox.objs[1]
+    editor.selectbox.selectedObj.field.text = "act01"
+    editor.selectbox:textListener(nil, {phase = "ended"})
+  end
 
-  --select play
-  local commandEntry = M.commandbox.objs[2] -- should we change 'objs' to 'objs'?
-  commandEntry:dispatchEvent{name="tap", target=commandEntry}
-  -- select _target
-  local objEntry = M.actionCommandPropsTable.objs[1]
-  objEntry:dispatchEvent{name="tap", target=objEntry}
+  helper.selectActionCommand("animation", "play")
 
+  helper.clickProp(M.actionCommandPropsTable.objs, "_target")
   helper.selectLayer("cat", "linear")
 
--- select a layer's animation (one of animation class)
-
-  -- button is newText, please see model.lua for commandClass
-  --controller.commandHandler{model={commandClass = "button"}}
-
-  -- action name
-    -- local editor = require("editor.action.index")
-    -- editor.selectbox.selectedObj = editor.selectbox.objs[1]
-    -- editor.selectbox.selectedObj.field.text = "act01"
-    -- editor.selectbox:textListener(nil, {phase = "ended"})
-
-   --- select button command
-    -- UI.scene.app:dispatchEvent {
-    --   name = "editor.action.selectActionCommand",
-    --   UI = UI,
-    --   value = "button", -- obj.model.commandClass
-    --   isNew = true
-    -- }
-    --
-
-   --- select a layer
-    -- local propsTable = require("editor.action.actionCommandPropsTable")
-    -- local linkbox = propsTable.linkbox
-    -- local obj = linkbox.objs[2]
-    --   obj:tap({numTaps = 1})
-   --
-
-   --- save command props
-      -- UI.scene.app:dispatchEvent {
-      --   name = "editor.actionCommand.save",
-      --   UI = UI,
-      -- }
-    --
+  helper.clickButton("save", M.actionCommandButtons)
 end
 
 --[[

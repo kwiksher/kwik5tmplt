@@ -4,37 +4,6 @@ local helper = require("Test.helper")
 
 --local toolbar  = require("editor.parts.toolbar")
 
-function selectTool(args)
-  M.UI.scene.app:dispatchEvent(
-    {
-      name = "editor.selector.selectTool",
-      UI = M.UI,
-      class = args.class, -- obj.class,
-      -- toolbar = self,
-      isNew = args.isNew
-    }
-  )
-end
-
-function selectAction(name)
-  for i, v in next, M.actionTable.objs do
-    if v.text == name then
-      -- v:dispatchEvent{name="touch", pahse="ended", target=v}
-      v:touch{phase = "ended"}
-      return
-    end
-  end
-end
-
-function selectComponent(name)
-  for i, v in next, M.selectors.componentSelector.objs do
-    if v.text == name then
-      v:dispatchEvent{name="tap", target=v}
-      return
-    end
-  end
-end
-
 function xM.test_onTap()
 
   helper.selectLayer("star", "button", false) -- isRightClick
@@ -121,7 +90,7 @@ function M.xtest_new_button()
     obj:dispatchEvent({name="tap", target=obj})
 
     M.actionTable.altDown = true
-    selectAction("eventOne")
+    helper.selectAction("eventOne")
     M.actionTable.altDown = false
 
     -- selectCancel()
