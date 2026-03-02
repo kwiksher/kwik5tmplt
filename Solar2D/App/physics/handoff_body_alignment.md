@@ -1,102 +1,72 @@
-# Handoff: Physics Body Alignment at Scale 2 (Gear Page)
+# Handoff: Physics Joint Anchors vs Scale (App/physics)
 
-## Summary
+## Confirmed Findings
 
-Circle physics bodies (gearL, gearR) are visually misaligned with their display objects when `sceneGroup.xScale = 2`. Rectangles (rect_0, rect_1) are correctly aligned. The basic physics page (anchor=0.5,0.5 objects) works fine at any scale.
-
----
-
-## Files Involved
-
-| File | Role |
-|---|---|
-| `Solar2D/lua_modules/kwiksher/kwik/components/kwik/layer_physicsBody.lua` | **Runtime** physics body creator (loaded by sample books) |
-| `kwik5-plugin/kwik/components/kwik/layer_physicsBody.lua` | **Source** physics body creator (keep in sync with above) |
-| `App/physics/components/gear/layers/gearL.lua` | gearL display object — `anchorX=0, anchorY=0, radius=40` |
-| `App/physics/components/gear/layers/gearR.lua` | gearR display object — `anchorX=0, anchorY=0, radius=80` |
+- `Solar2D/main.lua` currently has `env.props.scale = 1`.
+- If this is changed to `2`, then `kwikGlobal.scale`-based anchor formulas in joint files double their width/height offsets.
+- Ellipse/circle objects should use `anchorX, anchorY = 0.5, 0.5` for center-based joint anchors.
+- Rectangle objects with `anchorX, anchorY = 0, 0` are fine as long as joint anchors add `width/2` and `height/2` (or scaled equivalents).
 
 ---
 
-## Root Cause
+## How Scale=2 Affects Joint Anchor Coordinates
 
-In `layer_physicsBody.lua`, `physics.addBody` circle fixture `x,y` offsets must be in the **object's own local (unscaled) coordinate space**. The code was computing `localCenterOffsetX = (0.5 - anchorX) * obj.width * parentScaleX`, which multiplies by `parentScaleX`.
-
-- At **scale=1**: `0.5 * 80 * 1 = 40` → correct
-- At **scale=2**: `0.5 * 80 * 2 = 80` → **wrong** (should still be 40)
-
-This is why the basic page (anchor=0.5,0.5 → offset=0) never showed the bug.
-
-### Corona docs confirm:
-> `x` / `y` in the fixture table are local-space offsets from the object's anchor point.
-> https://docs.coronalabs.com/api/library/physics/addBody.html
-
----
-
-## Fix Applied
-
-Both `layer_physicsBody.lua` files (plugin + lua_modules) were updated to remove `parentScaleX` from the circle case:
+For joints that compute center from top-left anchors using:
 
 ```lua
--- BEFORE (wrong at scale ≠ 1):
-physics.addBody(obj, props.type, {
-  radius = radius,
-  x = localCenterOffsetX,   -- = (0.5 - anchorX) * width * parentScaleX
-  y = localCenterOffsetY,
-})
-
--- AFTER (correct):
-physics.addBody(obj, props.type, {
-  radius = radius,
-  x = (0.5 - (obj.anchorX or 0.5)) * obj.width,
-  y = (0.5 - (obj.anchorY or 0.5)) * obj.height,
-})
+obj.x + obj.width * kwikGlobal.scale * 0.5
+obj.y + obj.height * kwikGlobal.scale * 0.5
 ```
 
-### Expected values after fix:
-| Object | anchorX | obj.width | Fix offset x | Scale-independent? |
-|---|---|---|---|---|
-| gearL | 0 | 80 | 0.5×80 = **40** | ✓ |
-| gearR | 0 | 160 | 0.5×160 = **80** | ✓ |
-| ellipse_0 basic | 0.5 | 67 | 0×67 = **0** | ✓ |
+changing `env.props.scale` from 1 to 2 doubles the local offset term:
+
+- scale=1: `obj.x + obj.width * 0.5`
+- scale=2: `obj.x + obj.width * 1.0`
+
+So anchor points move farther from the top-left anchor when scale is increased.
+
+For joints using direct center-positioned objects (`anchor=0.5,0.5`) and `anchor_x = ellipse.x`, scale does not appear explicitly in the formula.
 
 ---
 
-## Current State (as of last log)
+## Joint Anchor Report (All Joint Files in `App/physics/components/*/joints`)
 
-The log still shows the **old** `localCenterOffset=80,80` entry for anchor=0,0 runs — this is because:
-1. The debug print message still references the old `fixtureOffset` variable name (cosmetic only).
-2. The latest log entry shows gearL with `anchor=0.5,0.5` (a debug test run), not the current anchor=0,0 production state.
-
-**The fix is in the source.** The simulator must be **restarted** to pick up the change, then navigate to the gear page to confirm body alignment.
-
----
-
-## Verification Steps
-
-1. Restart Solar2D Simulator.
-2. Navigate to the **gear physics page** with `sceneGroup.xScale = 2`.
-3. Confirm gearL (small purple circle) and gearR (large grey circle) physics bodies visually overlap their display objects.
-4. Check `tmp.log` for lines like:
-   ```
-   [physicsBody] gearL circle ... localCenterOffset=80,80
-   ```
-   The `x,y` passed to `physics.addBody` is now `40,40` (half of obj.width/height), not `80,80`.
-
----
-
-## Rectangle Case (Already Correct)
-
-The rectangle `box` fixture uses `halfWidth`/`halfHeight` (in content space via `bounds.halfW = scaledW * 0.5`), so parentScaleX cancels out correctly there. No change needed for rectangles.
+| Joint file | Type | Anchor points passed to `physics.newJoint` | Uses `kwikGlobal.scale` |
+|---|---|---|---|
+| `components/distance/joints/rect_0_rect_1_distance.lua` | distance | `anchorA=(rect_0.x + rect_0.width*kwikGlobal.scale*0.5, rect_0.y + rect_0.height*kwikGlobal.scale*0.5)`, `anchorB=(rect_1.x + rect_1.width*kwikGlobal.scale*0.5, rect_1.y + rect_1.height*kwikGlobal.scale*0.5)` | Yes |
+| `components/friction/joints/rect_0_rect_1_friction.lua` | friction | `anchor=(rect_1.x + rect_1.width*kwikGlobal.scale*0.5, rect_1.y + rect_1.height*kwikGlobal.scale*0.5)` | Yes |
+| `components/piston/joints/rect_0_rect_1_piston.lua` | piston | `anchor=(rect_1.x + rect_1.width*kwikGlobal.scale*0.5, rect_1.y + rect_1.height*kwikGlobal.scale*0.5)` | Yes |
+| `components/pivot/joints/rect_0_rect_1_pivot.lua` | pivot | `anchor=(rect_0.x + rect_0.width*kwikGlobal.scale*0.5, rect_0.y + rect_0.height*kwikGlobal.scale*0.5)` | Yes |
+| `components/pulley/joints/rect_0_rect_1_pulley.lua` | pulley | `groundA=(rect_0.x + rect_0.width*kwikGlobal.scale*0.5, rect_0.y + rect_0.height*kwikGlobal.scale*0.5 - 100)`, `groundB=(rect_1.x + rect_1.width*kwikGlobal.scale*0.5, rect_0.y + rect_0.height*kwikGlobal.scale*0.5 - 100)`, `bodyA=(rect_0.x + rect_0.width*kwikGlobal.scale*0.5, rect_0.y + rect_0.height*kwikGlobal.scale*0.5)`, `bodyB=(rect_1.x + rect_1.width*kwikGlobal.scale*0.5, rect_1.y + rect_1.height*kwikGlobal.scale*0.5)` | Yes |
+| `components/rope/joints/rect_0_rect_1_rope.lua` | rope | `offsetA=(25*kwikGlobal.scale, 25*kwikGlobal.scale)`, `offsetB=(25*kwikGlobal.scale, 25*kwikGlobal.scale)` | Yes |
+| `components/touch/joints/rect_0_touch.lua` | touch | `anchor=(rect_0.x + rect_0.width*kwikGlobal.scale*0.5, rect_0.y + rect_0.height*kwikGlobal.scale*0.5)` | Yes |
+| `components/weld/joints/rect_0_rect_1_weld.lua` | weld | `anchor=(rect_0.x + rect_0.width*kwikGlobal.scale*0.5, rect_0.y + rect_0.height*kwikGlobal.scale*0.5)` | Yes |
+| `components/wheel/joints/rect_0_ellipse_0_wheel.lua` | wheel | `anchor=(ellipse_0.x, ellipse_0.y)` | No (direct) |
+| `components/wheel/joints/rect_0_ellipse_1_wheel.lua` | wheel | `anchor=(ellipse_1.x, ellipse_1.y)` | No (direct) |
+| `components/gear/joints/rect_0_gearL_pivot.lua` | pivot | `anchor=(gearL.x, gearL.y)` | No (direct) |
+| `components/gear/joints/rect_0_gearR_pivot.lua` | pivot | `anchor=(gearR.x, gearR.y)` | No (direct) |
+| `components/gear/joints/rect_0_rect_1_piston.lua` | piston | `anchor=(rect_1.x + rect_1.width/2, rect_1.y + rect_1.height/2)` | No |
+| `components/gear/joints/gearL_gearR_gear.lua` | gear | no anchor coordinates (links two existing joints: `rect_0_gearL_pivot`, `rect_0_gearR_pivot`) | No |
+| `components/gear/joints/gearR_rect_1_gear.lua` | gear | no anchor coordinates (links two existing joints: `rect_0_gearR_pivot`, `rect_0_rect_1_piston`) | No |
 
 ---
 
-## Related Changes in This Session
+## Anchor Settings of Referenced Objects (Wheel + Gear)
 
-| File | Change |
-|---|---|
-| `page_physicsJoint.lua` | Removed hardcoded `scale=0.5`; distance joint reads raw `anchorA_x/y` (no offset) |
-| `rect_0_rect_1_distance.lua` | Computes anchors as `obj.x + obj.width * xScale * 0.5` |
-| All other joint files in `App/physics` | Anchor positions updated to `dimension * kwikGlobal.scale * 0.5` |
-| `gear/joints/rect_0_gearL_pivot.lua` | Uses `gearL:localToContent(width/2, height/2)` for pivot anchor |
-| `gear/joints/rect_0_gearR_pivot.lua` | Uses `gearR:localToContent(width/2, height/2)` for pivot anchor |
-| `lua_modules/.../baseTable.lua:114` | Fixed typo `UI.edtior` → `UI.editor` |
+| Object file | Shape | anchorX, anchorY |
+|---|---|---|
+| `components/wheel/layers/rect_0.lua` | rectangle | `0, 0` |
+| `components/wheel/layers/ellipse_0.lua` | ellipse/circle | `0.5, 0.5` |
+| `components/wheel/layers/ellipse_1.lua` | ellipse/circle | `0.5, 0.5` |
+| `components/gear/layers/rect_0.lua` | rectangle | `0, 0` |
+| `components/gear/layers/rect_1.lua` | rectangle | `0, 0` |
+| `components/gear/layers/gearL.lua` | ellipse/circle | `0.5, 0.5` |
+| `components/gear/layers/gearR.lua` | ellipse/circle | `0.5, 0.5` |
+
+---
+
+## Recommendation
+
+- Keep ellipses/circles at `anchorX, anchorY = 0.5, 0.5` (recommended).
+- Avoid `anchor=0,0` for circles when using center-based wheel/pivot anchors.
+- Rectangles with `anchor=0,0` are valid and already handled correctly by explicit center offsets in joint formulas.
