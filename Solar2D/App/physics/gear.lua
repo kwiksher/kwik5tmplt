@@ -10,19 +10,23 @@ local model = {
       },
       {
         rect_0 = {
-          class={ "body", }  }
+          class={ "body", }
+         }
       },
       {
         rect_1 = {
-          class={ "body", }  }
+          class={ "body", }
+        }
       },
       {
         gearL = {
-          class={ "body", }  }
+          class={ "body", }
+        }
       },
       {
         gearR = {
-          class={ "body", }  }
+          class={ "body", }
+         }
       },
     },
     audios = {
@@ -35,8 +39,8 @@ local model = {
          "rect_0_gearL_pivot",
          "rect_0_gearR_pivot",
          "rect_0_rect_1_piston",
-         "gearL_gearR_gear",
-        "gearR_rect_1_gear",
+          "gearL_gearR_gear",
+          "gearR_rect_1_gear",
       },
     page = { "physics",  }
   },

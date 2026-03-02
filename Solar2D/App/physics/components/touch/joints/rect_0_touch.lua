@@ -8,8 +8,8 @@ function M:create(UI)
     bodyB = "",
     type = "touch", --pistoin, distance, pulle, + defaultSet
     body     = "rect_0",
-    anchor_x = rect_0.x+rect_0.width/2,
-    anchor_y = rect_0.y+rect_0.height/2,
+    anchor_x = rect_0.x+rect_0.width* kwikGlobal.scale * 0.5,
+    anchor_y = rect_0.y+rect_0.height* kwikGlobal.scale * 0.5,
     frequency = 0.8,
     dampingRatio = 0.2,
     maxForce = 1000,

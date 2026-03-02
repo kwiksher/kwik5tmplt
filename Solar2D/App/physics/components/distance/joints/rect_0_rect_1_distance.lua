@@ -8,10 +8,10 @@ function M:create(UI)
     bodyA = "rect_0",
     bodyB = "rect_1",
     type = "distance", --pistoin, distance, pulle, + defaultSet
-    anchorA_x = rect_0.x + rect_0.width/2,
-    anchorA_y = rect_0.y + rect_0.height/2,
-    anchorB_x = rect_1.x + rect_1.width/2,
-    anchorB_y = rect_1.y + rect_1.height/2,
+    anchorA_x = rect_0.x + rect_0.width  * kwikGlobal.scale * 0.5,
+    anchorA_y = rect_0.y + rect_0.height * kwikGlobal.scale * 0.5,
+    anchorB_x = rect_1.x + rect_1.width  * kwikGlobal.scale * 0.5,
+    anchorB_y = rect_1.y + rect_1.height * kwikGlobal.scale * 0.5,
   }
   self:_create(UI)
   --[[

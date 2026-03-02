@@ -23,7 +23,8 @@ local model = {
     },
     timers = {  },
     variables = {  },
-    joints    = {  "rect_0_rect_1_distance",  },
+    -- joints    = {   },
+    joints    = {  "rect_0_rect_1_distance"  },
     page = { "physics",  }
   },
   commands = {  },

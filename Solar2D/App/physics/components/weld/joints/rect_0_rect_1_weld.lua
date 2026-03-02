@@ -8,8 +8,8 @@ function M:create(UI)
     bodyA = "rect_0",
     bodyB = "rect_1",
     type = "weld", --pistoin, distance, pulle, + defaultSet
-    anchor_x = rect_0.x+rect_0.width/2,
-    anchor_y = rect_0.y+rect_0.height/2,
+    anchor_x = rect_0.x+rect_0.width* kwikGlobal.scale * 0.5,
+    anchor_y = rect_0.y+rect_0.height* kwikGlobal.scale * 0.5,
     frequency = 8,
     dampingRatio = 20
   }
