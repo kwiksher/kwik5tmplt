@@ -1,0 +1,11 @@
+local M = require("Test.base_suite").new()
+
+local helper = require("Test.helper")
+
+function M.test_new()
+  local name = "rect_0"
+  helper.selectLayer(name)
+  helper.selectIcon("Replacements", "DynamicText"):done(function() end)
+end
+-- ...existing code...
+return M
