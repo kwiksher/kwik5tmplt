@@ -1,10 +1,10 @@
 local env = require("env")
 
 
-env.book = "BTree_test"
+--env.book = "BTree_test"
 --env.goPage = "animation"
 --env.goPage = "button"
-env.goPage = "narration"
+--env.goPage = "narration"
 
 
 --env.book = "TheLastSpark"
@@ -12,8 +12,8 @@ env.goPage = "narration"
 --env.goPage = "cabin"
 
 
--- env.book = "book"
--- env.goPage = "landscape"
+env.book = "book"
+env.goPage = "landscape"
 
 --env.book = "animation"
 --env.goPage = "linear"
