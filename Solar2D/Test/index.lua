@@ -57,24 +57,24 @@ local M = {
 
     -- lunatest.suite("test.book.suite_assets", props)
 
-    -- set("kwikTheCat", "page1_page_props")
-    -- set("kwikTheCat", "page1_interactions")
-    -- set("kwikTheCat", "page1_replacements")
-    -- set("kwikTheCat", "page1_animation")
-    -- set("kwikTheCat", "page1_button")
     -- set("kwikTheCat", "page1_action")
-    -- set("kwikTheCat", "page1_group")
+    -- set("kwikTheCat", "page1_animation")
     -- set("kwikTheCat", "page1_audio")
+    -- set("kwikTheCat", "page1_button")
+    -- set("kwikTheCat", "page1_group")
+    -- set("kwikTheCat", "page1_interactions")
+    -- set("kwikTheCat", "page1_page_props")
+    -- set("kwikTheCat", "page1_replacements")
     -- set("kwikTheCat", "page1_select_copy_paste")
 
-    set("kwikTheCat", "page2_sync2audio")
-    set("kwikTheCat", "page3_drag")
-    set("kwikTheCat", "page3_button")
-    set("kwikTheCat", "page3_animation")
-    set("kwikTheCat", "page4_physics")
-    set("kwikTheCat", "page12_canvas")
+    -- set("kwikTheCat", "page2_sync2audio")
+    -- set("kwikTheCat", "page3_drag")
+    -- set("kwikTheCat", "page3_button")
+    -- set("kwikTheCat", "page3_animation")
+    -- set("kwikTheCat", "page4_physics")
+    -- set("kwikTheCat", "page12_canvas")
 
-    set("snowMan", "page2")
+    -- set("snowMan", "page2")
 
 
     -- lunatest.suite("test.book.suite_new_book_page_layer", props)
