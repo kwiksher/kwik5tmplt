@@ -8,14 +8,14 @@ function M:create(UI)
     bodyA = "rect_0",
     bodyB = "rect_1",
     type = "pulley", --pistoin, distance, pulle, + defaultSet
-    statA_x= rect_0.x+rect_0.width/2,
-    statA_y= rect_0.y+rect_0.height/2 - 100,
-    statB_x= rect_1.x+rect_1.width/2,
-    statB_y= rect_0.y+rect_0.height/2 -100,
-    bodyA_x= rect_0.x+rect_0.width/2,
-    bodyA_y= rect_0.y+rect_0.height/2,
-    bodyB_x= rect_1.x+rect_1.width/2,
-    bodyB_y= rect_1.y+rect_1.height/2,
+    statA_x= rect_0.x+rect_0.width * kwikGlobal.scale * 0.5,
+    statA_y= rect_0.y+rect_0.height* kwikGlobal.scale * 0.5 - 100,
+    statB_x= rect_1.x+rect_1.width * kwikGlobal.scale * 0.5,
+    statB_y= rect_0.y+rect_0.height* kwikGlobal.scale * 0.5 -100,
+    bodyA_x= rect_0.x+rect_0.width * kwikGlobal.scale * 0.5,
+    bodyA_y= rect_0.y+rect_0.height* kwikGlobal.scale * 0.5,
+    bodyB_x= rect_1.x+rect_1.width * kwikGlobal.scale * 0.5,
+    bodyB_y= rect_1.y+rect_1.height* kwikGlobal.scale * 0.5,
     ratio  = 1,
   }
   self:_create(UI)

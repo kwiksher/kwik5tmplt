@@ -13,7 +13,7 @@ function M:create(UI)
       gravityScale = 1,
       isFixedRotation = false,
       isSensor = false,
-      radius = 30, -- NIL means use object width/2
+      radius = 0, -- NIL means use object width/2
       shape   ="circle", -- "circle", -- rectangle,  path
       type = "dynamic", -- kinematic, static, dynamic
   }
