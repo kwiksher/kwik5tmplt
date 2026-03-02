@@ -8,8 +8,10 @@ function M:create(UI)
     bodyA = "rect_0",
     bodyB = "gearR",
     type = "pivot", --pistoin, distance, pulle, + defaultSet
-    anchor_x = gearR.x+gearR.width/2,
-    anchor_y = gearR.y+gearR.height/2,
+    -- anchor_x = gearR.x+gearR.width/2,
+    -- anchor_y = gearR.y+gearR.height/2,
+    anchor_x = gearR.x,
+    anchor_y = gearR.y,
     isMotorEnabled= false,
     maxMotorTorque = 1000,
     motorForce = 1,
