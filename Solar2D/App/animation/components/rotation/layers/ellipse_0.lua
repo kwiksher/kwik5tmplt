@@ -31,7 +31,7 @@ function M:create(UI)
   local path = UI.props.imgDir..self.imagePath
   -- local path = system.pathForFile(UI.props.imgDir..self.imagePath, system.ResourceDirectory)
   -- local x, y = app.getCenter(layerProps.x, layerProps.y)
-  local x, y = layerProps.x, layerProps.y
+  local x, y = app.getNormalizedPosition(layerProps.x, layerProps.y)
   local obj = display.newCircle(
     x,
     y,
