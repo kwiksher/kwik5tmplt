@@ -1,6 +1,6 @@
 local parent,root, M = newModule(...)
 local layerProps = require(M.layerMod).layerProps
-local MultiTouch = require("extlib.dmc_multitouch")
+local MultiTouch = require("dmc_multitouch")
 local M = {
   name ="ellipse_0",
   -- commonAsset = "",
@@ -11,7 +11,7 @@ local M = {
     target = "ellipse_0",
     type  = "",
     constrainAngle = NIL,
-    boundaries = {xMin=0, xMax=1920, yMin=0, yMax=1080},
+    boundaries = {xMin=0, xMax=1920/4, yMin=0, yMax=1080/4},
     isActive = true,
     isFocus = true,
     isPage = false,

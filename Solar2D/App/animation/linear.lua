@@ -10,11 +10,14 @@ local model = {
       },
       {
         rect_0 = {
-          class={ "linear","linear4center","button", }  }
+          class={ "linear" }  }
+          -- class={ "linear","linear4center","button", }  }
+
       },
       {
         ellipse_0 = {
-          class={ "linear","linear4copy","linear4test", }  }
+          class={ "linear" }  }
+          -- class={ "linear","linear4copy","linear4test", }  }
       },
     },
     audios = {
@@ -26,8 +29,8 @@ local model = {
     joints    = {  },
     page = {  }
   },
-  commands = {  "eventPlay",  },
-  onInit = function(scene) print("onInit") end
+  commands = {   "eventPlay",  },
+  onInit = function(scene)  end
 }
 local scene = require('controller.scene').new(sceneName, model)
 --
