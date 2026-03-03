@@ -29,17 +29,17 @@ M.ACTIONS = {
 }
 
 function M.changeToOpen()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("chest", "open", DisplayBase)
 end
 
 function M.changeToLocked()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("chest", "locked", DisplayBase)
 end
 
 function M.changeToEmpty()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("chest", "empty", DisplayBase)
 end
 

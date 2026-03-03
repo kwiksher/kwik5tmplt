@@ -100,7 +100,7 @@ function M.changeToDoorOpen()
 
     -- Change the door state to "open" so (is door open) condition becomes true
     if sceneObjects.cabin_door then
-        local DisplayBase = require("views.display_base")
+        local DisplayBase = require("behaivor.display_base_common")
         sceneObjects.cabin_door = DisplayBase:changeState(sceneObjects.cabin_door, "open")
         if sceneObjects.cabin_door.modelData then
             sceneObjects.cabin_door.modelData.currentState = "open"
@@ -138,7 +138,7 @@ function M.changeToChestOpen()
 
     -- Change the chest state to "open" so (is chest open) condition becomes true
     if sceneObjects.chest then
-        local DisplayBase = require("views.display_base")
+        local DisplayBase = require("behaivor.display_base_common")
         sceneObjects.chest = DisplayBase:changeState(sceneObjects.chest, "open")
         sceneObjects.chest.currentState = "open"
         if sceneObjects.chest.modelData then

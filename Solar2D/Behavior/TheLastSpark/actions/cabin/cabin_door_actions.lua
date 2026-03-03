@@ -29,17 +29,17 @@ M.ACTIONS = {
 }
 
 function M.changeToOpen()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("cabin_door", "open", DisplayBase)
 end
 
 function M.changeToClosed()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("cabin_door", "closed", DisplayBase)
 end
 
 function M.changeToSealed()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("cabin_door", "sealed", DisplayBase)
 end
 

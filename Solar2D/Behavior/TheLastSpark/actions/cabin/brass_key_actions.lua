@@ -34,7 +34,7 @@ M.ACTIONS = {
 }
 
 function M.changeToVisible()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     print("=== BRASS KEY SHOW ACTION CALLED ===")
     print("DEBUG: Before changeState - brass_key type: " .. type(M.sceneObjects.brass_key))
     local result = M.changeState("brass_key", "visible", DisplayBase)
@@ -54,7 +54,7 @@ function M.changeToVisible()
 end
 
 function M.changeToCollected()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     local result = M.changeState("brass_key", "collected", DisplayBase)
 
     -- Mark as collected in object and enable dragging
