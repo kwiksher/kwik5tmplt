@@ -21,7 +21,7 @@ M.ACTIONS = {
 }
 
 function M.changeToGlowing()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("lumin_seed", "glowing", DisplayBase)
 end
 

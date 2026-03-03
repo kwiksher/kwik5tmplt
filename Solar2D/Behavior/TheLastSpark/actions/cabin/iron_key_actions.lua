@@ -34,7 +34,7 @@ M.ACTIONS = {
 }
 
 function M.changeToVisible()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     print("DEBUG: Before changeState - iron_key type: " .. type(M.sceneObjects.iron_key))
     local result = M.changeState("iron_key", "visible", DisplayBase)
     print("DEBUG: After changeState - result: " .. tostring(result))
@@ -51,7 +51,7 @@ function M.changeToVisible()
 end
 
 function M.changeToCollected()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     local result = M.changeState("iron_key", "collected", DisplayBase)
 
     -- Mark as collected in object
