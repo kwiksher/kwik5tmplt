@@ -11,7 +11,7 @@ local M = {
     gravityY = 9.8,
     drawMode = "hybrid", -- "hybrid" -- normal, debug
     walls = {
-      top=false, bottom=true, left=false, right=false
+      top=true, bottom=true, left=true, right=true
     }
   }
 }

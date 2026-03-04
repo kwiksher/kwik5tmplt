@@ -18,22 +18,6 @@ local _layerProps = {
   color    = { 0, 1, 1, 1 },
   shapedWith = "new_ellipse"
 }
-
-local function getNormalizedPosition(x, y)
-  local baseWidth, baseHeight = 960, 590
-  if display.contentHeight > display.contentWidth then
-    baseWidth, baseHeight = 590, 960
-  end
-
-  local posX, posY = x, y
-  if type(posX) == "number" then
-    posX = posX * (display.contentWidth / baseWidth)
-  end
-  if type(posY) == "number" then
-    posY = posY * (display.contentHeight / baseHeight)
-  end
-  return posX, posY
-end
 --
 function M:init(UI)
   --local sceneGroup = UI.sceneGroup
@@ -46,7 +30,7 @@ function M:create(UI)
   self.imagePath = layerProps.name.."." .. (layerProps.type or ".png")
   local path = UI.props.imgDir..self.imagePath
   -- local path = system.pathForFile(UI.props.imgDir..self.imagePath, system.ResourceDirectory)
-  local x, y = app.getNormalizedPosition(layerProps.x, layerProps.y)
+  local x, y = app.getPosition(layerProps.x, layerProps.y)
 
   local obj = display.newCircle(
       x,

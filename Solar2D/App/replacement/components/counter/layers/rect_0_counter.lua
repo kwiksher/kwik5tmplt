@@ -13,7 +13,7 @@ local M = {
     scaleX = NIL,
     scaleY = NIL,
     paddingX = 2,
-    paddingY = -2,
+    paddingY = 0,
     alpha = NIL,
     autoPlay = true
   },

@@ -30,7 +30,7 @@ end
 function M:create(UI)
   local layerProps = self.layerProps
   -- local x, y = app.getCenter(layerProps.x, layerProps.y)
-  local x, y = app.getNormalizedPosition(layerProps.x, layerProps.y)
+  local x, y = app.getPosition(layerProps.x, layerProps.y)
   local obj = display.newRect(
     x,
     y,
