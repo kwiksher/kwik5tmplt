@@ -5,8 +5,8 @@ local app = require "controller.Application"
 --
 local _layerProps = {
   name     = "ellipse_0",
-  x        = 960/2 + 10 + 30 ,
-  y        = 337 + 30,
+  x        = (240+40)*4,
+  y        = (160+80)*4 ,
   width    =  60,
   height    =  60,
   xScale = 1,
@@ -31,7 +31,7 @@ function M:create(UI)
   local path = UI.props.imgDir..self.imagePath
   -- local path = system.pathForFile(UI.props.imgDir..self.imagePath, system.ResourceDirectory)
   -- local x, y = app.getCenter(layerProps.x, layerProps.y)
-  local x, y = app.getNormalizedPosition(layerProps.x, layerProps.y)
+  local x, y = app.getPosition(layerProps.x, layerProps.y)
 
   local obj = display.newCircle(
       x,
