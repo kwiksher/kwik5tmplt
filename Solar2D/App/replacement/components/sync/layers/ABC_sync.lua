@@ -8,9 +8,11 @@ local M = {
   properties = {
     target       = "ABC",
     autoPlay     = true,
+    backgroundRectColor = {1, 1, 1, 0.4},
     delay        = NIL,
     fadeDuration = 1000,
     speakerIcon = true,
+    speakerIconColor = {0,0,1,1},
     wordTouch   = true,
   },
   audioProps = {
