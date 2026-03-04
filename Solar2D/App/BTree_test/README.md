@@ -166,7 +166,7 @@
 
      ```lua
      env.book = "BTree_test"
-     env.goPage = "animation"
+     env.page = "animation"
      ```
 
 6. linking the obj in UI.sceneGroup with the obj reference in behaviorTree
@@ -266,7 +266,7 @@ A kwik empty page and .tree for narrtions only
 
      ```lua
      env.book = "BTree_test"
-     env.goPage = "narration"
+     env.page = "narration"
 
 1. - [ ] create narration_scene.tree
 

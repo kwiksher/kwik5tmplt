@@ -9,7 +9,7 @@ local root = parent:sub(1, parent:len()-1):match("(.-)[^%.]+$")
 -- local app = require("Application").get()
 
 -- local editor = require("editor.index")
---editor.lastSelection = { book="book", page=app.props.goPage}
+--editor.lastSelection = { book="book", page=app.props.page}
 
 
 -- local screen = require(parent.."screen")
