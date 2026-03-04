@@ -13,6 +13,7 @@ local layerProps = {
   x         = 1052 + (868 -1052)/2,
   y         = 553 + (728 - 553)/2,
   alpha     = 100/100,
+  psdPage     = "landscape"
 }
 
 M.align       = ""
