@@ -10,12 +10,14 @@ local env = require("env")
 --env.page = "forest"
 --env.page = "cabin"
 
-env.book = "book"
-env.page = "landscape"
+-- env.book = "book"
+-- env.page = "landscape"
 
---env.book = "animation"
+env.book = "animation"
+--env.page = "blink"
 --env.page = "linear"
 --env.page = "path"
+env.page = "filter"
 
 -- env.book = "interaction"
 --env.page = "drag"
@@ -25,6 +27,21 @@ env.page = "landscape"
 -- env.page = "scroll_text"
 -- env.page  = "swipe"
 
+--env.book = "replacement"
+--env.page = "counter"
+-- env.page = "dynamicText"
+-- env.page = "inputText"
+-- env.page = "map"
+-- env.page = "mask"
+--env.page = "multiplier"
+-- env.page = "particles"
+-- env.page = "snowman"
+-- env.page = "sprite"
+-- env.page = "sync"
+-- env.page = "text"
+-- env.page = "vector"
+-- env.page = "video"
+-- env.page = "web"
 
 -- env.book = "particles"
 -- env.page = "air_stars"
@@ -38,8 +55,8 @@ env.page = "landscape"
 --env.book = "shape"
 --env.page = "ellipse"
 
--- env.book = "physics"
--- env.page = "basic"
+--env.book = "physics"
+--env.page = "basic"
 -- env.page = "distance"
 -- env.page = "friction"
 -- env.page = "gear"
@@ -49,7 +66,7 @@ env.page = "landscape"
 -- env.page = "rope"
 -- env.page = "touch"
 -- env.page = "weld"
--- env.page = "wheel"
+--env.page = "wheel"
 
 --
 
@@ -69,7 +86,7 @@ if env.mode == "development" or env.mode == "debug" then
     gotoLastBook = false,
     unitTest = true,
     httpServer = false,
-    scale      = 2,
+    scale      = 1,
     showPageName = true,
     turnOffNativeVideo = true
   }
