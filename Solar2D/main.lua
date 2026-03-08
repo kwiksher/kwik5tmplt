@@ -86,7 +86,7 @@ if env.mode == "development" or env.mode == "debug" then
     gotoLastBook = false,
     unitTest = true,
     httpServer = false,
-    scale      = 1,
+    scale      = 2,
     showPageName = true,
     turnOffNativeVideo = true
   }
