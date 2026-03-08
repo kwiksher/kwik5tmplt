@@ -79,6 +79,7 @@ elseif env.mode == "production" then
     gotoLastBook = false,
     unitTest = false,
     httpServer = false,
+    scale      = 1,
     showPageName = false,
     turnOffNativeVideo = false
   }
