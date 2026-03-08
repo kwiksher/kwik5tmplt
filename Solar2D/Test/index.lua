@@ -20,6 +20,7 @@ local M = {
     set("book", "landscape")
 
     set("animation", "linear")
+    set("animation", "filter")
     set("animation", "path_animation")
 
     set("asset", "audio")
