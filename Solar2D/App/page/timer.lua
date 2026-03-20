@@ -9,24 +9,25 @@ local model = {
         }
       },
       {
-        rect_0 = {  }
+        rect_0 = {
+        }
       },
       {
         ellipse_0 = {
-            }
+        }
       },
     },
     audios = {
     },
     groups = {
     },
-    timers = {  },
+    timers = {  "printAct",  },
     variables = {  },
     joints    = {  },
     page = {  }
   },
-  commands = {  },
-  onInit = function(scene) print("onInit") end
+  commands = {   "actPrint",  },
+  onInit = function(scene)  end
 }
 local scene = require('controller.scene').new(sceneName, model)
 --
