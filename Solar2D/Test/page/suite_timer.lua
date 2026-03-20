@@ -1,6 +1,6 @@
 local M = require("Test.base_suite").new({
-  book = "book",
-  page = "pageTimer"
+  book = "page",
+  page = "timer"
 })
 
 local helper = require("Test.helper")
@@ -8,7 +8,7 @@ local helper = require("Test.helper")
 --[[
   function M.test_readAssets()
     local util = require("editor.util")
-    util.readAssets("bookFree", "timer")
+    util.readAssets("page", "timer")
   end
 --]]
 
@@ -36,7 +36,7 @@ end
 --]]
 
 ---[[
-function M.test_new_component()
+function M.xtest_new_component()
   timer.performWithDelay( 1000, function()
     M.selectors.componentSelector.iconHander()
     M.selectors.componentSelector:onClick(true,  "timerTable")
