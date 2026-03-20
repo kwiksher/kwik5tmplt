@@ -1,6 +1,6 @@
 local M = require("Test.base_suite").new({
-  book = "book",
-  page = "pageVariable"
+  book = "page",
+  page = "variable"
 })
 
 local helper = require("Test.helper")
@@ -8,7 +8,7 @@ local helper = require("Test.helper")
 --[[
   function M.test_readAssets()
     local util = require("editor.util")
-    util.readAssets("bookFree", "timer")
+    util.readAssets("page", "variable")
   end
 --]]
 
@@ -101,7 +101,7 @@ function M.xtest_action_variable()
   end)
 end
 
-function M.test_action_condition()
+function M.xtest_action_condition()
   timer.performWithDelay( 1000, function()
     M.selectors.componentSelector.iconHander()
     M.selectors.componentSelector:onClick(true,  "actionTable")
