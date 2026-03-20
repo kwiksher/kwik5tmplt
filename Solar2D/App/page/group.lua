@@ -9,16 +9,21 @@ local model = {
         }
       },
       {
-        rect_0 = {  }
+        rect_0 = {
+        }
       },
       {
         ellipse_0 = {
-            }
+        }
       },
     },
     audios = {
     },
     groups = {
+      {
+        group0 = {
+        }
+      },
     },
     timers = {  },
     variables = {  },
@@ -26,7 +31,7 @@ local model = {
     page = {  }
   },
   commands = {  },
-  onInit = function(scene) print("onInit") end
+  onInit = function(scene)  end
 }
 local scene = require('controller.scene').new(sceneName, model)
 --
