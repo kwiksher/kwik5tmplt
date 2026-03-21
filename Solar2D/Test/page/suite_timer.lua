@@ -59,6 +59,26 @@ function M.xtest_new_component()
 end
 --]]
 
+function M.xtest_new_timer()
+  M.selectors.componentSelector:onClick(true,  "timerTable")
+  helper.clickIconObj(M.timerTable, "timers-icon")
+  M.picker:continue("timer1")
+
+  -- timer.performWithDelay(3000, function()
+  --   helper.clickProp(actionbox.objs, "onComplete")
+  --   helper.clickButton("New", actionboxButtonContext)
+  -- end)
+
+--  helper.selectActionGroup("Controls")
+end
+
+function M.xtest_select_timer()
+  M.selectors.componentSelector:onClick(true,  "timerTable")
+  -- helper.clickIconObj(timerTable, "timers-icon")
+  -- picker:continue("timer1")
+end
+
+
 --[[
 function M.test_component()
   timer.performWithDelay( 1000, function()
