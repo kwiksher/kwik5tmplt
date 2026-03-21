@@ -22,7 +22,7 @@ local model = {
       },
       {
         star = {
-           }
+          class={ "properties", }  }
       },
       {
         hello = {
