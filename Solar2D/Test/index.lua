@@ -56,6 +56,14 @@ local M = {
     set("replacement","video")
     set("replacement","web")
 
+    set("page", "audio")
+    set("page", "group")
+    set("page", "timer")
+    set("page", "variable")
+
+    set("layer", "lang")
+    set("layer", "properties")
+
     -- lunatest.suite("test.book.suite_assets", props)
 
     -- set("kwikTheCat", "page1_action")
