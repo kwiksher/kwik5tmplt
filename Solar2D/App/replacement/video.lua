@@ -14,7 +14,7 @@ local model = {
       },
       {
         ellipse_0 = {
-        }
+          class={ "video", }  }
       },
     },
     audios = {
@@ -27,7 +27,7 @@ local model = {
     page = {  }
   },
   commands = {  },
-  onInit = function(scene) print("onInit") end
+  onInit = function(scene)  end
 }
 local scene = require('controller.scene').new(sceneName, model)
 --
