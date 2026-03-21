@@ -6,8 +6,8 @@ local app = require "controller.Application"
 --
 local layerProps = {
   name     = "rect_0",
-  x        = 424,
-  y        = 272.5,
+  x        = 960,
+  y        = 640,
   width    =  362,
   height    =  259,
   xScale = 1,

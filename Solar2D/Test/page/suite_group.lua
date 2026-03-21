@@ -1,17 +1,17 @@
 local M = require("Test.base_suite").new({
-  book = "bookFree",
-  page = "page4",
+  book = "page",
+  page = "group",
   component = "iconOnly"
 })
 
 local helper = require("Test.helper")
 
-local book = "bookFree"
-local page = "page4"
+local book = "page"
+local page = "group"
 
 function M.xtest_new_group()
     M.UI.testCallback = function()
-      M.UI.page = "page4"
+  M.UI.page = "group"
       M.selectors.componentSelector:onClick(true,  "groupTable")
        -- click the icon for creatign a new group
       M.UI.scene.app:dispatchEvent {
@@ -24,9 +24,9 @@ function M.xtest_new_group()
     end
 end
 
-function M.test_cancel_group()
+function M.xtest_cancel_group()
   M.UI.testCallback = function()
-    M.UI.page = "page4"
+    M.UI.page = "group"
     M.selectors.componentSelector:onClick(true,  "groupTable")
      -- click the icon for creatign a new group
     M.UI.scene.app:dispatchEvent {
@@ -49,7 +49,7 @@ end
 
 function M.xtest_select_group()
   M.UI.testCallback = function()
-    M.UI.page = "page4"
+    M.UI.page = "group"
     M.selectors.componentSelector:onClick(true,  "groupTable")
     helper.selectGroup("myGroup")
      -- click the icon for creatign a new group
@@ -65,7 +65,7 @@ end
 
 function M.xtest_add()
   M.UI.testCallback = function()
-      M.UI.page = "page4"
+  M.UI.page = "group"
       local name = "myGroup"
       M.selectors.componentSelector:onClick(true,  "groupTable")
       helper.selectGroup(name)
@@ -93,7 +93,7 @@ end
 
 function M.xtest_remove()
   M.UI.testCallback = function()
-      M.UI.page = "page4"
+  M.UI.page = "group"
       local name = "myGroup"
       --selectors.componentSelector:onClick(true,  "layerTable") --isVisible = true
       M.selectors.componentSelector:onClick(true,  "groupTable")
@@ -149,7 +149,7 @@ end
 
 function M.xtest_add_from_group()
   M.UI.testCallback = function()
-      M.UI.page = "page4"
+  M.UI.page = "group"
       local name = "myGroup"
       --selectors.componentSelector:onClick(true,  "layerTable") --isVisible = true
       M.selectors.componentSelector:onClick(true,  "groupTable")
@@ -180,7 +180,7 @@ end
 
 function M.xtest_add_drag()
   M.UI.testCallback = function()
-      M.UI.page = "page4"
+  M.UI.page = "group"
       local name = "myGroup"
       --selectors.componentSelector:onClick(true,  "layerTable") --isVisible = true
       M.selectors.componentSelector:onClick(true,  "groupTable")

@@ -20,6 +20,7 @@ local M = {
     set("book", "landscape")
 
     set("animation", "linear")
+    set("animation", "filter")
     set("animation", "path_animation")
 
     set("asset", "audio")
@@ -54,6 +55,14 @@ local M = {
     set("replacement","video_png")
     set("replacement","video")
     set("replacement","web")
+
+    set("page", "audio")
+    set("page", "group")
+    set("page", "timer")
+    set("page", "variable")
+
+    set("layer", "lang")
+    set("layer", "properties")
 
     -- lunatest.suite("test.book.suite_assets", props)
 
