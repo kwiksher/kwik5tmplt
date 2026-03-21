@@ -38,7 +38,7 @@ M.ACTIONS = {
 }
 
 function M.changeToVisible()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     print("DEBUG: Before changeState - loose_floorboard type: " .. type(M.sceneObjects.loose_floorboard))
     local result = M.changeState("loose_floorboard", "visible", DisplayBase)
     print("DEBUG: After changeState - result: " .. tostring(result))
@@ -55,12 +55,12 @@ function M.changeToVisible()
 end
 
 function M.changeToHighlighted()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("loose_floorboard", "highlighted", DisplayBase)
 end
 
 function M.changeToOpen()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     local result = M.changeState("loose_floorboard", "open", DisplayBase)
 
     -- Mark as searched in modelData (persists across state changes)
