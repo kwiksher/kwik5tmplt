@@ -2,50 +2,71 @@ local env = require("env")
 
 
 --env.book = "BTree_test"
---env.goPage = "animation"
---env.goPage = "button"
---env.goPage = "narration"
-
+--env.page = "animation"
+--env.page = "button"
+--env.page = "narration"
 
 --env.book = "TheLastSpark"
---env.goPage = "forest"
---env.goPage = "cabin"
+--env.page = "forest"
+--env.page = "cabin"
 
+-- env.book = "book"
+-- env.page = "landscape"
 
-env.book = "book"
-env.goPage = "landscape"
-
---env.book = "animation"
---env.goPage = "linear"
+env.book = "animation"
+--env.page = "blink"
+--env.page = "linear"
+--env.page = "path"
+env.page = "filter"
 
 -- env.book = "interaction"
--- env.goPage = "canvas"
+--env.page = "drag"
+-- env.page = "pinch"
+-- env.page = "canvas"
+--env.page = "scroll_image"
+-- env.page = "scroll_text"
+-- env.page  = "swipe"
+
+--env.book = "replacement"
+--env.page = "counter"
+-- env.page = "dynamicText"
+-- env.page = "inputText"
+-- env.page = "map"
+-- env.page = "mask"
+--env.page = "multiplier"
+-- env.page = "particles"
+-- env.page = "snowman"
+-- env.page = "sprite"
+-- env.page = "sync"
+-- env.page = "text"
+-- env.page = "vector"
+-- env.page = "video"
+-- env.page = "web"
 
 -- env.book = "particles"
--- env.goPage = "air_stars"
+-- env.page = "air_stars"
 
 -- env.book = "LULU" -- "book"
--- env.goPage = "LULU_Sitting_With_A_CAT_Refine"
+-- env.page = "LULU_Sitting_With_A_CAT_Refine"
 
 -- env.book = "snowMan"
--- env.goPage = "page1"
+-- env.page = "page1"
 
 --env.book = "shape"
---env.goPage = "ellipse"
+--env.page = "ellipse"
 
-
-env.book = "physics"
--- env.goPage = "basic"
--- env.goPage = "distance"
--- env.goPage = "friction"
--- env.goPage = "gear"
--- env.goPage = "piston"
--- env.goPage = "pivot"
--- env.goPage = "pulley"
--- env.goPage = "rope"
--- env.goPage = "touch"
--- env.goPage = "weld"
-env.goPage = "wheel"
+--env.book = "physics"
+--env.page = "basic"
+-- env.page = "distance"
+-- env.page = "friction"
+-- env.page = "gear"
+-- env.page = "piston"
+-- env.page = "pivot"
+-- env.page = "pulley"
+-- env.page = "rope"
+-- env.page = "touch"
+-- env.page = "weld"
+--env.page = "wheel"
 
 --
 
@@ -59,13 +80,13 @@ if env.mode == "development" or env.mode == "debug" then
   env.props = {
     name = env.book,
     editor = true,
-    gotoPage = env.goPage,
+    gotoPage = env.page,
     language = "", -- empty string "" is for a single language project
     position = {x = 0, y = 0},
-    gotoLastBook = true,
+    gotoLastBook = false,
     unitTest = true,
     httpServer = false,
-    scale      = 1,
+    scale      = 2,
     showPageName = true,
     turnOffNativeVideo = true
   }
@@ -73,7 +94,7 @@ elseif env.mode == "production" then
   env.props = {
     name = env.book,
     editor = false,
-    gotoPage = env.goPage,
+    gotoPage = env.page,
     language = "", -- empty string "" is for a single language project
     position = {x = 0, y = 0},
     gotoLastBook = false,
@@ -99,7 +120,7 @@ elseif env.mode == "behaviorTree" then
   local composer = require("composer")
 
   -- Start with the selected behavior-tree scene
-  local sceneModule = "Behavior."..env.book..".views."..env.goPage.."."..env.goPage.."Scene"
+  local sceneModule = "Behavior."..env.book..".views."..env.page.."."..env.page.."Scene"
   local okScene, sceneOrErr = pcall(require, sceneModule)
   if not okScene then
     print("Failed to load scene module:", sceneModule)
@@ -112,7 +133,7 @@ elseif env.mode == "behaviorTree" then
   --Start automated test after scene loads
   -- timer.performWithDelay(1000, function()
   --     print("\n=== Starting Automated Test (Jump to Choices) ===\n")
-  --     local sceneTest = require("tests."..env.goPage.."SceneTest")
+  --     local sceneTest = require("tests."..env.page.."SceneTest")
   --     sceneTest.start()
   -- end)
   return
@@ -147,7 +168,7 @@ if env.setPlugin(env.mode)  then
   --       env.props.editor = false
   --       env.props.showPageName = false
   --       print("Mode changed to production - restarting...")
-  --         Runtime:dispatchEvent{name="changeThisMug", appName=env.props.name, gotoPage=env.props.goPage, editor = false }
+  --         Runtime:dispatchEvent{name="changeThisMug", appName=env.props.name, gotoPage=env.props.page, editor = false }
   --       return true
   --     end
   --   end
