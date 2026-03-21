@@ -29,17 +29,17 @@ M.ACTIONS = {
 }
 
 function M.changeToHappy()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("elara", "happy", DisplayBase)
 end
 
 function M.changeToShocked()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("elara", "shocked", DisplayBase)
 end
 
 function M.changeToPanicking()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     return M.changeState("elara", "panicking", DisplayBase)
 end
 

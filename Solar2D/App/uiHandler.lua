@@ -21,6 +21,27 @@ end
 
 local resourcePath = system.pathForFile("", system.ResourceDirectory)
 
+local function dispatchBehaviorTreePhase(behaviorTree, eventName, phase)
+  if not behaviorTree then
+    return
+  end
+
+  if behaviorTree.show then
+    behaviorTree:show({phase = phase})
+    return
+  end
+
+  if eventName == "show" and behaviorTree.onShow then
+    behaviorTree:onShow(phase)
+    return
+  end
+
+  if eventName == "hide" and behaviorTree.onHide then
+    behaviorTree:onHide(phase)
+    return
+  end
+end
+
 
 
 function M:init(UI)
@@ -76,27 +97,19 @@ function M:create(UI)
 end
 
 function M:willShow(UI)
-  if UI.behaviorTree then
-    UI.behaviorTree:show({phase = "will"})
-  end
+  dispatchBehaviorTreePhase(UI.behaviorTree, "show", "will")
 end
 
 function M:didShow(UI)
-  if UI.behaviorTree then
-    UI.behaviorTree:show({phase = "did"})
-  end
+  dispatchBehaviorTreePhase(UI.behaviorTree, "show", "did")
 end
 
 function M:willHide(UI)
-    if UI.behaviorTree then
-    UI.behaviorTree:show({phase = "will"})
-  end
+  dispatchBehaviorTreePhase(UI.behaviorTree, "hide", "will")
 end
 
 function M:didHide(UI)
-  if UI.behaviorTree then
-    UI.behaviorTree:show({phase = "did"})
-  end
+  dispatchBehaviorTreePhase(UI.behaviorTree, "hide", "did")
 end
 
 function M:destroy(UI)

@@ -33,7 +33,7 @@ M.ACTIONS = {
 }
 
 function M.changeToGlowing()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     print("DEBUG: Before changeState - lumin_seed type: " .. type(M.sceneObjects.lumin_seed))
 
     -- First, make sure the object is visible
@@ -59,7 +59,7 @@ function M.changeToGlowing()
 end
 
 function M.changeToCollected()
-    local DisplayBase = require("views.display_base")
+    local DisplayBase = require("behaivor.display_base_common")
     local result = M.changeState("lumin_seed", "collected", DisplayBase)
 
     -- Mark as collected in object
