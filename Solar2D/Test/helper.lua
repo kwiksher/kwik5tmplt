@@ -85,19 +85,20 @@ end
 function exports.selectActionGroup(name)
   local muiName = "action.commandView-"
   local controller = require("editor.action.controller.index")
-  controller.commandGroupHandler{target={muiOptions={name=muiName..name}}}
+    controller.commandGroupHandler{target={muiOptions={name=muiName..name}}}
 end
 
 function exports.selectActionCommand(class, name)
   local controller = require("editor.action.controller.index")
-  controller.commandHandler{model={commandClass=class}}
-  local commandbox = require("editor.action.commandbox")
-  for i, obj in next, commandbox.objs do
-    if obj.text == name then
-      obj:tap{numTaps=1}
-      break
+    controller.commandHandler{model={commandClass=class}}
+    local commandbox = require("editor.action.commandbox")
+    for i, obj in next, commandbox.objs do
+      -- print(name)
+      if obj.text == name then
+        obj:tap{numTaps=1}
+        break
+      end
     end
-  end
 end
 
 function exports.hasObj(layerTable, name, class)
