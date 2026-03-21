@@ -9,18 +9,18 @@ function M.xtest_select()
   --selectComponent("Action")
 end
 
-function M.xtest_select_for_editing()
+function M.test_select_for_editing()
   local name = "star"
   M.layerTable.altDown = true
   print("------------------")
-  helper.selectLayer(name)
+  helper.selectLayer(name, "path")
   M.layerTable.altDown = false
 
   -- selectTool{class="linear", isNew=true}
   --selectComponent("Action")
 end
 
-function M.test_new_path_animation()
+function M.xtest_new_path_animation()
   local name = "star"
   helper.selectLayer(name)
   helper.selectIcon("Animations", "Path"):done(

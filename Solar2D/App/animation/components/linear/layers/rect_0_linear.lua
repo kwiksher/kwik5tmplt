@@ -1,18 +1,13 @@
-local parent,root = newModule(...)
-local M = {
-  name = "rect_0",
-  --
-  class = "linear",
--- "Dissolve"
--- "Path"
--- "Linear"
--- "Pulse"
--- "Rotation"
--- "Tremble"
--- "Bounce"
--- "Blink"
---
-}
+local parent,root, M = newModule(...)
+M.class = "linear"
+-- "dissolve"
+-- "path"
+-- "linear"
+-- "pulse"
+-- "rotation"
+-- "tremble"
+-- "bounce"
+-- "blink"
 M.layerOptions = {
   --
   referencePoint = "TopRight",
@@ -33,12 +28,12 @@ M.layerOptions = {
 M.properties = {
   type    = "", -- group, page, sprite
   target = "rect_0",
-  autoPlay = true,
+  autoPlay = false,
   delay    = 1000,
   duration = 2000,
   loop     = 1,
-  reverse  = false,
-  resetAtEnd  = false,
+  reverse  = nil,
+  resetAtEnd  = nil,
   --
   easing   = "inCircular",
   -- 'Linear'
@@ -61,14 +56,14 @@ M.properties = {
   -- 'inOutBack'
   ------------
   -- flip
-  xSwipe   = false,
-  ySwipe   = false,
+  xSwipe   = nil,
+  ySwipe   = nil,
   useLang  = false
 }
 --
 M.from = {
-  x     = 424 -240,
-  y     = 272.5 -135,
+  x     = 184,
+  y     = 137.5,
   --
   alpha = 1,
   yScale   = 1,
@@ -77,8 +72,8 @@ M.from = {
 }
 --
 M.to = {
-  x     = 424 -240,
-  y     = 272.5 -135,
+  x     = 253,
+  y     = 135.5,
   --
   alpha = 1,
   yScale   = 1.5,
@@ -97,27 +92,27 @@ local function onEndHandler (UI)
 end
 --
 function M:create(UI)
+  local target = self.properties.target
   if UI.langClassDelegate and useLang then
-    local t = self.name:split("/")
-    self.name = t[1].."/".. UI.lang
+    local t = target:split("/")
+    target = t[1].."/".. UI.lang
   end
   --
   if self.properties.type == "group" then
     self.obj = require(parent..self.properties.target).group
   else
-    self.obj = UI.sceneGroup[self.name]
+    self.obj = UI.sceneGroup[target]
   end
   self:initAnimation(UI, self.obj, onEndHandler)
   self.animation = self:buildAnim(UI)
-  UI.animations[self.name.."_"..self.class] = self.animation
+  UI.animations[target.."_"..self.class..self.suffix] = self.animation
 end
 --
 function M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   if self.properties.autoPlay then
     if self.animation.to then
-      print("#### didShow play")
-      self.animation.to:toBeginning()
+      --self.animation.to:toBeginning()
       self.animation.to:play()
     end
   end
@@ -125,7 +120,6 @@ end
 --
 function M:didHide(UI)
   if self.animation.to then
-    print("#### didHide pause")
     self.animation.to:pause()
     -- self.animation.to:toBeginning()
   end
