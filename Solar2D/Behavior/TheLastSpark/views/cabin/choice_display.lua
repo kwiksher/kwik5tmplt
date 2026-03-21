@@ -4,7 +4,7 @@
 -- Inherits from choice_base.lua using metatable
 -------------------------------------------------------------------------------
 
-local choiceBase = require("Behavior.choice_base")
+local choiceBase = require("behaivor.choice_base_common")
 local behaviorConfig = require("Behavior.config")
 local showChoicesAction = require("Behavior.TheLastSpark.actions.cabin.show_choices_action")
 
