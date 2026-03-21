@@ -6,7 +6,7 @@ local shape = require("components.kwik.layer_shape")
 --
 local _layerProps = {
   name     = "ellipse_0",
-  x        = 548.5,
+  x        = 800,
   y        = 272,
   width    =  67,
   height    =  67,
