@@ -37,7 +37,7 @@ end
 
 ---[[
 function M.xtest_new_component()
-  timer.performWithDelay( 1000, function()
+  -- timer.performWithDelay( 1000, function()
     M.selectors.componentSelector.iconHander()
     M.selectors.componentSelector:onClick(true,  "variableTable")
     local view = require("editor.variable.variableTable")
@@ -50,12 +50,14 @@ function M.xtest_new_component()
       isDelete =false -- (name == "Trash-icon")
     }
 
+    M.picker:continue("myvar1")
+
     -- list actions in completeBox
     -- select one of them
     -- save
-    local buttons = require("editor.variable.buttons")
-    buttons.objs["save"].tap{eventName="save"}
-  end)
+    -- local buttons = require("editor.variable.buttons")
+    -- buttons.objs["save"].tap{eventName="save"}
+  -- end)
 end
 --]]
 
@@ -74,6 +76,27 @@ function M.test_component()
 end
 --]]
 
+
+function M.test_new_action_for_var()
+  timer.performWithDelay( 1000, function()
+      helper.selectIcon("action")
+      M.actionTable.newButton:tap()
+      M.picker:continue("varAct")
+      helper.selectActionGroup("Controls")
+      timer.performWithDelay( 1000, function()
+          helper.selectActionCommand("variable", "editVar")
+      end)
+  end)
+    -- helper.selectComponent("actionTable")
+    -- helper.clickButton("create", M.actionButtons)
+
+
+    --helper.setProp(M.actionCommandPropsTable.objs, "color", "0,0,0,1")
+    -- helper.clickButton("save", M.actionCommandButtons)
+
+end
+
+
 local muiName = "editor.action.commandView-"
 
 function M.xtest_action_variable()
@@ -82,7 +105,7 @@ function M.xtest_action_variable()
     M.selectors.componentSelector:onClick(true,  "actionTable")
 
     -- this call selectHandler
-    M.actionTable.objs[2]:tap() -- varaibleAction
+    M.actionTable.objs[1]:tap() -- varaibleAction
     -- then edit
     M.actionTable.editButton:tap()
 
