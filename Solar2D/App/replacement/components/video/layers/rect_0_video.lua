@@ -6,7 +6,7 @@ local M = {
     loop     = "true",
     rewind   = "true",
     isLocal  = "true",
-    url      = "kwikplanet.mp4",
+    url      = "videos/kwikplanet.mp4",
     autoPlay = "true",
   },
   actions = {
