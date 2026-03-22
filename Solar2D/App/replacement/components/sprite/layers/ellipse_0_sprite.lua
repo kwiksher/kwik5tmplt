@@ -89,4 +89,4 @@ end
 ---
 M.sheet = graphics.newImageSheet( "App/"..M.book.."/assets/"..M.properties.filename, system.ResourceDirectory, options )
 --
-return require("components.kwik.layer_spritesheet").new(M)
+return require("components.kwik.layer_spritesheet").set(M)

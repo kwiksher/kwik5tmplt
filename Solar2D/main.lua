@@ -10,17 +10,18 @@ local env = require("env")
 --env.page = "forest"
 --env.page = "cabin"
 
--- env.book = "book"
--- env.page = "landscape"
+env.book = "book"
+env.page = "landscape"
 
-env.book = "animation"
+-- env.book = "animation"
+-- env.page = "linear"
 --env.page = "blink"
---env.page = "linear"
 --env.page = "path"
-env.page = "filter"
+-- env.page = "filter"
 
 -- env.book = "interaction"
---env.page = "drag"
+-- env.page = "button"
+-- env.page = "drag"
 -- env.page = "pinch"
 -- env.page = "canvas"
 --env.page = "scroll_image"
@@ -34,13 +35,13 @@ env.page = "filter"
 -- env.page = "map"
 -- env.page = "mask"
 --env.page = "multiplier"
--- env.page = "particles"
+--env.page = "particles"
 -- env.page = "snowman"
--- env.page = "sprite"
+--env.page = "sprite"
 -- env.page = "sync"
 -- env.page = "text"
 -- env.page = "vector"
--- env.page = "video"
+--env.page = "video"
 -- env.page = "web"
 
 -- env.book = "particles"
@@ -68,6 +69,16 @@ env.page = "filter"
 -- env.page = "weld"
 --env.page = "wheel"
 
+-- env.book = "page"
+-- env.page = "audio"
+ -- env.page = "group"
+ -- env.page = "timer"
+--  env.page = "variable"
+
+ -- env.book = "layer"
+ -- env.page = "addCode" -- uiHandler.lua /tutorial/keyboard/
+ -- env.page = "lang"
+ -- env.page = "properties"
 --
 
 env.mode  = "development"
@@ -86,9 +97,9 @@ if env.mode == "development" or env.mode == "debug" then
     gotoLastBook = false,
     unitTest = true,
     httpServer = false,
-    scale      = 2,
+    scale      = 1,
     showPageName = true,
-    turnOffNativeVideo = true
+    turnOffNativeVideo = false
   }
 elseif env.mode == "production" then
   env.props = {

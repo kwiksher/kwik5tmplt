@@ -38,7 +38,9 @@ if M.properties.sheetType == "TexturePacker" then
   --
   print("###", path)
   local sheetInfo = require(path)
+  print("num of sheetInfo.frames", #sheetInfo.frames)
   options = {frames = sheetInfo.frames}
+
   --
 elseif M.properties.sheetType == "Animate" then
   --
@@ -83,5 +85,8 @@ else
 end
 ---
 M.sheet = graphics.newImageSheet( "App/"..M.book.."/assets/"..M.properties.filename, system.ResourceDirectory, options )
+if M.sheet == nil then
+  print("Error to load",  "App/"..M.book.."/assets/"..M.properties.filename)
+end
 --
-return require("components.kwik.layer_spritesheet").new(M)
+return require("components.kwik.layer_spritesheet").set(M)
