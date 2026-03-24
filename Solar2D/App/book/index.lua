@@ -3,6 +3,7 @@
 local scenes = {
   "landscape",
   "portrait",
-  "shape",
+  -- "shape",
+  "kwikTheCat"
 }
 return scenes
