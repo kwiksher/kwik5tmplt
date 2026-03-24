@@ -114,18 +114,6 @@ function xtest_selectFromIndexModel()
   -- util.selectFromIndexModel(scene, {"butBlue", "B", "animation"})
 end
 
-function xtest_4_renamePage()
-  local commands = require("editor.scripts.commands")
-  commands.renamePage("book", "page1", "page01")
-  native.requestExit() -- this prevents from infinitly looping of simulator reloading
-end
-
-function xtest_4_copyPage()
-  local commands = require("editor.scripts.commands")
-  commands.copyPage("book", "page1", "page01")
-  native.requestExit() -- this prevents from infinitly looping of simulator reloading
-end
-
 function xtest_createLayer()
   local commands = require("editor.scripts.commands")
   commands.createLayer("book", "page1", 1, "layerOne")
