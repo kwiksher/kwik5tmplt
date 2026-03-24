@@ -34,7 +34,7 @@ local  function createSymbolicLink()
             'runas /user:Administrator "cmd /c mklink /D lua_modules\\kwiksher ..\\..\\kwik5-plugin"')
     else
       local scripts = {
-        'cd ' .. resourcePath ..'/lua_modules && ln -s ../../../kwik5-plugin kwiksher',
+        'mkdir -p '..resourcePath ..'/lua_modules && cd ' .. resourcePath ..'/lua_modules && ln -s ../../../kwik5-plugin kwiksher',
       }
       for i, v in next, scripts do
         print(v)
@@ -59,7 +59,7 @@ function M.setPlugin(mode)
       createSymbolicLink()
     else
       -- Check for installer files
-      
+
       local path
       path = system.pathForFile("", system.ResourceDirectory).."/../"
       if isWindows then
