@@ -1,6 +1,6 @@
 local M = require("Test.base_suite").new({
   book = "book",
-  page = "page1",
+  page = "kwikTheCat",
   component = "iconOnly"
 })
 
@@ -114,19 +114,6 @@ function M.xtest_select_for_edit_class()
   -- layerTable.altDown = true
   helper.selectLayer(name, class, false) -- isRightClick true
   -- layerTable.altDown = false
-end
-
-function M.xtest_copy_layer()
-  local name = "cat"
-  -- layerTable.altDown = true
-  helper.selectLayer(name)
-  helper.selectLayer(name, nil, true) -- isRightClick true
-  helper.clickButton("copy")
-
-  -- layerTable.altDown = false
-
-  -- selectors.componentSelector:onClick(true,  "actionTable")
-  -- helper.selectAction("eventOne")
 end
 
 function M.xtest_save()
