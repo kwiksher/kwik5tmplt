@@ -16,7 +16,7 @@ local M = {
     height             = 188/4,
     sheetType  = "TexturePacker", -- uniform-sized TexturePacker, Animate
   },
-  book = "book"
+  book = "renameCopyPaste"
 }
 
 M.layerProps = require(parent.."starfish")

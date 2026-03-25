@@ -10,20 +10,27 @@ function ActionCommand:new()
     local UI         = params.UI
     local sceneGroup = UI.sceneGroup
     local layers      = UI.layers
-    local event      = params.event
+    local event      = params.event or {}
     local obj        = event.target
     --
     -- local alert = native.showAlert("Alert", "Hello", { "OK" } )
     -- printKeys(event.target)
     -- local conditions = require("App." .. UI.book..".common.conditions")
     -- local expressions = require("App." .. UI.book.."common.expressions")
-    AC.Page:gotoPage("NEXT", "fromRight", 0, 0);
+    --
+    if "string" == "function" then
+      AC.Var:editVar(UI, "myText", function(value) return Hello end)
+    elseif "string" == "string" then
+      AC.Var:editVar(UI, "myText", "Hello")
+    else
+      AC.Var:editVar(UI, "myText", tonumber(Hello))
+    end
   end
   return setmetatable( command, {__index=AC})
 end
 --
 ActionCommand.model = [[
-{"name":"nextPage","actions":[{"command":"page.gotoPage","params":{"pageName":"NEXT","duration":0,"delay":0,"effect":"fromRight"}}]}
+{"name":"nameAct","actions":[{"command":"variable.editVar","params":{"value":"Hello","valueType":"string","target":"myText"}}]}
 ]]
 --
 return ActionCommand

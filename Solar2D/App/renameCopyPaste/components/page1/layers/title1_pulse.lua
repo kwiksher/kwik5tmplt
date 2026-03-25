@@ -1,5 +1,5 @@
 local parent,root, M = newModule(...)
-M.class = "linear"
+M.class = "pulse"
 -- "dissolve"
 -- "path"
 -- "linear"
@@ -11,31 +11,31 @@ M.class = "linear"
 M.layerOptions = {
   --
   referencePoint = "Center",
-    -- "Center"
-    -- "TopLeft"
-    -- "TopCenter"
-    -- "TopRight"
-    -- "CenterLeft"
-    -- "CenterRight"
-    -- "BottomLeft"
-    -- "BottomCenter"
-    -- "BottomRight"
+  -- "Center"
+  -- "TopLeft"
+  -- "TopCenter"
+  -- "TopRight"
+  -- "CenterLeft"
+  -- "CenterRight"
+  -- "BottomLeft"
+  -- "BottomCenter"
+  -- "BottomRight"
   -- for text
   deltaX         = 0,
   deltaY         = 0,
 }
 -- animationProps
 M.properties = {
-  type    = "group", -- group, page, sprite
-  target = "groupCat",
+  type    = "", -- group, page, sprite
+  target = "title1",
   autoPlay = true,
-  delay    = 1000,
-  duration = 1000,
+  delay    = 500,
+  duration = 500,
   loop     = 1,
   reverse  = nil,
-  resetAtEnd  = nil,
+  resetAtEnd  = true,
   --
-  easing   = "outBounce",
+  easing   = "outCirc",
   -- 'Linear'
   -- 'inOutExpo'
   -- 'inOutQuad'
@@ -62,37 +62,27 @@ M.properties = {
 }
 --
 M.from = {
-  x     = 493,
-  y     = 184,
+  x     = nil,
+  y     = nil,
   --
-  alpha = 1,
+  alpha = 0,
   yScale   = 1,
   xScale   = 1,
   rotation = 0,
 }
 --
 M.to = {
-  x     = 244,
-  y     = 183,
+  x     = nil,
+  y     = nil,
   --
   alpha = 1,
-  yScale   = 1,
-  xScale   = 1,
+  yScale   = 1.5,
+  xScale   = 1.5,
   rotation = 0,
 }
-  -- more option
-  -- action at the end of animation
+-- more option
+-- action at the end of animation
 M.actions = { onComplete = "" }
-M.breadcrumbs = {
-    enable  = false,
-    dispose  = true,
-    shape    = "circle",
-    color    =  { 255, 0, 0, 0.2 },
-    interval = 50,
-    time     = 1000,
-    width  = 30,
-    height = 30,
-}
 ---------------------------------------
 --
 local function onEndHandler (UI)
@@ -122,7 +112,7 @@ function M:didShow(UI)
   local sceneGroup = UI.sceneGroup
   if self.properties.autoPlay then
     if self.animation.to then
-      --self.animation.to:toBeginning()
+    --  self.animation.to:toBeginning()
       self.animation.to:play()
     end
   end

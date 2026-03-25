@@ -48,7 +48,7 @@ function M:init(UI)
 end
 --
 function M:create(UI)
-  print("create cat_face1")
+  -- print("create cat_face1")
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
@@ -56,7 +56,7 @@ function M:create(UI)
   UI.layers[#UI.layers] = obj
   self.obj = obj
 
-  for k, v in pairs(UI.sceneGroup) do print(k ,v) end
+  -- for k, v in pairs(UI.sceneGroup) do print(k ,v) end
 
 
   if self.infinity and self.infinity.enabled then

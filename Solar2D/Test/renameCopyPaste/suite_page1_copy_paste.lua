@@ -1,5 +1,5 @@
 local M = require("Test.base_suite").new({
-  book = "book",
+  book = "renameCopyPaste",
   page = "page1",
   component = "iconOnly"
 })
@@ -12,11 +12,26 @@ local muiName = "editor.action.commandView-"
 -- copied in page1 layerTable, then pasted in page2 pageTable or layerTable
 --
 
+
+function M.xtest_new_animation()
+  local name = "title2"
+  helper.selectLayer(name)
+  helper.selectIcon("Animations", "Linear"):done(
+    function()
+    end
+  )
+
+  -- local buttons = require("editor.parts.buttons")
+  -- local obj = buttons.objs["save"]
+  -- obj.rect:tap()
+end
+
+
 --
 -- one layer or class is copied in page1, and pasted in page1 layerTable
 --
 function M.xtest_copy_layer()
-  local name = "cat"
+  local name = "title2"
   -- layerTable.altDown = true
   helper.selectLayer(name)
   helper.selectLayer(name, nil, true) -- isRightClick true

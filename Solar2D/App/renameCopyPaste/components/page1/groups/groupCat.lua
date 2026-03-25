@@ -5,12 +5,11 @@ local props = {
     "cat_face1",
   },
   properties = {
-    alpha = NIL,
-    xScale = NIL,
-    yScale = NIL,
-    rotation = NIL,
+    alpha = 1,
+    xScale = 1,
+    yScale = 1,
+    rotation = 0,
     isLuaTable = false
   }
 }
-
 return require("components.kwik.page_group").set(props)
