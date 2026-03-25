@@ -10,7 +10,7 @@ local model = {
       },
       {
         name = {
-        }
+          class={ "dynamictext", }  }
       },
       {
         cat = {
@@ -54,12 +54,12 @@ local model = {
           class={ "linear", }  }
       },
     },
-    timers = {  },
-    variables = {  },
+    timers = {  "nameTimer",  },
+    variables = {  "myText",  },
     joints    = {  },
     page = {  }
   },
-  commands = {   "previousPage",  },
+  commands = {   "previousPage",   "nameAct",  },
   onInit = function(scene)  end
 }
 local scene = require('controller.scene').new(sceneName, model)

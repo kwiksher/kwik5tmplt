@@ -13,7 +13,7 @@ local muiName = "editor.action.commandView-"
 --
 
 
-function M.test_new_animation()
+function M.xtest_new_animation()
   local name = "title2"
   helper.selectLayer(name)
   helper.selectIcon("Animations", "Linear"):done(

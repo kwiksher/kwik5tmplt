@@ -57,7 +57,7 @@ function M:create(UI)
   local centerX, centerY = display.contentCenterX, display.contentCenterY
   local dx, dy = obj.x - centerX, obj.y - centerY
   local dist = math.sqrt(dx * dx + dy * dy)
-  print("DEBUG_CENTER", "cat", "x", obj.x, "y", obj.y, "dx", dx, "dy", dy, "dist", dist)
+  -- print("DEBUG_CENTER", "cat", "x", obj.x, "y", obj.y, "dx", dx, "dy", dy, "dist", dist)
 
   if self.infinity and self.infinity.enabled then
     infinity.createInfinityImage(UI, self.obj, self.infinity)
