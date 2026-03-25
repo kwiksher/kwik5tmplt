@@ -1,6 +1,6 @@
 local M = require("Test.base_suite").new({
   book = "book",
-  page = "kwikTheCat",
+  page = "page1",
   component = "iconOnly"
 })
 

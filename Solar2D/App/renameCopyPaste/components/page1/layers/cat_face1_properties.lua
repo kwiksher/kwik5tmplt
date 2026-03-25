@@ -29,7 +29,7 @@ M.properties = {
   ---
   ---
   ---
-  imagePath   = "kwikTheCat/cat_face1.png",
+  imagePath   = "page1/cat_face1.png",
   imageHeight = nil,
   imageWidth  = nil
 }

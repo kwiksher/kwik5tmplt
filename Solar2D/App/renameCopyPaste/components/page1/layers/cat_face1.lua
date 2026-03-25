@@ -1,4 +1,4 @@
--- $weight=0
+-- $weight=6
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
@@ -6,13 +6,13 @@ local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
-  height    =  1175 - 1105,
-  width     = 1817 - 1615 ,
+  height    =  724 - 606,
+  width     = 959 - 485 ,
   kind      = pixel,
-  name      = "fish",
+  name      = "cat_face1",
   type      = "png",
-  x         = 1817 + (1615 -1817)/2,
-  y         = 1105 + (1175 - 1105)/2,
+  x         = 959 + (485 -959)/2,
+  y         = 606 + (724 - 606)/2,
   alpha     = 100/100,
   infinity = {
   },
@@ -22,9 +22,9 @@ local layerProps = {
   fontSize =  nil,
   alignment =  "",
   orientation = "",
+  psdPage     = "page1"
 }
 
-M.imagePath   = "kwikTheCat/fish.png"
 M.align       = ""
 M.randXStart  = nil
 M.randXEnd    = nil
@@ -36,7 +36,7 @@ M.yScale     = nil
 M.rotation   = nil
 --
 M.layerAsBg     = nil
-M.isSharedAsset = true
+M.isSharedAsset = nil
 --
 M:setProps(layerProps)
 --
@@ -48,12 +48,16 @@ function M:init(UI)
 end
 --
 function M:create(UI)
+  print("create cat_face1")
 	if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
   local obj = self:createImage(UI)
   UI.layers[#UI.layers] = obj
   self.obj = obj
+
+  for k, v in pairs(UI.sceneGroup) do print(k ,v) end
+
 
   if self.infinity and self.infinity.enabled then
     infinity.createInfinityImage(UI, self.obj, self.infinity)

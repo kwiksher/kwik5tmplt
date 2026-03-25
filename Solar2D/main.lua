@@ -10,8 +10,13 @@ local env = require("env")
 --env.page = "forest"
 --env.page = "cabin"
 
-env.book = "book"
-env.page = "landscape"
+--env.book = "book"
+--env.page = "landscape"
+--env.page = "portrait"
+--env.page = "shape"
+
+env.book = "renameCopyPaste"
+env.page = "page1"
 
 -- env.book = "animation"
 -- env.page = "linear"
@@ -82,7 +87,7 @@ env.page = "landscape"
 --
 
 env.mode  = "development"
--- env.mode  = "debug"
+--env.mode  = "debug"
 -- env.mode = "production" -- need kwik5-plugin src from kwiksher's repo
 -- env.mode = "behaviorTree"
 
@@ -95,7 +100,7 @@ if env.mode == "development" or env.mode == "debug" then
     language = "", -- empty string "" is for a single language project
     position = {x = 0, y = 0},
     gotoLastBook = false,
-    unitTest = true,
+    unitTest = false,
     httpServer = false,
     scale      = 1,
     showPageName = true,
