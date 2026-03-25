@@ -2,48 +2,44 @@ local parent,root, M = newModule(...)
 local layerMod = require(M.layerMod)
 --
 local infinity = require("components.kwik.layer_image_infinity")
-local util = require(kwikGlobal.ROOT.."lib.util")
 --
 M.properties = {
   blendMode = "normal",
-  height    = 175,
-  width     = 184 ,
+  height    = 118,
+  width     = 474 ,
   kind      = "",
-  name      = "star",
+  name      = "cat_face1",
   type      = "png",
-  x         = 960,
-  y         = 640.5,
+  x         = 420,
+  y         = 349,
   alpha     = 1,
   --
-  align       = "nil",
-  randXStart  = 0,
-  randXEnd    = 480,
-  randYStart  = 0,
-  randYEnd    = 320,
+  align       = "",
+  randXStart  = NIL,
+  randXEnd    = NIL,
+  randYStart  = NIL,
+  randYEnd    = NIL,
   --,
-  xScale     = nil,
-  yScale     = nil,
-  rotation   = nil,
+  xScale     = NIL,
+  yScale     = NIL,
+  rotation   = NIL,
   --,
-  layerAsBg     = nil,
-  isSharedAsset = nil,
+  layerAsBg     = NIL,
+  isSharedAsset = NIL,
   ---
   ---
-  infinity = {
-    enabled = false,
-    speed = 1,
-    distance = 0,
-    direction = "right",
-  },
   ---
+  imagePath   = "page1/cat_face1.png",
+  imageHeight = nil,
+  imageWidth  = nil
 }
 local slash_pos = M.properties.name:find("/")
 if slash_pos and slash_pos > 0 then -- pageX/bg.png for shared asset
   if M.properties.kind:len() > 0 then -- use if to jpg
-        M.properties.imagePath   = M.properties.name .."."..M.properties.kind
-  else
-    M.properties.imagePath   = M.properties.name ..".png"
-  end
+    M.properties.imagePath   = M.properties.name .."."..M.properties.kind
+else
+  M.properties.imagePath   = M.properties.name ..".png"
+end
 else
   if M.properties.kind:len() > 0 then -- use if to jpg
     M.properties.imagePath   =layerMod.psdPage.."/".. M.properties.name .."."..M.properties.kind
@@ -64,8 +60,8 @@ end
 function M:create(UI)
   local obj = UI.sceneGroup[self.properties.name]
   self.obj = obj
-  -- print("###", self.properties.name)
-  -- for k, v in pairs(UI.sceneGroup) do print(k ,v) end
+  print("###", self.properties.name)
+  for k, v in pairs(UI.sceneGroup) do print(k ,v) end
   --
   --
   -- obj.imagePath = self.imagePath
@@ -117,42 +113,12 @@ function M:create(UI)
   -- obj.type        = props.layerProps.type
   -- obj.kind        = props.layerProps.kind
   --
-  -- DEBUG: log rand boundaries + coordinate context
-  local sg = UI.sceneGroup
-  -- print("[star_properties DEBUG] randXStart="..tostring(props.randXStart).." randXEnd="..tostring(props.randXEnd)
-  --   .." randYStart="..tostring(props.randYStart).." randYEnd="..tostring(props.randYEnd))
-  -- print("[star_properties DEBUG] contentCenter=("..display.contentCenterX..","..display.contentCenterY
-  --   ..") contentSize=("..display.contentWidth.."x"..display.contentHeight..")")
-  -- print("[star_properties DEBUG] sceneGroup x="..tostring(sg.x).." y="..tostring(sg.y)
-  --   .." xScale="..tostring(sg.xScale).." yScale="..tostring(sg.yScale))
-  -- print("[star_properties DEBUG] kwikGlobal.scale="..tostring(kwikGlobal and kwikGlobal.scale)
-  --   .." editor="..tostring(kwikGlobal and kwikGlobal.editor))
-  -- print("[star_properties DEBUG] randX condition (type==number AND >=0): X="
-  --   ..tostring(type(props.randXStart)=="number" and props.randXStart >= 0)
-  --   .." Y="..tostring(type(props.randYStart)=="number" and props.randYStart >= 0))
-
-  if type(props.randXStart) == "number" and props.randXStart >= 0 then
-    local rx = math.random( props.randXStart, props.randXEnd)
-    local lx = util.designToLocal(rx, props.randYStart or 0, UI.sceneGroup)
-    obj.x = lx
-    -- print("[star_properties DEBUG] randX FIRED -> design="..rx.." local obj.x="..tostring(lx))
-  else
-    -- print("[star_properties DEBUG] randX SKIPPED (randXStart="..tostring(props.randXStart)..")")
+  if type(props.randXStart) == "number" and props.randXStart > 0 then
+    obj.x = math.random( props.randXStart, props.randXEnd)
   end
-  if type(props.randYStart) == "number" and props.randYStart >= 0 then
-    local ry = math.random( props.randYStart, props.randYEnd)
-    local _, ly = util.designToLocal(props.randXStart or 0, ry, UI.sceneGroup)
-    obj.y = ly
-    -- print("[star_properties DEBUG] randY FIRED -> design="..ry.." local obj.y="..tostring(ly))
+  if type(props.randYStart) == "number" and props.randYStart > 0  then
+    obj.y = math.random( props.randYStart, props.randYEnd)
   end
-
-  -- DEBUG: draw red boundary rect for rand region (in sceneGroup local/design coords)
-  self.debugRect = util.drawDebugBoundsRect({
-    xMin = props.randXStart,
-    xMax = props.randXEnd,
-    yMin = props.randYStart,
-    yMax = props.randYEnd,
-  }, UI.sceneGroup)
   if type(props.xScale) == "number" then
     obj.xScale = props.xScale
   end

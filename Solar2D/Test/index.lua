@@ -18,14 +18,14 @@ local M = {
     end
 
     set("book", "landscape")
-    -- set("book", "kwikTheCat_rename")
-    -- set("book", "kwikTheCat_edit_delete")
-    set("book", "kwikTheCat_copy_paste")
-    -- set("book", "kwikTheCat_copy_paste_in_page2")
-    -- set("book", "kwikTheCat_copy_many")
-    -- set("book", "kwikTheCat_copy_many_paste_in_page2")
-    -- set("book", "kwikTheCat_copy_one_paste_many")
-    -- set("book", "kwikTheCat_copy_one_paste_many_in_page2")
+    -- set("book", "renameCopyPaste_rename")
+    -- set("book", "renameCopyPaste_edit_delete")
+    set("book", "renameCopyPaste_copy_paste")
+    -- set("book", "renameCopyPaste_copy_paste_in_page2")
+    -- set("book", "renameCopyPaste_copy_many")
+    -- set("book", "renameCopyPaste_copy_many_paste_in_page2")
+    -- set("book", "renameCopyPaste_copy_one_paste_many")
+    -- set("book", "renameCopyPaste_copy_one_paste_many_in_page2")
 
     set("animation", "linear")
     set("animation", "filter")
