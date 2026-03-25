@@ -1,5 +1,5 @@
 local M = require("Test.base_suite").new({
-  book = "book",
+  book = "renameCopyPaste",
   page = "page1",
   component = "iconOnly"
 })

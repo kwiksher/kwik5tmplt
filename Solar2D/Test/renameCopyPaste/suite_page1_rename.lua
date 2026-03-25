@@ -1,5 +1,5 @@
 local M = require("Test.base_suite").new({
-  book = "book",
+  book = "renameCopyPaste",
   page = "page1",
   component = "iconOnly"
 })
@@ -43,13 +43,13 @@ end
 --
 function M.xtest_4_renamePage()
   local commands = require("editor.scripts.commands")
-  commands.renamePage("book", "page1", "page01")
+  commands.renamePage("renameCopyPaste", "page1", "page01")
   native.requestExit() -- this prevents from infinitly looping of simulator reloading
 end
 
 function M.xtest_4_copyPage()
   local commands = require("editor.scripts.commands")
-  commands.copyPage("book", "page1", "page01")
+  commands.copyPage("renameCopyPaste", "page1", "page01")
   native.requestExit() -- this prevents from infinitly looping of simulator reloading
 end
 

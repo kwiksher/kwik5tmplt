@@ -18,8 +18,7 @@ local model = {
       },
       {
         cat_face1 = {
-          -- class={ "properties", }
-         }
+        }
       },
       {
         title_base = {
@@ -35,7 +34,7 @@ local model = {
       },
       {
         title1 = {
-        }
+          class={ "pulse", }  }
       },
       {
         starfish = {
@@ -43,20 +42,24 @@ local model = {
       },
       {
         fish = {
-          class={ "button", }  }
+        }
       },
     },
     audios = {
       long={  }, short={   }
     },
     groups = {
+      {
+        groupCat = {
+          class={ "linear", }  }
+      },
     },
     timers = {  },
     variables = {  },
     joints    = {  },
     page = {  }
   },
-  commands = {   "nextPage",   "previousPage",  },
+  commands = {   "previousPage",  },
   onInit = function(scene)  end
 }
 local scene = require('controller.scene').new(sceneName, model)

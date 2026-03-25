@@ -18,14 +18,15 @@ local M = {
     end
 
     set("book", "landscape")
-    -- set("book", "renameCopyPaste_rename")
-    -- set("book", "renameCopyPaste_edit_delete")
-    set("book", "renameCopyPaste_copy_paste")
-    -- set("book", "renameCopyPaste_copy_paste_in_page2")
-    -- set("book", "renameCopyPaste_copy_many")
-    -- set("book", "renameCopyPaste_copy_many_paste_in_page2")
-    -- set("book", "renameCopyPaste_copy_one_paste_many")
-    -- set("book", "renameCopyPaste_copy_one_paste_many_in_page2")
+
+    -- set("renameCopyPaste", "page1_rename")
+    -- set("renameCopyPaste", "page1_edit_delete")
+    set("renameCopyPaste", "page1_copy_paste")
+    -- set("renameCopyPaste", "page1_copy_paste_in_page2")
+    -- set("renameCopyPaste", "page1_copy_many")
+    -- set("renameCopyPaste", "page1_copy_many_paste_in_page2")
+    -- set("renameCopyPaste", "page1_copy_one_paste_many")
+    -- set("renameCopyPaste", "page1_copy_one_paste_many_in_page2")
 
     set("animation", "linear")
     set("animation", "filter")
