@@ -73,17 +73,6 @@ function M.xtest_new_page()
   -- end
 end
 
-function M.test_rename_page()
-  local book = helper.selectBook("mybook")
-  book:touch()
-  if M.UI.book ~="mybook" then return end
-  helper.selectPage("page3", false)
-  helper.selectPage("page3", true)
-  helper.clickButton("rename")
-end
-
-function M.xtest_copy_paste_page()
-end
 
 function M.xtest_delete_page()
   local book = helper.selectBook("mybook")
@@ -157,26 +146,6 @@ function M.xtest_layer_contextmenu_up_down()
   --   or inserting a new one.
 end
 
---
--- rename layer.lua and layer_class.lua and generate(update) index.lua
---
-function M.xtest_rename_book()
-end
-
-function M.xtest_rename_group()
-end
-
-function M.xtest_rename_timer()
-end
-
-function M.xtest_rename_joints()
-end
-
-function M.xtest_rename_var()
-end
-
-function M.xtest_rename_audio()
-end
 
 ------
 return M
