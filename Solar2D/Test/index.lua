@@ -21,7 +21,7 @@ local M = {
 
     -- set("renameCopyPaste", "page1_rename")
     -- set("renameCopyPaste", "page1_edit_delete")
-    set("renameCopyPaste", "page1_copy_paste")
+    -- set("renameCopyPaste", "page1_copy_paste")
     set("renameCopyPaste", "page1_paste_direct")
     -- set("renameCopyPaste", "page1_copy_paste_in_page2")
     -- set("renameCopyPaste", "page1_copy_many")
