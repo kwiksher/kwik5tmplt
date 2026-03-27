@@ -14,7 +14,7 @@ local muiName = "editor.action.commandView-"
 --
 -- one layer or class is copied in page1, and pasted in page1 layerTable
 --
-function M.xtest_copy_layers() -- classes are included
+function M.xtest_copy_layer() -- classes are included
   local name = "cat"
   -- layerTable.altDown = true
   helper.selectLayer(name)
@@ -25,6 +25,11 @@ function M.xtest_copy_layers() -- classes are included
 
   -- selectors.componentSelector:onClick(true,  "actionTable")
   -- helper.selectAction("eventOne")
+end
+
+function M.xtest_copy_layers()
+  helper.selectLayer("title1", "pulse", true) -- isRightClick
+  helper.selectLayer("starfish", "button", true) -- isRightClick
 end
 
 --
