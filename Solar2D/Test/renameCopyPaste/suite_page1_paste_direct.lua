@@ -67,6 +67,41 @@ local function make_full_button_layer(name, target, onTap)
   }
 end
 
+local function make_pulse_layer(name, target)
+  return {
+    name = name,
+    class = "pulse",
+    properties = {
+      target = target or name,
+    },
+  }
+end
+
+local function make_audio_entry(name)
+  return {
+    name = name,
+  }
+end
+
+local function make_group_entry(name, groupType)
+  return {
+    name = name,
+    type = groupType or "group",
+  }
+end
+
+local function make_timer_entry(name)
+  return {
+    name = name,
+  }
+end
+
+local function make_variable_entry(name)
+  return {
+    name = name,
+  }
+end
+
 local function should_skip_if_layers_generated(testName, checks)
   local allGenerated = true
   for i = 1, #checks do
@@ -122,12 +157,18 @@ function M.test_direct_paste_layer_class_from_starfish_button()
 end
 
 function M.xtest_direct_paste_layer_class_from_title1_pulse()
+  if should_skip_if_layers_generated("xtest_direct_paste_layer_class_from_title1_pulse", {
+    {"title1", "pulse"}
+  }) then
+    return
+  end
+
   state.clipboard = {
     class = "pulse",
     page = "page1",
     components = make_components({
       layers = {
-        {name = "title1", class = "pulse", properties = {target = "title1"}}
+        make_pulse_layer("title1")
       }
     })
   }
@@ -150,8 +191,8 @@ function M.xtest_direct_paste_audios_long_and_short()
     page = "page1",
     components = make_components({
       audios = {
-        {name = "long"},
-        {name = "short"}
+        make_audio_entry("long"),
+        make_audio_entry("short")
       }
     })
   }
@@ -174,7 +215,7 @@ function M.xtest_direct_paste_group_groupCat()
     page = "page1",
     components = make_components({
       groups = {
-        {name = "groupCat", type = "group"}
+        make_group_entry("groupCat", "group")
       }
     })
   }
@@ -195,7 +236,7 @@ function M.xtest_direct_paste_timer_nameTimer()
     page = "page1",
     components = make_components({
       timers = {
-        {name = "nameTimer"}
+        make_timer_entry("nameTimer")
       }
     })
   }
@@ -216,7 +257,7 @@ function M.xtest_direct_paste_variable_myText()
     page = "page1",
     components = make_components({
       variables = {
-        {name = "myText"}
+        make_variable_entry("myText")
       }
     })
   }
