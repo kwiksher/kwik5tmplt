@@ -72,7 +72,21 @@ function M.xtest_direct_paste_layer_class_from_starfish_button()
     page = "page1",
     components = make_components({
       layers = {
-        {name = "starfish", class = "button", properties = {target = "starfish"}}
+        {
+          name = "starfish",
+          class = "button",
+          properties = {
+            target = "starfish",
+            type = "",
+            eventType = "tap",
+            over = "",
+            btaps = 1,
+            mask = "",
+          },
+          actions = {
+            onTap = "previousPage",
+          },
+        }
       }
     })
   }
