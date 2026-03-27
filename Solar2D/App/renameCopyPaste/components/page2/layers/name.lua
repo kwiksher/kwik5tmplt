@@ -1,4 +1,4 @@
--- $weight=9
+-- $weight=8
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
@@ -6,13 +6,13 @@ local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
-  height    =  1280 - 0,
-  width     = 1920 - 0 ,
+  height    =  1190 - 1076,
+  width     = 1423 - 581 ,
   kind      = pixel,
-  name      = "background",
-  type = "jpg",
-  x         = 1920 + (0 -1920)/2,
-  y         = 0 + (1280 - 0)/2,
+  name      = "name",
+  type      = "png",
+  x         = 1423 + (581 -1423)/2,
+  y         = 1076 + (1190 - 1076)/2,
   alpha     = 100/100,
   infinity = {
   },

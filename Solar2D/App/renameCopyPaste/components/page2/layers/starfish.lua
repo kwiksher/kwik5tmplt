@@ -1,4 +1,4 @@
--- $weight=9
+-- $weight=1
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
@@ -6,13 +6,13 @@ local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
-  height    =  1280 - 0,
-  width     = 1920 - 0 ,
+  height    =  1189 - 1065,
+  width     = 426 - 254 ,
   kind      = pixel,
-  name      = "background",
-  type = "jpg",
-  x         = 1920 + (0 -1920)/2,
-  y         = 0 + (1280 - 0)/2,
+  name      = "starfish",
+  type      = "png",
+  x         = 426 + (254 -426)/2,
+  y         = 1065 + (1189 - 1065)/2,
   alpha     = 100/100,
   infinity = {
   },
@@ -23,7 +23,7 @@ local layerProps = {
   alignment =  "",
   orientation = "",
 }
-
+M.imagePath   = "page1/starfish.png"
 M.align       = ""
 M.randXStart  = nil
 M.randXEnd    = nil
