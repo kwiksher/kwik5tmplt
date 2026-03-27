@@ -120,6 +120,24 @@ local function should_skip_if_layers_generated(testName, checks)
   return false
 end
 
+local function should_skip_if_files_exist(testName, relPaths)
+  local allExist = true
+  for i = 1, #relPaths do
+    local relPath = relPaths[i]
+    local absPath = resolve_runtime_path(relPath)
+    if not file_exists(absPath) then
+      allExist = false
+      break
+    end
+  end
+
+  if allExist then
+    print("SKIP " .. testName .. ": output files already exist")
+    return true
+  end
+  return false
+end
+
 function M.setup()
   helper.setup_stubs()
 end
@@ -186,6 +204,13 @@ function M.xtest_direct_paste_layer_class_from_title1_pulse()
 end
 
 function M.xtest_direct_paste_audios_long_and_short()
+  if should_skip_if_files_exist("xtest_direct_paste_audios_long_and_short", {
+    "App/renameCopyPaste/components/page2/audios/long/long.lua",
+    "App/renameCopyPaste/components/page2/audios/short/short.lua"
+  }) then
+    return
+  end
+
   state.clipboard = {
     class = "audio",
     page = "page1",
@@ -209,6 +234,12 @@ function M.xtest_direct_paste_audios_long_and_short()
 end
 
 function M.xtest_direct_paste_group_groupCat()
+  if should_skip_if_files_exist("xtest_direct_paste_group_groupCat", {
+    "App/renameCopyPaste/components/page2/groups/groupCat.lua"
+  }) then
+    return
+  end
+
   state.clipboard = {
     class = "group",
     type = "group",
@@ -231,6 +262,12 @@ function M.xtest_direct_paste_group_groupCat()
 end
 
 function M.xtest_direct_paste_timer_nameTimer()
+  if should_skip_if_files_exist("xtest_direct_paste_timer_nameTimer", {
+    "App/renameCopyPaste/components/page2/timers/nameTimer.lua"
+  }) then
+    return
+  end
+
   state.clipboard = {
     class = "timer",
     page = "page1",
@@ -252,6 +289,12 @@ function M.xtest_direct_paste_timer_nameTimer()
 end
 
 function M.xtest_direct_paste_variable_myText()
+  if should_skip_if_files_exist("xtest_direct_paste_variable_myText", {
+    "App/renameCopyPaste/components/page2/variables/myText.lua"
+  }) then
+    return
+  end
+
   state.clipboard = {
     class = "variable",
     page = "page1",
