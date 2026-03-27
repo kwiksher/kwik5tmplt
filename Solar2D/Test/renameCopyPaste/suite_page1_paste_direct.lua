@@ -49,6 +49,42 @@ local assert_page2_updated = helper.assert_page2_updated
 local assert_page2_index_layer_class = helper.assert_page2_index_layer_class
 local debug_print_paste_outputs = helper.debug_print_paste_outputs
 
+local function make_full_button_layer(name, target, onTap)
+  return {
+    name = name,
+    class = "button",
+    properties = {
+      target = target or name,
+      type = "",
+      eventType = "tap",
+      over = "",
+      btaps = 1,
+      mask = "",
+    },
+    actions = {
+      onTap = onTap or "previousPage",
+    },
+  }
+end
+
+local function should_skip_if_layers_generated(testName, checks)
+  local allGenerated = true
+  for i = 1, #checks do
+    local check = checks[i]
+    local ok = pcall(assert_layer_files_generated, check[1], check[2])
+    if not ok then
+      allGenerated = false
+      break
+    end
+  end
+
+  if allGenerated then
+    print("SKIP " .. testName .. ": generated files already exist")
+    return true
+  end
+  return false
+end
+
 function M.setup()
   helper.setup_stubs()
 end
@@ -57,10 +93,10 @@ function M.teardown()
   helper.teardown_stubs()
 end
 
-function M.xtest_direct_paste_layer_class_from_starfish_button()
-  local alreadyGenerated = pcall(assert_layer_files_generated, "starfish", "button")
-  if alreadyGenerated then
-    print("SKIP xtest_direct_paste_layer_class_from_starfish_button: generated files already exist")
+function M.test_direct_paste_layer_class_from_starfish_button()
+  if should_skip_if_layers_generated("test_direct_paste_layer_class_from_starfish_button", {
+    {"starfish", "button"}
+  }) then
     return
   end
 
@@ -72,21 +108,7 @@ function M.xtest_direct_paste_layer_class_from_starfish_button()
     page = "page1",
     components = make_components({
       layers = {
-        {
-          name = "starfish",
-          class = "button",
-          properties = {
-            target = "starfish",
-            type = "",
-            eventType = "tap",
-            over = "",
-            btaps = 1,
-            mask = "",
-          },
-          actions = {
-            onTap = "previousPage",
-          },
-        }
+        make_full_button_layer("starfish")
       }
     })
   }
@@ -210,6 +232,13 @@ function M.xtest_direct_paste_variable_myText()
 end
 
 function M.xtest_direct_paste_one_to_many_for_selected_layers()
+  if should_skip_if_layers_generated("xtest_direct_paste_one_to_many_for_selected_layers", {
+    {"cat", "button"},
+    {"fish", "button"}
+  }) then
+    return
+  end
+
   state.UI.editor.selections = {
     {layer = "cat"},
     {layer = "fish"}
@@ -220,7 +249,7 @@ function M.xtest_direct_paste_one_to_many_for_selected_layers()
     page = "page1",
     components = make_components({
       layers = {
-        {name = "starfish", class = "button", properties = {target = "starfish"}}
+        make_full_button_layer("starfish")
       }
     })
   }
@@ -240,13 +269,20 @@ function M.xtest_direct_paste_one_to_many_for_selected_layers()
 end
 
 function M.xtest_direct_paste_many_entries_keeps_payload_from_page1_components()
+  if should_skip_if_layers_generated("xtest_direct_paste_many_entries_keeps_payload_from_page1_components", {
+    {"starfish", "button"},
+    {"title1", "button"}
+  }) then
+    return
+  end
+
   state.clipboard = {
     class = "button",
     page = "page1",
     components = make_components({
       layers = {
-        {name = "starfish", class = "button", properties = {target = "starfish"}},
-        {name = "title1", class = "button", properties = {target = "title1"}}
+        make_full_button_layer("starfish"),
+        make_full_button_layer("title1")
       }
     })
   }
@@ -266,13 +302,19 @@ function M.xtest_direct_paste_many_entries_keeps_payload_from_page1_components()
 end
 
 function M.xtest_direct_multi_paste_skips_unmatched_layer_names()
+  if should_skip_if_layers_generated("xtest_direct_multi_paste_skips_unmatched_layer_names", {
+    {"starfish", "button"}
+  }) then
+    return
+  end
+
   state.clipboard = {
     class = "button",
     page = "page1",
     components = make_components({
       layers = {
-        {name = "starfish", class = "button", properties = {target = "starfish"}},
-        {name = "ghost", class = "button", properties = {target = "ghost"}}
+        make_full_button_layer("starfish"),
+        make_full_button_layer("ghost")
       }
     })
   }
@@ -295,13 +337,20 @@ function M.xtest_direct_multi_paste_skips_unmatched_layer_names()
 end
 
 function M.xtest_direct_multi_paste_overwrites_without_unique_rename()
+  if should_skip_if_layers_generated("xtest_direct_multi_paste_overwrites_without_unique_rename", {
+    {"starfish", "button"},
+    {"title1", "button"}
+  }) then
+    return
+  end
+
   state.clipboard = {
     class = "button",
     page = "page1",
     components = make_components({
       layers = {
-        {name = "starfish", class = "button", properties = {target = "starfish"}},
-        {name = "title1", class = "button", properties = {target = "title1"}}
+        make_full_button_layer("starfish"),
+        make_full_button_layer("title1")
       }
     })
   }
