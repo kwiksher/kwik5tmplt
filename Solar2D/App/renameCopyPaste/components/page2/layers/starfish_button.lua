@@ -7,14 +7,14 @@ local M = {
     type  = "",
     eventType = "",  -- tap, touch
     over = "",
-    btaps = ,
+    btaps = 1,
     mask = "",
   },
   actions={
   },
-    -- buyProductHide = 
-    -- product       = 
-    -- TV = 
+    -- buyProductHide =
+    -- product       =
+    -- TV =
   layerProps = layerProps
 }
 function M:create(UI)

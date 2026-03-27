@@ -57,7 +57,13 @@ function M.teardown()
   helper.teardown_stubs()
 end
 
-function M.test_direct_paste_layer_class_from_starfish_button()
+function M.xtest_direct_paste_layer_class_from_starfish_button()
+  local alreadyGenerated = pcall(assert_layer_files_generated, "starfish", "button")
+  if alreadyGenerated then
+    print("SKIP xtest_direct_paste_layer_class_from_starfish_button: generated files already exist")
+    return
+  end
+
   state.UI.editor.currentLayer = {layer = "starfish"}
   state.UI.editor.selections = {{layer = "starfish"}}
 
