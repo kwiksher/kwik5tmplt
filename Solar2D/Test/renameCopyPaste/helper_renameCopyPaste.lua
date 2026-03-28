@@ -28,16 +28,19 @@ function H.new(state, PAGE2_BASELINE)
   end
 
   local function make_full_button_layer(name, target, onTap)
+    local resolvedTarget = target or name
     return {
       name = name,
+      layer = name,
       class = "button",
+      type = "",
       properties = {
-        target = target or name,
+        target = resolvedTarget,
         type = "",
         eventType = "tap",
-        over = "",
+        over = "NIL",
         btaps = 1,
-        mask = "",
+        mask = "NIL",
       },
       actions = {
         onTap = onTap or "previousPage",
@@ -92,27 +95,71 @@ function H.new(state, PAGE2_BASELINE)
   end
 
   local function make_audio_entry(name)
+    local folder = name == "long" and "long" or "short"
     return {
       name = name,
+      type = folder,
+      properties = {
+        autoPlay = false,
+        channel = 1,
+        delay = 0,
+        fadein = 0,
+        filename = name,
+        folder = folder,
+        loops = 0,
+        volume = 1,
+      },
+      actions = {
+        onComplete = "",
+      },
     }
   end
 
   local function make_group_entry(name, groupType)
     return {
       name = name,
+      layer = name,
+      class = "group",
       type = groupType or "group",
+      members = {"cat", "cat_face1"},
+      properties = {
+        alpha = 1,
+        xScale = 1,
+        yScale = 1,
+        rotation = 0,
+        isLuaTable = false,
+      },
     }
   end
 
   local function make_timer_entry(name)
     return {
       name = name,
+      class = "timer",
+      index = 1,
+      properties = {
+        delay = 0,
+        iterations = 1,
+      },
+      actions = {
+        onComplete = "nameAct",
+      },
     }
   end
 
   local function make_variable_entry(name)
     return {
       name = name,
+      class = "variable",
+      index = 1,
+      properties = {
+        valueType = "string",
+        type = "string",
+        value = "\"Miki Kamekai\"",
+        isLocal = true,
+        isAfter = false,
+        isSave = true,
+      },
     }
   end
 
