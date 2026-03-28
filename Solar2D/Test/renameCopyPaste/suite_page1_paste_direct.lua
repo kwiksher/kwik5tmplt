@@ -94,8 +94,8 @@ function M.test_paste_layer_class_from_starfish_button()
   assert_page2_updated(true, "test_paste_layer_class_from_starfish_button", "button")
 end
 
-function M.xtest_paste_starfish_and_title1_do_not_force_unique_rename()
-  if should_skip_if_layers_generated("xtest_paste_starfish_and_title1_do_not_force_unique_rename", {
+function M.xtest_multi_paste_starfish_and_title1_do_not_force_unique_rename()
+  if should_skip_if_layers_generated("xtest_multi_paste_starfish_and_title1_do_not_force_unique_rename", {
     {"starfish", "button"},
     {"title1", "pulse"}
   }) then
@@ -104,7 +104,6 @@ function M.xtest_paste_starfish_and_title1_do_not_force_unique_rename()
 
   state.clipboard = {
     class = "button",
-    page = "page1",
     components = make_components({
       layers = {
         make_full_button_layer("starfish")
@@ -116,12 +115,14 @@ function M.xtest_paste_starfish_and_title1_do_not_force_unique_rename()
   state.UI.editor.selections = {{layer = "starfish"}}
 
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_paste_starfish_and_title1_do_not_force_unique_rename_first")
+  debug_print_paste_outputs("test_multi_paste_starfish_and_title1_do_not_force_unique_rename_first")
 
   assert_equal(1, #state.calls.updateIndexModel)
   assert_equal("starfish", state.calls.updateIndexModel[1].layer)
   assert_equal("button", state.calls.updateIndexModel[1].class)
+  assert_equal(1, #state.calls.render)
   assert_true(not file_exists(resolve_runtime_path("App/renameCopyPaste/components/page2/layers/starfish_1_button.lua")))
+  assert_layer_files_generated("starfish", "button")
 
   state.clipboard = {
     class = "pulse",
@@ -137,14 +138,15 @@ function M.xtest_paste_starfish_and_title1_do_not_force_unique_rename()
   state.UI.editor.selections = {{layer = "title1"}}
 
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_paste_starfish_and_title1_do_not_force_unique_rename_second")
+  debug_print_paste_outputs("test_multi_paste_starfish_and_title1_do_not_force_unique_rename_second")
 
   assert_equal(2, #state.calls.updateIndexModel)
   assert_equal("title1", state.calls.updateIndexModel[2].layer)
   assert_equal("pulse", state.calls.updateIndexModel[2].class)
   assert_true(not file_exists(resolve_runtime_path("App/renameCopyPaste/components/page2/layers/title1_1_pulse.lua")))
+  assert_layer_files_generated("title1", "pulse")
   assert_page2_lua_written()
-  assert_page2_updated(true, "test_paste_starfish_and_title1_do_not_force_unique_rename", "title1")
+  assert_page2_updated(true, "test_multi_paste_starfish_and_title1_do_not_force_unique_rename", "title1")
   assert_page2_index_layer_class("starfish", "button", true)
   assert_page2_index_layer_class("title1", "pulse", true)
 end
