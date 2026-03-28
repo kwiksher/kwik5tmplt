@@ -41,102 +41,21 @@ local state = {
 local helper = require("Test.renameCopyPaste.helper_renameCopyPaste").new(state, PAGE2_BASELINE)
 
 local make_components = helper.make_components
+local make_full_button_layer = helper.make_full_button_layer
+local make_pulse_layer = helper.make_pulse_layer
+local make_audio_entry = helper.make_audio_entry
+local make_group_entry = helper.make_group_entry
+local make_timer_entry = helper.make_timer_entry
+local make_variable_entry = helper.make_variable_entry
 local resolve_runtime_path = helper.resolve_runtime_path
 local file_exists = helper.file_exists
 local assert_layer_files_generated = helper.assert_layer_files_generated
+local should_skip_if_layers_generated = helper.should_skip_if_layers_generated
+local should_skip_if_files_exist = helper.should_skip_if_files_exist
 local assert_page2_lua_written = helper.assert_page2_lua_written
 local assert_page2_updated = helper.assert_page2_updated
 local assert_page2_index_layer_class = helper.assert_page2_index_layer_class
 local debug_print_paste_outputs = helper.debug_print_paste_outputs
-
-local function make_full_button_layer(name, target, onTap)
-  return {
-    name = name,
-    class = "button",
-    properties = {
-      target = target or name,
-      type = "",
-      eventType = "tap",
-      over = "",
-      btaps = 1,
-      mask = "",
-    },
-    actions = {
-      onTap = onTap or "previousPage",
-    },
-  }
-end
-
-local function make_pulse_layer(name, target)
-  return {
-    name = name,
-    class = "pulse",
-    properties = {
-      target = target or name,
-    },
-  }
-end
-
-local function make_audio_entry(name)
-  return {
-    name = name,
-  }
-end
-
-local function make_group_entry(name, groupType)
-  return {
-    name = name,
-    type = groupType or "group",
-  }
-end
-
-local function make_timer_entry(name)
-  return {
-    name = name,
-  }
-end
-
-local function make_variable_entry(name)
-  return {
-    name = name,
-  }
-end
-
-local function should_skip_if_layers_generated(testName, checks)
-  local allGenerated = true
-  for i = 1, #checks do
-    local check = checks[i]
-    local ok = pcall(assert_layer_files_generated, check[1], check[2])
-    if not ok then
-      allGenerated = false
-      break
-    end
-  end
-
-  if allGenerated then
-    print("SKIP " .. testName .. ": generated files already exist")
-    return true
-  end
-  return false
-end
-
-local function should_skip_if_files_exist(testName, relPaths)
-  local allExist = true
-  for i = 1, #relPaths do
-    local relPath = relPaths[i]
-    local absPath = resolve_runtime_path(relPath)
-    if not file_exists(absPath) then
-      allExist = false
-      break
-    end
-  end
-
-  if allExist then
-    print("SKIP " .. testName .. ": output files already exist")
-    return true
-  end
-  return false
-end
 
 function M.setup()
   helper.setup_stubs()

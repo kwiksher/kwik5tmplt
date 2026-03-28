@@ -27,6 +27,59 @@ function H.new(state, PAGE2_BASELINE)
     return components
   end
 
+  local function make_full_button_layer(name, target, onTap)
+    return {
+      name = name,
+      class = "button",
+      properties = {
+        target = target or name,
+        type = "",
+        eventType = "tap",
+        over = "",
+        btaps = 1,
+        mask = "",
+      },
+      actions = {
+        onTap = onTap or "previousPage",
+      },
+    }
+  end
+
+  local function make_pulse_layer(name, target)
+    return {
+      name = name,
+      class = "pulse",
+      properties = {
+        target = target or name,
+      },
+    }
+  end
+
+  local function make_audio_entry(name)
+    return {
+      name = name,
+    }
+  end
+
+  local function make_group_entry(name, groupType)
+    return {
+      name = name,
+      type = groupType or "group",
+    }
+  end
+
+  local function make_timer_entry(name)
+    return {
+      name = name,
+    }
+  end
+
+  local function make_variable_entry(name)
+    return {
+      name = name,
+    }
+  end
+
   local function get_file_mtime(path)
     local p = io.popen('stat -f %m "' .. tostring(path) .. '" 2>/dev/null')
     if not p then
@@ -149,6 +202,42 @@ function H.new(state, PAGE2_BASELINE)
     end, 8)
     assert_true(file_exists(luaPath))
     assert_true(file_exists(jsonPath))
+  end
+
+  local function should_skip_if_layers_generated(testName, checks)
+    local allGenerated = true
+    for i = 1, #checks do
+      local check = checks[i]
+      local ok = pcall(assert_layer_files_generated, check[1], check[2])
+      if not ok then
+        allGenerated = false
+        break
+      end
+    end
+
+    if allGenerated then
+      print("SKIP " .. testName .. ": generated files already exist")
+      return true
+    end
+    return false
+  end
+
+  local function should_skip_if_files_exist(testName, relPaths)
+    local allExist = true
+    for i = 1, #relPaths do
+      local relPath = relPaths[i]
+      local absPath = resolve_runtime_path(relPath)
+      if not file_exists(absPath) then
+        allExist = false
+        break
+      end
+    end
+
+    if allExist then
+      print("SKIP " .. testName .. ": output files already exist")
+      return true
+    end
+    return false
   end
 
   local function assert_page2_lua_written()
@@ -318,9 +407,17 @@ function H.new(state, PAGE2_BASELINE)
   return {
     deep_copy = deep_copy,
     make_components = make_components,
+    make_full_button_layer = make_full_button_layer,
+    make_pulse_layer = make_pulse_layer,
+    make_audio_entry = make_audio_entry,
+    make_group_entry = make_group_entry,
+    make_timer_entry = make_timer_entry,
+    make_variable_entry = make_variable_entry,
     resolve_runtime_path = resolve_runtime_path,
     file_exists = file_exists,
     assert_layer_files_generated = assert_layer_files_generated,
+    should_skip_if_layers_generated = should_skip_if_layers_generated,
+    should_skip_if_files_exist = should_skip_if_files_exist,
     assert_page2_lua_written = assert_page2_lua_written,
     assert_page2_updated = assert_page2_updated,
     assert_page2_index_layer_class = assert_page2_index_layer_class,
