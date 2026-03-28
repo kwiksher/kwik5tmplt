@@ -46,12 +46,48 @@ function H.new(state, PAGE2_BASELINE)
   end
 
   local function make_pulse_layer(name, target)
+    local resolvedTarget = target or name
     return {
       name = name,
       class = "pulse",
-      properties = {
-        target = target or name,
+      type = "",
+      layer = name,
+      layerOptions = {
+        referencePoint = "Center",
+        deltaX = 0,
+        deltaY = 0,
       },
+      properties = {
+        type = "",
+        target = resolvedTarget,
+        autoPlay = true,
+        delay = 500,
+        duration = 500,
+        loop = 1,
+        reverse = false,
+        resetAtEnd = true,
+        easing = "outCirc",
+        xSwipe = false,
+        ySwipe = false,
+        useLang = false,
+      },
+      from = {
+        x = "nil",
+        y = "nil",
+        alpha = 0,
+        yScale = 1,
+        xScale = 1,
+        rotation = 0,
+      },
+      to = {
+        x = "nil",
+        y = "nil",
+        alpha = 1,
+        yScale = 1.5,
+        xScale = 1.5,
+        rotation = 0,
+      },
+      actionName = "",
     }
   end
 

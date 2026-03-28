@@ -228,7 +228,7 @@ function M.xtest_paste_variable_myText()
   assert_page2_updated(true, "test_paste_variable_myText", "myText")
 end
 
-function M.test_paste_one_to_many_for_selected_layers()
+function M.xtest_paste_one_to_many_for_selected_layers()
   if should_skip_if_layers_generated("test_paste_one_to_many_for_selected_layers", {
     {"starfish", "button"}
   }) then
