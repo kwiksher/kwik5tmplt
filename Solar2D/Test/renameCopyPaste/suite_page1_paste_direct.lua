@@ -337,8 +337,8 @@ function M.xtest_direct_multi_paste_skips_unmatched_layer_names()
   assert_page2_index_layer_class("title1", "button", false)
 end
 
-function M.xtest_direct_multi_paste_same_layer_name_already_exists()
-  if should_skip_if_layers_generated("xtest_direct_multi_paste_same_layer_name_already_exists", {
+function M.xtest_direct_multi_paste_does_not_force_unique_rename()
+  if should_skip_if_layers_generated("xtest_direct_multi_paste_does_not_force_unique_rename", {
     {"starfish", "button"},
     {"fish", "button"}
   }) then
@@ -357,7 +357,7 @@ function M.xtest_direct_multi_paste_same_layer_name_already_exists()
   }
 
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_direct_multi_paste_same_layer_name_already_exists")
+  debug_print_paste_outputs("test_direct_multi_paste_does_not_force_unique_rename")
 
   assert_equal(2, #state.calls.render)
   assert_equal("starfish", state.calls.render[1].name)
@@ -368,7 +368,7 @@ function M.xtest_direct_multi_paste_same_layer_name_already_exists()
   local uniquePath = resolve_runtime_path("App/renameCopyPaste/components/page2/layers/starfish_1_button.lua")
   assert_true(not file_exists(uniquePath))
   assert_page2_lua_written()
-  assert_page2_updated(true, "test_direct_multi_paste_same_layer_name_already_exists", "starfish")
+  assert_page2_updated(true, "test_direct_multi_paste_does_not_force_unique_rename", "starfish")
   assert_page2_index_layer_class("starfish", "button", true)
   assert_page2_index_layer_class("fish", "button", true)
 end
