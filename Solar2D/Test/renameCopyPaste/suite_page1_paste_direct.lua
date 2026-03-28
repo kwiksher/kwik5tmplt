@@ -329,34 +329,4 @@ function M.xtest_multi_paste_skips_unmatched_layer_names()
   assert_page2_index_layer_class("title1", "button", false)
 end
 
-function M.xtest_paste_title1_does_not_force_unique_rename()
-  if should_skip_if_layers_generated("xtest_paste_title1_does_not_force_unique_rename", {
-    {"title1", "pulse"}
-  }) then
-    return
-  end
-
-  state.clipboard = {
-    class = "pulse",
-    page = "page1",
-    components = make_components({
-      layers = {
-        make_pulse_layer("title1")
-      }
-    })
-  }
-
-  state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_direct_paste_title1_does_not_force_unique_rename")
-
-  assert_equal(1, #state.calls.updateIndexModel)
-  assert_equal("title1", state.calls.updateIndexModel[1].layer)
-  assert_equal("pulse", state.calls.updateIndexModel[1].class)
-  assert_layer_files_generated("title1", "pulse")
-  assert_true(not file_exists(resolve_runtime_path("App/renameCopyPaste/components/page2/layers/title1_1_pulse.lua")))
-  assert_page2_lua_written()
-  assert_page2_updated(true, "test_direct_paste_title1_does_not_force_unique_rename", "title1")
-  assert_page2_index_layer_class("title1", "pulse", true)
-end
-
 return M
