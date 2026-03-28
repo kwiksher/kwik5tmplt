@@ -63,16 +63,16 @@ function H.new(state, PAGE2_BASELINE)
       properties = {
         type = "",
         target = resolvedTarget,
-        autoPlay = true,
+        autoPlay = "true",
         delay = 500,
         duration = 500,
         loop = 1,
-        reverse = false,
-        resetAtEnd = true,
+        reverse = "false",
+        resetAtEnd = "true",
         easing = "outCirc",
-        xSwipe = false,
-        ySwipe = false,
-        useLang = false,
+        xSwipe = "false",
+        ySwipe = "false",
+        useLang = "false",
       },
       from = {
         x = "nil",
@@ -100,7 +100,7 @@ function H.new(state, PAGE2_BASELINE)
       name = name,
       type = folder,
       properties = {
-        autoPlay = false,
+        autoPlay = "false",
         channel = 1,
         delay = 0,
         fadein = 0,
@@ -127,7 +127,7 @@ function H.new(state, PAGE2_BASELINE)
         xScale = 1,
         yScale = 1,
         rotation = 0,
-        isLuaTable = false,
+        isLuaTable = "false",
       },
     }
   end
@@ -156,9 +156,9 @@ function H.new(state, PAGE2_BASELINE)
         valueType = "string",
         type = "string",
         value = "\"Miki Kamekai\"",
-        isLocal = true,
-        isAfter = false,
-        isSave = true,
+        isLocal = "true",
+        isAfter = "false",
+        isSave = "true",
       },
     }
   end

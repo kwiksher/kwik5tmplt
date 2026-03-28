@@ -5,16 +5,17 @@ local M = {
   properties = {
     target = "starfish",
     type  = "",
-    eventType = "",  -- tap, touch
+    eventType = "tap",  -- tap, touch
     over = "",
     btaps = 1,
     mask = "",
   },
   actions={
+    onTap = "previousPage"
   },
-    -- buyProductHide =
-    -- product       =
-    -- TV =
+  -- buyProductHide =
+  -- product       =
+  -- TV =
   layerProps = layerProps
 }
 function M:create(UI)
@@ -30,7 +31,7 @@ function M:didShow(UI)
   -- function self.obj:tap(event)
   --   print("tap")
   -- end
- self:addEventListener(UI)
+  self:addEventListener(UI)
 end
 function M:didHide(UI)
   self:removeEventListener(UI)
