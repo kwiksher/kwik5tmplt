@@ -31,7 +31,7 @@ end
 -- one layer or class is copied in page1, and pasted in page1 layerTable
 --
 function M.xtest_copy_layer()
-  local name = "title2"
+  local name = "title1"
   -- layerTable.altDown = true
   helper.selectLayer(name)
   helper.selectLayer(name, nil, true) -- isRightClick true
@@ -42,6 +42,20 @@ function M.xtest_copy_layer()
   -- selectors.componentSelector:onClick(true,  "actionTable")
   -- helper.selectAction("eventOne")
 end
+
+function M.test_copy_layer_class()
+  local name = "title1"
+  -- layerTable.altDown = true
+  helper.selectLayer(name, "pulse")
+  helper.selectLayer(name, nil, true) -- isRightClick true
+  helper.clickButton("copy")
+
+  -- layerTable.altDown = false
+
+  -- selectors.componentSelector:onClick(true,  "actionTable")
+  -- helper.selectAction("eventOne")
+end
+
 
 function M.xtest_copy_paste_button()
   helper.selectLayer("color8", "button", false) -- isRightClick

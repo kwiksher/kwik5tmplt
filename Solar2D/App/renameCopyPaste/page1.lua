@@ -30,7 +30,7 @@ local model = {
       },
       {
         title2 = {
-        }
+          class={ "properties","button", }  }
       },
       {
         title1 = {
