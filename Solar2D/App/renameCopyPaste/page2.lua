@@ -34,7 +34,7 @@ local model = {
       },
       {
         title1 = {
-          class={ "pulse", }  }
+        }
       },
       {
         starfish = {

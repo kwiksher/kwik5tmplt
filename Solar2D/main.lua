@@ -99,7 +99,7 @@ if env.mode == "development" or env.mode == "debug" then
     gotoPage = env.page,
     language = "", -- empty string "" is for a single language project
     position = {x = 0, y = 0},
-    gotoLastBook = true,
+    gotoLastBook = false,
     unitTest = true,
     httpServer = false,
     scale      = 1,

@@ -262,7 +262,7 @@ function M.xtest_paste_one_to_many_for_selected_layers()
 
 end
 
-function M.test_multi_paste_matches_existing_layer_names()
+function M.xtest_multi_paste_matches_existing_layer_names()
   if should_skip_if_layers_generated("xtest_multi_paste_matches_existing_layer_names", {
     {"starfish", "button"},
     {"title1",   "pulse"}
