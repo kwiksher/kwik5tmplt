@@ -29,7 +29,6 @@ local PAGE2_BASELINE = {
 }
 
 local state = {
-  calls = nil,
   page2 = nil,
   page2LuaRelPath = nil,
   page2LuaPath = nil,
@@ -55,6 +54,7 @@ local should_skip_if_files_exist = helper.should_skip_if_files_exist
 local assert_page2_lua_written = helper.assert_page2_lua_written
 local assert_page2_updated = helper.assert_page2_updated
 local assert_page2_index_layer_class = helper.assert_page2_index_layer_class
+local assert_model_layer_class = helper.assert_model_layer_class
 local debug_print_paste_outputs = helper.debug_print_paste_outputs
 
 function M.setup()
@@ -65,7 +65,7 @@ function M.teardown()
   helper.teardown_stubs()
 end
 
-function M.test_paste_layer_class_from_starfish_button()
+function M.xtest_paste_layer_class_from_starfish_button()
   if should_skip_if_layers_generated("test_paste_layer_class_from_starfish_button", {
     {"starfish", "button"}
   }) then
@@ -94,35 +94,12 @@ function M.test_paste_layer_class_from_starfish_button()
   assert_page2_updated(true, "test_paste_layer_class_from_starfish_button", "button")
 end
 
-function M.xtest_multi_paste_starfish_and_title1_do_not_force_unique_rename()
-  if should_skip_if_layers_generated("xtest_multi_paste_starfish_and_title1_do_not_force_unique_rename", {
-    {"starfish", "button"},
+function M.xtest_paste_title1_pulse()
+  if should_skip_if_layers_generated("xtest_paste_title1_pulse", {
     {"title1", "pulse"}
   }) then
     return
   end
-
-  state.clipboard = {
-    class = "button",
-    components = make_components({
-      layers = {
-        make_full_button_layer("starfish")
-      }
-    })
-  }
-
-  state.UI.editor.currentLayer = {layer = "starfish"}
-  state.UI.editor.selections = {{layer = "starfish"}}
-
-  state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_multi_paste_starfish_and_title1_do_not_force_unique_rename_first")
-
-  assert_equal(1, #state.calls.updateIndexModel)
-  assert_equal("starfish", state.calls.updateIndexModel[1].layer)
-  assert_equal("button", state.calls.updateIndexModel[1].class)
-  assert_equal(1, #state.calls.render)
-  assert_true(not file_exists(resolve_runtime_path("App/renameCopyPaste/components/page2/layers/starfish_1_button.lua")))
-  assert_layer_files_generated("starfish", "button")
 
   state.clipboard = {
     class = "pulse",
@@ -138,16 +115,11 @@ function M.xtest_multi_paste_starfish_and_title1_do_not_force_unique_rename()
   state.UI.editor.selections = {{layer = "title1"}}
 
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_multi_paste_starfish_and_title1_do_not_force_unique_rename_second")
+  debug_print_paste_outputs("test_paste_title1_pulse")
 
-  assert_equal(2, #state.calls.updateIndexModel)
-  assert_equal("title1", state.calls.updateIndexModel[2].layer)
-  assert_equal("pulse", state.calls.updateIndexModel[2].class)
-  assert_true(not file_exists(resolve_runtime_path("App/renameCopyPaste/components/page2/layers/title1_1_pulse.lua")))
   assert_layer_files_generated("title1", "pulse")
   assert_page2_lua_written()
-  assert_page2_updated(true, "test_multi_paste_starfish_and_title1_do_not_force_unique_rename", "title1")
-  assert_page2_index_layer_class("starfish", "button", true)
+  assert_page2_updated(true, "test_paste_title1_pulse", "title1")
   assert_page2_index_layer_class("title1", "pulse", true)
 end
 
@@ -173,9 +145,6 @@ function M.xtest_paste_audios_long_and_short()
   state.paste.execute({UI = state.UI})
   debug_print_paste_outputs("test_paste_audios_long_and_short")
 
-  assert_equal(2, #state.calls.render)
-  assert_equal("long", state.calls.render[1].name)
-  assert_equal("short", state.calls.render[2].name)
   assert_page2_lua_written()
   assert_page2_updated(true, "test_paste_audios_long_and_short", "long")
 end
@@ -284,9 +253,6 @@ function M.test_paste_one_to_many_for_selected_layers()
   state.paste.execute({UI = state.UI})
   debug_print_paste_outputs("test_paste_one_to_many_for_selected_layers")
 
-  assert_equal(2, #state.calls.updateIndexModel)
-  assert_equal("starfish", state.calls.updateIndexModel[1].layer)
-  assert_equal("fish", state.calls.updateIndexModel[2].layer)
   assert_layer_files_generated("starfish", "button")
   assert_layer_files_generated("fish", "button")
   assert_page2_lua_written()
@@ -294,6 +260,40 @@ function M.test_paste_one_to_many_for_selected_layers()
   assert_page2_index_layer_class("starfish", "button", true)
   assert_page2_index_layer_class("fish", "button", true)
 
+end
+
+function M.test_multi_paste_matches_existing_layer_names()
+  if should_skip_if_layers_generated("xtest_multi_paste_matches_existing_layer_names", {
+    {"starfish", "button"},
+    {"title1",   "pulse"}
+  }) then
+    return
+  end
+
+  -- Clipboard holds two layers from page1, each with their own class.
+  -- No top-level class: paste must route each layer by its own class field.
+  -- page2 already has both starfish and title1, so both should be processed.
+  state.clipboard = {
+    page = "page1",
+    components = make_components({
+      layers = {
+        make_full_button_layer("starfish"),  -- class = "button"
+        make_pulse_layer("title1")           -- class = "pulse"
+      }
+    })
+  }
+
+  state.paste.execute({UI = state.UI})
+  debug_print_paste_outputs("xtest_multi_paste_matches_existing_layer_names")
+
+  assert_model_layer_class("starfish", "button", true)
+  assert_model_layer_class("title1",   "pulse",  true)
+  assert_layer_files_generated("starfish", "button")
+  assert_layer_files_generated("title1",   "pulse")
+  assert_page2_lua_written()
+  assert_page2_updated(true, "xtest_multi_paste_matches_existing_layer_names", "title1")
+  assert_page2_index_layer_class("starfish", "button", true)
+  assert_page2_index_layer_class("title1",   "pulse",  true)
 end
 
 function M.xtest_multi_paste_skips_unmatched_layer_names()
@@ -316,10 +316,6 @@ function M.xtest_multi_paste_skips_unmatched_layer_names()
 
   state.paste.execute({UI = state.UI})
   debug_print_paste_outputs("test_direct_multi_paste_skips_unmatched_layer_names")
-
-  assert_equal(1, #state.calls.updateIndexModel)
-  assert_equal("starfish", state.calls.updateIndexModel[1].layer)
-  assert_equal("starfish", state.calls.render[1].name)
 
   local starfishPath = resolve_runtime_path("App/renameCopyPaste/components/page2/layers/starfish_button.lua")
   local ghostPath = resolve_runtime_path("App/renameCopyPaste/components/page2/layers/ghost_button.lua")

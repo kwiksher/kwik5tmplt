@@ -345,14 +345,29 @@ function H.new(state, PAGE2_BASELINE)
     end
   end
 
+  local function assert_model_layer_class(layerName, className, expected)
+    local editorUtil = require("editor.util")
+    local indexModel = editorUtil.createIndexModel(state.UI.scene.model)
+    local found = false
+    for i = 1, #indexModel.components.layers do
+      local entry = indexModel.components.layers[i]
+      if entry.name == layerName then
+        local classes = entry.class or entry.class1 or {}
+        for j = 1, #classes do
+          if classes[j] == className then
+            found = true
+            break
+          end
+        end
+        break
+      end
+    end
+    assert_equal(expected, found, "model class check failed: " .. layerName .. "_" .. className)
+  end
+
   local function setup_stubs()
     ensure_runtime_templates()
 
-    state.calls = {
-      render = {},
-      save = {},
-      updateIndexModel = {},
-    }
     state.page2 = deep_copy(PAGE2_BASELINE)
     state.page2LuaRelPath = "App/renameCopyPaste/page2.lua"
     state.page2LuaPath = resolve_page2_lua_path()
@@ -421,6 +436,7 @@ function H.new(state, PAGE2_BASELINE)
     assert_page2_lua_written = assert_page2_lua_written,
     assert_page2_updated = assert_page2_updated,
     assert_page2_index_layer_class = assert_page2_index_layer_class,
+    assert_model_layer_class = assert_model_layer_class,
     debug_print_paste_outputs = debug_print_paste_outputs,
     setup_stubs = setup_stubs,
     teardown_stubs = teardown_stubs,
