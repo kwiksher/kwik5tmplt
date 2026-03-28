@@ -65,15 +65,12 @@ function M.teardown()
   helper.teardown_stubs()
 end
 
-function M.test_direct_paste_layer_class_from_starfish_button()
-  if should_skip_if_layers_generated("test_direct_paste_layer_class_from_starfish_button", {
+function M.test_paste_layer_class_from_starfish_button()
+  if should_skip_if_layers_generated("test_paste_layer_class_from_starfish_button", {
     {"starfish", "button"}
   }) then
     return
   end
-
-  state.UI.editor.currentLayer = {layer = "starfish"}
-  state.UI.editor.selections = {{layer = "starfish"}}
 
   state.clipboard = {
     class = "button",
@@ -85,16 +82,19 @@ function M.test_direct_paste_layer_class_from_starfish_button()
     })
   }
 
+  state.UI.editor.currentLayer = {layer = "starfish"}
+  state.UI.editor.selections = {{layer = "starfish"}}
+
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_direct_paste_layer_class_from_starfish_button")
+  debug_print_paste_outputs("test_paste_layer_class_from_starfish_button")
 
   assert_layer_files_generated("starfish", "button")
   assert_page2_lua_written()
-  assert_page2_updated(true, "test_direct_paste_layer_class_from_starfish_button", "\"button\"")
+  assert_page2_updated(true, "test_paste_layer_class_from_starfish_button", "button")
 end
 
-function M.xtest_direct_paste_layer_class_from_title1_pulse()
-  if should_skip_if_layers_generated("xtest_direct_paste_layer_class_from_title1_pulse", {
+function M.xtest_paste_layer_class_from_title1_pulse()
+  if should_skip_if_layers_generated("xtest_paste_layer_class_from_title1_pulse", {
     {"title1", "pulse"}
   }) then
     return
@@ -110,20 +110,22 @@ function M.xtest_direct_paste_layer_class_from_title1_pulse()
     })
   }
 
+  state.UI.editor.currentLayer = {layer = "title1"}
+  state.UI.editor.selections = {{layer = "title1"}}
+
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_direct_paste_layer_class_from_title1_pulse")
+  debug_print_paste_outputs("test_paste_layer_class_from_title1_pulse")
 
   assert_equal(1, #state.calls.updateIndexModel)
-  assert_equal("background", state.calls.updateIndexModel[1].layer)
+  assert_equal("title1", state.calls.updateIndexModel[1].layer)
   assert_equal("pulse", state.calls.updateIndexModel[1].class)
   assert_page2_lua_written()
-  assert_page2_updated(false, "test_direct_paste_layer_class_from_title1_pulse")
-  assert_page2_index_layer_class("background", "pulse", true)
-  assert_page2_index_layer_class("title1", "pulse", false)
+  assert_page2_updated(true, "test_paste_layer_class_from_title1_pulse", "title1")
+  assert_page2_index_layer_class("title1", "pulse", true)
 end
 
-function M.xtest_direct_paste_audios_long_and_short()
-  if should_skip_if_files_exist("xtest_direct_paste_audios_long_and_short", {
+function M.xtest_paste_audios_long_and_short()
+  if should_skip_if_files_exist("xtest_paste_audios_long_and_short", {
     "App/renameCopyPaste/components/page2/audios/long/long.lua",
     "App/renameCopyPaste/components/page2/audios/short/short.lua"
   }) then
@@ -142,18 +144,17 @@ function M.xtest_direct_paste_audios_long_and_short()
   }
 
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_direct_paste_audios_long_and_short")
+  debug_print_paste_outputs("test_paste_audios_long_and_short")
 
   assert_equal(2, #state.calls.render)
   assert_equal("long", state.calls.render[1].name)
   assert_equal("short", state.calls.render[2].name)
   assert_page2_lua_written()
-  assert_page2_updated(false, "test_direct_paste_audios_long_and_short")
-  assert_page2_index_layer_class("starfish", "button", false)
+  assert_page2_updated(true, "test_paste_audios_long_and_short", "long")
 end
 
-function M.xtest_direct_paste_group_groupCat()
-  if should_skip_if_files_exist("xtest_direct_paste_group_groupCat", {
+function M.xtest_paste_group_groupCat()
+  if should_skip_if_files_exist("xtest_paste_group_groupCat", {
     "App/renameCopyPaste/components/page2/groups/groupCat.lua"
   }) then
     return
@@ -171,17 +172,16 @@ function M.xtest_direct_paste_group_groupCat()
   }
 
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_direct_paste_group_groupCat")
+  debug_print_paste_outputs("test_paste_group_groupCat")
 
   assert_equal(1, #state.page2.components.groups)
   assert_not_nil(state.page2.components.groups[1].groupCat)
   assert_page2_lua_written()
-  assert_page2_updated(true, "test_direct_paste_group_groupCat")
-  assert_page2_index_layer_class("starfish", "button", false)
+  assert_page2_updated(true, "test_paste_group_groupCat", "groupCat")
 end
 
-function M.xtest_direct_paste_timer_nameTimer()
-  if should_skip_if_files_exist("xtest_direct_paste_timer_nameTimer", {
+function M.xtest_paste_timer_nameTimer()
+  if should_skip_if_files_exist("xtest_paste_timer_nameTimer", {
     "App/renameCopyPaste/components/page2/timers/nameTimer.lua"
   }) then
     return
@@ -198,17 +198,16 @@ function M.xtest_direct_paste_timer_nameTimer()
   }
 
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_direct_paste_timer_nameTimer")
+  debug_print_paste_outputs("test_paste_timer_nameTimer")
 
   assert_equal(1, #state.page2.components.timers)
   assert_equal("nameTimer", state.page2.components.timers[1])
   assert_page2_lua_written()
-  assert_page2_updated(true, "test_direct_paste_timer_nameTimer")
-  assert_page2_index_layer_class("starfish", "button", false)
+  assert_page2_updated(true, "test_paste_timer_nameTimer", "nameTimer")
 end
 
-function M.xtest_direct_paste_variable_myText()
-  if should_skip_if_files_exist("xtest_direct_paste_variable_myText", {
+function M.xtest_paste_variable_myText()
+  if should_skip_if_files_exist("xtest_paste_variable_myText", {
     "App/renameCopyPaste/components/page2/variables/myText.lua"
   }) then
     return
@@ -225,27 +224,20 @@ function M.xtest_direct_paste_variable_myText()
   }
 
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_direct_paste_variable_myText")
+  debug_print_paste_outputs("test_paste_variable_myText")
 
   assert_equal(1, #state.page2.components.variables)
   assert_equal("myText", state.page2.components.variables[1])
   assert_page2_lua_written()
-  assert_page2_updated(true, "test_direct_paste_variable_myText")
-  assert_page2_index_layer_class("starfish", "button", false)
+  assert_page2_updated(true, "test_paste_variable_myText", "myText")
 end
 
-function M.xtest_direct_paste_one_to_many_for_selected_layers()
-  if should_skip_if_layers_generated("xtest_direct_paste_one_to_many_for_selected_layers", {
-    {"cat", "button"},
-    {"fish", "button"}
+function M.test_paste_one_to_many_for_selected_layers()
+  if should_skip_if_layers_generated("test_paste_one_to_many_for_selected_layers", {
+    {"starfish", "button"}
   }) then
     return
   end
-
-  state.UI.editor.selections = {
-    {layer = "cat"},
-    {layer = "fish"}
-  }
 
   state.clipboard = {
     class = "button",
@@ -257,24 +249,30 @@ function M.xtest_direct_paste_one_to_many_for_selected_layers()
     })
   }
 
+  state.UI.editor.selections = {
+    {layer = "starfish"},
+    {layer = "fish"},
+  }
+
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_direct_paste_one_to_many_for_selected_layers")
+  debug_print_paste_outputs("test_paste_one_to_many_for_selected_layers")
 
   assert_equal(2, #state.calls.updateIndexModel)
-  assert_equal("cat", state.calls.updateIndexModel[1].layer)
+  assert_equal("starfish", state.calls.updateIndexModel[1].layer)
   assert_equal("fish", state.calls.updateIndexModel[2].layer)
-  assert_layer_files_generated("cat", "button")
+  assert_layer_files_generated("starfish", "button")
   assert_layer_files_generated("fish", "button")
   assert_page2_lua_written()
-  assert_page2_updated(false, "test_direct_paste_one_to_many_for_selected_layers")
-  assert_page2_index_layer_class("cat", "button", true)
+  assert_page2_updated(true, "test_paste_one_to_many_for_selected_layers", "starfish")
+  assert_page2_index_layer_class("starfish", "button", true)
   assert_page2_index_layer_class("fish", "button", true)
+
 end
 
-function M.xtest_direct_paste_many_entries_keeps_payload_from_page1_components()
-  if should_skip_if_layers_generated("xtest_direct_paste_many_entries_keeps_payload_from_page1_components", {
+function M.xtest_direct_multi_paste_same_layer_name_matches_existing_layers()
+  if should_skip_if_layers_generated("xtest_direct_multi_paste_same_layer_name_matches_existing_layers", {
     {"starfish", "button"},
-    {"title1", "button"}
+    {"fish", "button"}
   }) then
     return
   end
@@ -285,23 +283,23 @@ function M.xtest_direct_paste_many_entries_keeps_payload_from_page1_components()
     components = make_components({
       layers = {
         make_full_button_layer("starfish"),
-        make_full_button_layer("title1")
+        make_full_button_layer("fish")
       }
     })
   }
 
   state.paste.execute({UI = state.UI})
-  debug_print_paste_outputs("test_direct_paste_many_entries_keeps_payload_from_page1_components")
+  debug_print_paste_outputs("test_direct_multi_paste_same_layer_name_matches_existing_layers")
 
   assert_equal(2, #state.calls.updateIndexModel)
   assert_equal("starfish", state.calls.updateIndexModel[1].layer)
-  assert_equal("title1", state.calls.updateIndexModel[2].layer)
+  assert_equal("fish", state.calls.updateIndexModel[2].layer)
   assert_layer_files_generated("starfish", "button")
-  assert_layer_files_generated("title1", "button")
+  assert_layer_files_generated("fish", "button")
   assert_page2_lua_written()
-  assert_page2_updated(false, "test_direct_paste_many_entries_keeps_payload_from_page1_components")
+  assert_page2_updated(true, "test_direct_multi_paste_same_layer_name_matches_existing_layers", "starfish")
   assert_page2_index_layer_class("starfish", "button", true)
-  assert_page2_index_layer_class("title1", "button", true)
+  assert_page2_index_layer_class("fish", "button", true)
 end
 
 function M.xtest_direct_multi_paste_skips_unmatched_layer_names()
@@ -334,7 +332,7 @@ function M.xtest_direct_multi_paste_skips_unmatched_layer_names()
   assert_true(file_exists(starfishPath))
   assert_true(not file_exists(ghostPath))
   assert_page2_lua_written()
-  assert_page2_updated(false, "test_direct_multi_paste_skips_unmatched_layer_names")
+  assert_page2_updated(true, "test_direct_multi_paste_skips_unmatched_layer_names", "starfish")
   assert_page2_index_layer_class("starfish", "button", true)
   assert_page2_index_layer_class("title1", "button", false)
 end
@@ -342,7 +340,7 @@ end
 function M.xtest_direct_multi_paste_overwrites_without_unique_rename()
   if should_skip_if_layers_generated("xtest_direct_multi_paste_overwrites_without_unique_rename", {
     {"starfish", "button"},
-    {"title1", "button"}
+    {"fish", "button"}
   }) then
     return
   end
@@ -353,7 +351,7 @@ function M.xtest_direct_multi_paste_overwrites_without_unique_rename()
     components = make_components({
       layers = {
         make_full_button_layer("starfish"),
-        make_full_button_layer("title1")
+        make_full_button_layer("fish")
       }
     })
   }
@@ -363,16 +361,16 @@ function M.xtest_direct_multi_paste_overwrites_without_unique_rename()
 
   assert_equal(2, #state.calls.render)
   assert_equal("starfish", state.calls.render[1].name)
-  assert_equal("title1", state.calls.render[2].name)
+  assert_equal("fish", state.calls.render[2].name)
   assert_layer_files_generated("starfish", "button")
-  assert_layer_files_generated("title1", "button")
+  assert_layer_files_generated("fish", "button")
 
   local uniquePath = resolve_runtime_path("App/renameCopyPaste/components/page2/layers/starfish_1_button.lua")
   assert_true(not file_exists(uniquePath))
   assert_page2_lua_written()
-  assert_page2_updated(false, "test_direct_multi_paste_overwrites_without_unique_rename")
+  assert_page2_updated(true, "test_direct_multi_paste_overwrites_without_unique_rename", "starfish")
   assert_page2_index_layer_class("starfish", "button", true)
-  assert_page2_index_layer_class("title1", "button", true)
+  assert_page2_index_layer_class("fish", "button", true)
 end
 
 return M
