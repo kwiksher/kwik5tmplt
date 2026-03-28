@@ -28,7 +28,7 @@ function M.xtest_select_action()
    if commandsTable.objs then
     print("commandsTable.objs", #commandsTable.objs)
     local obj = commandsTable.objs[1]
-    commandsTable:singleClickEvent(obj, {showContextMenu = true})
+    commandsTable:singleClickEvent(obj)
    else
     print("not found a actionCommand")
    end
