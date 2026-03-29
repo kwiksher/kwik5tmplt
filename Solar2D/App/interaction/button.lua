@@ -38,7 +38,8 @@ local model = {
       },
       {
         Candice = {
-          class={ "properties", }  }
+          -- class={ "properties", }
+        }
       },
       {
         langTxt = {

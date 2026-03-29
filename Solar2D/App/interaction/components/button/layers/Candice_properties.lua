@@ -15,21 +15,24 @@ M.properties = {
   y         = 353.5,
   alpha     = 1,
   --
-  align       = "nil",
-  randXStart  = nil,
-  randXEnd    = nil,
-  randYStart  = nil,
-  randYEnd    = nil,
+  align       = "",
+  randXStart  = NIL,
+  randXEnd    = NIL,
+  randYStart  = NIL,
+  randYEnd    = NIL,
   --,
-  xScale     = nil,
-  yScale     = nil,
-  rotation   = nil,
+  xScale     = NIL,
+  yScale     = NIL,
+  rotation   = NIL,
   --,
   layerAsBg     = false,
   isSharedAsset = false,
----
----
----
+  ---
+  ---
+  ---
+  imagePath   = "button/Candice.png",
+  imageHeight = NIL,
+  imageWidth  = NIL
 }
 local slash_pos = M.properties.name:find("/")
 if slash_pos and slash_pos > 0 then -- pageX/bg.png for shared asset
@@ -53,7 +56,6 @@ function M:init(UI)
       layerProps[k] = v
     end
   end
-
   if type(layerMod.setProps) == "function" then
     layerMod:setProps(layerProps)
   end
@@ -65,7 +67,6 @@ function M:create(UI)
   if obj == nil then
     return
   end
-
   self.obj = obj
   print("###", props.name)
   for k, v in pairs(UI.sceneGroup) do print(k ,v) end
