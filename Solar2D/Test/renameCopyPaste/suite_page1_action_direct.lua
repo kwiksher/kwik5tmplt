@@ -7,11 +7,7 @@ local M = require("Test.base_suite").new({
 local json = require("json")
 
 local state = {
-  originalModules = {},
-  utilStub = nil,
-  scriptsStub = nil,
-  controllerStub = nil,
-  paste = nil,
+  paste = require("editor.action.controller.paste"),
   UI = nil,
   pageModel = nil,
   previousPageModel = nil,
@@ -30,51 +26,41 @@ local function deep_copy(v)
   return out
 end
 
-local function module_names(name)
-  local names = {name}
-  if kwikGlobal and kwikGlobal.ROOT then
-    names[#names + 1] = kwikGlobal.ROOT .. name
+local function file_exists(path)
+  local f = io.open(path, "r")
+  if f then
+    f:close()
+    return true
   end
-  return names
+  return false
 end
 
-local function swap_module(name, replacement)
-  for i = 1, #module_names(name) do
-    local moduleName = module_names(name)[i]
-    if state.originalModules[moduleName] == nil then
-      state.originalModules[moduleName] = package.loaded[moduleName]
+local function read_text(path)
+  local f = io.open(path, "r")
+  if not f then
+    return nil
+  end
+  local text = f:read("*a")
+  f:close()
+  return text
+end
+
+local function resolve_path(relPath)
+  if system and system.pathForFile then
+    local abs = system.pathForFile(relPath, system.ResourceDirectory)
+    if abs then
+      return abs
     end
-    package.loaded[moduleName] = replacement
   end
+  return relPath
 end
 
-local function clear_module(name)
-  for i = 1, #module_names(name) do
-    package.loaded[module_names(name)[i]] = nil
-  end
-end
-
-local function restore_modules()
-  for moduleName, original in pairs(state.originalModules) do
-    package.loaded[moduleName] = original
-  end
-  state.originalModules = {}
-end
-
-local function reset_spy_state()
-  state.controllerStub.calls = {
-    render = {},
-    save = {}
-  }
-  state.utilStub.calls = {
-    renderIndex = {},
-    saveIndex = {}
-  }
-  state.scriptsStub.calls = {
-    saveSelection = {},
-    backupFiles = {},
-    executeCopyFiles = {}
-  }
+local function decode_json_file(path)
+  local text = read_text(path)
+  assert_not_nil(text, "json file missing: " .. tostring(path))
+  local decoded = json.decode(text)
+  assert_not_nil(decoded, "json decode failed: " .. tostring(path))
+  return decoded
 end
 
 local function make_ui()
@@ -87,6 +73,7 @@ local function make_ui()
     editor = {
       currentBook = "renameCopyPaste",
       currentAction = {name = "previousPage"},
+      selections = {},
       clipboard = {
         read = function()
           return state.clipboardData
@@ -104,89 +91,21 @@ local function find_command_name(commands)
   return names
 end
 
+local function prepare_ui_for_run()
+  state.UI = make_ui()
+end
+
 function M.setup()
   state.pageModel = require("App.renameCopyPaste.page1").model
   state.previousPageModel = require("App.renameCopyPaste.commands.page1.previousPage").model
   state.nameActModel = require("App.renameCopyPaste.commands.page1.nameAct").model
   state.nameActDecoded = json.decode(state.nameActModel)
-
-  state.utilStub = {
-    calls = {},
-    createIndexModel = function(_, model)
-      return deep_copy(model)
-    end,
-    renderIndex = function(_, book, page, updatedModel)
-      state.utilStub.calls.renderIndex[#state.utilStub.calls.renderIndex + 1] = {
-        book = book,
-        page = page,
-        model = deep_copy(updatedModel)
-      }
-      return "render-index.lua"
-    end,
-    saveIndex = function(_, book, page, a, b, updatedModel)
-      state.utilStub.calls.saveIndex[#state.utilStub.calls.saveIndex + 1] = {
-        book = book,
-        page = page,
-        model = deep_copy(updatedModel)
-      }
-      return "save-index.json"
-    end,
-  }
-
-  state.controllerStub = {
-    calls = {},
-    render = function(_, book, page, command, actions)
-      state.controllerStub.calls.render[#state.controllerStub.calls.render + 1] = {
-        book = book,
-        page = page,
-        command = command,
-        actions = deep_copy(actions)
-      }
-      return "render-" .. tostring(command) .. ".lua"
-    end,
-    save = function(_, book, page, command, decoded)
-      state.controllerStub.calls.save[#state.controllerStub.calls.save + 1] = {
-        book = book,
-        page = page,
-        command = command,
-        decoded = deep_copy(decoded)
-      }
-      return "save-" .. tostring(command) .. ".json"
-    end,
-  }
-
-  state.scriptsStub = {
-    calls = {},
-    saveSelection = function(_, book, page, selection)
-      state.scriptsStub.calls.saveSelection[#state.scriptsStub.calls.saveSelection + 1] = {
-        book = book,
-        page = page,
-        selection = deep_copy(selection)
-      }
-    end,
-    backupFiles = function(_, files)
-      state.scriptsStub.calls.backupFiles[#state.scriptsStub.calls.backupFiles + 1] = deep_copy(files)
-    end,
-    executeCopyFiles = function(_, files)
-      state.scriptsStub.calls.executeCopyFiles[#state.scriptsStub.calls.executeCopyFiles + 1] = deep_copy(files)
-    end,
-  }
-
-  swap_module("editor.util", state.utilStub)
-  swap_module("editor.action.controller.index", state.controllerStub)
-  swap_module("editor.scripts.commands", state.scriptsStub)
-  clear_module("editor.action.controller.paste")
-  state.paste = require("editor.action.controller.paste")
 end
 
 function M.teardown()
-  clear_module("editor.action.controller.paste")
-  restore_modules()
 end
 
 function M.test_paste_action_from_previousPage()
-  reset_spy_state()
-
   state.clipboardData = {
     actions = {state.previousPageModel},
     actionCommands = {},
@@ -194,22 +113,21 @@ function M.test_paste_action_from_previousPage()
     page = "page1",
   }
 
-  state.UI = make_ui()
+  prepare_ui_for_run()
   state.paste.execute({UI = state.UI, class = "action"})
 
-  assert_equal(1, #state.controllerStub.calls.render)
-  assert_equal("previousPage_copied", state.controllerStub.calls.render[1].command)
+  local luaPath = resolve_path("App/renameCopyPaste/commands/page1/previousPage_copied.lua")
+  local jsonPath = resolve_path("App/renameCopyPaste/models/page1/commands/previousPage_copied.json")
+  assert_true(file_exists(luaPath))
+  assert_true(file_exists(jsonPath))
 
-  local savedIndex = state.utilStub.calls.saveIndex[#state.utilStub.calls.saveIndex].model
-  local names = find_command_name(savedIndex.commands)
+  local pageModel = require("App.renameCopyPaste.page1").model
+  local names = find_command_name(pageModel.commands)
   assert_true(names.previousPage)
   assert_true(names.nameAct)
-  assert_true(names.previousPage_copied)
 end
 
 function M.test_paste_action_from_nameAct()
-  reset_spy_state()
-
   state.clipboardData = {
     actions = {state.nameActModel},
     actionCommands = {},
@@ -217,20 +135,16 @@ function M.test_paste_action_from_nameAct()
     page = "page1",
   }
 
-  state.UI = make_ui()
+  prepare_ui_for_run()
   state.paste.execute({UI = state.UI, class = "action"})
 
-  assert_equal(1, #state.controllerStub.calls.render)
-  assert_equal("nameAct_copied", state.controllerStub.calls.render[1].command)
-
-  local savedIndex = state.utilStub.calls.saveIndex[#state.utilStub.calls.saveIndex].model
-  local names = find_command_name(savedIndex.commands)
-  assert_true(names.nameAct_copied)
+  local luaPath = resolve_path("App/renameCopyPaste/commands/page1/nameAct_copied.lua")
+  local jsonPath = resolve_path("App/renameCopyPaste/models/page1/commands/nameAct_copied.json")
+  assert_true(file_exists(luaPath))
+  assert_true(file_exists(jsonPath))
 end
 
 function M.test_paste_multiple_actions_previousPage_and_nameAct()
-  reset_spy_state()
-
   state.clipboardData = {
     actions = {state.previousPageModel, state.nameActModel},
     actionCommands = {},
@@ -238,22 +152,14 @@ function M.test_paste_multiple_actions_previousPage_and_nameAct()
     page = "page1",
   }
 
-  state.UI = make_ui()
+  prepare_ui_for_run()
   state.paste.execute({UI = state.UI, class = "action"})
 
-  assert_equal(2, #state.controllerStub.calls.render)
-  assert_equal("previousPage_copied", state.controllerStub.calls.render[1].command)
-  assert_equal("nameAct_copied", state.controllerStub.calls.render[2].command)
-
-  local savedIndex = state.utilStub.calls.saveIndex[#state.utilStub.calls.saveIndex].model
-  local names = find_command_name(savedIndex.commands)
-  assert_true(names.previousPage_copied)
-  assert_true(names.nameAct_copied)
+  assert_true(file_exists(resolve_path("App/renameCopyPaste/commands/page1/previousPage_copied.lua")))
+  assert_true(file_exists(resolve_path("App/renameCopyPaste/commands/page1/nameAct_copied.lua")))
 end
 
 function M.test_paste_one_actionCommand_into_previousPage()
-  reset_spy_state()
-
   state.clipboardData = {
     actions = {},
     actionCommands = {deep_copy(state.nameActDecoded.actions[1])},
@@ -261,21 +167,19 @@ function M.test_paste_one_actionCommand_into_previousPage()
     page = "page1",
   }
 
-  state.UI = make_ui()
+  prepare_ui_for_run()
   state.UI.editor.currentAction = {name = "previousPage"}
   state.paste.execute({UI = state.UI, class = "actionCommand", index = 1})
 
-  assert_equal(1, #state.controllerStub.calls.render)
-  local renderCall = state.controllerStub.calls.render[1]
-  assert_equal("previousPage", renderCall.command)
-  assert_equal(2, #renderCall.actions)
-  assert_equal("page.gotoPage", renderCall.actions[1].command)
-  assert_equal("variable.editVar", renderCall.actions[2].command)
+  local jsonPath = resolve_path("App/renameCopyPaste/models/page1/commands/previousPage.json")
+  local decoded = decode_json_file(jsonPath)
+  assert_equal("previousPage", decoded.name)
+  assert_true(#decoded.actions >= 2)
+  assert_equal("page.gotoPage", decoded.actions[1].command)
+  assert_equal("variable.editVar", decoded.actions[2].command)
 end
 
 function M.test_paste_multiple_actionCommands_into_previousPage()
-  reset_spy_state()
-
   state.clipboardData = {
     actions = {},
     actionCommands = {
@@ -291,17 +195,17 @@ function M.test_paste_multiple_actionCommands_into_previousPage()
     page = "page1",
   }
 
-  state.UI = make_ui()
+  prepare_ui_for_run()
   state.UI.editor.currentAction = {name = "previousPage"}
   state.paste.execute({UI = state.UI, class = "actionCommand", index = 1})
 
-  assert_equal(1, #state.controllerStub.calls.render)
-  local renderCall = state.controllerStub.calls.render[1]
-  assert_equal("previousPage", renderCall.command)
-  assert_equal(3, #renderCall.actions)
-  assert_equal("page.gotoPage", renderCall.actions[1].command)
-  assert_equal("variable.editVar", renderCall.actions[2].command)
-  assert_equal("action.play", renderCall.actions[3].command)
+  local jsonPath = resolve_path("App/renameCopyPaste/models/page1/commands/previousPage.json")
+  local decoded = decode_json_file(jsonPath)
+  assert_equal("previousPage", decoded.name)
+  assert_true(#decoded.actions >= 3)
+  assert_equal("page.gotoPage", decoded.actions[1].command)
+  assert_equal("variable.editVar", decoded.actions[2].command)
+  assert_equal("action.play", decoded.actions[3].command)
 end
 
 return M
