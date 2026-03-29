@@ -24,6 +24,31 @@ local decode_json_file = helper.decode_json_file
 local find_command_name = helper.find_command_name
 local prepare_ui_for_run = helper.prepare_action_ui
 
+local function make_clipboard_data_from_copy(params)
+  local data = {
+    actions = {},
+    actionCommands = {},
+    book = "renameCopyPaste",
+    page = "page1",
+  }
+
+  if params.class == "action" then
+    if params.selections then
+      for i = 1, #params.models do
+        data.actions[#data.actions + 1] = deep_copy(params.models[i])
+      end
+    else
+      data.actions[1] = params.model
+    end
+  elseif params.class == "actionCommand" then
+    for i = 1, #params.commands do
+      data.actionCommands[#data.actionCommands + 1] = deep_copy(params.commands[i])
+    end
+  end
+
+  return data
+end
+
 function M.setup()
   state.pageModel = require("App.renameCopyPaste.page1").model
   state.previousPageModel = require("App.renameCopyPaste.commands.page1.previousPage").model
@@ -36,12 +61,10 @@ function M.teardown()
 end
 
 function M.test_paste_action_from_previousPage()
-  state.clipboardData = {
-    actions = {deep_copy(state.previousPageDecoded)},
-    actionCommands = {},
-    book = "renameCopyPaste",
-    page = "page1",
-  }
+  state.clipboardData = make_clipboard_data_from_copy({
+    class = "action",
+    model = state.previousPageModel,
+  })
 
   prepare_ui_for_run()
   state.paste.execute({UI = state.UI, class = "action"})
@@ -58,12 +81,10 @@ function M.test_paste_action_from_previousPage()
 end
 
 function M.xtest_paste_action_from_nameAct()
-  state.clipboardData = {
-    actions = {state.nameActModel},
-    actionCommands = {},
-    book = "renameCopyPaste",
-    page = "page1",
-  }
+  state.clipboardData = make_clipboard_data_from_copy({
+    class = "action",
+    model = state.nameActModel,
+  })
 
   prepare_ui_for_run()
   state.paste.execute({UI = state.UI, class = "action"})
@@ -75,12 +96,11 @@ function M.xtest_paste_action_from_nameAct()
 end
 
 function M.xtest_paste_multiple_actions_previousPage_and_nameAct()
-  state.clipboardData = {
-    actions = {state.previousPageModel, state.nameActModel},
-    actionCommands = {},
-    book = "renameCopyPaste",
-    page = "page1",
-  }
+  state.clipboardData = make_clipboard_data_from_copy({
+    class = "action",
+    selections = true,
+    models = {state.previousPageDecoded, state.nameActDecoded},
+  })
 
   prepare_ui_for_run()
   state.paste.execute({UI = state.UI, class = "action"})
@@ -90,12 +110,10 @@ function M.xtest_paste_multiple_actions_previousPage_and_nameAct()
 end
 
 function M.xtest_paste_one_actionCommand_into_previousPage()
-  state.clipboardData = {
-    actions = {},
-    actionCommands = {deep_copy(state.nameActDecoded.actions[1])},
-    book = "renameCopyPaste",
-    page = "page1",
-  }
+  state.clipboardData = make_clipboard_data_from_copy({
+    class = "actionCommand",
+    commands = {state.nameActDecoded.actions[1]},
+  })
 
   prepare_ui_for_run()
   state.UI.editor.currentAction = {name = "previousPage"}
@@ -110,10 +128,10 @@ function M.xtest_paste_one_actionCommand_into_previousPage()
 end
 
 function M.xtest_paste_multiple_actionCommands_into_previousPage()
-  state.clipboardData = {
-    actions = {},
-    actionCommands = {
-      deep_copy(state.nameActDecoded.actions[1]),
+  state.clipboardData = make_clipboard_data_from_copy({
+    class = "actionCommand",
+    commands = {
+      state.nameActDecoded.actions[1],
       {
         command = "action.play",
         params = {
@@ -121,9 +139,7 @@ function M.xtest_paste_multiple_actionCommands_into_previousPage()
         }
       }
     },
-    book = "renameCopyPaste",
-    page = "page1",
-  }
+  })
 
   prepare_ui_for_run()
   state.UI.editor.currentAction = {name = "previousPage"}
