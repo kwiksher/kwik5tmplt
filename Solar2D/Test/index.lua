@@ -73,6 +73,8 @@ local M = {
     set("page", "timer")
     set("page", "variable")
 
+    set("shape", "image")
+
     set("layer", "lang")
     set("layer", "properties")
 

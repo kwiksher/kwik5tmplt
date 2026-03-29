@@ -15,8 +15,8 @@ local env = require("env")
 --env.page = "portrait"
 --env.page = "shape"
 
-env.book = "renameCopyPaste"
-env.page = "page1"
+--env.book = "renameCopyPaste"
+--env.page = "page1"
 
 -- env.book = "animation"
 -- env.page = "linear"
@@ -58,8 +58,9 @@ env.page = "page1"
 -- env.book = "snowMan"
 -- env.page = "page1"
 
---env.book = "shape"
+env.book = "shape"
 --env.page = "ellipse"
+env.page = "image"
 
 --env.book = "physics"
 --env.page = "basic"
