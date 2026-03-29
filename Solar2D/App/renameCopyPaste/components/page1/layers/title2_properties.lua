@@ -57,8 +57,8 @@ end
 function M:create(UI)
   local obj = UI.sceneGroup[self.properties.name]
   self.obj = obj
-  print("###", self.properties.name)
-  for k, v in pairs(UI.sceneGroup) do print(k ,v) end
+  -- print("###", self.properties.name)
+  -- for k, v in pairs(UI.sceneGroup) do print(k ,v) end
   --
   --
   -- obj.imagePath = self.imagePath
