@@ -61,24 +61,43 @@ function M.teardown()
 end
 
 function M.test_paste_action_from_previousPage()
+  print("TRACE test_paste_action_from_previousPage START")
   state.clipboardData = make_clipboard_data_from_copy({
     class = "action",
     model = state.previousPageModel,
   })
+  print("TRACE clipboard.actions count", #state.clipboardData.actions)
+  print("TRACE clipboard.actionCommands count", #state.clipboardData.actionCommands)
+  print("TRACE clipboard.action[1] type", type(state.clipboardData.actions[1]))
 
   prepare_ui_for_run()
+  print("TRACE currentAction before paste", state.UI.editor.currentAction and state.UI.editor.currentAction.name)
   state.paste.execute({UI = state.UI, class = "action"})
+  print("TRACE paste.execute done")
 
   local luaPath = resolve_path("App/renameCopyPaste/commands/page1/previousPage_copied.lua")
   local jsonPath = resolve_path("App/renameCopyPaste/models/page1/commands/previousPage_copied.json")
+  print("TRACE luaPath", luaPath)
+  print("TRACE jsonPath", jsonPath)
+  print("TRACE lua exists", file_exists(luaPath))
+  print("TRACE json exists", file_exists(jsonPath))
   assert_true(file_exists(luaPath))
   assert_true(file_exists(jsonPath))
 
+  package.loaded["App.renameCopyPaste.page1"] = nil
   local pageModel = require("App.renameCopyPaste.page1").model
   local names = find_command_name(pageModel.commands)
+  print("TRACE commands count", #pageModel.commands)
+  for i = 1, #pageModel.commands do
+    print("TRACE command", i, pageModel.commands[i])
+  end
+  print("TRACE has previousPage", names.previousPage)
+  print("TRACE has nameAct", names.nameAct)
+  print("TRACE has previousPage_copied", names.previousPage_copied)
   assert_true(names.previousPage)
   assert_true(names.nameAct)
   assert_true(names.previousPage_copied)
+  print("TRACE test_paste_action_from_previousPage END")
 end
 
 function M.xtest_paste_multiple_actions()
