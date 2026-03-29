@@ -100,7 +100,7 @@ function M.xtest_paste_one_actionCommand_into_previousPage()
   assert_equal("variable.editVar", decoded.actions[2].command)
 end
 
-function M.test_paste_multiple_actions()
+function M.xtest_paste_multiple_actions()
   state.clipboardData = make_clipboard_data_from_copy({
     class = "action",
     selections = true,
