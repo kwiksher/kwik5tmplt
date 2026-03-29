@@ -22,6 +22,17 @@ function M.xtest_select_action()
     M.actionTable.altDown = true
     helper.selectAction("previousPage")
     M.actionTable.altDown = false
+  end
+end
+
+function M.xtest_select_actionCommand()
+  M.UI.testCallback = function()
+    --
+    M.UI.editor.actionEditor.iconHander()
+
+    M.actionTable.altDown = true
+    helper.selectAction("previousPage")
+    M.actionTable.altDown = false
 
    --- select a command
    local commandsTable = require("editor.action.actionCommandTable")
@@ -32,21 +43,23 @@ function M.xtest_select_action()
    else
     print("not found a actionCommand")
    end
-      -- select a layer
-    -- local propsTable = require("editor.action.actionCommandPropsTable")
-    -- local linkbox = propsTable.linkbox
-    -- local obj = linkbox.objs[1]
-    -- obj:tap({numTaps = 1})
-
-   -- save command props
-      -- UI.scene.app:dispatchEvent {
-      --   name = "editor.actionCommand.save",
-      --   UI = UI,
-      -- }
-
-  -- -- editor.editButton:tap{target=editor.editButton}
-  -- controller.commandGroupHandler{target={muiOptions={name=muiName.."Page"}}}
   end
+end
+
+function M.test_copy_paste_action()
+  M.UI.testCallback = function()
+    --
+    M.UI.editor.actionEditor.iconHander()
+    M.actionTable.altDown = true
+    helper.selectAction("previousPage")
+    M.actionTable.altDown = false
+  end
+
+  -- copy action
+  -- paste in actionTable, an action is selected
+  --
+  -- result previoousPage_copied
+  --
 end
 
 function M.test_copy_paste_actionCommand()
@@ -67,6 +80,12 @@ function M.test_copy_paste_actionCommand()
    else
     print("not found a actionCommand")
    end
+
+    -- copy actionCommand
+    -- paste in actionCommandTable, an acitonCommand is selected
+    --
+    -- result another duplicated actionCommand
+    --
   end
 end
 
