@@ -78,24 +78,10 @@ function M.test_paste_action_from_previousPage()
   local names = find_command_name(pageModel.commands)
   assert_true(names.previousPage)
   assert_true(names.nameAct)
+  assert_true(names.previousPage_copied)
 end
 
-function M.xtest_paste_action_from_nameAct()
-  state.clipboardData = make_clipboard_data_from_copy({
-    class = "action",
-    model = state.nameActModel,
-  })
-
-  prepare_ui_for_run()
-  state.paste.execute({UI = state.UI, class = "action"})
-
-  local luaPath = resolve_path("App/renameCopyPaste/commands/page1/nameAct_copied.lua")
-  local jsonPath = resolve_path("App/renameCopyPaste/models/page1/commands/nameAct_copied.json")
-  assert_true(file_exists(luaPath))
-  assert_true(file_exists(jsonPath))
-end
-
-function M.xtest_paste_multiple_actions_previousPage_and_nameAct()
+function M.xtest_paste_multiple_actions()
   state.clipboardData = make_clipboard_data_from_copy({
     class = "action",
     selections = true,
@@ -132,12 +118,7 @@ function M.xtest_paste_multiple_actionCommands_into_previousPage()
     class = "actionCommand",
     commands = {
       state.nameActDecoded.actions[1],
-      {
-        command = "action.play",
-        params = {
-          actionName = "nameAct"
-        }
-      }
+      state.nameActDecoded.actions[2],
     },
   })
 
@@ -151,7 +132,7 @@ function M.xtest_paste_multiple_actionCommands_into_previousPage()
   assert_true(#decoded.actions >= 3)
   assert_equal("page.gotoPage", decoded.actions[1].command)
   assert_equal("variable.editVar", decoded.actions[2].command)
-  assert_equal("action.play", decoded.actions[3].command)
+  assert_equal("layer.frontBack", decoded.actions[3].command)
 end
 
 return M
