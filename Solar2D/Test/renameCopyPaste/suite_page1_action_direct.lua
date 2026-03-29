@@ -15,85 +15,13 @@ local state = {
   nameActDecoded = nil,
 }
 
-local function deep_copy(v)
-  if type(v) ~= "table" then
-    return v
-  end
-  local out = {}
-  for k, val in pairs(v) do
-    out[k] = deep_copy(val)
-  end
-  return out
-end
-
-local function file_exists(path)
-  local f = io.open(path, "r")
-  if f then
-    f:close()
-    return true
-  end
-  return false
-end
-
-local function read_text(path)
-  local f = io.open(path, "r")
-  if not f then
-    return nil
-  end
-  local text = f:read("*a")
-  f:close()
-  return text
-end
-
-local function resolve_path(relPath)
-  if system and system.pathForFile then
-    local abs = system.pathForFile(relPath, system.ResourceDirectory)
-    if abs then
-      return abs
-    end
-  end
-  return relPath
-end
-
-local function decode_json_file(path)
-  local text = read_text(path)
-  assert_not_nil(text, "json file missing: " .. tostring(path))
-  local decoded = json.decode(text)
-  assert_not_nil(decoded, "json decode failed: " .. tostring(path))
-  return decoded
-end
-
-local function make_ui()
-  return {
-    book = "renameCopyPaste",
-    page = "page1",
-    scene = {
-      model = deep_copy(state.pageModel)
-    },
-    editor = {
-      currentBook = "renameCopyPaste",
-      currentAction = {name = "previousPage"},
-      selections = {},
-      clipboard = {
-        read = function()
-          return state.clipboardData
-        end
-      }
-    }
-  }
-end
-
-local function find_command_name(commands)
-  local names = {}
-  for i = 1, #commands do
-    names[commands[i]] = true
-  end
-  return names
-end
-
-local function prepare_ui_for_run()
-  state.UI = make_ui()
-end
+local helper = require("Test.renameCopyPaste.helper_renameCopyPaste").new(state)
+local deep_copy = helper.deep_copy
+local file_exists = helper.file_exists
+local resolve_path = helper.resolve_runtime_path
+local decode_json_file = helper.decode_json_file
+local find_command_name = helper.find_command_name
+local prepare_ui_for_run = helper.prepare_action_ui
 
 function M.setup()
   state.pageModel = require("App.renameCopyPaste.page1").model

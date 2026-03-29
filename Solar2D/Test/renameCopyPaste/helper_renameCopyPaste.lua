@@ -250,6 +250,48 @@ function H.new(state, PAGE2_BASELINE)
     return text
   end
 
+  local function decode_json_file(path)
+    local json = require("json")
+    local text = read_text_file(path)
+    assert_not_nil(text, "json file missing: " .. tostring(path))
+    local decoded = json.decode(text)
+    assert_not_nil(decoded, "json decode failed: " .. tostring(path))
+    return decoded
+  end
+
+  local function make_action_ui(pageModel, clipboardData)
+    return {
+      book = "renameCopyPaste",
+      page = "page1",
+      scene = {
+        model = deep_copy(pageModel)
+      },
+      editor = {
+        currentBook = "renameCopyPaste",
+        currentAction = {name = "previousPage"},
+        selections = {},
+        clipboard = {
+          read = function()
+            return clipboardData
+          end
+        }
+      }
+    }
+  end
+
+  local function prepare_action_ui()
+    state.UI = make_action_ui(state.pageModel, state.clipboardData)
+    return state.UI
+  end
+
+  local function find_command_name(commands)
+    local names = {}
+    for i = 1, #commands do
+      names[commands[i]] = true
+    end
+    return names
+  end
+
   local function ensure_runtime_templates()
     local runtimeTemplateRoot = resolve_runtime_path("lua_modules/kwiksher/resources/template")
     local pageX = runtimeTemplateRoot .. "/pageX.lua"
@@ -513,6 +555,11 @@ function H.new(state, PAGE2_BASELINE)
     make_variable_entry = make_variable_entry,
     resolve_runtime_path = resolve_runtime_path,
     file_exists = file_exists,
+    read_text_file = read_text_file,
+    decode_json_file = decode_json_file,
+    make_action_ui = make_action_ui,
+    prepare_action_ui = prepare_action_ui,
+    find_command_name = find_command_name,
     assert_layer_files_generated = assert_layer_files_generated,
     should_skip_if_layers_generated = should_skip_if_layers_generated,
     should_skip_if_files_exist = should_skip_if_files_exist,

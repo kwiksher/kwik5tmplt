@@ -26,7 +26,7 @@ function ActionCommand:new()
 end
 --
 ActionCommand.model = [[
-{"name":"previousPage","actions":[{"command":"page.gotoPage","params":{"duration":0,"pageName":"PREVIOUS","delay":0,"effect":"fromLeft"}},{"command":"layer.showHide","params":{"time":"nil","target":"title3","toggle":"true","delay":"nil","hide":"true"}}]}
+{"name":"previousPage","actions":[{"command":"page.gotoPage","params":{"pageName":"PREVIOUS","duration":0,"delay":0,"effect":"fromLeft"}},{"command":"layer.showHide","params":{"time":"nil","toggle":"true","target":"title3","delay":"nil","hide":"true"}}]}
 ]]
 --
 return ActionCommand
