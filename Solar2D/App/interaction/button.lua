@@ -38,7 +38,7 @@ local model = {
       },
       {
         Candice = {
-        }
+          class={ "properties", }  }
       },
       {
         langTxt = {
@@ -60,7 +60,7 @@ local model = {
     page = {  }
   },
   commands = {   "actEn",   "actJp",   "actWitch",  },
-  onInit = function(scene) print("onInit") end
+  onInit = function(scene)  end
 }
 local scene = require('controller.scene').new(sceneName, model)
 --

@@ -15,8 +15,8 @@ local env = require("env")
 --env.page = "portrait"
 --env.page = "shape"
 
-env.book = "renameCopyPaste"
-env.page = "page1"
+--env.book = "renameCopyPaste"
+--env.page = "page1"
 
 -- env.book = "animation"
 -- env.page = "linear"
@@ -24,8 +24,8 @@ env.page = "page1"
 --env.page = "path"
 -- env.page = "filter"
 
--- env.book = "interaction"
--- env.page = "button"
+env.book = "interaction"
+env.page = "button"
 -- env.page = "drag"
 -- env.page = "pinch"
 -- env.page = "canvas"
