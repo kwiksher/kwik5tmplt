@@ -59,7 +59,7 @@ local model = {
     joints    = {  },
     page = {  }
   },
-  commands = {   "previousPage",   "nameAct",  },
+  commands = {   "nameAct",   "previousPage",  },
   onInit = function(scene)  end
 }
 local scene = require('controller.scene').new(sceneName, model)
