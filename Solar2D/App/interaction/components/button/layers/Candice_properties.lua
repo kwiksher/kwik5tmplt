@@ -72,31 +72,15 @@ function M:create(UI)
   --
   --
   -- obj.imagePath = self.imagePath
-  if type(props.x) == "number" or type(props.y) == "number" then
-    local catObj = UI.sceneGroup and UI.sceneGroup.cat
-    local baseCenterX, baseCenterY = 480, 320
-    if display.contentHeight > display.contentWidth then
-      baseCenterX, baseCenterY = 320, 480
-    end
-    local scaleX = display.contentCenterX / baseCenterX
-    local scaleY = display.contentCenterY / baseCenterY
-    if catObj and scaleX > 0 and scaleY > 0 then
-      local catBaseX = catObj.x / scaleX
-      local catBaseY = catObj.y / scaleY
-      if type(props.x) == "number" then
-        obj.x = catObj.x + (props.x - catBaseX)
-      end
-      if type(props.y) == "number" then
-        obj.y = catObj.y + (props.y - catBaseY)
-      end
-    else
-      if type(props.x) == "number" then
-        obj.x = props.x
-      end
-      if type(props.y) == "number" then
-        obj.y = props.y
-      end
-    end
+  if type(layerMod.mX) == "number" then
+    obj.x = layerMod.mX
+  elseif type(props.x) == "number" then
+    obj.x = props.x
+  end
+  if type(layerMod.mY) == "number" then
+    obj.y = layerMod.mY
+  elseif type(props.y) == "number" then
+    obj.y = props.y
   end
   -- obj.height    = props.height/4
   -- obj.width     = props.width/4
