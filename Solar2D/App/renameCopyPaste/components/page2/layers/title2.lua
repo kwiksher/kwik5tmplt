@@ -22,8 +22,6 @@ local layerProps = {
   fontSize =  nil,
   alignment =  "",
   orientation = "",
-  psdPage     = "page1"
-
 }
 
 M.align       = ""

@@ -1,4 +1,4 @@
--- $weight=3
+-- $weight=5
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
@@ -6,24 +6,23 @@ local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
-  height    =  353 - 165,
-  width     = 902 - 676 ,
-  kind      = pixel,
-  name      = "title2",
+  height    =  360 - 150,
+  width     = 1815 - 133 ,
+  kind      = text,
+  name      = "title_base",
   type      = "png",
-  x         = 902 + (676 -902)/2,
-  y         = 165 + (353 - 165)/2,
-  alpha     = 100/100,
+  x         = 1815 + (133 -1815)/2,
+  y         = 150 + (360 - 150)/2,
+  alpha     = 14.117647058823529/100,
   infinity = {
   },
   -- text properties
-  contents =  "",
-  font =  "",
-  fontSize =  nil,
-  alignment =  "",
-  orientation = "",
-  psdPage     = "page1"
-
+  contents =  "%E3%81%AD%E3%81%93%E3%81%AE%E3%81%8F%E3%81%84%E3%81%A3%E3%81%8F",
+  font =  "HiraKakuStd-W8",
+  fontSize =  300,
+  alignment =  "left",
+  color    =  { 0, 0, 0, 1 },
+  orientation = "horizontal",
 }
 
 M.align       = ""

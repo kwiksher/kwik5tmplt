@@ -1,4 +1,4 @@
--- $weight=3
+-- $weight=0
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
@@ -6,13 +6,13 @@ local infinity = require("components.kwik.layer_image_infinity")
 
 local layerProps = {
   blendMode = "normal",
-  height    =  353 - 165,
-  width     = 902 - 676 ,
+  height    =  1175 - 1105,
+  width     = 1817 - 1615 ,
   kind      = pixel,
-  name      = "title2",
+  name      = "fish",
   type      = "png",
-  x         = 902 + (676 -902)/2,
-  y         = 165 + (353 - 165)/2,
+  x         = 1817 + (1615 -1817)/2,
+  y         = 1105 + (1175 - 1105)/2,
   alpha     = 100/100,
   infinity = {
   },
@@ -22,10 +22,9 @@ local layerProps = {
   fontSize =  nil,
   alignment =  "",
   orientation = "",
-  psdPage     = "page1"
-
 }
 
+M.imagePath   = "page1/fish.png"
 M.align       = ""
 M.randXStart  = nil
 M.randXEnd    = nil
@@ -37,7 +36,7 @@ M.yScale     = nil
 M.rotation   = nil
 --
 M.layerAsBg     = nil
-M.isSharedAsset = nil
+M.isSharedAsset = true
 --
 M:setProps(layerProps)
 --

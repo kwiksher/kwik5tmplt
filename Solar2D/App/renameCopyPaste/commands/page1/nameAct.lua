@@ -25,12 +25,14 @@ function ActionCommand:new()
     else
       AC.Var:editVar(UI, "myText", tonumber(Hello))
     end
+    obj = UI.sceneGroup["title3"]
+    AC.Layer:frontBack(obj, true )
   end
   return setmetatable( command, {__index=AC})
 end
 --
 ActionCommand.model = [[
-{"name":"nameAct","actions":[{"command":"variable.editVar","params":{"value":"Hello","valueType":"string","target":"myText"}}]}
+{"name":"nameAct","actions":[{"command":"variable.editVar","params":{"valueType":"string","target":"myText","value":"Hello"}},{"command":"layer.frontBack","params":{"target":"title3","front":"true"}}]}
 ]]
 --
 return ActionCommand

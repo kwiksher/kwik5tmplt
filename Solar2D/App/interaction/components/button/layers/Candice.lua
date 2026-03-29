@@ -16,8 +16,10 @@ local layerProps = {
   alpha     = 100/100,
   infinity = {
   },
-
+  psdPage = "button"
 }
+
+print("@@@", layerProps.x, layerProps.y)
 
 M.align       = ""
 M.randXStart  = nil

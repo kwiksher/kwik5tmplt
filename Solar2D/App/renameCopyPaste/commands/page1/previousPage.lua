@@ -10,20 +10,23 @@ function ActionCommand:new()
     local UI         = params.UI
     local sceneGroup = UI.sceneGroup
     local layers      = UI.layers
-    local event      = params.event
+    local event      = params.event or {}
     local obj        = event.target
     --
     -- local alert = native.showAlert("Alert", "Hello", { "OK" } )
     -- printKeys(event.target)
     -- local conditions = require("App." .. UI.book..".common.conditions")
     -- local expressions = require("App." .. UI.book.."common.expressions")
+    --
     AC.Page:gotoPage("PREVIOUS", "fromLeft", 0, 0);
+    obj = UI.sceneGroup["title3"]
+    AC.Layer:showHide(obj,  true, true, nil, nil)
   end
   return setmetatable( command, {__index=AC})
 end
 --
 ActionCommand.model = [[
-{"name":"previousPage","actions":[{"command":"page.gotoPage","params":{"pageName":"PREVIOUS","duration":0,"delay":0,"effect":"fromLeft"}}]}
+{"name":"previousPage","actions":[{"command":"page.gotoPage","params":{"pageName":"PREVIOUS","duration":0,"delay":0,"effect":"fromLeft"}},{"command":"layer.showHide","params":{"time":"nil","toggle":"true","target":"title3","delay":"nil","hide":"true"}}]}
 ]]
 --
 return ActionCommand
