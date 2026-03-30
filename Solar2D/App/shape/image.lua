@@ -12,10 +12,22 @@ local model = {
         rect_0 = {
         }
       },
+      {
+        snowman = {
+        }
+      },
+      {
+        hat = {
+        }
+      },
     },
     audios = {
     },
     groups = {
+      {
+        group_1 = {
+        }
+      },
     },
     timers = {  },
     variables = {  },
@@ -23,7 +35,7 @@ local model = {
     page = {  }
   },
   commands = {  },
-  onInit = function(scene) print("onInit") end
+  onInit = function(scene)  end
 }
 local scene = require('controller.scene').new(sceneName, model)
 --

@@ -1,66 +1,66 @@
--- $weight=3
+-- $weight=
 --
 local app = require "controller.Application"
 local M = require("components.kwik.layer_image").new()
 local infinity = require("components.kwik.layer_image_infinity")
-
 local layerProps = {
-  blendMode = "normal",
-  height    =  134 - 0,
-  width     = 134 - 0 ,
-  kind      = "solidColor",
-  name      = "copyright",
+  blendMode = "",
+  height    =  886 - 394,
+  width     = 1162 - 758 ,
+  kind      = "image",
+  name      = "snowman",
   type      = "png",
-  x         = 134 + (0 -134)/2,
-  y         = 0 + (134 - 0)/2,
+  x         = 1162 + (758 -1162)/2,
+  y         = 394 + (886 - 394)/2,
   -- x         = bounds.right + bounds.left - bounds.right)/2,
   -- y         = bounds.top + bounds.bottom - bounds.top)/2,
   alpha     = 100/100,
   infinity = {
+    enabled = false,
+    speed = 1,
+    distance = 0,
+    direction = "right",
   },
   -- text properties
   contents =  "",
-  font =  "",
-  fontSize =  nil,
+  font =  "native.systemFont",
+  fontSize =  16,
   alignment =  "",
   orientation = "",
-  psdPage     = "portrait"
+  psdPage     = "image"
 }
-
 M.attachToEdge      = ""
 M.randXStart  = nil
 M.randXEnd    = nil
 M.randYStart  = nil
 M.randYEnd    = nil
 --
-M.xScale     = nil
-M.yScale     = nil
-M.rotation   = nil
+M.xScale     = 1
+M.yScale     = 1
+M.rotation   = 0
 --
-M.layerAsBg     = nil
+M.layerAsBg     = false
 --
 M:setProps(layerProps)
 --
 -- Set isSharedAsset = true, and then set a common module. See kwikTheCatCommon.lua
 --
-M.isSharedAsset = nil
-M.imagePath   = "portrait/copyright.png"
-
+M.isSharedAsset = false
+M.imagePath   = "image/snowman.png"
 function M:init(UI)
   --local sceneGroup = UI.scene.view
-	if not self.isSharedAsset then
+  if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
 end
 --
 function M:create(UI)
-	if not self.isSharedAsset then
+  if not self.isSharedAsset then
     self.imagePath = UI.page ..self.imageName
   end
   local obj = self:createImage(UI)
   UI.layers[#UI.layers] = obj
   self.obj = obj
-
   if self.infinity and self.infinity.enabled then
     infinity.createInfinityImage(UI, self.obj, self.infinity)
   end
