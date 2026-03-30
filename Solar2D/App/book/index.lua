@@ -1,8 +1,5 @@
--- $.weight=
---
 local scenes = {
-  "landscape",
-  "portrait",
-  -- "shape"
+    "landscape",
+    "portrait",
 }
 return scenes
