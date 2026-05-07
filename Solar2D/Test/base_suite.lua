@@ -104,7 +104,7 @@ function base_suite.new(config)
     end
     if config.component == "iconOnly" then
       M.selectors.componentSelector.iconHander()
-    else  -- default: "withClick"
+    elseif config.component then  -- default: "withClick"
       M.selectors.componentSelector.iconHander()
       M.selectors.componentSelector:onClick(
         true, config.componentTable or "layerTable")

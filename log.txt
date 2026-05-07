@@ -1,0 +1,23 @@
+﻿20:52:16.397  
+20:52:16.397  Solar2D Simulator 2026.3729 (Mar  9 2026 08:40:58)
+20:52:16.397  
+20:52:16.397  
+20:52:16.397  Copyright (C) 2009-2026  C o r o n a   L a b s   I n c .
+20:52:16.397  	Version: 3.0.0
+20:52:16.397  	Build: 2026.3729
+20:52:16.650  Platform: Kwik Editor Landscape / x64 / 10.0 / Intel(R) UHD Graphics 600 / 4.5.0 - Build 24.20.100.6292 / 2026.3729 / en_US | US | en_US | en
+20:52:16.681  Loading project from:   C:\Users\ymmtn\Documents\GitHub\kwik5-sample-books\Solar2D
+20:52:16.681  Project sandbox folder: C:\Users\ymmtn\AppData\Local\Corona Labs\Corona Simulator\Sandbox\solar2d-6119C3CC47F5725B453EEBF47806D7FD\Documents
+20:52:17.353  WARNING: issue found in C:\Users\ymmtn\Documents\GitHub\kwik5-sample-books\Solar2D\config.lua: 
+20:52:17.353  WARNING: unrecognized key: settings.content.license.google.key (string)
+20:52:17.353  \Users\ymmtn\Documents\GitHub\kwik5-sample-books\Solar2D\App\uiHandler.lua:54	renameCopyPaste
+20:52:17.353  \Users\ymmtn\Documents\GitHub\kwik5-sample-books\Solar2D\App\uiHandler.lua:87	behavitor tree is not found	Behavior/renameCopyPaste/page1r_scene.tree
+20:52:17.579  WARNING: C:\Users\ymmtn\Documents\GitHub\kwik5-sample-books\Solar2D/lua_modules/kwiksher\kwik\components\kwik\layer_image.lua:140: Failed to find image 'App/renameCopyPaste/assets/images/page1r/background.jpg'
+20:52:17.952  WARNING: C:\Users\ymmtn\Documents\GitHub\kwik5-sample-books\Solar2D/lua_modules/kwiksher\kwik\components\kwik\layer_image.lua:140: Failed to find image 'App/renameCopyPaste/assets/images/page1/fish.png'
+20:52:27.336  kwiksher\kwik\editor\index.lua:315	Warning GotoLastSelection: File does not exist
+20:52:27.405  kwiksher\kwik\editor\asset\index.lua:88	read assets.model in 	renameCopyPaste	nil
+20:52:28.510  kwiksher\kwik\commands\kwik\variableAction.lua:22	myText	Hello
+20:52:28.889  lunatest.lua:77	
+20:52:28.889  ---- Testing finished, with 0 assertion(s) ----
+20:52:28.889    0 passed, 0 failed, 0 error(s), 0 skipped.
+

@@ -27,6 +27,7 @@ function exports.init(props)
   assetTable = props.assetTable
   ---
   buttons = props.buttons
+  partsButtons = props.partsButtons
   audioTable = props.audioTable
 end
 
@@ -351,9 +352,9 @@ end
 
 function exports.clickButton(name, buttonsContext)
   local _buttons = buttonsContext or buttons
-  -- print(buttonsContext.name)
+  --print(buttonsContext.name)
   for i, v in next, _buttons.objs do
-    -- print("", v.text)
+    print("", v.text, v.eventName)
     if v.eventName == name then -- {name="add", label="->"}
         if v.rect.touch then
           v.rect:touch{phase="ended"}
