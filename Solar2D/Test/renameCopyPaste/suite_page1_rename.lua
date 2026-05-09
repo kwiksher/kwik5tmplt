@@ -1,7 +1,7 @@
 local M = require("Test.base_suite").new({
   book = "renameCopyPaste",
   page = "page1",
-  component = nil -- "iconOnly"
+  component =  "iconOnly" -- "nil" for page
 })
 
 local helper = require("Test.helper")
@@ -10,59 +10,50 @@ local muiName = "editor.action.commandView-"
 --
 -- rename
 --
-function M.test_rename_page()
-  --local book = helper.selectBook("mybook")
-  --book:touch()
-  if M.UI.book ~="renameCopyPaste" then return end
-  helper.selectPage("page1", false)
-  helper.selectPage("page1", true)
-  helper.clickButton("rename", M.partsButtons)
-end
---
--- rename layer.lua and layer_class.lua and generate(update) index.lua
---
---
-function M.xtest_rename_book()
-  --
-  -- test create_book_page.bat and .command additonally
-  --
-  --[[
-    Scripts/create_book.command Solar2D MyStory
-    Scripts/create_book.command Solar2D MyStory "page1 page2 page3"
-  --]]
-end
 
-function M.xtest_rename_group()
+function M.test_rename_group()
+  --
+  -- pre:create a group
+  --
+
+  M.selectors.componentSelector:onClick(true,  "groupTable")
+  --
+  -- click the icon for creatign a new group
+  --
+  -- M.UI.scene.app:dispatchEvent {
+  --   name = "editor.selector.selectGroup",
+  --   UI = M.UI,
+  --   isNew = true, --(name ~= "Trash-icon"),
+  --   isDelete =false -- (name == "Trash-icon")
+  -- }
+
 end
 
 function M.xtest_rename_joints()
+  -- try copy & paste from physics book
+  --   copy layer image and class together
+  --   copy the joint
+  -- rename
 end
 
 function M.xtest_rename_layer()
 end
 
+function M.xtest_rename_layer_with_class()
+end
+
 function M.xtest_rename_timer()
+  -- create a script copy timer action
+  -- or coping a page of a timer/action, and then rename
 end
 
 function M.xtest_rename_var()
+  -- create a var and then try renaming
 end
 
 function M.xtest_rename_audio()
+  -- copy an audio from another and raname it
 end
 --
---
--- low level commands
---
-function M.xtest_4_renamePage()
-  local commands = require("editor.scripts.commands")
-  commands.renamePage("renameCopyPaste", "page1", "page01")
-  native.requestExit() -- this prevents from infinitly looping of simulator reloading
-end
-
-function M.xtest_4_copyPage()
-  local commands = require("editor.scripts.commands")
-  commands.copyPage("renameCopyPaste", "page1", "page01")
-  native.requestExit() -- this prevents from infinitly looping of simulator reloading
-end
 
 return M
