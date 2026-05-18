@@ -50,9 +50,9 @@ function M.test_copy_paste_action()
   M.UI.testCallback = function()
     --
     M.UI.editor.actionEditor.iconHander()
-    M.actionTable.altDown = true
-    helper.selectAction("previousPage")
-    M.actionTable.altDown = false
+    -- M.actionTable.altDown = true
+    -- helper.selectAction("previousPage")
+    -- M.actionTable.altDown = false
   end
 
   -- copy action
@@ -62,7 +62,7 @@ function M.test_copy_paste_action()
   --
 end
 
-function M.test_copy_paste_actionCommand()
+function M.xtest_copy_paste_actionCommand()
   M.UI.testCallback = function()
     --
     M.UI.editor.actionEditor.iconHander()

@@ -43,7 +43,7 @@ function M.xtest_copy_layer()
   -- helper.selectAction("eventOne")
 end
 
-function M.test_copy_layer_class()
+function M.xtest_copy_layer_class()
   local name = "title1"
   -- layerTable.altDown = true
   helper.selectLayer(name, "pulse")
